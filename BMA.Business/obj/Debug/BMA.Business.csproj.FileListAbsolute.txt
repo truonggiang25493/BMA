@@ -1,0 +1,5 @@
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA.Business\bin\Debug\BMA.Business.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA.Business\bin\Debug\BMA.Business.pdb
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA.Business\obj\Debug\BMA.Business.csprojResolveAssemblyReference.cache
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA.Business\obj\Debug\BMA.Business.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA.Business\obj\Debug\BMA.Business.pdb
