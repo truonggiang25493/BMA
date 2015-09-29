@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1242a36210464f27aab7feb73cd36030" Name="Diagram1">
+        <EntityTypeShape EntityType="BMAModel.AspNetRole" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.AspNetUser" Width="1.5" PointX="3" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.Category" Width="1.5" PointX="9" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.Customer" Width="1.5" PointX="5.25" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.GuestInfo" Width="1.5" PointX="10.5" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.InputBill" Width="1.5" PointX="9" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.InputMaterial" Width="1.5" PointX="11.25" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.OrderItem" Width="1.5" PointX="13.5" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.Order" Width="1.5" PointX="8.25" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.OutputBill" Width="1.5" PointX="6" PointY="14.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.Product" Width="1.5" PointX="11.25" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.ProductMaterial" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.Recipe" Width="1.5" PointX="13.5" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.Staff" Width="1.5" PointX="5.25" PointY="18.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.Supplier" Width="1.5" PointX="9" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.sysdiagram" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.TaxRate" Width="1.5" PointX="11.25" PointY="17.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.TaxType" Width="1.5" PointX="9" PointY="18" IsExpanded="true" />
+        <AssociationConnector Association="BMAModel.FK_AspNetUserClaims_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_AspNetUserLogins_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_AspNetUsers_Customer_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_AspNetUsers_Staff_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_Orders_AspNetUsers_CustomerUserId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_Orders_AspNetUsers_StaffApproveUserId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_Category_Category_CategoryId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_Product_Category_CategoryId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_GuestInfo_Orders_OrderId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_InputMaterial_InputBill_InputBillId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_InputMaterial_Supplier_SupplierId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_OrderItem_Orders_OrderId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_OrderItem_Product_ProductId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_OrderItem_TaxRate_TaxRateId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_Orders_OutputBill_OutputBillId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_Recipe_Product_ProductId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_Recipe_ProductMaterial_ProductMaterialId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.FK_TaxRate_TaxType_TaxRateId" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.AspNetUserRoles" ManuallyRouted="false" />
+        <AssociationConnector Association="BMAModel.MaterialInOrderItem" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
