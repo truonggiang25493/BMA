@@ -7,7 +7,7 @@
       <Diagram DiagramId="1242a36210464f27aab7feb73cd36030" Name="Diagram1">
         <EntityTypeShape EntityType="BMAModel.AspNetRole" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="5.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="BMAModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.AspNetUserLogin" Width="2" PointX="5.25" PointY="8" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.AspNetUser" Width="1.5" PointX="3" PointY="8.125" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Category" Width="1.5" PointX="9" PointY="14" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Customer" Width="1.5" PointX="5.25" PointY="10.625" IsExpanded="true" />

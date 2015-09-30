@@ -116,6 +116,8 @@
     <Compile Include="Recipe.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Repository\AspNetRoleRepository.cs" />
+    <Compile Include="Repository\AspNetUserLoginRepository.cs" />
     <Compile Include="Repository\AspNetUsersRepository.cs" />
     <Compile Include="sp_helpdiagramdefinition_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
