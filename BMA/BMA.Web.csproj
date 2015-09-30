@@ -280,6 +280,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Custom\css\" />
+    <Folder Include="Content\Custom\js\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

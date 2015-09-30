@@ -4,18 +4,10 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    <link href="~/Content/CustomerLayout/CSS/animate.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/CustomerLayout/CSS/bootstrap.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/CustomerLayout/CSS/owl.carousel.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/CustomerLayout/CSS/photobox.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/CustomerLayout/CSS/responsive.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/CustomerLayout/CSS/revolution-slider.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/CustomerLayout/CSS/style.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/font-awesome-4.3.0/css/font-awesome.css" rel="stylesheet" />
-    <link href="~/Content/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    @Styles.Render("~/View/Layout/Css")
 </head>
 <body>
-    <div style=""  class="top-bar">
+    <div style="" class="top-bar">
         <div class="container">
             <div style="padding-bottom:15px;" class="right-bar">
                 <ul class="login">
@@ -47,7 +39,7 @@
                                     </ul>
                                 </li>
                                 <li>@Html.ActionLink("QUY TRÌNH ĐẶT HÀNG", "Index", "Procedure")</li>
-                                <li>@Html.ActionLink("LIÊN HỆ", "Index", "Contact")</li>                               
+                                <li>@Html.ActionLink("LIÊN HỆ", "Index", "Contact")</li>
                             </ul>
                         </div>
                     </nav>
@@ -55,7 +47,7 @@
             </div>
         </div>
     </header>
-    
+
     <div>
         @RenderBody()
     </div>
@@ -65,16 +57,6 @@
             <p>Bakery Management System - MGV | Copyright 2015</p>
         </div>
     </footer>
-    
-    <script type="text/javascript" src="~/Content/CustomerLayout/JS/jquery.js"></script>
-    <script type="text/javascript" src="~/Content/CustomerLayout/JS/bootstrap.js"></script>
-    <script type="text/javascript" src="~/Content/CustomerLayout/JS/jquery-ui.js"></script>
-    <script type="text/javascript" src="~/Content/CustomerLayout/JS/jquery.appear.js"></script>
-    <script type="text/javascript" src="~/Content/CustomerLayout/JS/jquery.mixitup.min.js"></script>
-    <script type="text/javascript" src="~/Content/CustomerLayout/JS/jquery.photobox.js"></script>
-    <script type="text/javascript" src="~/Content/CustomerLayout/JS/jquery.themepunch.revolution.js"></script>
-    <script type="text/javascript" src="~/Content/CustomerLayout/JS/jquery.themepunch.tools.min.js"></script>
-    <script type="text/javascript" src="~/Content/CustomerLayout/JS/owl.carousel.min.js"></script>
-    <script type="text/javascript" src="~/Content/CustomerLayout/JS/scripts.js"></script>
+    @Scripts.Render("~/View/Layout/Js");
 </body>
 </html>

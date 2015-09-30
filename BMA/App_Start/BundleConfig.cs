@@ -26,6 +26,26 @@ namespace BMA
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/View/Layout/Css").Include(
+                     "~/Content/CustomerLayout/CSS/animate.css",
+                     "~/Content/CustomerLayout/CSS/bootstrap.css",
+                     "~/Content/CustomerLayout/CSS/owl.carousel.css",
+                     "~/Content/CustomerLayout/CSS/photobox.css",
+                     "~/Content/CustomerLayout/CSS/responsive.css",
+                     "~/Content/CustomerLayout/CSS/revolution-slider.css",
+                     "~/Content/CustomerLayout/CSS/style.css",
+                     "~/Content/font-awesome-4.3.0/css/font-awesome.min.css")); // font-awesome.min.css with font-awesome.css is the same but font-awesome.min.css have smaill size
+            bundles.Add(new ScriptBundle("~/View/Layout/Js").Include(
+                      "~/Content/CustomerLayout/JS/jquery.js",
+                      "~/Content/CustomerLayout/JS/bootstrap.js",
+                      "~/Content/CustomerLayout/JS/jquery-ui.js",
+                      "~/Content/CustomerLayout/JS/jquery.appear.js",
+                      "~/Content/CustomerLayout/JS/jquery.mixitup.min.js",
+                      "~/Content/CustomerLayout/JS/jquery.photobox.js",
+                      "~/Content/CustomerLayout/JS/jquery.themepunch.revolution.js",
+                      "~/Content/CustomerLayout/JS/jquery.themepunch.tools.min.js",
+                      "~/Content/CustomerLayout/JS/owl.carousel.min.js",
+                      "~/Content/CustomerLayout/JS/scripts.js"));
         }
     }
 }
