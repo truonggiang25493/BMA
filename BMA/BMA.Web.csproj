@@ -289,6 +289,16 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BMA.Business\BMA.Business.csproj">
+      <Project>{5bcdf96f-bcf5-4b48-8f74-dc8274c36799}</Project>
+      <Name>BMA.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BMA.Data\BMA.Data.csproj">
+      <Project>{3bc021bd-f48f-4347-9be4-05f0f7de39ae}</Project>
+      <Name>BMA.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
