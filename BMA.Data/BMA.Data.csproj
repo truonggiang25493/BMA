@@ -90,6 +90,7 @@
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
     <Compile Include="Infrastructure\RepositoryBase.cs" />
+    <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="InputBill.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -115,6 +116,7 @@
     <Compile Include="Recipe.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Repository\AspNetUserRepository.cs" />
     <Compile Include="sp_helpdiagramdefinition_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
