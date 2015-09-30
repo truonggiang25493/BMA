@@ -117,10 +117,13 @@
     </Compile>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     <Compile Include="Repository\AspNetUserRepository.cs" />
 =======
     <Compile Include="Repository\AspNetUsersRepository.cs" />
 >>>>>>> master
+=======
+>>>>>>> parent of 39f3eec... Add AspNetUserRepository
 =======
 >>>>>>> parent of 39f3eec... Add AspNetUserRepository
     <Compile Include="sp_helpdiagramdefinition_Result.cs">
