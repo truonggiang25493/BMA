@@ -1,0 +1,110 @@
+D:\Code\C#\BMA\BMA\bin\BMA.dll.config
+D:\Code\C#\BMA\BMA\bin\BMA.dll
+D:\Code\C#\BMA\BMA\bin\BMA.pdb
+D:\Code\C#\BMA\BMA\bin\Antlr3.Runtime.dll
+D:\Code\C#\BMA\BMA\bin\EntityFramework.dll
+D:\Code\C#\BMA\BMA\bin\EntityFramework.SqlServer.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.AspNet.Identity.Core.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.AspNet.Identity.EntityFramework.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.AspNet.Identity.Owin.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.Cookies.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.Facebook.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.Google.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.MicrosoftAccount.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.OAuth.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.Twitter.dll
+D:\Code\C#\BMA\BMA\bin\Microsoft.Web.Infrastructure.dll
+D:\Code\C#\BMA\BMA\bin\Newtonsoft.Json.dll
+D:\Code\C#\BMA\BMA\bin\Owin.dll
+D:\Code\C#\BMA\BMA\bin\System.Web.Helpers.dll
+D:\Code\C#\BMA\BMA\bin\System.Web.Mvc.dll
+D:\Code\C#\BMA\BMA\bin\System.Web.Optimization.dll
+D:\Code\C#\BMA\BMA\bin\System.Web.Razor.dll
+D:\Code\C#\BMA\BMA\bin\System.Web.WebPages.Deployment.dll
+D:\Code\C#\BMA\BMA\bin\System.Web.WebPages.dll
+D:\Code\C#\BMA\BMA\bin\System.Web.WebPages.Razor.dll
+D:\Code\C#\BMA\BMA\bin\WebGrease.dll
+D:\Code\C#\BMA\BMA\bin\System.Web.Helpers.xml
+D:\Code\C#\BMA\BMA\bin\System.Web.Mvc.xml
+D:\Code\C#\BMA\BMA\bin\System.Web.Optimization.xml
+D:\Code\C#\BMA\BMA\bin\System.Web.Razor.xml
+D:\Code\C#\BMA\BMA\bin\System.Web.WebPages.xml
+D:\Code\C#\BMA\BMA\bin\System.Web.WebPages.Deployment.xml
+D:\Code\C#\BMA\BMA\bin\System.Web.WebPages.Razor.xml
+D:\Code\C#\BMA\BMA\bin\Newtonsoft.Json.xml
+D:\Code\C#\BMA\BMA\bin\Antlr3.Runtime.pdb
+D:\Code\C#\BMA\BMA\bin\EntityFramework.xml
+D:\Code\C#\BMA\BMA\bin\EntityFramework.SqlServer.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.AspNet.Identity.Core.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.AspNet.Identity.Owin.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.AspNet.Identity.EntityFramework.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.Facebook.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.Cookies.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.OAuth.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.Google.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.Twitter.xml
+D:\Code\C#\BMA\BMA\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+D:\Code\C#\BMA\BMA\obj\Debug\BMA.csprojResolveAssemblyReference.cache
+D:\Code\C#\BMA\BMA\obj\Debug\BMA.dll
+D:\Code\C#\BMA\BMA\obj\Debug\BMA.pdb
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\BMA.dll.config
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\BMA.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\BMA.pdb
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Antlr3.Runtime.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\EntityFramework.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\EntityFramework.SqlServer.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.AspNet.Identity.Core.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.AspNet.Identity.EntityFramework.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.AspNet.Identity.Owin.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Host.SystemWeb.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.Cookies.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.Facebook.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.Google.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.MicrosoftAccount.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.OAuth.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.Twitter.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Web.Infrastructure.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Newtonsoft.Json.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Owin.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.Helpers.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.Mvc.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.Optimization.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.Razor.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.WebPages.Deployment.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.WebPages.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.WebPages.Razor.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\WebGrease.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.Helpers.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.Mvc.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.Optimization.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.Razor.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.WebPages.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.WebPages.Deployment.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\System.Web.WebPages.Razor.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Newtonsoft.Json.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Antlr3.Runtime.pdb
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\EntityFramework.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\EntityFramework.SqlServer.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.AspNet.Identity.Core.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.AspNet.Identity.Owin.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.AspNet.Identity.EntityFramework.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Host.SystemWeb.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.Facebook.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.Cookies.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.OAuth.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.Google.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.Twitter.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\obj\Debug\BMA.csprojResolveAssemblyReference.cache
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\obj\Debug\BMA.dll
+E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\obj\Debug\BMA.pdb

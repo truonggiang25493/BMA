@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "Tất cả sản phẩm";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+}
+
+<section class="border-top">
+    <div class="container">
+        <div style="margin-bottom:5px;" class="page-title mrgb5x mrgt6x clearfix">
+            <h4 class="page-name">TÌM KIẾM</h4>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="property-filter clearfix">
+            <div class="filter-type mrgb6x clearfix">
+                <div style="margin-left:-45px;width:108%" class="row">
+                    <ul class="filter-form col-md-6 col-sm-5">
+                        <li>
+                            <div class="select-box col-md-6">
+                                <select class="form-control" name="dropdown">
+                                    <option value="location">Tên sản phẩm</option>
+                                    <option value="type">Nguyên liệu</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-section col-md-6">
+                                <input class="form-control" placeholder="">
+                            </div>
+                        </li>
+                    </ul>
+                    <ul style="margin-top:1px;" class="filter-values col-md-3 col-sm-3">
+                        <li>
+                            <div style="width:100%" class="filter-btn col-md-4"> <a href="#" class="filter-property">TÌM KIẾM</a> </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <ul class="filter-list clearfix">
+                     @for (int i = 0; i < 8;i++ )
+                     {    
+                        <li class="mix sale col-md-3 col-sm-4 mrgb5x" data-price="5">
+                            <div class="property-box animated out" data-delay="0" data-animation="fadeInUp">
+                                <div class="appartment-img">
+                                    <img src="@Url.Content("~/Content/Images/BakeryImages/brood-1.jpg")" class="img-responsive" alt="#" />
+                                    <div class="detail-btn"> <a href="@Url.Action("REDetail", "Realestate", new { @REID = 1})" class="sale">Chi tiết</a> </div>
+                                </div>
+                                <div class="property-text">
+                                    <div style="margin-bottom:-20px;" class="appartment-name">
+                                        <h4>Giò cháo quẩy</h4><br />                       
+                                    </div>                                 
+                                    <div class="property-price">
+                                        <h3><sup>$</sup><span>50.000</span></h3>
+                                    </div>
+                                    <div style="margin-left:60px;" class="detail-btn mrgt3x"> <a href="@Url.Action("REDetail", "Realestate", new { @REID = 1})" class="sale">Mua hàng</a> </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <div class="numbering">
+                    <ul class="pagination">
+                        <li class="active"><a href="#">01</a></li>
+                        <li><a href="#">02</a></li>
+                        <li><a href="#">03</a></li>
+                        <li><a href="#">04</a></li>
+                        <li><a href="#">05</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
