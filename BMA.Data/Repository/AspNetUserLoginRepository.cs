@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BMA.Data.Infrastructure;
+﻿using BMA.Data.Infrastructure;
 
 namespace BMA.Data.Repository
 {

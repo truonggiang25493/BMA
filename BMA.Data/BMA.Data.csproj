@@ -117,8 +117,24 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Repository\AspNetRoleRepository.cs" />
+    <Compile Include="Repository\AspNetUserClaimRepository.cs" />
     <Compile Include="Repository\AspNetUserLoginRepository.cs" />
     <Compile Include="Repository\AspNetUsersRepository.cs" />
+    <Compile Include="Repository\CategoryRepository.cs" />
+    <Compile Include="Repository\CustomerRepository.cs" />
+    <Compile Include="Repository\GuestInfoRepository.cs" />
+    <Compile Include="Repository\InputBillRepository.cs" />
+    <Compile Include="Repository\InputMaterialRepository.cs" />
+    <Compile Include="Repository\OrderItemRepository.cs" />
+    <Compile Include="Repository\OrderRepository.cs" />
+    <Compile Include="Repository\OutputBillRepository.cs" />
+    <Compile Include="Repository\ProductMarerialRepository.cs" />
+    <Compile Include="Repository\ProductRepository.cs" />
+    <Compile Include="Repository\RecipeRepository.cs" />
+    <Compile Include="Repository\StaffRepository.cs" />
+    <Compile Include="Repository\SupplierRepository.cs" />
+    <Compile Include="Repository\TaxRateRepository.cs" />
+    <Compile Include="Repository\TaxTypeRepository.cs" />
     <Compile Include="sp_helpdiagramdefinition_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
