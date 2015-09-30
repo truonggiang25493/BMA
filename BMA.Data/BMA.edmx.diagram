@@ -4,9 +4,9 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1242a36210464f27aab7feb73cd36030" Name="Diagram1">
+      <Diagram DiagramId="1242a36210464f27aab7feb73cd36030" Name="Diagram1" ZoomLevel="17">
         <EntityTypeShape EntityType="BMAModel.AspNetRole" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BMAModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.AspNetUserClaim" Width="1.875" PointX="5.25" PointY="5.25" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.AspNetUserLogin" Width="2" PointX="5.25" PointY="8" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.AspNetUser" Width="1.5" PointX="3" PointY="8.125" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Category" Width="1.5" PointX="9" PointY="14" IsExpanded="true" />
@@ -18,7 +18,7 @@
         <EntityTypeShape EntityType="BMAModel.Order" Width="1.5" PointX="8.25" PointY="8.75" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.OutputBill" Width="1.5" PointX="6" PointY="14.5" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Product" Width="1.5" PointX="11.25" PointY="13.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="BMAModel.ProductMaterial" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BMAModel.ProductMaterial" Width="1.5" PointX="0.875" PointY="5.625" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Recipe" Width="1.5" PointX="13.5" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Staff" Width="1.5" PointX="5.25" PointY="18.125" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Supplier" Width="1.5" PointX="9" PointY="5.125" IsExpanded="true" />
