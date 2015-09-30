@@ -90,7 +90,6 @@
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
     <Compile Include="Infrastructure\RepositoryBase.cs" />
-    <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="InputBill.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -117,10 +116,13 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
 <<<<<<< HEAD
+<<<<<<< HEAD
     <Compile Include="Repository\AspNetUserRepository.cs" />
 =======
     <Compile Include="Repository\AspNetUsersRepository.cs" />
 >>>>>>> master
+=======
+>>>>>>> parent of 39f3eec... Add AspNetUserRepository
     <Compile Include="sp_helpdiagramdefinition_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
