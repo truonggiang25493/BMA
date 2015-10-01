@@ -14,5 +14,7 @@ namespace BMA.Controllers
         {
             return View();
         }
+
+        //test totoi
 	}
 }
