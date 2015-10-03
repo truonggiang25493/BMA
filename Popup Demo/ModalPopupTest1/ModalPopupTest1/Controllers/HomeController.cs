@@ -4,17 +4,17 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace BMA.Controllers
+namespace ModalPopupTest1.Controllers
 {
-    public class ContactController : Controller
+    public class HomeController : Controller
     {
         //
-        // GET: /Contact/
+        // GET: /Home/
+
         public ActionResult Index()
         {
             return View();
         }
 
-        //test totoi
-	}
+    }
 }
