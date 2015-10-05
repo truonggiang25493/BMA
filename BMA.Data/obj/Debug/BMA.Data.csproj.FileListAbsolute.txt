@@ -1,5 +1,0 @@
-E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA.Data\bin\Debug\BMA.Data.dll
-E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA.Data\bin\Debug\BMA.Data.pdb
-E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA.Data\obj\Debug\BMA.Data.csprojResolveAssemblyReference.cache
-E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA.Data\obj\Debug\BMA.Data.dll
-E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA.Data\obj\Debug\BMA.Data.pdb
