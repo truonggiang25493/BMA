@@ -68,6 +68,7 @@ ul{
 li{
 	list-style:none;
 }
+
 h1,h2,h3,h4,h5,h6{
 	font-family:'Patrick Hand SC', sans-serif;
 	color:#2d2d2d;
@@ -2041,11 +2042,12 @@ input[type="checkbox"] {
 
 .popup-btn {
     margin-top:30px; 
-    margin-right:60px;
+    margin-right:80px;
     font-size:16px;
     background-color: #09b9e5;
     float: right;
     padding: 12px 26px 12px 18px;
+    border-radius:5px;
 	transform: scale(1, 1);
 }
 .popup-btn:hover {
@@ -3371,7 +3373,7 @@ td.text-right {
 /*STYLES FOR CSS POPUP*/
 
 .popup-table{
-    margin-left:50px;
+    margin-left:70px;
 }
 
 .popup-table tr{
@@ -3381,6 +3383,11 @@ td.text-right {
 .popup-table td{
     border:none;
     font-size:20px; 
+}
+
+
+h2{
+    font-family:'Patrick Hand SC';
 }
 
 .black_overlay {
@@ -3398,7 +3405,7 @@ td.text-right {
     }
 
     .white_content {
-        font-family:Arial;
+        font-family:'Patrick Hand SC';
         font-size:20px;
         display: none;
         position: fixed;
@@ -3407,10 +3414,11 @@ td.text-right {
         width: 40%;
         height: 52%;
         padding: 16px;
-        border: 5px solid orange;
+        border-top: 5px solid #ff2791;
         background-color: white;
         z-index: 1002;
         overflow: auto;
+        border-radius:9px 9px;
     }
 
 
