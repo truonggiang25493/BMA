@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "ProductDetail";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+}
+
+<section class="border-top">
+    <div class="container">
+        <div class="page-title mrgb6x mrgt6x clearfix">
+            <h4 class="page-name">Bánh hột gà xúc xích</h4>
+            <div class="tag-bar"> <a href="#"><span>your aiming holiday</span></a> </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="property-single">
+            <div class="col-md-6 no-padding col-sm-8 animated out" data-delay="0" data-animation="fadeInUp">
+                <div class="property-single-img">
+                    <img src="@Url.Content("~/Content/Images/BakeryImages/brood-1.jpg")" class="img-responsive" alt="#" />
+                    <div class="image-detail">
+                        <h5 class="place-name">Bánh hột gà xúc xích</h5>
+                        <div class="place-price"><span>$15000<sup>/cái</sup></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-4 animated out" data-delay="0" data-animation="fadeInUp">
+                <div class="property-heading property-info">
+                    <h4><span>BÁNH HỘT GÀ XÚC XÍCH</span></h4>
+                    <p style="font-size:14px;">Được làm từ những nguyên liệu thơm ngon..ngon..ngon..ngon..ngon..ngon..ngon.. và quý hiếm..hiếm..hiếm..hiếm..hiếm..hiếm..gồm xúc xích và hột gà từ đất nước Trung Quốc xa xôi..xôi..xôi..xôi..bánh mì..bánh bao</p>
+                    <div style="margin-top:103px;" class="booking-btn"> <a href="#" class="book-it" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'"><i class="fa fa-angle-right"></i>MUA HÀNG</a> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="property-details mrgt4x">
+            <div class="col-md-6 no-padding col-sm-12">
+                <div class="property-features animated out" data-delay="0" data-animation="fadeInUp">
+                    <div class="property-heading">
+                        <h4><span>NGUYÊN LIỆU</span></h4>
+                    </div>
+                    <ul class="features-name col-md-4 col-sm-4">
+                        <li><i class="fa fa-check"></i><span>Hột gà</span></li>
+                        <li><i class="fa fa-check"></i><span>Xúc xích</span></li>
+                        <li><i class="fa fa-check"></i><span>Bột gạo</span></li>
+                        <li><i class="fa fa-check"></i><span>Bột nở</span></li>
+                    </ul>
+                    <ul class="features-name col-md-4 col-sm-4">
+                        <li><i class="fa fa-check"></i><span>Muối</span></li>
+                        <li><i class="fa fa-check"></i><span>Đường</span></li>
+                        <li><i class="fa fa-check"></i><span>Bột ngọt</span></li>
+                        <li><i class="fa fa-check"></i><span>Dầu ăn</span></li>
+                    </ul>
+                    <ul style="margin-bottom:150px;" class="features-name col-md-4 col-sm-4">
+                        <li><i class="fa fa-check"></i><span>Dâu bôi trơn</span></li>
+                        <li><i class="fa fa-check"></i><span>Dầu gió</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="property-description animated out" data-delay="0" data-animation="fadeInUp">
+                    <div class="property-heading">
+                        <h4><span>GHI CHÚ</span></h4>
+                    </div>
+                    <p class="note">Sản phẩm chỉ bán trong 2 ngày 30,31 tháng 2 hàng năm !</p>
+                </div>
+            </div>
+        </div>
+        <div id="light" class="white_content">
+            <center><h2 style="color:#808080">Giò cháo quẩy</h2></center>
+            <div class="border-top"></div>
+            <br />
+            <table class="popup-table">
+                <tr>
+                    <td>Số lượng: </td>
+                    <td><input type="text" value="" placeholder="10" /></td>
+                </tr>
+                <tr>
+                    <td>Thành tiền: </td>
+                    <td>150.000 Đồng</td>
+                </tr>
+            </table>
+            <div class="popup-btn"> <a href="#" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Hủy bỏ</a> </div>
+            <div class="popup-btn"> <a href="#" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Đồng ý</a> </div>
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/CustomerCss");
+</head>
+<body>
+    <div style=""  class="top-bar">
+        <div class="container">
+            <div style="padding-bottom:15px;" class="right-bar">
+                <ul class="login">
+                    <li><i class="fa fa-shopping-cart"></i></li>
+                    <li><a href="/Cart/"><span>Giỏ Hàng (0)</span></a></li>
+                </ul>
+                <ul class="login">
+                    <li><i class="fa fa-sign-in"></i></li>
+                    <li><span><a href="javascript:void(0)" onclick="document.getElementById('lightLogin').style.display = 'block'; document.getElementById('fadeLogin').style.display = 'block'" class="sale">Đăng Nhập</a></span></li>
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="logo"><a href="index.html"><img style="width:201px;height:65px;margin-left:75px;margin-top:20px;" src="~/Content/Images/BakeryImages/logo.jpg" alt="#" /> </a></div>
+        <div class="container">
+            <div class="navigation clearfix">
+                <div class="menu">
+                    <nav class="navbar navbar-default">
+                        <div id="navbar" class="navbar-collapse collapse pull-right">
+                            <ul class="nav navbar-nav">
+                                <li>@Html.ActionLink("TRANG CHỦ", "Index", "Home")</li>
+                                <li>
+                                    <a aria-expanded="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">SẢN PHẨM</a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>@Html.ActionLink("Tất cả", "Index", "Product")</li>
+                                        <li>@Html.ActionLink("Bánh ngọt", "Cookie", "Product")</li>
+                                        <li>@Html.ActionLink("Bánh mặn", "Saltine", "Product")</li>
+                                    </ul>
+                                </li>
+                                <li>@Html.ActionLink("QUY TRÌNH ĐẶT HÀNG", "Index", "Procedure")</li>
+                                <li>@Html.ActionLink("LIÊN HỆ", "Index", "Contact")</li>                               
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div>
+        @RenderBody()
+    </div>
+    <div id="lightLogin" class="white_content">
+        <center><h2 style="color:#808080">Đăng Nhập</h2></center>
+        <div class="border-top"></div>
+        <br />
+        <table class="popup-table">
+            <tr>
+                <td>Tài Khoản: </td>
+                <td><input type="text" value="" placeholder="" /></td>
+            </tr>
+            <tr>
+                <td>Mật khẩu: </td>
+                <td><input type="password" value="" placeholder="" /></td>
+            </tr>
+        </table>
+        <div class="popup-btn"> <a href="#" onclick="document.getElementById('lightLogin').style.display = 'none'; document.getElementById('fadeLogin').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Hủy bỏ</a> </div>
+        <div class="popup-btn" style="margin-right:30px;"> <a href="#" onclick="document.getElementById('lightLogin').style.display = 'none'; document.getElementById('fadeLogin').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Đăng nhập</a> </div>
+    </div>
+    <div id="fadeLogin" class="black_overlay"></div>
+    <footer class="bg-color">
+        <div class="lower-footer">
+            <p>Bakery Management System - MGV | Copyright 2015</p>
+        </div>
+    </footer>
+    
+    @Scripts.Render("~/CustomerJs");
+</body>
+</html>

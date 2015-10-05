@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Đăng Nhập";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+}
+<section class="border-top">
+    <div class="container">
+        <div class="page-title mrgb4x mrgt6x clearfix">
+            <h4 class="page-name">ĐĂNG NHẬP</h4>
+            <div class="tag-bar"> <a href="#"><span>just get in touch</span></a> </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div style="" class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="contact-us animated out" data-delay="0" data-animation="fadeInUp">
+                    <div class="post-form row">
+                        <form id="/Account/Login" method="post" name="postreview">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>TÊN TÀI KHOẢN</label>
+                                    <input name="txtAccount" class="form-control" placeholder="Nhập tên tài khoản">
+                                </div>
+                                <div class="form-group">
+                                    <label>MẬT KHẨU</label>
+                                    <input name="txtPassword" type="password" class="form-control" placeholder="Nhập mật khẩu">
+                                </div>
+                                <div style="color:#ff0000">@ViewBag.Notify</div>
+                                <div style="margin: 40px 0px 40px 0px;" class="send-msg"><button style="width:75px; height:18px; border: none; background-color: #09b9e5; color: #fff;" type="submit">LOGIN</button></div>
+                                <div style="margin: 40px 30px 40px 0px;" class="send-msg"><button style="width:75px; height:18px; border: none; background-color: #09b9e5; color: #fff;" type="reset">NHẬP LẠI</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
