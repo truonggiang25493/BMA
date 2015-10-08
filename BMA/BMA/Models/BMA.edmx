@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AspNetRoles">
           <Key>
             <PropertyRef Name="Id" />
@@ -102,13 +102,16 @@
           <Key>
             <PropertyRef Name="InputMaterialId" />
           </Key>
-          <Property Name="InputMaterialId" Type="int" Nullable="false" />
-          <Property Name="Quantiry" Type="int" Nullable="false" />
+          <Property Name="InputMaterialId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ImportQuantity" Type="int" Nullable="false" />
+          <Property Name="RemainQuantity" Type="int" Nullable="false" />
           <Property Name="Price" Type="float" Nullable="false" />
-          <Property Name="InputMaterialImportDate" Type="datetime" Nullable="false" />
-          <Property Name="InputMaterialExpiryDate" Type="datetime" Nullable="false" />
+          <Property Name="InputMaterialImportDate" Type="date" Nullable="false" />
+          <Property Name="InputMaterialExpiryDate" Type="date" Nullable="false" />
           <Property Name="InputMaterialNote" Type="nvarchar" MaxLength="500" />
           <Property Name="InputBillId" Type="int" Nullable="false" />
+          <Property Name="ProductMaterialId" Type="int" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="MaterialInOrderItem">
           <Key>
@@ -117,6 +120,7 @@
           </Key>
           <Property Name="OrderItemId" Type="int" Nullable="false" />
           <Property Name="InputMarerialId" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderItem">
           <Key>
@@ -129,21 +133,36 @@
           <Property Name="RealPrice" Type="float" Nullable="false" />
           <Property Name="Amount" Type="float" Nullable="false" />
           <Property Name="TaxAmount" Type="float" Nullable="false" />
-          <Property Name="TaxRateId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
             <PropertyRef Name="OrderId" />
           </Key>
-          <Property Name="OrderId" Type="int" Nullable="false" />
+          <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="DeliveryTime" Type="date" />
           <Property Name="ApproveTime" Type="datetime" />
           <Property Name="OrderNote" Type="nvarchar" MaxLength="200" />
           <Property Name="DepositAmount" Type="int" Nullable="false" />
+          <Property Name="ConfirmDate" Type="date" />
           <Property Name="CustomerUserId" Type="nvarchar" MaxLength="128" />
           <Property Name="StaffApproveUserId" Type="nvarchar" MaxLength="128" />
+          <Property Name="Flag" Type="bit" Nullable="false" />
           <Property Name="OutputBillId" Type="int" Nullable="false" />
+          <Property Name="OrderStatus" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="OrderCode" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="PreviousOrderId" Type="int" />
+          <Property Name="TotalValue" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OtherExpense">
+          <Key>
+            <PropertyRef Name="ExpenseId" />
+          </Key>
+          <Property Name="ExpenseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="MonthTime" Type="int" />
+          <Property Name="YearTime" Type="int" />
         </EntityType>
         <EntityType Name="OutputBill">
           <Key>
@@ -173,11 +192,12 @@
         </EntityType>
         <EntityType Name="ProductMaterial">
           <Key>
-            <PropertyRef Name="ProductMaterialID" />
+            <PropertyRef Name="ProductMaterialId" />
           </Key>
-          <Property Name="ProductMaterialID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductMaterialId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductMaterialName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="ProductMaterialUnit" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CurrentQuantity" Type="int" />
         </EntityType>
         <EntityType Name="Recipe">
           <Key>
@@ -208,6 +228,7 @@
           <Property Name="SupplierPhoneNumber" Type="char" MaxLength="12" />
           <Property Name="SupplierEmail" Type="nvarchar" MaxLength="50" />
           <Property Name="SupplierTaxCode" Type="char" MaxLength="20" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -233,7 +254,7 @@
           <Key>
             <PropertyRef Name="TaxTypeID" />
           </Key>
-          <Property Name="TaxTypeID" Type="int" Nullable="false" />
+          <Property Name="TaxTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TaxTypeName" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <Association Name="FK_AspNetUserClaims_AspNetUsers_UserId">
@@ -296,6 +317,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_AspNetUsers_Staff_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Category_Category_CategoryId">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Category1" Type="Self.Category" Multiplicity="0..1" />
@@ -341,6 +374,18 @@
             </Principal>
             <Dependent Role="InputMaterial">
               <PropertyRef Name="InputBillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InputMaterial_ProductMaterial_ProductMaterialId">
+          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="0..1" />
+          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Principal>
+            <Dependent Role="InputMaterial">
+              <PropertyRef Name="ProductMaterialId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -392,18 +437,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OrderItem_TaxRate_TaxRateId">
-          <End Role="TaxRate" Type="Self.TaxRate" Multiplicity="1" />
-          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TaxRate">
-              <PropertyRef Name="TaxRateId" />
-            </Principal>
-            <Dependent Role="OrderItem">
-              <PropertyRef Name="TaxRateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Orders_AspNetUsers_CustomerUserId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -425,6 +458,18 @@
             </Principal>
             <Dependent Role="Orders">
               <PropertyRef Name="StaffApproveUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Orders">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="Orders1" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="Orders1">
+              <PropertyRef Name="PreviousOrderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -469,22 +514,10 @@
           <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProductMaterial">
-              <PropertyRef Name="ProductMaterialID" />
+              <PropertyRef Name="ProductMaterialId" />
             </Principal>
             <Dependent Role="Recipe">
               <PropertyRef Name="ProductMaterialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Staff_AspNetUsers">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
-          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Staff">
-              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -514,6 +547,7 @@
           <EntitySet Name="MaterialInOrderItem" EntityType="Self.MaterialInOrderItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderItem" EntityType="Self.OrderItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OtherExpense" EntityType="Self.OtherExpense" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OutputBill" EntityType="Self.OutputBill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductMaterial" EntityType="Self.ProductMaterial" Schema="dbo" store:Type="Tables" />
@@ -543,6 +577,10 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Customer" EntitySet="Customer" />
           </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_Staff_UserId" Association="Self.FK_AspNetUsers_Staff_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Staff" EntitySet="Staff" />
+          </AssociationSet>
           <AssociationSet Name="FK_Category_Category_CategoryId" Association="Self.FK_Category_Category_CategoryId">
             <End Role="Category" EntitySet="Category" />
             <End Role="Category1" EntitySet="Category" />
@@ -557,6 +595,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_InputMaterial_InputBill_InputBillId" Association="Self.FK_InputMaterial_InputBill_InputBillId">
             <End Role="InputBill" EntitySet="InputBill" />
+            <End Role="InputMaterial" EntitySet="InputMaterial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InputMaterial_ProductMaterial_ProductMaterialId" Association="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId">
+            <End Role="ProductMaterial" EntitySet="ProductMaterial" />
             <End Role="InputMaterial" EntitySet="InputMaterial" />
           </AssociationSet>
           <AssociationSet Name="FK_MaterialInOrderItem_InputMaterial_InputMaterialId" Association="Self.FK_MaterialInOrderItem_InputMaterial_InputMaterialId">
@@ -575,10 +617,6 @@
             <End Role="Product" EntitySet="Product" />
             <End Role="OrderItem" EntitySet="OrderItem" />
           </AssociationSet>
-          <AssociationSet Name="FK_OrderItem_TaxRate_TaxRateId" Association="Self.FK_OrderItem_TaxRate_TaxRateId">
-            <End Role="TaxRate" EntitySet="TaxRate" />
-            <End Role="OrderItem" EntitySet="OrderItem" />
-          </AssociationSet>
           <AssociationSet Name="FK_Orders_AspNetUsers_CustomerUserId" Association="Self.FK_Orders_AspNetUsers_CustomerUserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Orders" EntitySet="Orders" />
@@ -586,6 +624,10 @@
           <AssociationSet Name="FK_Orders_AspNetUsers_StaffApproveUserId" Association="Self.FK_Orders_AspNetUsers_StaffApproveUserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Orders" Association="Self.FK_Orders_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Orders1" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_OutputBill_OutputBillId" Association="Self.FK_Orders_OutputBill_OutputBillId">
             <End Role="OutputBill" EntitySet="OutputBill" />
@@ -603,20 +645,15 @@
             <End Role="ProductMaterial" EntitySet="ProductMaterial" />
             <End Role="Recipe" EntitySet="Recipe" />
           </AssociationSet>
-          <AssociationSet Name="FK_Staff_AspNetUsers" Association="Self.FK_Staff_AspNetUsers">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="Staff" EntitySet="Staff" />
-          </AssociationSet>
           <AssociationSet Name="FK_TaxRate_TaxType_TaxRateId" Association="Self.FK_TaxRate_TaxType_TaxRateId">
             <End Role="TaxType" EntitySet="TaxType" />
             <End Role="TaxRate" EntitySet="TaxRate" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="BMAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="BMAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="AspNetRole">
           <Key>
             <PropertyRef Name="Id" />
@@ -666,9 +703,9 @@
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_AspNetUserClaims_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_AspNetUserLogins_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
           <NavigationProperty Name="Customers" Relationship="Self.FK_AspNetUsers_Customer_UserId" FromRole="AspNetUsers" ToRole="Customer" />
+          <NavigationProperty Name="Staffs" Relationship="Self.FK_AspNetUsers_Staff_UserId" FromRole="AspNetUsers" ToRole="Staff" />
           <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_AspNetUsers_CustomerUserId" FromRole="AspNetUsers" ToRole="Orders" />
           <NavigationProperty Name="Orders1" Relationship="Self.FK_Orders_AspNetUsers_StaffApproveUserId" FromRole="AspNetUsers" ToRole="Orders" />
-          <NavigationProperty Name="Staffs" Relationship="Self.FK_Staff_AspNetUsers" FromRole="AspNetUsers" ToRole="Staff" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
         </EntityType>
         <EntityType Name="Category">
@@ -723,15 +760,30 @@
           <Key>
             <PropertyRef Name="InputMaterialId" />
           </Key>
-          <Property Name="InputMaterialId" Type="Int32" Nullable="false" />
-          <Property Name="Quantiry" Type="Int32" Nullable="false" />
+          <Property Name="InputMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ImportQuantity" Type="Int32" Nullable="false" />
+          <Property Name="RemainQuantity" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Double" Nullable="false" />
-          <Property Name="InputMaterialImportDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="InputMaterialExpiryDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="InputMaterialImportDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="InputMaterialExpiryDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="InputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="InputBillId" Type="Int32" Nullable="false" />
+          <Property Name="ProductMaterialId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="InputBill" Relationship="Self.FK_InputMaterial_InputBill_InputBillId" FromRole="InputMaterial" ToRole="InputBill" />
-          <NavigationProperty Name="OrderItems" Relationship="Self.MaterialInOrderItem" FromRole="InputMaterial" ToRole="OrderItem" />
+          <NavigationProperty Name="ProductMaterial" Relationship="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="InputMaterial" ToRole="ProductMaterial" />
+          <NavigationProperty Name="MaterialInOrderItems" Relationship="Self.FK_MaterialInOrderItem_InputMaterial_InputMaterialId" FromRole="InputMaterial" ToRole="MaterialInOrderItem" />
+        </EntityType>
+        <EntityType Name="MaterialInOrderItem">
+          <Key>
+            <PropertyRef Name="OrderItemId" />
+            <PropertyRef Name="InputMarerialId" />
+          </Key>
+          <Property Name="OrderItemId" Type="Int32" Nullable="false" />
+          <Property Name="InputMarerialId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="InputMaterial" Relationship="Self.FK_MaterialInOrderItem_InputMaterial_InputMaterialId" FromRole="MaterialInOrderItem" ToRole="InputMaterial" />
+          <NavigationProperty Name="OrderItem" Relationship="Self.FK_MaterialInOrderItem_InputMaterial_OrderID" FromRole="MaterialInOrderItem" ToRole="OrderItem" />
         </EntityType>
         <EntityType Name="OrderItem">
           <Key>
@@ -744,30 +796,46 @@
           <Property Name="RealPrice" Type="Double" Nullable="false" />
           <Property Name="Amount" Type="Double" Nullable="false" />
           <Property Name="TaxAmount" Type="Double" Nullable="false" />
-          <Property Name="TaxRateId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MaterialInOrderItems" Relationship="Self.FK_MaterialInOrderItem_InputMaterial_OrderID" FromRole="OrderItem" ToRole="MaterialInOrderItem" />
           <NavigationProperty Name="Order" Relationship="Self.FK_OrderItem_Orders_OrderId" FromRole="OrderItem" ToRole="Orders" />
           <NavigationProperty Name="Product" Relationship="Self.FK_OrderItem_Product_ProductId" FromRole="OrderItem" ToRole="Product" />
-          <NavigationProperty Name="TaxRate" Relationship="Self.FK_OrderItem_TaxRate_TaxRateId" FromRole="OrderItem" ToRole="TaxRate" />
-          <NavigationProperty Name="InputMaterials" Relationship="Self.MaterialInOrderItem" FromRole="OrderItem" ToRole="InputMaterial" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
             <PropertyRef Name="OrderId" />
           </Key>
-          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DeliveryTime" Type="DateTime" Precision="0" />
           <Property Name="ApproveTime" Type="DateTime" Precision="3" />
           <Property Name="OrderNote" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="DepositAmount" Type="Int32" Nullable="false" />
+          <Property Name="ConfirmDate" Type="DateTime" Precision="0" />
           <Property Name="CustomerUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="StaffApproveUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Flag" Type="Boolean" Nullable="false" />
           <Property Name="OutputBillId" Type="Int32" Nullable="false" />
+          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.FK_Orders_AspNetUsers_CustomerUserId" FromRole="Orders" ToRole="AspNetUsers" />
           <NavigationProperty Name="AspNetUser1" Relationship="Self.FK_Orders_AspNetUsers_StaffApproveUserId" FromRole="Orders" ToRole="AspNetUsers" />
           <NavigationProperty Name="GuestInfoes" Relationship="Self.FK_GuestInfo_Orders_OrderId" FromRole="Orders" ToRole="GuestInfo" />
           <NavigationProperty Name="OrderItems" Relationship="Self.FK_OrderItem_Orders_OrderId" FromRole="Orders" ToRole="OrderItem" />
           <NavigationProperty Name="OutputBill" Relationship="Self.FK_Orders_OutputBill_OutputBillId" FromRole="Orders" ToRole="OutputBill" />
+          <Property Name="OrderCode" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="PreviousOrderId" Type="Int32" />
+          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_Orders" FromRole="Order" ToRole="Order1" />
+          <NavigationProperty Name="Order1" Relationship="BMAModel.FK_Orders_Orders" FromRole="Order1" ToRole="Order" />
+          <Property Name="TotalValue" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OtherExpense">
+          <Key>
+            <PropertyRef Name="ExpenseId" />
+          </Key>
+          <Property Name="ExpenseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="MonthTime" Type="Int32" />
+          <Property Name="YearTime" Type="Int32" />
         </EntityType>
         <EntityType Name="OutputBill">
           <Key>
@@ -801,11 +869,13 @@
         </EntityType>
         <EntityType Name="ProductMaterial">
           <Key>
-            <PropertyRef Name="ProductMaterialID" />
+            <PropertyRef Name="ProductMaterialId" />
           </Key>
-          <Property Name="ProductMaterialID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProductMaterialName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProductMaterialUnit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CurrentQuantity" Type="Int32" />
+          <NavigationProperty Name="InputMaterials" Relationship="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="InputMaterial" />
           <NavigationProperty Name="Recipes" Relationship="Self.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="Recipe" />
         </EntityType>
         <EntityType Name="Recipe">
@@ -828,7 +898,7 @@
           <Property Name="StaffAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="StaffPhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_Staff_AspNetUsers" FromRole="Staff" ToRole="AspNetUsers" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_AspNetUsers_Staff_UserId" FromRole="Staff" ToRole="AspNetUsers" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -840,17 +910,8 @@
           <Property Name="SupplierPhoneNumber" Type="String" MaxLength="12" FixedLength="true" Unicode="false" />
           <Property Name="SupplierEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SupplierTaxCode" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="InputBills" Relationship="Self.FK_InputBill_Supplier_SupplierId" FromRole="Supplier" ToRole="InputBill" />
-        </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="TaxRate">
           <Key>
@@ -861,14 +922,13 @@
           <Property Name="EndDate" Type="DateTime" Precision="0" />
           <Property Name="TaxRateValue" Type="Double" Nullable="false" />
           <Property Name="TaxTypeId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="OrderItems" Relationship="Self.FK_OrderItem_TaxRate_TaxRateId" FromRole="TaxRate" ToRole="OrderItem" />
           <NavigationProperty Name="TaxType" Relationship="Self.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxRate" ToRole="TaxType" />
         </EntityType>
         <EntityType Name="TaxType">
           <Key>
             <PropertyRef Name="TaxTypeID" />
           </Key>
-          <Property Name="TaxTypeID" Type="Int32" Nullable="false" />
+          <Property Name="TaxTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TaxTypeName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="TaxRates" Relationship="Self.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxType" ToRole="TaxRate" />
         </EntityType>
@@ -908,6 +968,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_AspNetUsers_Staff_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_AspNetUsers_CustomerUserId">
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="0..1" />
           <End Role="Orders" Type="Self.Order" Multiplicity="*" />
@@ -929,18 +1001,6 @@
             </Principal>
             <Dependent Role="Orders">
               <PropertyRef Name="StaffApproveUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Staff_AspNetUsers">
-          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
-          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Staff">
-              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1004,6 +1064,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_InputMaterial_ProductMaterial_ProductMaterialId">
+          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="0..1" />
+          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Principal>
+            <Dependent Role="InputMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MaterialInOrderItem_InputMaterial_InputMaterialId">
+          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="1" />
+          <End Role="MaterialInOrderItem" Type="Self.MaterialInOrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InputMaterial">
+              <PropertyRef Name="InputMaterialId" />
+            </Principal>
+            <Dependent Role="MaterialInOrderItem">
+              <PropertyRef Name="InputMarerialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MaterialInOrderItem_InputMaterial_OrderID">
+          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="1" />
+          <End Role="MaterialInOrderItem" Type="Self.MaterialInOrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItem">
+              <PropertyRef Name="OrderItemId" />
+            </Principal>
+            <Dependent Role="MaterialInOrderItem">
+              <PropertyRef Name="OrderItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_OrderItem_Orders_OrderId">
           <End Role="Orders" Type="Self.Order" Multiplicity="1" />
           <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="*" />
@@ -1025,18 +1121,6 @@
             </Principal>
             <Dependent Role="OrderItem">
               <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderItem_TaxRate_TaxRateId">
-          <End Role="TaxRate" Type="Self.TaxRate" Multiplicity="1" />
-          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TaxRate">
-              <PropertyRef Name="TaxRateId" />
-            </Principal>
-            <Dependent Role="OrderItem">
-              <PropertyRef Name="TaxRateId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1069,7 +1153,7 @@
           <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProductMaterial">
-              <PropertyRef Name="ProductMaterialID" />
+              <PropertyRef Name="ProductMaterialId" />
             </Principal>
             <Dependent Role="Recipe">
               <PropertyRef Name="ProductMaterialId" />
@@ -1092,10 +1176,6 @@
           <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
         </Association>
-        <Association Name="MaterialInOrderItem">
-          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="*" />
-          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="*" />
-        </Association>
         <EntityContainer Name="BMAEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
@@ -1106,15 +1186,16 @@
           <EntitySet Name="GuestInfoes" EntityType="Self.GuestInfo" />
           <EntitySet Name="InputBills" EntityType="Self.InputBill" />
           <EntitySet Name="InputMaterials" EntityType="Self.InputMaterial" />
+          <EntitySet Name="MaterialInOrderItems" EntityType="Self.MaterialInOrderItem" />
           <EntitySet Name="OrderItems" EntityType="Self.OrderItem" />
           <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="OtherExpenses" EntityType="Self.OtherExpense" />
           <EntitySet Name="OutputBills" EntityType="Self.OutputBill" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="ProductMaterials" EntityType="Self.ProductMaterial" />
           <EntitySet Name="Recipes" EntityType="Self.Recipe" />
           <EntitySet Name="Staffs" EntityType="Self.Staff" />
           <EntitySet Name="Suppliers" EntityType="Self.Supplier" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="TaxRates" EntityType="Self.TaxRate" />
           <EntitySet Name="TaxTypes" EntityType="Self.TaxType" />
           <AssociationSet Name="FK_AspNetUserClaims_AspNetUsers_UserId" Association="Self.FK_AspNetUserClaims_AspNetUsers_UserId">
@@ -1129,6 +1210,10 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Customer" EntitySet="Customers" />
           </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_Staff_UserId" Association="Self.FK_AspNetUsers_Staff_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Staff" EntitySet="Staffs" />
+          </AssociationSet>
           <AssociationSet Name="FK_Orders_AspNetUsers_CustomerUserId" Association="Self.FK_Orders_AspNetUsers_CustomerUserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Orders" EntitySet="Orders" />
@@ -1136,10 +1221,6 @@
           <AssociationSet Name="FK_Orders_AspNetUsers_StaffApproveUserId" Association="Self.FK_Orders_AspNetUsers_StaffApproveUserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Staff_AspNetUsers" Association="Self.FK_Staff_AspNetUsers">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="Staff" EntitySet="Staffs" />
           </AssociationSet>
           <AssociationSet Name="FK_Category_Category_CategoryId" Association="Self.FK_Category_Category_CategoryId">
             <End Role="Category" EntitySet="Categories" />
@@ -1161,16 +1242,24 @@
             <End Role="InputBill" EntitySet="InputBills" />
             <End Role="InputMaterial" EntitySet="InputMaterials" />
           </AssociationSet>
+          <AssociationSet Name="FK_InputMaterial_ProductMaterial_ProductMaterialId" Association="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId">
+            <End Role="ProductMaterial" EntitySet="ProductMaterials" />
+            <End Role="InputMaterial" EntitySet="InputMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MaterialInOrderItem_InputMaterial_InputMaterialId" Association="Self.FK_MaterialInOrderItem_InputMaterial_InputMaterialId">
+            <End Role="InputMaterial" EntitySet="InputMaterials" />
+            <End Role="MaterialInOrderItem" EntitySet="MaterialInOrderItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MaterialInOrderItem_InputMaterial_OrderID" Association="Self.FK_MaterialInOrderItem_InputMaterial_OrderID">
+            <End Role="OrderItem" EntitySet="OrderItems" />
+            <End Role="MaterialInOrderItem" EntitySet="MaterialInOrderItems" />
+          </AssociationSet>
           <AssociationSet Name="FK_OrderItem_Orders_OrderId" Association="Self.FK_OrderItem_Orders_OrderId">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderItem" EntitySet="OrderItems" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderItem_Product_ProductId" Association="Self.FK_OrderItem_Product_ProductId">
             <End Role="Product" EntitySet="Products" />
-            <End Role="OrderItem" EntitySet="OrderItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OrderItem_TaxRate_TaxRateId" Association="Self.FK_OrderItem_TaxRate_TaxRateId">
-            <End Role="TaxRate" EntitySet="TaxRates" />
             <End Role="OrderItem" EntitySet="OrderItems" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_OutputBill_OutputBillId" Association="Self.FK_Orders_OutputBill_OutputBillId">
@@ -1193,11 +1282,34 @@
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <AssociationSet Name="MaterialInOrderItem" Association="Self.MaterialInOrderItem">
-            <End Role="InputMaterial" EntitySet="InputMaterials" />
-            <End Role="OrderItem" EntitySet="OrderItems" />
+          <EntitySet Name="sysdiagrams" EntityType="BMAModel.sysdiagram" />
+          <AssociationSet Name="FK_Orders_Orders" Association="BMAModel.FK_Orders_Orders">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="Order1" EntitySet="Orders" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_Orders_Orders">
+          <End Type="BMAModel.Order" Role="Order" Multiplicity="0..1" />
+          <End Type="BMAModel.Order" Role="Order1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="Order1">
+              <PropertyRef Name="PreviousOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1299,12 +1411,24 @@
             <EntityTypeMapping TypeName="BMAModel.InputMaterial">
               <MappingFragment StoreEntitySet="InputMaterial">
                 <ScalarProperty Name="InputMaterialId" ColumnName="InputMaterialId" />
-                <ScalarProperty Name="Quantiry" ColumnName="Quantiry" />
+                <ScalarProperty Name="ImportQuantity" ColumnName="ImportQuantity" />
+                <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="InputMaterialImportDate" ColumnName="InputMaterialImportDate" />
                 <ScalarProperty Name="InputMaterialExpiryDate" ColumnName="InputMaterialExpiryDate" />
                 <ScalarProperty Name="InputMaterialNote" ColumnName="InputMaterialNote" />
                 <ScalarProperty Name="InputBillId" ColumnName="InputBillId" />
+                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MaterialInOrderItems">
+            <EntityTypeMapping TypeName="BMAModel.MaterialInOrderItem">
+              <MappingFragment StoreEntitySet="MaterialInOrderItem">
+                <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
+                <ScalarProperty Name="InputMarerialId" ColumnName="InputMarerialId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1318,22 +1442,38 @@
                 <ScalarProperty Name="RealPrice" ColumnName="RealPrice" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
-                <ScalarProperty Name="TaxRateId" ColumnName="TaxRateId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="BMAModel.Order">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="TotalValue" ColumnName="TotalValue" />
+                <ScalarProperty Name="PreviousOrderId" ColumnName="PreviousOrderId" />
+                <ScalarProperty Name="OrderCode" ColumnName="OrderCode" />
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="DeliveryTime" ColumnName="DeliveryTime" />
                 <ScalarProperty Name="ApproveTime" ColumnName="ApproveTime" />
                 <ScalarProperty Name="OrderNote" ColumnName="OrderNote" />
                 <ScalarProperty Name="DepositAmount" ColumnName="DepositAmount" />
+                <ScalarProperty Name="ConfirmDate" ColumnName="ConfirmDate" />
                 <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
                 <ScalarProperty Name="StaffApproveUserId" ColumnName="StaffApproveUserId" />
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
                 <ScalarProperty Name="OutputBillId" ColumnName="OutputBillId" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OtherExpenses">
+            <EntityTypeMapping TypeName="BMAModel.OtherExpense">
+              <MappingFragment StoreEntitySet="OtherExpense">
+                <ScalarProperty Name="ExpenseId" ColumnName="ExpenseId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="MonthTime" ColumnName="MonthTime" />
+                <ScalarProperty Name="YearTime" ColumnName="YearTime" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1368,9 +1508,10 @@
           <EntitySetMapping Name="ProductMaterials">
             <EntityTypeMapping TypeName="BMAModel.ProductMaterial">
               <MappingFragment StoreEntitySet="ProductMaterial">
-                <ScalarProperty Name="ProductMaterialID" ColumnName="ProductMaterialID" />
+                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
                 <ScalarProperty Name="ProductMaterialName" ColumnName="ProductMaterialName" />
                 <ScalarProperty Name="ProductMaterialUnit" ColumnName="ProductMaterialUnit" />
+                <ScalarProperty Name="CurrentQuantity" ColumnName="CurrentQuantity" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1403,17 +1544,7 @@
                 <ScalarProperty Name="SupplierPhoneNumber" ColumnName="SupplierPhoneNumber" />
                 <ScalarProperty Name="SupplierEmail" ColumnName="SupplierEmail" />
                 <ScalarProperty Name="SupplierTaxCode" ColumnName="SupplierTaxCode" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="BMAModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1444,14 +1575,17 @@
               <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="MaterialInOrderItem" TypeName="BMAModel.MaterialInOrderItem" StoreEntitySet="MaterialInOrderItem">
-            <EndProperty Name="InputMaterial">
-              <ScalarProperty Name="InputMaterialId" ColumnName="InputMarerialId" />
-            </EndProperty>
-            <EndProperty Name="OrderItem">
-              <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
-            </EndProperty>
-          </AssociationSetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="BMAModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

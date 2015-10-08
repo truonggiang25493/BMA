@@ -1,0 +1,75 @@
+﻿@model System.Collections.Generic.List<BMA.Models.Order>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+<div class="box">
+    <!-- box-header -->
+    <div class="box-header">
+        <h3 class="box-title">Danh sách đơn hàng</h3>
+        <div class="box-tools">
+            <div class="input-group" style="width: 150px;">
+                <input type="text" name="table_search" class="form-control input-sm pull-right" placeholder="Tìm kiếm">
+                <div class="input-group-btn">
+                    <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- box-body -->
+    <div class="box-body">
+        <table id="example2" class="table table-hover table-bordered">
+            <tr>
+                <th>STT</th>
+                <th>Mã đơn hàng</th>
+                <th>Thời gian đơn hàng</th>
+                <th>Tổng giá trị</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@Model[i].OrderCode</td>
+                    <td>@Model[i].CreateTime</td>
+                    <td>@Model[i].TotalValue</td>
+                    <td>@Model[i].OrderStatus</td>
+                    <td>
+                        @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId }) |
+                        @Html.ActionLink("Sửa", "Edit", new { id = Model[i].OrderId }) |
+                        @Html.ActionLink("Hủy", "Delete", new { id = Model[i].OrderId })
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@Model[i].OrderCode</td>
+                    <td>@Model[i].CreateTime</td>
+                    <td>@Model[i].TotalValue</td>
+                    <td>@Model[i].OrderStatus</td>
+                    <td>
+                        @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId }) |
+                        @Html.ActionLink("Sửa", "Edit", new { id = Model[i].OrderId }) |
+                        @Html.ActionLink("Hủy", "Delete", new { id = Model[i].OrderId })
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@Model[i].OrderCode</td>
+                    <td>@Model[i].CreateTime</td>
+                    <td>@Model[i].TotalValue</td>
+                    <td>@Model[i].OrderStatus</td>
+                    <td>
+                        @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId })  |
+                        @Html.ActionLink("Sửa", "Edit", new { id = Model[i].OrderId }) |
+                        @Html.ActionLink("Hủy", "Delete", new { id = Model[i].OrderId })
+
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

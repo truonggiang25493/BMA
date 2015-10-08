@@ -14,18 +14,12 @@ namespace BMA.Models
     
     public partial class TaxRate
     {
-        public TaxRate()
-        {
-            this.OrderItems = new HashSet<OrderItem>();
-        }
-    
         public int TaxRateId { get; set; }
         public System.DateTime BeginDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
         public double TaxRateValue { get; set; }
         public int TaxTypeId { get; set; }
     
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual TaxType TaxType { get; set; }
     }
 }

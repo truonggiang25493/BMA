@@ -14,6 +14,7 @@ namespace BMA.Models
     
     public partial class Supplier
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Supplier()
         {
             this.InputBills = new HashSet<InputBill>();
@@ -25,7 +26,9 @@ namespace BMA.Models
         public string SupplierPhoneNumber { get; set; }
         public string SupplierEmail { get; set; }
         public string SupplierTaxCode { get; set; }
+        public bool IsActive { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InputBill> InputBills { get; set; }
     }
 }
