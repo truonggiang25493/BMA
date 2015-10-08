@@ -257,6 +257,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
     <Content Include="Content\CustomerLayout\CSS\animate.css" />
     <Content Include="Content\CustomerLayout\CSS\bootstrap.css" />
     <Content Include="Content\CustomerLayout\CSS\owl.carousel.css" />
