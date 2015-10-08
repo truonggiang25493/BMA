@@ -14,9 +14,10 @@ namespace BMA.Models
     
     public partial class OrderItem
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OrderItem()
         {
-            this.InputMaterials = new HashSet<InputMaterial>();
+            this.MaterialInOrderItems = new HashSet<MaterialInOrderItem>();
         }
     
         public int OrderItemId { get; set; }
@@ -26,11 +27,10 @@ namespace BMA.Models
         public double RealPrice { get; set; }
         public double Amount { get; set; }
         public double TaxAmount { get; set; }
-        public int TaxRateId { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MaterialInOrderItem> MaterialInOrderItems { get; set; }
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }
-        public virtual TaxRate TaxRate { get; set; }
-        public virtual ICollection<InputMaterial> InputMaterials { get; set; }
     }
 }

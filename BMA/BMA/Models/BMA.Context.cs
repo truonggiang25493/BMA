@@ -34,16 +34,18 @@ namespace BMA.Models
         public virtual DbSet<GuestInfo> GuestInfoes { get; set; }
         public virtual DbSet<InputBill> InputBills { get; set; }
         public virtual DbSet<InputMaterial> InputMaterials { get; set; }
+        public virtual DbSet<MaterialInOrderItem> MaterialInOrderItems { get; set; }
         public virtual DbSet<OrderItem> OrderItems { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OtherExpense> OtherExpenses { get; set; }
         public virtual DbSet<OutputBill> OutputBills { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductMaterial> ProductMaterials { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<Staff> Staffs { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TaxRate> TaxRates { get; set; }
         public virtual DbSet<TaxType> TaxTypes { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }
 }

@@ -24,9 +24,18 @@ namespace BMA
                       "~/Scripts/respond.js"));
 
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/AdminLTE/css").Include(
+                "~/Content/AdminLayout/CSS/_all-skins.min.css",
+                "~/Content/AdminLayout/CSS/AdminLTE.min.css",
+                "~/Content/AdminLayout/CSS/bootstrap.min.css"));
+            bundles.Add(new ScriptBundle("~/AdminLTE/js").Include(
+                      "~/Content/AdminLayout/JS/app.js",
+                      "~/Content/AdminLayout/JS/bootstrap.min.js",
+                     "~/Content/AdminLayout/JS/demo.js",
+                     "~/Content/AdminLayout/JS/fastclick.min.js",
+                     "~/Content/AdminLayout/JS/jQuery-2.1.4.min.js",
+                     "~/Content/AdminLayout/JS/jquery.dataTables.min.js",
+                     "~/Content/AdminLayout/JS/jquery.slimscroll.min.js"));
 
             bundles.Add(new StyleBundle("~/CustomerCss").Include(
                      "~/Content/CustomerLayout/CSS/animate.css",
