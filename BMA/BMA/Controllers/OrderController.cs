@@ -30,7 +30,8 @@ namespace BMA.Controllers
         // GET: Detail
         public ActionResult Detail(int id)
         {
-            return View();
+            Order order = db.Orders.FirstOrDefault(m => m.OrderId == id);
+            return View(order);
         }
 
         // GET: Delete

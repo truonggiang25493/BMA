@@ -14,10 +14,10 @@ namespace BMA.Models
     
     public partial class OtherExpense
     {
-        public int ExpenseId { get; set; }
-        public string Name { get; set; }
-        public int Amount { get; set; }
-        public Nullable<int> MonthTime { get; set; }
-        public Nullable<int> YearTime { get; set; }
+        public int OtherExpenseId { get; set; }
+        public string OtherExpenseName { get; set; }
+        public int OtherExpenseAmount { get; set; }
+        public Nullable<int> OtherExpenseMonthTime { get; set; }
+        public Nullable<int> OtherExpenseYearTime { get; set; }
     }
 }

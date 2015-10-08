@@ -46,6 +46,5 @@ namespace BMA.Models
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<TaxRate> TaxRates { get; set; }
         public virtual DbSet<TaxType> TaxTypes { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }
 }

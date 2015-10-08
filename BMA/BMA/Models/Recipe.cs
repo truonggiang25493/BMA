@@ -16,7 +16,7 @@ namespace BMA.Models
     {
         public int ProductId { get; set; }
         public int ProductMaterialId { get; set; }
-        public double Quantity { get; set; }
+        public double RecipeQuantity { get; set; }
     
         public virtual Product Product { get; set; }
         public virtual ProductMaterial ProductMaterial { get; set; }

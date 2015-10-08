@@ -23,7 +23,7 @@ namespace BMA.Models
         public int InputMaterialId { get; set; }
         public int ImportQuantity { get; set; }
         public int RemainQuantity { get; set; }
-        public double Price { get; set; }
+        public double InputMaterialPrice { get; set; }
         public System.DateTime InputMaterialImportDate { get; set; }
         public System.DateTime InputMaterialExpiryDate { get; set; }
         public string InputMaterialNote { get; set; }

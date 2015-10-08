@@ -16,7 +16,7 @@ namespace BMA.Models
     {
         public int OrderItemId { get; set; }
         public int InputMarerialId { get; set; }
-        public int Quantity { get; set; }
+        public int MaterialInOrderItemQuantity { get; set; }
     
         public virtual InputMaterial InputMaterial { get; set; }
         public virtual OrderItem OrderItem { get; set; }

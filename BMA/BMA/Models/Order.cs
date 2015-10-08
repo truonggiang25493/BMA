@@ -23,6 +23,7 @@ namespace BMA.Models
         }
     
         public int OrderId { get; set; }
+        public string OrderCode { get; set; }
         public System.DateTime CreateTime { get; set; }
         public Nullable<System.DateTime> DeliveryTime { get; set; }
         public Nullable<System.DateTime> ApproveTime { get; set; }
@@ -31,10 +32,10 @@ namespace BMA.Models
         public Nullable<System.DateTime> ConfirmDate { get; set; }
         public string CustomerUserId { get; set; }
         public string StaffApproveUserId { get; set; }
+        public bool IsStaffEdit { get; set; }
         public bool Flag { get; set; }
-        public int OutputBillId { get; set; }
+        public Nullable<int> OutputBillId { get; set; }
         public string OrderStatus { get; set; }
-        public string OrderCode { get; set; }
         public Nullable<int> PreviousOrderId { get; set; }
         public int TotalValue { get; set; }
     
@@ -44,9 +45,9 @@ namespace BMA.Models
         public virtual ICollection<GuestInfo> GuestInfoes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderItem> OrderItems { get; set; }
-        public virtual OutputBill OutputBill { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders1 { get; set; }
         public virtual Order Order1 { get; set; }
+        public virtual OutputBill OutputBill { get; set; }
     }
 }

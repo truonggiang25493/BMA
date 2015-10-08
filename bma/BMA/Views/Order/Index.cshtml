@@ -1,75 +1,66 @@
-﻿@model System.Collections.Generic.List<BMA.Models.Order>
+﻿@using System.Globalization
+@model List<BMA.Models.Order>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Danh sách đơn hàng";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>Danh sách đơn hàng</h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="box">
+        <!-- box-body -->
+        <div class="box-body">
+            <table id="example2" class="table table-hover table-bordered">
+                <thead style="font-weight: bold">
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã đơn hàng</th>
+                        <th>Thời gian đơn hàng</th>
+                        <th>Tổng giá trị</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@Model[i].OrderCode</td>
+                            <td>@Model[i].CreateTime.ToString("dd/MM/yyyy hh:mm tt")</td>
+                            <td style="text-align: right">@Model[i].TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <td>
+                                @if (Model[i].OrderStatus.Equals("Đã hoàn thành"))
+                                {
+                                    <span class="label label-success">@Model[i].OrderStatus</span>
+                                }
+                                else if (Model[i].OrderStatus.Equals("Hủy"))
+                                {
+                                    <span class="label label-danger">@Model[i].OrderStatus</span>
+                                }
+                                else if (Model[i].OrderStatus.Equals("Chờ xử lý") || Model[i].OrderStatus.Equals("Chờ xác nhận"))
+                                {
+                                    <span class="label label-warning">@Model[i].OrderStatus</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-primary">@Model[i].OrderStatus</span>
+                                }
 
-<div class="box">
-    <!-- box-header -->
-    <div class="box-header">
-        <h3 class="box-title">Danh sách đơn hàng</h3>
-        <div class="box-tools">
-            <div class="input-group" style="width: 150px;">
-                <input type="text" name="table_search" class="form-control input-sm pull-right" placeholder="Tìm kiếm">
-                <div class="input-group-btn">
-                    <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
-                </div>
-            </div>
+                            </td>
+                            <td>
+                                @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId }) |
+                                @Html.ActionLink("Sửa", "Edit", new { id = Model[i].OrderId }) |
+                                @Html.ActionLink("Hủy", "Delete", new { id = Model[i].OrderId })
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
-    <!-- box-body -->
-    <div class="box-body">
-        <table id="example2" class="table table-hover table-bordered">
-            <tr>
-                <th>STT</th>
-                <th>Mã đơn hàng</th>
-                <th>Thời gian đơn hàng</th>
-                <th>Tổng giá trị</th>
-                <th>Trạng thái</th>
-                <th></th>
-            </tr>
-            @for (int i = 0; i < Model.Count; i++)
-            {
-                <tr>
-                    <td>@(i + 1)</td>
-                    <td>@Model[i].OrderCode</td>
-                    <td>@Model[i].CreateTime</td>
-                    <td>@Model[i].TotalValue</td>
-                    <td>@Model[i].OrderStatus</td>
-                    <td>
-                        @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId }) |
-                        @Html.ActionLink("Sửa", "Edit", new { id = Model[i].OrderId }) |
-                        @Html.ActionLink("Hủy", "Delete", new { id = Model[i].OrderId })
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>@(i + 1)</td>
-                    <td>@Model[i].OrderCode</td>
-                    <td>@Model[i].CreateTime</td>
-                    <td>@Model[i].TotalValue</td>
-                    <td>@Model[i].OrderStatus</td>
-                    <td>
-                        @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId }) |
-                        @Html.ActionLink("Sửa", "Edit", new { id = Model[i].OrderId }) |
-                        @Html.ActionLink("Hủy", "Delete", new { id = Model[i].OrderId })
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>@(i + 1)</td>
-                    <td>@Model[i].OrderCode</td>
-                    <td>@Model[i].CreateTime</td>
-                    <td>@Model[i].TotalValue</td>
-                    <td>@Model[i].OrderStatus</td>
-                    <td>
-                        @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId })  |
-                        @Html.ActionLink("Sửa", "Edit", new { id = Model[i].OrderId }) |
-                        @Html.ActionLink("Hủy", "Delete", new { id = Model[i].OrderId })
-
-                    </td>
-                </tr>
-            }
-        </table>
-    </div>
-</div>
+</section>
