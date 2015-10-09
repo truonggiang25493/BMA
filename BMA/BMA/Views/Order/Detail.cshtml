@@ -1,8 +1,152 @@
-﻿
+﻿@using System.Globalization
+@using BMA.Models
+@model BMA.Models.Order
 @{
     ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>Chi tiết đơn hàng</h1>
+</section>
+<section class="invoice">
+    <!--Title row-->
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                Thông tin đơn hàng
+            </h2>
+        </div>
+    </div>
+    <!-- Info row -->
+    <div class="row invoice-info">
+        <div class="col-sm-6 invoice-col">
+            <b>Đơn hàng: </b>
+            @Model.OrderCode
+            <br />
+            <b>Thời gian tạo: </b>
+            @Model.CreateTime.ToString(("dd/MM/yyyy hh:mm tt"))
+            <br />
+            <b>Trạng thái: </b>
+            @if (Model.OrderStatus.Equals("Đã hoàn thành"))
+            {
+                <span class="label label-success">@Model.OrderStatus</span>
+            }
+            else if (Model.OrderStatus.Equals("Hủy"))
+            {
+                <span class="label label-danger">@Model.OrderStatus</span>
+            }
+            else if (Model.OrderStatus.Equals("Chờ xử lý") || Model.OrderStatus.Equals("Chờ xác nhận"))
+            {
+                <span class="label label-warning">@Model.OrderStatus</span>
+            }
+            else
+            {
+                <span class="label label-primary">@Model.OrderStatus</span>
+            }
+        </div>
+        <div class="col-sm-6 invoice-col">
+            @if (!@Model.OrderStatus.Equals("Chờ xử lý"))
+            {
+                <div>
+                    Thành viên:
+                    <b>@Model.AspNetUser.FullName</b>
+                </div>
+                <div>@ViewBag.Customer.CustomerAddress</div>
+                <div>Điện thoại: @ViewBag.Customer.CustomerPhoneNumber</div>
+            }
+            else if (ViewBag.GuestInfo != null)
+            {
+                <div>
+                    Khách hàng:
+                    <b>@ViewBag.GuestInfo.GuestInfoName</b>
+                </div>
+                <div>@ViewBag.GuestInfo.GuestInfoAddress</div>
+                <div>Điện thoại: @ViewBag.GuestInfo.GuestInfoPhone</div>
+            }
+            else
+            {
+                <div>
+                    Thành viên:
+                    <b>@Model.AspNetUser.FullName</b>
+                </div>
+                <div>@ViewBag.Customer.CustomerAddress</div>
+                <div>Điện thoại: @ViewBag.Customer.CustomerPhoneNumber</div>
+            }
+        </div>
+    </div>
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                Thông tin sản phẩm
+            </h2>
+        </div>
+    </div>
+    <!-- Table row -->
+    <div class="row">
+        <div class="col-xs-12 table-responsive">
+            <table class="table table-striped">
+                <thead style="font-weight: bold">
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th style="text-align: right">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.OrderItems.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@Model.OrderItems.ElementAt(i).Product.ProductName</td>
+                            <td>@Model.OrderItems.ElementAt(i).RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <td>@Model.OrderItems.ElementAt(i).Quantity</td>
+                            <td style="text-align: right">@Model.OrderItems.ElementAt(i).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-9">
 
-<h2>Detail</h2>
-
+        </div>
+        <div class=" col-xs-3">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>Tổng cộng: </th>
+                        <td style="text-align: right">
+                            @ViewBag.TotalAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Thuế: </th>
+                        <td style="text-align: right">@ViewBag.TotalTax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                    </tr>
+                    <tr>
+                        <th>Thành tiền: </th>
+                        <td style="text-align: right">@Model.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--Button-->
+    <div class="row">
+        <div class="col-xs-12">
+            <button class="btn btn-warning ">
+                <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy
+            </button>
+            <button class="btn btn-success pull-right">
+                <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Duyệt
+            </button>
+            <button class="btn btn-primary pull-right" style="margin-right: 25px;">
+                <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
+            </button>
+        </div>
+    </div>
+</section>
