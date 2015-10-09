@@ -199,6 +199,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BMA.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
