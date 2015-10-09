@@ -14,7 +14,8 @@ namespace BMA.Controllers
         // GET: /Product/
         public ActionResult Index()
         {
-            return View();
+            var lstProducts = db.Products.ToList();
+            return View(lstProducts);
         }
 
         public ActionResult Cookie()
@@ -27,9 +28,16 @@ namespace BMA.Controllers
             return View();
         }
 
-        public ActionResult ProductDetail()
+        public ActionResult ProductDetail(int ProductId)
         {
-            return View();
+            var productDetail = db.Products.SingleOrDefault(n => n.ProductId == ProductId);
+            var productMaterial = db.Recipes.Where(p => p.ProductId == productDetail.ProductId).ToList();
+            ViewBag.ProductMaterial = productMaterial;
+            if (productDetail == null)
+            {
+                RedirectToAction("Index", "Error");
+            }
+            return View(productDetail);
         }
 	}
 }

@@ -24,9 +24,9 @@ namespace BMA.Models
         public int ProductId { get; set; }
         public int OrderId { get; set; }
         public int Quantity { get; set; }
-        public double RealPrice { get; set; }
-        public double Amount { get; set; }
-        public double TaxAmount { get; set; }
+        public int RealPrice { get; set; }
+        public int Amount { get; set; }
+        public int TaxAmount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MaterialInOrderItem> MaterialInOrderItems { get; set; }

@@ -244,6 +244,9 @@
     <Compile Include="Models\Supplier.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sysdiagram.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TaxRate.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>

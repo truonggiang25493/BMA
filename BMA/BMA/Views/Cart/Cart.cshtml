@@ -1,0 +1,93 @@
+﻿@using BMA.Models
+@using System.Globalization;
+@model List<Cart>
+@{
+    ViewBag.Title = "Cart";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+}
+@{
+    double sumTotal = 0;
+    double dongia = 0;
+}
+<section class="border-top"></section>
+<center><h3 style="margin-top: 50px; margin-bottom: -30px; font-weight: bolder; color: #09b9e5">THÔNG TIN ĐƠN HÀNG</h3></center>
+<form id="formCart" action="@Url.Action("UpdateCart", "Cart"@*, new { @REID = 1}*@)" method="post">
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th class="text-left">Sản phẩm</th>
+                <th class="text-left">Đơn giá</th>
+                <th class="text-left">Số lượng</th>
+                <th class="text-left">Thành tiền</th>
+                <th class="text-left">Xóa</th>
+            </tr>
+        </thead>
+
+        <tbody class="table-hover">
+            @foreach (var item in Model)
+            {
+                dongia = @item.price;
+                <tr>
+                    <td class="text-left">@item.productName</td>
+                    <td class="text-left">@item.price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                    <td class="text-left1">
+                        <input type="text" value="@item.quantity" class="inputProductNum" name="txtQuantity" />
+                        <script>
+                            $('#light .inputProductNum').keyup(function () {
+                                var total = $(this).val() * dongia;
+                                $('#light .totalPriceProduct').text(total + " Đồng");
+
+                            });
+                        </script>
+                    </td>
+                    <td class="text-left">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                    <td class="cancel-order"><a href="@Url.Action("DeleteCart", "Cart", new { @ProductId = item.productId})">Hủy</a></td>
+                </tr>
+                sumTotal = sumTotal + @item.Total;             
+            }
+        </tbody>
+    </table>
+</form>
+<table class="table-fill-2">
+    <tbody class="table-hover">
+        <tr>
+            <td class="sum-td">Tổng cộng </td>
+            <td style="font-weight: bolder; " class="text-left">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+        </tr>
+        <tr>
+            <td class="sum-td">Thuế VAT(10%)</td>
+            <td style="font-weight: bolder;" class="text-left">@((sumTotal * 0.1).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+        </tr>
+        <tr>
+            <td style="border-bottom:none;" class="sum-td">Thành tiền</td>
+            <td style="min-width:107px;font-weight:bolder;" class="text-left">@((sumTotal + (sumTotal * 0.1)).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+        </tr>
+    </tbody>
+</table>
+
+<div style="margin-top:-85px;" class="row">
+    <ul class="filter-list clearfix">
+        <li>
+            <div class="property-box animated out" data-delay="0" data-animation="fadeInUp">
+                <div class="property-text2">
+                    <div style="margin-left: 60px; margin-top: 81px; float: right; margin-right: 170px;" class="detail-btn mrgt3x"><a href="#" onclick="return submitUpdateCart();" class="sale">Cập nhật giỏ hàng</a></div>
+                    <script type="text/javascript">
+                        function submitUpdateCart() {
+                            document.getElementById("formCart").submit();
+                            return 1;
+                        }
+                    </script>
+                </div>
+                <div class="property-text2">
+                    <div style="margin-top:21px; float:right;margin-right:-35px;" class="detail-btn mrgt3x"><a href="@Url.Action("Index", "Product"@*, new { @REID = 1}*@)" class="sale">Tiếp tục mua sắm</a></div>
+                </div>
+                <div class="property-text2">
+                    <div style="margin-top:-40px; float:right;margin-right:563px;" class="detail-btn mrgt3x"> <a style="background-color:#ad0707" href="@Url.Action("DeleteAll", "Cart"@*, new { @REID = 1}*@)" class="sale">Hủy đơn hàng</a> </div>
+                </div>
+                <div class="property-text2">
+                    <div style="margin-top:-40px; float:right;margin-right:170px;" class="detail-btn mrgt3x"> <a style="background-color:#4cff00; " href="@Url.Action("Index", "Cart"@*, new { @REID = 1}*@)" class="sale">Đặt hàng</a> </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -31,6 +31,33 @@ namespace BMA.Controllers
         public ActionResult Detail(int id)
         {
             Order order = db.Orders.FirstOrDefault(m => m.OrderId == id);
+            if (order != null)
+            {
+                // Get and transfer total amount and total tax of order
+                int totalAmount = 0;
+                int totalTax = 0;
+                foreach (var orderItem in order.OrderItems)
+                {
+                    totalAmount += orderItem.Amount;
+                    totalTax += orderItem.TaxAmount;
+                }
+                ViewBag.TotalAmount = totalAmount;
+                ViewBag.TotalTax = totalTax;
+                //  if customer is not null, get and transfer
+                //  else get and transfer guest info
+                if (order.CustomerUserId != null)
+                {
+                    Customer customer = db.Customers.FirstOrDefault(m => m.UserId == order.CustomerUserId);
+                    ViewBag.Customer = customer;
+                }
+                else
+                {
+                    GuestInfo guestInfo = db.GuestInfoes.FirstOrDefault(m => m.GuestInfoId == order.GuestInfoId);
+                    ViewBag.GuestInfo = guestInfo;
+                }
+            }
+
+
             return View(order);
         }
 

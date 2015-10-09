@@ -14,13 +14,19 @@ namespace BMA.Models
     
     public partial class GuestInfo
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public GuestInfo()
+        {
+            this.Orders = new HashSet<Order>();
+        }
+    
         public int GuestInfoId { get; set; }
         public string GuestInfoName { get; set; }
         public string GuestInfoPhone { get; set; }
         public string GuestInfoAddress { get; set; }
         public string GuestInfoEmail { get; set; }
-        public Nullable<int> OrderId { get; set; }
     
-        public virtual Order Order { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

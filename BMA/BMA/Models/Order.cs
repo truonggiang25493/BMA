@@ -17,7 +17,6 @@ namespace BMA.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Order()
         {
-            this.GuestInfoes = new HashSet<GuestInfo>();
             this.OrderItems = new HashSet<OrderItem>();
             this.Orders1 = new HashSet<Order>();
         }
@@ -38,11 +37,11 @@ namespace BMA.Models
         public string OrderStatus { get; set; }
         public Nullable<int> PreviousOrderId { get; set; }
         public int TotalValue { get; set; }
+        public Nullable<int> GuestInfoId { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual AspNetUser AspNetUser1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GuestInfo> GuestInfoes { get; set; }
+        public virtual GuestInfo GuestInfo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
