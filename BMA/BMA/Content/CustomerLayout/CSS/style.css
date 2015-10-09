@@ -1755,6 +1755,7 @@ footer .contact li {
 	background-color:#09b9e5;
 	padding:13px 28px;
 	transition:all 0.8s ease 0s;
+    border-radius : 5px;
 }
 .property-box .detail-btn .rent {
 	background-color:#43d6d1;
@@ -3208,6 +3209,7 @@ contact-info-rightbar {
   width: 100%;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
   animation: float 5s infinite;
+  max-height:100px;
 }
 
 .table-fill-2 {
