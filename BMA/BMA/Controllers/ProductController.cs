@@ -20,12 +20,14 @@ namespace BMA.Controllers
 
         public ActionResult Cookie()
         {
-            return View();
+            var lstCookies = db.Products.Where(n => n.Category.CategoryName == "Bánh ngọt").ToList();
+            return View(lstCookies);
         }
 
         public ActionResult Saltine()
         {
-            return View();
+            var lstSaltine = db.Products.Where(n => n.Category.CategoryName == "Bánh mặn").ToList();
+            return View(lstSaltine);
         }
 
         public ActionResult ProductDetail(int ProductId)
