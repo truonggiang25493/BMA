@@ -34,7 +34,7 @@ namespace BMA.Models
         public bool IsStaffEdit { get; set; }
         public bool Flag { get; set; }
         public Nullable<int> OutputBillId { get; set; }
-        public string OrderStatus { get; set; }
+        public int OrderStatus { get; set; }
         public Nullable<int> PreviousOrderId { get; set; }
         public int TotalValue { get; set; }
         public Nullable<int> GuestInfoId { get; set; }

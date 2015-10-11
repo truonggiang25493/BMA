@@ -150,7 +150,7 @@
           <Property Name="IsStaffEdit" Type="bit" Nullable="false" />
           <Property Name="Flag" Type="bit" Nullable="false" />
           <Property Name="OutputBillId" Type="int" />
-          <Property Name="OrderStatus" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="OrderStatus" Type="int" Nullable="false" />
           <Property Name="PreviousOrderId" Type="int" />
           <Property Name="TotalValue" Type="int" Nullable="false" />
           <Property Name="GuestInfoId" Type="int" />
@@ -198,7 +198,8 @@
           <Property Name="ProductMaterialId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductMaterialName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="ProductMaterialUnit" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="CurrentQuantity" Type="int" />
+          <Property Name="CurrentQuantity" Type="float" Nullable="false" />
+          <Property Name="StandardQuantity" Type="float" />
         </EntityType>
         <EntityType Name="Recipe">
           <Key>
@@ -818,7 +819,7 @@
           <Property Name="IsStaffEdit" Type="Boolean" Nullable="false" />
           <Property Name="Flag" Type="Boolean" Nullable="false" />
           <Property Name="OutputBillId" Type="Int32" />
-          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OrderStatus" Type="Int32" Nullable="false" />
           <Property Name="PreviousOrderId" Type="Int32" />
           <Property Name="TotalValue" Type="Int32" Nullable="false" />
           <Property Name="GuestInfoId" Type="Int32" />
@@ -877,7 +878,8 @@
           <Property Name="ProductMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProductMaterialName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProductMaterialUnit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CurrentQuantity" Type="Int32" />
+          <Property Name="CurrentQuantity" Type="Double" Nullable="false" />
+          <Property Name="StandardQuantity" Type="Double" />
           <NavigationProperty Name="InputMaterials" Relationship="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="InputMaterial" />
           <NavigationProperty Name="Recipes" Relationship="Self.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="Recipe" />
         </EntityType>
@@ -1516,6 +1518,7 @@
                 <ScalarProperty Name="ProductMaterialName" ColumnName="ProductMaterialName" />
                 <ScalarProperty Name="ProductMaterialUnit" ColumnName="ProductMaterialUnit" />
                 <ScalarProperty Name="CurrentQuantity" ColumnName="CurrentQuantity" />
+                <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
