@@ -1,21 +1,18 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
     <title>@ViewBag.Title</title>
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
     <!-- Bootstrap 3.3.5 -->
     <link href="/Content/AdminLayout/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Font Awesome -->
     <link href="/Content/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
-    <!-- Ionicons -->
-    <link href="/Content/AdminLayout/plugins/ionic/ionic.min.css" rel="stylesheet" />
+    <!-- Theme style -->
+    <link href="/Content/AdminLayout/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <!-- jvectormap -->
     <link href="/Content/AdminLayout/plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" />
-    <!-- Theme style -->
-    <link href="/Content/AdminLayout/dist/css/AdminLTE.min.css" rel="stylesheet" />
     <!-- AdminLTE Skins -->
     <link href="/Content/AdminLayout/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
 </head>
@@ -254,7 +251,7 @@
                 "info": true,
                 "autoWidth": false
             });
-            
+
 
         });
     </script>
@@ -263,6 +260,36 @@
 
         });
     </script>
+    <!--
+    <script language="javascript">
+            function open_container() {
+                var content = '<form role="form"><div class="form-group"><label for="exampleInputEmail1">Email address</label><input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"></div><div class="form-group"><label for="exampleInputPassword1">Password</label><input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"></div><div class="form-group"><label for="exampleInputFile">File input</label><input type="file" id="exampleInputFile"><p class="help-block">Example block-level help text here.</p></div><div class="checkbox"><label><input type="checkbox"> Check me out</label></div><button type="submit" class="btn btn-default">Submit</button></form>';
+                var title = 'My dynamic modal dialog form with bootstrap';
+                var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button><button type="button" class="btn btn-primary">Save changes</button>';
+                setModalBox(title, content, footer);
+                $('#myModal').modal('show');
+            }
+            function setModalBox(title, content, footer) {
+                document.getElementById('popup-body').innerHTML = content;
+                document.getElementById('popup-title').innerHTML = title;
+                document.getElementById('popup-footer').innerHTML = footer;
 
+            }
+        </script>
+        -->
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="popup-title"></h4>
+                </div>
+                <div class="modal-body" id="popup-body"></div>
+                <div class="modal-footer" id="popup-footer"></div>
+            </div>
+        </div>
+    </div>
+    <!--End of modal-->
 </body>
 </html>

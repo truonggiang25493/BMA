@@ -1,8 +1,257 @@
-﻿
+﻿@using System.Globalization
+@using BMA.Common
+@model BMA.Models.ViewModel.OrderViewModel
 @{
     ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>Chi tiết đơn hàng</h1>
+</section>
+<section class="content">
+    <!--Title row-->
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                Thông tin đơn hàng
+            </h2>
+        </div>
+    </div>
+    <!-- Info row -->
+    <div class="row invoice-info">
+        <div class="col-sm-6 invoice-col">
+            <b>Mã đơn hàng: </b>
+            @Model.Order.OrderCode
+            <br />
+            <b>Thời gian tạo: </b>
+            @Model.Order.CreateTime.ToString(("dd/MM/yyyy hh:mm tt"))
+            <br />
+            <b>Trạng thái: </b>
+            @if (Model.Order.OrderStatus == 5)
+            {
+                <span class="label label-success">@CommonData.Status[Model.Order.OrderStatus]</span>
+            }
+            else if (Model.Order.OrderStatus == 6)
+            {
+                <span class="label label-danger">@CommonData.Status[Model.Order.OrderStatus]</span>
+            }
+            else if (Model.Order.OrderStatus == 0 || Model.Order.OrderStatus == 1)
+            {
+                <span class="label label-warning">@CommonData.Status[Model.Order.OrderStatus]</span>
+            }
+            else
+            {
+                <span class="label label-primary">@CommonData.Status[Model.Order.OrderStatus]</span>
+            }
+        </div>
+        <div class="col-sm-6 invoice-col">
+            @if (!Model.IsGuest)
+            {
+                <div>
+                    Thành viên:
+                    <b>@Model.OrderPersonName</b>
+                </div>
+                <div>@Model.OrderPersonAddress</div>
+                <div>Điện thoại: @Model.OrderPersonPhoneNumber</div>
+                <div>Mã số thuế: @Model.OrderPersonTaxCode</div>
+            }
+            else
+            {
+                <div>
+                    Khách hàng:
+                    <b>@Model.OrderPersonName</b>
+                </div>
+                <div>@Model.OrderPersonAddress</div>
+                <div>Điện thoại: @Model.OrderPersonPhoneNumber</div>
+            }
+        </div>
+    </div>
+    <!-- Product detail-->
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                Thông tin sản phẩm
+            </h2>
+        </div>
+    </div>
+    <!-- Table row -->
+    <div class="row">
+        <div class="col-xs-12 table-responsive">
+            <table class="table table-striped">
+                <thead style="font-weight: bold">
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th style="text-align: right">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.OrderItemList.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@Model.OrderItemList.ElementAt(i).ProductName</td>
+                            <td>@Model.OrderItemList.ElementAt(i).OrderItem.RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <td>@Model.OrderItemList.ElementAt(i).OrderItem.Quantity</td>
+                            <td style="text-align: right">@Model.OrderItemList.ElementAt(i).OrderItem.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-9"></div>
+        <div class=" col-xs-3">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>Tổng cộng: </th>
+                        <td style="text-align: right">
+                            @Model.TotalAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Thuế: </th>
+                        <td style="text-align: right">@Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                    </tr>
+                    <tr>
+                        <th>Thành tiền: </th>
+                        <td style="text-align: right">@Model.Order.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    @if (Model.Order.OrderStatus == 0)
+    {
+        <!-- Material detail-->
+    <!-- Material Table Header-->
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-xs-12">
+                <h2 class="page-header">
+                    Thông tin nguyên liệu
+                </h2>
+            </div>
+        </div>
+    <!--Material Noti-->
+        if (!Model.IsEnoughMaterial)
+        {
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 class="label label-danger" style="font-size: 14pt">Không đủ nguyên liệu</h2>
+                </div>
+            </div>
+        }
+    <!-- Material Table Content-->
+        <div class="row">
+            <div class="col-xs-12 table-responsive">
+                <table class="table table-striped">
+                    <thead style="font-weight: bold">
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên nguyên liệu</th>
+                            <th>Số lượng cần</th>
+                            <th>Số lượng trong kho</th>
+                            <th>Tình trạng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.MaterialList.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@Model.MaterialList[i].ProductMaterialName</td>
+                                <td>@Model.MaterialList[i].NeedQuantity @Model.MaterialList[i].Unit</td>
+                                <td>@Model.MaterialList[i].StorageQuantity @Model.MaterialList[i].Unit</td>
+                                @if (Model.MaterialList[i].IsEnough)
+                                {
+                                    <td>
+                                        <span class="label label-success">Đủ</span>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <span class="label label-danger">Thiếu</span>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" style="padding-bottom: 20px;">
+            <div class="col-xs-12">
+                <h2 class="label label-info" style="font-size: 12pt">Chi phí nguyên liệu: @Model.MaterialCost.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</h2>
+        </div>
+    </div>
+    }
 
-<h2>Detail</h2>
+    <!--Button-->
+    <div class="row">
+        <div class="col-xs-12">
+            @if (Model.Order.OrderStatus != 5)
+            {
+                <button class="btn btn-warning ">
+                    <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy
+                </button>
+            }
 
+            @if (Model.Order.OrderStatus == 0)
+            {
+                if (Model.IsEnoughMaterial)
+                {
+                    <button class="btn btn-success pull-right" id="btn-approved" onclick="open_container();">
+                        <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Duyệt
+                        <script type="text/javascript">
+                            function open_container() {
+                                var content =
+                                    '<form role="form" action="/Order/ApproveOrder" method="post" id="form-aprrove">' +
+                                        '<div class="form-group">' +
+                                        '<label for="deposit">Tiền cọc</label>' +
+                                        '<input type="number" min = "1" class="form-control" id="deposit" placeholder="Hãy nhập số tiền cọc" name="deposit"/>' +
+                                        '<input type="hidden" name="orderId" value="@Model.Order.OrderId">' +
+                                        '</div>' +
+                                        '<div class="form-group">' +
+                                        '<label for="deliveryDate">Ngày giao hàng</label>' +
+                                        '<input type="date" class="form-control" id="deliveryDate" name="deliveryDate"/>' +
+                                        '</div>' +
+                                        '<div class="form-group" style="padding-bottom: 20px;">' +
+                                        '<button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Hủy</button>' +
+                                        '<button type="submit" class="btn btn-success pull-right" style="margin-right: 10px;">Đồng ý</button>' +
+                                        '</div>' +
+                                        '</form>';
+                                var title = 'Xác nhận duyệt đơn hàng';
+                                var footer = '';
+                                setModalBox(title, content, footer);
+                                $('#myModal').modal('show');
+                            }
+
+                            function setModalBox(title, content, footer) {
+                                document.getElementById('popup-body').innerHTML = content;
+                                document.getElementById('popup-title').innerHTML = title;
+                                document.getElementById('popup-footer').innerHTML = footer;
+
+                            }
+
+                        </script>
+                    </button>
+                }
+                else
+                {
+
+                }
+
+                <button class="btn btn-primary pull-right" style="margin-right: 25px;">
+                    <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
+                </button>
+            }
+        </div>
+    </div>
+
+</section>
