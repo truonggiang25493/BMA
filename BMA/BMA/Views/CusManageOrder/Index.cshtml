@@ -1,5 +1,7 @@
 ﻿@using BMA.Models
 @using PagedList.Mvc;
+@using BMA.Common;
+
 @model PagedList.PagedList<Order>
 
 @{
@@ -47,24 +49,24 @@
                                     <tr>
                                         <td class="text-left"><a href="@Url.Action("OrderDetail", "CusManageOrder", new { @orderId = item.OrderId})">@item.OrderCode</a></td>
                                         <td class="text-left">@item.CreateTime.ToString("dd/MM/yyyy")</td>
-                                        @if (item.OrderStatus == "Chờ xử lý")
+                                        @if (item.OrderStatus == 0)
                                         {
-                                            <td class="text-left"><div class="btn btn-primary">@item.OrderStatus</div></td>
+                                            <td class="text-left"><div class="btn btn-primary">@CommonData.Status[item.OrderStatus]</div></td>
                                         }
-                                        @if (item.OrderStatus == "Đã duyệt" || item.OrderStatus == "Đang sản xuất" || item.OrderStatus == "Đang giao hàng")
+                                        @if (item.OrderStatus == 2 || item.OrderStatus == 3 || item.OrderStatus == 4)
                                         {
-                                            <td class="text-left"><div class="btn btn-warning">@item.OrderStatus</div></td>
+                                            <td class="text-left"><div class="btn btn-warning">@CommonData.Status[item.OrderStatus]</div></td>
                                         }
-                                        @if (item.OrderStatus == "Ðã hoàn thành")
+                                        @if (item.OrderStatus == 5)
                                         {
-                                            <td class="text-left"><div class="btn btn-success">@item.OrderStatus</div></td>
+                                            <td class="text-left"><div class="btn btn-success">@CommonData.Status[item.OrderStatus]</div></td>
                                         }
-                                        @if (item.OrderStatus == "Đã hủy")
+                                        @if (item.OrderStatus == 6)
                                         {
-                                            <td class="text-left"><div class="btn btn-cancel">@item.OrderStatus</div></td>
+                                            <td class="text-left"><div class="btn btn-cancel">@CommonData.Status[item.OrderStatus]</div></td>
                                         }                                       
                                         <td class="cancel-order"><a href="@Url.Action("OrderDetail", "CusManageOrder", new { @orderId = item.OrderId})">Chi tiết </a></td>
-                                        @if (item.OrderStatus == "Chờ xử lý")
+                                        @if (item.OrderStatus == 0)
                                         {
                                             <td class="cancel-order"><a href="@Url.Action("GetOrderToCart", "Cart", new { @orderId = item.OrderId })">Chỉnh sửa </a></td>
                                         }
@@ -72,7 +74,7 @@
                                         {
                                             <td class="text-left">Không thể sửa</td>
                                         }
-                                        @if (item.OrderStatus == "Ðã hoàn thành" || item.OrderStatus == "Đã hủy")
+                                        @if (item.OrderStatus == 5 || item.OrderStatus == 6)
                                         {
                                             <td class="text-left">Không thể hủy</td>
                                         }

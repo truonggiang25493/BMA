@@ -22,20 +22,20 @@ namespace BMA.Controllers
             if (Session["User"] != null)
             {
                 string cusId = Session["UserId"].ToString();
-                var orderList = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != "Chờ xác nhận").OrderByDescending(n => n.CreateTime).ToList().ToPagedList(pageNumber, pageSize);
-                var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == "Chờ xác nhận").OrderBy(n => n.CreateTime).ToList();
+                var orderList = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != 1).OrderByDescending(n => n.CreateTime).ToList().ToPagedList(pageNumber,pageSize);
+                var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList();
                 List<int> checkId = new List<int> { };
-                for (int i = 0; i < confirmOrderList.Count; i++)
-                {
-                    checkId.Insert(i, (int)confirmOrderList[i].PreviousOrderId);
-                    for (int j = 0; j < orderList.Count; j++)
-                    {
-                        if (orderList[j].OrderId == checkId[i])
-                        {
-                            orderList[j].ToString().Remove(j);
-                        }
-                    }
-                }
+                //for (int i = 0; i < confirmOrderList.Count; i++)
+                //{
+                //    checkId.Insert(i, (int)confirmOrderList[i].PreviousOrderId);
+                //    for (int j = 0; j < orderList.Count; j++)
+                //    {
+                //        if (orderList[j].OrderId == checkId[i])
+                //        {
+                //            orderList[j].ToString().Remove(j);
+                //        }
+                //    }
+                //}
                 return View(orderList);
             }
             return RedirectToAction("Index", "Home");
@@ -48,7 +48,7 @@ namespace BMA.Controllers
             if (Session["User"] != null)
             {
                 string cusId = Session["UserId"].ToString();
-                var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == "Chờ xác nhận").OrderBy(n => n.CreateTime).ToList().ToPagedList(pageNumber, pageSize);
+                var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList().ToPagedList(pageNumber, pageSize);
                 return View(confirmOrderList);
             }
             return RedirectToAction("Index", "Home");
@@ -82,7 +82,7 @@ namespace BMA.Controllers
             try
             {
                 Order order = db.Orders.Find(orderId);
-                if (order.OrderStatus == "Chờ xử lý")
+                if (order.OrderStatus == 0)
                 {
                     List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
                     for (int i = 0; i < orderItems.Count; i++)
@@ -93,7 +93,7 @@ namespace BMA.Controllers
                 }
                 else
                 {
-                    order.OrderStatus = "Đã hủy";
+                    order.OrderStatus = 6;
                 }
                 db.SaveChanges();
             }
@@ -122,7 +122,7 @@ namespace BMA.Controllers
             Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
             Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
             List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
-            confirmedOrder.OrderStatus = "Đã duyệt";
+            confirmedOrder.OrderStatus = 2;
             for (int i = 0; i < oldOrderItems.Count; i++)
             {
                 db.OrderItems.Remove(oldOrderItems[i]);
@@ -137,7 +137,7 @@ namespace BMA.Controllers
             Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
             List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
             Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-            oldOrder.OrderStatus = "Chờ xử lý";
+            oldOrder.OrderStatus = 0;
             for (int i = 0; i < orderItems.Count; i++)
             {
                 db.OrderItems.Remove(orderItems[i]);

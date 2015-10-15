@@ -281,7 +281,7 @@ namespace BMA.Controllers
             order.DepositAmount = 0;
             order.IsStaffEdit = false;
             order.Flag = false;
-            order.OrderStatus = "Chờ xử lý";
+            order.OrderStatus = 0;
             order.TotalValue = totalValue;
             if (Session["User"] != null)
             {
@@ -350,7 +350,7 @@ namespace BMA.Controllers
             order.DepositAmount = 0;
             order.IsStaffEdit = false;
             order.Flag = false;
-            order.OrderStatus = "Chờ xử lý";
+            order.OrderStatus = 0;
             order.TotalValue = totalValue;
 
             //Lấy thông tin từ account, xét có thì login, add cusid
@@ -393,7 +393,7 @@ namespace BMA.Controllers
             order.DepositAmount = 0;
             order.IsStaffEdit = false;
             order.Flag = false;
-            order.OrderStatus = "Chờ xử lý";
+            order.OrderStatus = 0;
             order.TotalValue = totalValue;
 
             // add guestinfo,guestid
