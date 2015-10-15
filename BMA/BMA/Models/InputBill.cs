@@ -18,6 +18,7 @@ namespace BMA.Models
         public InputBill()
         {
             this.InputMaterials = new HashSet<InputMaterial>();
+            this.OutputMaterials = new HashSet<OutputMaterial>();
         }
     
         public int InputBillId { get; set; }
@@ -30,5 +31,7 @@ namespace BMA.Models
         public virtual Supplier Supplier { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InputMaterial> InputMaterials { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OutputMaterial> OutputMaterials { get; set; }
     }
 }

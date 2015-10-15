@@ -12,25 +12,24 @@ namespace BMA.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class OrderItem
+    public partial class OutputMaterial
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public OrderItem()
+        public OutputMaterial()
         {
-            this.OutputMaterials = new HashSet<OutputMaterial>();
+            this.InputBills = new HashSet<InputBill>();
         }
     
+        public int OutputMaterialId { get; set; }
+        public int ExportQuantity { get; set; }
+        public Nullable<System.DateTime> ExportDate { get; set; }
+        public string OutputMaterialNote { get; set; }
+        public int ProductMaterialId { get; set; }
         public int OrderItemId { get; set; }
-        public int ProductId { get; set; }
-        public int OrderId { get; set; }
-        public int Quantity { get; set; }
-        public int RealPrice { get; set; }
-        public int Amount { get; set; }
-        public int TaxAmount { get; set; }
     
-        public virtual Order Order { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual OrderItem OrderItem { get; set; }
+        public virtual ProductMaterial ProductMaterial { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OutputMaterial> OutputMaterials { get; set; }
+        public virtual ICollection<InputBill> InputBills { get; set; }
     }
 }

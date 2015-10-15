@@ -1,4 +1,7 @@
-﻿@model IEnumerable<BMA.Models.Product>
+﻿@using BMA.Models
+@using PagedList.Mvc;
+@model PagedList.PagedList<Product>
+
 @{
     ViewBag.Title = "Tất cả sản phẩm";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
@@ -89,7 +92,7 @@
                                 <center><h2 class="popupProductName" style="color:#808080">@item.ProductName</h2></center>
                                 <div class="border-top"></div>
                                 <br />
-                                <form action='@Url.Action("AddCart", "Cart")' id="myForm" method="post">
+                                <form action='@Url.Action("AddCart", "Cart", new { @strURL = Request.Url.ToString()})' id="myForm" method="post">
                                     <table class="popup-table">
                                         <tr>
                                             <td>Số lượng: </td>
@@ -109,14 +112,9 @@
                         </li>
                     }
                 </ul>
+
                 <div class="numbering">
-                    <ul class="pagination">
-                        <li class="active"><a href="#">01</a></li>
-                        <li><a href="#">02</a></li>
-                        <li><a href="#">03</a></li>
-                        <li><a href="#">04</a></li>
-                        <li><a href="#">05</a></li>
-                    </ul>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
                 </div>
             </div>
         </div>

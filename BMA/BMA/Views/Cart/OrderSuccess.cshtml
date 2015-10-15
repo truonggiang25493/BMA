@@ -1,17 +1,16 @@
-﻿
-@{
-    ViewBag.Title = "Liên hệ";
+﻿@{
+    ViewBag.Title = "Thành công";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
 }
 
 <section class="border-top">
-    <div class="container">
+    <div class="container" style="margin-left:550px;">
         <div class="page-title mrgb4x mrgt6x clearfix">
-            <h4 class="page-name">LIÊN HỆ VỚI CHÚNG TÔI</h4>
+            <h4 class="page-name">ĐẶT HÀNG THÀNH CÔNG</h4>
         </div>
     </div>
 </section>
-<section>
+<section style="margin-left:400px;">
     <div class="container">
         <div class="row">
             <div class="col-md-9">
@@ -21,20 +20,20 @@
                             <div style="margin-bottom:60px;" class="col-md-6">
                                 <div class="contact-info-rightbar animated out" data-delay="0" data-animation="fadeInUp">
                                     <div class="rightbar-heading">
-                                        <h4>THÔNG TIN LIÊN LẠC</h4>
+                                        <h4>Thông tin đơn hàng</h4>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Cửa hàng : MGV BAKERY</label>
+                                    <label>Mã đơn hàng : @TempData["orderCode"]</label>
                                 </div>
                                 <div class="form-group">
-                                    <label>Địa chỉ : 1052 Quang Trung, Phường 3, Quận Gò vấp</label>
+                                    <label>Khách hàng : @TempData["userName"]</label>
                                 </div>
                                 <div class="form-group">
-                                    <label>Số điện thoại : 01239123707</label>
+                                    <label>Số điện thoại : @TempData["phoneNumber"]</label>
                                 </div>
                                 <div class="form-group">
-                                    <label>Email : ManhOTSE61045@fpt.edu.vn</label>
+                                    <label>Ngày giao hàng : @TempData["deliveryDate"].ToString().AsDateTime().ToString("dd/MM/yyyy")</label>
                                 </div>
                             </div>
                         </form>

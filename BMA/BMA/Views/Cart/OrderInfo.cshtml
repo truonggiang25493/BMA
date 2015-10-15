@@ -1,0 +1,111 @@
+﻿@{
+    ViewBag.Title = "Nhập thông tin khách hàng";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+}
+<script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
+<section class="border-top">
+    <div class="container">
+        <div class="page-title mrgb5x mrgt6x clearfix" id="filterOptions">
+            <h4 class="page-name">Bạn là : </h4>
+            <div style="margin-top: 40px;margin-left:-76px; float:left;" class="send-msg"><button class="submit-button" type="submit" onclick="return showLogin();">THÀNH VIÊN</button></div>
+            <div style="margin:40px 0px 60px 15px;float:left;" class="send-msg"><button class="submit-button" type="submit" onclick="return showEnterInfor();">KHÁCH HÀNG MỚI</button></div>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function() {
+        $("#CusInfor").show();
+        $("#GuestInfor").hide();
+    })
+
+    function showLogin() {
+        $("#CusInfor").show();
+        $("#GuestInfor").hide();
+        return 1;
+    }
+
+    function showEnterInfor() {
+        $("#GuestInfor").show();
+        $("#CusInfor").hide();
+        return 1;
+    }
+</script>
+
+<section style="margin-top:-25px;margin-bottom:25px;" class="border-top"></section>
+<section style="margin-left:450px;" id="CusInfor">
+    <section>
+        <div class="container">
+            <div class="page-title mrgb5x mrgt6x clearfix" id="filterOptions">
+                <h4 class="page-name">Vui lòng đăng nhập để hoàn tất đặt hàng : </h4>
+            </div>
+        </div>
+    </section>
+    <div style="" class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="contact-us animated out" data-delay="0" data-animation="fadeInUp">
+                    <div class="post-form row">
+                        <form id="customerLogin" action="@Url.Action("LoginOrderProduct", "Cart")" method="post" name="postreview">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>TÊN TÀI KHOẢN</label>
+                                    <input name="txtAccount" class="form-control" placeholder="Nhập tên tài khoản">
+                                </div>
+                                <div class="form-group">
+                                    <label>MẬT KHẨU</label>
+                                    <input name="txtPassword" type="password" class="form-control" placeholder="Nhập mật khẩu">
+                                </div>
+                                <div style="color:#ff0000">@ViewBag.Notify</div>
+                                <div style="margin: 40px 0px 40px 0px;" class="send-msg"><button class="submit-button" type="submit">ĐĂNG NHẬP</button></div>
+                                <div style="margin: 40px 30px 40px 0px;" class="send-msg"><button class="submit-button" type="reset">NHẬP LẠI</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="margin-left:450px;" id="GuestInfor">
+    <section>
+        <div class="container">
+            <div class="page-title mrgb5x mrgt6x clearfix" id="filterOptions">
+                <h4 class="page-name">Vui lòng nhập thông tin để hoàn tất đặt hàng : </h4>
+            </div>
+        </div>
+    </section>
+    <div style="" class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="contact-us animated out" data-delay="0" data-animation="fadeInUp">
+                    <div class="post-form row">
+                        <form id="guestInfor" action="@Url.Action("GuestOrderProduct", "Cart")" method="post" name="postreview">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Họ và tên</label>
+                                    <input name="txtName" class="form-control" placeholder="Nhập tên tài khoản">
+                                </div>
+                                <div class="form-group">
+                                    <label>Số điện thoại</label>
+                                    <input name="txtPhoneNumber" class="form-control" placeholder="Chỉ nhập số">
+                                </div>
+                                <div class="form-group">
+                                    <label>Địa chỉ</label>
+                                    <input name="txtAddress" class="form-control" placeholder="Nhập địa chỉ">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input name="txtEmail" class="form-control" placeholder="Nhập email">
+                                </div>
+                                <div style="margin: 40px 0px 40px 0px;" class="send-msg"><button class="submit-button" type="submit">XÁC NHẬN</button></div>
+                                <div style="margin: 40px 30px 40px 0px;" class="send-msg"><button class="submit-button" type="reset">NHẬP LẠI</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

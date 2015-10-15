@@ -29,8 +29,33 @@
                 <div class="property-heading property-info">
                     <h4><span>@Model.ProductName.ToUpper()</span></h4>
                     <p style="font-size:14px;">@Model.Descriptions</p>
-                    <div style="margin-top:153px;" class="booking-btn"> <a href="@Url.Action("AddCart", "Cart", new { @productId = Model.ProductId, @strURL = Request.Url.ToString() })" class="book-it">MUA HÀNG</a> </div>
-                    @*<div style="margin-top:103px;" class="booking-btn"> <a href="#" class="book-it" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'"><i class="fa fa-angle-right"></i>MUA HÀNG</a> </div>*@
+                    @*<div style="margin-top:153px;" class="booking-btn"> <a href="@Url.Action("AddCart", "Cart", new { @productId = Model.ProductId, @strURL = Request.Url.ToString() })" class="book-it">MUA HÀNG</a> </div>*@
+                    <div style="margin-top: 153px;" class="booking-btn">
+                        <a style="color:#ffffff" href="javascript:void(0)" onclick="return openPopup('@Model.ProductName','@Model.ProductId','@Model.ProductStandardPrice');" class="sale">MUA HÀNG</a>
+                        <script type="text/javascript">
+                            var selectDongia = 0;
+                            function openPopup(productName, productId, dongia) {
+                                selectDongia = dongia;
+                                $('#light .totalPriceProduct').text(selectDongia + " Đồng");
+                                $("#light .popupProductName").text(productName);
+                                $("#light .hiddenProductID").attr('value', productId);
+                                $("#light").show();
+                                $("#fade").show();
+
+                                return 1;
+                            }
+                            $('#light .inputProductNum').keyup(function () {
+                                var total = $(this).val() * selectDongia;
+                                $('#light .totalPriceProduct').text(total + " Đồng");
+                            });
+                            $('.inputProductNum').keyup(function () {
+                                if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
+                                    this.value = this.value.replace(/[^0-9\.]/g, '');
+                                }
+                            });
+                        </script>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -62,21 +87,24 @@
             </div>
         </div>
         <div id="light" class="white_content">
-            <center><h2 style="color:#808080">@Model.ProductName</h2></center>
+            <center><h2 class="popupProductName" style="color:#808080">@Model.ProductName</h2></center>
             <div class="border-top"></div>
             <br />
-            <table class="popup-table">
-                <tr>
-                    <td>Số lượng: </td>
-                    <td><input style="width:220px;" type="text" value="" placeholder="" /></td>
-                </tr>
-                <tr>
-                    <td>Thành tiền: </td>
-                    <td>150.000 Đồng</td>
-                </tr>
-            </table>
+            <form action='@Url.Action("AddCart", "Cart", new { @ProductId = Model.ProductId, @strURL = Request.Url.ToString()})' id="myForm" method="post">
+                <table class="popup-table">
+                    <tr>
+                        <td>Số lượng: </td>
+                        <td><input style="width:220px;" type="text" value="" placeholder="Chỉ nhập số" class="inputProductNum" name="inputNumber" /></td>
+                    </tr>
+                    <tr>
+                        <td>Thành tiền: </td>
+                        <td class="totalPriceProduct"> Đồng</td>
+                    </tr>
+                </table>
+                <input type="hidden" class="hiddenProductID" name="productID" value="" />
+            </form>
             <div class="popup-btn"> <a href="#" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Hủy bỏ</a> </div>
-            <div class="popup-btn" style="margin-right:30px"> <a href="#" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Đồng ý</a> </div>
+            <div class="popup-btn" style="margin-right:30px"> <a href="javascript:void(0)" onclick="$('#myForm').submit();document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Đồng ý</a> </div>
         </div>
         <div id="fade" class="black_overlay"></div>
     </div>

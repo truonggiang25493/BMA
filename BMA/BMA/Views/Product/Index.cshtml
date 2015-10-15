@@ -1,4 +1,7 @@
-﻿@model IEnumerable<BMA.Models.Product>
+﻿@using BMA.Models
+@using PagedList.Mvc;
+@model PagedList.PagedList<Product>
+
 @{
     ViewBag.Title = "Tất cả sản phẩm";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
@@ -57,7 +60,7 @@
                                     <div class="property-price">
                                         <h3><sup>$</sup><span>@item.ProductStandardPrice</span></h3>
                                     </div>
-                                    @*<div style="margin-left:60px;" class="detail-btn mrgt3x"> <a href="@Url.Action("AddCart", "Cart", new { @productId = item.ProductId, @strURL = Request.Url.ToString() })" class="sale">Mua hàng</a> </div>*@
+
                                     <div style="margin-left:60px;" class="detail-btn mrgt3x">
                                         <a href="javascript:void(0)" onclick="return openPopup('@item.ProductName','@item.ProductId','@item.ProductStandardPrice');" class="sale">Mua hàng</a>
                                         <script type="text/javascript">
@@ -74,13 +77,26 @@
                                             }
                                             $('#light .inputProductNum').keyup(function () {
                                                 var total = $(this).val() * selectDongia;
-                                                $('#light .totalPriceProduct').text(total + " Đồng");
+                                                total = addPeriod(total);
+                                                $('#light .totalPriceProduct').text(total + " Đồng");
                                             });
                                             $('.inputProductNum').keyup(function () {
                                                 if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
                                                     this.value = this.value.replace(/[^0-9\.]/g, '');
                                                 }
                                             });
+
+                                            function addPeriod(nStr) {
+                                                nStr += '';
+                                                x = nStr.split('.');
+                                                x1 = x[0];
+                                                x2 = x.length > 1 ? '.' + x[1] : '';
+                                                var rgx = /(\d+)(\d{3})/;
+                                                while (rgx.test(x1)) {
+                                                    x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                                                }
+                                                return x1 + x2;
+                                            }
                                         </script>
                                     </div>
                                 </div>
@@ -89,34 +105,35 @@
                                 <center><h2 class="popupProductName" style="color:#808080">@item.ProductName</h2></center>
                                 <div class="border-top"></div>
                                 <br />
-                                <form action='@Url.Action("AddCart", "Cart")' id="myForm" method="post">
+                                <form id="addCartForm" action='@Url.Action("AddCart", "Cart", new { @strURL = Request.Url.ToString()})' method="post">
                                     <table class="popup-table">
                                         <tr>
                                             <td>Số lượng: </td>
-                                            <td><input style="width:220px;" type="text" value="" placeholder="Chỉ nhập số" class="inputProductNum" name="inputNumber" /></td>
+                                            <td><input style="width:220px;" type="text" value="" placeholder="Chỉ nhập số" class="inputProductNum" id="inputProductNum" name="inputNumber" required /></td>
                                         </tr>
                                         <tr>
                                             <td>Thành tiền: </td>
-                                            <td class="totalPriceProduct"> Đồng</td>
+                                            <td class="totalPriceProduct"></td>
                                         </tr>
                                     </table>
                                     <input type="hidden" class="hiddenProductID" name="productID" value="" />
                                 </form>
                                 <div class="popup-btn"> <a href="#" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Hủy bỏ</a> </div>
-                                <div class="popup-btn" style="margin-right:30px"> <a href="javascript:void(0)" onclick="$('#myForm').submit();document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Đồng ý</a> </div>
+                                <div class="popup-btn" style="margin-right:30px"> <a href="#" onclick="return submitAddCart();" class="book-it"><i class="fa fa-angle-right"></i>Đồng ý</a> </div>
+                                <script type="text/javascript">
+                                    function submitAddCart() {
+                                        document.getElementById("addCartForm").submit();
+                                        return 1;
+                                    }
+                                </script>
                             </div>
                             <div id="fade" class="black_overlay"></div>
                         </li>
                     }
                 </ul>
+
                 <div class="numbering">
-                    <ul class="pagination">
-                        <li class="active"><a href="#">01</a></li>
-                        <li><a href="#">02</a></li>
-                        <li><a href="#">03</a></li>
-                        <li><a href="#">04</a></li>
-                        <li><a href="#">05</a></li>
-                    </ul>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
                 </div>
             </div>
         </div>

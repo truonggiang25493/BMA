@@ -2,13 +2,13 @@
 @using System.Globalization;
 @model List<Cart>
 @{
-    ViewBag.Title = "Giỏ hàng";
+    ViewBag.Title = "Chỉnh sửa đơn hàng";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
+    int IdToEdit = (int)Session["BeEdited"];
 }
 @{
     int sumTotal = 0;
 }
-<script type="text/javascript" src="webforms2/webforms2-p.js"></script>
 <section class="border-top"></section>
 <center><h3 style="margin-top: 50px; margin-bottom: -30px; font-weight: bolder; color: #09b9e5">THÔNG TIN ĐƠN HÀNG</h3></center>
 <form id="updateCartForm" action="@Url.Action("UpdateCart", "Cart")" method="post">
@@ -63,10 +63,6 @@
 @{
     ViewBag.totalValue = totalValue;
     TempData["TotalValue"] = ViewBag.totalValue;
-    //ViewBag.amount = sumTotal;
-    //TempData["Amount"] = ViewBag.amount;
-    //ViewBag.taxAmount = taxAmount;
-    //TempData["TaxAmount"] = ViewBag.taxAmount;
 }
 <div style="margin-top:-85px;" class="row">
     <ul class="filter-list clearfix">
@@ -85,26 +81,14 @@
                     <div style="margin-top:21px; float:right;margin-right:-35px;" class="detail-btn mrgt3x"><a href="@Url.Action("Index", "Product")" class="sale">Tiếp tục mua sắm</a></div>
                 </div>
                 <div class="property-text2">
-                    @{
-                        if (Session["BeEdited"] != null)
-                        {
-                            <div style="margin-top:-40px; float:right;margin-right:563px;" class="detail-btn mrgt3x"> <a style="background-color:#ad0707" href="javascript:void(0)" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'" class="sale">Hủy đơn hàng</a> </div>
-                        }
-                        else
-                        {
-                            <div style="margin-top:-40px; float:right;margin-right:563px;" class="detail-btn mrgt3x"> <a style="background-color:#ad0707" href="@Url.Action("DeleteAll", "Cart")" class="sale">Hủy đơn hàng</a> </div>
-                        }
-                    }
-
+                    <div style="margin-top:-40px; float:right;margin-right:563px;" class="detail-btn mrgt3x"> <a style="background-color:#ad0707" href="javascript:void(0)" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'" class="sale">Hủy đơn hàng</a> </div>
                 </div>
-
                 <div class="property-text2">
                     @{
                         if (Session["User"] != null)
                         {
                             if (Session["BeEdited"] != null)
                             {
-                                int IdToEdit = (int)Session["BeEdited"];
                                 using (Html.BeginForm("EditOrder", "Cart", new { @orderId = IdToEdit }, FormMethod.Post, new { id = "orderForm" }))
                                 {
                                     <table class="table-fill-2" style="margin-top:-50px;margin-left:610px;">
@@ -146,7 +130,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div style="margin-top: 28px; float: right; margin-right: 170px; margin-bottom: 50px; " class="detail-btn mrgt3x"> <a style="background-color: #5cb85c; " href="#" onclick="document.getElementById('orderForm').submit();" class="sale">Đặt hàng</a> </div>
+                                <div style="margin-top: -10px; float: right; margin-right: 170px; margin-bottom: 50px; " class="detail-btn mrgt3x"> <a style="background-color: #5cb85c; " href="#" onclick="document.getElementById('orderForm').submit();" class="sale">Đặt hàng</a> </div>
                             }
                         }
                     }
@@ -155,22 +139,17 @@
         </li>
     </ul>
 </div>
-@{
-    if (Session["BeEdited"] != null)
-    {
-        <div id="light" class="white_content_delete">
-            <div class="modal-content">
-                <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
-                    <button type="button" class="close" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
-                    <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
-                </div>
-                <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Quý khách thực sự muốn hủy đơn hàng này?</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
-                    <a class="btn btn-primary" href="@Url.Action("CancelOrderConfirm", "CusManageOrder", new { @orderId = (int)Session["BeEdited"]})">Đồng ý</a>
-                </div>
-            </div>
+<div id="light" class="white_content_delete">
+    <div class="modal-content">
+        <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
+            <button type="button" class="close" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
+            <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
         </div>
-        <div id="fade" class="black_overlay"></div>
-    }
-}
+        <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Quý khách thực sự muốn hủy đơn hàng này?</div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
+            <a class="btn btn-primary" href="@Url.Action("CancelOrderConfirm", "CusManageOrder", new { @orderId = IdToEdit })">Đồng ý</a>
+        </div>
+    </div>
+</div>
+<div id="fade" class="black_overlay"></div>

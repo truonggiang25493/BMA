@@ -8,22 +8,28 @@ namespace BMA.Models
     public class Cart
     {
         BMAEntities db = new BMAEntities();
-        public int productId { get; set; }
-        public string productName { get; set; }
-        public double price { get; set; }
-        public int quantity { get; set; }
-        public double Total
-        {
-            get { return price * quantity; }
-        }
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public int Price { get; set; }
+        public int Quantity { get; set; }
+        public int Total {get;set;}
+        //{
+        //    get { return price * quantity; }
+        //    set;
+        //}
 
         public Cart(int id)
         {
-            productId = id;
-            Product product = db.Products.Single(n => n.ProductId == productId);
-            productName = product.ProductName;
-            price = product.ProductStandardPrice;
-            quantity = 1;
+            ProductId = id;
+            Product product = db.Products.Single(n => n.ProductId == ProductId);
+            ProductName = product.ProductName;
+            Price = product.ProductStandardPrice;
+            Quantity = 0;
+        }
+
+        public Cart()
+        {
+
         }
     }
 }
