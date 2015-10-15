@@ -165,6 +165,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
@@ -217,9 +218,6 @@
     <Compile Include="Models\InputMaterial.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\MaterialInOrderItem.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Order.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -230,6 +228,9 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OutputBill.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OutputMaterial.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Product.cs">
@@ -256,6 +257,7 @@
     <Compile Include="Models\TaxType.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderItemViewModel.cs" />
@@ -291,6 +293,7 @@
     <Content Include="Content\CustomerLayout\JS\jquery.themepunch.tools.min.js" />
     <Content Include="Content\CustomerLayout\JS\owl.carousel.min.js" />
     <Content Include="Content\CustomerLayout\JS\scripts.js" />
+    <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -1198,6 +1201,11 @@
     <Content Include="Views\Cart\Cart.cshtml" />
     <Content Include="Views\Cart\CartPartial.cshtml" />
     <Content Include="Views\Order\Detail.cshtml" />
+    <Content Include="Views\Order\Add.cshtml" />
+    <Content Include="Views\Order\Checkout.cshtml" />
+    <Content Include="Views\Order\AddCustomerToOrder.cshtml" />
+    <Content Include="Views\Customer\GetCustomerPartialView.cshtml" />
+    <Content Include="Views\Order\CheckoutWithCustomer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -27,6 +27,33 @@
             <b>Thời gian tạo: </b>
             @Model.Order.CreateTime.ToString(("dd/MM/yyyy hh:mm tt"))
             <br />
+            @if (Model.Order.OrderStatus != 0 && Model.Order.OrderStatus != 1)
+            {
+                if (Model.Order.ApproveTime != null)
+                {
+                    <b>Thời gian duyệt: </b>
+                    @(((DateTime)Model.Order.ApproveTime).ToString("dd/MM/yyyy hh:mm tt"))
+                }
+                if (Model.Order.AspNetUser1.FullName != null)
+                {
+                    <br />
+                    <b>Người duyệt: </b>
+                    @(Model.Order.AspNetUser1.FullName)
+                }
+                if (Model.Order.DepositAmount > 0)
+                {
+                    <br />
+                    <b>Tiền cọc: </b>
+                    @(Model.Order.DepositAmount.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                }
+                if (Model.Order.DeliveryTime != null)
+                {
+                    <br />
+                    <b>Ngày giao hàng: </b>
+                    @(((DateTime)Model.Order.DeliveryTime).ToString("dd/MM/yyyy"))
+                }
+            }
+            <br />
             <b>Trạng thái: </b>
             @if (Model.Order.OrderStatus == 5)
             {
@@ -95,7 +122,7 @@
                             <td>@(i + 1)</td>
                             <td>@Model.OrderItemList.ElementAt(i).ProductName</td>
                             <td>@Model.OrderItemList.ElementAt(i).OrderItem.RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                            <td>@Model.OrderItemList.ElementAt(i).OrderItem.Quantity</td>
+                            <td>@Model.OrderItemList.ElementAt(i).OrderItem.Quantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                             <td style="text-align: right">@Model.OrderItemList.ElementAt(i).OrderItem.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                         </tr>
                     }
@@ -165,8 +192,8 @@
                             <tr>
                                 <td>@(i + 1)</td>
                                 <td>@Model.MaterialList[i].ProductMaterialName</td>
-                                <td>@Model.MaterialList[i].NeedQuantity @Model.MaterialList[i].Unit</td>
-                                <td>@Model.MaterialList[i].StorageQuantity @Model.MaterialList[i].Unit</td>
+                                <td>@Model.MaterialList[i].NeedQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @Model.MaterialList[i].Unit</td>
+                                <td>@Model.MaterialList[i].StorageQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @Model.MaterialList[i].Unit</td>
                                 @if (Model.MaterialList[i].IsEnough)
                                 {
                                     <td>
@@ -188,8 +215,8 @@
         <div class="row" style="padding-bottom: 20px;">
             <div class="col-xs-12">
                 <h2 class="label label-info" style="font-size: 12pt">Chi phí nguyên liệu: @Model.MaterialCost.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</h2>
+            </div>
         </div>
-    </div>
     }
 
     <!--Button-->

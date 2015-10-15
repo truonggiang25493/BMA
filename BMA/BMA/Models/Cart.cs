@@ -25,5 +25,6 @@ namespace BMA.Models
             price = product.ProductStandardPrice;
             quantity = 1;
         }
+
     }
 }

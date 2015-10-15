@@ -1,6 +1,7 @@
 ﻿@using System.Globalization
 @using BMA.Common
-@model List<BMA.Models.Order>
+@using BMA.Models
+@model List<Order>
 @{
     ViewBag.Title = "Danh sách đơn hàng";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
@@ -17,73 +18,73 @@
             <table id="example2" class="table table-hover table-bordered">
                 <thead style="font-weight: bold">
                     <tr>
-                        <th>STT</th>
+
                         <th>Mã đơn hàng</th>
-                        <th>Thời gian đơn hàng</th>
+                        <th>Thời gian đặt hàng</th>
                         <th>Tổng giá trị</th>
                         <th>Trạng thái</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 0; i < Model.Count; i++)
+                    @foreach (Order order in Model)
                     {
                         <tr>
-                            <td>@(i + 1)</td>
-                            <td>@Model[i].OrderCode</td>
-                            <td>@Model[i].CreateTime.ToString("dd/MM/yyyy hh:mm tt")</td>
-                            <td style="text-align: right">@Model[i].TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
 
-                            @if (Model[i].OrderStatus==5)
+                            <td>@order.OrderCode</td>
+                            <td>@order.CreateTime.ToString("dd/MM/yyyy hh:mm tt")</td>
+                            <td style="text-align: right">@order.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+
+                            @if (order.OrderStatus == 5)
                             {
                                 <td>
-                                    <span class="label label-success">@CommonData.Status[Model.ElementAt(i).OrderStatus]</span>
+                                    <span class="label label-success">@CommonData.Status[order.OrderStatus]</span>
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId })
-                                </td>
-
-                            }
-                            else if (Model[i].OrderStatus == 6)
-                            {
-                                <td>
-                                    <span class="label label-danger">@CommonData.Status[Model.ElementAt(i).OrderStatus]</span>
-                                </td>
-                                <td>
-                                    @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId })
+                                    @Html.ActionLink("Xem", "Detail", new { id = order.OrderId })
                                 </td>
 
                             }
-                            else if (Model[i].OrderStatus == 0)
+                            else if (order.OrderStatus == 6)
                             {
                                 <td>
-                                    <span class="label label-warning">@CommonData.Status[Model.ElementAt(i).OrderStatus]</span>
+                                    <span class="label label-danger">@CommonData.Status[order.OrderStatus]</span>
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId })
-                                    @Html.ActionLink("Sửa", "Edit", new { id = Model[i].OrderId })
-                                    @Html.ActionLink("Hủy", "Delete", new { id = Model[i].OrderId })
+                                    @Html.ActionLink("Xem", "Detail", new { id = order.OrderId })
                                 </td>
 
                             }
-                            else if (Model[i].OrderStatus == 1)
+                            else if (order.OrderStatus == 0)
                             {
                                 <td>
-                                    <span class="label label-warning">@CommonData.Status[Model.ElementAt(i).OrderStatus]</span>
+                                    <span class="label label-warning">@CommonData.Status[order.OrderStatus]</span>
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId })
-                                    @Html.ActionLink("Hủy", "Delete", new { id = Model[i].OrderId })
+                                    @Html.ActionLink("Xem", "Detail", new { id = order.OrderId })
+                                    @Html.ActionLink("Sửa", "Edit", new { id = order.OrderId })
+                                    @Html.ActionLink("Hủy", "Delete", new { id = order.OrderId })
+                                </td>
+
+                            }
+                            else if (order.OrderStatus == 1)
+                            {
+                                <td>
+                                    <span class="label label-warning">@CommonData.Status[order.OrderStatus]</span>
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Xem", "Detail", new { id = order.OrderId })
+                                    @Html.ActionLink("Hủy", "Delete", new { id = order.OrderId })
                                 </td>
                             }
                             else
                             {
                                 <td>
-                                    <span class="label label-primary">@CommonData.Status[Model.ElementAt(i).OrderStatus]</span>
+                                    <span class="label label-primary">@CommonData.Status[order.OrderStatus]</span>
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Xem", "Detail", new { id = Model[i].OrderId })
-                                    @Html.ActionLink("Hủy", "Delete", new { id = Model[i].OrderId })
+                                    @Html.ActionLink("Xem", "Detail", new { id = order.OrderId })
+                                    @Html.ActionLink("Hủy", "Delete", new { id = order.OrderId })
                                 </td>
                             }
                         </tr>

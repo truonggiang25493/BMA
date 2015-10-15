@@ -15,6 +15,8 @@
     <link href="/Content/AdminLayout/plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" />
     <!-- AdminLTE Skins -->
     <link href="/Content/AdminLayout/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
+    <!-- Own css -->
+    <link href="~/Content/style.css" rel="stylesheet" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -173,7 +175,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index","Order")"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
-                            <li><a href=""><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
+                            <li><a href="@Url.Action("Add", "Order")"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
                             <li><a href=""><i class="fa fa-thumbs-o-up"></i>Chấp nhận đơn hàng</a></li>
                         </ul>
                     </li>
@@ -251,32 +253,19 @@
                 "info": true,
                 "autoWidth": false
             });
-
-
+            $('#example1').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": false,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+        $(document).on("click", ".table tbody tr", function () {
+            $(this).addClass('selected').siblings().removeClass('selected');
         });
     </script>
-    <script>
-        $(function () {
-
-        });
-    </script>
-    <!--
-    <script language="javascript">
-            function open_container() {
-                var content = '<form role="form"><div class="form-group"><label for="exampleInputEmail1">Email address</label><input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"></div><div class="form-group"><label for="exampleInputPassword1">Password</label><input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"></div><div class="form-group"><label for="exampleInputFile">File input</label><input type="file" id="exampleInputFile"><p class="help-block">Example block-level help text here.</p></div><div class="checkbox"><label><input type="checkbox"> Check me out</label></div><button type="submit" class="btn btn-default">Submit</button></form>';
-                var title = 'My dynamic modal dialog form with bootstrap';
-                var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button><button type="button" class="btn btn-primary">Save changes</button>';
-                setModalBox(title, content, footer);
-                $('#myModal').modal('show');
-            }
-            function setModalBox(title, content, footer) {
-                document.getElementById('popup-body').innerHTML = content;
-                document.getElementById('popup-title').innerHTML = title;
-                document.getElementById('popup-footer').innerHTML = footer;
-
-            }
-        </script>
-        -->
     <!-- Modal -->
     <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm ">

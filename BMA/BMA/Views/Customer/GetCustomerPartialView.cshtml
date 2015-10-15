@@ -1,0 +1,27 @@
+﻿@model List<BMA.Models.Customer>
+<table id="example1" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên khách hàng</th>
+            <th>Địa chỉ</th>
+            <th>Số điện thoại</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>
+                    @customer.AspNetUser.FullName
+                    <input type="hidden" value="@customer.UserId" />
+                </td>
+                <td>
+                    @customer.CustomerAddress
+                </td>
+                <td>
+                    @customer.CustomerPhoneNumber
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

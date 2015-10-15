@@ -76,6 +76,14 @@
           <Property Name="CustomerPhoneNumber" Type="nvarchar" MaxLength="20" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="ExportFrom">
+          <Key>
+            <PropertyRef Name="OutputMaterialId" />
+            <PropertyRef Name="InputbillId" />
+          </Key>
+          <Property Name="OutputMaterialId" Type="int" Nullable="false" />
+          <Property Name="InputbillId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="GuestInfo">
           <Key>
             <PropertyRef Name="GuestInfoId" />
@@ -105,21 +113,12 @@
           <Property Name="ImportQuantity" Type="int" Nullable="false" />
           <Property Name="RemainQuantity" Type="int" Nullable="false" />
           <Property Name="InputMaterialPrice" Type="float" Nullable="false" />
-          <Property Name="InputMaterialImportDate" Type="date" Nullable="false" />
+          <Property Name="ImportDate" Type="date" />
           <Property Name="InputMaterialExpiryDate" Type="date" Nullable="false" />
           <Property Name="InputMaterialNote" Type="nvarchar" MaxLength="500" />
           <Property Name="InputBillId" Type="int" Nullable="false" />
-          <Property Name="ProductMaterialId" Type="int" />
+          <Property Name="ProductMaterialId" Type="int" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="MaterialInOrderItem">
-          <Key>
-            <PropertyRef Name="OrderItemId" />
-            <PropertyRef Name="InputMarerialId" />
-          </Key>
-          <Property Name="OrderItemId" Type="int" Nullable="false" />
-          <Property Name="InputMarerialId" Type="int" Nullable="false" />
-          <Property Name="MaterialInOrderItemQuantity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderItem">
           <Key>
@@ -175,6 +174,17 @@
           <Property Name="OutputBillRawImage" Type="nvarchar" MaxLength="200" />
           <Property Name="OutputBillTaxAmount" Type="float" Nullable="false" />
         </EntityType>
+        <EntityType Name="OutputMaterial">
+          <Key>
+            <PropertyRef Name="OutputMaterialId" />
+          </Key>
+          <Property Name="OutputMaterialId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExportQuantity" Type="int" Nullable="false" />
+          <Property Name="ExportDate" Type="date" />
+          <Property Name="OutputMaterialNote" Type="nvarchar" MaxLength="500" />
+          <Property Name="ProductMaterialId" Type="int" Nullable="false" />
+          <Property Name="OrderItemId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="ProductId" />
@@ -186,7 +196,7 @@
           <Property Name="Descriptions" Type="nvarchar" MaxLength="500" />
           <Property Name="Note" Type="nvarchar" MaxLength="500" />
           <Property Name="ProductImgage" Type="nvarchar" MaxLength="200" />
-          <Property Name="ProductStandardPrice" Type="float" Nullable="false" />
+          <Property Name="ProductStandardPrice" Type="int" Nullable="false" />
           <Property Name="CategoryId" Type="int" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="ProductCode" Type="varchar" MaxLength="10" Nullable="false" />
@@ -249,7 +259,7 @@
           <Property Name="TaxRateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BeginDate" Type="date" Nullable="false" />
           <Property Name="EndDate" Type="date" />
-          <Property Name="TaxRateValue" Type="float" Nullable="false" />
+          <Property Name="TaxRateValue" Type="int" Nullable="false" />
           <Property Name="TaxTypeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TaxType">
@@ -355,6 +365,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ExportFrom_InputBill">
+          <End Role="InputBill" Type="Self.InputBill" Multiplicity="1" />
+          <End Role="ExportFrom" Type="Self.ExportFrom" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InputBill">
+              <PropertyRef Name="InputBillId" />
+            </Principal>
+            <Dependent Role="ExportFrom">
+              <PropertyRef Name="InputbillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExportFrom_OutputMaterial">
+          <End Role="OutputMaterial" Type="Self.OutputMaterial" Multiplicity="1" />
+          <End Role="ExportFrom" Type="Self.ExportFrom" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OutputMaterial">
+              <PropertyRef Name="OutputMaterialId" />
+            </Principal>
+            <Dependent Role="ExportFrom">
+              <PropertyRef Name="OutputMaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_InputBill_Supplier_SupplierId">
           <End Role="Supplier" Type="Self.Supplier" Multiplicity="0..1" />
           <End Role="InputBill" Type="Self.InputBill" Multiplicity="*" />
@@ -380,7 +414,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_InputMaterial_ProductMaterial_ProductMaterialId">
-          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="0..1" />
+          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="1" />
           <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProductMaterial">
@@ -388,30 +422,6 @@
             </Principal>
             <Dependent Role="InputMaterial">
               <PropertyRef Name="ProductMaterialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MaterialInOrderItem_InputMaterial_InputMaterialId">
-          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="1" />
-          <End Role="MaterialInOrderItem" Type="Self.MaterialInOrderItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InputMaterial">
-              <PropertyRef Name="InputMaterialId" />
-            </Principal>
-            <Dependent Role="MaterialInOrderItem">
-              <PropertyRef Name="InputMarerialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MaterialInOrderItem_InputMaterial_OrderID">
-          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="1" />
-          <End Role="MaterialInOrderItem" Type="Self.MaterialInOrderItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderItem">
-              <PropertyRef Name="OrderItemId" />
-            </Principal>
-            <Dependent Role="MaterialInOrderItem">
-              <PropertyRef Name="OrderItemId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -487,6 +497,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OutputMaterial_OrderItem">
+          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="1" />
+          <End Role="OutputMaterial" Type="Self.OutputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItem">
+              <PropertyRef Name="OrderItemId" />
+            </Principal>
+            <Dependent Role="OutputMaterial">
+              <PropertyRef Name="OrderItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OutputMaterial_ProductMaterial">
+          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="1" />
+          <End Role="OutputMaterial" Type="Self.OutputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Principal>
+            <Dependent Role="OutputMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Product_Category_CategoryId">
           <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
           <End Role="Product" Type="Self.Product" Multiplicity="*" />
@@ -543,14 +577,15 @@
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExportFrom" EntityType="Self.ExportFrom" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GuestInfo" EntityType="Self.GuestInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InputBill" EntityType="Self.InputBill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InputMaterial" EntityType="Self.InputMaterial" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="MaterialInOrderItem" EntityType="Self.MaterialInOrderItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderItem" EntityType="Self.OrderItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OtherExpense" EntityType="Self.OtherExpense" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OutputBill" EntityType="Self.OutputBill" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OutputMaterial" EntityType="Self.OutputMaterial" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductMaterial" EntityType="Self.ProductMaterial" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
@@ -591,6 +626,14 @@
             <End Role="Category" EntitySet="Category" />
             <End Role="Category1" EntitySet="Category" />
           </AssociationSet>
+          <AssociationSet Name="FK_ExportFrom_InputBill" Association="Self.FK_ExportFrom_InputBill">
+            <End Role="InputBill" EntitySet="InputBill" />
+            <End Role="ExportFrom" EntitySet="ExportFrom" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExportFrom_OutputMaterial" Association="Self.FK_ExportFrom_OutputMaterial">
+            <End Role="OutputMaterial" EntitySet="OutputMaterial" />
+            <End Role="ExportFrom" EntitySet="ExportFrom" />
+          </AssociationSet>
           <AssociationSet Name="FK_InputBill_Supplier_SupplierId" Association="Self.FK_InputBill_Supplier_SupplierId">
             <End Role="Supplier" EntitySet="Supplier" />
             <End Role="InputBill" EntitySet="InputBill" />
@@ -602,14 +645,6 @@
           <AssociationSet Name="FK_InputMaterial_ProductMaterial_ProductMaterialId" Association="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId">
             <End Role="ProductMaterial" EntitySet="ProductMaterial" />
             <End Role="InputMaterial" EntitySet="InputMaterial" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MaterialInOrderItem_InputMaterial_InputMaterialId" Association="Self.FK_MaterialInOrderItem_InputMaterial_InputMaterialId">
-            <End Role="InputMaterial" EntitySet="InputMaterial" />
-            <End Role="MaterialInOrderItem" EntitySet="MaterialInOrderItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MaterialInOrderItem_InputMaterial_OrderID" Association="Self.FK_MaterialInOrderItem_InputMaterial_OrderID">
-            <End Role="OrderItem" EntitySet="OrderItem" />
-            <End Role="MaterialInOrderItem" EntitySet="MaterialInOrderItem" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderItem_Orders_OrderId" Association="Self.FK_OrderItem_Orders_OrderId">
             <End Role="Orders" EntitySet="Orders" />
@@ -634,6 +669,14 @@
           <AssociationSet Name="FK_Orders_OutputBill_OutputBillId" Association="Self.FK_Orders_OutputBill_OutputBillId">
             <End Role="OutputBill" EntitySet="OutputBill" />
             <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OutputMaterial_OrderItem" Association="Self.FK_OutputMaterial_OrderItem">
+            <End Role="OrderItem" EntitySet="OrderItem" />
+            <End Role="OutputMaterial" EntitySet="OutputMaterial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OutputMaterial_ProductMaterial" Association="Self.FK_OutputMaterial_ProductMaterial">
+            <End Role="ProductMaterial" EntitySet="ProductMaterial" />
+            <End Role="OutputMaterial" EntitySet="OutputMaterial" />
           </AssociationSet>
           <AssociationSet Name="FK_Product_Category_CategoryId" Association="Self.FK_Product_Category_CategoryId">
             <End Role="Category" EntitySet="Category" />
@@ -757,6 +800,7 @@
           <Property Name="SupplierId" Type="Int32" />
           <NavigationProperty Name="Supplier" Relationship="Self.FK_InputBill_Supplier_SupplierId" FromRole="InputBill" ToRole="Supplier" />
           <NavigationProperty Name="InputMaterials" Relationship="Self.FK_InputMaterial_InputBill_InputBillId" FromRole="InputBill" ToRole="InputMaterial" />
+          <NavigationProperty Name="OutputMaterials" Relationship="Self.ExportFrom" FromRole="InputBill" ToRole="OutputMaterial" />
         </EntityType>
         <EntityType Name="InputMaterial">
           <Key>
@@ -766,26 +810,14 @@
           <Property Name="ImportQuantity" Type="Int32" Nullable="false" />
           <Property Name="RemainQuantity" Type="Int32" Nullable="false" />
           <Property Name="InputMaterialPrice" Type="Double" Nullable="false" />
-          <Property Name="InputMaterialImportDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ImportDate" Type="DateTime" Precision="0" />
           <Property Name="InputMaterialExpiryDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="InputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="InputBillId" Type="Int32" Nullable="false" />
-          <Property Name="ProductMaterialId" Type="Int32" />
+          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="InputBill" Relationship="Self.FK_InputMaterial_InputBill_InputBillId" FromRole="InputMaterial" ToRole="InputBill" />
           <NavigationProperty Name="ProductMaterial" Relationship="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="InputMaterial" ToRole="ProductMaterial" />
-          <NavigationProperty Name="MaterialInOrderItems" Relationship="Self.FK_MaterialInOrderItem_InputMaterial_InputMaterialId" FromRole="InputMaterial" ToRole="MaterialInOrderItem" />
-        </EntityType>
-        <EntityType Name="MaterialInOrderItem">
-          <Key>
-            <PropertyRef Name="OrderItemId" />
-            <PropertyRef Name="InputMarerialId" />
-          </Key>
-          <Property Name="OrderItemId" Type="Int32" Nullable="false" />
-          <Property Name="InputMarerialId" Type="Int32" Nullable="false" />
-          <Property Name="MaterialInOrderItemQuantity" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="InputMaterial" Relationship="Self.FK_MaterialInOrderItem_InputMaterial_InputMaterialId" FromRole="MaterialInOrderItem" ToRole="InputMaterial" />
-          <NavigationProperty Name="OrderItem" Relationship="Self.FK_MaterialInOrderItem_InputMaterial_OrderID" FromRole="MaterialInOrderItem" ToRole="OrderItem" />
         </EntityType>
         <EntityType Name="OrderItem">
           <Key>
@@ -798,9 +830,9 @@
           <Property Name="RealPrice" Type="Int32" Nullable="false" />
           <Property Name="Amount" Type="Int32" Nullable="false" />
           <Property Name="TaxAmount" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="MaterialInOrderItems" Relationship="Self.FK_MaterialInOrderItem_InputMaterial_OrderID" FromRole="OrderItem" ToRole="MaterialInOrderItem" />
           <NavigationProperty Name="Order" Relationship="Self.FK_OrderItem_Orders_OrderId" FromRole="OrderItem" ToRole="Orders" />
           <NavigationProperty Name="Product" Relationship="Self.FK_OrderItem_Product_ProductId" FromRole="OrderItem" ToRole="Product" />
+          <NavigationProperty Name="OutputMaterials" Relationship="Self.FK_OutputMaterial_OrderItem" FromRole="OrderItem" ToRole="OutputMaterial" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -852,6 +884,20 @@
           <Property Name="OutputBillTaxAmount" Type="Double" Nullable="false" />
           <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_OutputBill_OutputBillId" FromRole="OutputBill" ToRole="Orders" />
         </EntityType>
+        <EntityType Name="OutputMaterial">
+          <Key>
+            <PropertyRef Name="OutputMaterialId" />
+          </Key>
+          <Property Name="OutputMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExportQuantity" Type="Int32" Nullable="false" />
+          <Property Name="ExportDate" Type="DateTime" Precision="0" />
+          <Property Name="OutputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
+          <Property Name="OrderItemId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="OrderItem" Relationship="Self.FK_OutputMaterial_OrderItem" FromRole="OutputMaterial" ToRole="OrderItem" />
+          <NavigationProperty Name="ProductMaterial" Relationship="Self.FK_OutputMaterial_ProductMaterial" FromRole="OutputMaterial" ToRole="ProductMaterial" />
+          <NavigationProperty Name="InputBills" Relationship="Self.ExportFrom" FromRole="OutputMaterial" ToRole="InputBill" />
+        </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="ProductId" />
@@ -863,7 +909,7 @@
           <Property Name="Descriptions" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="ProductImgage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="ProductStandardPrice" Type="Double" Nullable="false" />
+          <Property Name="ProductStandardPrice" Type="Int32" Nullable="false" />
           <Property Name="CategoryId" Type="Int32" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="ProductCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
@@ -881,6 +927,7 @@
           <Property Name="CurrentQuantity" Type="Int32" Nullable="false" />
           <Property Name="StandardQuantity" Type="Int32" />
           <NavigationProperty Name="InputMaterials" Relationship="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="InputMaterial" />
+          <NavigationProperty Name="OutputMaterials" Relationship="Self.FK_OutputMaterial_ProductMaterial" FromRole="ProductMaterial" ToRole="OutputMaterial" />
           <NavigationProperty Name="Recipes" Relationship="Self.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="Recipe" />
         </EntityType>
         <EntityType Name="Recipe">
@@ -935,7 +982,7 @@
           <Property Name="TaxRateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="BeginDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="EndDate" Type="DateTime" Precision="0" />
-          <Property Name="TaxRateValue" Type="Double" Nullable="false" />
+          <Property Name="TaxRateValue" Type="Int32" Nullable="false" />
           <Property Name="TaxTypeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TaxType" Relationship="Self.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxRate" ToRole="TaxType" />
         </EntityType>
@@ -1080,7 +1127,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_InputMaterial_ProductMaterial_ProductMaterialId">
-          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="0..1" />
+          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="1" />
           <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProductMaterial">
@@ -1088,30 +1135,6 @@
             </Principal>
             <Dependent Role="InputMaterial">
               <PropertyRef Name="ProductMaterialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MaterialInOrderItem_InputMaterial_InputMaterialId">
-          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="1" />
-          <End Role="MaterialInOrderItem" Type="Self.MaterialInOrderItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InputMaterial">
-              <PropertyRef Name="InputMaterialId" />
-            </Principal>
-            <Dependent Role="MaterialInOrderItem">
-              <PropertyRef Name="InputMarerialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MaterialInOrderItem_InputMaterial_OrderID">
-          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="1" />
-          <End Role="MaterialInOrderItem" Type="Self.MaterialInOrderItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderItem">
-              <PropertyRef Name="OrderItemId" />
-            </Principal>
-            <Dependent Role="MaterialInOrderItem">
-              <PropertyRef Name="OrderItemId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1139,6 +1162,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OutputMaterial_OrderItem">
+          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="1" />
+          <End Role="OutputMaterial" Type="Self.OutputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItem">
+              <PropertyRef Name="OrderItemId" />
+            </Principal>
+            <Dependent Role="OutputMaterial">
+              <PropertyRef Name="OrderItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Orders_Orders_OrderId">
           <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
           <End Role="Orders1" Type="Self.Order" Multiplicity="*" />
@@ -1160,6 +1195,18 @@
             </Principal>
             <Dependent Role="Orders">
               <PropertyRef Name="OutputBillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OutputMaterial_ProductMaterial">
+          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="1" />
+          <End Role="OutputMaterial" Type="Self.OutputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Principal>
+            <Dependent Role="OutputMaterial">
+              <PropertyRef Name="ProductMaterialId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1203,6 +1250,10 @@
           <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
         </Association>
+        <Association Name="ExportFrom">
+          <End Role="InputBill" Type="Self.InputBill" Multiplicity="*" />
+          <End Role="OutputMaterial" Type="Self.OutputMaterial" Multiplicity="*" />
+        </Association>
         <EntityContainer Name="BMAEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
@@ -1213,11 +1264,11 @@
           <EntitySet Name="GuestInfoes" EntityType="Self.GuestInfo" />
           <EntitySet Name="InputBills" EntityType="Self.InputBill" />
           <EntitySet Name="InputMaterials" EntityType="Self.InputMaterial" />
-          <EntitySet Name="MaterialInOrderItems" EntityType="Self.MaterialInOrderItem" />
           <EntitySet Name="OrderItems" EntityType="Self.OrderItem" />
           <EntitySet Name="Orders" EntityType="Self.Order" />
           <EntitySet Name="OtherExpenses" EntityType="Self.OtherExpense" />
           <EntitySet Name="OutputBills" EntityType="Self.OutputBill" />
+          <EntitySet Name="OutputMaterials" EntityType="Self.OutputMaterial" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="ProductMaterials" EntityType="Self.ProductMaterial" />
           <EntitySet Name="Recipes" EntityType="Self.Recipe" />
@@ -1274,14 +1325,6 @@
             <End Role="ProductMaterial" EntitySet="ProductMaterials" />
             <End Role="InputMaterial" EntitySet="InputMaterials" />
           </AssociationSet>
-          <AssociationSet Name="FK_MaterialInOrderItem_InputMaterial_InputMaterialId" Association="Self.FK_MaterialInOrderItem_InputMaterial_InputMaterialId">
-            <End Role="InputMaterial" EntitySet="InputMaterials" />
-            <End Role="MaterialInOrderItem" EntitySet="MaterialInOrderItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MaterialInOrderItem_InputMaterial_OrderID" Association="Self.FK_MaterialInOrderItem_InputMaterial_OrderID">
-            <End Role="OrderItem" EntitySet="OrderItems" />
-            <End Role="MaterialInOrderItem" EntitySet="MaterialInOrderItems" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrderItem_Orders_OrderId" Association="Self.FK_OrderItem_Orders_OrderId">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderItem" EntitySet="OrderItems" />
@@ -1290,6 +1333,10 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="OrderItem" EntitySet="OrderItems" />
           </AssociationSet>
+          <AssociationSet Name="FK_OutputMaterial_OrderItem" Association="Self.FK_OutputMaterial_OrderItem">
+            <End Role="OrderItem" EntitySet="OrderItems" />
+            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
+          </AssociationSet>
           <AssociationSet Name="FK__Orders_Orders_OrderId" Association="Self.FK__Orders_Orders_OrderId">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="Orders1" EntitySet="Orders" />
@@ -1297,6 +1344,10 @@
           <AssociationSet Name="FK_Orders_OutputBill_OutputBillId" Association="Self.FK_Orders_OutputBill_OutputBillId">
             <End Role="OutputBill" EntitySet="OutputBills" />
             <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OutputMaterial_ProductMaterial" Association="Self.FK_OutputMaterial_ProductMaterial">
+            <End Role="ProductMaterial" EntitySet="ProductMaterials" />
+            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
           </AssociationSet>
           <AssociationSet Name="FK_Recipe_Product_ProductId" Association="Self.FK_Recipe_Product_ProductId">
             <End Role="Product" EntitySet="Products" />
@@ -1313,6 +1364,10 @@
           <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="ExportFrom" Association="Self.ExportFrom">
+            <End Role="InputBill" EntitySet="InputBills" />
+            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -1418,21 +1473,12 @@
                 <ScalarProperty Name="ImportQuantity" ColumnName="ImportQuantity" />
                 <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
                 <ScalarProperty Name="InputMaterialPrice" ColumnName="InputMaterialPrice" />
-                <ScalarProperty Name="InputMaterialImportDate" ColumnName="InputMaterialImportDate" />
+                <ScalarProperty Name="ImportDate" ColumnName="ImportDate" />
                 <ScalarProperty Name="InputMaterialExpiryDate" ColumnName="InputMaterialExpiryDate" />
                 <ScalarProperty Name="InputMaterialNote" ColumnName="InputMaterialNote" />
                 <ScalarProperty Name="InputBillId" ColumnName="InputBillId" />
                 <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MaterialInOrderItems">
-            <EntityTypeMapping TypeName="BMAModel.MaterialInOrderItem">
-              <MappingFragment StoreEntitySet="MaterialInOrderItem">
-                <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
-                <ScalarProperty Name="InputMarerialId" ColumnName="InputMarerialId" />
-                <ScalarProperty Name="MaterialInOrderItemQuantity" ColumnName="MaterialInOrderItemQuantity" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1491,6 +1537,18 @@
                 <ScalarProperty Name="OutputBillAmount" ColumnName="OutputBillAmount" />
                 <ScalarProperty Name="OutputBillRawImage" ColumnName="OutputBillRawImage" />
                 <ScalarProperty Name="OutputBillTaxAmount" ColumnName="OutputBillTaxAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OutputMaterials">
+            <EntityTypeMapping TypeName="BMAModel.OutputMaterial">
+              <MappingFragment StoreEntitySet="OutputMaterial">
+                <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
+                <ScalarProperty Name="ExportQuantity" ColumnName="ExportQuantity" />
+                <ScalarProperty Name="ExportDate" ColumnName="ExportDate" />
+                <ScalarProperty Name="OutputMaterialNote" ColumnName="OutputMaterialNote" />
+                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
+                <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1591,6 +1649,14 @@
             </EndProperty>
             <EndProperty Name="AspNetUsers">
               <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="ExportFrom" TypeName="BMAModel.ExportFrom" StoreEntitySet="ExportFrom">
+            <EndProperty Name="InputBill">
+              <ScalarProperty Name="InputBillId" ColumnName="InputbillId" />
+            </EndProperty>
+            <EndProperty Name="OutputMaterial">
+              <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
             </EndProperty>
           </AssociationSetMapping>
         </EntityContainerMapping>
