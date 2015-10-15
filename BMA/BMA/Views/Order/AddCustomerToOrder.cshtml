@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Tạo mới đơn hàng - Thông tin khách hàng";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+<section class="content-header">
+    <h1>Tạo mới đơn hàng</h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                Thông tin khách hàng
+            </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="row" style="margin-left: 20px;">
+                <button class="btn btn-facebook" style="margin-bottom: 10px;" onclick="open_choose_customer()">Chọn khách hàng</button>
+                <br />
+                <button class="btn btn-facebook" onclick="open_add_customer()">Thêm khách hàng</button>
+            </div>
+
+        </div>
+        <div class="col-xs-9" id="announce">
+            <h3>Vui lòng chọn "Thêm khách hàng" hay "Chọn khách hàng" !</h3>
+        </div>
+        <div class="col-xs-9" id="choose-customer" style="display: none">
+            <div class="box">
+                <!--Header-->
+                <div class="box-header">
+                    <h3>Chọn khách hàng</h3>
+                </div>
+                <!--Customer table-->
+                <div class="box-body" id="customer-table">
+                    <!--Customer table load by ajax-->
+                </div>
+                <!--Button-->
+                <div class="box-footer">
+                    <button class="btn btn-primary">Quay lại</button>
+                    <button class="btn btn-success pull-right" onclick="fnselect()">Chọn</button>
+                </div>
+                <script>
+                    function fnselect() {
+                        var customerId = $(".table tr.selected td:first input").val();
+
+                        var form = document.createElement("form");
+                        form.setAttribute("method", "post");
+                        form.setAttribute("action", "/Order/CheckoutWithCustomer");
+
+                        var hiddenField = document.createElement("input");
+                        hiddenField.setAttribute("type", "hidden");
+                        hiddenField.setAttribute("name", "customerId");
+                        hiddenField.setAttribute("value", customerId);
+                        form.appendChild(hiddenField);
+                        form.submit();
+                    }
+                </script>
+
+            </div>
+
+        </div>
+        <div class="col-xs-9" id="add-customer" style="display: none">
+            <!--Header-->
+            <div class="row">
+                <h3>Thêm khách hàng</h3>
+            </div>
+
+
+        </div>
+        <script>
+            function open_choose_customer() {
+                $.ajax({
+                    "url": "/Customer/GetCustomerPartialView",
+                    "method": "GET",
+                    "success": function (data) {
+                        $('#customer-table').html(data);
+                    },
+                    "fail": function (e) {
+                        alert("Have error" + e.toString());
+                    }
+                });
+                $('#announce').hide();
+                $('#choose-customer').show();
+                $('#add-customer').hide();
+            }
+            function open_add_customer() {
+                $('#announce').hide();
+                $('#choose-customer').hide();
+                $('#add-customer').show();
+            }
+        </script>
+    </div>
+</section>

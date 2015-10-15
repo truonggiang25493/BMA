@@ -1,23 +1,22 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
     <title>@ViewBag.Title</title>
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
     <!-- Bootstrap 3.3.5 -->
     <link href="/Content/AdminLayout/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Font Awesome -->
     <link href="/Content/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
-    <!-- Ionicons -->
-    <link href="/Content/AdminLayout/plugins/ionic/ionic.min.css" rel="stylesheet" />
+    <!-- Theme style -->
+    <link href="/Content/AdminLayout/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <!-- jvectormap -->
     <link href="/Content/AdminLayout/plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" />
-    <!-- Theme style -->
-    <link href="/Content/AdminLayout/dist/css/AdminLTE.min.css" rel="stylesheet" />
     <!-- AdminLTE Skins -->
     <link href="/Content/AdminLayout/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
+    <!-- Own css -->
+    <link href="~/Content/style.css" rel="stylesheet" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -76,7 +75,7 @@
                                         Haruyuki - Nhân viên cửa hàng
                                         <small></small>
                                     </p>
-                                </li>                              
+                                </li>
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
@@ -176,7 +175,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index","Order")"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
-                            <li><a href=""><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
+                            <li><a href="@Url.Action("Add", "Order")"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
                             <li><a href=""><i class="fa fa-thumbs-o-up"></i>Chấp nhận đơn hàng</a></li>
                         </ul>
                     </li>
@@ -212,8 +211,7 @@
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
             <!-- Create the tabs -->
-            <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-            </ul>
+            <ul class="nav nav-tabs nav-justified control-sidebar-tabs"></ul>
             <!-- Tab panes -->
             <div class="tab-content">
                 <!-- Home tab content -->
@@ -255,7 +253,32 @@
                 "info": true,
                 "autoWidth": false
             });
+            $('#example1').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": false,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+        $(document).on("click", ".table tbody tr", function () {
+            $(this).addClass('selected').siblings().removeClass('selected');
         });
     </script>
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="popup-title"></h4>
+                </div>
+                <div class="modal-body" id="popup-body"></div>
+                <div class="modal-footer" id="popup-footer"></div>
+            </div>
+        </div>
+    </div>
+    <!--End of modal-->
 </body>
 </html>
