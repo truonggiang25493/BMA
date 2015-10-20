@@ -7,13 +7,13 @@
       <Diagram DiagramId="5b049600074045a98f0c3462cc935c61" Name="Diagram1">
         <EntityTypeShape EntityType="BMAModel.Category" Width="1.5" PointX="6" PointY="18.75" />
         <EntityTypeShape EntityType="BMAModel.Customer" Width="1.5" PointX="5.25" PointY="5" />
-        <EntityTypeShape EntityType="BMAModel.GuestInfo" Width="1.5" PointX="6" PointY="1.25" />
+        <EntityTypeShape EntityType="BMAModel.GuestInfo" Width="1.5" PointX="6" PointY="9.125" />
         <EntityTypeShape EntityType="BMAModel.InputBill" Width="1.5" PointX="10.5" PointY="0.75" />
         <EntityTypeShape EntityType="BMAModel.InputMaterial" Width="1.5" PointX="12.75" PointY="2.125" />
         <EntityTypeShape EntityType="BMAModel.OrderItem" Width="1.5" PointX="10.5" PointY="6.25" />
         <EntityTypeShape EntityType="BMAModel.Order" Width="1.5" PointX="8.25" PointY="5" />
         <EntityTypeShape EntityType="BMAModel.OtherExpense" Width="1.5" PointX="0.75" PointY="1.125" />
-        <EntityTypeShape EntityType="BMAModel.OutputBill" Width="1.5" PointX="6" PointY="9.125" />
+        <EntityTypeShape EntityType="BMAModel.OutputBill" Width="1.5" PointX="6" PointY="1.25" />
         <EntityTypeShape EntityType="BMAModel.OutputMaterial" Width="1.5" PointX="12.75" PointY="6.375" />
         <EntityTypeShape EntityType="BMAModel.Product" Width="1.5" PointX="8.25" PointY="17.875" />
         <EntityTypeShape EntityType="BMAModel.ProductMaterial" Width="1.5" PointX="10.5" PointY="10.25" />

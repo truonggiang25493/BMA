@@ -1246,6 +1246,7 @@ span {
 }
 
 .property-detail {
+    border: 1px solid #e6e6e6;
     margin-bottom: 50px;
 }
 
@@ -2040,11 +2041,60 @@ footer .contact li {
     right: -9%;
 }
 
+
+
+.property-box .delete-btn .sale {
+    background-color: #a92828;
+    padding: 13px 20px;
+    color: #fff;
+    transition: all 0.8s ease 0s;
+    margin-top: -72px;
+    float: left;
+    margin-left: 163px;
+}
+
+.property-box .delete-btn .rent {
+    background-color: #a92828;
+    padding: 10px 20px;
+    transition: all 0.8s ease 0s;
+}
+
+    .property-box .delete-btn .rent:hover,
+    .property-box .delete-btn .sale:hover,
+    .property-box.rent-2 .delete-btn .rent:hover,
+    .property-box.sale-2 .delete-btn .sale:hover {
+        background-color: #333;
+    }
+
+.property-box .book-btn .sale {
+    background-color: #5cb85c;
+    padding: 13px 20px;
+    color: #fff;
+    transition: all 0.8s ease 0s;
+    margin-top: -165px;
+    float: right;
+    margin-right: 150px;
+    margin-bottom: 50px;
+}
+
+.property-box .book-btn .rent {
+    background-color: #5cb85c;
+    padding: 10px 20px;
+    transition: all 0.8s ease 0s;
+}
+
+    .property-box .book-btn .rent:hover,
+    .property-box .book-btn .sale:hover,
+    .property-box.rent-2 .book-btn .rent:hover,
+    .property-box.sale-2 .book-btn .sale:hover {
+        background-color: #333;
+    }
+
+
 .property-box .detail-btn .sale {
     background-color: #09b9e5;
     padding: 13px 20px;
     transition: all 0.8s ease 0s;
-    border-radius: 5px;
 }
 
 .property-box .detail-btn .rent {
@@ -2392,13 +2442,12 @@ input[type="checkbox"] {
         }
 
 .popup-btn {
-    margin-top: 30px;
-    margin-right: 90px;
+    margin-right: 80px;
     font-size: 16px;
     background-color: #09b9e5;
     float: right;
-    padding: 12px 26px 12px 18px;
-    border-radius: 5px;
+    padding: 6px 20px 6px 12px;
+    border-radius: 3px;
     transform: scale(1, 1);
 }
 
@@ -3810,8 +3859,8 @@ contact-info-rightbar {
     background: white;
     border-radius: 3px;
     border-collapse: collapse;
-    margin-left: 622px;
-    margin-top: -40px;
+    margin-left: 5px;
+    margin-top: -15px;
     margin-bottom: 5px;
     max-width: 400px;
     padding: 5px;
@@ -3877,22 +3926,7 @@ tr {
     text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
 }
 
-/*tr:hover td {
-  background:#4E5066;
-  color:#FFFFFF;
-  border-top: 1px solid #22262e;
-  border-bottom: 1px solid #22262e;
-}
- 
-tr:hover .text-left1{
-  background:#4E5066;
-  color:#000;
-  border-top: 1px solid #22262e;
-  border-bottom: 1px solid #22262e;
-}*/
-
 .cancel-order:hover {
-    /*background:#4E5066;*/
     background: #cecece;
 }
 
@@ -3909,14 +3943,6 @@ tr:first-child {
 tr:last-child {
     border-bottom: none;
 }
-
-    /*tr:nth-child(odd) td {
-  background:#EBEBEB;
-}
- 
-tr:nth-child(odd):hover td {
-  background:#4E5066;
-}*/
 
     tr:last-child td:first-child {
         border-bottom-left-radius: 3px;
@@ -4005,15 +4031,13 @@ h2 {
     display: none;
     position: fixed;
     top: 25%;
-    left: 30.5%;
-    width: 539px;
-    height: 350px;
-    padding: 16px;
-    border-top: 5px solid #ff2791;
+    left: 29.5%;
+    width: 519px;
+    height: 280px;
     background-color: white;
     z-index: 1002;
     overflow: auto;
-    border-radius: 9px 9px;
+    border-radius: 6px;
 }
 
 .white_content_login {
@@ -4031,7 +4055,7 @@ h2 {
     border-radius: 9px 9px;
 }
 
-.white_content_delete{
+.white_content_delete {
     font-family: 'Patrick Hand SC';
     font-size: 20px;
     display: none;
@@ -4051,4 +4075,12 @@ h2 {
     border: none;
     background-color: #09b9e5;
     color: #fff;
+}
+
+.cart-title {
+    font-family: 'Patrick Hand SC';
+    margin-top: 50px;
+    margin-bottom: -30px;
+    font-weight: bolder;
+    color: #09b9e5;
 }

@@ -1,0 +1,80 @@
+﻿@model BMA.Models.Product
+
+@{
+    ViewBag.Title = "Chỉnh sửa";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+<section class="content-header">
+    <h1>
+        Sửa thông tin sản phẩm
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Chi tiết sản phẩm</h3>
+                </div><!-- /.box-header -->
+                <!-- form start -->
+                <form role="form" action="/ManageProduct/Edit" method="post">
+                    @Html.HiddenFor(model => model.ProductId)
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Tên sản phẩm</label>
+                            <input type="text" class="form-control" name="productName" value="@Model.ProductName" id="" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Đơn vị tính</label><br />
+                            <select class="form-control" name="productUnit">
+                                @if (Model.Unit == "cái")
+                                {
+                                    <option value="Bịch">Bịch</option>
+                                    <option value="Cái" selected>Cái</option>
+                                }
+                                else
+                                {
+                                    <option value="Bịch" selected>Bịch</option>
+                                    <option value="Cái">Cái</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Trọng lượng</label>
+                            <input type="text" class="form-control" name="productWeight" value="@Model.ProductWeight" id="" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Mô tả sản phẩm</label>
+                            <input type="text" class="form-control" name="productDes" value="@Model.Descriptions" id="" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Ghi chú</label>
+                            <input type="text" class="form-control" name="productNote" value="@Model.Note" id="" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Giá gốc</label>
+                            <input type="text" class="form-control" name="productPrice" value="@Model.ProductStandardPrice" id="" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Loại bánh</label>
+                            <input type="text" class="form-control" name="productCategory" value="@Model.Category.CategoryName" id="" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Mã sản phẩm</label>
+                            <input type="text" class="form-control" name="productCode" value="@Model.ProductCode" id="" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputFile">Hình ảnh</label>
+                            <input type="file" value="@Model.ProductImgage" name="productImage" id="exampleInputFile">
+                        </div>
+                    </div><!-- /.box-body -->
+
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">Thay đổi</button>
+                        <a style="float:right" href="@Url.Action("ProductMaterial", "ManageProduct", new { @ProductId = Model.ProductId})" class="btn btn-danger">Chỉnh sửa nguyên liệu</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

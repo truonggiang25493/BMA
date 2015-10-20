@@ -30,10 +30,10 @@
                                     <label>Khách hàng : @TempData["userName"]</label>
                                 </div>
                                 <div class="form-group">
-                                    <label>Số điện thoại : @TempData["phoneNumber"]</label>
+                                    <label>Số điện thoại : @Session["Phonenumber"]</label>
                                 </div>
                                 <div class="form-group">
-                                    <label>Ngày giao hàng : @TempData["deliveryDate"].ToString().AsDateTime().ToString("dd/MM/yyyy")</label>
+                                    <label>Ngày giao hàng : @Session["DeliveryDate"].ToString().AsDateTime().ToString("dd/MM/yyyy")</label>
                                 </div>
                             </div>
                         </form>

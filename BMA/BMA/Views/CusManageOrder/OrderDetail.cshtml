@@ -67,23 +67,23 @@
                                     <td class="text-left">Trạng thái</td>
                                     @if (Model.OrderStatus == 0)
                                     {
-                                        <td class="text-left"><div class="btn btn-primary">@CommonData.Status[Model.OrderStatus]</div></td>
+                                        <td class="text-left"><div class="label label-warning">@CommonData.Status[Model.OrderStatus]</div></td>
                                     }
-                                    @if (Model.OrderStatus == 2 || Model.OrderStatus == 3 || Model.OrderStatus == 4)
+                                    @if (Model.OrderStatus == 2)
                                     {
-                                        <td class="text-left"><div class="btn btn-warning">@CommonData.Status[Model.OrderStatus]</div></td>
+                                        <td class="text-left"><div class="label label-primary">@CommonData.Status[Model.OrderStatus]</div></td>
+                                    }
+                                    @if (Model.OrderStatus == 3 || Model.OrderStatus == 4)
+                                    {
+                                        <td class="text-left"><div class="label label-info">@CommonData.Status[Model.OrderStatus]</div></td>
                                     }
                                     @if (Model.OrderStatus == 5)
                                     {
-                                        <td class="text-left"><div class="btn btn-success">@CommonData.Status[Model.OrderStatus]</div></td>
+                                        <td class="text-left"><div class="label label-success">@CommonData.Status[Model.OrderStatus]</div></td>
                                     }
                                     @if (Model.OrderStatus == 6)
                                     {
-                                        <td class="text-left"><div class="btn btn-cancel">@CommonData.Status[Model.OrderStatus]</div></td>
-                                    }
-                                    @if (Model.OrderStatus == 1)
-                                    {
-                                        <td class="text-left"><div class="btn btn-danger">@CommonData.Status[Model.OrderStatus]</div></td>
+                                        <td class="text-left"><div class="label label-primary">@CommonData.Status[Model.OrderStatus]</div></td>
                                     }
 
                                 </tr>

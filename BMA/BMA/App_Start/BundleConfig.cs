@@ -52,6 +52,7 @@ namespace BMA
                       "~/Content/CustomerLayout/JS/jquery.js",
                       "~/Content/CustomerLayout/JS/bootstrap.js",
                       "~/Content/CustomerLayout/JS/jquery-ui.js",
+                      "~/Content/CustomerLayout/JS/bootstrap-datepicker.min.js",
                       "~/Content/CustomerLayout/JS/jquery.appear.js",
                       "~/Content/CustomerLayout/JS/jquery.mixitup.min.js",
                       "~/Content/CustomerLayout/JS/jquery.photobox.js",
