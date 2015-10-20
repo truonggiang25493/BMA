@@ -174,6 +174,7 @@
     <Compile Include="Controllers\CusManageOrderController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InputMaterialController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManageMaterialController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
@@ -1224,6 +1225,8 @@
     <Content Include="Views\ManageMaterial\AddMaterial.cshtml" />
     <Content Include="Views\ManageMaterial\Index.cshtml" />
     <Content Include="Views\ManageProduct\ListMaterial.cshtml" />
+    <Content Include="Views\InputMaterial\Detail.cshtml" />
+    <Content Include="Views\InputMaterial\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
