@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
+using PagedList.Mvc;
 using BMA.Models;
 
 namespace BMA.Controllers
@@ -12,21 +14,27 @@ namespace BMA.Controllers
         BMAEntities db = new BMAEntities();
         //
         // GET: /Product/
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            var lstProducts = db.Products.ToList();
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
+            var lstProducts = db.Products.Where(n=>n.IsActive).ToList().ToPagedList(pageNumber, pageSize);
             return View(lstProducts);
         }
 
-        public ActionResult Cookie()
+        public ActionResult Cookie(int? page)
         {
-            var lstCookies = db.Products.Where(n => n.Category.CategoryName == "Bánh ngọt").ToList();
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
+            var lstCookies = db.Products.Where(n => n.Category.CategoryName == "Bánh ngọt" && n.IsActive).ToList().ToPagedList(pageNumber, pageSize);
             return View(lstCookies);
         }
 
-        public ActionResult Saltine()
+        public ActionResult Saltine(int? page)
         {
-            var lstSaltine = db.Products.Where(n => n.Category.CategoryName == "Bánh mặn").ToList();
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
+            var lstSaltine = db.Products.Where(n => n.Category.CategoryName == "Bánh mặn" && n.IsActive).ToList().ToPagedList(pageNumber, pageSize);
             return View(lstSaltine);
         }
 

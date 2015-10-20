@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Thành công";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+}
+
+<section class="border-top">
+    <div class="container" style="margin-left:550px;">
+        <div class="page-title mrgb4x mrgt6x clearfix">
+            <h4 class="page-name">CHỈNH SỬA ĐƠN HÀNG THÀNH CÔNG</h4>
+        </div>
+    </div>
+</section>
+<section style="margin-left:400px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="contact-us animated out" data-delay="0" data-animation="fadeInUp">
+                    <div class="post-form row">
+                        <form id="review-form" method="post" name="postreview">
+                            <div style="margin-bottom:60px;" class="col-md-6">
+                                <div class="contact-info-rightbar animated out" data-delay="0" data-animation="fadeInUp">
+                                    <div class="rightbar-heading">
+                                        <h4>Thông tin đơn hàng</h4>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã đơn hàng : @TempData["orderCode"]</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Khách hàng : @TempData["userName"]</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Số điện thoại : @TempData["phoneNumber"]</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Ngày giao hàng : @TempData["deliveryDate"].ToString().AsDateTime().ToString("dd/MM/yyyy")</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

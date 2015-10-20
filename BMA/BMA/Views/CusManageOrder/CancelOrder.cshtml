@@ -1,0 +1,154 @@
+﻿@using System.Globalization;
+@using BMA.Common;
+@model BMA.Models.Order
+
+@{
+    ViewBag.Title = "Xác nhận hủy";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+    IEnumerable<BMA.Models.OrderItem> oi = ViewBag.orderItems;
+}
+
+<section class="border-top">
+    <div class="container">
+        <div class="page-title mrgb5x mrgt6x clearfix">
+            <h4 class="page-name">Quản lý đơn hàng</h4>
+        </div>
+    </div>
+</section>
+@{
+    int sumTotal = Convert.ToInt32(Model.TotalValue * 0.9);
+    int tax = Convert.ToInt32(Model.TotalValue * 0.1);
+}
+<section>
+    <div class="container">
+        <div class="service-tab">
+            <div class="col-md-3 no-padding col-sm-5 animated out" data-delay="0" data-animation="fadeInUp">
+                <div class="tab-section">
+                    <ul class="nav nav-stacked">
+                        @if (Model.OrderStatus == 1)
+                        {
+                            <li><a href="/CusManageOrder/Index" aria-expanded="true"><span class="tab-border">DANH SÁCH ĐƠN HÀNG</span></a></li>
+                            <li class="active"><a href="/CusManageOrder/ConfirmIndex"><span class="tab-border">XÁC NHẬN ĐƠN HÀNG</span></a></li>
+                        }
+                        else
+                        {
+                            <li class="active"><a href="/CusManageOrder/Index" aria-expanded="true"><span class="tab-border">DANH SÁCH ĐƠN HÀNG</span></a></li>
+                            <li><a href="/CusManageOrder/ConfirmIndex"><span class="tab-border">XÁC NHẬN ĐƠN HÀNG</span></a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-7">
+                <div class="tab-content mrgb7x animated out" data-delay="0" data-animation="fadeInUp">
+                    <div id="booking" class="tab-pane fade in active">
+                        <div class="rightbar-heading" style="float:right">
+                            <h4>THÔNG TIN ĐƠN HÀNG</h4>
+                        </div>
+                        <table class="table-fill" style="margin-top:0px;">
+                            <tbody class="table-hover">
+                                <tr>
+                                    <td class="text-left">Mã đơn hàng</td>
+                                    <td class="text-left">@Model.OrderCode</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Thời gian tạo</td>
+                                    <td class="text-left">@Model.CreateTime.ToShortDateString()</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Trạng thái</td>
+                                    @if (Model.OrderStatus == 0)
+                                    {
+                                        <td class="text-left"><div class="label label-warning">@CommonData.Status[Model.OrderStatus]</div></td>
+                                    }
+                                    @if (Model.OrderStatus == 2)
+                                    {
+                                        <td class="text-left"><div class="label label-primary">@CommonData.Status[Model.OrderStatus]</div></td>
+                                    }
+                                    @if (Model.OrderStatus == 3 || Model.OrderStatus == 4)
+                                    {
+                                        <td class="text-left"><div class="label label-info">@CommonData.Status[Model.OrderStatus]</div></td>
+                                    }
+                                    @if (Model.OrderStatus == 5)
+                                    {
+                                        <td class="text-left"><div class="label label-success">@CommonData.Status[Model.OrderStatus]</div></td>
+                                    }
+                                    @if (Model.OrderStatus == 6)
+                                    {
+                                        <td class="text-left"><div class="label label-primary">@CommonData.Status[Model.OrderStatus]</div></td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Tổng cộng</td>
+                                    <td class="text-left">@(sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Thuế</td>
+                                    <td class="text-left">@(tax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Thành tiền</td>
+                                    <td class="text-left">@Model.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="rightbar-heading" style="float:right">
+                            <h4>SẢN PHẨM TRONG ĐƠN HÀNG</h4>
+                        </div>
+                        <table class="table-fill">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Tên sản phẩm</th>
+                                    <th class="text-left">Đơn giá</th>
+                                    <th class="text-left">Số lượng</th>
+                                    <th class="text-left">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-hover">
+                                @foreach (var item in oi)
+                                {
+                                    <tr>
+                                        <td class="text-left">@item.Product.ProductName</td>
+                                        <td class="text-left">@item.RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        <td class="text-left">@item.Quantity</td>
+                                        <td class="text-left">@item.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        @if (Model.OrderStatus == 5 || Model.OrderStatus == 6)
+                        {
+                            <div style="margin: 40px 0px 40px 0px; background-color: #808080" class="send-msg"><a style="background-color:#808080" class="submit-button">KHÔNG THỂ HỦY</a></div>
+                        }
+                        else
+                        {
+                            <div style="margin: 40px 0px 40px 0px; background-color:#ad0707" class="send-msg"><a href="javascript:void(0)" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'" style="background-color:#ad0707" class="submit-button">HỦY ĐƠN HÀNG</a></div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div id="light" class="white_content_delete">
+                <div class="modal-content">
+                    <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
+                        <button type="button" class="close" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
+                        <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
+                    </div>
+                    @if (Model.OrderStatus == 0)
+                    {
+                        <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Quý khách thực sự muốn hủy đơn hàng này?</div>
+                    }
+                    else
+                    {
+                        <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc.<br /> Quý khách có muốn hủy đơn hàng này không ?</div>
+                    }
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
+                        <a class="btn btn-primary" href="@Url.Action("CancelOrderConfirm", "CusManageOrder", new { @orderId = Model.OrderId })">Đồng ý</a>
+                    </div>
+                </div>
+            </div>
+            <div id="fade" class="black_overlay"></div>
+        </div>
+    </div>
+</section>

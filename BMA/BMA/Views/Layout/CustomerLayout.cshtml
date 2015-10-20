@@ -4,22 +4,40 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/CustomerCss");
+    @Styles.Render("~/CustomerCss")
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
 <body>
-    <div style=""  class="top-bar">
+    <div class="top-bar" style="padding-bottom: -200px; max-height: 100px; background-color: #f5f5f5; ">
         <div class="container">
-            <div style="padding-bottom:15px;" class="right-bar">
-                <ul class="login">
-                    <li><i class="fa fa-shopping-cart"></i></li>
-                    <li><a href="/Cart/Cart"><span>@Html.Action("CartPartial", "Cart")</span></a></li>
-                </ul>
-                <ul class="login">
-                    <li><i class="fa fa-sign-in"></i></li>
-                    <li><span><a href="javascript:void(0)" onclick="document.getElementById('lightLogin').style.display = 'block'; document.getElementById('fadeLogin').style.display = 'block'" class="sale">Đăng Nhập</a></span></li>
-                    
-                </ul>
+            <div class=" navigation clearfix">
+                <div class="menu">
+                    <nav class="navbar navbar-default" style="background-color: #f5f5f5; ">
+                        <div id="navbar" class="navbar-collapse collapse pull-right">
+                            <ul class="nav navbar-nav">
+                                <li><i class="fa fa-shopping-cart"></i></li>
+                                <li style="margin-left:-20px;"><a href="/Cart/Cart"><span>@Html.Action("CartPartial", "Cart")</span></a></li>
+                                @if (Session["User"] != null)
+                                {
+                                    <li><i class="fa fa-user"></i></li>
+                                    <li>
+                                        <a aria-expanded="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">@Session["Username"]</a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li>@Html.ActionLink("Quản lý tài khoản", "Index", "Product")</li>
+                                            <li>@Html.ActionLink("Quản lý đơn hàng", "Index", "CusManageOrder")</li>
+                                            <li>@Html.ActionLink("Đăng xuất", "Logout", "Account")</li>
+                                        </ul>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li><i class="fa fa-sign-in"></i></li>
+                                    <li><a href="javascript:void(0)" onclick="document.getElementById('lightLogin').style.display = 'block'; document.getElementById('fadeLogin').style.display = 'block'" class="sale">Đăng Nhập</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
@@ -41,7 +59,7 @@
                                     </ul>
                                 </li>
                                 <li>@Html.ActionLink("QUY TRÌNH ĐẶT HÀNG", "Index", "Procedure")</li>
-                                <li>@Html.ActionLink("LIÊN HỆ", "Index", "Contact")</li>                               
+                                <li>@Html.ActionLink("LIÊN HỆ", "Index", "Contact")</li>
                             </ul>
                         </div>
                     </nav>
@@ -49,34 +67,48 @@
             </div>
         </div>
     </header>
-    
+
     <div>
         @RenderBody()
     </div>
-    <div id="lightLogin" class="white_content">
-        <center><h2 style="color:#808080">Đăng Nhập</h2></center>
-        <div class="border-top"></div>
-        <br />
-        <table class="popup-table">
-            <tr>
-                <td><i class="fa fa-user fa-2x"></i></td>
-                <td><input type="text" value="" placeholder="Tên đăng nhập" /></td>
-            </tr>
-            <tr>
-                <td><i class="fa fa-lock fa-2x"></i></td>
-                <td><input type="password" value="" placeholder="Mật khẩu" /></td>
-            </tr>
-        </table>
-        <div class="popup-btn" style="margin-right:120px;"> <a href="#" onclick="document.getElementById('lightLogin').style.display = 'none'; document.getElementById('fadeLogin').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Hủy bỏ</a> </div>
-        <div class="popup-btn" style="margin-right:30px;"> <a href="#" onclick="document.getElementById('lightLogin').style.display = 'none'; document.getElementById('fadeLogin').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Đăng nhập</a> </div>
+    <div id="lightLogin" class="white_content_login">
+        <div class="modal-content">
+            <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
+                <h4 class="modal-title ng-binding" style="color:white">Đăng nhập</h4>
+            </div>
+            <form action='@Url.Action("Login", "Account", new { @strURL = Request.Url.ToString()})' id="loginForm" method="post">
+                <table class="popup-table">
+                    <tr>
+                        <td><i class="fa fa-user fa-2x"></i></td>
+                        <td><input style="width:220px;margin-left:30px;" type="text" value="" placeholder="Tên đăng nhập" name="txtAccount" required /></td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa fa-lock fa-2x"></i></td>
+                        <td><input style="width:220px;margin-left:30px;" type="password" value="" placeholder="Mật khẩu" name="txtPassword" required /></td>
+                    </tr>
+                </table>
+                <input type="hidden" class="hiddenProductID" name="productID" value="" />
+            </form>
+            <div class="modal-footer">
+                <div class="popup-btn"> <a href="#" onclick="return submitLogin();" class="book-it">Đăng nhập</a> </div>
+                <div class="popup-btn" style="margin-right: 30px; background-color: #a92828"><a style="background-color: #a92828" onclick="document.getElementById('lightLogin').style.display = 'none'; document.getElementById('fadeLogin').style.display = 'none'" class="book-it">Hủy bỏ</a> </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function submitLogin() {
+                document.getElementById("loginForm").submit();
+                return 1;
+            }
+        </script>
     </div>
     <div id="fadeLogin" class="black_overlay"></div>
+
     <footer class="bg-color">
         <div class="lower-footer">
             <p>Bakery Management System - MGV | Copyright 2015</p>
         </div>
     </footer>
-    
-    @Scripts.Render("~/CustomerJs");
+
+    @Scripts.Render("~/CustomerJs")
 </body>
 </html>

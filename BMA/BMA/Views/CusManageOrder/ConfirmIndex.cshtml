@@ -1,0 +1,67 @@
+﻿@using BMA.Models
+@using BMA.Common
+@using PagedList.Mvc;
+@model PagedList.PagedList<Order>
+
+@{
+    ViewBag.Title = "Xác nhận đơn hàng";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+}
+
+<section class="border-top">
+    <div class="container">
+        <div class="page-title mrgb5x mrgt6x clearfix">
+            <h4 class="page-name">Xác nhận đơn hàng</h4>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="service-tab">
+            <div class="col-md-3 no-padding col-sm-5 animated out" data-delay="0" data-animation="fadeInUp">
+                <div class="tab-section">
+                    <ul class="nav nav-stacked">
+                        <li><a href="/CusManageOrder/Index" aria-expanded="true"><span class="tab-border">DANH SÁCH ĐƠN HÀNG</span></a></li>
+                        <li class="active"><a href="/CusManageOrder/ConfirmIndex"><span class="tab-border">XÁC NHẬN ĐƠN HÀNG</span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <div id="guidance" class="tab-pane fade in active">
+                        <div class="rightbar-heading" style="float:right;margin-right:-60px;">
+                            <h4>DANH SÁCH ĐƠN HÀNG CẦN XÁC NHẬN</h4>
+                        </div>
+                        <table class="table-fill" style="width:110%;margin-top:0px;margin-left:-20px;">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Mã đơn hàng</th>
+                                    <th class="text-left">Ngày tạo</th>
+                                    <th class="text-left">Trạng thái</th>
+                                    <th class="text-left" style="width:50%;" colspan="4"><center>Thay đổi</center></th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="table-hover">
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-left"><a href="@Url.Action("OrderDetail", "CusManageOrder", new { @orderId = item.OrderId})">@item.OrderCode</a></td>
+                                        <td class="text-left">@item.CreateTime.ToString("dd/MM/yyyy hh:mm tt")</td>
+                                        <td class="text-left"><div class="label label-danger">@CommonData.Status[@item.OrderStatus]</div></td>
+                                        <td class="cancel-order"><a href="@Url.Action("OrderDetail", "CusManageOrder", new { @orderId = item.OrderId})">Xem</a></td>
+                                        <td class="cancel-order"><a href="@Url.Action("ConfirmOrder", "CusManageOrder", new { @orderId = item.OrderId})">Sửa</a></td>
+                                        <td class="cancel-order"><a href="@Url.Action("CancelOrder", "CusManageOrder", new { @orderId = item.OrderId})">Hủy</a></td>                                       
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="numbering">
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,4 +1,7 @@
-﻿@model IEnumerable<BMA.Models.Product>
+﻿@using BMA.Models
+@using PagedList.Mvc;
+@model PagedList.PagedList<Product>
+
 @{
     ViewBag.Title = "Tất cả sản phẩm";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
@@ -48,75 +51,93 @@
                             <div class="property-box animated out" data-delay="0" data-animation="fadeInUp">
                                 <div class="appartment-img">
                                     <img src="@Url.Content("~/Content/Images/BakeryImages/brood-1.jpg")" class="img-responsive" alt="#" />
-                                    <div class="detail-btn"> <a href="@Url.Action("ProductDetail", "Product", new { @ProductId = item.ProductId})" class="sale">Chi tiết</a> </div>
-                                </div>
-                                <div class="property-text">
-                                    <div style="margin-bottom:-20px;" class="appartment-name">
-                                        <h4>@item.ProductName</h4><br />
-                                    </div>
-                                    <div class="property-price">
-                                        <h3><sup>$</sup><span>@item.ProductStandardPrice</span></h3>
-                                    </div>
-                                    @*<div style="margin-left:60px;" class="detail-btn mrgt3x"> <a href="@Url.Action("AddCart", "Cart", new { @productId = item.ProductId, @strURL = Request.Url.ToString() })" class="sale">Mua hàng</a> </div>*@
-                                    <div style="margin-left:60px;" class="detail-btn mrgt3x">
-                                        <a href="javascript:void(0)" onclick="return openPopup('@item.ProductName','@item.ProductId','@item.ProductStandardPrice');" class="sale">Mua hàng</a>
-                                        <script type="text/javascript">
-                                            var selectDongia = 0;
-                                            function openPopup(productName, productId, dongia) {
-                                                selectDongia = dongia;
-                                                $('#light .totalPriceProduct').text(selectDongia + " Đồng");
-                                                $("#light .popupProductName").text(productName);
-                                                $("#light .hiddenProductID").attr('value', productId);
-                                                $("#light").show();
-                                                $("#fade").show();
+                                    <div class="detail-btn"><a href="javascript:void(0)" onclick="return openPopup('@item.ProductName','@item.ProductId','@item.ProductStandardPrice');" class="sale"><i class="fa fa-plus"></i></a></div>
+                                    <script type="text/javascript">
+                                        var selectDongia = 0;
+                                        function openPopup(productName, productId, dongia) {
+                                            selectDongia = dongia;
+                                            $('#light .totalPriceProduct').text(selectDongia + " Đồng");
+                                            $("#light #popupProductName").text(productName);
+                                            $("#light .hiddenProductID").attr('value', productId);
+                                            $("#light").show();
+                                            $("#fade").show();
 
-                                                return 1;
+                                            return 1;
+                                        }
+                                        $('#light .inputProductNum').keyup(function () {
+                                            var total = $(this).val() * selectDongia;
+                                            total = addPeriod(total);
+                                            $('#light .totalPriceProduct').text(total + " Đồng");
+                                        });
+                                        $('.inputProductNum').keyup(function () {
+                                            if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
+                                                this.value = this.value.replace(/[^0-9\.]/g, '');
                                             }
-                                            $('#light .inputProductNum').keyup(function () {
-                                                var total = $(this).val() * selectDongia;
-                                                $('#light .totalPriceProduct').text(total + " Đồng");
-                                            });
-                                            $('.inputProductNum').keyup(function () {
-                                                if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
-                                                    this.value = this.value.replace(/[^0-9\.]/g, '');
-                                                }
-                                            });
-                                        </script>
-                                    </div>
+                                        });
+
+                                        function addPeriod(nStr) {
+                                            nStr += '';
+                                            x = nStr.split('.');
+                                            x1 = x[0];
+                                            x2 = x.length > 1 ? '.' + x[1] : '';
+                                            var rgx = /(\d+)(\d{3})/;
+                                            while (rgx.test(x1)) {
+                                                x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                                            }
+                                            return x1 + x2;
+                                        }
+                                    </script>
+                                </div>
+                                <div class="property-detail">
+                                    <ul class="clearfix">
+                                        <li>
+                                            <h4>@item.ProductName</h4>
+                                        </li>
+                                        <li><span>Trọng lượng : @item.ProductWeight</span>g</li>
+                                        <li class="property-price"><span><sup>$</sup>@item.ProductStandardPrice</span></li>
+                                        <li><a href="@Url.Action("ProductDetail", "Product", new { @ProductId = item.ProductId})" class="detail" style="color:#fff;">CHI TIẾT</a> </li>
+                                    </ul>
                                 </div>
                             </div>
                             <div id="light" class="white_content">
-                                <center><h2 class="popupProductName" style="color:#808080">@item.ProductName</h2></center>
-                                <div class="border-top"></div>
-                                <br />
-                                <form action='@Url.Action("AddCart", "Cart")' id="myForm" method="post">
-                                    <table class="popup-table">
-                                        <tr>
-                                            <td>Số lượng: </td>
-                                            <td><input style="width:220px;" type="text" value="" placeholder="Chỉ nhập số" class="inputProductNum" name="inputNumber" /></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Thành tiền: </td>
-                                            <td class="totalPriceProduct"> Đồng</td>
-                                        </tr>
-                                    </table>
-                                    <input type="hidden" class="hiddenProductID" name="productID" value="" />
-                                </form>
-                                <div class="popup-btn"> <a href="#" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Hủy bỏ</a> </div>
-                                <div class="popup-btn" style="margin-right:30px"> <a href="javascript:void(0)" onclick="$('#myForm').submit();document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Đồng ý</a> </div>
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="popupProductName" style="margin-left: 150px; font-family: 'Patrick Hand SC'">@item.ProductName</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="addCartForm" action='@Url.Action("AddCart", "Cart", new { @strURL = Request.Url.ToString()})' method="post">
+                                            <table class="popup-table">
+                                                <tr>
+                                                    <td>Số lượng: </td>
+                                                    <td><input style="width:220px;" type="text" value="" placeholder="Chỉ nhập số" class="inputProductNum" id="inputProductNum" name="inputNumber" required /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Thành tiền: </td>
+                                                    <td class="totalPriceProduct"></td>
+                                                </tr>
+                                            </table>
+                                            <input type="hidden" class="hiddenProductID" name="productID" value="" />
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="popup-btn"> <a href="#" onclick="return submitAddCart();" class="book-it">Đồng ý</a> </div>
+                                        <script type="text/javascript">
+                                            function submitAddCart() {
+                                                document.getElementById("addCartForm").submit();
+                                                return 1;
+                                            }
+                                        </script>
+                                        <div class="popup-btn" style="margin-right: 30px; background-color: #a92828"><a style="background-color: #a92828" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it">Hủy bỏ</a> </div>
+                                    </div>
+                                </div>
                             </div>
                             <div id="fade" class="black_overlay"></div>
                         </li>
                     }
                 </ul>
+
                 <div class="numbering">
-                    <ul class="pagination">
-                        <li class="active"><a href="#">01</a></li>
-                        <li><a href="#">02</a></li>
-                        <li><a href="#">03</a></li>
-                        <li><a href="#">04</a></li>
-                        <li><a href="#">05</a></li>
-                    </ul>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
                 </div>
             </div>
         </div>

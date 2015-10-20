@@ -1,0 +1,112 @@
+﻿@using System.Globalization
+@using BMA.Common
+@model BMA.Models.ViewModel.InputMaterialViewModel
+
+
+@{
+    ViewBag.Title = "Chi tiết nguyên liệu đầu vào";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>Chi tiết nguyên liệu đầu vào</h1>
+</section>
+<section class="content">
+    <!--Title row-->
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                Thông tin nguyên liệu
+            </h2>
+        </div>
+    </div>
+    <!-- Info row -->
+    <div class="row invoice-info">
+        <div class="col-sm-6 invoice-col">
+            <b>Tên nguyên liệu: </b>
+            @Model.InputMaterialId
+            <br/>
+            <b>Số lượng nhập: </b>
+            @Model.ImportQuantity
+            <br/>
+            <b>Số lượng tồn kho: </b>
+            @Model.RemainQuantity
+            <br />
+            <b>Giá nhập kho: </b>
+            @Model.InputMaterialPrice
+            <br/>
+            <b>Ngày nhập kho: </b>
+            @Model.ImportDate.ToString(("dd/MM/yyyy"))
+            <br/>
+            <b>Giá nhập kho: </b>
+            @Model.InputMaterialExpiryDate.ToString(("dd/MM/yyyy"))
+            <br/>
+            <b>Ghi chú: </b>
+            @if(Model.InputMaterialNote==null){
+                <a>Không có</a>
+            }
+            else{
+            @Model.InputMaterialNote}
+            <br />
+            <b>Trạng thái: </b>
+            @if (Model.IsActive)
+            {
+                <span class="label label-success">Đang sử dụng</span>
+            }
+            else 
+            {
+                <span class="label label-danger">Đã hủy</span>
+            }
+        </div>
+    </div>
+
+
+
+    <!--Button-->
+    <div class="row">
+        <div class="col-xs-12">
+            @if(Model.IsActive){
+                
+            
+            <button class="btn btn-success pull-right" id="btn-approved" onclick="open_container();">
+                <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Thay đổi trạng thái nguyên liệu
+                <script type="text/javascript">
+                    function open_container() {
+                        var content =
+                            '<form role="form" action="" method="post" id="form-aprrove">' +
+                                '<div class="form-group">' +
+                                '<label>bạn có muốn chuyển nguyên liệu từ trạng thái đang sử dụng sang trạng thái đã hủy không?</label>' +
+                                '</div>' +
+                                '<div class="form-group" style="padding-bottom: 20px;">' +
+                                '<button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Hủy</button>' +
+                                '<button type="submit" class="btn btn-success pull-right" style="margin-right: 10px;">Đồng ý</button>' +
+                                '</div>' +
+                                '</form>';
+                        var title = 'Thay đổi trạng thái nguyên liệu';
+                        var footer = '';
+                        setModalBox(title, content, footer);
+                        $('#myModal').modal('show');
+                    }
+
+                    function setModalBox(title, content, footer) {
+                        document.getElementById('popup-body').innerHTML = content;
+                        document.getElementById('popup-title').innerHTML = title;
+                        document.getElementById('popup-footer').innerHTML = footer;
+
+                    }
+
+                </script>
+            </button>
+}
+            else{
+                
+            }
+            <button class="btn btn-primary pull-right" style="margin-right: 25px;">
+                <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
+            </button>
+            }
+        </div>
+    </div>
+
+</section>

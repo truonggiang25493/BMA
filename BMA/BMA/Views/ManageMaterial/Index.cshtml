@@ -1,0 +1,95 @@
+﻿@using System.Globalization
+@using BMA.Models
+@model List<ProductMaterial>
+@{
+    ViewBag.Title = "Quản lý nguyên liệu";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+    string strURL = Request.Url.ToString();
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>Quản lý nguyên liệu</h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="box">
+        <!-- box-body -->
+        <div class="box-body">
+            <table id="example2" class="table table-hover table-bordered">
+                <thead style="font-weight: bold">
+                    <tr>
+
+                        <th>Tên nguyên liệu</th>
+                        <th>Đơn vị tính</th>
+                        <th>Số lượng hiện tại</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.ProductMaterialName</td>
+                            <td>@item.ProductMaterialUnit</td>
+                            <td><p style="float:right">@item.CurrentQuantity</p></td>
+                            @*@{
+                        if (item.IsActive)
+                        {
+                            <td><div class="label label-success">Đang sử dụng</div></td>
+                        }
+                        else
+                        {
+                            <td><div class="label label-default">Đã hủy</div></td>
+                        }
+                            }*@
+                            <td>
+                                @Html.ActionLink("Xem", "Detail"@*, new { ProductId = item.ProductId }*@)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Sửa", "Edit"@*, new { ProductId = item.ProductId }*@)
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" id="btn-choose">Đổi trạng thái</a>
+                                <script>
+                                    function open_container(productId, productName, strURL, isActive) {
+                                        var content =
+                                            '<form role="form" action="/ManageProduct/ChangeStatus" method="post" id="form-aprrove">' +
+                                                '<div class="form-group">' +
+                                                '<label>' + productName + '</label>' +
+                                                '<input type="hidden" name="productId" value="' + productId + '"/>' +
+                                                '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                                '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
+                                                '</div>' +
+                                                 '<div class="form-group">' +
+                                                 '<input type="radio" name="status" value="True" checked> Sử dụng' +
+                                                '</div>' +
+                                                 '<div class="form-group">' +
+                                                 '<input type="radio" name="status" value="False"> Hủy' +
+                                                '</div>' +
+                                                '<div class="form-group" style="padding-bottom: 20px;">' +
+                                                '<button type="submit" class="btn btn-success pull-right">Đồng ý</button>' +
+                                                '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</button>' +
+                                                '</div>' +
+                                                '</form>';
+                                        var title = 'Chọn trạng thái';
+                                        var footer = '';
+                                        setModalBox(title, content, footer);
+                                        $('#myModal').modal('show');
+                                    }
+
+                                    function setModalBox(title, content, footer) {
+                                        document.getElementById('popup-body').innerHTML = content;
+                                        document.getElementById('popup-title').innerHTML = title;
+                                        document.getElementById('popup-footer').innerHTML = footer;
+                                    }
+                                </script>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
