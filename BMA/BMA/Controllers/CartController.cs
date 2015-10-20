@@ -48,29 +48,36 @@ namespace BMA.Controllers
         [HttpPost]
         public ActionResult AddCart(FormCollection f, string strURL)
         {
-            if (f == null)
+            try
             {
-                RedirectToAction("Index", "Error");
-                return null;
-            }
-            int productId = int.Parse(f["productID"].ToString());
-            int productNumber = int.Parse(f["inputNumber"].ToString());
+                if (f == null)
+                {
+                    RedirectToAction("Index", "Error");
+                    return null;
+                }
+                int productId = int.Parse(f["productID"].ToString());
+                int productNumber = int.Parse(f["inputNumber"].ToString());
 
-            List<Cart> lstCart = GetCart();
-            Cart cart = lstCart.Find(n => n.ProductId == productId);
-            if (cart == null)
-            {
-                cart = new Cart(productId);
-                cart.Quantity = productNumber;
-                cart.Total = cart.Price * cart.Quantity;
-                lstCart.Add(cart);
-                return Redirect(strURL);
+                List<Cart> lstCart = GetCart();
+                Cart cart = lstCart.Find(n => n.ProductId == productId);
+                if (cart == null)
+                {
+                    cart = new Cart(productId);
+                    cart.Quantity = productNumber;
+                    cart.Total = cart.Price * cart.Quantity;
+                    lstCart.Add(cart);
+                    return Redirect(strURL);
+                }
+                else
+                {
+                    cart.Quantity += productNumber;
+                    cart.Total += cart.Price * cart.Quantity;
+                    return Redirect(strURL);
+                }
             }
-            else
+            catch (Exception)
             {
-                cart.Quantity += productNumber;
-                cart.Total += cart.Price * cart.Quantity;
-                return Redirect(strURL);
+                return RedirectToAction("Index", "Error");
             }
         }
 
@@ -179,105 +186,115 @@ namespace BMA.Controllers
 
         public ActionResult GetOrderToCart(int orderId)
         {
-            List<Cart> lstCart = new List<Cart>();
-            Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-            var orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-            if (lstCart != null)
+            try
             {
-                for (int i = 0; i < orderItems.Count; i++)
+                List<Cart> lstCart = new List<Cart>();
+                Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                var orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+                if (lstCart != null)
                 {
-                    Cart cart = lstCart.Find(n => n.ProductId == orderItems[i].ProductId);
-                    if (cart == null)
+                    for (int i = 0; i < orderItems.Count; i++)
                     {
-                        cart = new Cart(orderItems[i].ProductId);
-                        cart.ProductId = orderItems[i].ProductId;
-                        cart.ProductName = orderItems[i].Product.ProductName;
-                        cart.Quantity = orderItems[i].Quantity;
-                        cart.Price = orderItems[i].RealPrice;
-                        cart.Total = orderItems[i].Amount;
-                        lstCart.Add(cart);
+                        Cart cart = lstCart.Find(n => n.ProductId == orderItems[i].ProductId);
+                        if (cart == null)
+                        {
+                            cart = new Cart(orderItems[i].ProductId);
+                            cart.ProductId = orderItems[i].ProductId;
+                            cart.ProductName = orderItems[i].Product.ProductName;
+                            cart.Quantity = orderItems[i].Quantity;
+                            cart.Price = orderItems[i].RealPrice;
+                            cart.Total = orderItems[i].Amount;
+                            lstCart.Add(cart);
+                        }
                     }
+                    Session["Cart"] = lstCart;
+                    Session["BeEdited"] = order.OrderId;
                 }
-                Session["Cart"] = lstCart;
-                Session["BeEdited"] = order.OrderId;
+                return View(lstCart);
             }
-            return View(lstCart);
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Error");
+            }
+
         }
 
-        public ActionResult EditOrder(FormCollection f,int orderId)
+        public ActionResult EditOrder(FormCollection f, int orderId)
         {
-            if (Session["Cart"] == null)
+            try
             {
-                RedirectToAction("Index", "Product");
+                if (Session["Cart"] == null)
+                {
+                    RedirectToAction("Index", "Product");
+                }
+                Order order = db.Orders.Find(orderId);
+                List<Cart> cart = GetCart();
+                DateTime? deliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
+                int totalValue = Convert.ToInt32(TempData["TotalValue"]);
+                order.DeliveryTime = deliveryDate;
+                TempData["deliveryDate"] = deliveryDate;
+                order.TotalValue = totalValue;
+                if (Session["User"] != null)
+                {
+                    int cusUserId = Convert.ToInt32(Session["UserId"]);
+                    order.CustomerUserId = cusUserId;
+                    TempData["userName"] = Session["Username"].ToString();
+                    TempData["phoneNumber"] = Session["Phonenumber"].ToString();
+                }
+                else
+                {
+                    RedirectToAction("Index", "Product");
+                }
+                TryUpdateModel(order);
+                db.SaveChanges();
+                List<OrderItem> orderItem = db.OrderItems.Where(n => n.OrderId == order.OrderId).ToList();
+                for (int i = 0; i < orderItem.Count; i++)
+                {
+                    db.OrderItems.Remove(orderItem[i]);
+                }
+
+                foreach (var item in cart)
+                {
+                    OrderItem orderDetail = new OrderItem();
+                    orderDetail.OrderId = order.OrderId;
+                    orderDetail.ProductId = item.ProductId;
+                    orderDetail.Quantity = item.Quantity;
+                    orderDetail.RealPrice = item.Price;
+                    orderDetail.Amount = item.Total;
+                    orderDetail.TaxAmount = Convert.ToInt32(item.Total * 0.1);
+                    db.OrderItems.Add(orderDetail);
+                }
+                TempData["orderCode"] = order.OrderCode.ToString();
+                db.SaveChanges();
+                Session["Cart"] = null;
+                Session["BeEdited"] = null;
+                return RedirectToAction("EditOrderSuccess", "Cart");
             }
-            Order order = db.Orders.Find(orderId);
-            List<Cart> cart = GetCart();
-            DateTime? deliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
-            int totalValue = Convert.ToInt32(TempData["TotalValue"]);
-            order.DeliveryTime = deliveryDate;
-            TempData["deliveryDate"] = deliveryDate;
-            order.TotalValue = totalValue;
-            if (Session["User"] != null)
+            catch (Exception)
             {
-                string cusUserId = Session["UserId"].ToString();
-                order.CustomerUserId = cusUserId;
-                TempData["userName"] = Session["Username"].ToString();
-                TempData["phoneNumber"] = Session["Phonenumber"].ToString();
+                return RedirectToAction("Index", "Error");
             }
-            else
-            {
-                RedirectToAction("Index", "Product");
-            }
-            TryUpdateModel(order);
-            db.SaveChanges();
-            List<OrderItem> orderItem = db.OrderItems.Where(n => n.OrderId == order.OrderId).ToList();
-            for (int i = 0; i < orderItem.Count; i++)
-            {
-                db.OrderItems.Remove(orderItem[i]);
-            }
-                
-            foreach (var item in cart)
-            {
-                OrderItem orderDetail = new OrderItem();
-                orderDetail.OrderId = order.OrderId;
-                orderDetail.ProductId = item.ProductId;
-                orderDetail.Quantity = item.Quantity;
-                orderDetail.RealPrice = item.Price;
-                orderDetail.Amount = item.Total;
-                orderDetail.TaxAmount = Convert.ToInt32(item.Total * 0.1);
-                db.OrderItems.Add(orderDetail);
-            }
-            TempData["orderCode"] = order.OrderCode.ToString();
-            db.SaveChanges();
-            Session["Cart"] = null;
-            Session["BeEdited"] = null;
-            return RedirectToAction("EditOrderSuccess", "Cart");
         }
-        
+
 
         //For customer order
         public ActionResult OrderProduct(FormCollection f)
         {
+
             if (Session["Cart"] == null)
             {
                 RedirectToAction("Index", "Product");
             }
             Order order = new Order();
-            //List<Order> orderList = db.Orders.ToList();
             List<Cart> cart = GetCart();
             string orderTime = DateTime.Now.ToString("yyyyMMdd");
-            //List<string> orderTimeToInsert = new List<string>();
-            //for (int i = 0; i < orderList.Count; i++)
-            //{
-            //    orderTimeToInsert[i] = orderList[i].OrderCode.Substring(0, 8);
-            //}           
-            string orderNumber = "0001";
+            string orderNumber;
             DateTime? deliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
             int totalValue = Convert.ToInt32(TempData["TotalValue"]);
-            order.OrderCode = String.Format("{0}{1}", orderTime, orderNumber);
+            order.OrderCode = orderTime;
             order.CreateTime = DateTime.Now;
             order.DeliveryTime = deliveryDate;
-            TempData["deliveryDate"] = deliveryDate;
+            Session["DeliveryDate"] = deliveryDate;
             order.DepositAmount = 0;
             order.IsStaffEdit = false;
             order.Flag = false;
@@ -285,7 +302,7 @@ namespace BMA.Controllers
             order.TotalValue = totalValue;
             if (Session["User"] != null)
             {
-                string cusUserId = Session["UserId"].ToString();
+                int cusUserId = Convert.ToInt32(Session["UserId"]);
                 order.CustomerUserId = cusUserId;
                 TempData["userName"] = Session["Username"].ToString();
                 TempData["phoneNumber"] = Session["Phonenumber"].ToString();
@@ -296,7 +313,8 @@ namespace BMA.Controllers
             }
             db.Orders.Add(order);
             db.SaveChanges();
-            order.OrderCode = String.Format("{0}{1}", orderTime, order.OrderId.ToString());
+            orderNumber = order.OrderId.ToString().PadLeft(4, '0');
+            order.OrderCode = String.Format("{0}{1}{2}", 'O', orderTime, orderNumber);
             db.SaveChanges();
             foreach (var item in cart)
             {
@@ -313,6 +331,8 @@ namespace BMA.Controllers
             db.SaveChanges();
             Session["Cart"] = null;
             return RedirectToAction("OrderSuccess", "Cart");
+
+
         }
 
         //For customer after enter information
@@ -325,28 +345,28 @@ namespace BMA.Controllers
             Order order = new Order();
             List<Cart> cart = GetCart();
             string orderTime = DateTime.Now.ToString("yyyyMMdd");
-            string orderNumber = "0001";
+            string orderNumber;
             int totalValue = Convert.ToInt32(TempData["TotalValue"]);
             string sAccount = f.Get("txtAccount").ToString();
             string sPassword = f.Get("txtPassword").ToString();
-            AspNetUser endUser = db.AspNetUsers.SingleOrDefault(n => n.UserName == sAccount && n.PasswordHash == sPassword);
+            User endUser = db.Users.SingleOrDefault(n => n.Username == sAccount && n.Password == sPassword);
             if (endUser != null)
             {
                 Session["User"] = endUser;
-                Session["Username"] = endUser.UserName;
-                Session["UserId"] = endUser.Id;
-                order.CustomerUserId = endUser.Id.ToString();
-                TempData["userName"] = endUser.UserName.ToString();
-                TempData["phoneNumber"] = endUser.PhoneNumber.ToString();
+                Session["Username"] = endUser.Username;
+                Session["UserId"] = endUser.Customers.CustomerId;
+                order.CustomerUserId = endUser.Customers.CustomerId;
+                TempData["userName"] = endUser.Username.ToString();
+                Session["Phonenumber"] = endUser.Customers.CustomerPhoneNumber.ToString();
             }
             else
             {
                 ViewBag.Notify = "Sai tài khoản hoặc mật khẩu";
                 return RedirectToAction("OrderInfo");
             }
-            order.OrderCode = String.Format("{0}{1}", orderTime, orderNumber);
+            order.OrderCode = orderTime;
             order.CreateTime = DateTime.Now;
-            order.DeliveryTime = (DateTime)TempData["deliveryDate"];
+            order.DeliveryTime = (DateTime)Session["DeliveryDate"];
             order.DepositAmount = 0;
             order.IsStaffEdit = false;
             order.Flag = false;
@@ -354,10 +374,11 @@ namespace BMA.Controllers
             order.TotalValue = totalValue;
 
             //Lấy thông tin từ account, xét có thì login, add cusid
-            
+
             db.Orders.Add(order);
             db.SaveChanges();
-            order.OrderCode = String.Format("{0}{1}", orderTime, order.OrderId.ToString());
+            orderNumber = order.OrderId.ToString().PadLeft(4, '0');
+            order.OrderCode = String.Format("{0}{1}{2}", 'O', orderTime, orderNumber);
             db.SaveChanges();
             foreach (var item in cart)
             {
@@ -385,11 +406,11 @@ namespace BMA.Controllers
             Order order = new Order();
             List<Cart> cart = GetCart();
             string orderTime = DateTime.Now.ToString("yyyyMMdd");
-            string orderNumber = "0001";
+            string orderNumber;
             int totalValue = Convert.ToInt32(TempData["TotalValue"]);
-            order.OrderCode = String.Format("{0}{1}", orderTime, orderNumber);
+            order.OrderCode = orderTime;
             order.CreateTime = DateTime.Now;
-            order.DeliveryTime = (DateTime)TempData["deliveryDate"];
+            order.DeliveryTime = (DateTime)Session["DeliveryDate"];
             order.DepositAmount = 0;
             order.IsStaffEdit = false;
             order.Flag = false;
@@ -407,14 +428,22 @@ namespace BMA.Controllers
             guestInfo.GuestInfoAddress = sAddress;
             guestInfo.GuestInfoEmail = sEmail;
             TempData["userName"] = sName;
-            TempData["phoneNumber"] = sPhone;
-            db.GuestInfoes.Add(guestInfo);
-            db.SaveChanges();
+            Session["Phonenumber"] = sPhone;
+            if ((TempData["userName"]) != null && (Session["Phonenumber"]) != null && sAddress != null)
+            {
+                db.GuestInfoes.Add(guestInfo);
+                db.SaveChanges();
+            }
+            else
+            {
+                ViewBag.Notify = "Sai tài khoản hoặc mật khẩu";
+                return RedirectToAction("OrderInfo");
+            }
             order.GuestInfoId = guestInfo.GuestInfoId;
-
             db.Orders.Add(order);
             db.SaveChanges();
-            order.OrderCode = String.Format("{0}{1}", orderTime, order.OrderId.ToString());
+            orderNumber = order.OrderId.ToString().PadLeft(4, '0');
+            order.OrderCode = String.Format("{0}{1}{2}", 'O', orderTime, orderNumber);
             db.SaveChanges();
             foreach (var item in cart)
             {
@@ -435,12 +464,19 @@ namespace BMA.Controllers
 
         public ActionResult OrderInfo(FormCollection f)
         {
-            DateTime? deliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
-            if (TempData["deliveryDate"] == null)
+            try
             {
-                TempData["deliveryDate"] = deliveryDate;
-            }    
-            return View();
+                DateTime? deliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
+                if (Session["DeliveryDate"] == null)
+                {
+                    Session["DeliveryDate"] = deliveryDate;
+                }
+                return View();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
         public ActionResult OrderSuccess()
         {

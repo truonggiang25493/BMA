@@ -67,7 +67,7 @@ namespace BMA.Business
                     if (customer != null)
                     {
                         result.IsGuest = false;
-                        result.OrderPersonName = customer.AspNetUser.FullName;
+                        result.OrderPersonName = customer.User.Fullname;
                         result.OrderPersonAddress = customer.CustomerAddress;
                         result.OrderPersonPhoneNumber = customer.CustomerPhoneNumber;
                         result.OrderPersonId = customer.CustomerId;
@@ -351,14 +351,14 @@ namespace BMA.Business
             order.ApproveTime = DateTime.Now;
             order.DepositAmount = deposit;
             //Bug
-            order.StaffApproveUserId = "User002";
+            order.StaffApproveUserId = 2;
             db.SaveChanges();
             contextTransaction.Commit();
             #endregion
             return true;
         }
 
-        public static OrderViewModel MakeOrderViewModel(List<CartViewModel> cartList, string customerId)
+        public static OrderViewModel MakeOrderViewModel(List<CartViewModel> cartList, int customerId)
         {
             OrderViewModel result = new OrderViewModel();
             BMAEntities db = new BMAEntities();
@@ -371,7 +371,7 @@ namespace BMA.Business
             Customer customer = db.Customers.FirstOrDefault(m => m.UserId == customerId && m.IsActive);
             if (customer != null)
             {
-                result.OrderPersonName = customer.AspNetUser.FullName;
+                result.OrderPersonName = customer.User.Fullname;
                 result.OrderPersonAddress = customer.CustomerAddress;
                 result.OrderPersonPhoneNumber = customer.CustomerPhoneNumber;
                 result.OrderPersonTaxCode = customer.TaxCode;
@@ -467,7 +467,7 @@ namespace BMA.Business
             TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1);
             if (taxRate != null)
             {
-                result.TaxAmount = (int)Math.Floor(totalAmount * taxRate.TaxRateValue / 100);
+                result.TaxAmount = totalAmount * taxRate.TaxRateValue / 100;
             }
             result.OrderItemList = orderItemViewModelList;
             result.MaterialList = materialViewModelList;
@@ -477,7 +477,7 @@ namespace BMA.Business
             return result;
         }
 
-        public static bool AddOrderForCustomer(List<CartViewModel> cartList, string customerId, int deposit, DateTime deliveryDate)
+        public static bool AddOrderForCustomer(List<CartViewModel> cartList, int customerId, int deposit, DateTime deliveryDate)
         {
             OrderViewModel orderViewModel = MakeOrderViewModel(cartList, customerId);
             if (orderViewModel == null)

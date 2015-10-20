@@ -1,0 +1,166 @@
+﻿@using System.Globalization
+@model BMA.Models.Product
+
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+    IEnumerable<BMA.Models.Recipe> pm = ViewBag.ProductMaterial;
+    string strURL = Request.Url.ToString();
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>Chi tiết sản phẩm</h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Profile Image -->
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <img class="profile-user-img img-responsive img-bordered" src="@Url.Content("~/Content/Images/BakeryImages/brood-1.jpg")" alt="User profile picture">
+                    <h3 class="profile-username text-center">@Model.ProductName</h3>
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Mã sản phẩm</b> <a class="pull-right">@Model.ProductCode</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Đơn giá</b> <a class="pull-right">@Model.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Trạng thái</b>
+                            @if (Model.IsActive)
+                            {
+                                <a class="pull-right"><div class="label label-success">Đang sử dụng</div></a>
+                            }
+                            else
+                            {
+                                <a class="pull-right"><div class="label label-default">Đã hủy</div></a>
+                            }
+                        </li>
+                        <li class="list-group-item">
+                            <b>Khối lượng</b><a class="pull-right">g</a><a class="pull-right">@Model.ProductWeight</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Loại</b>
+                            @if (Model.CategoryId == 3)
+                            {
+                                <a class="pull-right">Bánh mặn</a>
+                            }
+                            @if (Model.CategoryId == 2)
+                            {
+                                <a class="pull-right">Bánh ngọt</a>
+                            }
+                        </li>
+                    </ul>
+                    <a href="javascript:void(0)" class="btn btn-primary btn-block" onclick="open_container(@Model.ProductId, '@Model.ProductName', '@strURL')"><b>Đổi trạng thái</b></a>
+                    <script>
+                        function open_container(productId, productName, strURL, isActive) {
+                            var content =
+                                '<form role="form" action="/ManageProduct/ChangeStatus" method="post" id="form-aprrove">' +
+                                    '<div class="form-group">' +
+                                    '<label>' + productName + '</label>' +
+                                    '<input type="hidden" name="productId" value="' + productId + '"/>' +
+                                     '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                    '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
+                                    '</div>' +
+                                     '<div class="form-group">' +
+                                     '<input type="radio" name="status" value="True" checked> Sử dụng' +
+                                    '</div>' +
+                                     '<div class="form-group">' +
+                                     '<input type="radio" name="status" value="False"> Hủy' +
+                                    '</div>' +
+                                    '<div class="form-group" style="padding-bottom: 20px;">' +
+                                    '<button type="submit" class="btn btn-success pull-right">Đồng ý</button>' +
+                                    '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</button>' +
+                                    '</div>' +
+                                    '</form>';
+                            var title = 'Chọn sản phẩm';
+                            var footer = '';
+                            setModalBox(title, content, footer);
+                            $('#myModal').modal('show');
+                        }
+
+                        function setModalBox(title, content, footer) {
+                            document.getElementById('popup-body').innerHTML = content;
+                            document.getElementById('popup-title').innerHTML = title;
+                            document.getElementById('popup-footer').innerHTML = footer;
+                        }
+                    </script>
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div>
+        <div class="col-md-9">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#activity" data-toggle="tab">Miêu tả</a></li>
+                    <li><a href="#timeline" data-toggle="tab">Ghi chú</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="active tab-pane" id="activity">
+                        <!-- Post -->
+                        <div class="post">
+                            <div class="user-block">
+                                <span class="username">
+                                    <a href="#" style="margin-left:-50px;">Miêu tả sản phẩm</a>
+                                </span>
+                            </div><!-- /.user-block -->
+                            <p>
+                                @Model.Descriptions
+                            </p>
+                        </div><!-- /.post -->
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="timeline">
+                        <div class="post">
+                            <div class="user-block">
+                                <span class="username">
+                                    <a href="#" style="margin-left:-50px;">Ghi chú</a>
+                                </span>
+                            </div>
+                            <p>
+                                @Model.Note
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#activity" data-toggle="tab">Nguyên liệu sản phẩm</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="active tab-pane" id="activity">
+                        <!-- Post -->
+                        <div class="post">
+                            <div class="user-block">
+                                <span class="username">
+                                    <a href="#" style="margin-left:-50px;">Nguyên liệu cho sản phẩm</a>
+                                </span>
+                            </div>
+                            <div class="box-body">
+                                <table id="example2" class="table table-hover table-bordered">
+                                    <thead style="font-weight: bold">
+                                        <tr>
+                                            <th>Tên nguyên liệu</th>
+                                            <th>Số lượng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in pm)
+                                        {
+                                            <tr>
+                                                <td>@item.ProductMaterial.ProductMaterialName</td>
+                                                <td>@String.Format("{0} {1}", item.RecipeQuantity, item.ProductMaterial.ProductMaterialUnit)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

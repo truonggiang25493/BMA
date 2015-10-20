@@ -17,64 +17,98 @@ namespace BMA.Controllers
         BMAEntities db = new BMAEntities();
         public ActionResult Index(int? page)
         {
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-            if (Session["User"] != null)
+            try
             {
-                string cusId = Session["UserId"].ToString();
-                var orderList = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != 1).OrderByDescending(n => n.CreateTime).ToList().ToPagedList(pageNumber,pageSize);
-                var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList();
-                List<int> checkId = new List<int> { };
-                //for (int i = 0; i < confirmOrderList.Count; i++)
-                //{
-                //    checkId.Insert(i, (int)confirmOrderList[i].PreviousOrderId);
-                //    for (int j = 0; j < orderList.Count; j++)
-                //    {
-                //        if (orderList[j].OrderId == checkId[i])
-                //        {
-                //            orderList[j].ToString().Remove(j);
-                //        }
-                //    }
-                //}
-                return View(orderList);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                if (Session["User"] != null)
+                {
+                    int cusId = Convert.ToInt32(Session["UserId"]);
+                    List<Order> orderToCheck = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != 1).ToList();
+                    var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList();
+                    List<int> checkId = new List<int> { };
+                    for (int i = 0; i < confirmOrderList.Count; i++)
+                    {
+                        checkId.Insert(i, (int)confirmOrderList[i].PreviousOrderId);
+                        for (int j = 0; j < orderToCheck.Count; j++)
+                        {
+                            if (orderToCheck[j].OrderId == checkId[i])
+                            {
+                                orderToCheck.RemoveAt(j);
+                            }
+                        }
+                    }
+                    var orderList = orderToCheck.OrderByDescending(n=>n.CreateTime).ToPagedList(pageNumber, pageSize);
+                    return View(orderList);
+                }
+                return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction("Index", "Home");
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Error");
+            }
+            
         }
 
         public ActionResult ConfirmIndex(int? page)
         {
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-            if (Session["User"] != null)
+            try
             {
-                string cusId = Session["UserId"].ToString();
-                var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList().ToPagedList(pageNumber, pageSize);
-                return View(confirmOrderList);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                if (Session["User"] != null)
+                {
+                    int cusUserId = Convert.ToInt32(Session["UserId"]);
+                    var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusUserId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList().ToPagedList(pageNumber, pageSize);
+                    return View(confirmOrderList);
+                }
+                return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction("Index", "Home");
+            catch (Exception)
+            {
+
+                return RedirectToAction("Index", "Error");
+            }
+            
         }
         public ActionResult OrderDetail(int orderId)
         {
-            Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-            List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-            ViewBag.orderItems = orderItems;
-            return View(order);
+            try
+            {
+                Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+                ViewBag.orderItems = orderItems;
+                return View(order);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Error");
+            }
+            
         }
 
         public ActionResult CancelOrder(int? orderId)
         {
-            if (orderId == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (orderId == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Order order = db.Orders.Find(orderId);
+                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+                ViewBag.orderItems = orderItems;
+                if (order == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(order);
             }
-            Order order = db.Orders.Find(orderId);
-            List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-            ViewBag.orderItems = orderItems;
-            if (order == null)
+            catch (Exception)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Error");
             }
-            return View(order);
+            
         }
 
         public ActionResult CancelOrderConfirm(int orderId)
@@ -107,88 +141,126 @@ namespace BMA.Controllers
         #region ConfirmOrder
         public ActionResult ConfirmOrder(int orderId)
         {
-            Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-            List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-            Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-            List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
-            ViewBag.oldOrder = oldOrder;
-            ViewBag.orderItems = orderItems;
-            ViewBag.oldOrderItems = oldOrderItems;
-            return View(confirmedOrder);
+            try
+            {
+                Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+                Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
+                List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
+                ViewBag.oldOrder = oldOrder;
+                ViewBag.orderItems = orderItems;
+                ViewBag.oldOrderItems = oldOrderItems;
+                return View(confirmedOrder);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Error");
+            }
+           
         }
 
         public ActionResult AcceptEditedOrder(int orderId)
         {
-            Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-            Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-            List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
-            confirmedOrder.OrderStatus = 2;
-            for (int i = 0; i < oldOrderItems.Count; i++)
+            try
             {
-                db.OrderItems.Remove(oldOrderItems[i]);
+                Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
+                List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
+                confirmedOrder.OrderStatus = 2;
+                for (int i = 0; i < oldOrderItems.Count; i++)
+                {
+                    db.OrderItems.Remove(oldOrderItems[i]);
+                }
+                confirmedOrder.ConfirmDate = DateTime.Now;
+                db.Orders.Remove(oldOrder);
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            db.Orders.Remove(oldOrder);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Error");
+            }            
         }
 
         public ActionResult CancelEditedOrder(int orderId)
         {
-            Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-            List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-            Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-            oldOrder.OrderStatus = 0;
-            for (int i = 0; i < orderItems.Count; i++)
+            try
             {
-                db.OrderItems.Remove(orderItems[i]);
+                Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+                Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
+                oldOrder.OrderStatus = 0;
+                for (int i = 0; i < orderItems.Count; i++)
+                {
+                    db.OrderItems.Remove(orderItems[i]);
+                }
+                oldOrder.ConfirmDate = DateTime.Now;
+                db.Orders.Remove(confirmedOrder);
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            db.Orders.Remove(confirmedOrder);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Error");
+            }         
         }
 
 
         public ActionResult CancelBothOrder(int? orderId, int? oldOrderId)
         {
-            if (orderId == null || oldOrderId == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (orderId == null || oldOrderId == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+                Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
+                List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
+                ViewBag.oldOrder = oldOrder;
+                ViewBag.orderItems = orderItems;
+                ViewBag.oldOrderItems = oldOrderItems;
+                ViewBag.oldOrder = oldOrder;
+                if (confirmedOrder == null || oldOrder == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(confirmedOrder);
             }
-            Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-            List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-            Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-            List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
-            ViewBag.oldOrder = oldOrder;
-            ViewBag.orderItems = orderItems;
-            ViewBag.oldOrderItems = oldOrderItems;
-            ViewBag.oldOrder = oldOrder;
-            if (confirmedOrder == null || oldOrder == null)
+            catch (Exception)
             {
-                return HttpNotFound();
-            }
-            return View(confirmedOrder);
+                return RedirectToAction("Index", "Error");
+            }         
         }
 
         public ActionResult CancelBothOrderConfirm(int orderId, int oldOrderId)
         {
-            Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-            List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-            Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-            List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
-
-            for (int i = 0; i < oldOrderItems.Count; i++)
+            try
             {
-                db.OrderItems.Remove(oldOrderItems[i]);
-            }
-            db.Orders.Remove(oldOrder);
+                Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+                Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
+                List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
 
-            for (int i = 0; i < orderItems.Count; i++)
-            {
-                db.OrderItems.Remove(orderItems[i]);
+                for (int i = 0; i < oldOrderItems.Count; i++)
+                {
+                    db.OrderItems.Remove(oldOrderItems[i]);
+                }
+                db.Orders.Remove(oldOrder);
+
+                for (int i = 0; i < orderItems.Count; i++)
+                {
+                    db.OrderItems.Remove(orderItems[i]);
+                }
+                db.Orders.Remove(confirmedOrder);
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            db.Orders.Remove(confirmedOrder);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Error");
+            }          
         }
         #endregion
     }

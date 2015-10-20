@@ -155,7 +155,7 @@ namespace BMA.Controllers
         }
 
         [HttpPost]
-        public ActionResult CheckoutWithCustomer(string customerId)
+        public ActionResult CheckoutWithCustomer(int customerId)
         {
             List<CartViewModel> inputCartList = GetCart();
             OrderViewModel order = OrderBusiness.MakeOrderViewModel(inputCartList, customerId);
@@ -163,7 +163,7 @@ namespace BMA.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddOrderForCustomer(int deposit, DateTime deliveryDate, string customerId)
+        public ActionResult AddOrderForCustomer(int deposit, DateTime deliveryDate, int customerId)
         {
             List<CartViewModel> cart = Session["Cart"] as List<CartViewModel>;
             bool rs = OrderBusiness.AddOrderForCustomer(cart, customerId, deposit, deliveryDate);

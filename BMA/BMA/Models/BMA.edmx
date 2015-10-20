@@ -5,58 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="AspNetRoles">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AspNetUserClaims">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="ClaimType" Type="nvarchar(max)" />
-          <Property Name="ClaimValue" Type="nvarchar(max)" />
-        </EntityType>
-        <EntityType Name="AspNetUserLogins">
-          <Key>
-            <PropertyRef Name="LoginProvider" />
-            <PropertyRef Name="ProviderKey" />
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AspNetUserRoles">
-          <Key>
-            <PropertyRef Name="UserId" />
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AspNetUsers">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="Email" Type="nvarchar" MaxLength="256" />
-          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
-          <Property Name="PasswordHash" Type="nvarchar(max)" />
-          <Property Name="SecurityStamp" Type="nvarchar(max)" />
-          <Property Name="PhoneNumber" Type="nvarchar(max)" />
-          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
-          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
-          <Property Name="LockoutEndDateUtc" Type="datetime" />
-          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
-          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
-          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="FullName" Type="nvarchar" MaxLength="50" />
-        </EntityType>
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -70,11 +18,12 @@
             <PropertyRef Name="CustomerId" />
           </Key>
           <Property Name="CustomerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="TaxCode" Type="varchar" MaxLength="20" />
           <Property Name="CustomerAddress" Type="nvarchar" MaxLength="200" />
           <Property Name="CustomerPhoneNumber" Type="nvarchar" MaxLength="20" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsLoyal" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ExportFrom">
           <Key>
@@ -144,8 +93,8 @@
           <Property Name="OrderNote" Type="nvarchar" MaxLength="200" />
           <Property Name="DepositAmount" Type="int" Nullable="false" />
           <Property Name="ConfirmDate" Type="date" />
-          <Property Name="CustomerUserId" Type="nvarchar" MaxLength="128" />
-          <Property Name="StaffApproveUserId" Type="nvarchar" MaxLength="128" />
+          <Property Name="CustomerUserId" Type="int" />
+          <Property Name="StaffApproveUserId" Type="int" />
           <Property Name="IsStaffEdit" Type="bit" Nullable="false" />
           <Property Name="Flag" Type="bit" Nullable="false" />
           <Property Name="OutputBillId" Type="int" />
@@ -220,12 +169,19 @@
           <Property Name="ProductMaterialId" Type="int" Nullable="false" />
           <Property Name="RecipeQuantity" Type="float" Nullable="false" />
         </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Staff">
           <Key>
             <PropertyRef Name="StaffId" />
           </Key>
           <Property Name="StaffId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="StaffAddress" Type="nvarchar" MaxLength="200" />
           <Property Name="StaffPhoneNumber" Type="nvarchar" MaxLength="20" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -259,7 +215,7 @@
           <Property Name="TaxRateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BeginDate" Type="date" Nullable="false" />
           <Property Name="EndDate" Type="date" />
-          <Property Name="TaxRateValue" Type="float" Nullable="false" />
+          <Property Name="TaxRateValue" Type="int" Nullable="false" />
           <Property Name="TaxTypeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TaxType">
@@ -268,6 +224,18 @@
           </Key>
           <Property Name="TaxTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TaxTypeName" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="Fullname" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="250" />
+          <Property Name="IsConfirmed" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK__Orders_Orders_OrderId">
           <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
@@ -281,78 +249,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_AspNetUserClaims_AspNetUsers_UserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
-          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserClaims">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AspNetUserLogins_AspNetUsers_UserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
-          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserLogins">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AspNetUserRoles_AspNetRoles_RoleId">
-          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1" />
-          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetRoles">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserRoles">
-              <PropertyRef Name="RoleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AspNetUserRoles_AspNetRoles_UserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
-          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserRoles">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AspNetUsers_Customer_UserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
-          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Customer">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AspNetUsers_Staff_UserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
-          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Staff">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Category_Category_CategoryId">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Category1" Type="Self.Category" Multiplicity="0..1" />
@@ -362,6 +258,18 @@
             </Principal>
             <Dependent Role="Category1">
               <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -449,30 +357,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Orders_AspNetUsers_CustomerUserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="CustomerUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_AspNetUsers_StaffApproveUserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="StaffApproveUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Orders_GuestInfo">
           <End Role="GuestInfo" Type="Self.GuestInfo" Multiplicity="0..1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -494,6 +378,30 @@
             </Principal>
             <Dependent Role="Orders">
               <PropertyRef Name="OutputBillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_User_CustomerOrder">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="CustomerUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_User_StaffApprove">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="StaffApproveUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -557,6 +465,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Staff_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TaxRate_TaxType_TaxRateId">
           <End Role="TaxType" Type="Self.TaxType" Multiplicity="1" />
           <End Role="TaxRate" Type="Self.TaxRate" Multiplicity="*" />
@@ -569,12 +489,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_User_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="BMAModelStoreContainer">
-          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExportFrom" EntityType="Self.ExportFrom" Schema="dbo" store:Type="Tables" />
@@ -589,42 +516,24 @@
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductMaterial" EntityType="Self.ProductMaterial" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Staff" EntityType="Self.Staff" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TaxRate" EntityType="Self.TaxRate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TaxType" EntityType="Self.TaxType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Orders_Orders_OrderId" Association="Self.FK__Orders_Orders_OrderId">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="Orders1" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK_AspNetUserClaims_AspNetUsers_UserId" Association="Self.FK_AspNetUserClaims_AspNetUsers_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AspNetUserLogins_AspNetUsers_UserId" Association="Self.FK_AspNetUserLogins_AspNetUsers_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AspNetUserRoles_AspNetRoles_RoleId" Association="Self.FK_AspNetUserRoles_AspNetRoles_RoleId">
-            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
-            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AspNetUserRoles_AspNetRoles_UserId" Association="Self.FK_AspNetUserRoles_AspNetRoles_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AspNetUsers_Customer_UserId" Association="Self.FK_AspNetUsers_Customer_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="Customer" EntitySet="Customer" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AspNetUsers_Staff_UserId" Association="Self.FK_AspNetUsers_Staff_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="Staff" EntitySet="Staff" />
-          </AssociationSet>
           <AssociationSet Name="FK_Category_Category_CategoryId" Association="Self.FK_Category_Category_CategoryId">
             <End Role="Category" EntitySet="Category" />
             <End Role="Category1" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_User" Association="Self.FK_Customer_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Customer" EntitySet="Customer" />
           </AssociationSet>
           <AssociationSet Name="FK_ExportFrom_InputBill" Association="Self.FK_ExportFrom_InputBill">
             <End Role="InputBill" EntitySet="InputBill" />
@@ -654,20 +563,20 @@
             <End Role="Product" EntitySet="Product" />
             <End Role="OrderItem" EntitySet="OrderItem" />
           </AssociationSet>
-          <AssociationSet Name="FK_Orders_AspNetUsers_CustomerUserId" Association="Self.FK_Orders_AspNetUsers_CustomerUserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_AspNetUsers_StaffApproveUserId" Association="Self.FK_Orders_AspNetUsers_StaffApproveUserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
           <AssociationSet Name="FK_Orders_GuestInfo" Association="Self.FK_Orders_GuestInfo">
             <End Role="GuestInfo" EntitySet="GuestInfo" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_OutputBill_OutputBillId" Association="Self.FK_Orders_OutputBill_OutputBillId">
             <End Role="OutputBill" EntitySet="OutputBill" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_User_CustomerOrder" Association="Self.FK_Orders_User_CustomerOrder">
+            <End Role="User" EntitySet="User" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_User_StaffApprove" Association="Self.FK_Orders_User_StaffApprove">
+            <End Role="User" EntitySet="User" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_OutputMaterial_OrderItem" Association="Self.FK_OutputMaterial_OrderItem">
@@ -690,9 +599,17 @@
             <End Role="ProductMaterial" EntitySet="ProductMaterial" />
             <End Role="Recipe" EntitySet="Recipe" />
           </AssociationSet>
+          <AssociationSet Name="FK_Staff_User" Association="Self.FK_Staff_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Staff" EntitySet="Staff" />
+          </AssociationSet>
           <AssociationSet Name="FK_TaxRate_TaxType_TaxRateId" Association="Self.FK_TaxRate_TaxType_TaxRateId">
             <End Role="TaxType" EntitySet="TaxType" />
             <End Role="TaxRate" EntitySet="TaxRate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -700,10 +617,6 @@
     <edmx:ConceptualModels>
       <Schema Namespace="BMAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="BMAEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="AspNetRoles" EntityType="BMAModel.AspNetRole" />
-          <EntitySet Name="AspNetUserClaims" EntityType="BMAModel.AspNetUserClaim" />
-          <EntitySet Name="AspNetUserLogins" EntityType="BMAModel.AspNetUserLogin" />
-          <EntitySet Name="AspNetUsers" EntityType="BMAModel.AspNetUser" />
           <EntitySet Name="Categories" EntityType="BMAModel.Category" />
           <EntitySet Name="Customers" EntityType="BMAModel.Customer" />
           <EntitySet Name="GuestInfoes" EntityType="BMAModel.GuestInfo" />
@@ -717,35 +630,13 @@
           <EntitySet Name="Products" EntityType="BMAModel.Product" />
           <EntitySet Name="ProductMaterials" EntityType="BMAModel.ProductMaterial" />
           <EntitySet Name="Recipes" EntityType="BMAModel.Recipe" />
+          <EntitySet Name="Roles" EntityType="BMAModel.Role" />
           <EntitySet Name="Staffs" EntityType="BMAModel.Staff" />
           <EntitySet Name="Suppliers" EntityType="BMAModel.Supplier" />
           <EntitySet Name="sysdiagrams" EntityType="BMAModel.sysdiagram" />
           <EntitySet Name="TaxRates" EntityType="BMAModel.TaxRate" />
           <EntitySet Name="TaxTypes" EntityType="BMAModel.TaxType" />
-          <AssociationSet Name="FK_AspNetUserClaims_AspNetUsers_UserId" Association="BMAModel.FK_AspNetUserClaims_AspNetUsers_UserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AspNetUserLogins_AspNetUsers_UserId" Association="BMAModel.FK_AspNetUserLogins_AspNetUsers_UserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AspNetUsers_Customer_UserId" Association="BMAModel.FK_AspNetUsers_Customer_UserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="Customer" EntitySet="Customers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AspNetUsers_Staff_UserId" Association="BMAModel.FK_AspNetUsers_Staff_UserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="Staff" EntitySet="Staffs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_AspNetUsers_CustomerUserId" Association="BMAModel.FK_Orders_AspNetUsers_CustomerUserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_AspNetUsers_StaffApproveUserId" Association="BMAModel.FK_Orders_AspNetUsers_StaffApproveUserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
+          <EntitySet Name="Users" EntityType="BMAModel.User" />
           <AssociationSet Name="FK_Category_Category_CategoryId" Association="BMAModel.FK_Category_Category_CategoryId">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Category1" EntitySet="Categories" />
@@ -753,6 +644,10 @@
           <AssociationSet Name="FK_Product_Category_CategoryId" Association="BMAModel.FK_Product_Category_CategoryId">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_User" Association="BMAModel.FK_Customer_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Customer" EntitySet="Customers" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_GuestInfo" Association="BMAModel.FK_Orders_GuestInfo">
             <End Role="GuestInfo" EntitySet="GuestInfoes" />
@@ -790,6 +685,14 @@
             <End Role="OutputBill" EntitySet="OutputBills" />
             <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
+          <AssociationSet Name="FK_Orders_User_CustomerOrder" Association="BMAModel.FK_Orders_User_CustomerOrder">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_User_StaffApprove" Association="BMAModel.FK_Orders_User_StaffApprove">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
           <AssociationSet Name="FK_OutputMaterial_ProductMaterial" Association="BMAModel.FK_OutputMaterial_ProductMaterial">
             <End Role="ProductMaterial" EntitySet="ProductMaterials" />
             <End Role="OutputMaterial" EntitySet="OutputMaterials" />
@@ -802,73 +705,23 @@
             <End Role="ProductMaterial" EntitySet="ProductMaterials" />
             <End Role="Recipe" EntitySet="Recipes" />
           </AssociationSet>
+          <AssociationSet Name="FK_User_Role" Association="BMAModel.FK_User_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Staff_User" Association="BMAModel.FK_Staff_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Staff" EntitySet="Staffs" />
+          </AssociationSet>
           <AssociationSet Name="FK_TaxRate_TaxType_TaxRateId" Association="BMAModel.FK_TaxRate_TaxType_TaxRateId">
             <End Role="TaxType" EntitySet="TaxTypes" />
             <End Role="TaxRate" EntitySet="TaxRates" />
-          </AssociationSet>
-          <AssociationSet Name="AspNetUserRoles" Association="BMAModel.AspNetUserRoles">
-            <End Role="AspNetRole" EntitySet="AspNetRoles" />
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
           </AssociationSet>
           <AssociationSet Name="ExportFrom" Association="BMAModel.ExportFrom">
             <End Role="InputBill" EntitySet="InputBills" />
             <End Role="OutputMaterial" EntitySet="OutputMaterials" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="AspNetRole">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUsers" Relationship="BMAModel.AspNetUserRoles" FromRole="AspNetRole" ToRole="AspNetUser" />
-        </EntityType>
-        <EntityType Name="AspNetUserClaim">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUser" Relationship="BMAModel.FK_AspNetUserClaims_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
-        </EntityType>
-        <EntityType Name="AspNetUserLogin">
-          <Key>
-            <PropertyRef Name="LoginProvider" />
-            <PropertyRef Name="ProviderKey" />
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUser" Relationship="BMAModel.FK_AspNetUserLogins_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
-        </EntityType>
-        <EntityType Name="AspNetUser">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
-          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
-          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
-          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUserClaims" Relationship="BMAModel.FK_AspNetUserClaims_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
-          <NavigationProperty Name="AspNetUserLogins" Relationship="BMAModel.FK_AspNetUserLogins_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
-          <NavigationProperty Name="Customers" Relationship="BMAModel.FK_AspNetUsers_Customer_UserId" FromRole="AspNetUser" ToRole="Customer" />
-          <NavigationProperty Name="Staffs" Relationship="BMAModel.FK_AspNetUsers_Staff_UserId" FromRole="AspNetUser" ToRole="Staff" />
-          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_AspNetUsers_CustomerUserId" FromRole="AspNetUser" ToRole="Order" />
-          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_AspNetUsers_StaffApproveUserId" FromRole="AspNetUser" ToRole="Order" />
-          <NavigationProperty Name="AspNetRoles" Relationship="BMAModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
-        </EntityType>
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -885,12 +738,13 @@
             <PropertyRef Name="CustomerId" />
           </Key>
           <Property Name="CustomerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="TaxCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="CustomerAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="CustomerPhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="AspNetUser" Relationship="BMAModel.FK_AspNetUsers_Customer_UserId" FromRole="Customer" ToRole="AspNetUser" />
+          <Property Name="IsLoyal" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="BMAModel.FK_Customer_User" FromRole="Customer" ToRole="User" />
         </EntityType>
         <EntityType Name="GuestInfo">
           <Key>
@@ -961,8 +815,8 @@
           <Property Name="OrderNote" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="DepositAmount" Type="Int32" Nullable="false" />
           <Property Name="ConfirmDate" Type="DateTime" Precision="0" />
-          <Property Name="CustomerUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="StaffApproveUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerUserId" Type="Int32" />
+          <Property Name="StaffApproveUserId" Type="Int32" />
           <Property Name="IsStaffEdit" Type="Boolean" Nullable="false" />
           <Property Name="Flag" Type="Boolean" Nullable="false" />
           <Property Name="OutputBillId" Type="Int32" />
@@ -970,13 +824,13 @@
           <Property Name="PreviousOrderId" Type="Int32" />
           <Property Name="TotalValue" Type="Int32" Nullable="false" />
           <Property Name="GuestInfoId" Type="Int32" />
-          <NavigationProperty Name="AspNetUser" Relationship="BMAModel.FK_Orders_AspNetUsers_CustomerUserId" FromRole="Order" ToRole="AspNetUser" />
-          <NavigationProperty Name="AspNetUser1" Relationship="BMAModel.FK_Orders_AspNetUsers_StaffApproveUserId" FromRole="Order" ToRole="AspNetUser" />
           <NavigationProperty Name="GuestInfo" Relationship="BMAModel.FK_Orders_GuestInfo" FromRole="Order" ToRole="GuestInfo" />
           <NavigationProperty Name="OrderItems" Relationship="BMAModel.FK_OrderItem_Orders_OrderId" FromRole="Order" ToRole="OrderItem" />
           <NavigationProperty Name="Orders1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order" ToRole="Order1" />
           <NavigationProperty Name="Order1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order1" ToRole="Order" />
           <NavigationProperty Name="OutputBill" Relationship="BMAModel.FK_Orders_OutputBill_OutputBillId" FromRole="Order" ToRole="OutputBill" />
+          <NavigationProperty Name="User" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="Order" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="Order" ToRole="User" />
         </EntityType>
         <EntityType Name="OtherExpense">
           <Key>
@@ -1056,16 +910,24 @@
           <NavigationProperty Name="Product" Relationship="BMAModel.FK_Recipe_Product_ProductId" FromRole="Recipe" ToRole="Product" />
           <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="Recipe" ToRole="ProductMaterial" />
         </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Users" Relationship="BMAModel.FK_User_Role" FromRole="Role" ToRole="User" />
+        </EntityType>
         <EntityType Name="Staff">
           <Key>
             <PropertyRef Name="StaffId" />
           </Key>
           <Property Name="StaffId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="StaffAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="StaffPhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="AspNetUser" Relationship="BMAModel.FK_AspNetUsers_Staff_UserId" FromRole="Staff" ToRole="AspNetUser" />
+          <NavigationProperty Name="User" Relationship="BMAModel.FK_Staff_User" FromRole="Staff" ToRole="User" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -1097,7 +959,7 @@
           <Property Name="TaxRateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="BeginDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="EndDate" Type="DateTime" Precision="0" />
-          <Property Name="TaxRateValue" Type="Double" Nullable="false" />
+          <Property Name="TaxRateValue" Type="Int32" Nullable="false" />
           <Property Name="TaxTypeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TaxType" Relationship="BMAModel.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxRate" ToRole="TaxType" />
         </EntityType>
@@ -1109,78 +971,23 @@
           <Property Name="TaxTypeName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TaxRates" Relationship="BMAModel.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxType" ToRole="TaxRate" />
         </EntityType>
-        <Association Name="FK_AspNetUserClaims_AspNetUsers_UserId">
-          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="BMAModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserClaim">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AspNetUserLogins_AspNetUsers_UserId">
-          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="BMAModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserLogin">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AspNetUsers_Customer_UserId">
-          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="BMAModel.Customer" Role="Customer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Customer">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AspNetUsers_Staff_UserId">
-          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="BMAModel.Staff" Role="Staff" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Staff">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_AspNetUsers_CustomerUserId">
-          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="CustomerUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_AspNetUsers_StaffApproveUserId">
-          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="StaffApproveUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="Fullname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Customers" Relationship="BMAModel.FK_Customer_User" FromRole="User" ToRole="Customer" />
+          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="Role" Relationship="BMAModel.FK_User_Role" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="Staffs" Relationship="BMAModel.FK_Staff_User" FromRole="User" ToRole="Staff" />
+        </EntityType>
         <Association Name="FK_Category_Category_CategoryId">
           <End Type="BMAModel.Category" Role="Category" Multiplicity="1" />
           <End Type="BMAModel.Category" Role="Category1" Multiplicity="0..1" />
@@ -1202,6 +1009,18 @@
             </Principal>
             <Dependent Role="Product">
               <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_User">
+          <End Type="BMAModel.User" Role="User" Multiplicity="1" />
+          <End Type="BMAModel.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1313,6 +1132,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Orders_User_CustomerOrder">
+          <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="CustomerUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_User_StaffApprove">
+          <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="StaffApproveUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_OutputMaterial_ProductMaterial">
           <End Type="BMAModel.ProductMaterial" Role="ProductMaterial" Multiplicity="1" />
           <End Type="BMAModel.OutputMaterial" Role="OutputMaterial" Multiplicity="*" />
@@ -1349,6 +1192,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_User_Role">
+          <End Type="BMAModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="BMAModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Staff_User">
+          <End Type="BMAModel.User" Role="User" Multiplicity="1" />
+          <End Type="BMAModel.Staff" Role="Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TaxRate_TaxType_TaxRateId">
           <End Type="BMAModel.TaxType" Role="TaxType" Multiplicity="1" />
           <End Type="BMAModel.TaxRate" Role="TaxRate" Multiplicity="*" />
@@ -1361,10 +1228,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="AspNetUserRoles">
-          <End Type="BMAModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
-          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
-        </Association>
         <Association Name="ExportFrom">
           <End Type="BMAModel.InputBill" Role="InputBill" Multiplicity="*" />
           <End Type="BMAModel.OutputMaterial" Role="OutputMaterial" Multiplicity="*" />
@@ -1375,52 +1238,6 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BMAModelStoreContainer" CdmEntityContainer="BMAEntities">
-          <EntitySetMapping Name="AspNetRoles">
-            <EntityTypeMapping TypeName="BMAModel.AspNetRole">
-              <MappingFragment StoreEntitySet="AspNetRoles">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUserClaims">
-            <EntityTypeMapping TypeName="BMAModel.AspNetUserClaim">
-              <MappingFragment StoreEntitySet="AspNetUserClaims">
-                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
-                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUserLogins">
-            <EntityTypeMapping TypeName="BMAModel.AspNetUserLogin">
-              <MappingFragment StoreEntitySet="AspNetUserLogins">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
-                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUsers">
-            <EntityTypeMapping TypeName="BMAModel.AspNetUser">
-              <MappingFragment StoreEntitySet="AspNetUsers">
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
-                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
-                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
-                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
-                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
-                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
-                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="BMAModel.Category">
               <MappingFragment StoreEntitySet="Category">
@@ -1433,6 +1250,7 @@
           <EntitySetMapping Name="Customers">
             <EntityTypeMapping TypeName="BMAModel.Customer">
               <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="IsLoyal" ColumnName="IsLoyal" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="CustomerPhoneNumber" ColumnName="CustomerPhoneNumber" />
                 <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
@@ -1588,6 +1406,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="BMAModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Staffs">
             <EntityTypeMapping TypeName="BMAModel.Staff">
               <MappingFragment StoreEntitySet="Staff">
@@ -1642,14 +1468,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="AspNetUserRoles" TypeName="BMAModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
-            <EndProperty Name="AspNetUser">
-              <ScalarProperty Name="Id" ColumnName="UserId" />
-            </EndProperty>
-            <EndProperty Name="AspNetRole">
-              <ScalarProperty Name="Id" ColumnName="RoleId" />
-            </EndProperty>
-          </AssociationSetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="BMAModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <AssociationSetMapping Name="ExportFrom" TypeName="BMAModel.ExportFrom" StoreEntitySet="ExportFrom">
             <EndProperty Name="OutputMaterial">
               <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
