@@ -1,292 +1,576 @@
 ﻿@using System.Globalization
 @using BMA.Models
-@model Order
+@model BMA.Models.ViewModel.OrderViewModel
 @{
-    ViewBag.Title = "Chỉnh sửa đơn hàng";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>Chỉnh sửa đơn hàng</h1>
+    <h1>@ViewBag.Title</h1>
 </section>
-<!-- Main content -->
-<section class="invoice">
-    <!--Title row-->
-    <div class="row">
-        <div class="col-xs-12">
-            <h2 class="page-header">
-                Thông tin đơn hàng
-            </h2>
-        </div>
-    </div>
-    <!-- Info row -->
-    <div class="row invoice-info">
-        <div class="col-sm-6 invoice-col">
-            <b>Mã đơn hàng: </b>
-            @Model.OrderCode
-            <br />
-            <b>Thời gian tạo: </b>
-            @Model.CreateTime.ToString(("dd/MM/yyyy hh:mm tt"))
-            <br />
-            <b>Trạng thái: </b>
-            @if (Model.OrderStatus.Equals("Đã hoàn thành"))
-            {
-                <span class="label label-success">@Model.OrderStatus</span>
-            }
-            else if (Model.OrderStatus.Equals("Hủy"))
-            {
-                <span class="label label-danger">@Model.OrderStatus</span>
-            }
-            else if (Model.OrderStatus.Equals("Chờ xử lý") || Model.OrderStatus.Equals("Chờ xác nhận"))
-            {
-                <span class="label label-warning">@Model.OrderStatus</span>
-            }
-            else
-            {
-                <span class="label label-primary">@Model.OrderStatus</span>
-            }
-        </div>
-        <div class="col-sm-6 invoice-col">
-            @if (!@Model.OrderStatus.Equals("Chờ xử lý"))
-            {
-                <div>
-                    Thành viên:
-                    <b>@Model.AspNetUser.FullName</b>
-                </div>
-                <div>@ViewBag.Customer.CustomerAddress</div>
-                <div>Điện thoại: @ViewBag.Customer.CustomerPhoneNumber</div>
-            }
-            else if (ViewBag.GuestInfo != null)
-            {
-                <div>
-                    Khách hàng:
-                    <b>@ViewBag.GuestInfo.GuestInfoName</b>
-                </div>
-                <div>@ViewBag.GuestInfo.GuestInfoAddress</div>
-                <div>Điện thoại: @ViewBag.GuestInfo.GuestInfoPhone</div>
-            }
-            else
-            {
-                <div>
-                    Thành viên:
-                    <b>@Model.AspNetUser.FullName</b>
-                </div>
-                <div>@ViewBag.Customer.CustomerAddress</div>
-                <div>Điện thoại: @ViewBag.Customer.CustomerPhoneNumber</div>
-            }
-        </div>
-    </div>
-    <div class="row" style="margin-top: 15px;">
-        <div class="col-xs-12">
-            <h2 class="page-header">
-                Thông tin sản phẩm
-            </h2>
-        </div>
-    </div>
-    <!-- Table row -->
-    <div class="row">
-        <div class="col-xs-12 table-responsive">
-            <table class="table table-striped">
-                <thead style="font-weight: bold">
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Đơn giá</th>
-                        <th>Số lượng</th>
-                        <th style="text-align: right">Thành tiền</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.OrderItems.Count; i++)
-                    {
-                        <tr>
-                            <td>@(i + 1)</td>
-                            <td>@Model.OrderItems.ElementAt(i).Product.ProductName</td>
-                            <td>@Model.OrderItems.ElementAt(i).RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                            <td>@Model.OrderItems.ElementAt(i).Quantity</td>
-                            <td style="text-align: right">@Model.OrderItems.ElementAt(i).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-9">
-
-        </div>
-        <div class=" col-xs-3">
-            <div class="table-responsive">
-                <table class="table">
-                    <tr>
-                        <th>Tổng cộng: </th>
-                        <td style="text-align: right">
-                            @ViewBag.TotalAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Thuế: </th>
-                        <td style="text-align: right">@ViewBag.TotalTax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                    </tr>
-                    <tr>
-                        <th>Thành tiền: </th>
-                        <td style="text-align: right">@Model.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-</section>
-<section class="invoice">
-    <!--Title row-->
-    <div class="row">
-        <div class="col-xs-12">
-            <h2 class="page-header">
-                Thông tin đơn hàng
-            </h2>
-        </div>
-    </div>
-    <!-- Info row -->
-    <div class="row invoice-info">
-        <div class="col-sm-6 invoice-col">
-            <b>Mã đơn hàng: </b>
-            @Model.OrderCode
-            <br />
-            <b>Thời gian tạo: </b>
-            @Model.CreateTime.ToString(("dd/MM/yyyy hh:mm tt"))
-            <br />
-            <b>Trạng thái: </b>
-            @if (Model.OrderStatus.Equals("Đã hoàn thành"))
-            {
-                <span class="label label-success">@Model.OrderStatus</span>
-            }
-            else if (Model.OrderStatus.Equals("Hủy"))
-            {
-                <span class="label label-danger">@Model.OrderStatus</span>
-            }
-            else if (Model.OrderStatus.Equals("Chờ xử lý") || Model.OrderStatus.Equals("Chờ xác nhận"))
-            {
-                <span class="label label-warning">@Model.OrderStatus</span>
-            }
-            else
-            {
-                <span class="label label-primary">@Model.OrderStatus</span>
-            }
-        </div>
-        <div class="col-sm-6 invoice-col">
-            @if (!@Model.OrderStatus.Equals("Chờ xử lý"))
-            {
-                <div>
-                    Thành viên:
-                    <b>@Model.AspNetUser.FullName</b>
-                </div>
-                <div>@ViewBag.Customer.CustomerAddress</div>
-                <div>Điện thoại: @ViewBag.Customer.CustomerPhoneNumber</div>
-            }
-            else if (ViewBag.GuestInfo != null)
-            {
-                <div>
-                    Khách hàng:
-                    <b>@ViewBag.GuestInfo.GuestInfoName</b>
-                </div>
-                <div>@ViewBag.GuestInfo.GuestInfoAddress</div>
-                <div>Điện thoại: @ViewBag.GuestInfo.GuestInfoPhone</div>
-            }
-            else
-            {
-                <div>
-                    Thành viên:
-                    <b>@Model.AspNetUser.FullName</b>
-                </div>
-                <div>@ViewBag.Customer.CustomerAddress</div>
-                <div>Điện thoại: @ViewBag.Customer.CustomerPhoneNumber</div>
-            }
-        </div>
-    </div>
-    <div class="row" style="margin-top: 15px;">
-        <div class="col-xs-12">
-            <h2 class="page-header">
-                Thông tin sản phẩm
-            </h2>
-        </div>
-    </div>
-    <!-- Table row -->
-    <div class="row">
-        <div class="col-xs-12 table-responsive">
-            <table class="table table-striped">
-                <thead style="font-weight: bold">
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Đơn giá</th>
-                        <th>Số lượng</th>
-                        <th style="text-align: right">Thành tiền</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.OrderItems.Count; i++)
-                    {
-                        <tr>
-                            <td>@(i + 1)</td>
-                            <td>@Model.OrderItems.ElementAt(i).Product.ProductName</td>
-                            <td>@Model.OrderItems.ElementAt(i).RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                            <td>@Model.OrderItems.ElementAt(i).Quantity</td>
-                            <td style="text-align: right">@Model.OrderItems.ElementAt(i).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-9">
-
-        </div>
-        <div class=" col-xs-3">
-            <div class="table-responsive">
-                <table class="table">
-                    <tr>
-                        <th>Tổng cộng: </th>
-                        <td style="text-align: right">
-                            @ViewBag.TotalAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Thuế: </th>
-                        <td style="text-align: right">@ViewBag.TotalTax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                    </tr>
-                    <tr>
-                        <th>Thành tiền: </th>
-                        <td style="text-align: right">@Model.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-    <!--Button-->
-    <!--Bug-->
-    @if (!Model.OrderStatus.Equals("Đã hoàn thành"))
-    {
+@if (Model.Order.OrderStatus == 0)
+{
+    <section class="invoice">
+        <!--Title row-->
         <div class="row">
             <div class="col-xs-12">
-
-                <button class="btn btn-warning ">
-                    <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy
-                </button>
-                @if (Model.OrderStatus.Equals("Chờ xử lý"))
-                {
-                    <button class="btn btn-success pull-right" id="btn-approved">
-                        <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Duyệt
-
-                    </button>
-                    <button class="btn btn-primary pull-right" style="margin-right: 25px;">
-                        <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
-                    </button>
-                }
-
+                <h2 class="page-header">
+                    Thông tin đơn hàng
+                </h2>
             </div>
         </div>
-    }
-</section>
+        <!-- Info row -->
+        <div class="row invoice-info">
+            <div class="col-sm-6 invoice-col">
+                <b>Mã đơn hàng: </b>
+                @Model.Order.OrderCode
+                <br />
+                <b>Thời gian tạo: </b>
+                @Model.Order.CreateTime.ToString(("dd/MM/yyyy hh:mm tt"))
+                <br />
+                <b>Trạng thái: </b>
+                <span class="label label-danger">Chờ xử lý</span>
+            </div>
+            <div class="col-sm-6 invoice-col">
+                @if (Model.IsGuest)
+                {
+                    <div>
+                        Khách hàng:
+                        <b style="font-size: 17px;">@Model.OrderPersonName</b>
+                    </div>
+                    <div>
+                        <b>Địa chỉ: </b>
+                        @Model.OrderPersonAddress
+                    </div>
+                    <div>
+                        <b> Điện thoại: </b>
+                        @Model.OrderPersonPhoneNumber
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        Thành viên:
+                        <b style="font-size: 17px;">@Model.OrderPersonName</b>
+                    </div>
+                    <div>
+                        <b>Địa chỉ: </b>
+                        @Model.OrderPersonAddress
+                    </div>
+                    <div>
+                        <b> Điện thoại: </b>
+                        @Model.OrderPersonPhoneNumber
+                    </div>
+                }
+            </div>
+        </div>
+        <!--List of product-->
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">
+                            Thông tin sản phẩm
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <!-- Table row -->
+                        <div class="row">
+                            <div class="col-xs-12 table-responsive">
+                                <form action="@Url.Action("Edit", "Order")" method="POST" id="update-product-list">
+                                    <table class="table table-striped" id="product-table">
+                                        <thead style="font-weight: bold">
+                                            <tr>
+                                                <th>
+                                                    Tên sản phẩm
+                                                    <input type="hidden" name="orderId" value="@(Model.Order.OrderId)" />
+                                                </th>
+                                                <th>Đơn giá</th>
+                                                <th>Số lượng</th>
+                                                <th style="text-align: right">Thành tiền</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
+                                            @foreach (OrderItem orderItem in Model.Order.OrderItems)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @(orderItem.Product.ProductName)
+                                                        <input type="hidden" name="productId" value="@(orderItem.ProductId)" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="productPrice" min="1000" value="@(orderItem.RealPrice)" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="productQuantity" min="0" value="@(orderItem.Quantity)" />
+                                                    </td>
+                                                    <td style="text-align: right">
+                                                        <span id="orderItemAmount">@(orderItem.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span>
+                                                    </td>
+                                                    <td style="text-align: center">
+                                                        <a class="btn btn-warning" data-role="remove-row-btn">Hủy</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--List of button-->
+        <div class="row">
+            <div class="col-xs-9">
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: 8%">
+                        <!--Back button-->
+                        <button class="btn btn-primary">
+                            <i class="fa fa-backward" style="margin-right: 3px"></i>Quay lại
+                        </button>
+
+
+
+                        <!--Update order-->
+                        <button class="btn btn-primary pull-right" style="margin-right: 10px;" onclick="update_material_list()">
+                            <i class="fa fa-refresh" style="margin-right: 3px"></i>Cập nhật danh sách
+                            <script type="text/javascript">
+                                function update_material_list() {
+                                    var totalAmount = 0;
+                                    $("#product-table tbody tr").each(function(index,element) {
+                                        var productPrice = $(element).find("td:nth-child(2) input").val();
+                                        var productQuantity = $(element).find("td:nth-child(3) input").val();
+                                        var amount = productPrice * productQuantity;
+                                        totalAmount += amount;
+                                        $(element).find("td:nth-child(4) span").text(formatCurrency(amount));
+                                    });
+                                    $("#total-table tr:first td").text(formatCurrency(totalAmount));
+                                    var totalTax = totalAmount * @(Model.TaxRate) / 100;
+                                    $("#total-table tr:nth-child(2) td").text(formatCurrency(totalTax));
+                                    var totalValue = totalAmount + totalTax;
+                                    $("#total-table tr:nth-child(3) td").text(formatCurrency(totalValue));
+
+                                    $.ajax({
+                                        url: "@Url.Action("UpdateMaterialList","Order")",
+                                        method: "POST",
+                                        data: $("#update-product-list").serialize(),
+                                        success: function (data) {
+                                            $('#material-info').html(data);
+                                        },
+                                        fail: function (e) {
+                                            alert("Have error " + e.toString());
+                                        }
+                                    })
+                                }
+                            </script>
+                        </button>
+                        <!--Add more product button-->
+                        <button class="btn btn-success pull-right" style="margin-right: 10px;" onclick="show_list_product()">
+                            <i class="fa fa-plus" style="margin-right: 3px"></i>Thêm sản phẩm
+                            <script type="text/javascript">
+                                function show_list_product() {
+                                    $.ajax({
+                                        url: "@(Url.Action("GetListOfProductToAdd", "Order"))",
+                                        data: {
+                                            orderId: "@Model.Order.OrderId"
+                                        },
+                                        method: "POST",
+                                        success: function (data) {
+                                            document.getElementById('standard-popup-title').innerHTML = "Chọn sản phẩm";
+                                            document.getElementById('standard-popup-body').innerHTML = data;
+                                            $('#myStandardModal').modal('show');
+                                        },
+                                        fail: function (e) {
+                                            alert("Have error" + e.toString());
+                                        }
+                                    });
+                                }
+                            </script>
+                        </button>
+                        <script type="text/javascript">
+                            function fnselect() {
+                                var productId = $(".table tr.selected td:first input").val();
+                                var productName = $(".table tr.selected td:first span").text();
+                                var price = $(".table tr.selected td:nth-child(2) span").text();
+
+                                $.ajax({
+                                    "url": "@Url.Action("RemoveProductInProductList", "Order")",
+                                    "method": "POST",
+                                    "data": {
+                                        "productId": productId
+                                    },
+                                    "success": function (data) {
+                                        if (data === "1") {
+                                            $('#myStandardModal').modal('hide');
+
+                                            var productRow = $("<tr>", {
+                                                "html": [
+                                                    $("<td>", {
+                                                        "html": [
+                                                            productName,
+                                                            $("<input>", {
+                                                                "type": "hidden",
+                                                                "name": "productId",
+                                                                "value": productId
+                                                            })
+                                                        ]
+                                                    }),
+                                                    $("<td>", {
+                                                        "html": $("<input>", {
+                                                            "type": "number",
+                                                            "name": "productPrice",
+                                                            "value": price
+                                                        })
+                                                    }),
+                                                    $("<td>", {
+                                                        "html": $("<input>", {
+                                                            "type": "number",
+                                                            "name": "productQuantity",
+                                                            "value": "1",
+                                                            "min": "1"
+                                                        })
+                                                    }),
+                                                    $("<td>", {
+                                                        "style": "text-align: right",
+                                                        "html": $("<span>", {
+                                                            id:"orderItemAmount",
+                                                            "html":price
+                                                        })
+                                                    }),
+                                                    $("<td>", {
+                                                        "style": "text-align: center",
+                                                        "html": $("<a>", {
+                                                            "class": "btn btn-warning",
+                                                            "data-role": "remove-row-btn",
+                                                            "html": "Hủy"
+                                                        })
+                                                    })
+                                                ]
+                                            });
+                                            $("#product-table tbody").append(productRow);
+                                        } else {
+                                            alert("Không thể thêm sản phẩm");
+                                        }
+                                    },
+                                    "fail": function (e) {
+                                        alert("Have error" + e.toString());
+                                    }
+                                });
+                            }
+                        </script>
+
+                    </div>
+                </div>
+            </div>
+            <div class=" col-xs-3">
+                <div class="table-responsive">
+                    <table class="table" id="total-table">
+                        <tr>
+                            <th>Tổng cộng: </th>
+                            <td style="text-align: right">
+                                @Model.TotalAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Thuế(VAT): </th>
+                            <td style="text-align: right">@Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        </tr>
+                        <tr>
+                            <th>Thành tiền: </th>
+                            <td style="text-align: right">@Model.Order.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--List of material-->
+        <div class="row" id="material-info">
+            <div class="col-xs-12">
+                <!-- Material detail-->
+                <!-- Material Table Header-->
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-xs-12">
+                        <h2 class="page-header">
+                            Thông tin nguyên liệu
+                        </h2>
+                    </div>
+                </div>
+                <!--Material Noti-->
+                @if (!Model.IsEnoughMaterial)
+                {
+                    <div class="row" style="margin-bottom: 10px">
+                        <div class="col-xs-12">
+                            <h2 class="label label-danger" style="font-size: 14pt">Không đủ nguyên liệu. Không cập nhật</h2>
+                        </div>
+                    </div>
+                }
+                <!-- Material Table Content-->
+                <div class="row">
+                    <div class="col-xs-12 table-responsive">
+                        <table class="table table-striped">
+                            <thead style="font-weight: bold">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên nguyên liệu</th>
+                                    <th>Số lượng cần</th>
+                                    <th>Số lượng trong kho</th>
+                                    <th>Tình trạng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.MaterialList.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@(i + 1)</td>
+                                        <td>@Model.MaterialList[i].ProductMaterialName</td>
+                                        <td>@Model.MaterialList[i].NeedQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @Model.MaterialList[i].Unit</td>
+                                        <td>@Model.MaterialList[i].StorageQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @Model.MaterialList[i].Unit</td>
+                                        @if (Model.MaterialList[i].IsEnough)
+                                        {
+                                            <td>
+                                                <span class="label label-success">Đủ</span>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <span class="label label-danger">Thiếu</span>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" style="padding-bottom: 20px;">
+                    <div class="col-xs-12">
+                        <h2 class="label label-info" style="font-size: 12pt">Chi phí nguyên liệu: @Model.MaterialCost.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</h2>
+                    </div>
+                </div>
+                <!--Button row-->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!--Cancel order-->
+                        <button class="btn btn-danger" onclick="open_cancel_order(@Model.Order.OrderId)">
+                            <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy đơn hàng
+                            <script type="text/javascript">
+                                function open_cancel_order(orderId) {
+                                    var contentControl = $("<form>", {
+                                        "action": "@Url.Action("Cancel","Order")",
+                                        "method": "post",
+                                        "class": "form-group",
+                                        "id": "return-deposit-form",
+                                        "html": [
+                                            $("<div>", {
+                                                "class": "form-group",
+                                                "html": [
+                                                    $("<div>", {
+                                                        "class": "form-group",
+                                                        "html": [
+                                                            $("<input>", {
+                                                                "type": "hidden",
+                                                                "name": "orderId",
+                                                                "value": orderId
+                                                            }),
+                                                            $("<input>", {
+                                                                "type": "hidden",
+                                                                "name": "isReturnDeposit",
+                                                                "value": "0"
+                                                            }),
+                                                            $("<input>", {
+                                                                "type": "hidden",
+                                                                "name": "returnDeposit",
+                                                                "value": "0"
+                                                            })
+                                                        ]
+                                                    })
+                                                ]
+                                            })
+                                        ]
+                                    });
+                                    $(document).on("change", "[data-role=radio-return-deposit]", function () {
+                                        if ($(this).val() === 1) {
+                                            $('#return_deposit').show();
+                                        } else {
+                                            $('#return_deposit').hide();
+                                        }
+                                    });
+
+                                    var title = 'Xác nhận hủy đơn hàng';
+                                    var footerControl = $("<div>", {
+                                        "class": "row",
+                                        "html": [
+                                            $("<button>", {
+                                                "class": "btn btn-primary",
+                                                "data-dismiss": "modal",
+                                                "html": [
+                                                    "Đóng"
+                                                ]
+                                            }),
+                                            $("<button>", {
+                                                "class": "btn btn-danger",
+                                                "style": "margin-right: 10px;",
+                                                "onclick": "cancel_order()",
+                                                "html": [
+                                                    "Hủy"
+                                                ]
+                                            })
+                                        ]
+                                    });
+                                    document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+                                    document.getElementById('popup-title').innerHTML = title;
+                                    document.getElementById('popup-footer').innerHTML = footerControl[0].outerHTML;
+                                    $('#myModal').modal('show');
+                                }
+                                function cancel_order() {
+                                    $('#return-deposit-form').submit();
+                                }
+                            </script>
+                        </button>
+                        <!--Update order-->
+                        @if (Model.IsEnoughMaterial)
+                        {
+                            <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container()">
+                                <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Cập nhật
+                                <script type="text/javascript">
+                                    function open_update_container() {
+                                        var loyalCustControl = $("<div>", {
+                                            "class": "form-group",
+                                            "html": [
+                                                "<label>Có nhận tiền cọc không ?</label>",
+                                                $("<input>", {
+                                                    "type": "radio",
+                                                    "name": "isDeposit",
+                                                    "value": "yes",
+                                                    "style": "margin-left: 10px",
+                                                    "data-role": "radio-is-deposit"
+                                                }),
+                                                "Có ",
+                                                $("<input>", {
+                                                    "type": "radio",
+                                                    "name": "isDeposit",
+                                                    "value": "no",
+                                                    "style": "margin-left: 10px",
+                                                    "data-role": "radio-is-deposit"
+                                                }),
+                                                "Không"
+                                            ]
+                                        });
+                                        $(document).on("change", "[data-role=radio-is-deposit]", function () {
+                                            if ($(this).val() === "yes") {
+                                                $('#deposit').show();
+                                                $('#deposit-amount').attr("min", @Model.MaterialCost);
+                                                $('#deposit-amount').val(@Model.MaterialCost);
+                                            } else {
+                                                $('#deposit').hide();
+                                                $('#deposit-amount').attr("min", 0);
+                                                $('#deposit-amount').val(0);
+                                            }
+                                        });
+                                        var contentControl = $("<form>", {
+                                            "id": "form-update",
+                                            "html": [
+                                                @(Model.IsLoyal?"loyalCustControl":""),
+                                                $("<div>", {
+                                                    "class": "form-group",
+                                                    "id": "deposit",
+                                                    "style": "@(Model.IsLoyal?"display:none;":"")",
+                                                    "html": [
+                                                        "<label>Tiền cọc</label>",
+                                                        $("<input>", {
+                                                            "type": "number",
+                                                            "min": "@(Model.MaterialCost)",
+                                                            "class": "form-control",
+                                                            "id": "deposit-amount",
+                                                            "name": "deposit",
+                                                            "value": "@(Model.MaterialCost)"
+                                                        })
+                                                    ]
+                                                }),
+                                            $("<div>", {
+                                                "class": "form-group",
+                                                "html": [
+                                                    '<label>Ngày giao hàng</label>',
+                                                    $("<input>", {
+                                                        "type": "date",
+                                                        "min": "@(DateTime.Now.ToString("yyyy-MM-dd"))",
+                                                        "class": "form-control",
+                                                        "name": "deliveryDate",
+                                                        "id":"deliveryDate",
+                                                        "value": "@(((DateTime)Model.Order.DeliveryTime).ToString("yyyy-MM-dd"))"
+
+                                                    }),
+                                                    $("<input>", {
+                                                        "type": "hidden",
+                                                        "name": "orderId",
+                                                        "value": "@Model.Order.OrderId"
+                                                    })
+                                                ]
+                                            })
+                                            ]
+                                        });
+                                        var title = 'Xác nhận duyệt đơn hàng';
+                                        var footer = $("<div>", {
+                                            "class": "row",
+                                            "style": "padding-bottom: 20px;",
+                                            "html": [
+                                                 $("<button>", {
+                                                     "class": "btn btn-success pull-right",
+                                                     "style": "margin-right: 10px;",
+                                                     "onclick":"update_order()",
+                                                     "html": [
+                                                         "Đồng ý"
+                                                     ]
+                                                 }),
+                                                $("<button>", {
+                                                    "class": "btn btn-danger pull-right",
+                                                    "style": "margin-right: 10px;",
+                                                    "data-dismiss": "modal",
+                                                    "html": [
+                                                        "Hủy"
+                                                    ]
+                                                })
+
+                                            ]
+                                        });
+
+                                        document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+                                        document.getElementById('popup-title').innerHTML = title;
+                                        document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
+
+                                        $('#myModal').modal('show');
+                                    }
+
+                                    function update_order() {
+                                        var deposit_amount = $("#deposit-amount").val();
+                                        var delivery_date = $("#deliveryDate").val();
+                                        var depositAmountControl = $("<input>", {
+                                            type: "hidden",
+                                            name: "depositAmount",
+                                            value: deposit_amount
+                                        });
+                                        var deliveryDateControl = $("<input>", {
+                                            type: "date",
+                                            name: "deliveryDate",
+                                            value: delivery_date
+                                        });
+                                        $("#update-product-list").append(depositAmountControl);
+                                        $("#update-product-list").append(deliveryDateControl);
+                                        $("#update-product-list").submit();
+                                    }
+                                </script>
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+<!-- Main content -->

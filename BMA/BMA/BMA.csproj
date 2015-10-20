@@ -162,6 +162,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
+    <Compile Include="Common\CommonFunction.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
@@ -174,18 +175,6 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetRole.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUser.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUserClaim.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUserLogin.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BMA.Context.cs">
       <AutoGen>True</AutoGen>
@@ -242,6 +231,9 @@
     <Compile Include="Models\Recipe.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Role.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Staff.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -257,8 +249,13 @@
     <Compile Include="Models\TaxType.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
+    <Compile Include="Models\ViewModel\ExportFrom.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
+    <Compile Include="Models\ViewModel\MaterialInfoForProductListViewMode%3b.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderItemViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
@@ -356,6 +353,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\my-own-function.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
@@ -1159,7 +1157,7 @@
     <Content Include="Views\Layout\CustomerLayout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Procedure\Index.cshtml" />
-    <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Customer\Contact\Index.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Product\Cookie.cshtml" />
     <Content Include="Views\Product\Saltine.cshtml" />
@@ -1196,7 +1194,6 @@
     <Content Include="Content\AdminLayout\plugins\input-mask\phone-codes\phone-be.json" />
     <Content Include="Content\AdminLayout\plugins\input-mask\phone-codes\phone-codes.json" />
     <Content Include="Views\Layout\ManageLayout.cshtml" />
-    <Content Include="Views\Order\Delete.cshtml" />
     <Content Include="Views\Order\Edit.cshtml" />
     <Content Include="Views\Cart\Cart.cshtml" />
     <Content Include="Views\Cart\CartPartial.cshtml" />
@@ -1206,6 +1203,8 @@
     <Content Include="Views\Order\AddCustomerToOrder.cshtml" />
     <Content Include="Views\Customer\GetCustomerPartialView.cshtml" />
     <Content Include="Views\Order\CheckoutWithCustomer.cshtml" />
+    <Content Include="Views\Order\GetListOfProductToAdd.cshtml" />
+    <Content Include="Views\Order\MaterialListForOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

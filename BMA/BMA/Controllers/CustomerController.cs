@@ -16,5 +16,11 @@ namespace BMA.Controllers
             List<Customer> customerList = db.Customers.Where(m => m.IsActive).ToList();
             return PartialView(customerList);
         }
+
+        [HttpPost]
+        public ActionResult Create(FormCollection form, string returnUrl)
+        {
+            return RedirectToAction(returnUrl);
+        }
     }
 }

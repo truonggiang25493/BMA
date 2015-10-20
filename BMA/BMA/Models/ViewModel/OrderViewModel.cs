@@ -13,6 +13,7 @@ namespace BMA.Models.ViewModel
         public int TaxAmount { get; set; }
         public int TotalAmount { get; set; }
         public bool IsEnoughMaterial { get; set; }
+        public int TaxRate { get; set; }
         // Customer or Guest info
         public int OrderPersonId { get; set; }
         public String OrderPersonName { get; set; }
@@ -20,6 +21,7 @@ namespace BMA.Models.ViewModel
         public String OrderPersonPhoneNumber { get; set; }
         public String OrderPersonTaxCode { get; set; }
         public bool IsGuest { get; set; }
+        public bool IsLoyal { get; set; }
         // Order item info
         public List<OrderItemViewModel> OrderItemList { get; set; }
         // Material Info

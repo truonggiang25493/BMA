@@ -1,5 +1,5 @@
 ﻿@model List<BMA.Models.Customer>
-<table id="example1" class="table table-bordered">
+<table id="example2" class="table table-bordered customer-table">
     <thead>
         <tr>
             <th>Tên khách hàng</th>
@@ -12,7 +12,7 @@
         {
             <tr>
                 <td>
-                    @customer.AspNetUser.FullName
+                    @customer.User.Fullname
                     <input type="hidden" value="@customer.UserId" />
                 </td>
                 <td>

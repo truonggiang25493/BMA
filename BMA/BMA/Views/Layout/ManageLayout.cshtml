@@ -243,6 +243,8 @@
     <script src="/Content/AdminLayout/plugins/datatables/dataTables.bootstrap.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="/Content/AdminLayout/dist/js/demo.js"></script>
+    <!--Own js function-->
+    <script src="~/Scripts/my-own-function.js"></script>
     <script>
         $(function () {
             $('#example2').DataTable({
@@ -262,11 +264,32 @@
                 "autoWidth": false
             });
         });
-        $(document).on("click", ".table tbody tr", function () {
+        $(document).on("click", ".customer-table tbody tr", function () {
             $(this).addClass('selected').siblings().removeClass('selected');
         });
+        $(document).on("click", "[data-role=remove-row-btn]", function () {
+            var productId = $(this).parent().parent().find("td:first input").val();
+            $(this).parent().parent().remove();
+            $.ajax({
+                "url": "@(Url.Action("AddProductInProductList", "Order"))",
+                "method": "POST",
+                "data": {
+                    "productId": productId
+                },
+                "success": function (data) {
+                    if (data === "0") {
+                        alert("Không thể hủy");
+                    }
+                },
+                "fail": function (e) {
+                    alert("Have error" + e.toString());
+                }
+            });
+
+
+        });
     </script>
-    <!-- Modal -->
+    <!--Small Modal -->
     <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm ">
             <div class="modal-content">
@@ -279,6 +302,34 @@
             </div>
         </div>
     </div>
-    <!--End of modal-->
+    <!--End of small modal-->
+    <!--Standard Modal -->
+    <div class="modal fade" id="myStandardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="standard-popup-title"></h4>
+                </div>
+                <div class="modal-body" id="standard-popup-body"></div>
+                <div class="modal-footer" id="standard-popup-footer"></div>
+            </div>
+        </div>
+    </div>
+    <!--End of standard modal-->
+    <!--Large Modal -->
+    <div class="modal fade bs-example-modal-lg" id="myLargeModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="standard-popup-title"></h4>
+                </div>
+                <div class="modal-body" id="large-popup-body"></div>
+                <div class="modal-footer" id="large-popup-footer"></div>
+            </div>
+        </div>
+    </div>
+    <!--End of large modal-->
 </body>
 </html>
