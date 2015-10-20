@@ -64,8 +64,7 @@ namespace BMA.Business
                 // Get Customer or Guest info
                 if (order.CustomerUserId != null)
                 {
-                    Customer customer = db.Customers.FirstOrDefault(m => m.UserId == order.CustomerUserId);
-
+                    Customer customer = db.Customers.SingleOrDefault(m => m.UserId == order.CustomerUserId);
                     if (customer != null)
                     {
                         result.IsGuest = false;
@@ -268,7 +267,6 @@ namespace BMA.Business
             BMAEntities db = new BMAEntities();
             DbContextTransaction contextTransaction = db.Database.BeginTransaction();
             #region Update OutputMaterial; ExportFrom and InputMaterial
-            List<ExportFrom> exportFromList = new List<ExportFrom>();
             foreach (OrderItemViewModel orderItemViewModel in orderViewModel.OrderItemList)
             {
                 foreach (MaterialViewModel materialViewModel in orderItemViewModel.MaterialList)
@@ -301,12 +299,9 @@ namespace BMA.Business
                             }
                             InputBill inputBill = inputMaterial.InputBill;
                             // Get info for ExportFrom
-                            exportFrom.ProductMaterialId = materialViewModel.ProductMaterialId;
-                            exportFrom.OrderItemId = orderItemViewModel.OrderItem.OrderItemId;
-                            exportFrom.InputBillId = inputBill.InputBillId;
-                            exportFromList.Add(exportFrom);
+                            exportFrom.InputBill = inputBill;
                             // Add input bill to output material
-                            outputMaterial.InputBills.Add(inputBill);
+                            outputMaterial.ExportFroms.Add(exportFrom);
                         }
                     }
                     db.OutputMaterials.Add(outputMaterial);
@@ -360,25 +355,7 @@ namespace BMA.Business
                 contextTransaction.Dispose();
             }
 
-            #region Update Export From
-            if (exportFromList.Count != 0)
-            {
-                foreach (ExportFrom exportFrom in exportFromList)
-                {
-                    // Get OutputMaterialId
-                    OutputMaterial outputMaterial = db.OutputMaterials.FirstOrDefault(
-                        m =>
-                            m.ProductMaterialId == exportFrom.ProductMaterialId &&
-                            m.OrderItemId == exportFrom.OrderItemId);
-                    if (outputMaterial != null)
-                    {
-                        int outputMaterialId = outputMaterial.OutputMaterialId;
-                        db.Database.ExecuteSqlCommand("UPDATE ExportFrom SET ExportFromQuantity= @quantity WHERE OutputMaterialId=@outputMaterialId AND InputBillId = @inputBillId;", new SqlParameter("@quantity", exportFrom.ExportFromQuantity), new SqlParameter("@outputMaterialId", outputMaterialId), new SqlParameter("@inputBillId", exportFrom.InputBillId));
-                    }
 
-                }
-            }
-            #endregion
             return true;
         }
 
@@ -551,7 +528,6 @@ namespace BMA.Business
 
             #region Add OrderItem, OutputMaterial, ExportFrom, InputMaterial
             int currentOrderItemId = (int)db.Database.SqlQuery<decimal>("SELECT IDENT_CURRENT('OrderItem')").FirstOrDefault();
-            List<ExportFrom> exportFromList = new List<ExportFrom>();
             List<OrderItem> orderItemList = new List<OrderItem>();
             foreach (OrderItemViewModel orderItemViewModel in orderViewModel.OrderItemList)
             {
@@ -587,12 +563,9 @@ namespace BMA.Business
                             }
                             InputBill inputBill = inputMaterial.InputBill;
                             // Get info for ExportFrom
-                            exportFrom.ProductMaterialId = materialViewModel.ProductMaterialId;
-                            exportFrom.OrderItemId = currentOrderItemId;
-                            exportFrom.InputBillId = inputBill.InputBillId;
-                            exportFromList.Add(exportFrom);
+                            exportFrom.InputBill = inputBill;
                             // Add input bill to output material
-                            outputMaterial.InputBills.Add(inputBill);
+                            outputMaterial.ExportFroms.Add(exportFrom);
                         }
                     }
                     outputMaterialList.Add(outputMaterial);
@@ -637,25 +610,7 @@ namespace BMA.Business
                 contextTransaction.Dispose();
             }
 
-            #region Update Export From
-            if (exportFromList.Count != 0)
-            {
-                foreach (ExportFrom exportFrom in exportFromList)
-                {
-                    // Get OutputMaterialId
-                    OutputMaterial outputMaterial = db.OutputMaterials.FirstOrDefault(
-                        m =>
-                            m.ProductMaterialId == exportFrom.ProductMaterialId &&
-                            m.OrderItemId == exportFrom.OrderItemId);
-                    if (outputMaterial != null)
-                    {
-                        int outputMaterialId = outputMaterial.OutputMaterialId;
-                        db.Database.ExecuteSqlCommand("UPDATE ExportFrom SET ExportFromQuantity= @quantity WHERE OutputMaterialId=@outputMaterialId AND InputBillId = @inputBillId;", new SqlParameter("@quantity", exportFrom.ExportFromQuantity), new SqlParameter("@outputMaterialId", outputMaterialId), new SqlParameter("@inputBillId", exportFrom.InputBillId));
-                    }
 
-                }
-            }
-            #endregion
 
             return true;
         }
@@ -834,20 +789,30 @@ namespace BMA.Business
                     List<InputMaterial> tempList = db.InputMaterials.Where(
                         m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive).OrderBy(m => m.ImportDate).ToList();
                     //Compare each input material with material ViewModel and merge each material of orderItem to input material
+                    //Compare each input material with material ViewModel and merge each material of orderItem to input material
                     foreach (InputMaterial inputMaterial in tempList)
                     {
                         if (materialViewModel.NeedQuantity > 0)
                         {
+                            ExportFrom exportFrom = new ExportFrom();
                             if (inputMaterial.RemainQuantity >= materialViewModel.NeedQuantity)
                             {
+                                exportFrom.ExportFromQuantity = materialViewModel.NeedQuantity;
+                                inputMaterial.RemainQuantity -= materialViewModel.NeedQuantity;
                                 materialViewModel.NeedQuantity = 0;
+
                             }
                             else
                             {
                                 materialViewModel.NeedQuantity -= inputMaterial.RemainQuantity;
+                                exportFrom.ExportFromQuantity = inputMaterial.RemainQuantity;
+                                inputMaterial.RemainQuantity = 0;
                             }
                             InputBill inputBill = inputMaterial.InputBill;
-                            outputMaterial.InputBills.Add(inputBill);
+                            // Get info for ExportFrom
+                            exportFrom.InputBill = inputBill;
+                            // Add input bill to output material
+                            outputMaterial.ExportFroms.Add(exportFrom);
                         }
                     }
                     outputMaterialList.Add(outputMaterial);
@@ -926,49 +891,52 @@ namespace BMA.Business
                     {
                         foreach (OutputMaterial outputMaterial in orderItem.OutputMaterials)
                         {
-                            foreach (InputBill inputBill in outputMaterial.InputBills)
+                            foreach (ExportFrom exportFrom in outputMaterial.ExportFroms)
                             {
-                                // Get exportFromQuantity
-                                int inputBillId = inputBill.InputBillId;
-                                int exportFromQuantity = db.Database.SqlQuery<Int32>
-                                    ("SELECT ExportFromQuantity FROM ExportFrom WHERE OutputMaterialId=@outputMaterialId AND InputbillId=@inputBillId"
-                                        , new SqlParameter("@outputMaterialId", outputMaterial.OutputMaterialId)
-                                        , new SqlParameter("@inputBillId", inputBillId)).FirstOrDefault();
+
                                 // Return InputMaterial
                                 int productMaterialId = outputMaterial.ProductMaterialId;
                                 InputMaterial inputMaterial = db.InputMaterials.FirstOrDefault(
-                                    m => m.ProductMaterialId == productMaterialId && m.InputBillId == inputBillId);
+                                    m => m.ProductMaterialId == productMaterialId && m.InputBillId == exportFrom.InputbillId);
                                 if (inputMaterial != null)
                                 {
-                                    inputMaterial.RemainQuantity += exportFromQuantity;
+                                    inputMaterial.RemainQuantity += exportFrom.ExportFromQuantity;
                                 }
                                 // Return ProductMaterial
                                 ProductMaterial productMaterial =
                                     db.ProductMaterials.FirstOrDefault(m => m.ProductMaterialId == productMaterialId);
                                 if (productMaterial != null)
                                 {
-                                    productMaterial.CurrentQuantity += exportFromQuantity;
+                                    productMaterial.CurrentQuantity += exportFrom.ExportFromQuantity;
                                 }
-                                // Remove ExportFrom by SQL command
-                                db.Database.ExecuteSqlCommand("DELETE FROM ExportFrom WHERE OutputMaterialId=@outputMaterialId AND InputbillId=@inputBillId"
-                                        , new SqlParameter("@outputMaterialId", outputMaterial.OutputMaterialId)
-                                        , new SqlParameter("@inputBillId", inputBillId));
-                            }
 
-                            // Remove OutputMaterial by SQL command
-                            db.Database.ExecuteSqlCommand("DELETE FROM OutputMaterial WHERE OutputMaterialId=@outputMaterialId"
-                                    , new SqlParameter("@outputMaterialId", outputMaterial.OutputMaterialId));
+                            }
+                            // Remove ExportFrom
+                            db.ExportFroms.RemoveRange(outputMaterial.ExportFroms);
+
                         }
+                        // Remove OutputMaterial
+                        db.OutputMaterials.RemoveRange(orderItem.OutputMaterials);
                     }
 
                     // Return Deposit
                     if (isReturnDeposit == 0)
                     {
-                        order.ReturnDeposit = returnDeposit;
+                        order.ReturnDeposit = 0;
                     }
                     else
                     {
-                        order.ReturnDeposit = 0;
+                        order.ReturnDeposit = returnDeposit;
+                    }
+                    // Remove the previous order
+                    if (order.OrderStatus == 1)
+                    {
+                        Order previousOrder = db.Orders.FirstOrDefault(m => m.OrderId == order.PreviousOrderId);
+                        if (previousOrder != null)
+                        {
+                            db.OrderItems.RemoveRange(previousOrder.OrderItems);
+                            db.Orders.Remove(previousOrder);
+                        }
                     }
 
                     // Change order status become "Hủy"
@@ -976,6 +944,7 @@ namespace BMA.Business
                     order.CancelTime = DateTime.Now;
                     //Temp Bug
                     order.CancelUserId = 2;
+
                     db.SaveChanges();
                     // Commit transaction
                     try
@@ -1203,12 +1172,8 @@ namespace BMA.Business
                             }
                             InputBill inputBill = inputMaterial.InputBill;
                             // Get info for ExportFrom
-                            exportFrom.ProductMaterialId = materialViewModel.ProductMaterialId;
-                            exportFrom.OrderItemId = currentOrderItemId;
-                            exportFrom.InputBillId = inputBill.InputBillId;
-                            exportFromList.Add(exportFrom);
-                            // Add input bill to output material
-                            outputMaterial.InputBills.Add(inputBill);
+                            exportFrom.InputBill = inputBill;
+                            outputMaterial.ExportFroms.Add(exportFrom);
                         }
                     }
                     outputMaterialList.Add(outputMaterial);
@@ -1253,25 +1218,7 @@ namespace BMA.Business
                 contextTransaction.Dispose();
             }
 
-            #region Update Export From
-            if (exportFromList.Count != 0)
-            {
-                foreach (ExportFrom exportFrom in exportFromList)
-                {
-                    // Get OutputMaterialId
-                    OutputMaterial outputMaterial = db.OutputMaterials.FirstOrDefault(
-                        m =>
-                            m.ProductMaterialId == exportFrom.ProductMaterialId &&
-                            m.OrderItemId == exportFrom.OrderItemId);
-                    if (outputMaterial != null)
-                    {
-                        int outputMaterialId = outputMaterial.OutputMaterialId;
-                        db.Database.ExecuteSqlCommand("UPDATE ExportFrom SET ExportFromQuantity= @quantity WHERE OutputMaterialId=@outputMaterialId AND InputBillId = @inputBillId;", new SqlParameter("@quantity", exportFrom.ExportFromQuantity), new SqlParameter("@outputMaterialId", outputMaterialId), new SqlParameter("@inputBillId", exportFrom.InputBillId));
-                    }
 
-                }
-            }
-            #endregion
 
             return true;
         }

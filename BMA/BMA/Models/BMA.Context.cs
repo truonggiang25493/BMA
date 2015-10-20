@@ -27,6 +27,7 @@ namespace BMA.Models
     
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<ExportFrom> ExportFroms { get; set; }
         public virtual DbSet<GuestInfo> GuestInfoes { get; set; }
         public virtual DbSet<InputBill> InputBills { get; set; }
         public virtual DbSet<InputMaterial> InputMaterials { get; set; }

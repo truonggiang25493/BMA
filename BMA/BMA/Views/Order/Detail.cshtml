@@ -38,7 +38,7 @@
                 {
                     <br />
                     <b>Người duyệt: </b>
-                    @(Model.Order.User.Fullname)
+                    @(Model.Order.User1.Fullname)
                 }
                 if (Model.Order.DepositAmount > 0)
                 {
@@ -61,7 +61,7 @@
             }
             else if (Model.Order.OrderStatus == 6)
             {
-                <span class="label label-danger">@CommonData.Status[Model.Order.OrderStatus]</span>
+                <span class="label label-default">@CommonData.Status[Model.Order.OrderStatus]</span>
             }
             else if (Model.Order.OrderStatus == 0 || Model.Order.OrderStatus == 1)
             {
@@ -162,8 +162,8 @@
     </div>
     @if (Model.Order.OrderStatus == 0)
     {
-        <!-- Material detail-->
-        <!-- Material Table Header-->
+    <!-- Material detail-->
+    <!-- Material Table Header-->
         <div class="row" style="margin-top: 15px;">
             <div class="col-xs-12">
                 <h2 class="page-header">
@@ -171,7 +171,7 @@
                 </h2>
             </div>
         </div>
-        <!--Material Noti-->
+    <!--Material Noti-->
         if (!Model.IsEnoughMaterial)
         {
             <div class="row">
@@ -231,9 +231,9 @@
         <div class="col-xs-12">
             @if (Model.Order.OrderStatus != 5)
             {
-                <!--Cancel order-->
+            <!--Cancel order-->
                 <button class="btn btn-danger" onclick="open_cancel_order(@Model.Order.OrderId,@Model.Order.DepositAmount)">
-                    <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy
+                    <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy đơn hàng
                     <script type="text/javascript">
                         function open_cancel_order(orderId, deposit) {
                             var contentControl = $("<form>", {
@@ -299,7 +299,7 @@
                                 ]
                             });
                             $(document).on("change", "[data-role=radio-return-deposit]", function () {
-                                if ($(this).val() === 1) {
+                                if ($(this).val() === "1") {
                                     $('#return_deposit').show();
                                     $('#return_deposit_amount').val(deposit);
                                     $('#return_deposit_amount').attr("max", deposit);

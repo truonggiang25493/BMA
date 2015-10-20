@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -32,6 +32,7 @@
           </Key>
           <Property Name="OutputMaterialId" Type="int" Nullable="false" />
           <Property Name="InputbillId" Type="int" Nullable="false" />
+          <Property Name="ExportFromQuantity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="GuestInfo">
           <Key>
@@ -92,7 +93,7 @@
           <Property Name="ApproveTime" Type="datetime" />
           <Property Name="OrderNote" Type="nvarchar" MaxLength="200" />
           <Property Name="DepositAmount" Type="int" Nullable="false" />
-          <Property Name="ConfirmDate" Type="date" />
+          <Property Name="ConfirmDate" Type="datetime" />
           <Property Name="CustomerUserId" Type="int" />
           <Property Name="StaffApproveUserId" Type="int" />
           <Property Name="IsStaffEdit" Type="bit" Nullable="false" />
@@ -102,6 +103,9 @@
           <Property Name="PreviousOrderId" Type="int" />
           <Property Name="TotalValue" Type="int" Nullable="false" />
           <Property Name="GuestInfoId" Type="int" />
+          <Property Name="ReturnDeposit" Type="int" Nullable="false" />
+          <Property Name="CancelUserId" Type="int" />
+          <Property Name="CancelTime" Type="datetime" />
         </EntityType>
         <EntityType Name="OtherExpense">
           <Key>
@@ -619,6 +623,7 @@
         <EntityContainer Name="BMAEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Categories" EntityType="BMAModel.Category" />
           <EntitySet Name="Customers" EntityType="BMAModel.Customer" />
+          <EntitySet Name="ExportFroms" EntityType="BMAModel.ExportFrom" />
           <EntitySet Name="GuestInfoes" EntityType="BMAModel.GuestInfo" />
           <EntitySet Name="InputBills" EntityType="BMAModel.InputBill" />
           <EntitySet Name="InputMaterials" EntityType="BMAModel.InputMaterial" />
@@ -648,6 +653,14 @@
           <AssociationSet Name="FK_Customer_User" Association="BMAModel.FK_Customer_User">
             <End Role="User" EntitySet="Users" />
             <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExportFrom_InputBill" Association="BMAModel.FK_ExportFrom_InputBill">
+            <End Role="InputBill" EntitySet="InputBills" />
+            <End Role="ExportFrom" EntitySet="ExportFroms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExportFrom_OutputMaterial" Association="BMAModel.FK_ExportFrom_OutputMaterial">
+            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
+            <End Role="ExportFrom" EntitySet="ExportFroms" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_GuestInfo" Association="BMAModel.FK_Orders_GuestInfo">
             <End Role="GuestInfo" EntitySet="GuestInfoes" />
@@ -717,10 +730,6 @@
             <End Role="TaxType" EntitySet="TaxTypes" />
             <End Role="TaxRate" EntitySet="TaxRates" />
           </AssociationSet>
-          <AssociationSet Name="ExportFrom" Association="BMAModel.ExportFrom">
-            <End Role="InputBill" EntitySet="InputBills" />
-            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
-          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Category">
           <Key>
@@ -746,6 +755,17 @@
           <Property Name="IsLoyal" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="User" Relationship="BMAModel.FK_Customer_User" FromRole="Customer" ToRole="User" />
         </EntityType>
+        <EntityType Name="ExportFrom">
+          <Key>
+            <PropertyRef Name="OutputMaterialId" />
+            <PropertyRef Name="InputbillId" />
+          </Key>
+          <Property Name="OutputMaterialId" Type="Int32" Nullable="false" />
+          <Property Name="InputbillId" Type="Int32" Nullable="false" />
+          <Property Name="ExportFromQuantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="InputBill" Relationship="BMAModel.FK_ExportFrom_InputBill" FromRole="ExportFrom" ToRole="InputBill" />
+          <NavigationProperty Name="OutputMaterial" Relationship="BMAModel.FK_ExportFrom_OutputMaterial" FromRole="ExportFrom" ToRole="OutputMaterial" />
+        </EntityType>
         <EntityType Name="GuestInfo">
           <Key>
             <PropertyRef Name="GuestInfoId" />
@@ -767,9 +787,9 @@
           <Property Name="InputRawImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="InputTaxAmount" Type="Double" Nullable="false" />
           <Property Name="SupplierId" Type="Int32" />
+          <NavigationProperty Name="ExportFroms" Relationship="BMAModel.FK_ExportFrom_InputBill" FromRole="InputBill" ToRole="ExportFrom" />
           <NavigationProperty Name="Supplier" Relationship="BMAModel.FK_InputBill_Supplier_SupplierId" FromRole="InputBill" ToRole="Supplier" />
           <NavigationProperty Name="InputMaterials" Relationship="BMAModel.FK_InputMaterial_InputBill_InputBillId" FromRole="InputBill" ToRole="InputMaterial" />
-          <NavigationProperty Name="OutputMaterials" Relationship="BMAModel.ExportFrom" FromRole="InputBill" ToRole="OutputMaterial" />
         </EntityType>
         <EntityType Name="InputMaterial">
           <Key>
@@ -814,7 +834,7 @@
           <Property Name="ApproveTime" Type="DateTime" Precision="3" />
           <Property Name="OrderNote" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="DepositAmount" Type="Int32" Nullable="false" />
-          <Property Name="ConfirmDate" Type="DateTime" Precision="0" />
+          <Property Name="ConfirmDate" Type="DateTime" Precision="3" />
           <Property Name="CustomerUserId" Type="Int32" />
           <Property Name="StaffApproveUserId" Type="Int32" />
           <Property Name="IsStaffEdit" Type="Boolean" Nullable="false" />
@@ -824,6 +844,9 @@
           <Property Name="PreviousOrderId" Type="Int32" />
           <Property Name="TotalValue" Type="Int32" Nullable="false" />
           <Property Name="GuestInfoId" Type="Int32" />
+          <Property Name="ReturnDeposit" Type="Int32" Nullable="false" />
+          <Property Name="CancelUserId" Type="Int32" />
+          <Property Name="CancelTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="GuestInfo" Relationship="BMAModel.FK_Orders_GuestInfo" FromRole="Order" ToRole="GuestInfo" />
           <NavigationProperty Name="OrderItems" Relationship="BMAModel.FK_OrderItem_Orders_OrderId" FromRole="Order" ToRole="OrderItem" />
           <NavigationProperty Name="Orders1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order" ToRole="Order1" />
@@ -863,9 +886,9 @@
           <Property Name="OutputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
           <Property Name="OrderItemId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ExportFroms" Relationship="BMAModel.FK_ExportFrom_OutputMaterial" FromRole="OutputMaterial" ToRole="ExportFrom" />
           <NavigationProperty Name="OrderItem" Relationship="BMAModel.FK_OutputMaterial_OrderItem" FromRole="OutputMaterial" ToRole="OrderItem" />
           <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_OutputMaterial_ProductMaterial" FromRole="OutputMaterial" ToRole="ProductMaterial" />
-          <NavigationProperty Name="InputBills" Relationship="BMAModel.ExportFrom" FromRole="OutputMaterial" ToRole="InputBill" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -1021,6 +1044,30 @@
             </Principal>
             <Dependent Role="Customer">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExportFrom_InputBill">
+          <End Type="BMAModel.InputBill" Role="InputBill" Multiplicity="1" />
+          <End Type="BMAModel.ExportFrom" Role="ExportFrom" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InputBill">
+              <PropertyRef Name="InputBillId" />
+            </Principal>
+            <Dependent Role="ExportFrom">
+              <PropertyRef Name="InputbillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExportFrom_OutputMaterial">
+          <End Type="BMAModel.OutputMaterial" Role="OutputMaterial" Multiplicity="1" />
+          <End Type="BMAModel.ExportFrom" Role="ExportFrom" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OutputMaterial">
+              <PropertyRef Name="OutputMaterialId" />
+            </Principal>
+            <Dependent Role="ExportFrom">
+              <PropertyRef Name="OutputMaterialId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1228,10 +1275,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="ExportFrom">
-          <End Type="BMAModel.InputBill" Role="InputBill" Multiplicity="*" />
-          <End Type="BMAModel.OutputMaterial" Role="OutputMaterial" Multiplicity="*" />
-        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1257,6 +1300,15 @@
                 <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExportFroms">
+            <EntityTypeMapping TypeName="BMAModel.ExportFrom">
+              <MappingFragment StoreEntitySet="ExportFrom">
+                <ScalarProperty Name="ExportFromQuantity" ColumnName="ExportFromQuantity" />
+                <ScalarProperty Name="InputbillId" ColumnName="InputbillId" />
+                <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1315,6 +1367,9 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="BMAModel.Order">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="CancelTime" ColumnName="CancelTime" />
+                <ScalarProperty Name="CancelUserId" ColumnName="CancelUserId" />
+                <ScalarProperty Name="ReturnDeposit" ColumnName="ReturnDeposit" />
                 <ScalarProperty Name="GuestInfoId" ColumnName="GuestInfoId" />
                 <ScalarProperty Name="TotalValue" ColumnName="TotalValue" />
                 <ScalarProperty Name="PreviousOrderId" ColumnName="PreviousOrderId" />
@@ -1481,14 +1536,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="ExportFrom" TypeName="BMAModel.ExportFrom" StoreEntitySet="ExportFrom">
-            <EndProperty Name="OutputMaterial">
-              <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
-            </EndProperty>
-            <EndProperty Name="InputBill">
-              <ScalarProperty Name="InputBillId" ColumnName="InputbillId" />
-            </EndProperty>
-          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>@ViewBag.Title</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <link href="/Content/jquery-ui.css" rel="stylesheet" />
     <!-- Bootstrap 3.3.5 -->
     <link href="/Content/AdminLayout/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Font Awesome -->
@@ -264,9 +264,11 @@
                 "autoWidth": false
             });
         });
+
         $(document).on("click", ".customer-table tbody tr", function () {
             $(this).addClass('selected').siblings().removeClass('selected');
         });
+
         $(document).on("click", "[data-role=remove-row-btn]", function () {
             var productId = $(this).parent().parent().find("td:first input").val();
             $(this).parent().parent().remove();
@@ -285,9 +287,8 @@
                     alert("Have error" + e.toString());
                 }
             });
-
-
         });
+
     </script>
     <!--Small Modal -->
     <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">

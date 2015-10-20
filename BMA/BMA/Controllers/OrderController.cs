@@ -19,7 +19,7 @@ namespace BMA.Controllers
         // GET: Order
         public ActionResult Index()
         {
-            List<Order> orderList = db.Orders.Where(m => m.PreviousOrderId == null && !m.IsStaffEdit).ToList();
+            List<Order> orderList = db.Orders.Where(m => !m.IsStaffEdit).ToList();
             // Custom sort
             orderList.Sort(
                 delegate(Order o1, Order o2)
@@ -60,7 +60,7 @@ namespace BMA.Controllers
             }
             if (orderViewModel != null)
             {
-                if (orderViewModel.Order.OrderStatus == 0)
+                if (orderViewModel.Order.OrderStatus == 0 && !orderViewModel.Order.IsStaffEdit)
                 {
                     InitiateProductList(orderViewModel.Order.OrderId);
                     return View(orderViewModel);

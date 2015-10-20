@@ -23,8 +23,8 @@ namespace BMA.Controllers
                 {
                     Session["User"] = endUser;
                     Session["Username"] = endUser.Username;
-                    Session["UserId"] = endUser.Customers.CustomerId;
-                    Session["Phonenumber"] = endUser.Customers.CustomerPhoneNumber;
+                    Session["UserId"] = endUser.Customers.ElementAt(0).CustomerId;
+                    Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber;
                     return RedirectToAction("Index", "Home");
                 }
                 ViewBag.Notify = "Sai tài khoản hoặc mật khẩu";
