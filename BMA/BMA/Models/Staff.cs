@@ -15,11 +15,11 @@ namespace BMA.Models
     public partial class Staff
     {
         public int StaffId { get; set; }
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public string StaffAddress { get; set; }
         public string StaffPhoneNumber { get; set; }
         public bool IsActive { get; set; }
     
-        public virtual AspNetUser AspNetUser { get; set; }
+        public virtual User User { get; set; }
     }
 }

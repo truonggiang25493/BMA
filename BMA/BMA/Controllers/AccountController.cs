@@ -18,13 +18,13 @@ namespace BMA.Controllers
             {
                 string sAccount = f.Get("txtAccount").ToString();
                 string sPassword = f.Get("txtPassword").ToString();
-                AspNetUser endUser = db.AspNetUsers.SingleOrDefault(n => n.UserName == sAccount && n.PasswordHash == sPassword);
+                User endUser = db.Users.SingleOrDefault(n => n.Username == sAccount && n.Password == sPassword);
                 if (endUser != null)
                 {
                     Session["User"] = endUser;
-                    Session["Username"] = endUser.UserName;
-                    Session["UserId"] = endUser.Id;
-                    Session["Phonenumber"] = endUser.PhoneNumber;
+                    Session["Username"] = endUser.Username;
+                    Session["UserId"] = endUser.UserId;
+                    Session["Phonenumber"] = endUser.Customers;
                     return RedirectToAction("Index", "Home");
                 }
                 ViewBag.Notify = "Sai tài khoản hoặc mật khẩu";

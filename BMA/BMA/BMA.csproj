@@ -174,6 +174,7 @@
     <Compile Include="Controllers\CusManageOrderController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InputMaterialController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -181,18 +182,6 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetRole.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUser.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUserClaim.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUserLogin.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BMA.Context.cs">
       <AutoGen>True</AutoGen>
@@ -249,6 +238,9 @@
     <Compile Include="Models\Recipe.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Role.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Staff.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -262,6 +254,9 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TaxType.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
@@ -1218,6 +1213,8 @@
     <Content Include="Views\Cart\GetOrderToCart.cshtml" />
     <Content Include="Views\CusManageOrder\ConfirmIndex.cshtml" />
     <Content Include="Views\Cart\EditOrderSuccess.cshtml" />
+    <Content Include="Views\InputMaterial\Index.cshtml" />
+    <Content Include="Views\InputMaterial\Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

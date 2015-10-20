@@ -29,8 +29,8 @@ namespace BMA.Models
         public string OrderNote { get; set; }
         public int DepositAmount { get; set; }
         public Nullable<System.DateTime> ConfirmDate { get; set; }
-        public string CustomerUserId { get; set; }
-        public string StaffApproveUserId { get; set; }
+        public Nullable<int> CustomerUserId { get; set; }
+        public Nullable<int> StaffApproveUserId { get; set; }
         public bool IsStaffEdit { get; set; }
         public bool Flag { get; set; }
         public Nullable<int> OutputBillId { get; set; }
@@ -39,8 +39,6 @@ namespace BMA.Models
         public int TotalValue { get; set; }
         public Nullable<int> GuestInfoId { get; set; }
     
-        public virtual AspNetUser AspNetUser { get; set; }
-        public virtual AspNetUser AspNetUser1 { get; set; }
         public virtual GuestInfo GuestInfo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderItem> OrderItems { get; set; }
@@ -48,5 +46,7 @@ namespace BMA.Models
         public virtual ICollection<Order> Orders1 { get; set; }
         public virtual Order Order1 { get; set; }
         public virtual OutputBill OutputBill { get; set; }
+        public virtual User User { get; set; }
+        public virtual User User1 { get; set; }
     }
 }
