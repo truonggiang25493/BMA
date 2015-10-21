@@ -37,8 +37,13 @@
                 </div>
                 <!--Button-->
                 <div class="box-footer">
-                    <button class="btn btn-primary">Quay lại</button>
-                    <button class="btn btn-success pull-right" onclick="fnselect()">Chọn</button>
+
+                    <button class="btn btn-success pull-right" onclick="fnselect()">
+                        <i class=" fa fa-check"></i>Chọn
+                    </button>
+
+
+
                 </div>
                 <script>
                     function fnselect() {
@@ -62,8 +67,76 @@
         </div>
         <div class="col-xs-9" id="add-customer" style="display: none">
             <!--Header-->
-            <div class="row">
-                <h3>Thêm khách hàng</h3>
+            <div class="box">
+                <div class="box-header">
+                    <h3>Thêm khách hàng</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table">
+                        <form action="@Url.Action("CreateCustomerForOrder", "Order")" id="add-customer-form" method="POST">
+                            <tr class="row">
+                                <td class="col-xs-3">
+                                    <label>Tên khách hàng(*): </label>
+                                </td>
+                                <td class="col-xs-9">
+                                    <input type="text" class="col-xs-9" name="customerName" required maxlength="50" />
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="col-xs-3">
+                                    <label>Tên đăng nhập(*): </label>
+                                </td>
+                                <td class="col-xs-9">
+                                    <input type="text" class="col-xs-9" name="username" required maxlength="50" />
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="col-xs-3">
+                                    <label>Email(*): </label>
+                                </td>
+                                <td class="col-xs-9">
+                                    <input type="text" class="col-xs-9" name="customerEmail" required maxlength="50" placeholder="Hãy nhập kí tự" />
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="col-xs-3">
+                                    <label>Địa chỉ(*): </label>
+                                </td>
+                                <td class="col-xs-9">
+                                    <input type="text" class="col-xs-9" name="customerAddress" maxlength="250" required />
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="col-xs-3">
+                                    <label>Số điện thoại(*): </label>
+                                </td>
+                                <td class="col-xs-9">
+                                    <input type="text" class="col-xs-9" name="customerPhoneNumber" required />
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="col-xs-3">
+                                    <label>Mã số thuế(*): </label>
+                                </td>
+                                <td class="col-xs-9">
+                                    <input type="text" class="col-xs-9" name="customerTaxCode" required />
+                                </td>
+                            </tr>
+                            <tr class="row" style="text-align: center">
+                                <td>
+                                    <input type="button" name="btn-clear" value="Xóa" />
+                                </td>
+                                <td>
+                                    <input type="submit" name="btn-submit" value="Đồng ý" />
+                                </td>
+                            </tr>
+                        </form>
+                    </table>
+
+                </div>
+                <div class="box-footer">
+
+                </div>
             </div>
 
 
@@ -71,12 +144,12 @@
         <script>
             function open_choose_customer() {
                 $.ajax({
-                    "url": "/Customer/GetCustomerPartialView",
-                    "method": "GET",
-                    "success": function (data) {
+                    url: "/Customer/GetCustomerPartialView",
+                    method: "GET",
+                    success: function (data) {
                         $('#customer-table').html(data);
                     },
-                    "fail": function (e) {
+                    fail: function (e) {
                         alert("Have error" + e.toString());
                     }
                 });
@@ -84,11 +157,24 @@
                 $('#choose-customer').show();
                 $('#add-customer').hide();
             }
+
             function open_add_customer() {
                 $('#announce').hide();
                 $('#choose-customer').hide();
                 $('#add-customer').show();
             }
         </script>
+    </div>
+    <div class="row" style="margin-top: 30px">
+        <div class="col-xs-12">
+
+            <a class="btn btn-primary" href="/Order/Add">
+                <i class=" fa fa-backward" style="margin-right: 3px;"></i>Quay lại
+            </a>
+
+            <a class="btn btn-danger pull-right" href="/Order/CancelAddOrder">
+                <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy
+            </a>
+        </div>
     </div>
 </section>

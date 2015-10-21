@@ -38,6 +38,7 @@
                 </div>
                 <div>@Model.OrderPersonAddress</div>
                 <div>Điện thoại: @Model.OrderPersonPhoneNumber</div>
+                <div>Mã số thuế: @Model.OrderPersonTaxCode</div>
             }
         </div>
     </div>
@@ -89,7 +90,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Thuế: </th>
+                        <th>Thuế(VAT) : </th>
                         <td style="text-align: right">@Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                     </tr>
                     <tr>
@@ -168,36 +169,118 @@
     <!--Button-->
     <div class="row">
         <div class="col-xs-12">
-            <button class="btn btn-primary ">
+            <button class="btn btn-primary" style="margin-right: 10px">
                 <i class="fa fa-backward" style="margin-right: 3px;"></i>Quay lại
             </button>
+            <a class="btn btn-primary" href="/Order/Add">
+                <i class="fa fa-shopping-cart" style="margin-right: 3px;"></i>Chọn sản phẩm
+            </a>
 
+            <a class="btn btn-danger pull-right" href="/Order/CancelAddOrder">
+                <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy
+            </a>
 
             @if (Model.IsEnoughMaterial)
             {
-                <button class="btn btn-success pull-right" id="btn-approved" onclick="open_container();">
+                <button class="btn btn-success pull-right" id="btn-approved" onclick="open_container();" style="margin-right: 10px">
                     <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Duyệt
                     <script type="text/javascript">
                         function open_container() {
-                            var content =
-                                '<form role="form" action="/Order/AddOrderForCustomer" method="post" id="form-aprrove">' +
-                                    '<div class="form-group">' +
-                                    '<label for="deposit">Tiền cọc</label>' +
-                                    '<input type="number" min="@Model.MaterialCost" class="form-control" id="deposit" placeholder="Hãy nhập số tiền cọc" name="deposit"/>' +
-                                    '<input type="hidden" name="customerId" value="@Model.Order.CustomerUserId">' +
-                                    '</div>' +
-                                    '<div class="form-group">' +
-                                    '<label for="deliveryDate">Ngày giao hàng</label>' +
-                                    '<input type="date" class="form-control" id="deliveryDate" name="deliveryDate"/>' +
-                                    '</div>' +
-                                    '<div class="form-group" style="padding-bottom: 20px;">' +
-                                    '<button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Hủy</button>' +
-                                    '<button type="submit" class="btn btn-success pull-right" style="margin-right: 10px;">Đồng ý</button>' +
-                                    '</div>' +
-                                    '</form>';
+                            var loyalCustControl = $("<div>", {
+                                "class": "form-group",
+                                "html": [
+                                     "<label>Có nhận tiền cọc không ?</label>",
+                                    $("<input>", {
+                                        "type": "radio",
+                                        "name": "isDeposit",
+                                        "value": "yes",
+                                        "style": "margin-left: 10px",
+                                        "data-role": "radio-is-deposit"
+                                    }),
+                                    "Có ",
+                                    $("<input>", {
+                                        "type": "radio",
+                                        "name": "isDeposit",
+                                        "value": "no",
+                                        "style": "margin-left: 10px",
+                                        "data-role": "radio-is-deposit"
+                                    }),
+                                    "Không"
+                                ]
+                            });
+                            $(document).on("change", "[data-role=radio-is-deposit]", function () {
+                                if ($(this).val() === "yes") {
+                                    show_deposit();
+                                } else {
+                                    hide_deposit();
+                                }
+                            });
+                            var contentControl = $("<form>", {
+                                "action": "@Url.Action("AddOrderForCustomer", "Order")",
+                                "method": "post",
+                                "id": "form-aprrove",
+                                "html": [
+                                    @(Model.IsLoyal?"loyalCustControl":""),
+                                    $("<div>", {
+                                        "class": "form-group",
+                                        "id": "deposit",
+                                        "style": "@(Model.IsLoyal?"display:none;":"")",
+                                        "html": [
+                                            "<label>Tiền cọc</label>",
+                                            $("<input>", {
+                                                "type": "number",
+                                                "min": "@(Model.MaterialCost)",
+                                                "class": "form-control",
+                                                "id": "deposit-amount",
+                                                "name": "deposit",
+                                                "value": "@(Model.MaterialCost)"
+                                            })
+                                        ]
+                                    }),
+                                    $("<div>", {
+                                        "class": "form-group",
+                                        "html": [
+                                            '<label>Ngày giao hàng</label>',
+                                            $("<input>", {
+                                                "type": "date",
+                                                "min": "@(DateTime.Now.ToString("yyyy-MM-dd"))",
+                                                "class": "form-control",
+                                                "name": "deliveryDate",
+                                                "value": "@(DateTime.Now.ToString("yyyy-MM-dd"))"
+                                            }),
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "customerId",
+                                                "value": "@Model.Order.CustomerUserId"
+                                            })
+                                        ]
+                                    }),
+                                    $("<div>", {
+                                        "class": "form-group",
+                                        "style": "padding-bottom: 20px;",
+                                        "html": [
+                                            $("<button>", {
+                                                "class": "btn btn-danger pull-right",
+                                                "data-dismiss": "modal",
+                                                "html": [
+                                                    "Hủy"
+                                                ]
+                                            }),
+                                            $("<button>", {
+                                                "class": "btn btn-success pull-right",
+                                                "style": "margin-right: 10px;",
+                                                "type": "submit",
+                                                "html": [
+                                                    "Đồng ý"
+                                                ]
+                                            })
+                                        ]
+                                    })
+                                ]
+                            });
                             var title = 'Xác nhận duyệt đơn hàng';
                             var footer = '';
-                            setModalBox(title, content, footer);
+                            setModalBox(title, contentControl[0].outerHTML, footer);
                             $('#myModal').modal('show');
                         }
 
@@ -207,18 +290,25 @@
                             document.getElementById('popup-footer').innerHTML = footer;
 
                         }
+                        function show_deposit() {
+                            $('#deposit').show();
+                            $('#deposit-amount').attr("min", @Model.MaterialCost);
+                            $('#deposit-amount').val(@Model.MaterialCost);
+                        }
 
+                        function hide_deposit() {
+                            $('#deposit').hide();
+                            $('#deposit-amount').attr("min", 0);
+                            $('#deposit-amount').val(0);
+                        }
                     </script>
                 </button>
             }
 
 
-            <button class="btn btn-warning pull-right" style="margin-right: 25px;">
-                <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy
-            </button>
+
 
         </div>
     </div>
 
 </section>
-

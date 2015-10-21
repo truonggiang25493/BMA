@@ -38,6 +38,9 @@ namespace BMA.Models
         public Nullable<int> PreviousOrderId { get; set; }
         public int TotalValue { get; set; }
         public Nullable<int> GuestInfoId { get; set; }
+        public int ReturnDeposit { get; set; }
+        public Nullable<int> CancelUserId { get; set; }
+        public Nullable<System.DateTime> CancelTime { get; set; }
     
         public virtual GuestInfo GuestInfo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

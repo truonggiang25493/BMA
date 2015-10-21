@@ -168,15 +168,13 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
+    <Compile Include="Common\CommonFunction.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
-    <Compile Include="Controllers\CusManageOrderController.cs" />
-    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\InputMaterialController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ManageMaterialController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProcedureController.cs" />
@@ -204,6 +202,9 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Customer.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ExportFrom.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GuestInfo.cs">
@@ -262,6 +263,7 @@
     </Compile>
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
+    <Compile Include="Models\ViewModel\MaterialInfoForProductListViewMode%3b.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderItemViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
@@ -277,7 +279,6 @@
     <Content Include="Content\CustomerLayout\CSS\responsive.css" />
     <Content Include="Content\CustomerLayout\CSS\revolution-slider.css" />
     <Content Include="Content\CustomerLayout\CSS\style.css" />
-    <Content Include="Content\CustomerLayout\JS\bootstrap-datepicker.min.js" />
     <Content Include="Content\CustomerLayout\JS\css-pop.js" />
     <Content Include="Content\font-awesome-4.3.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.3.0\css\font-awesome.min.css" />
@@ -297,7 +298,8 @@
     <Content Include="Content\CustomerLayout\JS\jquery.themepunch.tools.min.js" />
     <Content Include="Content\CustomerLayout\JS\owl.carousel.min.js" />
     <Content Include="Content\CustomerLayout\JS\scripts.js" />
-    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -360,6 +362,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\my-own-function.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
@@ -1163,12 +1166,14 @@
     <Content Include="Views\Layout\CustomerLayout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Procedure\Index.cshtml" />
-    <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Customer\Contact\Index.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Product\Cookie.cshtml" />
     <Content Include="Views\Product\Saltine.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\ManageProduct\Index.cshtml" />
     <Content Include="Views\Product\ProductDetail.cshtml" />
+    <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Content\AdminLayout\bootstrap\css\bootstrap.css.map" />
@@ -1198,41 +1203,21 @@
     <Content Include="Content\AdminLayout\plugins\input-mask\phone-codes\phone-be.json" />
     <Content Include="Content\AdminLayout\plugins\input-mask\phone-codes\phone-codes.json" />
     <Content Include="Views\Layout\ManageLayout.cshtml" />
-    <Content Include="Views\Order\Detail.cshtml" />
-    <Content Include="Views\Order\Delete.cshtml" />
     <Content Include="Views\Order\Edit.cshtml" />
     <Content Include="Views\Cart\Cart.cshtml" />
     <Content Include="Views\Cart\CartPartial.cshtml" />
-    <Content Include="Views\Error\Index.cshtml" />
-    <Content Include="Views\Cart\OrderInfo.cshtml" />
-    <Content Include="Views\Cart\OrderSuccess.cshtml" />
-    <Content Include="Views\CusManageOrder\Index.cshtml" />
-    <Content Include="Views\CusManageOrder\OrderDetail.cshtml" />
-    <Content Include="Views\CusManageOrder\CancelOrder.cshtml" />
-    <Content Include="Views\CusManageOrder\ConfirmOrder.cshtml" />
-    <Content Include="Views\CusManageOrder\CancelBothOrder.cshtml" />
-    <Content Include="Views\Cart\GetOrderToCart.cshtml" />
-    <Content Include="Views\CusManageOrder\ConfirmIndex.cshtml" />
-    <Content Include="Views\Cart\EditOrderSuccess.cshtml" />
-    <Content Include="Views\ManageProduct\Index.cshtml" />
-    <Content Include="Views\ManageProduct\Detail.cshtml" />
+    <Content Include="Views\Order\Detail.cshtml" />
     <Content Include="Views\Order\Add.cshtml" />
-    <Content Include="Views\Order\AddCustomerToOrder.cshtml" />
     <Content Include="Views\Order\Checkout.cshtml" />
+    <Content Include="Views\Order\AddCustomerToOrder.cshtml" />
+    <Content Include="Views\Customer\GetCustomerPartialView.cshtml" />
     <Content Include="Views\Order\CheckoutWithCustomer.cshtml" />
-    <Content Include="Views\ManageProduct\Edit.cshtml" />
-    <Content Include="Views\ManageProduct\ProductMaterial.cshtml" />
-    <Content Include="Views\ManageMaterial\AddMaterial.cshtml" />
-    <Content Include="Views\ManageMaterial\Index.cshtml" />
-    <Content Include="Views\ManageProduct\ListMaterial.cshtml" />
-    <Content Include="Views\InputMaterial\Detail.cshtml" />
-    <Content Include="Views\InputMaterial\Index.cshtml" />
-    <Content Include="Views\InputMaterial\Edit.cshtml" />
-    <Content Include="Views\InputMaterial\Add.cshtml" />
-    <Content Include="Views\InputMaterial\InputListPartialView.cshtml" />
+    <Content Include="Views\Order\GetListOfProductToAdd.cshtml" />
+    <Content Include="Views\Order\MaterialListForOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\InputMaterial\" />
     <Folder Include="Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
@@ -1244,6 +1229,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

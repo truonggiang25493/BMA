@@ -354,10 +354,10 @@ namespace BMA.Controllers
             {
                 Session["User"] = endUser;
                 Session["Username"] = endUser.Username;
-                Session["UserId"] = endUser.Customers.CustomerId;
-                order.CustomerUserId = endUser.Customers.CustomerId;
+                Session["UserId"] = endUser.Customers.ElementAt(0).CustomerId;
+                order.CustomerUserId = endUser.Customers.ElementAt(0).CustomerId;
                 TempData["userName"] = endUser.Username.ToString();
-                Session["Phonenumber"] = endUser.Customers.CustomerPhoneNumber.ToString();
+                Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber.ToString();
             }
             else
             {
