@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <title>@ViewBag.Title</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <link href="/Content/jquery-ui.css" rel="stylesheet" />
@@ -17,6 +17,8 @@
     <link href="/Content/AdminLayout/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
     <!-- Own css -->
     <link href="~/Content/style.css" rel="stylesheet" />
+    <!-- Animate css -->
+    <link href="~/Content/animate.css" rel="stylesheet" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -245,6 +247,8 @@
     <script src="/Content/AdminLayout/dist/js/demo.js"></script>
     <!--Own js function-->
     <script src="~/Scripts/my-own-function.js"></script>
+    <!--Noty js-->
+    <script src="~/Scripts/jquery.noty.packaged.min.js"></script>
     <script>
         $(function () {
             $('#example2').DataTable({
@@ -324,7 +328,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="standard-popup-title"></h4>
+                    <h4 class="modal-title" id="large-popup-title"></h4>
                 </div>
                 <div class="modal-body" id="large-popup-body"></div>
                 <div class="modal-footer" id="large-popup-footer"></div>

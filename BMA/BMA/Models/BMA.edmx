@@ -89,23 +89,27 @@
           <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OrderCode" Type="varchar" MaxLength="13" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
-          <Property Name="DeliveryTime" Type="date" />
+          <Property Name="PlanDeliveryTime" Type="datetime" Nullable="false" />
           <Property Name="ApproveTime" Type="datetime" />
           <Property Name="OrderNote" Type="nvarchar" MaxLength="200" />
           <Property Name="DepositAmount" Type="int" Nullable="false" />
-          <Property Name="ConfirmDate" Type="datetime" />
+          <Property Name="ConfirmTime" Type="datetime" />
           <Property Name="CustomerUserId" Type="int" />
           <Property Name="StaffApproveUserId" Type="int" />
           <Property Name="IsStaffEdit" Type="bit" Nullable="false" />
-          <Property Name="Flag" Type="bit" Nullable="false" />
+          <Property Name="CustomerEditingFlag" Type="bit" Nullable="false" />
           <Property Name="OutputBillId" Type="int" />
           <Property Name="OrderStatus" Type="int" Nullable="false" />
           <Property Name="PreviousOrderId" Type="int" />
-          <Property Name="TotalValue" Type="int" Nullable="false" />
           <Property Name="GuestInfoId" Type="int" />
           <Property Name="ReturnDeposit" Type="int" Nullable="false" />
           <Property Name="CancelUserId" Type="int" />
           <Property Name="CancelTime" Type="datetime" />
+          <Property Name="FinishTime" Type="datetime" />
+          <Property Name="DeliveryTime" Type="datetime" />
+          <Property Name="StartProduceTime" Type="datetime" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="TaxAmount" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="OtherExpense">
           <Key>
@@ -138,6 +142,15 @@
           <Property Name="ProductMaterialId" Type="int" Nullable="false" />
           <Property Name="OrderItemId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Policy">
+          <Key>
+            <PropertyRef Name="PolicyId" />
+          </Key>
+          <Property Name="PolicyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PolicyName" Type="nvarchar" MaxLength="50" />
+          <Property Name="PolicyBound" Type="int" />
+          <Property Name="PolicyComparition" Type="nvarchar" MaxLength="10" />
+        </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="ProductId" />
@@ -148,7 +161,7 @@
           <Property Name="Unit" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Descriptions" Type="nvarchar" MaxLength="500" />
           <Property Name="Note" Type="nvarchar" MaxLength="500" />
-          <Property Name="ProductImgage" Type="nvarchar" MaxLength="200" />
+          <Property Name="ProductImage" Type="nvarchar" MaxLength="200" />
           <Property Name="ProductStandardPrice" Type="int" Nullable="false" />
           <Property Name="CategoryId" Type="int" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -195,11 +208,11 @@
             <PropertyRef Name="SupplierId" />
           </Key>
           <Property Name="SupplierId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SupplierName" Type="nvarchar" MaxLength="200" />
-          <Property Name="SupplierAddress" Type="nvarchar" MaxLength="200" />
-          <Property Name="SupplierPhoneNumber" Type="char" MaxLength="12" />
-          <Property Name="SupplierEmail" Type="nvarchar" MaxLength="50" />
-          <Property Name="SupplierTaxCode" Type="char" MaxLength="20" />
+          <Property Name="SupplierName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="SupplierAddress" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="SupplierPhoneNumber" Type="char" MaxLength="12" Nullable="false" />
+          <Property Name="SupplierEmail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SupplierTaxCode" Type="char" MaxLength="20" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
@@ -517,6 +530,7 @@
           <EntitySet Name="OtherExpense" EntityType="Self.OtherExpense" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OutputBill" EntityType="Self.OutputBill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OutputMaterial" EntityType="Self.OutputMaterial" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Policy" EntityType="Self.Policy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductMaterial" EntityType="Self.ProductMaterial" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
@@ -632,6 +646,7 @@
           <EntitySet Name="OtherExpenses" EntityType="BMAModel.OtherExpense" />
           <EntitySet Name="OutputBills" EntityType="BMAModel.OutputBill" />
           <EntitySet Name="OutputMaterials" EntityType="BMAModel.OutputMaterial" />
+          <EntitySet Name="Policies" EntityType="BMAModel.Policy" />
           <EntitySet Name="Products" EntityType="BMAModel.Product" />
           <EntitySet Name="ProductMaterials" EntityType="BMAModel.ProductMaterial" />
           <EntitySet Name="Recipes" EntityType="BMAModel.Recipe" />
@@ -830,23 +845,27 @@
           <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="OrderCode" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DeliveryTime" Type="DateTime" Precision="0" />
+          <Property Name="PlanDeliveryTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ApproveTime" Type="DateTime" Precision="3" />
           <Property Name="OrderNote" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="DepositAmount" Type="Int32" Nullable="false" />
-          <Property Name="ConfirmDate" Type="DateTime" Precision="3" />
+          <Property Name="ConfirmTime" Type="DateTime" Precision="3" />
           <Property Name="CustomerUserId" Type="Int32" />
           <Property Name="StaffApproveUserId" Type="Int32" />
           <Property Name="IsStaffEdit" Type="Boolean" Nullable="false" />
-          <Property Name="Flag" Type="Boolean" Nullable="false" />
+          <Property Name="CustomerEditingFlag" Type="Boolean" Nullable="false" />
           <Property Name="OutputBillId" Type="Int32" />
           <Property Name="OrderStatus" Type="Int32" Nullable="false" />
           <Property Name="PreviousOrderId" Type="Int32" />
-          <Property Name="TotalValue" Type="Int32" Nullable="false" />
           <Property Name="GuestInfoId" Type="Int32" />
           <Property Name="ReturnDeposit" Type="Int32" Nullable="false" />
           <Property Name="CancelUserId" Type="Int32" />
           <Property Name="CancelTime" Type="DateTime" Precision="3" />
+          <Property Name="FinishTime" Type="DateTime" Precision="3" />
+          <Property Name="DeliveryTime" Type="DateTime" Precision="3" />
+          <Property Name="StartProduceTime" Type="DateTime" Precision="3" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="TaxAmount" Type="Int32" Nullable="false" />
           <NavigationProperty Name="GuestInfo" Relationship="BMAModel.FK_Orders_GuestInfo" FromRole="Order" ToRole="GuestInfo" />
           <NavigationProperty Name="OrderItems" Relationship="BMAModel.FK_OrderItem_Orders_OrderId" FromRole="Order" ToRole="OrderItem" />
           <NavigationProperty Name="Orders1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order" ToRole="Order1" />
@@ -890,6 +909,15 @@
           <NavigationProperty Name="OrderItem" Relationship="BMAModel.FK_OutputMaterial_OrderItem" FromRole="OutputMaterial" ToRole="OrderItem" />
           <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_OutputMaterial_ProductMaterial" FromRole="OutputMaterial" ToRole="ProductMaterial" />
         </EntityType>
+        <EntityType Name="Policy">
+          <Key>
+            <PropertyRef Name="PolicyId" />
+          </Key>
+          <Property Name="PolicyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PolicyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PolicyBound" Type="Int32" />
+          <Property Name="PolicyComparition" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="ProductId" />
@@ -900,7 +928,7 @@
           <Property Name="Unit" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Descriptions" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ProductImgage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ProductImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="ProductStandardPrice" Type="Int32" Nullable="false" />
           <Property Name="CategoryId" Type="Int32" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
@@ -957,11 +985,11 @@
             <PropertyRef Name="SupplierId" />
           </Key>
           <Property Name="SupplierId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SupplierName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="SupplierAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="SupplierPhoneNumber" Type="String" MaxLength="12" FixedLength="true" Unicode="false" />
-          <Property Name="SupplierEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="SupplierTaxCode" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="SupplierName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="SupplierAddress" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="SupplierPhoneNumber" Type="String" Nullable="false" MaxLength="12" FixedLength="true" Unicode="false" />
+          <Property Name="SupplierEmail" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SupplierTaxCode" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="InputBills" Relationship="BMAModel.FK_InputBill_Supplier_SupplierId" FromRole="Supplier" ToRole="InputBill" />
         </EntityType>
@@ -1367,23 +1395,27 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="BMAModel.Order">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="StartProduceTime" ColumnName="StartProduceTime" />
+                <ScalarProperty Name="DeliveryTime" ColumnName="DeliveryTime" />
+                <ScalarProperty Name="FinishTime" ColumnName="FinishTime" />
                 <ScalarProperty Name="CancelTime" ColumnName="CancelTime" />
                 <ScalarProperty Name="CancelUserId" ColumnName="CancelUserId" />
                 <ScalarProperty Name="ReturnDeposit" ColumnName="ReturnDeposit" />
                 <ScalarProperty Name="GuestInfoId" ColumnName="GuestInfoId" />
-                <ScalarProperty Name="TotalValue" ColumnName="TotalValue" />
                 <ScalarProperty Name="PreviousOrderId" ColumnName="PreviousOrderId" />
                 <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
                 <ScalarProperty Name="OutputBillId" ColumnName="OutputBillId" />
-                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="CustomerEditingFlag" ColumnName="CustomerEditingFlag" />
                 <ScalarProperty Name="IsStaffEdit" ColumnName="IsStaffEdit" />
                 <ScalarProperty Name="StaffApproveUserId" ColumnName="StaffApproveUserId" />
                 <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
-                <ScalarProperty Name="ConfirmDate" ColumnName="ConfirmDate" />
+                <ScalarProperty Name="ConfirmTime" ColumnName="ConfirmTime" />
                 <ScalarProperty Name="DepositAmount" ColumnName="DepositAmount" />
                 <ScalarProperty Name="OrderNote" ColumnName="OrderNote" />
                 <ScalarProperty Name="ApproveTime" ColumnName="ApproveTime" />
-                <ScalarProperty Name="DeliveryTime" ColumnName="DeliveryTime" />
+                <ScalarProperty Name="PlanDeliveryTime" ColumnName="PlanDeliveryTime" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="OrderCode" ColumnName="OrderCode" />
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
@@ -1424,6 +1456,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Policies">
+            <EntityTypeMapping TypeName="BMAModel.Policy">
+              <MappingFragment StoreEntitySet="Policy">
+                <ScalarProperty Name="PolicyComparition" ColumnName="PolicyComparition" />
+                <ScalarProperty Name="PolicyBound" ColumnName="PolicyBound" />
+                <ScalarProperty Name="PolicyName" ColumnName="PolicyName" />
+                <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="BMAModel.Product">
               <MappingFragment StoreEntitySet="Product">
@@ -1431,7 +1473,7 @@
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="ProductStandardPrice" ColumnName="ProductStandardPrice" />
-                <ScalarProperty Name="ProductImgage" ColumnName="ProductImgage" />
+                <ScalarProperty Name="ProductImage" ColumnName="ProductImage" />
                 <ScalarProperty Name="Note" ColumnName="Note" />
                 <ScalarProperty Name="Descriptions" ColumnName="Descriptions" />
                 <ScalarProperty Name="Unit" ColumnName="Unit" />

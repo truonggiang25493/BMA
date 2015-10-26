@@ -86,16 +86,16 @@
                     <tr>
                         <th>Tổng cộng: </th>
                         <td style="text-align: right">
-                            @Model.TotalAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
+                            @Model.Order.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
                         </td>
                     </tr>
                     <tr>
                         <th>Thuế(VAT) : </th>
-                        <td style="text-align: right">@Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        <td style="text-align: right">@Model.Order.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                     </tr>
                     <tr>
                         <th>Thành tiền: </th>
-                        <td style="text-align: right">@((@Model.TotalAmount + Model.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                        <td style="text-align: right">@((@Model.Order.Amount + Model.Order.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                     </tr>
                 </table>
             </div>
@@ -172,7 +172,7 @@
             <button class="btn btn-primary" style="margin-right: 10px">
                 <i class="fa fa-backward" style="margin-right: 3px;"></i>Quay lại
             </button>
-            <a class="btn btn-primary" href="/Order/Add">
+            <a class="btn btn-primary" href="@(Url.Action("Add", "Order"))">
                 <i class="fa fa-shopping-cart" style="margin-right: 3px;"></i>Chọn sản phẩm
             </a>
 
@@ -266,10 +266,10 @@
                                                     "Hủy"
                                                 ]
                                             }),
-                                            $("<button>", {
+                                            $("<a>", {
                                                 "class": "btn btn-success pull-right",
                                                 "style": "margin-right: 10px;",
-                                                "type": "submit",
+                                                "onclick": "checkout_Order()",
                                                 "html": [
                                                     "Đồng ý"
                                                 ]
@@ -300,6 +300,51 @@
                             $('#deposit').hide();
                             $('#deposit-amount').attr("min", 0);
                             $('#deposit-amount').val(0);
+                        }
+                        function checkout_Order() {
+                            $.ajax({
+                                "url": "@(Url.Action("AddOrderForCustomer", "Order"))",
+                                "method": "POST",
+                                "data": $("#form-aprrove").serialize(),
+                                "success": function(data) {
+                                    if (data === "1") {
+                                        $('#myModal').modal('hide');
+                                        var n = noty({
+                                            text: 'Thêm đơn hàng thành công',
+                                            type: 'success',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 3000
+                                        });
+                                        window.setTimeout(function(){
+                                            window.location.replace("@(Url.Action("Index", "Order"))");
+                                        }, 4000);
+
+                                    } else {
+                                        $('#myModal').modal('hide');
+                                        var n = noty({
+                                            text: 'Không thể thêm đơn hàng',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
+                                },
+                                "fail": function(e) {
+                                    $('#myModal').modal('hide');
+                                    var n = noty({
+                                        text: 'Đã có lỗi xảy ra',
+                                        type: 'error',
+                                        dismissQueue: false,
+                                        layout: 'bottomRight',
+                                        theme: 'defaultTheme',
+                                        timeout: 1000
+                                    });
+                                }
+                            });
                         }
                     </script>
                 </button>

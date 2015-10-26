@@ -230,10 +230,12 @@ namespace BMA.Controllers
                 Order order = db.Orders.Find(orderId);
                 List<Cart> cart = GetCart();
                 DateTime? deliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
-                int totalValue = Convert.ToInt32(TempData["TotalValue"]);
+                //Bug
+                //int totalValue = Convert.ToInt32(TempData["TotalValue"]);
                 order.DeliveryTime = deliveryDate;
                 TempData["deliveryDate"] = deliveryDate;
-                order.TotalValue = totalValue;
+                //Bug
+                //order.TotalValue = totalValue;
                 if (Session["User"] != null)
                 {
                     int cusUserId = Convert.ToInt32(Session["UserId"]);
@@ -297,9 +299,10 @@ namespace BMA.Controllers
             Session["DeliveryDate"] = deliveryDate;
             order.DepositAmount = 0;
             order.IsStaffEdit = false;
-            order.Flag = false;
+            order.CustomerEditingFlag = false;
             order.OrderStatus = 0;
-            order.TotalValue = totalValue;
+            //Bug
+            //order.TotalValue = totalValue;
             if (Session["User"] != null)
             {
                 int cusUserId = Convert.ToInt32(Session["UserId"]);
@@ -369,9 +372,10 @@ namespace BMA.Controllers
             order.DeliveryTime = (DateTime)Session["DeliveryDate"];
             order.DepositAmount = 0;
             order.IsStaffEdit = false;
-            order.Flag = false;
+            order.CustomerEditingFlag = false;
             order.OrderStatus = 0;
-            order.TotalValue = totalValue;
+            //Bug
+            //order.TotalValue = totalValue;
 
             //Lấy thông tin từ account, xét có thì login, add cusid
 
@@ -413,9 +417,10 @@ namespace BMA.Controllers
             order.DeliveryTime = (DateTime)Session["DeliveryDate"];
             order.DepositAmount = 0;
             order.IsStaffEdit = false;
-            order.Flag = false;
+            order.CustomerEditingFlag = false;
             order.OrderStatus = 0;
-            order.TotalValue = totalValue;
+            //Bug
+            //order.TotalValue = totalValue;
 
             // add guestinfo,guestid
             GuestInfo guestInfo = new GuestInfo();

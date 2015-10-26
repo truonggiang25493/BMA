@@ -24,23 +24,27 @@ namespace BMA.Models
         public int OrderId { get; set; }
         public string OrderCode { get; set; }
         public System.DateTime CreateTime { get; set; }
-        public Nullable<System.DateTime> DeliveryTime { get; set; }
+        public System.DateTime PlanDeliveryTime { get; set; }
         public Nullable<System.DateTime> ApproveTime { get; set; }
         public string OrderNote { get; set; }
         public int DepositAmount { get; set; }
-        public Nullable<System.DateTime> ConfirmDate { get; set; }
+        public Nullable<System.DateTime> ConfirmTime { get; set; }
         public Nullable<int> CustomerUserId { get; set; }
         public Nullable<int> StaffApproveUserId { get; set; }
         public bool IsStaffEdit { get; set; }
-        public bool Flag { get; set; }
+        public bool CustomerEditingFlag { get; set; }
         public Nullable<int> OutputBillId { get; set; }
         public int OrderStatus { get; set; }
         public Nullable<int> PreviousOrderId { get; set; }
-        public int TotalValue { get; set; }
         public Nullable<int> GuestInfoId { get; set; }
         public int ReturnDeposit { get; set; }
         public Nullable<int> CancelUserId { get; set; }
         public Nullable<System.DateTime> CancelTime { get; set; }
+        public Nullable<System.DateTime> FinishTime { get; set; }
+        public Nullable<System.DateTime> DeliveryTime { get; set; }
+        public Nullable<System.DateTime> StartProduceTime { get; set; }
+        public int Amount { get; set; }
+        public int TaxAmount { get; set; }
     
         public virtual GuestInfo GuestInfo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
