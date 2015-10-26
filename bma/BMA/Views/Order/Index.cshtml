@@ -1,7 +1,8 @@
 ﻿@using System.Globalization
 @using BMA.Common
 @using BMA.Models
-@model List<Order>
+@using BMA.Models.ViewModel
+@model List<BMA.Models.ViewModel.OrderViewModel>
 @{
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
@@ -14,215 +15,248 @@
     <div class="box">
         <!-- box-body -->
         <div class="box-body">
-            <table id="example1" class="table table-hover table-bordered">
-                <thead style="font-weight: bold">
-                    <tr>
+            <div class="row">
+                <button class="btn btn-info" onclick="open_shortage_material_list()">
+                    <i class="fa fa-list" style="margin-right: 3px"></i>Danh sách nguyên liệu bị thiếu
+                    <script type="text/javascript">
+                        function open_shortage_material_list() {
+                            $.ajax({
+                                url: "@(Url.Action("GetShortageMaterialList","Order"))",
+                                method: "POST",
+                                success: function (data) {
+                                    document.getElementById('large-popup-body').innerHTML = data;
+                                    document.getElementById('large-popup-title').innerHTML = "<h3>Danh sách nguyên liệu thiếu</h3>";
+                                    $('#myLargeModal').modal('show');
+                                },
+                                fail: function (e) {
+                                    alert("Have error: " + e);
+                                }
 
-                        <th>Mã đơn hàng</th>
-                        <th>Thời gian đặt hàng</th>
-                        <th>Thời gian duyệt</th>
-                        <th>Thời gian giao hàng</th>
-                        <th>Tiền cọc</th>
-                        <th>Tổng giá trị</th>
-                        <th>Trạng thái</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (Order order in Model)
-                    {
+                            });
+                        }
+                    </script>
+                </button>
+            </div>
+            <div class="row">
+                <table id="example1" class="table table-hover table-bordered">
+                    <thead style="font-weight: bold">
                         <tr>
 
-                            <td>@order.OrderCode</td>
-                            <td>
-                                @CommonFunction.ChangeDateTimeToVietnameseType(order.CreateTime)
-                            </td>
-                            <td>
-                                @if (order.OrderStatus != 0 && order.OrderStatus != 1 && order.ApproveTime != null)
-                                {
-                                    @CommonFunction.ChangeDateTimeToVietnameseType((DateTime)order.ApproveTime)
-                                }
-                            </td>
-                            <td>
-                                @if (order.DeliveryTime != null)
-                                {
-                                    @(((DateTime)order.DeliveryTime).ToString("dd/MM/yyyy"))
-                                }
-                            </td>
-                            <td>
-                                @if (order.DepositAmount != null)
-                                {
-                                    @(order.DepositAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
-                                }
-                            </td>
-                            <td style="text-align: right">@order.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                            <!--OrderStatus-->
-                            <!--Chờ xử lý-->
-                            @if (order.OrderStatus == 0)
-                            {
-                                <td>
-                                    <span class="label label-danger">@CommonData.Status[order.OrderStatus]</span>
-                                </td>
-                            }
-                            <!--Chờ xác nhận-->
-                            @if (order.OrderStatus == 1)
-                            {
-                                <td>
-                                    <span class="label label-warning">@CommonData.Status[order.OrderStatus]</span>
-                                </td>
-                            }
-                            <!--Đã duyệt-->
-                            @if (order.OrderStatus == 2)
-                            {
-                                <td>
-                                    <span class="label label-primary">@CommonData.Status[order.OrderStatus]</span>
-                                </td>
-                            }
-                            <!--Đang sản xuất|Đang giao hàng-->
-                            @if (order.OrderStatus == 3 || order.OrderStatus == 4)
-                            {
-                                <td>
-                                    <span class="label label-info">@CommonData.Status[order.OrderStatus]</span>
-                                </td>
-                            }
-                            <!--Đã hoàn thành-->
-                            @if (order.OrderStatus == 5)
-                            {
-                                <td>
-                                    <span class="label label-success">@CommonData.Status[order.OrderStatus]</span>
-                                </td>
-                            }
-                            <!--Hủy-->
-                            @if (order.OrderStatus == 6)
-                            {
-                                <td>
-                                    <span class="label label-danger">@CommonData.Status[order.OrderStatus]</span>
-                                </td>
-                            }
-
-                            <!--Link-->
-                            <td>
-                                @Html.ActionLink("Xem", "Detail", new { id = order.OrderId })
-                                @if (order.OrderStatus == 0)
-                                {
-                                    @Html.ActionLink("Sửa", "Edit", new { id = order.OrderId })
-                                }
-                                @if (order.OrderStatus != 5 && order.OrderStatus != 6)
-                                {
-                                    <a onclick="open_cancel_order(@order.OrderId,@(order.DepositAmount))">
-                                        Hủy
-                                        <script type="text/javascript">
-                                            function open_cancel_order(orderId, deposit) {
-                                                var contentControl = $("<form>", {
-                                                    "action": "@Url.Action("Cancel","Order")",
-                                                    "method": "post",
-                                                    "class": "form-group",
-                                                    "id": "return-deposit-form",
-                                                    "html": [
-                                                        $("<div>", {
-                                                            "class": "form-group",
-                                                            "html": [
-                                                                $("<div>", {
-                                                                    "class": "form-group",
-                                                                    "html": [
-                                                                        "<label>Có hoàn trả tiền cọc không ?</label>",
-                                                                        $("<input>", {
-                                                                            "type": "hidden",
-                                                                            "name": "orderId",
-                                                                            "value": orderId
-                                                                        })
-                                                                    ]
-
-                                                                }),
-                                                                $("<div>", {
-                                                                    "class": "form-group",
-                                                                    "html": [
-                                                                        $("<input>", {
-                                                                            "type": "radio",
-                                                                            "name": "isReturnDeposit",
-                                                                            "value": "1",
-                                                                            "style": "margin-left: 10px",
-                                                                            "data-role": "radio-return-deposit"
-                                                                        }),
-                                                                        "Có ",
-                                                                        $("<input>", {
-                                                                            "type": "radio",
-                                                                            "name": "isReturnDeposit",
-                                                                            "value": "0",
-                                                                            "checked": "checked",
-                                                                            "style": "margin-left: 10px",
-                                                                            "data-role": "radio-return-deposit"
-                                                                        }),
-                                                                        "Không"
-                                                                    ]
-                                                                }),
-                                                                $("<div>", {
-                                                                    "class": "form-group",
-                                                                    "id": "return_deposit",
-                                                                    "style": "display:none;",
-                                                                    "html": ["<label>Tiền cọc hoàn trả: </lable>",
-                                                                        $("<input>", {
-                                                                            "type": "number",
-                                                                            "name": "returnDeposit",
-                                                                            "id": "return_deposit_amount",
-                                                                            "value": deposit,
-                                                                            "max": deposit,
-                                                                            "min": "0"
-                                                                        })
-                                                                    ]
-                                                                })
-                                                            ]
-                                                        })
-                                                    ]
-                                                });
-                                                $(document).on("change", "[data-role=radio-return-deposit]", function () {
-                                                    if ($(this).val() === 1) {
-                                                        $('#return_deposit').show();
-                                                        $('#return_deposit_amount').val(deposit);
-                                                        $('#return_deposit_amount').attr("max", deposit);
-                                                    } else {
-                                                        $('#return_deposit').hide();
-                                                        $('#return_deposit_amount').val(deposit);
-                                                    }
-                                                });
-
-                                                var title = 'Xác nhận hủy đơn hàng';
-                                                var footerControl = $("<div>", {
-                                                    "class": "row",
-                                                    "html": [
-                                                        $("<button>", {
-                                                            "class": "btn btn-primary",
-                                                            "data-dismiss": "modal",
-                                                            "html": [
-                                                                "Đóng"
-                                                            ]
-                                                        }),
-                                                        $("<button>", {
-                                                            "class": "btn btn-danger",
-                                                            "style": "margin-right: 10px;",
-                                                            "onclick": "cancel_order()",
-                                                            "html": [
-                                                                "Hủy"
-                                                            ]
-                                                        })
-                                                    ]
-                                                });
-                                                document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
-                                                document.getElementById('popup-title').innerHTML = title;
-                                                document.getElementById('popup-footer').innerHTML = footerControl[0].outerHTML;
-                                                $('#myModal').modal('show');
-                                            }
-                                            function cancel_order() {
-                                                $('#return-deposit-form').submit();
-                                            }
-                                        </script>
-                                    </a>
-                                }
-                            </td>
+                            <th>Mã đơn hàng</th>
+                            <th>Thời gian đặt hàng</th>
+                            <th>Thời gian duyệt</th>
+                            <th>Thời gian giao hàng</th>
+                            <th>Tiền cọc</th>
+                            <th>Tổng giá trị</th>
+                            <th>Trạng thái</th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (OrderViewModel orderViewModel in Model)
+                        {
+                            <tr>
+
+                                <td>@orderViewModel.Order.OrderCode</td>
+                                <td>
+                                    @CommonFunction.ChangeDateTimeToVietnameseType(orderViewModel.Order.CreateTime)
+                                </td>
+                                <td>
+                                    @if (orderViewModel.Order.OrderStatus != 0 && orderViewModel.Order.OrderStatus != 1 && orderViewModel.Order.ApproveTime != null)
+                                    {
+                                        @CommonFunction.ChangeDateTimeToVietnameseType((DateTime)orderViewModel.Order.ApproveTime)
+                                    }
+                                </td>
+                                <td>
+                                    @if (orderViewModel.Order.DeliveryTime != null)
+                                    {
+                                        @(((DateTime)orderViewModel.Order.DeliveryTime).ToString("dd/MM/yyyy"))
+                                    }
+                                </td>
+                                <td>
+                                    @if (orderViewModel.Order.DepositAmount != null)
+                                    {
+                                        @(orderViewModel.Order.DepositAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                                    }
+                                </td>
+                                <td style="text-align: right">@((orderViewModel.Order.Amount + orderViewModel.Order.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                <!--OrderStatus-->
+                                <!--Chờ xử lý-->
+                                @if (orderViewModel.Order.OrderStatus == 0)
+                                {
+                                    <td>
+                                        <span class="label label-danger">@CommonData.Status[orderViewModel.Order.OrderStatus]</span>
+                                        @if (!orderViewModel.IsEnoughMaterial)
+                                        {
+                                            <br />
+                                            <span class="label label-warning">
+                                                <i class="fa  fa-bolt" style="margin-right: 3px"></i> Thiếu nguyên liệu
+                                            </span>
+                                        }
+                                    </td>
+                                }
+                                <!--Chờ xác nhận-->
+                                @if (orderViewModel.Order.OrderStatus == 1)
+                                {
+                                    <td>
+                                        <span class="label label-warning">@CommonData.Status[orderViewModel.Order.OrderStatus]</span>
+                                    </td>
+                                }
+                                <!--Đã duyệt-->
+                                @if (orderViewModel.Order.OrderStatus == 2)
+                                {
+                                    <td>
+                                        <span class="label label-primary">@CommonData.Status[orderViewModel.Order.OrderStatus]</span>
+                                    </td>
+                                }
+                                <!--Đang sản xuất|Đang giao hàng-->
+                                @if (orderViewModel.Order.OrderStatus == 3 || orderViewModel.Order.OrderStatus == 4)
+                                {
+                                    <td>
+                                        <span class="label label-info">@CommonData.Status[orderViewModel.Order.OrderStatus]</span>
+                                    </td>
+                                }
+                                <!--Đã hoàn thành-->
+                                @if (orderViewModel.Order.OrderStatus == 5)
+                                {
+                                    <td>
+                                        <span class="label label-success">@CommonData.Status[orderViewModel.Order.OrderStatus]</span>
+                                    </td>
+                                }
+                                <!--Hủy-->
+                                @if (orderViewModel.Order.OrderStatus == 6)
+                                {
+                                    <td>
+                                        <span class="label label-default">@CommonData.Status[orderViewModel.Order.OrderStatus]</span>
+                                    </td>
+                                }
+
+                                <!--Link-->
+                                <td>
+                                    @Html.ActionLink("Xem", "Detail", new { id = orderViewModel.Order.OrderId })
+                                    @if (orderViewModel.Order.OrderStatus == 0)
+                                    {
+                                        @Html.ActionLink("Sửa", "Edit", new { id = orderViewModel.Order.OrderId })
+                                    }
+                                    @if (orderViewModel.Order.OrderStatus != 5 && orderViewModel.Order.OrderStatus != 6)
+                                    {
+                                        <a onclick="open_cancel_order(@orderViewModel.Order.OrderId, @(orderViewModel.Order.DepositAmount))">
+                                            Hủy
+                                            <script type="text/javascript">
+                                                function open_cancel_order(orderId, deposit) {
+                                                    var contentControl = $("<form>", {
+                                                        "action": "@Url.Action("Cancel", "Order")",
+                                                        "method": "post",
+                                                        "class": "form-group",
+                                                        "id": "return-deposit-form",
+                                                        "html": [
+                                                            $("<div>", {
+                                                                "class": "form-group",
+                                                                "html": [
+                                                                    $("<div>", {
+                                                                        "class": "form-group",
+                                                                        "html": [
+                                                                            "<label>Có hoàn trả tiền cọc không ?</label>",
+                                                                            $("<input>", {
+                                                                                "type": "hidden",
+                                                                                "name": "orderId",
+                                                                                "value": orderId
+                                                                            })
+                                                                        ]
+
+                                                                    }),
+                                                                    $("<div>", {
+                                                                        "class": "form-group",
+                                                                        "html": [
+                                                                            $("<input>", {
+                                                                                "type": "radio",
+                                                                                "name": "isReturnDeposit",
+                                                                                "value": "1",
+                                                                                "style": "margin-left: 10px",
+                                                                                "data-role": "radio-return-deposit"
+                                                                            }),
+                                                                            "Có ",
+                                                                            $("<input>", {
+                                                                                "type": "radio",
+                                                                                "name": "isReturnDeposit",
+                                                                                "value": "0",
+                                                                                "checked": "checked",
+                                                                                "style": "margin-left: 10px",
+                                                                                "data-role": "radio-return-deposit"
+                                                                            }),
+                                                                            "Không"
+                                                                        ]
+                                                                    }),
+                                                                    $("<div>", {
+                                                                        "class": "form-group",
+                                                                        "id": "return_deposit",
+                                                                        "style": "display:none;",
+                                                                        "html": [
+                                                                            "<label>Tiền cọc hoàn trả: </lable>",
+                                                                            $("<input>", {
+                                                                                "type": "number",
+                                                                                "name": "returnDeposit",
+                                                                                "id": "return_deposit_amount",
+                                                                                "value": deposit,
+                                                                                "max": deposit,
+                                                                                "min": "0"
+                                                                            })
+                                                                        ]
+                                                                    })
+                                                                ]
+                                                            })
+                                                        ]
+                                                    });
+                                                    $(document).on("change", "[data-role=radio-return-deposit]", function () {
+                                                        if ($(this).val() === 1) {
+                                                            $('#return_deposit').show();
+                                                            $('#return_deposit_amount').val(deposit);
+                                                            $('#return_deposit_amount').attr("max", deposit);
+                                                        } else {
+                                                            $('#return_deposit').hide();
+                                                            $('#return_deposit_amount').val(deposit);
+                                                        }
+                                                    });
+
+                                                    var title = 'Xác nhận hủy đơn hàng';
+                                                    var footerControl = $("<div>", {
+                                                        "class": "row",
+                                                        "html": [
+                                                            $("<button>", {
+                                                                "class": "btn btn-primary",
+                                                                "data-dismiss": "modal",
+                                                                "html": [
+                                                                    "Đóng"
+                                                                ]
+                                                            }),
+                                                            $("<button>", {
+                                                                "class": "btn btn-danger",
+                                                                "style": "margin-right: 10px;",
+                                                                "onclick": "cancel_order()",
+                                                                "html": [
+                                                                    "Hủy"
+                                                                ]
+                                                            })
+                                                        ]
+                                                    });
+                                                    document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+                                                    document.getElementById('popup-title').innerHTML = title;
+                                                    document.getElementById('popup-footer').innerHTML = footerControl[0].outerHTML;
+                                                    $('#myModal').modal('show');
+                                                }
+
+                                                function cancel_order() {
+                                                    $('#return-deposit-form').submit();
+                                                }
+                                            </script>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </section>

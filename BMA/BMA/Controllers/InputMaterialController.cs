@@ -16,14 +16,15 @@ namespace BMA.Controllers
         // GET: /InputMaterial/
         public ActionResult Index()
         {
-            List<InputMaterial> InputMaterialList = db.InputMaterials.OrderBy(n=>n.InputMaterialExpiryDate).ToList();
+            List<InputMaterial> InputMaterialList = db.InputMaterials.OrderBy(n => n.InputMaterialExpiryDate).ToList();
             return View(InputMaterialList);
         }
+
         // GET: Detail
         public ActionResult Detail(int id)
         {
             var inputMaterialDetail = db.InputMaterials.SingleOrDefault(n => n.InputMaterialId == id);
-            ViewBag.InputMaterialDetail = inputMaterialDetail;           
+            ViewBag.InputMaterialDetail = inputMaterialDetail;
             if (inputMaterialDetail == null)
             {
                 RedirectToAction("Index", "Error");
@@ -31,5 +32,18 @@ namespace BMA.Controllers
             return View(inputMaterialDetail);
         }
 
-	}
+
+        public ActionResult Add()
+        {
+            List<ProductMaterial> productInputMaterialslList = db.ProductMaterials.OrderBy(n => n.ProductMaterialName).ToList();
+            return View(productInputMaterialslList);
+        }
+
+        [HttpPost]
+        public ActionResult GetInputList()
+        {
+            return PartialView("InputListPartialView");
+        }
+    }
 }
+
