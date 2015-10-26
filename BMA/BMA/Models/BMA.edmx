@@ -63,7 +63,7 @@
           <Property Name="ImportQuantity" Type="int" Nullable="false" />
           <Property Name="RemainQuantity" Type="int" Nullable="false" />
           <Property Name="InputMaterialPrice" Type="float" Nullable="false" />
-          <Property Name="ImportDate" Type="date" />
+          <Property Name="ImportDate" Type="date" Nullable="false" />
           <Property Name="InputMaterialExpiryDate" Type="date" Nullable="false" />
           <Property Name="InputMaterialNote" Type="nvarchar" MaxLength="500" />
           <Property Name="InputBillId" Type="int" Nullable="false" />
@@ -814,7 +814,7 @@
           <Property Name="ImportQuantity" Type="Int32" Nullable="false" />
           <Property Name="RemainQuantity" Type="Int32" Nullable="false" />
           <Property Name="InputMaterialPrice" Type="Double" Nullable="false" />
-          <Property Name="ImportDate" Type="DateTime" Precision="0" />
+          <Property Name="ImportDate" Type="DateTime" Precision="0" Nullable="false" />
           <Property Name="InputMaterialExpiryDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="InputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="InputBillId" Type="Int32" Nullable="false" />
