@@ -1,0 +1,153 @@
+﻿@using System.Globalization
+@model BMA.Models.ViewModel.MaterialInfoForProductListViewModel
+@if (Model != null)
+{
+    <div class="col-xs-12">
+        <!-- Material detail-->
+        <!-- Material Table Header-->
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-xs-12">
+                <h2 class="page-header">
+                    Thông tin nguyên liệu
+                </h2>
+            </div>
+        </div>
+        <!--Material Noti-->
+        @if (!Model.IsEnough)
+        {
+            <div class="row" style="margin-bottom: 10px">
+                <div class="col-xs-12">
+                    <h2 class="label label-danger" style="font-size: 14pt">Không đủ nguyên liệu. Không cập nhật</h2>
+                </div>
+            </div>
+        }
+        <!-- Material Table Content-->
+        <div class="row">
+            <div class="col-xs-12 table-responsive">
+                <table class="table table-striped">
+                    <thead style="font-weight: bold">
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên nguyên liệu</th>
+                            <th>Số lượng cần</th>
+                            <th>Số lượng trong kho</th>
+                            <th>Tình trạng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.MaterialList.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@Model.MaterialList[i].ProductMaterialName</td>
+                                <td>@Model.MaterialList[i].NeedQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @Model.MaterialList[i].Unit</td>
+                                <td>@Model.MaterialList[i].StorageQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @Model.MaterialList[i].Unit</td>
+                                @if (Model.MaterialList[i].IsEnough)
+                                {
+                                    <td>
+                                        <span class="label label-success">Đủ</span>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <span class="label label-danger">Thiếu</span>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" style="padding-bottom: 20px;">
+            <div class="col-xs-12">
+                <h2 class="label label-info" style="font-size: 12pt">Chi phí nguyên liệu: @Model.MaterialCost.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</h2>
+            </div>
+        </div>
+        <!--Button row-->
+        <div class="row">
+            <div class="col-xs-12">
+                <!--Cancel order-->
+                <button class="btn btn-danger" onclick="open_cancel_order(@Model.OrderId)">
+                    <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy đơn hàng
+                    <script type="text/javascript">
+                        function open_cancel_order(orderId) {
+                            var contentControl = $("<form>", {
+                                "action": "@Url.Action("Cancel","Order")",
+                                "method": "post",
+                                "class": "form-group",
+                                "id": "return-deposit-form",
+                                "html": [
+                                    $("<div>", {
+                                        "class": "form-group",
+                                        "html": [
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "orderId",
+                                                "value": orderId
+                                            }),
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "isReturnDeposit",
+                                                "value": "0"
+                                            }),
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "returnDeposit",
+                                                "value": "0"
+                                            })
+                                        ]
+                                    })
+                                ]
+                            });
+                            $(document).on("change", "[data-role=radio-return-deposit]", function () {
+                                if ($(this).val() === 1) {
+                                    $('#return_deposit').show();
+                                } else {
+                                    $('#return_deposit').hide();
+                                }
+                            });
+
+                            var title = 'Xác nhận hủy đơn hàng';
+                            var footerControl = $("<div>", {
+                                "class": "row",
+                                "html": [
+                                    $("<button>", {
+                                        "class": "btn btn-primary",
+                                        "data-dismiss": "modal",
+                                        "html": [
+                                            "Đóng"
+                                        ]
+                                    }),
+                                    $("<button>", {
+                                        "class": "btn btn-danger",
+                                        "style": "margin-right: 10px;",
+                                        "onclick": "cancel_order()",
+                                        "html": [
+                                            "Hủy"
+                                        ]
+                                    })
+                                ]
+                            });
+                            document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+                            document.getElementById('popup-title').innerHTML = title;
+                            document.getElementById('popup-footer').innerHTML = footerControl[0].outerHTML;
+                            $('#myModal').modal('show');
+                        }
+                        function cancel_order() {
+                            $('#return-deposit-form').submit();
+                        }
+                    </script>
+                </button>
+                <!--Update order-->
+                @if (Model.IsEnough)
+                {
+                    <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container()">
+                        <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Cập nhật
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+}

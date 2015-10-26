@@ -1,0 +1,166 @@
+﻿@using System.Globalization
+@using BMA.Models
+@model BMA.Models.Order
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>Xuất hóa đơn</title>
+    <style>
+        .table-cell {
+            border: 1px solid black;
+        }
+
+        #order-table {
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <!--Header-->
+    <!--Store Info-->
+    <table style="margin-left: 20px">
+        <tr>
+            <td></td>
+            <td></td>
+            <td rowspan="5" style="vertical-align: middle; text-align: center; padding-left: 120px">
+                <h1>HÓA ĐƠN BÁN HÀNG</h1>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center">
+                <h3>TIỆM BÁNH DÂU TÂY</h3>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Địa chỉ: </b>
+            </td>
+            <td>Công viên phần mềm Quang Trung</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Điện thoại: </b>
+            </td>
+            <td>097.9758.054</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Mã số thuế: </b>
+            </td>
+            <td>013235656897</td>
+        </tr>
+    </table>
+    <!--Customer info-->
+    <table style="margin-left: 150px; margin-top: 20px;">
+        <tr>
+            <td>
+                <b>Tên khách hàng: </b>
+            </td>
+            <td>
+                @Model.User.Fullname
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Địa chỉ: </b>
+            </td>
+            <td>@Model.User.Customers.ElementAt(0).CustomerAddress</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Điện thoại: </b>
+            </td>
+            <td>@Model.User.Customers.ElementAt(0).CustomerPhoneNumber</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Mã số thuế: </b>
+            </td>
+            <td>@Model.User.Customers.ElementAt(0).TaxCode</td>
+        </tr>
+    </table>
+    <!--Order Info-->
+    <table id="order-table" style="margin-top: 20px; margin-left: 20px;">
+        <thead>
+            <tr>
+                <th style="width: 40px;" class="table-cell">STT</th>
+                <th style="width: 370px;" class="table-cell">Tên hàng</th>
+                <th style="width: 140px;" class="table-cell">Số lượng</th>
+                <th style="width: 140px;" class="table-cell">Đơn giá</th>
+                <th style="width: 140px;" class="table-cell">Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.OrderItems.Count; i++)
+            {
+                <tr>
+                    <td style="width: 40px; text-align: center;" class="table-cell">@(i + 1)</td>
+                    <td style="width: 370px; padding-left: 10px;" class="table-cell">@(Model.OrderItems.ElementAt(i).Product.ProductName)</td>
+                    <td style="width: 140px; text-align: right; padding-right: 10px;" class="table-cell">@(Model.OrderItems.ElementAt(i).Quantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-Vn")))</td>
+                    <td style="width: 140px; text-align: right; padding-right: 10px;" class="table-cell">@(Model.OrderItems.ElementAt(i).RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                    <td style="width: 140px; text-align: right; padding-right: 10px;" class="table-cell">
+                        @(((Model.OrderItems.ElementAt(i).Quantity) * (Model.OrderItems.ElementAt(i).RealPrice)).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="4" style="width: 410px; text-align: right; padding-right: 10px;" class="table-cell">
+                    <b>TỔNG CỘNG</b>
+                </td>
+                <td style="width: 140px; text-align: right; padding-right: 10px;" class="table-cell">
+                    @(Model.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="width: 410px; text-align: right; padding-right: 10px;" class="table-cell">
+                    <b>THUẾ(VAT) @(ViewBag.TaxRate)%</b>
+                </td>
+                <td style="width: 140px; text-align: right; padding-right: 10px;" class="table-cell">
+                    @(Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="width: 410px; text-align: right; padding-right: 10px;" class="table-cell">
+                    <b>THÀNH TIỀN</b>
+                </td>
+                <td style="width: 140px; text-align: right; padding-right: 10px;" class="table-cell">
+                    @((Model.Amount + Model.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="margin-top: 20px; margin-left: 20px;">
+        <tr>
+            <td style="width: 830px">
+                <span style="font-style: italic; padding-left: 10px">Thành tiền (viết bằng chữ): </span>
+                ...............................................................................................................................................................
+            </td>
+        </tr>
+    </table>
+    <!--Sign-->
+    <table style="margin-top: 20px; margin-left: 20px;">
+        <tr>
+            <td style="width: 415px;"></td>
+            <td style="width: 415px; text-align: center; font-style: italic;">
+                Ngày @(((DateTime)Model.FinishTime).ToString("dd")) tháng @(((DateTime)Model.FinishTime).ToString("MM")) năm @(((DateTime)Model.FinishTime).ToString("yyyy"))
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 415px; text-align: center">
+                KHÁCH HÀNG
+            </td>
+            <td style="width: 415px; text-align: center">
+                NGƯỜI BÁN HÀNG
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

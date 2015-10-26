@@ -1,0 +1,112 @@
+﻿@using System.Globalization
+@using BMA.Common
+@using BMA.Models
+@model List<ProductMaterial>
+
+@{
+    ViewBag.Title = "Thêm nguyên liệu đầu vào";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+<section class="content-header">
+    <h1>Thêm nguyên liệu đầu vào</h1>
+</section>
+<section>
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-5">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <div class="row" style="margin-bottom: 17px;">
+                        <div class="col-xs-5">
+                            <b>Tên nguyên liệu:</b>
+                        </div>
+                        <div class="col-xs-7">
+
+                            <select name="InputMaterialName" style="width: 55%">
+                                @foreach (ProductMaterial productMaterial in Model)
+                                {
+                                    <option>@productMaterial.ProductMaterialName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 17px;">
+                        <div class="col-xs-5">
+                            <b>Số lượng nhập: </b>
+                        </div>
+                        <div class="col-xs-7">
+                            <input type="text" name="InportQuantity" required />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 17px;">
+                        <div class="col-xs-5">
+                            <b>Giá nhập kho: </b>
+                        </div>
+                        <div class="col-xs-7">
+                            <input type="text" required />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 17px;">
+                        <div class="col-xs-5">
+                            <b>Ngày nhập kho: </b>
+                        </div>
+                        <div class="col-xs-7">
+                            <input type="date" required min="@DateTime.Now.ToString("yyyy-MM-dd")" max="2020-12-31" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="txtImportDate" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 17px;">
+                        <div class="col-xs-5">
+                            <b>Ngày hết hạn: </b>
+                        </div>
+                        <div class="col-xs-7">
+                            <input type="date" required min="@DateTime.Now.ToString("yyyy-MM-dd")" max="2020-12-31" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="txtInputMaterialExpiryDate" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 17px;">
+                        <div class="col-xs-5">
+                            <b>Thuộc hóa đơn: </b>
+                        </div>
+                        <div class="col-xs-7">
+                            <button class="btn btn-success" onclick="open_choose_bill()">
+                                Chọn hóa đơn
+                                <script type="text/javascript">
+                                    function open_choose_bill() {
+                                        $.ajax({
+                                            url: "@(Url.Action("GetInputList", "InputMaterial"))",
+                                            method: "POST",
+                                            success: function (data) {
+                                                document.getElementById('popup-body').innerHTML = data;
+                                                $('#myModal').modal('show');
+                                            }
+                                        });
+
+                                    }
+                                </script>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-xs-3">
+
+        </div>
+        <div class="col-xs-5">
+
+            <button class="btn btn-primary pull-right" style="margin-right: 25px;">
+                <i class="fa fa-edit" style="margin-right: 3px;"></i>Tạo mới
+            </button>
+            <button class="btn btn-danger pull-right" style="margin-right: 150px;">
+                <i class="fa fa-edit" style="margin-right: 3px;"></i>Hủy
+            </button>
+        </div>
+    </div>
+</section>

@@ -1,11 +1,10 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <title>@ViewBag.Title</title>
-    @using BMA.Models
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <link href="/Content/jquery-ui.css" rel="stylesheet" />
     <!-- Bootstrap 3.3.5 -->
     <link href="/Content/AdminLayout/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Font Awesome -->
@@ -16,9 +15,10 @@
     <link href="/Content/AdminLayout/plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" />
     <!-- AdminLTE Skins -->
     <link href="/Content/AdminLayout/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
-    <link href="~/Content/style.css" rel="stylesheet" />
     <!-- Own css -->
     <link href="~/Content/style.css" rel="stylesheet" />
+    <!-- Animate css -->
+    <link href="~/Content/animate.css" rel="stylesheet" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -67,26 +67,16 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="user-image" alt="User Image">
-                                <span class="hidden-xs">@*@((Session["User"] as User).Username)*@</span>
+                                <span class="hidden-xs">Haruyuki</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
-                                    @*@if (Convert.ToInt32(Session["UserRole"]) == 1)
-                                    {
-                                        <p>
-                                            @((Session["User"] as User).Username) - Quản lý cửa hàng
-                                            <small></small>
-                                        </p>
-                                    }
-                                    @if (Convert.ToInt32(Session["UserRole"]) == 2)
-                                    {
-                                        <p>
-                                            @((Session["User"] as User).Username) - Nhân viên cửa hàng
-                                            <small></small>
-                                        </p>
-                                    }*@
+                                    <p>
+                                        Haruyuki - Nhân viên cửa hàng
+                                        <small></small>
+                                    </p>
                                 </li>
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
@@ -94,7 +84,7 @@
                                         <a href="#" class="btn btn-default btn-flat">Thông tin cá nhân</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="@Url.Action("Logout", "Account")" class="btn btn-default btn-flat">Đăng xuất</a>
+                                        <a href="#" class="btn btn-default btn-flat">Đăng xuất</a>
                                     </div>
                                 </li>
                             </ul>
@@ -117,7 +107,7 @@
                         <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>@*@((Session["User"] as User).Username)*@</p>
+                        <p>Haruyuki</p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
@@ -156,7 +146,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index","ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-                            <li><a href="@Url.Action("AddProduct", "ManageProduct")"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+                            <li><a href="@Url.Action("Create", "ManageProduct")"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -165,9 +155,19 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index", "ManageMaterial")"><i class="fa fa-cubes"></i>Danh sách nguyên liệu</a></li>
-                            <li><a href="@Url.Action("AddMaterial", "ManageMaterial")"><i class="fa fa-plus"></i>Tạo mới nguyên liệu</a></li>
+                            <li><a href=""><i class="fa fa-cubes"></i>Danh sách nguyên liệu</a></li>
+                            <li><a href=""><i class="fa fa-plus"></i>Tạo mới nguyên liệu</a></li>
                             <li><a href=""><i class="fa fa-home"></i>Quản lí kho</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-flask"></i> <span>Nguyên liệu đầu vào</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index","InputMaterial")"><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
+                            <li><a href="@Url.Action("Add","InputMaterial")"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -255,6 +255,10 @@
     <script src="/Content/AdminLayout/plugins/datatables/dataTables.bootstrap.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="/Content/AdminLayout/dist/js/demo.js"></script>
+    <!--Own js function-->
+    <script src="~/Scripts/my-own-function.js"></script>
+    <!--Noty js-->
+    <script src="~/Scripts/jquery.noty.packaged.min.js"></script>
     <script>
         $(function () {
             $('#example2').DataTable({
@@ -274,11 +278,33 @@
                 "autoWidth": false
             });
         });
-        $(document).on("click", ".select-popup tbody tr", function () {
+
+        $(document).on("click", ".customer-table tbody tr", function () {
             $(this).addClass('selected').siblings().removeClass('selected');
         });
+
+        $(document).on("click", "[data-role=remove-row-btn]", function () {
+            var productId = $(this).parent().parent().find("td:first input").val();
+            $(this).parent().parent().remove();
+            $.ajax({
+                "url": "@(Url.Action("AddProductInProductList", "Order"))",
+                "method": "POST",
+                "data": {
+                    "productId": productId
+                },
+                "success": function (data) {
+                    if (data === "0") {
+                        alert("Không thể hủy");
+                    }
+                },
+                "fail": function (e) {
+                    alert("Have error" + e.toString());
+                }
+            });
+        });
+
     </script>
-    <!-- Modal -->
+    <!--Small Modal -->
     <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm ">
             <div class="modal-content">
@@ -291,8 +317,8 @@
             </div>
         </div>
     </div>
-    <!--End of modal-->
-
+    <!--End of small modal-->
+    <!--Standard Modal -->
     <div class="modal fade" id="myStandardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -305,5 +331,20 @@
             </div>
         </div>
     </div>
+    <!--End of standard modal-->
+    <!--Large Modal -->
+    <div class="modal fade bs-example-modal-lg" id="myLargeModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="large-popup-title"></h4>
+                </div>
+                <div class="modal-body" id="large-popup-body"></div>
+                <div class="modal-footer" id="large-popup-footer"></div>
+            </div>
+        </div>
+    </div>
+    <!--End of large modal-->
 </body>
 </html>
