@@ -246,7 +246,7 @@ namespace BMA.Business
         public static bool ApproveOrder(int orderId, int deposit, DateTime deliveryTime)
         {
             OrderViewModel orderViewModel = GetOrderViewModel(orderId);
-            if (orderViewModel.Order.Flag)
+            if (orderViewModel.Order.CustomerEditingFlag)
             {
                 return false;
             }
@@ -290,7 +290,7 @@ namespace BMA.Business
                                 materialViewModel.NeedQuantity -= inputMaterial.RemainQuantity;
                             }
                             InputBill inputBill = inputMaterial.InputBill;
-                            outputMaterial.InputBills.Add(inputBill);
+                            //outputMaterial.InputBills.Add(inputBill);
                         }
                     }
                     db.OutputMaterials.Add(outputMaterial);

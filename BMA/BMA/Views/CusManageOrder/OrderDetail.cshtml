@@ -15,15 +15,7 @@
         </div>
     </div>
 </section>
-@{
-    int sumTotal = 0;
-    int tax = 0;
-    foreach (var item in oi)
-    {
-        sumTotal = sumTotal + item.Amount;
-        tax = tax + item.TaxAmount;
-    }
-}
+
 <section>
     <div class="container">
         <div class="service-tab">
@@ -57,17 +49,21 @@
                                 </tr>
                                 <tr>
                                     <td class="text-left">Thời gian tạo</td>
-                                    <td class="text-left">@Model.CreateTime.ToShortDateString()</td>
+                                    <td class="text-left">@Model.CreateTime.ToString("dd/MM/yyyy hh:mm tt")</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-left">Ngày nhận hàng</td>
-                                    <td class="text-left">@Model.DeliveryTime.ToString().AsDateTime().ToString("dd/MM/yyyy")</td>
+                                    <td class="text-left">Thời gian nhận hàng</td>
+                                    <td class="text-left">@Model.PlanDeliveryTime.ToString("dd/MM/yyyy hh:mm tt")</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left">Trạng thái</td>
                                     @if (Model.OrderStatus == 0)
                                     {
                                         <td class="text-left"><div class="label label-warning">@CommonData.Status[Model.OrderStatus]</div></td>
+                                    }
+                                    @if (Model.OrderStatus == 1)
+                                    {
+                                        <td class="text-left"><div class="label label-danger">@CommonData.Status[Model.OrderStatus]</div></td>
                                     }
                                     @if (Model.OrderStatus == 2)
                                     {
@@ -83,21 +79,21 @@
                                     }
                                     @if (Model.OrderStatus == 6)
                                     {
-                                        <td class="text-left"><div class="label label-primary">@CommonData.Status[Model.OrderStatus]</div></td>
+                                        <td class="text-left"><div class="label label-cancel">@CommonData.Status[Model.OrderStatus]</div></td>
                                     }
 
                                 </tr>
                                 <tr>
                                     <td class="text-left">Tổng cộng</td>
-                                    <td class="text-left">@(sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    <td class="text-left">@(Model.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left">Thuế VAT(10%)</td>
-                                    <td class="text-left">@(tax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    <td class="text-left">@(Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left">Thành tiền</td>
-                                    <td class="text-left">@Model.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                    <td class="text-left">@((Model.Amount + Model.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                             </tbody>
                         </table>

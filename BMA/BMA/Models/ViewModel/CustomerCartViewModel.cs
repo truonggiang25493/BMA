@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace BMA.Models
+namespace BMA.Models.ViewModel
 {
-    public class Cart
+    public class CustomerCartViewModel
     {
         BMAEntities db = new BMAEntities();
         public int ProductId { get; set; }
@@ -13,12 +13,8 @@ namespace BMA.Models
         public int Price { get; set; }
         public int Quantity { get; set; }
         public int Total {get;set;}
-        //{
-        //    get { return price * quantity; }
-        //    set;
-        //}
 
-        public Cart(int id)
+        public CustomerCartViewModel(int id)
         {
             ProductId = id;
             Product product = db.Products.Single(n => n.ProductId == ProductId);
@@ -27,10 +23,9 @@ namespace BMA.Models
             Quantity = 0;
         }
 
-        public Cart()
+        public CustomerCartViewModel()
         {
 
         }
-
     }
 }

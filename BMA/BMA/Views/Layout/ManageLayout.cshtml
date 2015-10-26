@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>@ViewBag.Title</title>
+    @using BMA.Models
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
     <!-- Bootstrap 3.3.5 -->
@@ -15,6 +16,7 @@
     <link href="/Content/AdminLayout/plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" />
     <!-- AdminLTE Skins -->
     <link href="/Content/AdminLayout/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
     <!-- Own css -->
     <link href="~/Content/style.css" rel="stylesheet" />
 </head>
@@ -65,16 +67,26 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="user-image" alt="User Image">
-                                <span class="hidden-xs">Haruyuki</span>
+                                <span class="hidden-xs">@*@((Session["User"] as User).Username)*@</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
-                                    <p>
-                                        Haruyuki - Nhân viên cửa hàng
-                                        <small></small>
-                                    </p>
+                                    @*@if (Convert.ToInt32(Session["UserRole"]) == 1)
+                                    {
+                                        <p>
+                                            @((Session["User"] as User).Username) - Quản lý cửa hàng
+                                            <small></small>
+                                        </p>
+                                    }
+                                    @if (Convert.ToInt32(Session["UserRole"]) == 2)
+                                    {
+                                        <p>
+                                            @((Session["User"] as User).Username) - Nhân viên cửa hàng
+                                            <small></small>
+                                        </p>
+                                    }*@
                                 </li>
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
@@ -82,7 +94,7 @@
                                         <a href="#" class="btn btn-default btn-flat">Thông tin cá nhân</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Đăng xuất</a>
+                                        <a href="@Url.Action("Logout", "Account")" class="btn btn-default btn-flat">Đăng xuất</a>
                                     </div>
                                 </li>
                             </ul>
@@ -105,7 +117,7 @@
                         <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>Haruyuki</p>
+                        <p>@*@((Session["User"] as User).Username)*@</p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
@@ -144,7 +156,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index","ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-                            <li><a href="@Url.Action("Create", "ManageProduct")"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+                            <li><a href="@Url.Action("AddProduct", "ManageProduct")"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -153,8 +165,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-cubes"></i>Danh sách nguyên liệu</a></li>
-                            <li><a href=""><i class="fa fa-plus"></i>Tạo mới nguyên liệu</a></li>
+                            <li><a href="@Url.Action("Index", "ManageMaterial")"><i class="fa fa-cubes"></i>Danh sách nguyên liệu</a></li>
+                            <li><a href="@Url.Action("AddMaterial", "ManageMaterial")"><i class="fa fa-plus"></i>Tạo mới nguyên liệu</a></li>
                             <li><a href=""><i class="fa fa-home"></i>Quản lí kho</a></li>
                         </ul>
                     </li>
@@ -262,7 +274,7 @@
                 "autoWidth": false
             });
         });
-        $(document).on("click", ".table tbody tr", function () {
+        $(document).on("click", ".select-popup tbody tr", function () {
             $(this).addClass('selected').siblings().removeClass('selected');
         });
     </script>
@@ -280,5 +292,18 @@
         </div>
     </div>
     <!--End of modal-->
+
+    <div class="modal fade" id="myStandardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="standard-popup-title"></h4>
+                </div>
+                <div class="modal-body" id="standard-popup-body"></div>
+                <div class="modal-footer" id="standard-popup-footer"></div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

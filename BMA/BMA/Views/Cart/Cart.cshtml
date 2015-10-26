@@ -1,6 +1,7 @@
 ﻿@using BMA.Models
+@using BMA.Models.ViewModel
 @using System.Globalization;
-@model List<Cart>
+@model List<CustomerCartViewModel>
 @{
     ViewBag.Title = "Giỏ hàng";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
@@ -11,168 +12,173 @@
 
 <section class="border-top"></section>
 <center><h3 class="cart-title">THÔNG TIN ĐƠN HÀNG</h3></center>
-<form id="updateCartForm" action="@Url.Action("UpdateCart", "Cart")" method="post">
-    <table class="table-fill">
-        <thead>
-            <tr>
-                <th class="text-left">Sản phẩm</th>
-                <th class="text-left">Đơn giá</th>
-                <th class="text-left">Số lượng</th>
-                <th class="text-left">Thành tiền</th>
-                <th class="text-left">Xóa</th>
-            </tr>
-        </thead>
 
-        <tbody class="table-hover">
-            @foreach (var item in Model)
-            {
+<div style="padding: 0px;">
+    <form id="updateCartForm" action="@Url.Action("UpdateCart", "Cart")" method="post">
+        <table class="table-fill">
+            <thead>
                 <tr>
-                    <td class="text-left">@item.ProductName</td>
-                    <td class="text-left">@item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                    <td class="text-left1">
-                        <input type="text" value="@item.Quantity" class="inputProductNum" name="txtQuantity" required />
-                    </td>
-                    <td class="text-left">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                    <td class="cancel-order"><a href="@Url.Action("DeleteCart", "Cart", new { @ProductId = item.ProductId})">Hủy</a></td>
+                    <th class="text-left">Sản phẩm</th>
+                    <th class="text-left">Đơn giá</th>
+                    <th class="text-left">Số lượng</th>
+                    <th class="text-left">Thành tiền</th>
+                    <th class="text-left">Xóa</th>
                 </tr>
-                sumTotal = sumTotal + @item.Total;
-            }
+            </thead>
+
+            <tbody class="table-hover">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-left">@item.ProductName</td>
+                        <td class="text-left">@item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        <td class="text-left1">
+                            <input type="text" value="@item.Quantity" class="inputProductNum" name="txtQuantity" maxlength="4" required />
+                        </td>
+                        <td class="text-left">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        <td class="cancel-order"><a href="@Url.Action("DeleteCart", "Cart", new { @ProductId = item.ProductId})">Hủy</a></td>
+                    </tr>
+                    sumTotal = sumTotal + @item.Total;
+                }
+            </tbody>
+        </table>
+    </form>
+    @{
+        int totalValue = Convert.ToInt32(sumTotal + sumTotal * 0.1);
+        int taxAmount = Convert.ToInt32(sumTotal * 0.1);
+    }
+
+    <table class="table-fill-2" style="margin-left:5px;">
+        <tbody class="table-hover">
+            <tr>
+                <td class="sum-td">Tổng cộng </td>
+                <td style="font-weight: bolder;" class="text-left">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+            </tr>
+            <tr>
+                <td class="sum-td">Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
+                <td style="font-weight: bolder;" class="text-left">@taxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+            </tr>
+            <tr>
+                <td style="border-bottom:none;" class="sum-td">Thành tiền</td>
+                <td style="min-width:180px;font-weight:bolder;" class="text-left">@totalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+            </tr>
         </tbody>
     </table>
-</form>
-@{
-    int totalValue = Convert.ToInt32(sumTotal + sumTotal * 0.1);
-    int taxAmount = Convert.ToInt32(sumTotal * 0.1);
-}
-<table class="table-fill-2">
-    <tbody class="table-hover">
-        <tr>
-            <td class="sum-td">Tổng cộng </td>
-            <td style="font-weight: bolder;" class="text-left">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-        </tr>
-        <tr>
-            <td class="sum-td">Thuế VAT(10%)</td>
-            <td style="font-weight: bolder;" class="text-left">@taxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-        </tr>
-        <tr>
-            <td style="border-bottom:none;" class="sum-td">Thành tiền</td>
-            <td style="min-width:180px;font-weight:bolder;" class="text-left">@totalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-        </tr>
-    </tbody>
-</table>
 
-@{
-    if (Session["User"] != null)
-    {
-        if (Session["BeEdited"] != null)
-        {
-            int IdToEdit = (int)Session["BeEdited"];
-            using (Html.BeginForm("EditOrder", "Cart", new { @orderId = IdToEdit }, FormMethod.Post, new { id = "orderForm" }))
-            {
-                <table class="table-fill-2" style="margin-top:-70px;margin-right:163px;float:right">
-                    <tbody class=" table-hover" style="">
-                        <tr>
-                            <td style="border-bottom: none;width:67%" class="sum-td">Ngày nhận</td>
-                            <td><input style="max-height: 86%;" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="2020-12-31" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="txtDeliveryDate" required /></td>
-                        </tr>
-                    </tbody>
-                </table>
-            }
-        }
-        else
-        {
-            using (Html.BeginForm("OrderProduct", "Cart", FormMethod.Post, new { id = "orderForm" }))
-            {
-                <table class="table-fill-2" style="margin-top:-70px;margin-right:163px;float:right">
-                    <tbody class=" table-hover" style="">
-                        <tr>
-                            <td style="border-bottom: none;width:67%" class="sum-td">Ngày nhận</td>
-                            <td><input style="max-height: 86%;" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="2020-12-31" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="txtDeliveryDate" required /></td>
-                        </tr>
-                    </tbody>
-                </table>
-            }
-        }
+    @{
+        TempData["TaxAmount"] = taxAmount;
+        TempData["Amount"] = sumTotal;
     }
-    else
-    {
-        using (Html.BeginForm("OrderInfo", "Cart", FormMethod.Post, new { id = "orderForm" }))
-        {
-            <table class="table-fill-2" style="margin-top:-70px;margin-right:163px;float:right">
-                <tbody class=" table-hover" style="">
-                    <tr>
-                        <td style="border-bottom: none;width:67%" class="sum-td">Ngày nhận</td>
-                        <td><input style="max-height: 86%;" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="2020-12-31" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="txtDeliveryDate" required /></td>
-                    </tr>
-                </tbody>
-            </table>
-        }
-    }
-}
-
-@{
-    ViewBag.totalValue = totalValue;
-    TempData["TotalValue"] = ViewBag.totalValue;
-}
-<div style="margin-top:-85px;" class="row">
-    <ul class="filter-list clearfix">
-        <li>
-            <div class="property-box animated out" data-delay="0" data-animation="fadeInUp">
-                <div class="property-text2">
-                    <div style="margin-left: 330px; margin-top: 34px; float: left; margin-right: 65px;" class="detail-btn mrgt3x"><a href="#" onclick="return submitUpdateCart();" class="sale">Cập nhật giỏ hàng</a></div>
-                    <script type="text/javascript">
-                        function submitUpdateCart() {
-                            document.getElementById("updateCartForm").submit();
-                            return 1;
+    <div style="margin-top:-85px;" class="row">
+        <ul class="filter-list clearfix">
+            <li>
+                <div class="property-box animated out" data-delay="0" data-animation="fadeInUp">
+                    <div class="property-text2">
+                        <div style="margin-left: 170px; margin-top: 93px; float: left;" class="detail-btn mrgt3x"><a href="#" onclick="return submitUpdateCart();" class="sale">Cập nhật giỏ hàng</a></div>
+                        <script type="text/javascript">
+                            function submitUpdateCart() {
+                                document.getElementById("updateCartForm").submit();
+                                return 1;
+                            }
+                        </script>
+                    </div>
+                    <div class="property-text2">
+                        <div style="margin-top:31.5px; float:left;margin-left:45px;" class="detail-btn mrgt3x"><a href="@Url.Action("Index", "Product")" class="sale">Tiếp tục mua sắm</a></div>
+                    </div>
+                    <div class="property-text2">
+                        @{
+                            if (Session["BeEdited"] != null)
+                            {
+                                <div class="delete-btn mrgt3x"> <a style="background-color:#ad0707" href="javascript:void(0)" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'" class="sale">Hủy đơn hàng</a> </div>
+                            }
+                            else
+                            {
+                                <div class="delete-btn mrgt3x"> <a href="@Url.Action("DeleteAll", "Cart")" class="sale">Hủy giỏ hàng</a> </div>
+                            }
                         }
-                    </script>
-                </div>
-                <div class="property-text2">
-                    <div style="margin-top:31px; float:left;margin-left:-30px;" class="detail-btn mrgt3x"><a href="@Url.Action("Index", "Product")" class="sale">Tiếp tục mua sắm</a></div>
-                </div>
-                <div class="property-text2">
-                    @{
-                        if (Session["BeEdited"] != null)
+                    </div>
+                    <div class="property-text2">
+                        @if (Session["BeEdited"] != null)
                         {
-                            <div class="delete-btn mrgt3x"> <a style="background-color:#ad0707" href="javascript:void(0)" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'" class="sale">Hủy đơn hàng</a> </div>
+                            <div class="book-btn mrgt3x"> <a href="#" onclick="document.getElementById('orderForm').submit();" class="sale">Cập nhật đơn hàng</a> </div>
                         }
                         else
                         {
-                            <div class="delete-btn mrgt3x"> <a href="@Url.Action("DeleteAll", "Cart")" class="sale">Hủy giỏ hàng</a> </div>
+                            <div class="book-btn mrgt3x"> <a href="#" onclick="document.getElementById('orderForm').submit();" class="sale">Đặt hàng</a> </div>
                         }
-                    }
+                    </div>
+                    <div class="property-text2">
+                        @{
+                            if (Session["User"] != null)
+                            {
+                                if (Session["BeEdited"] != null)
+                                {
+                                    int IdToEdit = (int)Session["BeEdited"];
+                                    using (Html.BeginForm("EditOrder", "Cart", new { @orderId = IdToEdit }, FormMethod.Post, new { id = "orderForm" }))
+                                    {
+                                        <table class="table-fill-2" style="margin-top:-363px;float:right">
+                                            <tbody class=" table-hover" style="">
+                                                <tr>
+                                                    <td style="border-bottom: none;width:67%" class="sum-td">Ngày nhận</td>
+                                                    <td><input style="max-height: 100%;" type="datetime" min="@DateTime.Now.ToString()" max="2020-12-31" value="@DateTime.Now.ToString()" name="txtDeliveryDate" required /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("OrderProduct", "Cart", FormMethod.Post, new { id = "orderForm" }))
+                                    {
+                                        <table class="table-fill-2" style="margin-top:-363px;float:right">
+                                            <tbody class=" table-hover" style="">
+                                                <tr>
+                                                    <td style="border-bottom: none;width:67%" class="sum-td">Ngày nhận</td>
+                                                    <td><input style="max-height: 100%;" type="datetime" min="@DateTime.Now.ToString()" max="2020-12-31" value="@DateTime.Now.ToString()" name="txtDeliveryDate" required /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                using (Html.BeginForm("OrderInfo", "Cart", FormMethod.Post, new { id = "orderForm" }))
+                                {
+                                    <table class="table-fill-2" style="margin-top:-363px;float:right">
+                                        <tbody class=" table-hover" style="">
+                                            <tr>
+                                                <td style="border-bottom: none;width:67%" class="sum-td">Ngày nhận</td>
+                                                <td><input style="max-height: 100%;" type="datetime" min="@DateTime.Now.ToString()" max="2020-12-31" value="@DateTime.Now.ToString()" name="txtDeliveryDate" required /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                }
+                            }
+                        }
+                    </div>
                 </div>
-                <div class="property-text2">
-                    @if (Session["BeEdited"] != null)
-                    {
-                        <div class="book-btn mrgt3x"> <a href="#" onclick="document.getElementById('orderForm').submit();" class="sale">Cập nhật đơn hàng</a> </div>
-                    }
-                    else
-                    {
-                        <div class="book-btn mrgt3x"> <a href="#" onclick="document.getElementById('orderForm').submit();" class="sale">Đặt hàng</a> </div>
-                    }
-                </div>
-            </div>
-        </li>
-    </ul>
-</div>
+            </li>
+        </ul>
+    </div>
 
-@{
-    if (Session["BeEdited"] != null)
-    {
-        <div id="light" class="white_content_delete">
-            <div class="modal-content">
-                <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
-                    <button type="button" class="close" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
-                    <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
-                </div>
-                <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Quý khách thực sự muốn hủy đơn hàng này?</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
-                    <a class="btn btn-primary" href="@Url.Action("CancelOrderConfirm", "CusManageOrder", new { @orderId = (int)Session["BeEdited"]})">Đồng ý</a>
+    @{
+        if (Session["BeEdited"] != null)
+        {
+            <div id="light" class="white_content_delete">
+                <div class="modal-content">
+                    <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
+                        <button type="button" class="close" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
+                        <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
+                    </div>
+                    <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Quý khách thực sự muốn hủy đơn hàng này?</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
+                        <a class="btn btn-primary" href="@Url.Action("CancelOrderConfirm", "CusManageOrder", new { @orderId = (int)Session["BeEdited"]})">Đồng ý</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div id="fade" class="black_overlay"></div>
+            <div id="fade" class="black_overlay"></div>
+        }
     }
-}
+</div>

@@ -2050,7 +2050,7 @@ footer .contact li {
     transition: all 0.8s ease 0s;
     margin-top: -72px;
     float: left;
-    margin-left: 163px;
+    margin-left: -5px;
 }
 
 .property-box .delete-btn .rent {
@@ -2073,7 +2073,7 @@ footer .contact li {
     transition: all 0.8s ease 0s;
     margin-top: -165px;
     float: right;
-    margin-right: 150px;
+
     margin-bottom: 50px;
 }
 
@@ -3859,9 +3859,9 @@ contact-info-rightbar {
     background: white;
     border-radius: 3px;
     border-collapse: collapse;
-    margin-left: 5px;
-    margin-top: -15px;
-    margin-bottom: 5px;
+    margin:auto;
+    /*margin-top: 50px;*/
+    margin-bottom: 50px;
     max-width: 400px;
     padding: 5px;
     width: 100%;
@@ -4083,4 +4083,9 @@ h2 {
     margin-bottom: -30px;
     font-weight: bolder;
     color: #09b9e5;
+}
+
+.img-responsive-2{
+    width:262.5px;
+    height:147.5px;
 }

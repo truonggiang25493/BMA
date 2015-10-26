@@ -27,7 +27,7 @@ namespace BMA.Models
         public string Unit { get; set; }
         public string Descriptions { get; set; }
         public string Note { get; set; }
-        public string ProductImgage { get; set; }
+        public string ProductImage { get; set; }
         public int ProductStandardPrice { get; set; }
         public Nullable<int> CategoryId { get; set; }
         public bool IsActive { get; set; }
