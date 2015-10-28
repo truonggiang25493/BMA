@@ -274,11 +274,13 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
+    <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialInfoForProductListViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderItemViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
+    <Compile Include="Models\ViewModel\ShortageMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\SupplierViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
