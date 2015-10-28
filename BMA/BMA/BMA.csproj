@@ -338,7 +338,7 @@
     </Compile>
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
-    <Compile Include="Models\ViewModel\MaterialInfoForProductListViewMode%3b.cs" />
+    <Compile Include="Models\ViewModel\MaterialInfoForProductListViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderItemViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
