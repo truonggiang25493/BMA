@@ -1177,3 +1177,1042 @@
 2015-10-26T05:14:19.197Z - info: Starting rendering request 1 (user: null)
 2015-10-26T05:14:19.205Z - info: Rendering anonymous template { recipe:phantom-pdf,engine:handlebars}
 2015-10-26T05:14:27.553Z - info: Rendering request 1 finished in 8355 ms
+2015-10-26T08:17:56.955Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-26T08:18:00.991Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T08:18:01.087Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-26T08:18:02.618Z - info: Found 29 extensions
+2015-10-26T08:21:16.623Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-26T08:21:17.280Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T08:21:17.321Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-26T08:21:18.285Z - info: Found 29 extensions
+2015-10-26T08:21:18.319Z - info: Using extension express
+2015-10-26T08:21:18.580Z - info: Using extension handlebars
+2015-10-26T08:21:18.585Z - info: Using extension html
+2015-10-26T08:21:18.591Z - info: Using extension jsrender
+2015-10-26T08:21:18.596Z - info: Using extension selfTerminate
+2015-10-26T08:21:18.598Z - info: Using extension xlsx
+2015-10-26T08:21:18.980Z - info: Using extension client-html
+2015-10-26T08:21:19.044Z - info: Using extension templates
+2015-10-26T08:21:19.101Z - info: Using extension fop-pdf
+2015-10-26T08:21:19.110Z - info: Using extension authentication
+2015-10-26T08:21:19.356Z - info: Using extension analytics
+2015-10-26T08:21:19.440Z - info: Using extension excel-parser
+2015-10-26T08:21:19.720Z - info: Using extension reports
+2015-10-26T08:21:19.765Z - info: Using extension html-to-xlsx
+2015-10-26T08:21:20.179Z - info: Using extension childTemplates
+2015-10-26T08:21:20.216Z - info: Using extension phantom-pdf
+2015-10-26T08:21:20.292Z - info: Using extension images
+2015-10-26T08:21:20.304Z - info: Using extension authorization
+2015-10-26T08:21:20.323Z - info: Using extension data
+2015-10-26T08:21:20.348Z - info: Using extension client-app
+2015-10-26T08:21:20.373Z - info: Using extension licensing
+2015-10-26T08:21:20.377Z - info: Using extension text
+2015-10-26T08:21:20.394Z - info: Using extension resources
+2015-10-26T08:21:20.413Z - info: Using extension statistics
+2015-10-26T08:21:20.416Z - info: Using extension scheduling
+2015-10-26T08:21:20.538Z - info: Using extension scripts
+2015-10-26T08:21:20.549Z - info: Using extension public-templates
+2015-10-26T08:21:20.560Z - info: Using extension sample-template
+2015-10-26T08:21:20.568Z - info: Using extension embedding
+2015-10-26T08:21:20.587Z - info: Extensions loaded.
+2015-10-26T08:21:20.587Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T08:21:20.696Z - info: Creating default express app.
+2015-10-26T08:21:21.317Z - info: jsreport server successfully started on http port: 2000
+2015-10-26T08:21:21.324Z - warn: License not found, using free
+2015-10-26T08:21:21.335Z - info: reporter initialized
+2015-10-26T08:26:41.520Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-26T08:26:42.199Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T08:26:42.235Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-26T08:26:43.178Z - info: Found 29 extensions
+2015-10-26T08:26:43.216Z - info: Using extension express
+2015-10-26T08:26:43.548Z - info: Using extension fop-pdf
+2015-10-26T08:26:43.718Z - info: Using extension handlebars
+2015-10-26T08:26:43.728Z - info: Using extension html
+2015-10-26T08:26:43.742Z - info: Using extension jsrender
+2015-10-26T08:26:43.750Z - info: Using extension selfTerminate
+2015-10-26T08:26:43.753Z - info: Using extension xlsx
+2015-10-26T08:26:44.080Z - info: Using extension authentication
+2015-10-26T08:26:44.172Z - info: Using extension client-html
+2015-10-26T08:26:44.179Z - info: Using extension templates
+2015-10-26T08:26:44.195Z - info: Using extension html-to-xlsx
+2015-10-26T08:26:44.351Z - info: Using extension authorization
+2015-10-26T08:26:44.364Z - info: Using extension childTemplates
+2015-10-26T08:26:44.379Z - info: Using extension data
+2015-10-26T08:26:44.389Z - info: Using extension excel-parser
+2015-10-26T08:26:44.649Z - info: Using extension phantom-pdf
+2015-10-26T08:26:44.674Z - info: Using extension licensing
+2015-10-26T08:26:44.678Z - info: Using extension resources
+2015-10-26T08:26:44.686Z - info: Using extension analytics
+2015-10-26T08:26:44.710Z - info: Using extension reports
+2015-10-26T08:26:44.723Z - info: Using extension client-app
+2015-10-26T08:26:44.728Z - info: Using extension text
+2015-10-26T08:26:44.731Z - info: Using extension images
+2015-10-26T08:26:44.743Z - info: Using extension statistics
+2015-10-26T08:26:44.746Z - info: Using extension scripts
+2015-10-26T08:26:44.759Z - info: Using extension scheduling
+2015-10-26T08:26:44.857Z - info: Using extension public-templates
+2015-10-26T08:26:44.875Z - info: Using extension sample-template
+2015-10-26T08:26:44.891Z - info: Using extension embedding
+2015-10-26T08:26:44.901Z - info: Extensions loaded.
+2015-10-26T08:26:44.901Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T08:26:45.026Z - info: Creating default express app.
+2015-10-26T08:26:45.276Z - info: jsreport server successfully started on http port: 2000
+2015-10-26T08:26:45.281Z - warn: License not found, using free
+2015-10-26T08:26:45.290Z - info: reporter initialized
+2015-10-26T08:26:48.218Z - info: Starting rendering request 1 (user: null)
+2015-10-26T08:26:48.233Z - info: Rendering anonymous template { recipe:phantom-pdf,engine:handlebars}
+2015-10-26T08:26:54.621Z - info: Rendering request 1 finished in 6403 ms
+2015-10-26T08:27:07.073Z - info: Starting rendering request 2 (user: null)
+2015-10-26T08:27:07.082Z - info: Rendering anonymous template { recipe:phantom-pdf,engine:handlebars}
+2015-10-26T08:27:08.443Z - info: Rendering request 2 finished in 1372 ms
+2015-10-26T08:33:12.767Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-26T08:33:13.574Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T08:33:13.613Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-26T08:33:14.641Z - info: Found 29 extensions
+2015-10-26T08:33:14.677Z - info: Using extension express
+2015-10-26T08:33:15.041Z - info: Using extension fop-pdf
+2015-10-26T08:33:15.139Z - info: Using extension handlebars
+2015-10-26T08:33:15.147Z - info: Using extension html
+2015-10-26T08:33:15.158Z - info: Using extension jsrender
+2015-10-26T08:33:15.168Z - info: Using extension selfTerminate
+2015-10-26T08:33:15.172Z - info: Using extension xlsx
+2015-10-26T08:33:15.639Z - info: Using extension authentication
+2015-10-26T08:33:15.858Z - info: Using extension client-html
+2015-10-26T08:33:15.876Z - info: Using extension templates
+2015-10-26T08:33:15.905Z - info: Using extension html-to-xlsx
+2015-10-26T08:33:16.188Z - info: Using extension childTemplates
+2015-10-26T08:33:16.265Z - info: Using extension authorization
+2015-10-26T08:33:16.305Z - info: Using extension text
+2015-10-26T08:33:16.317Z - info: Using extension excel-parser
+2015-10-26T08:33:16.694Z - info: Using extension images
+2015-10-26T08:33:16.708Z - info: Using extension analytics
+2015-10-26T08:33:16.785Z - info: Using extension phantom-pdf
+2015-10-26T08:33:16.982Z - info: Using extension resources
+2015-10-26T08:33:17.049Z - info: Using extension licensing
+2015-10-26T08:33:17.114Z - info: Using extension data
+2015-10-26T08:33:17.193Z - info: Using extension reports
+2015-10-26T08:33:17.201Z - info: Using extension client-app
+2015-10-26T08:33:17.340Z - info: Using extension statistics
+2015-10-26T08:33:17.404Z - info: Using extension scripts
+2015-10-26T08:33:17.488Z - info: Using extension scheduling
+2015-10-26T08:33:17.839Z - info: Using extension sample-template
+2015-10-26T08:33:18.031Z - info: Using extension public-templates
+2015-10-26T08:33:18.101Z - info: Using extension embedding
+2015-10-26T08:33:18.110Z - info: Extensions loaded.
+2015-10-26T08:33:18.110Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T08:33:18.250Z - info: Creating default express app.
+2015-10-26T08:33:19.049Z - info: jsreport server successfully started on http port: 2000
+2015-10-26T08:33:19.054Z - warn: License not found, using free
+2015-10-26T08:33:19.065Z - info: reporter initialized
+2015-10-26T08:33:31.653Z - info: Starting rendering request 1 (user: null)
+2015-10-26T08:33:31.667Z - info: Rendering anonymous template { recipe:phantom-pdf,engine:handlebars}
+2015-10-26T08:33:35.697Z - info: Rendering request 1 finished in 4044 ms
+2015-10-26T09:01:37.142Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-26T09:01:38.072Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T09:01:38.115Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-26T09:01:38.981Z - info: Found 29 extensions
+2015-10-26T09:02:47.677Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-26T09:02:48.342Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T09:02:48.377Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-26T09:02:49.151Z - info: Found 29 extensions
+2015-10-26T09:02:49.182Z - info: Using extension express
+2015-10-26T09:02:49.467Z - info: Using extension handlebars
+2015-10-26T09:02:49.473Z - info: Using extension jsrender
+2015-10-26T09:02:49.478Z - info: Using extension fop-pdf
+2015-10-26T09:02:49.547Z - info: Using extension selfTerminate
+2015-10-26T09:02:49.550Z - info: Using extension xlsx
+2015-10-26T09:02:49.815Z - info: Using extension authentication
+2015-10-26T09:02:49.886Z - info: Using extension client-html
+2015-10-26T09:02:49.891Z - info: Using extension html
+2015-10-26T09:02:49.897Z - info: Using extension templates
+2015-10-26T09:02:49.912Z - info: Using extension excel-parser
+2015-10-26T09:02:50.496Z - info: Using extension authorization
+2015-10-26T09:02:50.508Z - info: Using extension html-to-xlsx
+2015-10-26T09:02:51.115Z - info: Using extension client-app
+2015-10-26T09:02:51.118Z - info: Using extension childTemplates
+2015-10-26T09:02:51.243Z - info: Using extension phantom-pdf
+2015-10-26T09:02:51.345Z - info: Using extension images
+2015-10-26T09:02:51.379Z - info: Using extension licensing
+2015-10-26T09:02:51.399Z - info: Using extension reports
+2015-10-26T09:02:51.408Z - info: Using extension resources
+2015-10-26T09:02:51.416Z - info: Using extension analytics
+2015-10-26T09:02:51.431Z - info: Using extension text
+2015-10-26T09:02:51.480Z - info: Using extension data
+2015-10-26T09:02:51.499Z - info: Using extension statistics
+2015-10-26T09:02:51.512Z - info: Using extension scheduling
+2015-10-26T09:02:51.880Z - info: Using extension scripts
+2015-10-26T09:02:51.894Z - info: Using extension sample-template
+2015-10-26T09:02:51.913Z - info: Using extension public-templates
+2015-10-26T09:02:51.928Z - info: Using extension embedding
+2015-10-26T09:02:51.964Z - info: Extensions loaded.
+2015-10-26T09:02:51.965Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T09:02:52.099Z - info: Creating default express app.
+2015-10-26T09:02:52.793Z - info: jsreport server successfully started on http port: 2000
+2015-10-26T09:02:52.799Z - warn: License not found, using free
+2015-10-26T09:02:52.810Z - info: reporter initialized
+2015-10-26T10:05:41.693Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-26T10:05:42.467Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T10:05:42.503Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-26T10:05:44.067Z - info: Found 29 extensions
+2015-10-26T10:05:44.109Z - info: Using extension authentication
+2015-10-26T10:05:44.407Z - info: Using extension html
+2015-10-26T10:05:44.427Z - info: Using extension jsrender
+2015-10-26T10:05:44.435Z - info: Using extension selfTerminate
+2015-10-26T10:05:44.438Z - info: Using extension xlsx
+2015-10-26T10:05:45.053Z - info: Using extension templates
+2015-10-26T10:05:45.116Z - info: Using extension fop-pdf
+2015-10-26T10:05:45.179Z - info: Using extension handlebars
+2015-10-26T10:05:45.186Z - info: Using extension client-html
+2015-10-26T10:05:45.226Z - info: Using extension express
+2015-10-26T10:05:45.713Z - info: Using extension html-to-xlsx
+2015-10-26T10:05:46.175Z - info: Using extension reports
+2015-10-26T10:05:46.186Z - info: Using extension data
+2015-10-26T10:05:46.220Z - info: Using extension licensing
+2015-10-26T10:05:46.241Z - info: Using extension excel-parser
+2015-10-26T10:05:46.530Z - info: Using extension authorization
+2015-10-26T10:05:46.566Z - info: Using extension analytics
+2015-10-26T10:05:46.733Z - info: Using extension text
+2015-10-26T10:05:46.743Z - info: Using extension phantom-pdf
+2015-10-26T10:05:46.901Z - info: Using extension images
+2015-10-26T10:05:46.959Z - info: Using extension client-app
+2015-10-26T10:05:46.978Z - info: Using extension resources
+2015-10-26T10:05:46.997Z - info: Using extension childTemplates
+2015-10-26T10:05:47.020Z - info: Using extension statistics
+2015-10-26T10:05:47.025Z - info: Using extension scripts
+2015-10-26T10:05:47.035Z - info: Using extension scheduling
+2015-10-26T10:05:47.128Z - info: Using extension sample-template
+2015-10-26T10:05:47.137Z - info: Using extension public-templates
+2015-10-26T10:05:47.181Z - info: Using extension embedding
+2015-10-26T10:05:47.200Z - info: Extensions loaded.
+2015-10-26T10:05:47.200Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T10:05:47.320Z - info: Creating default express app.
+2015-10-26T10:05:47.841Z - info: jsreport server successfully started on http port: 2000
+2015-10-26T10:05:47.848Z - warn: License not found, using free
+2015-10-26T10:05:47.859Z - info: reporter initialized
+2015-10-26T14:26:56.145Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-26T14:26:57.564Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T14:26:57.594Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-26T14:26:58.118Z - info: Found 29 extensions
+2015-10-26T14:26:58.160Z - info: Using extension express
+2015-10-26T14:26:58.781Z - info: Using extension handlebars
+2015-10-26T14:26:58.794Z - info: Using extension html
+2015-10-26T14:26:58.801Z - info: Using extension fop-pdf
+2015-10-26T14:26:58.981Z - info: Using extension jsrender
+2015-10-26T14:26:58.987Z - info: Using extension selfTerminate
+2015-10-26T14:26:58.999Z - info: Using extension xlsx
+2015-10-26T14:26:59.665Z - info: Using extension authentication
+2015-10-26T14:26:59.852Z - info: Using extension client-html
+2015-10-26T14:26:59.871Z - info: Using extension templates
+2015-10-26T14:26:59.901Z - info: Using extension childTemplates
+2015-10-26T14:26:59.945Z - info: Using extension authorization
+2015-10-26T14:26:59.964Z - info: Using extension html-to-xlsx
+2015-10-26T14:27:00.216Z - info: Using extension client-app
+2015-10-26T14:27:00.235Z - info: Using extension excel-parser
+2015-10-26T14:27:00.471Z - info: Using extension text
+2015-10-26T14:27:00.490Z - info: Using extension images
+2015-10-26T14:27:00.501Z - info: Using extension licensing
+2015-10-26T14:27:00.520Z - info: Using extension phantom-pdf
+2015-10-26T14:27:00.588Z - info: Using extension reports
+2015-10-26T14:27:00.602Z - info: Using extension analytics
+2015-10-26T14:27:00.658Z - info: Using extension resources
+2015-10-26T14:27:00.664Z - info: Using extension data
+2015-10-26T14:27:00.687Z - info: Using extension scheduling
+2015-10-26T14:27:00.858Z - info: Using extension scripts
+2015-10-26T14:27:00.876Z - info: Using extension statistics
+2015-10-26T14:27:00.879Z - info: Using extension sample-template
+2015-10-26T14:27:00.888Z - info: Using extension public-templates
+2015-10-26T14:27:00.900Z - info: Using extension embedding
+2015-10-26T14:27:00.917Z - info: Extensions loaded.
+2015-10-26T14:27:00.917Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T14:27:01.045Z - info: Creating default express app.
+2015-10-26T14:27:01.501Z - info: jsreport server successfully started on http port: 2000
+2015-10-26T14:27:01.507Z - warn: License not found, using free
+2015-10-26T14:27:01.518Z - info: reporter initialized
+2015-10-26T17:20:42.166Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-26T17:20:42.813Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T17:20:42.844Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-26T17:20:43.352Z - info: Found 29 extensions
+2015-10-26T17:20:43.383Z - info: Using extension authentication
+2015-10-26T17:20:43.516Z - info: Using extension handlebars
+2015-10-26T17:20:43.520Z - info: Using extension jsrender
+2015-10-26T17:20:43.525Z - info: Using extension selfTerminate
+2015-10-26T17:20:43.527Z - info: Using extension xlsx
+2015-10-26T17:20:43.764Z - info: Using extension templates
+2015-10-26T17:20:43.779Z - info: Using extension client-html
+2015-10-26T17:20:43.822Z - info: Using extension html
+2015-10-26T17:20:43.828Z - info: Using extension fop-pdf
+2015-10-26T17:20:43.841Z - info: Using extension express
+2015-10-26T17:20:44.097Z - info: Using extension analytics
+2015-10-26T17:20:44.112Z - info: Using extension excel-parser
+2015-10-26T17:20:44.287Z - info: Using extension data
+2015-10-26T17:20:44.298Z - info: Using extension childTemplates
+2015-10-26T17:20:44.311Z - info: Using extension html-to-xlsx
+2015-10-26T17:20:44.449Z - info: Using extension reports
+2015-10-26T17:20:44.456Z - info: Using extension images
+2015-10-26T17:20:44.465Z - info: Using extension phantom-pdf
+2015-10-26T17:20:44.485Z - info: Using extension licensing
+2015-10-26T17:20:44.488Z - info: Using extension authorization
+2015-10-26T17:20:44.497Z - info: Using extension text
+2015-10-26T17:20:44.499Z - info: Using extension client-app
+2015-10-26T17:20:44.502Z - info: Using extension resources
+2015-10-26T17:20:44.508Z - info: Using extension scripts
+2015-10-26T17:20:44.522Z - info: Using extension scheduling
+2015-10-26T17:20:44.587Z - info: Using extension statistics
+2015-10-26T17:20:44.589Z - info: Using extension sample-template
+2015-10-26T17:20:44.597Z - info: Using extension public-templates
+2015-10-26T17:20:44.607Z - info: Using extension embedding
+2015-10-26T17:20:44.621Z - info: Extensions loaded.
+2015-10-26T17:20:44.621Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-26T17:20:44.704Z - info: Creating default express app.
+2015-10-26T17:20:44.898Z - info: jsreport server successfully started on http port: 2000
+2015-10-26T17:20:44.905Z - warn: License not found, using free
+2015-10-26T17:20:44.912Z - info: reporter initialized
+2015-10-27T02:21:35.664Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T02:21:36.389Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T02:21:36.424Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T02:21:36.976Z - info: Found 29 extensions
+2015-10-27T02:21:37.007Z - info: Using extension express
+2015-10-27T02:21:37.289Z - info: Using extension fop-pdf
+2015-10-27T02:21:37.366Z - info: Using extension handlebars
+2015-10-27T02:21:37.374Z - info: Using extension html
+2015-10-27T02:21:37.385Z - info: Using extension jsrender
+2015-10-27T02:21:37.398Z - info: Using extension selfTerminate
+2015-10-27T02:21:37.404Z - info: Using extension xlsx
+2015-10-27T02:21:37.689Z - info: Using extension authentication
+2015-10-27T02:21:37.768Z - info: Using extension client-html
+2015-10-27T02:21:37.774Z - info: Using extension templates
+2015-10-27T02:21:37.789Z - info: Using extension authorization
+2015-10-27T02:21:37.799Z - info: Using extension html-to-xlsx
+2015-10-27T02:21:37.926Z - info: Using extension client-app
+2015-10-27T02:21:37.930Z - info: Using extension data
+2015-10-27T02:21:37.938Z - info: Using extension excel-parser
+2015-10-27T02:21:38.156Z - info: Using extension childTemplates
+2015-10-27T02:21:38.169Z - info: Using extension images
+2015-10-27T02:21:38.178Z - info: Using extension licensing
+2015-10-27T02:21:38.182Z - info: Using extension phantom-pdf
+2015-10-27T02:21:38.213Z - info: Using extension text
+2015-10-27T02:21:38.217Z - info: Using extension analytics
+2015-10-27T02:21:38.240Z - info: Using extension reports
+2015-10-27T02:21:38.249Z - info: Using extension resources
+2015-10-27T02:21:38.257Z - info: Using extension scheduling
+2015-10-27T02:21:38.359Z - info: Using extension statistics
+2015-10-27T02:21:38.362Z - info: Using extension scripts
+2015-10-27T02:21:38.380Z - info: Using extension sample-template
+2015-10-27T02:21:38.392Z - info: Using extension public-templates
+2015-10-27T02:21:38.407Z - info: Using extension embedding
+2015-10-27T02:21:38.417Z - info: Extensions loaded.
+2015-10-27T02:21:38.417Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T02:21:38.611Z - info: Creating default express app.
+2015-10-27T02:21:38.858Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T02:21:38.863Z - warn: License not found, using free
+2015-10-27T02:21:38.876Z - info: reporter initialized
+2015-10-27T02:47:45.820Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T02:47:46.524Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T02:47:46.573Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T02:47:47.164Z - info: Found 29 extensions
+2015-10-27T02:47:47.198Z - info: Using extension express
+2015-10-27T02:47:47.501Z - info: Using extension handlebars
+2015-10-27T02:47:47.507Z - info: Using extension html
+2015-10-27T02:47:47.514Z - info: Using extension jsrender
+2015-10-27T02:47:47.519Z - info: Using extension selfTerminate
+2015-10-27T02:47:47.522Z - info: Using extension xlsx
+2015-10-27T02:47:47.785Z - info: Using extension authentication
+2015-10-27T02:47:47.883Z - info: Using extension client-html
+2015-10-27T02:47:47.932Z - info: Using extension templates
+2015-10-27T02:47:47.957Z - info: Using extension fop-pdf
+2015-10-27T02:47:47.972Z - info: Using extension authorization
+2015-10-27T02:47:47.988Z - info: Using extension childTemplates
+2015-10-27T02:47:48.023Z - info: Using extension excel-parser
+2015-10-27T02:47:48.240Z - info: Using extension html-to-xlsx
+2015-10-27T02:47:48.418Z - info: Using extension analytics
+2015-10-27T02:47:48.435Z - info: Using extension data
+2015-10-27T02:47:48.446Z - info: Using extension licensing
+2015-10-27T02:47:48.452Z - info: Using extension images
+2015-10-27T02:47:48.464Z - info: Using extension phantom-pdf
+2015-10-27T02:47:48.490Z - info: Using extension text
+2015-10-27T02:47:48.493Z - info: Using extension reports
+2015-10-27T02:47:48.506Z - info: Using extension resources
+2015-10-27T02:47:48.516Z - info: Using extension client-app
+2015-10-27T02:47:48.522Z - info: Using extension scheduling
+2015-10-27T02:47:48.632Z - info: Using extension scripts
+2015-10-27T02:47:48.648Z - info: Using extension statistics
+2015-10-27T02:47:48.650Z - info: Using extension sample-template
+2015-10-27T02:47:48.660Z - info: Using extension public-templates
+2015-10-27T02:47:48.671Z - info: Using extension embedding
+2015-10-27T02:47:48.680Z - info: Extensions loaded.
+2015-10-27T02:47:48.680Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T02:47:48.802Z - info: Creating default express app.
+2015-10-27T02:47:49.023Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T02:47:49.034Z - warn: License not found, using free
+2015-10-27T02:47:49.045Z - info: reporter initialized
+2015-10-27T09:32:50.213Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T09:32:51.339Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T09:32:51.370Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T09:32:51.931Z - info: Found 29 extensions
+2015-10-27T09:32:51.964Z - info: Using extension express
+2015-10-27T09:32:52.775Z - info: Using extension handlebars
+2015-10-27T09:32:52.790Z - info: Using extension html
+2015-10-27T09:32:52.796Z - info: Using extension fop-pdf
+2015-10-27T09:32:52.984Z - info: Using extension jsrender
+2015-10-27T09:32:52.990Z - info: Using extension selfTerminate
+2015-10-27T09:32:52.996Z - info: Using extension xlsx
+2015-10-27T09:32:53.540Z - info: Using extension authentication
+2015-10-27T09:32:53.748Z - info: Using extension client-html
+2015-10-27T09:32:53.769Z - info: Using extension templates
+2015-10-27T09:32:53.798Z - info: Using extension authorization
+2015-10-27T09:32:53.818Z - info: Using extension html-to-xlsx
+2015-10-27T09:32:54.047Z - info: Using extension client-app
+2015-10-27T09:32:54.065Z - info: Using extension childTemplates
+2015-10-27T09:32:54.109Z - info: Using extension excel-parser
+2015-10-27T09:32:54.325Z - info: Using extension data
+2015-10-27T09:32:54.352Z - info: Using extension licensing
+2015-10-27T09:32:54.372Z - info: Using extension images
+2015-10-27T09:32:54.382Z - info: Using extension phantom-pdf
+2015-10-27T09:32:54.452Z - info: Using extension text
+2015-10-27T09:32:54.476Z - info: Using extension reports
+2015-10-27T09:32:54.484Z - info: Using extension analytics
+2015-10-27T09:32:54.533Z - info: Using extension resources
+2015-10-27T09:32:54.542Z - info: Using extension scripts
+2015-10-27T09:32:54.558Z - info: Using extension scheduling
+2015-10-27T09:32:54.720Z - info: Using extension statistics
+2015-10-27T09:32:54.723Z - info: Using extension sample-template
+2015-10-27T09:32:54.733Z - info: Using extension public-templates
+2015-10-27T09:32:54.745Z - info: Using extension embedding
+2015-10-27T09:32:54.758Z - info: Extensions loaded.
+2015-10-27T09:32:54.758Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T09:32:54.895Z - info: Creating default express app.
+2015-10-27T09:32:55.720Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T09:32:55.725Z - warn: License not found, using free
+2015-10-27T09:32:55.734Z - info: reporter initialized
+2015-10-27T10:34:27.625Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T10:34:28.933Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T10:34:28.966Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T10:34:39.308Z - info: Found 29 extensions
+2015-10-27T10:35:23.056Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T10:35:23.800Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T10:35:23.859Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T10:35:24.470Z - info: Found 29 extensions
+2015-10-27T10:35:24.495Z - info: Using extension express
+2015-10-27T10:35:24.733Z - info: Using extension fop-pdf
+2015-10-27T10:35:24.794Z - info: Using extension handlebars
+2015-10-27T10:35:24.799Z - info: Using extension html
+2015-10-27T10:35:24.805Z - info: Using extension jsrender
+2015-10-27T10:35:24.810Z - info: Using extension selfTerminate
+2015-10-27T10:35:24.812Z - info: Using extension xlsx
+2015-10-27T10:35:25.048Z - info: Using extension authentication
+2015-10-27T10:35:25.114Z - info: Using extension client-html
+2015-10-27T10:35:25.119Z - info: Using extension templates
+2015-10-27T10:35:25.131Z - info: Using extension html-to-xlsx
+2015-10-27T10:35:25.392Z - info: Using extension authorization
+2015-10-27T10:35:25.419Z - info: Using extension childTemplates
+2015-10-27T10:35:25.445Z - info: Using extension client-app
+2015-10-27T10:35:25.449Z - info: Using extension excel-parser
+2015-10-27T10:35:25.630Z - info: Using extension data
+2015-10-27T10:35:25.640Z - info: Using extension images
+2015-10-27T10:35:25.652Z - info: Using extension phantom-pdf
+2015-10-27T10:35:25.742Z - info: Using extension licensing
+2015-10-27T10:35:25.746Z - info: Using extension reports
+2015-10-27T10:35:25.761Z - info: Using extension analytics
+2015-10-27T10:35:25.835Z - info: Using extension text
+2015-10-27T10:35:25.837Z - info: Using extension resources
+2015-10-27T10:35:25.845Z - info: Using extension scripts
+2015-10-27T10:35:25.885Z - info: Using extension statistics
+2015-10-27T10:35:25.888Z - info: Using extension scheduling
+2015-10-27T10:35:26.063Z - info: Using extension sample-template
+2015-10-27T10:35:26.077Z - info: Using extension public-templates
+2015-10-27T10:35:26.093Z - info: Using extension embedding
+2015-10-27T10:35:26.106Z - info: Extensions loaded.
+2015-10-27T10:35:26.106Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T10:35:26.197Z - info: Creating default express app.
+2015-10-27T10:35:26.975Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T10:35:26.980Z - warn: License not found, using free
+2015-10-27T10:35:26.990Z - info: reporter initialized
+2015-10-27T10:38:36.187Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T10:38:36.951Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T10:38:36.986Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T10:38:37.561Z - info: Found 29 extensions
+2015-10-27T10:38:37.592Z - info: Using extension express
+2015-10-27T10:38:37.873Z - info: Using extension fop-pdf
+2015-10-27T10:38:37.943Z - info: Using extension jsrender
+2015-10-27T10:38:37.950Z - info: Using extension handlebars
+2015-10-27T10:38:37.956Z - info: Using extension selfTerminate
+2015-10-27T10:38:37.959Z - info: Using extension xlsx
+2015-10-27T10:38:38.208Z - info: Using extension authentication
+2015-10-27T10:38:38.277Z - info: Using extension client-html
+2015-10-27T10:38:38.282Z - info: Using extension html
+2015-10-27T10:38:38.289Z - info: Using extension templates
+2015-10-27T10:38:38.300Z - info: Using extension analytics
+2015-10-27T10:38:38.316Z - info: Using extension authorization
+2015-10-27T10:38:38.325Z - info: Using extension childTemplates
+2015-10-27T10:38:38.345Z - info: Using extension data
+2015-10-27T10:38:38.352Z - info: Using extension html-to-xlsx
+2015-10-27T10:38:38.462Z - info: Using extension images
+2015-10-27T10:38:38.482Z - info: Using extension licensing
+2015-10-27T10:38:38.487Z - info: Using extension phantom-pdf
+2015-10-27T10:38:38.514Z - info: Using extension reports
+2015-10-27T10:38:38.524Z - info: Using extension text
+2015-10-27T10:38:38.527Z - info: Using extension resources
+2015-10-27T10:38:38.536Z - info: Using extension client-app
+2015-10-27T10:38:38.541Z - info: Using extension excel-parser
+2015-10-27T10:38:38.719Z - info: Using extension statistics
+2015-10-27T10:38:38.721Z - info: Using extension scripts
+2015-10-27T10:38:38.732Z - info: Using extension scheduling
+2015-10-27T10:38:38.832Z - info: Using extension public-templates
+2015-10-27T10:38:38.851Z - info: Using extension sample-template
+2015-10-27T10:38:38.860Z - info: Using extension embedding
+2015-10-27T10:38:38.874Z - info: Extensions loaded.
+2015-10-27T10:38:38.874Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T10:38:39.070Z - info: Creating default express app.
+2015-10-27T10:38:39.267Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T10:38:39.275Z - warn: License not found, using free
+2015-10-27T10:38:39.288Z - info: reporter initialized
+2015-10-27T10:39:57.680Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T10:39:58.403Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T10:39:58.438Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T10:39:58.986Z - info: Found 29 extensions
+2015-10-27T10:39:59.021Z - info: Using extension express
+2015-10-27T10:39:59.293Z - info: Using extension handlebars
+2015-10-27T10:39:59.298Z - info: Using extension html
+2015-10-27T10:39:59.305Z - info: Using extension jsrender
+2015-10-27T10:39:59.309Z - info: Using extension fop-pdf
+2015-10-27T10:39:59.378Z - info: Using extension selfTerminate
+2015-10-27T10:39:59.380Z - info: Using extension xlsx
+2015-10-27T10:39:59.628Z - info: Using extension authentication
+2015-10-27T10:39:59.693Z - info: Using extension client-html
+2015-10-27T10:39:59.698Z - info: Using extension templates
+2015-10-27T10:39:59.711Z - info: Using extension childTemplates
+2015-10-27T10:39:59.721Z - info: Using extension authorization
+2015-10-27T10:39:59.731Z - info: Using extension html-to-xlsx
+2015-10-27T10:39:59.842Z - info: Using extension data
+2015-10-27T10:39:59.849Z - info: Using extension excel-parser
+2015-10-27T10:40:00.039Z - info: Using extension licensing
+2015-10-27T10:40:00.042Z - info: Using extension phantom-pdf
+2015-10-27T10:40:00.060Z - info: Using extension client-app
+2015-10-27T10:40:00.065Z - info: Using extension reports
+2015-10-27T10:40:00.072Z - info: Using extension text
+2015-10-27T10:40:00.074Z - info: Using extension analytics
+2015-10-27T10:40:00.093Z - info: Using extension resources
+2015-10-27T10:40:00.100Z - info: Using extension images
+2015-10-27T10:40:00.109Z - info: Using extension statistics
+2015-10-27T10:40:00.111Z - info: Using extension scripts
+2015-10-27T10:40:00.119Z - info: Using extension scheduling
+2015-10-27T10:40:00.197Z - info: Using extension sample-template
+2015-10-27T10:40:00.209Z - info: Using extension public-templates
+2015-10-27T10:40:00.227Z - info: Using extension embedding
+2015-10-27T10:40:00.242Z - info: Extensions loaded.
+2015-10-27T10:40:00.242Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T10:40:00.401Z - info: Creating default express app.
+2015-10-27T10:40:00.682Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T10:40:00.690Z - warn: License not found, using free
+2015-10-27T10:40:00.699Z - info: reporter initialized
+2015-10-27T10:56:09.987Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T10:56:11.005Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T10:56:11.035Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T10:56:11.584Z - info: Found 29 extensions
+2015-10-27T10:56:11.617Z - info: Using extension express
+2015-10-27T10:56:12.441Z - info: Using extension handlebars
+2015-10-27T10:56:12.458Z - info: Using extension fop-pdf
+2015-10-27T10:56:12.640Z - info: Using extension html
+2015-10-27T10:56:12.646Z - info: Using extension jsrender
+2015-10-27T10:56:12.652Z - info: Using extension selfTerminate
+2015-10-27T10:56:12.663Z - info: Using extension xlsx
+2015-10-27T10:56:13.219Z - info: Using extension authentication
+2015-10-27T10:56:13.439Z - info: Using extension client-html
+2015-10-27T10:56:13.457Z - info: Using extension templates
+2015-10-27T10:56:13.490Z - info: Using extension html-to-xlsx
+2015-10-27T10:56:13.736Z - info: Using extension authorization
+2015-10-27T10:56:13.761Z - info: Using extension childTemplates
+2015-10-27T10:56:13.809Z - info: Using extension client-app
+2015-10-27T10:56:13.843Z - info: Using extension excel-parser
+2015-10-27T10:56:14.060Z - info: Using extension text
+2015-10-27T10:56:14.087Z - info: Using extension images
+2015-10-27T10:56:14.098Z - info: Using extension licensing
+2015-10-27T10:56:14.117Z - info: Using extension phantom-pdf
+2015-10-27T10:56:14.185Z - info: Using extension analytics
+2015-10-27T10:56:14.244Z - info: Using extension reports
+2015-10-27T10:56:14.252Z - info: Using extension resources
+2015-10-27T10:56:14.259Z - info: Using extension data
+2015-10-27T10:56:14.284Z - info: Using extension scheduling
+2015-10-27T10:56:14.454Z - info: Using extension scripts
+2015-10-27T10:56:14.472Z - info: Using extension statistics
+2015-10-27T10:56:14.475Z - info: Using extension sample-template
+2015-10-27T10:56:14.486Z - info: Using extension public-templates
+2015-10-27T10:56:14.498Z - info: Using extension embedding
+2015-10-27T10:56:14.514Z - info: Extensions loaded.
+2015-10-27T10:56:14.514Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T10:56:14.587Z - info: Creating default express app.
+2015-10-27T10:56:15.059Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T10:56:15.065Z - warn: License not found, using free
+2015-10-27T10:56:15.075Z - info: reporter initialized
+2015-10-27T11:00:28.694Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T11:00:29.288Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T11:00:29.334Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T11:00:29.900Z - info: Found 29 extensions
+2015-10-27T11:00:29.928Z - info: Using extension express
+2015-10-27T11:00:30.200Z - info: Using extension handlebars
+2015-10-27T11:00:30.207Z - info: Using extension html
+2015-10-27T11:00:30.216Z - info: Using extension jsrender
+2015-10-27T11:00:30.223Z - info: Using extension selfTerminate
+2015-10-27T11:00:30.226Z - info: Using extension xlsx
+2015-10-27T11:00:30.514Z - info: Using extension authentication
+2015-10-27T11:00:30.596Z - info: Using extension client-html
+2015-10-27T11:00:30.649Z - info: Using extension fop-pdf
+2015-10-27T11:00:30.664Z - info: Using extension templates
+2015-10-27T11:00:30.682Z - info: Using extension excel-parser
+2015-10-27T11:00:30.874Z - info: Using extension html-to-xlsx
+2015-10-27T11:00:30.985Z - info: Using extension data
+2015-10-27T11:00:30.992Z - info: Using extension client-app
+2015-10-27T11:00:30.996Z - info: Using extension childTemplates
+2015-10-27T11:00:31.007Z - info: Using extension licensing
+2015-10-27T11:00:31.010Z - info: Using extension phantom-pdf
+2015-10-27T11:00:31.027Z - info: Using extension reports
+2015-10-27T11:00:31.035Z - info: Using extension text
+2015-10-27T11:00:31.044Z - info: Using extension resources
+2015-10-27T11:00:31.050Z - info: Using extension authorization
+2015-10-27T11:00:31.059Z - info: Using extension analytics
+2015-10-27T11:00:31.073Z - info: Using extension images
+2015-10-27T11:00:31.083Z - info: Using extension scripts
+2015-10-27T11:00:31.094Z - info: Using extension statistics
+2015-10-27T11:00:31.096Z - info: Using extension scheduling
+2015-10-27T11:00:31.180Z - info: Using extension public-templates
+2015-10-27T11:00:31.195Z - info: Using extension sample-template
+2015-10-27T11:00:31.205Z - info: Using extension embedding
+2015-10-27T11:00:31.219Z - info: Extensions loaded.
+2015-10-27T11:00:31.219Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T11:00:31.313Z - info: Creating default express app.
+2015-10-27T11:00:31.539Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T11:00:31.546Z - warn: License not found, using free
+2015-10-27T11:00:31.558Z - info: reporter initialized
+2015-10-27T11:53:04.783Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T11:53:05.388Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T11:53:05.418Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T11:53:05.967Z - info: Found 29 extensions
+2015-10-27T11:53:06.006Z - info: Using extension client-html
+2015-10-27T11:53:06.064Z - info: Using extension express
+2015-10-27T11:53:06.352Z - info: Using extension fop-pdf
+2015-10-27T11:53:06.372Z - info: Using extension handlebars
+2015-10-27T11:53:06.379Z - info: Using extension html
+2015-10-27T11:53:06.388Z - info: Using extension templates
+2015-10-27T11:53:06.407Z - info: Using extension jsrender
+2015-10-27T11:53:06.412Z - info: Using extension selfTerminate
+2015-10-27T11:53:06.414Z - info: Using extension xlsx
+2015-10-27T11:53:06.650Z - info: Using extension authentication
+2015-10-27T11:53:06.736Z - info: Using extension phantom-pdf
+2015-10-27T11:53:06.760Z - info: Using extension analytics
+2015-10-27T11:53:06.783Z - info: Using extension client-app
+2015-10-27T11:53:06.787Z - info: Using extension data
+2015-10-27T11:53:06.793Z - info: Using extension excel-parser
+2015-10-27T11:53:06.992Z - info: Using extension text
+2015-10-27T11:53:06.994Z - info: Using extension images
+2015-10-27T11:53:07.007Z - info: Using extension licensing
+2015-10-27T11:53:07.011Z - info: Using extension html-to-xlsx
+2015-10-27T11:53:07.122Z - info: Using extension authorization
+2015-10-27T11:53:07.131Z - info: Using extension reports
+2015-10-27T11:53:07.140Z - info: Using extension resources
+2015-10-27T11:53:07.145Z - info: Using extension childTemplates
+2015-10-27T11:53:07.152Z - info: Using extension scheduling
+2015-10-27T11:53:07.233Z - info: Using extension scripts
+2015-10-27T11:53:07.244Z - info: Using extension statistics
+2015-10-27T11:53:07.247Z - info: Using extension sample-template
+2015-10-27T11:53:07.254Z - info: Using extension public-templates
+2015-10-27T11:53:07.265Z - info: Using extension embedding
+2015-10-27T11:53:07.273Z - info: Extensions loaded.
+2015-10-27T11:53:07.273Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T11:53:07.369Z - info: Creating default express app.
+2015-10-27T11:53:07.623Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T11:53:07.631Z - warn: License not found, using free
+2015-10-27T11:53:07.641Z - info: reporter initialized
+2015-10-27T14:19:07.253Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T14:19:07.957Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T14:19:07.989Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T14:19:08.617Z - info: Found 29 extensions
+2015-10-27T14:19:08.656Z - info: Using extension express
+2015-10-27T14:19:08.999Z - info: Using extension fop-pdf
+2015-10-27T14:19:09.071Z - info: Using extension handlebars
+2015-10-27T14:19:09.077Z - info: Using extension html
+2015-10-27T14:19:09.083Z - info: Using extension jsrender
+2015-10-27T14:19:09.089Z - info: Using extension selfTerminate
+2015-10-27T14:19:09.091Z - info: Using extension xlsx
+2015-10-27T14:19:09.347Z - info: Using extension authentication
+2015-10-27T14:19:09.410Z - info: Using extension client-html
+2015-10-27T14:19:09.415Z - info: Using extension templates
+2015-10-27T14:19:09.428Z - info: Using extension html-to-xlsx
+2015-10-27T14:19:09.574Z - info: Using extension authorization
+2015-10-27T14:19:09.583Z - info: Using extension childTemplates
+2015-10-27T14:19:09.595Z - info: Using extension data
+2015-10-27T14:19:09.602Z - info: Using extension excel-parser
+2015-10-27T14:19:09.815Z - info: Using extension text
+2015-10-27T14:19:09.817Z - info: Using extension images
+2015-10-27T14:19:09.827Z - info: Using extension licensing
+2015-10-27T14:19:09.831Z - info: Using extension phantom-pdf
+2015-10-27T14:19:09.853Z - info: Using extension reports
+2015-10-27T14:19:09.872Z - info: Using extension analytics
+2015-10-27T14:19:09.887Z - info: Using extension resources
+2015-10-27T14:19:09.894Z - info: Using extension client-app
+2015-10-27T14:19:09.898Z - info: Using extension scheduling
+2015-10-27T14:19:09.989Z - info: Using extension scripts
+2015-10-27T14:19:10.001Z - info: Using extension statistics
+2015-10-27T14:19:10.004Z - info: Using extension sample-template
+2015-10-27T14:19:10.017Z - info: Using extension public-templates
+2015-10-27T14:19:10.031Z - info: Using extension embedding
+2015-10-27T14:19:10.040Z - info: Extensions loaded.
+2015-10-27T14:19:10.041Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T14:19:10.134Z - info: Creating default express app.
+2015-10-27T14:19:10.416Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T14:19:10.423Z - warn: License not found, using free
+2015-10-27T14:19:10.438Z - info: reporter initialized
+2015-10-27T15:34:03.258Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T15:34:04.156Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T15:34:04.187Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T15:34:05.950Z - info: Found 29 extensions
+2015-10-27T15:34:05.975Z - info: Using extension handlebars
+2015-10-27T15:34:05.984Z - info: Using extension jsrender
+2015-10-27T15:34:05.988Z - info: Using extension selfTerminate
+2015-10-27T15:34:05.991Z - info: Using extension xlsx
+2015-10-27T15:34:06.206Z - info: Using extension fop-pdf
+2015-10-27T15:34:06.270Z - info: Using extension html
+2015-10-27T15:34:06.278Z - info: Using extension templates
+2015-10-27T15:34:06.294Z - info: Using extension authentication
+2015-10-27T15:34:06.379Z - info: Using extension client-html
+2015-10-27T15:34:06.383Z - info: Using extension express
+2015-10-27T15:34:06.587Z - info: Using extension resources
+2015-10-27T15:34:06.601Z - info: Using extension html-to-xlsx
+2015-10-27T15:34:06.744Z - info: Using extension images
+2015-10-27T15:34:06.758Z - info: Using extension childTemplates
+2015-10-27T15:34:06.765Z - info: Using extension text
+2015-10-27T15:34:06.766Z - info: Using extension data
+2015-10-27T15:34:06.774Z - info: Using extension phantom-pdf
+2015-10-27T15:34:06.795Z - info: Using extension reports
+2015-10-27T15:34:06.803Z - info: Using extension excel-parser
+2015-10-27T15:34:06.959Z - info: Using extension authorization
+2015-10-27T15:34:06.973Z - info: Using extension analytics
+2015-10-27T15:34:06.989Z - info: Using extension client-app
+2015-10-27T15:34:06.993Z - info: Using extension licensing
+2015-10-27T15:34:06.998Z - info: Using extension scripts
+2015-10-27T15:34:07.009Z - info: Using extension statistics
+2015-10-27T15:34:07.011Z - info: Using extension scheduling
+2015-10-27T15:34:07.107Z - info: Using extension public-templates
+2015-10-27T15:34:07.117Z - info: Using extension sample-template
+2015-10-27T15:34:07.125Z - info: Using extension embedding
+2015-10-27T15:34:07.134Z - info: Extensions loaded.
+2015-10-27T15:34:07.134Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T15:34:07.230Z - info: Creating default express app.
+2015-10-27T15:34:07.409Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T15:34:07.415Z - warn: License not found, using free
+2015-10-27T15:34:07.427Z - info: reporter initialized
+2015-10-27T15:52:49.760Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T15:52:50.619Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T15:52:50.690Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T15:52:51.521Z - info: Found 29 extensions
+2015-10-27T15:52:51.605Z - info: Using extension fop-pdf
+2015-10-27T15:52:51.735Z - info: Using extension express
+2015-10-27T15:52:52.196Z - info: Using extension authentication
+2015-10-27T15:52:52.322Z - info: Using extension html
+2015-10-27T15:52:52.332Z - info: Using extension jsrender
+2015-10-27T15:52:52.339Z - info: Using extension selfTerminate
+2015-10-27T15:52:52.343Z - info: Using extension xlsx
+2015-10-27T15:52:56.918Z - info: Using extension templates
+2015-10-27T15:52:56.966Z - info: Using extension handlebars
+2015-10-27T15:52:57.002Z - info: Using extension client-html
+2015-10-27T15:52:57.048Z - info: Using extension images
+2015-10-27T15:52:57.238Z - info: Using extension licensing
+2015-10-27T15:52:57.272Z - info: Using extension reports
+2015-10-27T15:52:57.318Z - info: Using extension client-app
+2015-10-27T15:52:57.354Z - info: Using extension excel-parser
+2015-10-27T15:52:57.662Z - info: Using extension phantom-pdf
+2015-10-27T15:52:57.775Z - info: Using extension analytics
+2015-10-27T15:52:57.899Z - info: Using extension authorization
+2015-10-27T15:52:57.919Z - info: Using extension resources
+2015-10-27T15:52:57.954Z - info: Using extension text
+2015-10-27T15:52:57.965Z - info: Using extension childTemplates
+2015-10-27T15:52:58.007Z - info: Using extension data
+2015-10-27T15:52:58.074Z - info: Using extension html-to-xlsx
+2015-10-27T15:52:58.370Z - info: Using extension scheduling
+2015-10-27T15:52:58.515Z - info: Using extension statistics
+2015-10-27T15:52:58.518Z - info: Using extension scripts
+2015-10-27T15:52:58.529Z - info: Using extension sample-template
+2015-10-27T15:52:58.536Z - info: Using extension public-templates
+2015-10-27T15:52:58.553Z - info: Using extension embedding
+2015-10-27T15:52:58.568Z - info: Extensions loaded.
+2015-10-27T15:52:58.568Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T15:52:58.688Z - info: Creating default express app.
+2015-10-27T15:52:59.200Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T15:52:59.204Z - warn: License not found, using free
+2015-10-27T15:52:59.222Z - info: reporter initialized
+2015-10-27T15:55:30.695Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T15:55:31.291Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T15:55:31.323Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T15:55:31.901Z - info: Found 29 extensions
+2015-10-27T15:55:31.932Z - info: Using extension authentication
+2015-10-27T15:55:32.054Z - info: Using extension express
+2015-10-27T15:55:32.308Z - info: Using extension fop-pdf
+2015-10-27T15:55:32.359Z - info: Using extension handlebars
+2015-10-27T15:55:32.363Z - info: Using extension html
+2015-10-27T15:55:32.368Z - info: Using extension templates
+2015-10-27T15:55:32.381Z - info: Using extension jsrender
+2015-10-27T15:55:32.386Z - info: Using extension selfTerminate
+2015-10-27T15:55:32.387Z - info: Using extension xlsx
+2015-10-27T15:55:32.596Z - info: Using extension client-html
+2015-10-27T15:55:32.602Z - info: Using extension authorization
+2015-10-27T15:55:32.610Z - info: Using extension childTemplates
+2015-10-27T15:55:32.627Z - info: Using extension client-app
+2015-10-27T15:55:32.631Z - info: Using extension text
+2015-10-27T15:55:32.633Z - info: Using extension excel-parser
+2015-10-27T15:55:32.792Z - info: Using extension data
+2015-10-27T15:55:32.802Z - info: Using extension images
+2015-10-27T15:55:32.815Z - info: Using extension licensing
+2015-10-27T15:55:32.819Z - info: Using extension phantom-pdf
+2015-10-27T15:55:32.853Z - info: Using extension analytics
+2015-10-27T15:55:32.885Z - info: Using extension reports
+2015-10-27T15:55:32.892Z - info: Using extension html-to-xlsx
+2015-10-27T15:55:32.994Z - info: Using extension resources
+2015-10-27T15:55:33.000Z - info: Using extension scheduling
+2015-10-27T15:55:33.065Z - info: Using extension scripts
+2015-10-27T15:55:33.075Z - info: Using extension statistics
+2015-10-27T15:55:33.076Z - info: Using extension sample-template
+2015-10-27T15:55:33.083Z - info: Using extension public-templates
+2015-10-27T15:55:33.093Z - info: Using extension embedding
+2015-10-27T15:55:33.100Z - info: Extensions loaded.
+2015-10-27T15:55:33.100Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T15:55:33.171Z - info: Creating default express app.
+2015-10-27T15:55:33.375Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T15:55:33.380Z - warn: License not found, using free
+2015-10-27T15:55:33.389Z - info: reporter initialized
+2015-10-27T16:08:47.681Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T16:08:48.327Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T16:08:48.366Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T16:08:48.924Z - info: Found 29 extensions
+2015-10-27T16:08:48.954Z - info: Using extension express
+2015-10-27T16:08:49.222Z - info: Using extension fop-pdf
+2015-10-27T16:08:49.293Z - info: Using extension handlebars
+2015-10-27T16:08:49.299Z - info: Using extension html
+2015-10-27T16:08:49.307Z - info: Using extension jsrender
+2015-10-27T16:08:49.315Z - info: Using extension selfTerminate
+2015-10-27T16:08:49.317Z - info: Using extension xlsx
+2015-10-27T16:08:49.558Z - info: Using extension client-html
+2015-10-27T16:08:49.563Z - info: Using extension authentication
+2015-10-27T16:08:49.630Z - info: Using extension templates
+2015-10-27T16:08:49.644Z - info: Using extension authorization
+2015-10-27T16:08:49.653Z - info: Using extension html-to-xlsx
+2015-10-27T16:08:49.771Z - info: Using extension text
+2015-10-27T16:08:49.773Z - info: Using extension childTemplates
+2015-10-27T16:08:49.784Z - info: Using extension excel-parser
+2015-10-27T16:08:49.976Z - info: Using extension phantom-pdf
+2015-10-27T16:08:49.999Z - info: Using extension images
+2015-10-27T16:08:50.008Z - info: Using extension client-app
+2015-10-27T16:08:50.011Z - info: Using extension analytics
+2015-10-27T16:08:50.032Z - info: Using extension reports
+2015-10-27T16:08:50.041Z - info: Using extension data
+2015-10-27T16:08:50.050Z - info: Using extension resources
+2015-10-27T16:08:50.056Z - info: Using extension licensing
+2015-10-27T16:08:50.059Z - info: Using extension scheduling
+2015-10-27T16:08:50.136Z - info: Using extension scripts
+2015-10-27T16:08:50.151Z - info: Using extension statistics
+2015-10-27T16:08:50.153Z - info: Using extension sample-template
+2015-10-27T16:08:50.165Z - info: Using extension public-templates
+2015-10-27T16:08:50.180Z - info: Using extension embedding
+2015-10-27T16:08:50.193Z - info: Extensions loaded.
+2015-10-27T16:08:50.193Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T16:08:50.321Z - info: Creating default express app.
+2015-10-27T16:08:50.628Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T16:08:50.637Z - warn: License not found, using free
+2015-10-27T16:08:50.650Z - info: reporter initialized
+2015-10-27T16:15:04.748Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T16:15:05.388Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T16:15:05.418Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T16:15:06.007Z - info: Found 29 extensions
+2015-10-27T16:15:06.035Z - info: Using extension express
+2015-10-27T16:15:06.298Z - info: Using extension fop-pdf
+2015-10-27T16:15:06.380Z - info: Using extension handlebars
+2015-10-27T16:15:06.385Z - info: Using extension html
+2015-10-27T16:15:06.395Z - info: Using extension jsrender
+2015-10-27T16:15:06.404Z - info: Using extension selfTerminate
+2015-10-27T16:15:06.407Z - info: Using extension xlsx
+2015-10-27T16:15:06.713Z - info: Using extension authentication
+2015-10-27T16:15:06.796Z - info: Using extension client-html
+2015-10-27T16:15:06.802Z - info: Using extension templates
+2015-10-27T16:15:06.814Z - info: Using extension html-to-xlsx
+2015-10-27T16:15:06.925Z - info: Using extension client-app
+2015-10-27T16:15:06.928Z - info: Using extension authorization
+2015-10-27T16:15:06.936Z - info: Using extension childTemplates
+2015-10-27T16:15:06.948Z - info: Using extension excel-parser
+2015-10-27T16:15:07.136Z - info: Using extension text
+2015-10-27T16:15:07.139Z - info: Using extension images
+2015-10-27T16:15:07.149Z - info: Using extension licensing
+2015-10-27T16:15:07.153Z - info: Using extension analytics
+2015-10-27T16:15:07.169Z - info: Using extension phantom-pdf
+2015-10-27T16:15:07.195Z - info: Using extension resources
+2015-10-27T16:15:07.202Z - info: Using extension reports
+2015-10-27T16:15:07.210Z - info: Using extension data
+2015-10-27T16:15:07.218Z - info: Using extension scripts
+2015-10-27T16:15:07.232Z - info: Using extension scheduling
+2015-10-27T16:15:07.343Z - info: Using extension statistics
+2015-10-27T16:15:07.345Z - info: Using extension sample-template
+2015-10-27T16:15:07.358Z - info: Using extension public-templates
+2015-10-27T16:15:07.376Z - info: Using extension embedding
+2015-10-27T16:15:07.386Z - info: Extensions loaded.
+2015-10-27T16:15:07.386Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T16:15:07.492Z - info: Creating default express app.
+2015-10-27T16:15:07.711Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T16:15:07.719Z - warn: License not found, using free
+2015-10-27T16:15:07.732Z - info: reporter initialized
+2015-10-27T16:25:36.093Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T16:25:36.825Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T16:25:36.860Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T16:25:37.465Z - info: Found 29 extensions
+2015-10-27T16:25:37.494Z - info: Using extension express
+2015-10-27T16:25:37.801Z - info: Using extension html
+2015-10-27T16:25:37.810Z - info: Using extension fop-pdf
+2015-10-27T16:25:37.888Z - info: Using extension selfTerminate
+2015-10-27T16:25:37.892Z - info: Using extension xlsx
+2015-10-27T16:25:38.141Z - info: Using extension jsrender
+2015-10-27T16:25:38.147Z - info: Using extension authentication
+2015-10-27T16:25:38.213Z - info: Using extension client-html
+2015-10-27T16:25:38.218Z - info: Using extension handlebars
+2015-10-27T16:25:38.224Z - info: Using extension templates
+2015-10-27T16:25:38.237Z - info: Using extension childTemplates
+2015-10-27T16:25:38.253Z - info: Using extension authorization
+2015-10-27T16:25:38.262Z - info: Using extension html-to-xlsx
+2015-10-27T16:25:38.377Z - info: Using extension client-app
+2015-10-27T16:25:38.380Z - info: Using extension excel-parser
+2015-10-27T16:25:38.585Z - info: Using extension analytics
+2015-10-27T16:25:38.603Z - info: Using extension images
+2015-10-27T16:25:38.614Z - info: Using extension licensing
+2015-10-27T16:25:38.619Z - info: Using extension reports
+2015-10-27T16:25:38.632Z - info: Using extension phantom-pdf
+2015-10-27T16:25:38.663Z - info: Using extension text
+2015-10-27T16:25:38.665Z - info: Using extension resources
+2015-10-27T16:25:38.671Z - info: Using extension data
+2015-10-27T16:25:38.679Z - info: Using extension scripts
+2015-10-27T16:25:38.690Z - info: Using extension statistics
+2015-10-27T16:25:38.693Z - info: Using extension scheduling
+2015-10-27T16:25:38.817Z - info: Using extension sample-template
+2015-10-27T16:25:38.839Z - info: Using extension public-templates
+2015-10-27T16:25:38.855Z - info: Using extension embedding
+2015-10-27T16:25:38.870Z - info: Extensions loaded.
+2015-10-27T16:25:38.870Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T16:25:39.057Z - info: Creating default express app.
+2015-10-27T16:25:39.334Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T16:25:39.342Z - warn: License not found, using free
+2015-10-27T16:25:39.358Z - info: reporter initialized
+2015-10-27T17:09:49.333Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T17:09:50.125Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T17:09:50.159Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T17:09:50.708Z - info: Found 29 extensions
+2015-10-27T17:09:50.743Z - info: Using extension express
+2015-10-27T17:09:51.016Z - info: Using extension fop-pdf
+2015-10-27T17:09:51.135Z - info: Using extension handlebars
+2015-10-27T17:09:51.140Z - info: Using extension html
+2015-10-27T17:09:51.147Z - info: Using extension jsrender
+2015-10-27T17:09:51.152Z - info: Using extension selfTerminate
+2015-10-27T17:09:51.153Z - info: Using extension xlsx
+2015-10-27T17:09:51.490Z - info: Using extension authentication
+2015-10-27T17:09:51.555Z - info: Using extension client-html
+2015-10-27T17:09:51.561Z - info: Using extension templates
+2015-10-27T17:09:51.574Z - info: Using extension html-to-xlsx
+2015-10-27T17:09:51.727Z - info: Using extension authorization
+2015-10-27T17:09:51.736Z - info: Using extension childTemplates
+2015-10-27T17:09:51.747Z - info: Using extension client-app
+2015-10-27T17:09:51.751Z - info: Using extension excel-parser
+2015-10-27T17:09:51.940Z - info: Using extension data
+2015-10-27T17:09:51.948Z - info: Using extension images
+2015-10-27T17:09:51.958Z - info: Using extension phantom-pdf
+2015-10-27T17:09:51.998Z - info: Using extension licensing
+2015-10-27T17:09:52.002Z - info: Using extension text
+2015-10-27T17:09:52.011Z - info: Using extension reports
+2015-10-27T17:09:52.032Z - info: Using extension resources
+2015-10-27T17:09:52.040Z - info: Using extension analytics
+2015-10-27T17:09:52.056Z - info: Using extension scheduling
+2015-10-27T17:09:52.149Z - info: Using extension scripts
+2015-10-27T17:09:52.164Z - info: Using extension statistics
+2015-10-27T17:09:52.167Z - info: Using extension sample-template
+2015-10-27T17:09:52.178Z - info: Using extension public-templates
+2015-10-27T17:09:52.195Z - info: Using extension embedding
+2015-10-27T17:09:52.206Z - info: Extensions loaded.
+2015-10-27T17:09:52.206Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T17:09:52.292Z - info: Creating default express app.
+2015-10-27T17:09:52.568Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T17:09:52.575Z - warn: License not found, using free
+2015-10-27T17:09:52.598Z - info: reporter initialized
+2015-10-27T17:13:42.126Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-27T17:13:42.763Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T17:13:42.794Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-27T17:13:43.346Z - info: Found 29 extensions
+2015-10-27T17:13:43.381Z - info: Using extension express
+2015-10-27T17:13:43.663Z - info: Using extension fop-pdf
+2015-10-27T17:13:43.751Z - info: Using extension handlebars
+2015-10-27T17:13:43.759Z - info: Using extension html
+2015-10-27T17:13:43.769Z - info: Using extension jsrender
+2015-10-27T17:13:43.777Z - info: Using extension selfTerminate
+2015-10-27T17:13:43.780Z - info: Using extension xlsx
+2015-10-27T17:13:44.085Z - info: Using extension authentication
+2015-10-27T17:13:44.155Z - info: Using extension client-html
+2015-10-27T17:13:44.160Z - info: Using extension templates
+2015-10-27T17:13:44.172Z - info: Using extension html-to-xlsx
+2015-10-27T17:13:44.289Z - info: Using extension childTemplates
+2015-10-27T17:13:44.305Z - info: Using extension authorization
+2015-10-27T17:13:44.315Z - info: Using extension images
+2015-10-27T17:13:44.325Z - info: Using extension excel-parser
+2015-10-27T17:13:44.526Z - info: Using extension licensing
+2015-10-27T17:13:44.530Z - info: Using extension analytics
+2015-10-27T17:13:44.545Z - info: Using extension phantom-pdf
+2015-10-27T17:13:44.564Z - info: Using extension reports
+2015-10-27T17:13:44.576Z - info: Using extension resources
+2015-10-27T17:13:44.583Z - info: Using extension text
+2015-10-27T17:13:44.586Z - info: Using extension client-app
+2015-10-27T17:13:44.591Z - info: Using extension data
+2015-10-27T17:13:44.601Z - info: Using extension scripts
+2015-10-27T17:13:44.611Z - info: Using extension statistics
+2015-10-27T17:13:44.613Z - info: Using extension scheduling
+2015-10-27T17:13:44.698Z - info: Using extension sample-template
+2015-10-27T17:13:44.709Z - info: Using extension public-templates
+2015-10-27T17:13:44.724Z - info: Using extension embedding
+2015-10-27T17:13:44.735Z - info: Extensions loaded.
+2015-10-27T17:13:44.735Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-27T17:13:44.822Z - info: Creating default express app.
+2015-10-27T17:13:45.051Z - info: jsreport server successfully started on http port: 2000
+2015-10-27T17:13:45.059Z - warn: License not found, using free
+2015-10-27T17:13:45.073Z - info: reporter initialized
+2015-10-28T00:56:03.058Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-28T00:56:03.725Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-28T00:56:03.754Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-28T00:56:04.250Z - info: Found 29 extensions
+2015-10-28T00:56:04.281Z - info: Using extension express
+2015-10-28T00:56:04.565Z - info: Using extension html
+2015-10-28T00:56:04.570Z - info: Using extension jsrender
+2015-10-28T00:56:04.574Z - info: Using extension selfTerminate
+2015-10-28T00:56:04.576Z - info: Using extension xlsx
+2015-10-28T00:56:04.831Z - info: Using extension fop-pdf
+2015-10-28T00:56:04.892Z - info: Using extension client-html
+2015-10-28T00:56:04.897Z - info: Using extension handlebars
+2015-10-28T00:56:04.901Z - info: Using extension templates
+2015-10-28T00:56:04.914Z - info: Using extension authentication
+2015-10-28T00:56:04.980Z - info: Using extension client-app
+2015-10-28T00:56:04.983Z - info: Using extension licensing
+2015-10-28T00:56:04.986Z - info: Using extension images
+2015-10-28T00:56:04.998Z - info: Using extension reports
+2015-10-28T00:56:05.006Z - info: Using extension excel-parser
+2015-10-28T00:56:05.185Z - info: Using extension data
+2015-10-28T00:56:05.199Z - info: Using extension authorization
+2015-10-28T00:56:05.212Z - info: Using extension resources
+2015-10-28T00:56:05.223Z - info: Using extension analytics
+2015-10-28T00:56:05.256Z - info: Using extension phantom-pdf
+2015-10-28T00:56:05.307Z - info: Using extension html-to-xlsx
+2015-10-28T00:56:05.420Z - info: Using extension childTemplates
+2015-10-28T00:56:05.427Z - info: Using extension text
+2015-10-28T00:56:05.429Z - info: Using extension statistics
+2015-10-28T00:56:05.430Z - info: Using extension scheduling
+2015-10-28T00:56:05.500Z - info: Using extension scripts
+2015-10-28T00:56:05.511Z - info: Using extension sample-template
+2015-10-28T00:56:05.518Z - info: Using extension public-templates
+2015-10-28T00:56:05.527Z - info: Using extension embedding
+2015-10-28T00:56:05.534Z - info: Extensions loaded.
+2015-10-28T00:56:05.534Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-28T00:56:05.678Z - info: Creating default express app.
+2015-10-28T00:56:05.835Z - info: jsreport server successfully started on http port: 2000
+2015-10-28T00:56:05.840Z - warn: License not found, using free
+2015-10-28T00:56:05.849Z - info: reporter initialized
+2015-10-28T02:58:24.122Z - info: Setting process based strategy for rendering. Please visit http://jsreport.net/learn/configuration for information how to get more performance.
+2015-10-28T02:58:29.849Z - info: Initializing embedded storage at E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded\data
+2015-10-28T02:58:29.882Z - info: Searching for available extensions in E:\FPT\CP Fall 2015\BMA\SourceCode\BMA\BMA\BMA\App_Data\jsreport-net-embedded
+2015-10-28T02:58:45.039Z - info: Found 29 extensions

@@ -13,9 +13,11 @@
 {"fiveMinuteDate":{"$$date":1445825700000},"amount":1,"_id":"Q5O1FXUCGsDkKeLt","success":1}
 {"fiveMinuteDate":{"$$date":1445707800000},"amount":2,"_id":"QeAE7176Nimgtpa3","success":2}
 {"fiveMinuteDate":{"$$date":1445699100000},"amount":1,"_id":"RWbN8YhutpTppIDE","success":1}
+{"fiveMinuteDate":{"$$date":1445836200000},"amount":1,"_id":"TQaamyOYlDtHME3I","success":1}
 {"fiveMinuteDate":{"$$date":1445707200000},"amount":3,"_id":"UbbLFHAPQyzScXyW","success":3}
 {"fiveMinuteDate":{"$$date":1445700300000},"amount":1,"_id":"VAURpu6FUOLzTChb","success":1}
 {"fiveMinuteDate":{"$$date":1445706900000},"amount":7,"_id":"WoCWiKBajnqj6qIU","success":7}
+{"fiveMinuteDate":{"$$date":1445848200000},"amount":1,"_id":"XGkI5YSaQfD0cIyo","success":1}
 {"fiveMinuteDate":{"$$date":1445702700000},"amount":5,"_id":"Y2a0OUlgPT47GznK","success":5}
 {"fiveMinuteDate":{"$$date":1445708700000},"amount":1,"_id":"c0e6FX69LhTfgrbT","success":1}
 {"fiveMinuteDate":{"$$date":1445705700000},"amount":2,"_id":"eCeGrNdWx0ZZC9fz","success":2}
@@ -23,6 +25,5 @@
 {"fiveMinuteDate":{"$$date":1445707500000},"amount":3,"_id":"fkXQ42va1keWHNy7","success":3}
 {"fiveMinuteDate":{"$$date":1445772000000},"amount":3,"_id":"itFsiZdVJUYszuu6","success":3}
 {"fiveMinuteDate":{"$$date":1445770200000},"amount":1,"_id":"qGhkGLhLRYuR7li5","success":1}
+{"fiveMinuteDate":{"$$date":1445847900000},"amount":2,"_id":"zWAr1ivnl6Oxpr61","success":2}
 {"fiveMinuteDate":{"$$date":1445832000000},"amount":1,"_id":"zWJpQa6KH7aChGYo","success":1}
-{"fiveMinuteDate":{"$$date":1445836200000},"amount":1,"_id":"TQaamyOYlDtHME3I"}
-{"fiveMinuteDate":{"$$date":1445836200000},"amount":1,"_id":"TQaamyOYlDtHME3I","success":1}

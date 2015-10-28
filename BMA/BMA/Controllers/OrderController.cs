@@ -1,53 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using System.Web.WebPages;
 using BMA.Business;
 using BMA.Models;
 using BMA.Models.ViewModel;
-using jsreport.MVC;
 
 namespace BMA.Controllers
 {
     public class OrderController : Controller
     {
         private readonly BMAEntities db = new BMAEntities();
+
+
         // GET: Order
         public ActionResult Index()
         {
-            List<Order> orderList = db.Orders.Where(m => !m.IsStaffEdit).ToList();
-            // Custom sort
-            orderList.Sort(
-                delegate(Order o1, Order o2)
-                {
-                    if (o1.OrderStatus != o2.OrderStatus)
-                    {
-                        return o1.OrderStatus.CompareTo(o2.OrderStatus);
-                    }
-                    return o1.CreateTime.CompareTo(o2.CreateTime);
+            ViewBag.TreeView = "order";
+            ViewBag.TreeViewMenu = "orderList";
+            ViewBag.Title = "Danh sách đơn hàng";
 
-                });
-            List<OrderViewModel> orderViewModelList = new List<OrderViewModel>();
-            foreach (Order order in orderList)
-            {
-                OrderViewModel orderViewModel = new OrderViewModel();
-                orderViewModel.Order = order;
-                if (order.OrderStatus != 0)
-                {
-                    orderViewModel.IsEnoughMaterial = true;
-                }
-                else
-                {
-                    OrderBusiness orderBusiness = new OrderBusiness();
-                    orderViewModel.IsEnoughMaterial = orderBusiness.IsEnoughMaterialForOrder(order);
-                }
-                orderViewModelList.Add(orderViewModel);
-            }
+            OrderBusiness orderBusiness = new OrderBusiness();
+            List<OrderViewModel> orderViewModelList = orderBusiness.GetSortedOrderViewModelList();
+
+            // Bug if orderViewModelList is null return error
             ViewBag.Title = "Danh sách đơn hàng";
             return View(orderViewModelList);
         }
@@ -59,8 +37,15 @@ namespace BMA.Controllers
             OrderViewModel orderViewModel = orderBusiness.GetOrderViewModel(id);
             if (orderViewModel != null)
             {
+                ViewBag.TreeView = "order";
+                ViewBag.TaxRate = orderBusiness.GetVatRateAtTime(orderViewModel.Order.CreateTime);
+                if (!orderViewModel.IsEnoughMaterial)
+                {
+                    ViewBag.ShortageOfMaterial = true;
+                }
                 return View(orderViewModel);
             }
+            // Bug return error page when orderViewModel is null
             return RedirectToAction("Index");
         }
 
@@ -456,7 +441,7 @@ namespace BMA.Controllers
             return 0;
         }
 
-        [EnableJsReport(Recipe = "phantom-pdf")]
+
         public ActionResult ExportBill(int orderId)
         {
             OrderBusiness orderBusiness = new OrderBusiness();

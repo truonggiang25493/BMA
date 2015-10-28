@@ -23,7 +23,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="window.print();">
     <!--Header-->
     <!--Store Info-->
     <table style="margin-left: 20px">
@@ -150,7 +150,7 @@
         <tr>
             <td style="width: 415px;"></td>
             <td style="width: 415px; text-align: center; font-style: italic;">
-                Ngày @(((DateTime)Model.FinishTime).ToString("dd")) tháng @(((DateTime)Model.FinishTime).ToString("MM")) năm @(((DateTime)Model.FinishTime).ToString("yyyy"))
+                Ngày @(((DateTime)Model.DeliveryTime).ToString("dd")) tháng @(((DateTime)Model.DeliveryTime).ToString("MM")) năm @(((DateTime)Model.DeliveryTime).ToString("yyyy"))
             </td>
         </tr>
         <tr>

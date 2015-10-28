@@ -44,18 +44,6 @@
       <HintPath>..\packages\DotNetZip.1.9.3\lib\net20\Ionic.Zip.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="jsreport.Client, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\jsreport.Client.0.8.1.0\lib\net45\jsreport.Client.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="jsreport.Embedded, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\jsreport.Embedded.0.8.1.0\lib\net45\jsreport.Embedded.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="jsreport.MVC, Version=0.1.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\jsreport.MVC.0.1.4\lib\net45\jsreport.MVC.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Data.Edm.5.6.3\lib\net40\Microsoft.Data.Edm.dll</HintPath>
@@ -234,19 +222,22 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\CustomerBusiness.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
+    <Compile Include="Business\TaxBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
     <Compile Include="Common\CommonFunction.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
-    <Compile Include="Controllers\CustomerViewModel.cs" />
+    <Compile Include="Controllers\InputMaterialController.cs" />
+    <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProcedureController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\TaxController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -373,12 +364,10 @@
     <Content Include="Content\CustomerLayout\JS\scripts.js" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\style.css" />
+    <Content Include="Content\timeslider.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="node.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.eot" />
@@ -429,9 +418,6 @@
       <DependentUpon>BMA.edmx</DependentUpon>
       <LastGenOutput>BMA.cs</LastGenOutput>
     </Content>
-    <Content Include="jsreport-net-embedded.zip">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -445,6 +431,7 @@
     <Content Include="Scripts\my-own-function.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\timeslider.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Content\AdminLayout\bootstrap\css\bootstrap.css" />
     <Content Include="Content\AdminLayout\bootstrap\css\bootstrap.min.css" />
@@ -1296,6 +1283,7 @@
     <Content Include="Views\Order\MaterialListForOrder.cshtml" />
     <Content Include="Views\Order\GetShortageMaterialList.cshtml" />
     <Content Include="Views\Order\ExportBill.cshtml" />
+    <Content Include="Views\Tax\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
