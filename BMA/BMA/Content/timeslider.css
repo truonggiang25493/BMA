@@ -1,0 +1,55 @@
+.timeslide-container {
+    width: 100%;
+    height: 20px;
+    border: 1px solid black;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    background: green;
+}
+
+.timeslide-slider {
+    position: absolute;
+    background: white;
+    top: 0;
+    height: 20px;
+    left: 0;
+}
+
+.timeslide-container .point {
+    position: absolute;
+    top: 0;
+    width: 17px;
+    height: 17px;
+    border: 3px solid white;
+    border-radius: 10px;
+    background: blue;
+}
+
+    .timeslide-container .point:nth-child(2) {
+        left: 0 !important;
+    }
+
+    .timeslide-container .point:last-child {
+        left: auto !important;
+        right: 0;
+    }
+
+.point-label {
+    position: absolute;
+    top: 100%;
+    text-align: center;
+}
+
+    .point-label:nth-child(2) {
+        text-align: left;
+        left: 0 !important;
+        width: auto !important;
+    }
+
+    .point-label:last-child {
+        width: auto !important;
+        text-align: right;
+        left: auto !important;
+        right: 0;
+    }

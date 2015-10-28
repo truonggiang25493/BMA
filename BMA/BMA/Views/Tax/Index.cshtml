@@ -1,0 +1,192 @@
+﻿@model List<BMA.Models.TaxRate>
+@{
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+<!--Header-->
+<section class="content-header">
+    <h1>@ViewBag.Title</h1>
+</section>
+<!--Content-->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="nav-tabs-custom">
+                <!--Menu-->
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#vat" data-toggle="tab">Thuế giá trị gia tăng(VAT)</a></li>
+                    <li><a href="#tndn" data-toggle="tab">Thuế thu nhập doanh nghiệp(TNDN)</a></li>
+                </ul>
+                <!--Tab content-->
+                <div class="tab-content">
+                    <!--VAT-->
+                    <div class="active tab-pane" id="vat">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="page-header">Thuế giá trị gia tăng(VAT)</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                Tỉ suất thuế VAT hiện tại: @(Model.ElementAt(0).TaxRateValue) %
+                                <button class="btn btn-primary btn-xs" style="margin-left: 10px" onclick="openChangeVATPopup()">
+                                    <i class="fa fa-edit"></i>
+                                    Thay đổi
+                                    <script type="text/javascript">
+                                        function openChangeVATPopup() {
+                                            var title = "Cập nhật tỉ suất thuế giá trị gia tăng(VAT)";
+                                            var body = $("<form>", {
+                                                "id": "changeVAT",
+                                                "class": "form-group",
+                                                "html": [
+                                                    $("<div>", {
+                                                        "class": "form-group",
+                                                        "html": [
+                                                            "<label>Tỉ suất VAT mới: </label>",
+                                                            $("<input>", {
+                                                                "type": "number",
+                                                                "min": "1",
+                                                                "max": "100",
+                                                                "name": "vatRate",
+                                                                "value": "@(Model.ElementAt(0).TaxRateValue)",
+                                                                "style": "margin-left: 15px; margin-right: 10px;"
+                                                            }),
+                                                            "<label>%</label>"
+                                                        ]
+                                                    }),
+                                                    $("<div>", {
+                                                        "class": "form-group",
+                                                        "html": [
+                                                            "<label>Áp dụng từ ngày: </label>",
+                                                            $("<input>", {
+                                                                "type": "date",
+                                                                "name": "beginDate",
+                                                                "style": "margin-left: 10px;",
+                                                                "min": "@((DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"))",
+                                                                "value": "@((new DateTime((DateTime.Now.Year), (DateTime.Now.AddMonths(1).Month), 1).ToString("yyyy-MM-dd")))"
+                                                            })
+                                                        ]
+                                                    })
+                                                ]
+                                            });
+                                            var footer = $("<div>", {
+                                                "class": "row",
+                                                "html": [
+                                                    $("<button>", {
+                                                        "class": "btn btn-primary",
+                                                        "data-dismiss": "modal",
+                                                        "style": "margin-right: 10px",
+                                                        "html": [
+                                                            "Đóng"
+                                                        ]
+                                                    }),
+                                                    $("<button>", {
+                                                        "class": "btn btn-success",
+                                                        "style": "margin-right: 10px;",
+                                                        "onclick": "changeVat()",
+                                                        "html": [
+                                                            "Đồng ý"
+                                                        ]
+                                                    })
+                                                ]
+                                            });
+                                            document.getElementById('popup-body').innerHTML = body[0].outerHTML;
+                                            document.getElementById('popup-title').innerHTML = title;
+                                            document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
+                                            $('#myModal').modal('show');
+                                        }
+
+                                        function changeVat() {
+                                            $.ajax({
+                                                url: "@(Url.Action("ChangeVat","Tax"))",
+                                                method: "POST",
+                                                data: $("#changeVAT").serialize(),
+                                                success: function (data) {
+                                                    $('#myModal').modal('hide');
+                                                    if (data === "1") {
+                                                        var n = noty({
+                                                            text: 'Cập nhật thuế giá trị gia tăng (VAT) thành công',
+                                                            type: 'success',
+                                                            dismissQueue: false,
+                                                            layout: 'bottomLeft',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 3000
+                                                        });
+                                                        window.setTimeout(function () {
+                                                            window.reload();
+                                                        }, 4000);
+                                                    } else {
+                                                        $('#myModal').modal('hide');
+                                                        var n = noty({
+                                                            text: 'Không thể cập nhật thuế giá trị gia tăng (VAT)',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'bottomLeft',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                    }
+                                                },
+                                                fail: function (e) {
+                                                    $('#myModal').modal('hide');
+                                                    var n = noty({
+                                                        text: 'Đã có lỗi xảy ra',
+                                                        type: 'error',
+                                                        dismissQueue: false,
+                                                        layout: 'bottomRight',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                }
+                                            })
+                                        }
+                                    </script>
+                                </button>
+                            </div>
+
+                        </div>
+                        <div class="row" style="margin-top: 10px">
+                            <div class="col-xs-12" style="vertical-align: middle">
+                                Xem báo cáo thuế VAT từ
+                                <input type="date" id="from-date" value="2010-01-01" />
+                                đến
+                                <input type="date" id="to-date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" />
+                                <button class="btn btn-primary btn-xs" style="margin-left: 10px">
+                                    <i class="fa fa-bar-chart" style="margin-right: 3px"></i>
+                                    Thống kê
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--TNDN-->
+                    <div class="tab-pane" id="tndn">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="page-header">Thuế thu nhập doanh nghiệp(TNDN)</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                Tỉ suất thuế TNDN hiện tại: 10%
+                                <button class="btn btn-primary btn-xs" style="margin-left: 10px">
+                                    <i class="fa fa-edit"></i>
+                                    Thay đổi
+                                </button>
+                            </div>
+
+                        </div>
+                        <div class="row" style="margin-top: 10px">
+                            <div class="col-xs-12" style="vertical-align: middle">
+                                Xem báo cáo thuế VAT năm
+                                <input type="number" id="year" min="1990" max="@(DateTime.Now.Year)" value="@(DateTime.Now.Year - 1)" />
+                                <button class="btn btn-primary btn-xs" style="margin-left: 10px">
+                                    <i class="fa fa-bar-chart" style="margin-right: 3px"></i>
+                                    Thống kê
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
