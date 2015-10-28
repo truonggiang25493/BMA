@@ -14,5 +14,10 @@ namespace BMA.Controllers
         {
             return View();
         }
+
+        public ActionResult ManageError()
+        {
+            return View();
+        }
 	}
 }

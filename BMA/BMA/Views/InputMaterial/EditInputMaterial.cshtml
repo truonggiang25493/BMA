@@ -1,0 +1,194 @@
+﻿@using System.Globalization
+@using BMA.Common
+@using BMA.Models
+@model BMA.Models.InputMaterial
+@{
+    ViewBag.Title = "Chỉnh sửa nguyên liệu đầu vào";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+    List<ProductMaterial> pm = ViewBag.productMaterial;
+}
+
+<section class="content-header">
+    <h1>Chỉnh sửa nguyên liệu đầu vào</h1>
+</section>
+<section>
+
+    <div style="margin-top: 5%">
+        <div class="row">
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+                <div class="box box-primary">
+                    <!-- Update form -->
+                    <form id="edit-input-material-form">
+                        <input type="hidden" name="InputMaterialId" value="@Model.InputMaterialId"/>
+                        <div class="box-body box-profile">
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Tên nguyên liệu:</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <select name="txtProductMaterialId" style="width: 80%">
+                                        @foreach (ProductMaterial item in pm)
+                                        {
+                                            if (item.ProductMaterialId == Model.ProductMaterial.ProductMaterialId)
+                                            {
+                                                <option value="@Model.ProductMaterial.ProductMaterialId" selected>@item.ProductMaterialName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="">@(item.ProductMaterialName)</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Số lượng nhập: </b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="number" value="@Model.ImportQuantity" name="txtInportQuantity" required oninput="maxLengthCheck(this)" maxlength="6" min="1" max="999999" style="width: 80%" placeholder="nhập số từ 1-6 chữ số"/>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Tổng giá nhập kho: </b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="number" value="@Model.InputMaterialPrice" name="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="7" min="1" max="9999999" style="width: 80%" placeholder="nhập số từ 1-7 chữ số"/>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Ngày nhập kho: </b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="date" value="@(Model.ImportDate.ToString("yyyy-MM-dd"))" required min=" 2015-01-01" max="2020-12-31" name="txtImportDate" style="width: 80%"/>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Ngày hết hạn: </b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="date" value="@Model.InputMaterialExpiryDate.ToString("yyyy-MM-dd")" required min="2015-01-01" max="2020-12-31" name="txtInputMaterialExpiryDate" style="width: 80%"/>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Ghi chú: </b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <textarea name="txtInputMaterialNote" maxlength="200" rows="3" style="width: 80%">@Model.InputMaterialNote</textarea>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Thuộc hóa đơn: </b>
+                                </div>
+                                <div class="col-xs-7" id="order-info">
+                                    <input type="text" name="inputBillCode" value="@Model.InputBill.InputBillCode" readonly style="margin-bottom: 10px; width: 80%"/>
+                                    <input type="hidden" name="inputBillId" id="inputBillId" value="@Model.InputBill.InputBillId"/>
+                                    <button class="btn btn-success" id="add-bill" onclick="open_choose_bill()">
+                                        Chọn hóa đơn
+                                        <script type="text/javascript">
+                                            function open_choose_bill() {
+                                                $.ajax({
+                                                    url: "@(Url.Action("GetInputList", "InputMaterial"))",
+                                                    method: "POST",
+                                                    success: function(data) {
+                                                        var chooseButton = $("<button>", {
+                                                            "class": "btn btn-success",
+                                                            "onclick": "choose_bill()",
+                                                            "html": "Chọn"
+                                                        });
+                                                        document.getElementById('standard-popup-body').innerHTML = data;
+                                                        document.getElementById('standard-popup-footer').innerHTML = chooseButton[0].outerHTML;
+                                                        $('#myStandardModal').modal('show');
+                                                    }
+                                                });
+                                            }
+
+                                            function choose_bill() {
+                                                var billCode = $(".table tr.selected td:first span").html();
+                                                $('#myStandardModal').modal('hide');
+                                                $("#order-info input").val(billCode);
+                                            }
+                                        </script>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- Update button -->
+                    <div class="box-footer">
+                        <button class="btn btn-primary pull-right" style="margin-right: 10%;" onclick="editInputMaterial()">
+                            <i class="fa fa-edit" style="margin-right: 3px;"></i>Cập nhật
+                            <script type="text/javascript">
+                                function editInputMaterial() {
+                                    $.ajax({
+                                        url: "@(Url.Action("EditInputMaterial","InputMaterial"))",
+                                        method: "POST",
+                                        data: $("#edit-input-material-form").serialize(),
+                                        success: function(data) {
+                                            if (data === "1") {
+                                                var n1 = noty({
+                                                    text: 'Chỉnh sửa nguyên liệu thành công',
+                                                    type: 'success',
+                                                    dismissQueue: false,
+                                                    layout: 'bottomLeft',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1500
+                                                });
+                                                window.setTimeout(function() {
+                                                    window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
+                                                }, 4000);
+                                            } else {
+                                                var n2 = noty({
+                                                    text: 'Không thể chỉnh sửa nguyên liệu đầu vào',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'bottomLeft',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                            }
+                                        },
+                                        fail: function(e) {
+                                            var n2 = noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }
+                                    });
+                                }
+                            </script>
+                        </button>
+                        <!-- Comeback button -->
+                        <button class="btn btn-danger" onclick="comebackToIndex()">
+                            <i class="fa fa-edit" style="margin-left: 10px;"></i>Quay lại
+                            <script type="text/javascript">
+                                function comebackToIndex() {
+                                    window.location.replace("@(Url.Action("InputMaterialDetail", "InputMaterial", new {@id = Model.InputMaterialId}))");
+                                }
+                            </script>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--max length for number-->
+    <script>
+        function maxLengthCheck(object) {
+            if (object.value.length > object.maxLength)
+                object.value = object.value.slice(0, object.maxLength)
+        }
+    </script>
+</section>

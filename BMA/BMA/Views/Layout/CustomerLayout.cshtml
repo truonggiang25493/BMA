@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/CustomerCss")
-    @using BMA.Models;
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
 <body>
@@ -22,7 +21,7 @@
                                 {
                                     <li><i class="fa fa-user"></i></li>
                                     <li>
-                                        <a aria-expanded="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">@((Session["User"] as User).Username)</a>
+                                        <a aria-expanded="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">@Session["Username"]</a>
                                         <ul class="dropdown-menu" role="menu">
                                             <li>@Html.ActionLink("Quản lý tài khoản", "Index", "Product")</li>
                                             <li>@Html.ActionLink("Quản lý đơn hàng", "Index", "CusManageOrder")</li>
@@ -43,7 +42,7 @@
         </div>
     </div>
     <header>
-        <div class="logo"><a href="#"><img style="width:201px;height:65px;margin-left:75px;margin-top:20px;" src="~/Content/Images/BakeryImages/logo.jpg" alt="#" /> </a></div>
+        <div class="logo"><a href="index.html"><img style="width:201px;height:65px;margin-left:75px;margin-top:20px;" src="~/Content/Images/BakeryImages/logo.jpg" alt="#" /> </a></div>
         <div class="container">
             <div class="navigation clearfix">
                 <div class="menu">
@@ -92,7 +91,7 @@
             </form>
             <div class="modal-footer">
                 <div class="popup-btn"> <a href="#" onclick="return submitLogin();" class="book-it">Đăng nhập</a> </div>
-                <div class="popup-btn" style="margin-right: 30px; background-color: #a92828"><a href="#" style="background-color: #a92828" onclick="document.getElementById('lightLogin').style.display = 'none'; document.getElementById('fadeLogin').style.display = 'none'" class="book-it">Hủy bỏ</a> </div>
+                <div class="popup-btn" style="margin-right: 30px; background-color: #a92828"><a style="background-color: #a92828" onclick="document.getElementById('lightLogin').style.display = 'none'; document.getElementById('fadeLogin').style.display = 'none'" class="book-it">Hủy bỏ</a> </div>
             </div>
         </div>
         <script type="text/javascript">

@@ -50,7 +50,7 @@
                                         <td class="text-left">@item.CreateTime.ToString("dd/MM/yyyy hh:mm tt")</td>
                                         <td class="text-left"><div class="label label-danger">@CommonData.Status[@item.OrderStatus]</div></td>
                                         <td class="cancel-order"><a href="@Url.Action("OrderDetail", "CusManageOrder", new { @orderId = item.OrderId})">Xem</a></td>
-                                        <td class="cancel-order"><a href="@Url.Action("ConfirmOrder", "CusManageOrder", new { @orderId = item.OrderId})">Xác nhận</a></td>
+                                        <td class="cancel-order"><a href="@Url.Action("ConfirmOrder", "CusManageOrder", new { @orderId = item.OrderId})">Sửa</a></td>
                                         <td class="cancel-order"><a href="@Url.Action("CancelOrder", "CusManageOrder", new { @orderId = item.OrderId})">Hủy</a></td>                                       
                                     </tr>
                                 }

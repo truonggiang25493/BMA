@@ -30,13 +30,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var orderItem in (HttpContext.Current.Session["Cart"] as List<CartViewModel>))
+                @foreach(var orderItem in (HttpContext.Current.Session["Cart"] as List<CartViewModel>))
                     {
                         <tr>
                             <td>@orderItem.ProductName</td>
-                            <td>@orderItem.RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <td>@orderItem.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                             <td>@orderItem.Quantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                            <td style="text-align: right">@((orderItem.RealPrice * orderItem.Quantity).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                            <td style="text-align: right">@((orderItem.Price*orderItem.Quantity).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                         </tr>
                     }
                 </tbody>
@@ -44,4 +44,5 @@
         </div>
     </div>
 </div>
+
 
