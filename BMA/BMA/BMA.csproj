@@ -220,16 +220,29 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Business\AccountBusiness.cs" />
+    <Compile Include="Business\CusManageOrderBusiness.cs" />
     <Compile Include="Business\CustomerBusiness.cs" />
+    <Compile Include="Business\CustomerOrberBusiness.cs" />
+    <Compile Include="Business\ManageMaterialBusiness.cs" />
+    <Compile Include="Business\ManageProductBusiness.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
+    <Compile Include="Business\ProductBusiness.cs" />
     <Compile Include="Business\TaxBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
     <Compile Include="Common\CommonFunction.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\CusManageOrderController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\InputMaterialController.cs" />
+    <Compile Include="Controllers\ManageMaterialController.cs" />
+    <Compile Include="Models\DiscardedInputMaterial.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -363,6 +376,7 @@
     <Content Include="Content\CustomerLayout\JS\owl.carousel.min.js" />
     <Content Include="Content\CustomerLayout\JS\scripts.js" />
     <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Content\style.css" />
     <Content Include="Content\timeslider.css" />
     <Content Include="favicon.ico" />

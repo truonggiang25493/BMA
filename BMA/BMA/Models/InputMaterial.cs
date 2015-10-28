@@ -14,6 +14,12 @@ namespace BMA.Models
     
     public partial class InputMaterial
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public InputMaterial()
+        {
+            this.DiscardedInputMaterials = new HashSet<DiscardedInputMaterial>();
+        }
+    
         public int InputMaterialId { get; set; }
         public int ImportQuantity { get; set; }
         public int RemainQuantity { get; set; }
@@ -25,6 +31,8 @@ namespace BMA.Models
         public int ProductMaterialId { get; set; }
         public bool IsActive { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DiscardedInputMaterial> DiscardedInputMaterials { get; set; }
         public virtual InputBill InputBill { get; set; }
         public virtual ProductMaterial ProductMaterial { get; set; }
     }
