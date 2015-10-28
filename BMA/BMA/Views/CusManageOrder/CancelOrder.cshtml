@@ -15,10 +15,7 @@
         </div>
     </div>
 </section>
-@{
-    int sumTotal = Convert.ToInt32(Model.TotalValue * 0.9);
-    int tax = Convert.ToInt32(Model.TotalValue * 0.1);
-}
+
 <section>
     <div class="container">
         <div class="service-tab">
@@ -52,13 +49,17 @@
                                 </tr>
                                 <tr>
                                     <td class="text-left">Thời gian tạo</td>
-                                    <td class="text-left">@Model.CreateTime.ToShortDateString()</td>
+                                    <td class="text-left">@Model.CreateTime.ToString("dd/MM/yyyy hh:mm tt")</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left">Trạng thái</td>
                                     @if (Model.OrderStatus == 0)
                                     {
                                         <td class="text-left"><div class="label label-warning">@CommonData.Status[Model.OrderStatus]</div></td>
+                                    }
+                                    @if (Model.OrderStatus == 1)
+                                    {
+                                        <td class="text-left"><div class="label label-danger">@CommonData.Status[Model.OrderStatus]</div></td>
                                     }
                                     @if (Model.OrderStatus == 2)
                                     {
@@ -74,20 +75,20 @@
                                     }
                                     @if (Model.OrderStatus == 6)
                                     {
-                                        <td class="text-left"><div class="label label-primary">@CommonData.Status[Model.OrderStatus]</div></td>
+                                        <td class="text-left"><div class="label label-cancel">@CommonData.Status[Model.OrderStatus]</div></td>
                                     }
                                 </tr>
                                 <tr>
                                     <td class="text-left">Tổng cộng</td>
-                                    <td class="text-left">@(sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    <td class="text-left">@(Model.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left">Thuế</td>
-                                    <td class="text-left">@(tax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    <td class="text-left">@(Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left">Thành tiền</td>
-                                    <td class="text-left">@Model.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                    <td class="text-left">@((Model.Amount + Model.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                             </tbody>
                         </table>

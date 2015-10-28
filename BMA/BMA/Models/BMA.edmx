@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -176,6 +176,7 @@
           <Property Name="ProductMaterialUnit" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CurrentQuantity" Type="int" Nullable="false" />
           <Property Name="StandardQuantity" Type="int" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Recipe">
           <Key>
@@ -814,7 +815,7 @@
           <Property Name="ImportQuantity" Type="Int32" Nullable="false" />
           <Property Name="RemainQuantity" Type="Int32" Nullable="false" />
           <Property Name="InputMaterialPrice" Type="Double" Nullable="false" />
-          <Property Name="ImportDate" Type="DateTime" Precision="0" Nullable="false" />
+          <Property Name="ImportDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="InputMaterialExpiryDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="InputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="InputBillId" Type="Int32" Nullable="false" />
@@ -946,6 +947,7 @@
           <Property Name="ProductMaterialUnit" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CurrentQuantity" Type="Int32" Nullable="false" />
           <Property Name="StandardQuantity" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="InputMaterials" Relationship="BMAModel.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="InputMaterial" />
           <NavigationProperty Name="OutputMaterials" Relationship="BMAModel.FK_OutputMaterial_ProductMaterial" FromRole="ProductMaterial" ToRole="OutputMaterial" />
           <NavigationProperty Name="Recipes" Relationship="BMAModel.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="Recipe" />
@@ -1486,6 +1488,7 @@
           <EntitySetMapping Name="ProductMaterials">
             <EntityTypeMapping TypeName="BMAModel.ProductMaterial">
               <MappingFragment StoreEntitySet="ProductMaterial">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
                 <ScalarProperty Name="CurrentQuantity" ColumnName="CurrentQuantity" />
                 <ScalarProperty Name="ProductMaterialUnit" ColumnName="ProductMaterialUnit" />

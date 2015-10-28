@@ -1,16 +1,15 @@
 ﻿@model BMA.Models.Product
 
 @{
-    ViewBag.Title = "Chỉnh sửa";
+    ViewBag.Title = "Thêm sản phẩm";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
     IEnumerable<BMA.Models.Category> cg = ViewBag.category;
 }
 <section class="content-header">
     <h1>
-        Sửa sản phẩm
+        Thêm mới sản phẩm
     </h1>
 </section>
-
 <section class="content">
     <div class="row">
         <div class="col-md-12">
@@ -20,38 +19,37 @@
                     <label class="box-title" style="color:#ff0000">@TempData["Error"]</label>
                 </div><!-- /.box-header -->
                 <!-- form start -->
-                <form role="form" action="/ManageProduct/Edit" method="post" enctype="multipart/form-data">
+                <form role="form" action="/ManageProduct/AddProduct" id="myForm" method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
-                    @Html.HiddenFor(model => model.ProductId)
                     <div class="box-body">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tên sản phẩm (*)</label>
-                            <input type="text" class="form-control" name="productName" value="@Model.ProductName" placeholder="" required>
+                            <input type="text" class="form-control" name="productName" value="" placeholder="Nhập tên sản phẩm" required>
                             @Html.ValidationMessageFor(model => model.ProductName)
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Đơn vị tính (*)</label><br />
-                            <input type="text" class="form-control" name="productUnit" value="@Model.Unit" placeholder="" required>
+                            <label for="exampleInputEmail1">Đơn vị tính (*)</label>
+                            <input type="text" class="form-control" name="productUnit" value="" placeholder="Nhập đơn vị" required>
                             @Html.ValidationMessageFor(model => model.Unit)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Trọng lượng (*)</label>
-                            <input type="number" class="form-control" name="productWeight" value="@Model.ProductWeight" min="100" max="2000" placeholder="" required>
+                            <input type="number" class="form-control" name="productWeight" value="" min="100" max="2000" placeholder="Nhập trọng lượng bánh" required>
                             @Html.ValidationMessageFor(model => model.ProductWeight)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Mô tả sản phẩm</label>
-                            <input type="text" class="form-control" name="productDes" value="@Model.Descriptions" placeholder="">
+                            <input type="text" class="form-control" name="productDes" value="" placeholder="Mô tả">
                             @Html.ValidationMessageFor(model => model.Descriptions)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Ghi chú</label>
-                            <input type="text" class="form-control" name="productNote" value="@Model.Note" placeholder="">
+                            <input type="text" class="form-control" name="productNote" value="" placeholder="Ghi chú">
                             @Html.ValidationMessageFor(model => model.Note)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Giá gốc (*)</label>
-                            <input type="text" class="form-control" name="productPrice" value="@Model.ProductStandardPrice" min="1000" max="100000" placeholder="" required>
+                            <input type="number" class="form-control" name="productPrice" value="" min="1000" max="100000" placeholder="Nhập giả sản phẩm" required>
                             @Html.ValidationMessageFor(model => model.ProductStandardPrice)
                         </div>
                         <div class="form-group">
@@ -59,25 +57,17 @@
                             <select class="form-control" name="dropCate">
                                 @foreach (var item in cg)
                                 {
-                                    if (Model.CategoryId == item.CategoryId)
-                                    {
-                                        <option value="@item.CategoryId" selected>@item.CategoryName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@item.CategoryId">@item.CategoryName</option>
-                                    }
+                                    <option value="@item.CategoryId">@item.CategoryName</option>
                                 }
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Mã sản phẩm (*)</label>
-                            <input type="text" class="form-control" name="productCode" value="@Model.ProductCode" placeholder="" required>
+                            <input type="text" class="form-control" name="productCode" value="" placeholder="Nhập mã sản phẩm" required>
                             @Html.ValidationMessageFor(model => model.ProductCode)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputFile">Hình ảnh</label>
-                            <label for="exampleInputFile" style="font-weight:400;">@Model.ProductImage</label>
                             <input type="file" value="" name="file" id="file" onchange="show(this)">
                             <div>
                                 <img id="user_img"
@@ -101,8 +91,7 @@
                     </div><!-- /.box-body -->
 
                     <div class="box-footer">
-                        <button type="submit" class="btn btn-primary" id="EditProduct">Thay đổi</button>
-                        <a style="float:right" href="@Url.Action("ProductMaterial", "ManageProduct", new { @ProductId = Model.ProductId})" class="btn btn-danger">Chỉnh sửa nguyên liệu</a>
+                        <button type="submit" class="btn btn-primary" value="AddMaterial">Thêm mới</button>
                     </div>
                 </form>
             </div>

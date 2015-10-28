@@ -22,6 +22,7 @@
                         <th>Tên nguyên liệu</th>
                         <th>Đơn vị tính</th>
                         <th>Số lượng hiện tại</th>
+                        <th>Trạng thái</th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -34,16 +35,16 @@
                             <td>@item.ProductMaterialName</td>
                             <td>@item.ProductMaterialUnit</td>
                             <td><p style="float:right">@item.CurrentQuantity</p></td>
-                            @*@{
-                        if (item.IsActive)
-                        {
-                            <td><div class="label label-success">Đang sử dụng</div></td>
-                        }
-                        else
-                        {
-                            <td><div class="label label-default">Đã hủy</div></td>
-                        }
-                            }*@
+                            @{
+                                if (item.IsActive)
+                                {
+                                    <td><div class="label label-success">Đang sử dụng</div></td>
+                                }
+                                else
+                                {
+                                    <td><div class="label label-default">Đã hủy</div></td>
+                                }
+                            }
                             <td>
                                 @Html.ActionLink("Xem", "Detail"@*, new { ProductId = item.ProductId }*@)
                             </td>

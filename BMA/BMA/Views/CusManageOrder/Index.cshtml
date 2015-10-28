@@ -66,7 +66,7 @@
                                     }
                                     @if (item.OrderStatus == 6)
                                     {
-                                        <td class="text-left"><div class="label label-primary">@CommonData.Status[item.OrderStatus]</div></td>
+                                        <td class="text-left"><div class="label label-cancel">@CommonData.Status[item.OrderStatus]</div></td>
                                     }
                                     <td class="cancel-order"><a href="@Url.Action("OrderDetail", "CusManageOrder", new { @orderId = item.OrderId})">Xem </a></td>
                                     @if (item.OrderStatus == 0)
