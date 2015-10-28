@@ -25,6 +25,16 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="IsLoyal" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="DiscardedInputMaterial">
+          <Key>
+            <PropertyRef Name="DiscardId" />
+          </Key>
+          <Property Name="DiscardId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InputMaterialId" Type="int" Nullable="false" />
+          <Property Name="DiscardQuantity" Type="int" Nullable="false" />
+          <Property Name="DiscardDate" Type="date" Nullable="false" />
+          <Property Name="DiscardNote" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
         <EntityType Name="ExportFrom">
           <Key>
             <PropertyRef Name="OutputMaterialId" />
@@ -54,6 +64,7 @@
           <Property Name="InputRawImage" Type="nvarchar" MaxLength="200" />
           <Property Name="InputTaxAmount" Type="float" Nullable="false" />
           <Property Name="SupplierId" Type="int" />
+          <Property Name="ImportDate" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="InputMaterial">
           <Key>
@@ -291,6 +302,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DiscardedInputMaterial_InputMaterial">
+          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="1" />
+          <End Role="DiscardedInputMaterial" Type="Self.DiscardedInputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InputMaterial">
+              <PropertyRef Name="InputMaterialId" />
+            </Principal>
+            <Dependent Role="DiscardedInputMaterial">
+              <PropertyRef Name="InputMaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ExportFrom_InputBill">
           <End Role="InputBill" Type="Self.InputBill" Multiplicity="1" />
           <End Role="ExportFrom" Type="Self.ExportFrom" Multiplicity="*" />
@@ -522,6 +545,7 @@
         <EntityContainer Name="BMAModelStoreContainer">
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DiscardedInputMaterial" EntityType="Self.DiscardedInputMaterial" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExportFrom" EntityType="Self.ExportFrom" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GuestInfo" EntityType="Self.GuestInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InputBill" EntityType="Self.InputBill" Schema="dbo" store:Type="Tables" />
@@ -553,6 +577,10 @@
           <AssociationSet Name="FK_Customer_User" Association="Self.FK_Customer_User">
             <End Role="User" EntitySet="User" />
             <End Role="Customer" EntitySet="Customer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscardedInputMaterial_InputMaterial" Association="Self.FK_DiscardedInputMaterial_InputMaterial">
+            <End Role="InputMaterial" EntitySet="InputMaterial" />
+            <End Role="DiscardedInputMaterial" EntitySet="DiscardedInputMaterial" />
           </AssociationSet>
           <AssociationSet Name="FK_ExportFrom_InputBill" Association="Self.FK_ExportFrom_InputBill">
             <End Role="InputBill" EntitySet="InputBill" />
@@ -634,10 +662,11 @@
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="BMAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="BMAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="BMAEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Categories" EntityType="BMAModel.Category" />
           <EntitySet Name="Customers" EntityType="BMAModel.Customer" />
+          <EntitySet Name="DiscardedInputMaterials" EntityType="BMAModel.DiscardedInputMaterial" />
           <EntitySet Name="ExportFroms" EntityType="BMAModel.ExportFrom" />
           <EntitySet Name="GuestInfoes" EntityType="BMAModel.GuestInfo" />
           <EntitySet Name="InputBills" EntityType="BMAModel.InputBill" />
@@ -669,6 +698,10 @@
           <AssociationSet Name="FK_Customer_User" Association="BMAModel.FK_Customer_User">
             <End Role="User" EntitySet="Users" />
             <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscardedInputMaterial_InputMaterial" Association="BMAModel.FK_DiscardedInputMaterial_InputMaterial">
+            <End Role="InputMaterial" EntitySet="InputMaterials" />
+            <End Role="DiscardedInputMaterial" EntitySet="DiscardedInputMaterials" />
           </AssociationSet>
           <AssociationSet Name="FK_ExportFrom_InputBill" Association="BMAModel.FK_ExportFrom_InputBill">
             <End Role="InputBill" EntitySet="InputBills" />
@@ -771,6 +804,17 @@
           <Property Name="IsLoyal" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="User" Relationship="BMAModel.FK_Customer_User" FromRole="Customer" ToRole="User" />
         </EntityType>
+        <EntityType Name="DiscardedInputMaterial">
+          <Key>
+            <PropertyRef Name="DiscardId" />
+          </Key>
+          <Property Name="DiscardId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InputMaterialId" Type="Int32" Nullable="false" />
+          <Property Name="DiscardQuantity" Type="Int32" Nullable="false" />
+          <Property Name="DiscardDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DiscardNote" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="InputMaterial" Relationship="BMAModel.FK_DiscardedInputMaterial_InputMaterial" FromRole="DiscardedInputMaterial" ToRole="InputMaterial" />
+        </EntityType>
         <EntityType Name="ExportFrom">
           <Key>
             <PropertyRef Name="OutputMaterialId" />
@@ -803,6 +847,7 @@
           <Property Name="InputRawImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="InputTaxAmount" Type="Double" Nullable="false" />
           <Property Name="SupplierId" Type="Int32" />
+          <Property Name="ImportDate" Type="DateTime" Nullable="false" Precision="0" />
           <NavigationProperty Name="ExportFroms" Relationship="BMAModel.FK_ExportFrom_InputBill" FromRole="InputBill" ToRole="ExportFrom" />
           <NavigationProperty Name="Supplier" Relationship="BMAModel.FK_InputBill_Supplier_SupplierId" FromRole="InputBill" ToRole="Supplier" />
           <NavigationProperty Name="InputMaterials" Relationship="BMAModel.FK_InputMaterial_InputBill_InputBillId" FromRole="InputBill" ToRole="InputMaterial" />
@@ -821,6 +866,7 @@
           <Property Name="InputBillId" Type="Int32" Nullable="false" />
           <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="DiscardedInputMaterials" Relationship="BMAModel.FK_DiscardedInputMaterial_InputMaterial" FromRole="InputMaterial" ToRole="DiscardedInputMaterial" />
           <NavigationProperty Name="InputBill" Relationship="BMAModel.FK_InputMaterial_InputBill_InputBillId" FromRole="InputMaterial" ToRole="InputBill" />
           <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="InputMaterial" ToRole="ProductMaterial" />
         </EntityType>
@@ -1077,6 +1123,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DiscardedInputMaterial_InputMaterial">
+          <End Type="BMAModel.InputMaterial" Role="InputMaterial" Multiplicity="1" />
+          <End Type="BMAModel.DiscardedInputMaterial" Role="DiscardedInputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InputMaterial">
+              <PropertyRef Name="InputMaterialId" />
+            </Principal>
+            <Dependent Role="DiscardedInputMaterial">
+              <PropertyRef Name="InputMaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ExportFrom_InputBill">
           <End Type="BMAModel.InputBill" Role="InputBill" Multiplicity="1" />
           <End Type="BMAModel.ExportFrom" Role="ExportFrom" Multiplicity="*" />
@@ -1305,7 +1363,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        </Schema>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -1333,6 +1391,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="DiscardedInputMaterials">
+            <EntityTypeMapping TypeName="BMAModel.DiscardedInputMaterial">
+              <MappingFragment StoreEntitySet="DiscardedInputMaterial">
+                <ScalarProperty Name="DiscardNote" ColumnName="DiscardNote" />
+                <ScalarProperty Name="DiscardDate" ColumnName="DiscardDate" />
+                <ScalarProperty Name="DiscardQuantity" ColumnName="DiscardQuantity" />
+                <ScalarProperty Name="InputMaterialId" ColumnName="InputMaterialId" />
+                <ScalarProperty Name="DiscardId" ColumnName="DiscardId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="ExportFroms">
             <EntityTypeMapping TypeName="BMAModel.ExportFrom">
               <MappingFragment StoreEntitySet="ExportFrom">
@@ -1356,6 +1425,7 @@
           <EntitySetMapping Name="InputBills">
             <EntityTypeMapping TypeName="BMAModel.InputBill">
               <MappingFragment StoreEntitySet="InputBill">
+                <ScalarProperty Name="ImportDate" ColumnName="ImportDate" />
                 <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
                 <ScalarProperty Name="InputTaxAmount" ColumnName="InputTaxAmount" />
                 <ScalarProperty Name="InputRawImage" ColumnName="InputRawImage" />

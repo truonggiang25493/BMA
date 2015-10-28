@@ -10,13 +10,12 @@ using System.Web.WebPages;
 using BMA.Business;
 using BMA.Models;
 using BMA.Models.ViewModel;
-using jsreport.MVC;
 
 namespace BMA.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly BMAEntities db = new BMAEntities();
+        private BMAEntities db = new BMAEntities();
         // GET: Order
         public ActionResult Index()
         {
@@ -32,31 +31,14 @@ namespace BMA.Controllers
                     return o1.CreateTime.CompareTo(o2.CreateTime);
 
                 });
-            List<OrderViewModel> orderViewModelList = new List<OrderViewModel>();
-            foreach (Order order in orderList)
-            {
-                OrderViewModel orderViewModel = new OrderViewModel();
-                orderViewModel.Order = order;
-                if (order.OrderStatus != 0)
-                {
-                    orderViewModel.IsEnoughMaterial = true;
-                }
-                else
-                {
-                    OrderBusiness orderBusiness = new OrderBusiness();
-                    orderViewModel.IsEnoughMaterial = orderBusiness.IsEnoughMaterialForOrder(order);
-                }
-                orderViewModelList.Add(orderViewModel);
-            }
             ViewBag.Title = "Danh sách đơn hàng";
-            return View(orderViewModelList);
+            return View(orderList);
         }
 
         // GET: Detail
         public ActionResult Detail(int id)
         {
-            OrderBusiness orderBusiness = new OrderBusiness();
-            OrderViewModel orderViewModel = orderBusiness.GetOrderViewModel(id);
+            OrderViewModel orderViewModel = OrderBusiness.GetOrderViewModel(id);
             if (orderViewModel != null)
             {
                 return View(orderViewModel);
@@ -70,15 +52,7 @@ namespace BMA.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Chỉnh sửa đơn hàng";
-
-            Order order = db.Orders.FirstOrDefault(m => m.OrderId == id);
-            if (order != null)
-            {
-                order.CustomerEditingFlag = true;
-                db.SaveChanges();
-            }
-            OrderBusiness orderBusiness = new OrderBusiness();
-            OrderViewModel orderViewModel = orderBusiness.GetOrderViewModel(id);
+            OrderViewModel orderViewModel = OrderBusiness.GetOrderViewModel(id);
             TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && m.EndDate == null);
             if (taxRate != null)
             {
@@ -125,8 +99,7 @@ namespace BMA.Controllers
                 int depositAmount = Convert.ToInt32(depositAmountString);
                 DateTime deliveryDate = Convert.ToDateTime(deliveryDateString);
                 bool rs = true;
-                OrderBusiness orderBusiness = new OrderBusiness();
-                rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate);
+                rs = OrderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate);
                 if (rs)
                 {
                     return RedirectToAction("Index");
@@ -138,11 +111,14 @@ namespace BMA.Controllers
         }
 
         [HttpPost]
-        public int ApproveOrder(int deposit, DateTime deliveryDate, int orderId)
+        public ActionResult ApproveOrder(int deposit, DateTime deliveryDate, int orderId)
         {
-            OrderBusiness orderBusiness = new OrderBusiness();
-            bool rs = orderBusiness.ApproveOrder(orderId, deposit, deliveryDate);
-            return rs ? 1 : 0;
+            bool rs = OrderBusiness.ApproveOrder(orderId, deposit, deliveryDate);
+            if (!rs)
+            {
+                return RedirectToAction("Detail", orderId);
+            }
+            return RedirectToAction("Index");
         }
 
         private List<CartViewModel> GetCart()
@@ -180,6 +156,7 @@ namespace BMA.Controllers
         public ActionResult AddProductToOrder(int productId, int price, int quantity)
         {
             List<CartViewModel> cartList = GetCart();
+            bool check = false;
             if (cartList.Count != 0)
             {
                 foreach (CartViewModel cartViewModel in cartList)
@@ -188,43 +165,13 @@ namespace BMA.Controllers
                     {
                         cartViewModel.Quantity = quantity;
                         cartViewModel.RealPrice = price;
+                        check = true;
                     }
                 }
             }
+            ViewBag.IsAdded = check;
             Session["Cart"] = cartList;
             return RedirectToAction("Add");
-        }
-
-        [HttpPost]
-        public ActionResult RemoveProductFromOrder(int productId)
-        {
-            List<CartViewModel> cartList = GetCart();
-            if (cartList.Count != 0)
-            {
-                foreach (CartViewModel cartViewModel in cartList)
-                {
-                    if (cartViewModel.ProductId == productId)
-                    {
-                        cartViewModel.Quantity = 0;
-                    }
-                }
-            }
-            Session["Cart"] = cartList;
-            return RedirectToAction("Add");
-        }
-
-        [HttpPost]
-        public int CheckCart()
-        {
-            List<CartViewModel> cartList = GetCart();
-            foreach (CartViewModel cart in cartList)
-            {
-                if (cart.Quantity > 0)
-                {
-                    return 1;
-                }
-            }
-            return 0;
         }
 
         public ActionResult AddCustomerToOrder()
@@ -236,53 +183,43 @@ namespace BMA.Controllers
         public ActionResult CheckoutWithCustomer(int customerId)
         {
             List<CartViewModel> inputCartList = GetCart();
-            OrderBusiness orderBusiness = new OrderBusiness();
-            OrderViewModel order = orderBusiness.MakeOrderViewModel(inputCartList, customerId);
+            OrderViewModel order = OrderBusiness.MakeOrderViewModel(inputCartList, customerId);
             return View(order);
         }
 
         [HttpPost]
-        public int AddOrderForCustomer(int deposit, DateTime deliveryDate, int customerId)
+        public ActionResult AddOrderForCustomer(int deposit, DateTime deliveryDate, int customerId)
         {
-            int rs = 0;
+            bool rs = false;
             List<CartViewModel> cart = Session["Cart"] as List<CartViewModel>;
-            if (customerId == 0)
+            if (customerId.Equals("0"))
             {
-                CustomerViewModel customer = Session["NewCustomer"] as CustomerViewModel;
-                OrderBusiness orderBusiness = new OrderBusiness();
-                bool check = orderBusiness.AddOrderForNewCustomer(cart, customer, deposit, deliveryDate);
-                if (check)
-                {
-                    rs = 1;
-                }
+                User customer = Session["NewCustomer"] as User;
+                rs = OrderBusiness.AddOrderForNewCustomer(cart, customer, deposit, deliveryDate);
             }
             else
             {
-                OrderBusiness orderBusiness = new OrderBusiness();
-                bool check = orderBusiness.AddOrderForCustomer(cart, customerId, deposit, deliveryDate);
-                if (check)
-                {
-                    rs = 1;
-                }
+                rs = OrderBusiness.AddOrderForCustomer(cart, customerId, deposit, deliveryDate);
             }
-            if (rs == 1)
+            if (rs)
             {
                 Session["Cart"] = null;
+                return RedirectToAction("Index");
+
             }
-            return rs;
+            return RedirectToAction("CheckoutWithCustomer", customerId);
         }
 
         public ActionResult CancelAddOrder()
         {
             Session["Cart"] = null;
+            ViewBag.IsAdded = null;
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult CheckoutWithNewCustomer(FormCollection form)
+        public ActionResult CreateCustomerForOrder(FormCollection form)
         {
-            List<CartViewModel> inputCartList = GetCart();
-
             string customerNameString = form["customerName"];
             string customerEmailString = form["customerEmail"];
             string customerAddressString = form["customerAddress"];
@@ -291,27 +228,38 @@ namespace BMA.Controllers
             string usernameString = form["username"];
             if (
                 !(customerNameString.IsEmpty() || customerAddressString.IsEmpty() || customerPhoneNumberString.IsEmpty() ||
-                  customerTaxCodeString.IsEmpty() || customerEmailString.IsEmpty() || usernameString.IsEmpty()))
+                  customerTaxCodeString.IsEmpty() || customerEmailString.IsEmpty()))
             {
-                CustomerViewModel customer = new CustomerViewModel();
-                customer.CustomerName = customerNameString;
+                Customer customer = new Customer();
                 customer.CustomerAddress = customerAddressString;
                 customer.CustomerPhoneNumber = customerPhoneNumberString;
-                customer.CustomerTaxCode = customerTaxCodeString;
-                customer.Username = usernameString;
-                customer.CustomerEmail = customerEmailString;
-                Session["NewCustomer"] = customer;
-                OrderBusiness orderBusiness = new OrderBusiness();
-                OrderViewModel order = orderBusiness.MakeOrderViewForNewCustomerModel(inputCartList, customer);
-                return View("CheckoutWithCustomer", order);
+                customer.TaxCode = customerTaxCodeString;
+
+                User aspNetUser = new User();
+                aspNetUser.Username = usernameString;
+                aspNetUser.Email = customerEmailString;
+                aspNetUser.Fullname = customerNameString;
+                // Password Bug
+
+                aspNetUser.Customers.Add(customer);
+                Session["NewCustomer"] = aspNetUser;
+                return RedirectToAction("CheckoutWithNewCustomer");
+
             }
             return RedirectToAction("AddCustomerToOrder");
+        }
+
+        public ActionResult CheckoutWithNewCustomer()
+        {
+            List<CartViewModel> inputCartList = GetCart();
+            var customerUser = Session["NewCustomer"];
+            OrderViewModel order = OrderBusiness.MakeOrderViewForNewCustomerModel(inputCartList, (User)customerUser);
+            return View("CheckoutWithCustomer", order);
         }
         [HttpPost]
         public ActionResult Cancel(int orderId, int isReturnDeposit, int returnDeposit, string url)
         {
-            OrderBusiness orderBusiness = new OrderBusiness();
-            bool rs = orderBusiness.Cancel(orderId, returnDeposit, isReturnDeposit);
+            bool rs = OrderBusiness.Cancel(orderId, returnDeposit, isReturnDeposit);
             // Call cancel order from OrderBusiness
 
             if (rs)
@@ -428,47 +376,11 @@ namespace BMA.Controllers
             }
             if (cartList.Count > 0)
             {
-                OrderBusiness orderBusiness = new OrderBusiness();
-                MaterialInfoForProductListViewModel material = orderBusiness.GetMaterialListForOrder(cartList);
+                MaterialInfoForProductListViewModel material = OrderBusiness.GetMaterialListForOrder(cartList);
                 material.OrderId = Convert.ToInt32(orderIdString);
                 return PartialView("MaterialListForOrder", material);
             }
             return PartialView("MaterialListForOrder", null);
-        }
-
-        [HttpPost]
-        public ActionResult GetShortageMaterialList()
-        {
-            OrderBusiness orderBusiness = new OrderBusiness();
-            List<ShortageMaterialViewModel> shortageMaterialList =
-                orderBusiness.GetShortageMaterialList();
-            return PartialView(shortageMaterialList);
-        }
-
-        [HttpPost]
-        public int ChangeOrderState(int orderId)
-        {
-            OrderBusiness orderBusiness = new OrderBusiness();
-            if (orderBusiness.ChangeOrderState(orderId))
-            {
-                return 1;
-            }
-            return 0;
-        }
-
-        [EnableJsReport(Recipe = "phantom-pdf")]
-        public ActionResult ExportBill(int orderId)
-        {
-            OrderBusiness orderBusiness = new OrderBusiness();
-            Order order = orderBusiness.GetOrder(orderId);
-            // Get tax rate
-            TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.EndDate >= order.CreateTime && m.BeginDate <= order.CreateTime);
-            if (taxRate != null)
-            {
-                ViewBag.TaxRate = taxRate.TaxRateValue;
-            }
-            // Bug check order is null or not.
-            return View(order);
         }
     }
 }

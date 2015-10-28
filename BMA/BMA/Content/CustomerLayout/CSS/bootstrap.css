@@ -4833,13 +4833,6 @@ a.label:focus {
 .label-primary[href]:focus {
   background-color: #286090;
 }
-.label-cancel {
-  background-color: #777;
-}
-.label-cancel[href]:hover,
-.label-cancel[href]:focus {
-  background-color: #777;
-}
 .label-success {
   background-color: #5cb85c;
 }

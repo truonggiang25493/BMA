@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta charset="UTF-8">
     <title>@ViewBag.Title</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <link href="/Content/jquery-ui.css" rel="stylesheet" />
@@ -17,8 +17,6 @@
     <link href="/Content/AdminLayout/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
     <!-- Own css -->
     <link href="~/Content/style.css" rel="stylesheet" />
-    <!-- Animate css -->
-    <link href="~/Content/animate.css" rel="stylesheet" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -166,8 +164,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index","InputMaterial")"><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
-                            <li><a href="@Url.Action("Add","InputMaterial")"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
+                            <li><a href="@Url.Action("InputMaterialIndex", "InputMaterial")"><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
+                            <li><a href="@Url.Action("AddInputMaterial", "InputMaterial")"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -176,8 +174,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
-                            <li><a href=""><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
+                            <li><a href="@Url.Action("SupplierIndex","Supplier")"><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
+                            <li><a href="@Url.Action("AddSupplier","Supplier")"><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -257,7 +255,7 @@
     <script src="/Content/AdminLayout/dist/js/demo.js"></script>
     <!--Own js function-->
     <script src="~/Scripts/my-own-function.js"></script>
-    <!--Noty js-->
+    <!-- Noty -->
     <script src="~/Scripts/jquery.noty.packaged.min.js"></script>
     <script>
         $(function () {

@@ -1,6 +1,5 @@
 ﻿@using BMA.Models
 @using PagedList.Mvc;
-@using System.Globalization;
 @model PagedList.PagedList<Product>
 
 @{
@@ -51,7 +50,7 @@
                         <li class="mix sale col-md-3 col-sm-4 mrgb5x" data-price="5">
                             <div class="property-box animated out" data-delay="0" data-animation="fadeInUp">
                                 <div class="appartment-img">
-                                    <img src="@Url.Content("~/Content/Images/BakeryImages/" + item.ProductImage)" class="img-responsive-2" alt="#" />
+                                    <img src="@Url.Content("~/Content/Images/BakeryImages/brood-1.jpg")" class="img-responsive" alt="#" />
                                     <div class="detail-btn"><a href="javascript:void(0)" onclick="return openPopup('@item.ProductName','@item.ProductId','@item.ProductStandardPrice');" class="sale"><i class="fa fa-plus"></i></a></div>
                                     <script type="text/javascript">
                                         var selectDongia = 0;
@@ -95,7 +94,7 @@
                                             <h4>@item.ProductName</h4>
                                         </li>
                                         <li><span>Trọng lượng : @item.ProductWeight</span>g</li>
-                                        <li class="property-price"><span style="font-size:25px;">@item.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</span></li>
+                                        <li class="property-price"><span><sup>$</sup>@item.ProductStandardPrice</span></li>
                                         <li><a href="@Url.Action("ProductDetail", "Product", new { @ProductId = item.ProductId})" class="detail" style="color:#fff;">CHI TIẾT</a> </li>
                                     </ul>
                                 </div>
@@ -110,7 +109,7 @@
                                             <table class="popup-table">
                                                 <tr>
                                                     <td>Số lượng: </td>
-                                                    <td><input style="width:220px;" type="text" value="" placeholder="Chỉ nhập số - tối đa 9999" class="inputProductNum" id="inputProductNum" name="inputNumber" min="1" maxlength="4" required /></td>
+                                                    <td><input style="width:220px;" type="text" value="" placeholder="Chỉ nhập số" class="inputProductNum" id="inputProductNum" name="inputNumber" required /></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Thành tiền: </td>
@@ -128,7 +127,7 @@
                                                 return 1;
                                             }
                                         </script>
-                                        <div class="popup-btn" style="margin-right: 30px; background-color: #a92828"><a href="javascript:void(0)" style="background-color: #a92828" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it">Hủy bỏ</a> </div>
+                                        <div class="popup-btn" style="margin-right: 30px; background-color: #a92828"><a style="background-color: #a92828" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it">Hủy bỏ</a> </div>
                                     </div>
                                 </div>
                             </div>

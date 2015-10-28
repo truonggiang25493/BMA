@@ -10,6 +10,8 @@ namespace BMA.Models.ViewModel
         // Basic info of Order
         public Order Order { get; set; }
         public int MaterialCost { get; set; }
+        public int TaxAmount { get; set; }
+        public int TotalAmount { get; set; }
         public bool IsEnoughMaterial { get; set; }
         public int TaxRate { get; set; }
         // Customer or Guest info
