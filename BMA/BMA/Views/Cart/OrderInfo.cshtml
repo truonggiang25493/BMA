@@ -33,7 +33,7 @@
 </script>
 
 <section style="margin-top:-25px;margin-bottom:25px;" class="border-top"></section>
-<section id="CusInfor">
+<section style="margin-left:450px;" id="CusInfor">
     <section>
         <div class="container">
             <div class="page-title mrgb5x mrgt6x clearfix" id="filterOptions">
@@ -56,8 +56,9 @@
                                     <label>MẬT KHẨU</label>
                                     <input name="txtPassword" type="password" class="form-control" placeholder="Nhập mật khẩu">
                                 </div>
-                                <div style="color:#ff0000">@TempData["Notify"]</div>
-                                <div style="margin: 40px 0px 50px 0px;" class="send-msg"><button class="submit-button" type="submit">ĐĂNG NHẬP</button></div>
+                                <div style="color:#ff0000">@ViewBag.Notify</div>
+                                <div style="margin: 40px 0px 40px 0px;" class="send-msg"><button class="submit-button" type="submit">ĐĂNG NHẬP</button></div>
+                                <div style="margin: 40px 30px 40px 0px;" class="send-msg"><button class="submit-button" type="reset">NHẬP LẠI</button></div>
                             </div>
                         </form>
                     </div>
@@ -67,7 +68,7 @@
     </div>
 </section>
 
-<section id="GuestInfor">
+<section style="margin-left:450px;" id="GuestInfor">
     <section>
         <div class="container">
             <div class="page-title mrgb5x mrgt6x clearfix" id="filterOptions">
@@ -99,6 +100,7 @@
                                     <input name="txtEmail" class="form-control" placeholder="Nhập email" required>
                                 </div>
                                 <div style="margin: 40px 0px 40px 0px;" class="send-msg"><button class="submit-button" type="submit">XÁC NHẬN</button></div>
+                                <div style="margin: 40px 30px 40px 0px;" class="send-msg"><button class="submit-button" type="reset">NHẬP LẠI</button></div>
                             </div>
                         </form>
                     </div>

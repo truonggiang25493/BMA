@@ -5,15 +5,19 @@
     ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
+@section InitStyle{
+    
+}
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>Chi tiết đơn hàng</h1>
 </section>
-<section class="content">
+<section class="invoice">
     <!--Title row-->
     <div class="row">
         <div class="col-xs-12">
             <h2 class="page-header">
+                <i class="fa fa-navicon" style="margin-right: 3px;"></i>
                 Thông tin đơn hàng
             </h2>
         </div>
@@ -21,119 +25,79 @@
     <!-- Info row -->
     <div class="row invoice-info">
         <div class="col-sm-6 invoice-col">
-            <div class="row">
-                <div class="col-xs-5">
-                    <b>Mã đơn hàng: </b>
-                </div>
-                <div class="col-xs-7">
-                    @Model.Order.OrderCode
-                </div>
+            <div class="row" style="margin-left: 1px; margin-bottom: 10px">
+                Mã đơn hàng: <b style="font-size: 17px;">@Model.Order.OrderCode</b>
             </div>
-            <div class="row">
-                <div class="col-xs-5">
-                    <b>Thời gian tạo: </b>
-                </div>
-                <div class="col-xs-7">
-                    @Model.Order.CreateTime.ToString(("dd/MM/yyyy hh:mm tt"))
-                </div>
+
+            <div class="row" style="margin-left: 1px;">
+                <b>Thời gian tạo: </b>
+                @Model.Order.CreateTime.ToString(("dd/MM/yyyy HH:mm"))
             </div>
             @if (Model.Order.OrderStatus != 0 && Model.Order.OrderStatus != 1)
             {
                 if (Model.Order.ApproveTime != null)
                 {
-                    <div class="row">
-                        <div class="col-xs-5">
-                            <b>Thời gian duyệt: </b>
-                        </div>
-                        <div class="col-xs-7">
-                            @(((DateTime)Model.Order.ApproveTime).ToString("dd/MM/yyyy hh:mm tt"))
-                        </div>
+                    <div class="row" style="margin-left: 1px;">
+                        <b>Thời gian duyệt: </b>
+                        @(((DateTime)Model.Order.ApproveTime).ToString("dd/MM/yyyy HH:mm"))
                     </div>
-
-
                 }
-                if (Model.Order.User.Fullname != null)
+                if (Model.Order.User1.Fullname != null)
                 {
-                    <div class="row">
-                        <div class="col-xs-5">
-                            <b>Người duyệt: </b>
-                        </div>
-                        <div class="col-xs-7">
-                            @(Model.Order.User1.Fullname)
-                        </div>
+                    <div class="row" style="margin-left: 1px;">
+                        <b>Người duyệt: </b>
+                        @(Model.Order.User1.Fullname)
                     </div>
-
-
                 }
                 if (Model.Order.DepositAmount > 0)
                 {
-                    <div class="row">
-                        <div class="col-xs-5">
-                            <b>Tiền cọc: </b>
-                        </div>
-                        <div class="col-xs-7">
-                            @(Model.Order.DepositAmount.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))
-                        </div>
+                    <div class="row" style="margin-left: 1px;">
+                        <b>Tiền cọc: </b>
+                        @(Model.Order.DepositAmount.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))
                     </div>
 
 
                 }
                 if (Model.Order.DeliveryTime != null)
                 {
-                    <div class="row">
-                        <div class="col-xs-5">
-                            <b>Ngày giao hàng: </b>
-                        </div>
-                        <div class="col-xs-7">
-                            @(((DateTime)Model.Order.DeliveryTime).ToString("dd/MM/yyyy"))
-                        </div>
+                    <div class="row" style="margin-left: 1px;">
+                        <b>Thời gian giao hàng dự kiến: </b>
+                        @(Model.Order.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm"))
                     </div>
                 }
             }
-            <div class="row" style="vertical-align: middle">
-                <div class="col-xs-5">
-                    <b>Trạng thái: </b>
-                </div>
+            <div class="row" style="vertical-align: middle; margin-left: 1px;">
+                <b>Trạng thái: </b>
                 <!--Đã hoàn thành-->
                 @if (Model.Order.OrderStatus == 5)
                 {
-                    <div class="col-xs-2">
-                        <span class="label label-success">@CommonData.Status[Model.Order.OrderStatus]</span>
-                    </div>
-                    <div class="col-xs-5">
-                        <button class="btn btn-info btn-xs" onclick="openExportInNewTab()">
-                            Xem hóa đơn xuất
-                            <script type="text/javascript">
-                                function openExportInNewTab() {
-                                    var win = window.open("@(Url.Action("ExportBill", "Order", new { orderId = Model.Order.OrderId}))", '_blank');
-                                    win.focus();
-                                }
-                            </script>
-                        </button>
-                    </div>
+                    <span class="label label-success">@CommonData.Status[Model.Order.OrderStatus]</span>
+                    <button class="btn btn-info btn-xs" onclick="openExportInNewTab()">
+                        Xem hóa đơn xuất
+                        <script type="text/javascript">
+                            function openExportInNewTab() {
+                                var win = window.open("@(Url.Action("ExportBill", "Order", new {orderId = Model.Order.OrderId}))", '_blank');
+                                win.focus();
+                            }
+                        </script>
+                    </button>
                 }
                 <!--Hủy-->
                 @if (Model.Order.OrderStatus == 6)
                 {
-                    <div class="col-xs-7">
-                        <span class="label label-default">@CommonData.Status[Model.Order.OrderStatus]</span>
-                    </div>
+                    <span class="label label-default">@CommonData.Status[Model.Order.OrderStatus]</span>
                 }
                 <!--Chờ xử lý-->
                 @if (Model.Order.OrderStatus == 0)
                 {
-                    <div class="col-xs-7">
-                        <span class="label label-danger">@CommonData.Status[Model.Order.OrderStatus]</span>
-                    </div>
+                    <span class="label label-danger">@CommonData.Status[Model.Order.OrderStatus]</span>
 
                 }
 
                 <!--Chờ xác nhận-->
                 @if (Model.Order.OrderStatus == 1)
                 {
-                    <div class="col-xs-7">
-                        <span class="label label-warning">@CommonData.Status[Model.Order.OrderStatus]</span>
-                    </div>
+                    <span class="label label-warning">@CommonData.Status[Model.Order.OrderStatus]</span>
 
                 }
                 <!--Đã duyệt!Đang sản xuất|Đang giao hàng-->
@@ -142,162 +106,177 @@
 
                     if (Model.Order.OrderStatus == 2)
                     {
-                        <div class="col-xs-2">
-                            <span class="label label-primary">@CommonData.Status[Model.Order.OrderStatus]</span>
-                        </div>
+                        <span class="label label-primary">@CommonData.Status[Model.Order.OrderStatus]</span>
                     }
                     if (Model.Order.OrderStatus == 3 || Model.Order.OrderStatus == 4)
                     {
-                        <div class="col-xs-2">
-                            <span class="label label-info">@CommonData.Status[Model.Order.OrderStatus]</span>
-                        </div>
+                        <span class="label label-info">@CommonData.Status[Model.Order.OrderStatus]</span>
                     }
-                    <div class="col-xs-5">
+                    if (Model.Order.OrderStatus == 2 || Model.Order.OrderStatus == 3)
+                    {
                         <button class="btn btn-success btn-xs" onclick="openChangeOrderStatePopup(@Model.Order.OrderId, @Model.Order.OrderStatus)">
                             <i class="fa fa-edit"></i>
                             Thay đổi
+                        </button>
+                    }
+                    if (Model.Order.OrderStatus == 4)
+                    {
+                        <button class="btn btn-success btn-xs" onclick="openChangeOrderStatePopup(@Model.Order.OrderId, @Model.Order.OrderStatus)">
+                            <i class="fa fa-edit"></i>
+                            Thay đổi
+                        </button>
+                        <button class="btn btn-info btn-xs" onclick="openExportInNewTab()">
+                            Xem hóa đơn xuất
                             <script type="text/javascript">
-                                function openChangeOrderStatePopup(orderId, orderStatus) {
-                                    var nextState;
-                                    if (orderStatus === 2) {
-                                        nextState = $("<span>", {
-                                            "class": "label label-primary",
-                                            "html": "Đang sản xuất"
-                                        });
-                                    }
-                                    if (orderStatus === 3) {
-                                        nextState = $("<span>", {
-                                            "class": "label label-primary",
-                                            "html": "Đang giao hàng"
-                                        });
-                                    }
-                                    if (orderStatus === 4) {
-                                        nextState = $("<span>", {
-                                            "class": "label label-success",
-                                            "html": "Đã hoàn thành"
-                                        });
-                                    }
-                                    var message = $("<div>", {
-                                        "class": "row",
-                                        "style": "padding: 0px 10px",
-                                        "html": [
-                                            "Bạn có muốn thay đổi trạng thái hóa đơn thành ",
-                                            nextState,
-                                            " không ?"
-                                        ]
-                                    });
-                                    var footer = $("<div>", {
-                                        "class": "row",
-                                        "style": "padding: 0px 10px",
-                                        "html": [
-                                            $("<button>", {
-                                                "class": "btn btn-danger",
-                                                "data-dismiss": "modal",
-                                                "html": "Hủy"
-                                            }),
-                                            $("<button>", {
-                                                "class": "btn btn-success pull-right",
-                                                "onclick": 'changeOrderState('+orderId+','+ orderStatus+')',
-                                                "html": "Đồng ý"
-                                            })
-                                        ]
-                                    });
-
-
-                                    var title = 'Thay đổi trạng thái đơn hàng';
-                                    document.getElementById('popup-body').innerHTML = message[0].outerHTML;
-                                    document.getElementById('popup-title').innerHTML = title;
-                                    document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
-                                    $('#myModal').modal('show');
-                                }
-
-                                function changeOrderState(orderId, orderStatus) {
-                                    $.ajax({
-                                        "url": "@(Url.Action("ChangeOrderState", "Order"))",
-                                        "method": "POST",
-                                        "data": {
-                                            "orderId": orderId
-                                        },
-                                        "success": function(data) {
-                                            if (data === "1") {
-                                                $('#myModal').modal('hide');
-                                                if (orderStatus !== 4) {
-                                                    var n = noty({
-                                                        text: 'Thay đổi trạng thái đơn hàng thành công',
-                                                        type: 'success',
-                                                        dismissQueue: false,
-                                                        layout: 'bottomLeft',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 3000
-                                                    });
-                                                    window.setTimeout(function() {
-                                                        location.reload();
-                                                    }, 4000);
-                                                }
-                                                if (orderStatus === 4) {
-                                                    var n = noty({
-                                                        text: 'Bạn có muốn xuất hóa đơn không ?',
-                                                        buttons: [
-                                                            {
-                                                                addClass: 'btn btn-primary btn-xs pull-right', text: 'Có', onClick: function($noty) {
-                                                                    location.reload();
-                                                                    var win = window.open("@(Url.Action("ExportBill", "Order", new { orderId = Model.Order.OrderId}))", '_blank');
-                                                                    win.focus();
-                                                                    $noty.close();
-                                                                }
-                                                            },
-                                                            {
-                                                                addClass: 'btn btn-danger btn-xs', text: 'Không', onClick: function($noty) {
-                                                                    $noty.close();
-                                                                }
-                                                            }
-                                                        ],
-                                                        type: 'success',
-                                                        dismissQueue: false,
-                                                        layout: 'bottomLeft',
-                                                        theme: 'defaultTheme'
-                                                    });
-                                                }
-                                            } else {
-                                                $('#myModal').modal('hide');
-                                                var n = noty({
-                                                    text: 'Không thay đổi trạng thái đơn hàng',
-                                                    type: 'warning',
-                                                    dismissQueue: false,
-                                                    layout: 'bottomLeft',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 1000
-                                                });
-                                            }
-
-                                        },
-                                        "fail": function(e) {
-                                            $('#myModal').modal('hide');
-                                            var n = noty({
-                                                text: 'Đã có lỗi xảy ra',
-                                                type: 'error',
-                                                dismissQueue: false,
-                                                layout: 'bottomRight',
-                                                theme: 'defaultTheme',
-                                                timeout: 1000
-                                            });
-                                        }
-                                    });
+                                function openExportInNewTab() {
+                                    var win = window.open("@(Url.Action("ExportBill", "Order", new {orderId = Model.Order.OrderId}))", '_blank');
+                                    win.focus();
                                 }
                             </script>
                         </button>
-                    </div>
+                    }
+                    <script type="text/javascript">
+                        function openChangeOrderStatePopup(orderId, orderStatus) {
+                            var nextState;
+                            if (orderStatus === 2) {
+                                nextState = $("<span>", {
+                                    "class": "label label-info",
+                                    "html": "Đang sản xuất"
+                                });
+                            }
+                            if (orderStatus === 3) {
+                                nextState = $("<span>", {
+                                    "class": "label label-info",
+                                    "html": "Đang giao hàng"
+                                });
+                            }
+                            if (orderStatus === 4) {
+                                nextState = $("<span>", {
+                                    "class": "label label-success",
+                                    "html": "Đã hoàn thành"
+                                });
+                            }
+                            var message = $("<div>", {
+                                "class": "row",
+                                "style": "padding: 0px 10px",
+                                "html": [
+                                    "Bạn có muốn thay đổi trạng thái hóa đơn thành ",
+                                    nextState,
+                                    " không ?"
+                                ]
+                            });
+                            var footer = $("<div>", {
+                                "class": "row",
+                                "style": "padding: 0px 10px",
+                                "html": [
+                                    $("<button>", {
+                                        "class": "btn btn-danger",
+                                        "data-dismiss": "modal",
+                                        "html": "Hủy"
+                                    }),
+                                    $("<button>", {
+                                        "class": "btn btn-success pull-right",
+                                        "onclick": 'changeOrderState(' + orderId + ',' + orderStatus + ')',
+                                        "html": "Đồng ý"
+                                    })
+                                ]
+                            });
+
+
+                            var title = 'Thay đổi trạng thái đơn hàng';
+                            document.getElementById('popup-body').innerHTML = message[0].outerHTML;
+                            document.getElementById('popup-title').innerHTML = title;
+                            document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
+                            $('#myModal').modal('show');
+                        }
+
+                        function changeOrderState(orderId, orderStatus) {
+                            $.ajax({
+                                "url": "@(Url.Action("ChangeOrderState", "Order"))",
+                                "method": "POST",
+                                "data": {
+                                    "orderId": orderId
+                                },
+                                "success": function(data) {
+                                    if (data === "1") {
+                                        $('#myModal').modal('hide');
+                                        if (orderStatus !== 3) {
+                                            var n = noty({
+                                                text: 'Thay đổi trạng thái đơn hàng thành công',
+                                                type: 'success',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 3000
+                                            });
+                                            window.setTimeout(function() {
+                                                location.reload();
+                                            }, 4000);
+                                        }
+                                        if (orderStatus === 3) {
+                                            var n = noty({
+                                                text: 'Bạn có muốn xuất hóa đơn không ?',
+                                                buttons: [
+                                                    {
+                                                        addClass: 'btn btn-primary btn-xs pull-right',
+                                                        text: 'Có',
+                                                        onClick: function($noty) {
+                                                            location.reload();
+                                                            var win = window.open("@(Url.Action("ExportBill", "Order", new {orderId = Model.Order.OrderId}))", '_blank');
+                                                            win.focus();
+                                                            $noty.close();
+                                                        }
+                                                    },
+                                                    {
+                                                        addClass: 'btn btn-danger btn-xs',
+                                                        text: 'Không',
+                                                        onClick: function($noty) {
+                                                            $noty.close();
+                                                        }
+                                                    }
+                                                ],
+                                                type: 'success',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme'
+                                            });
+                                        }
+                                    } else {
+                                        $('#myModal').modal('hide');
+                                        var n = noty({
+                                            text: 'Không thay đổi trạng thái đơn hàng',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
+
+                                },
+                                "fail": function(e) {
+                                    $('#myModal').modal('hide');
+                                    var n = noty({
+                                        text: 'Đã có lỗi xảy ra',
+                                        type: 'error',
+                                        dismissQueue: false,
+                                        layout: 'bottomRight',
+                                        theme: 'defaultTheme',
+                                        timeout: 1000
+                                    });
+                                }
+                            });
+                        }
+                    </script>
                 }
             </div>
-
-
         </div>
         <div class="col-sm-6 invoice-col">
             @if (!Model.IsGuest)
             {
-                <div>
+                <div style="margin-bottom: 10px;">
                     Thành viên:
-                    <b>@Model.OrderPersonName</b>
+                    <b style="font-size: 17px;">@Model.OrderPersonName</b>
                 </div>
                 <div><b>Địa chỉ: </b>@Model.OrderPersonAddress</div>
                 <div><b>Điện thoại: </b>@Model.OrderPersonPhoneNumber</div>
@@ -305,7 +284,7 @@
             }
             else
             {
-                <div>
+                <div style="margin-bottom: 10px;">
                     Khách hàng:
                     <b style="font-size: 17px">@Model.OrderPersonName</b>
                 </div>
@@ -314,10 +293,20 @@
             }
         </div>
     </div>
+    @section InitScript{
+        
+    }
+    <!--Timeslide-->
+    <div class="row" style="margin: 0px 1px 25px">
+        <div id="timeslide">
+
+        </div>
+    </div>
     <!-- Product detail-->
     <div class="row" style="margin-top: 15px;">
         <div class="col-xs-12">
             <h2 class="page-header">
+                <i class="fa fa-shopping-cart" style="margin-right: 3px;"></i>
                 Thông tin sản phẩm
             </h2>
         </div>
@@ -362,7 +351,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Thuế(VAT): </th>
+                        <th>Thuế(VAT) @(ViewBag.TaxRate)%: </th>
                         <td style="text-align: right">@Model.Order.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                     </tr>
                     <tr>
@@ -389,19 +378,11 @@
         <div class="row" style="margin-top: 15px;">
             <div class="col-xs-12">
                 <h2 class="page-header">
+                    <i class="fa fa-cubes" style="margin-right: 3px;"></i>
                     Thông tin nguyên liệu
                 </h2>
             </div>
         </div>
-    <!--Material Noti-->
-        if (!Model.IsEnoughMaterial)
-        {
-            <div class="row">
-                <div class="col-xs-12">
-                    <h2 class="label label-danger" style="font-size: 14pt">Không đủ nguyên liệu. Không thể duyệt</h2>
-                </div>
-            </div>
-        }
     <!-- Material Table Content-->
         <div class="row">
             <div class="col-xs-12 table-responsive">
@@ -453,13 +434,13 @@
         <div class="col-xs-12">
             @if (Model.Order.OrderStatus != 5)
             {
-            <!--Cancel order-->
-                <button class="btn btn-danger" onclick="open_cancel_order(@Model.Order.OrderId,@Model.Order.DepositAmount)">
+    <!--Cancel order-->
+                <button class="btn btn-danger" onclick="open_cancel_order(@Model.Order.OrderId, @Model.Order.DepositAmount)">
                     <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy đơn hàng
                     <script type="text/javascript">
                         function open_cancel_order(orderId, deposit) {
                             var contentControl = $("<form>", {
-                                "action": "@Url.Action("Cancel","Order")",
+                                "action": "@Url.Action("Cancel", "Order")",
                                 "method": "post",
                                 "class": "form-group",
                                 "id": "return-deposit-form",
@@ -505,7 +486,8 @@
                                                 "class": "form-group",
                                                 "id": "return_deposit",
                                                 "style": "display:none;",
-                                                "html": ["<label>Tiền cọc hoàn trả: </lable>",
+                                                "html": [
+                                                    "<label>Tiền cọc hoàn trả: </lable>",
                                                     $("<input>", {
                                                         "type": "number",
                                                         "name": "returnDeposit",
@@ -520,7 +502,7 @@
                                     })
                                 ]
                             });
-                            $(document).on("change", "[data-role=radio-return-deposit]", function () {
+                            $(document).on("change", "[data-role=radio-return-deposit]", function() {
                                 if ($(this).val() === "1") {
                                     $('#return_deposit').show();
                                     $('#return_deposit_amount').val(deposit);
@@ -557,6 +539,7 @@
                             document.getElementById('popup-footer').innerHTML = footerControl[0].outerHTML;
                             $('#myModal').modal('show');
                         }
+
                         function cancel_order() {
                             $('#return-deposit-form').submit();
                         }
@@ -597,7 +580,7 @@
                                         "Không"
                                     ]
                                 });
-                                $(document).on("change", "[data-role=radio-is-deposit]", function () {
+                                $(document).on("change", "[data-role=radio-is-deposit]", function() {
                                     if ($(this).val() === "yes") {
                                         showDeposit();
                                     } else {
@@ -607,11 +590,11 @@
                                 var contentControl = $("<form>", {
                                     "id": "form-aprrove",
                                     "html": [
-                                        @(Model.IsLoyal?"loyalCustControl":""),
+                                        @(Model.IsLoyal ? "loyalCustControl" : ""),
                                         $("<div>", {
                                             "class": "form-group",
                                             "id": "deposit",
-                                            "style": "@(Model.IsLoyal?"display:none;":"")",
+                                            "style": "@(Model.IsLoyal ? "display:none;" : "")",
                                             "html": [
                                                 "<label>Tiền cọc</label>",
                                                 $("<input>", {
@@ -633,7 +616,7 @@
                                                     "min": "@(DateTime.Now.ToString("yyyy-MM-dd"))",
                                                     "class": "form-control",
                                                     "name": "deliveryDate",
-                                                    "value": "@(((DateTime)Model.Order.DeliveryTime).ToString("yyyy-MM-dd"))"
+                                                    "value": "@(((DateTime) Model.Order.DeliveryTime).ToString("yyyy-MM-dd"))"
 
                                                 }),
                                                 $("<input>", {
@@ -657,7 +640,7 @@
                                                 $("<a>", {
                                                     "class": "btn btn-success pull-right",
                                                     "style": "margin-right: 10px;",
-                                                    "onclick": "approveOrder(@(Model.IsGuest?"1":"0"))",
+                                                    "onclick": "approveOrder(@(Model.IsGuest ? "1" : "0"))",
                                                     "html": [
                                                         "Đồng ý"
                                                     ]
@@ -693,7 +676,7 @@
 
                             function approveOrder(isGuest) {
                                 $.ajax({
-                                    url:"@Url.Action("ApproveOrder","Order")",
+                                    url: "@Url.Action("ApproveOrder", "Order")",
                                     method: "POST",
                                     data: $("#form-aprrove").serialize(),
                                     success: function(data) {
@@ -716,10 +699,12 @@
                                                     text: 'Bạn có muốn tạo tài khoản cho khách hàng không ?',
                                                     buttons: [
                                                         {
-                                                            addClass: 'btn btn-primary btn-xs pull-right', text: 'Có', onClick: function($noty) {
+                                                            addClass: 'btn btn-primary btn-xs pull-right',
+                                                            text: 'Có',
+                                                            onClick: function($noty) {
                                                                 $noty.close();
                                                                 var body = $("<form>", {
-                                                                    "id":"add-customer-form",
+                                                                    "id": "add-customer-form",
                                                                     "html": [
                                                                         $("<div>", {
                                                                             "class": "form-group",
@@ -830,7 +815,9 @@
                                                             }
                                                         },
                                                         {
-                                                            addClass: 'btn btn-danger btn-xs', text: 'Không', onClick: function($noty) {
+                                                            addClass: 'btn btn-danger btn-xs',
+                                                            text: 'Không',
+                                                            onClick: function($noty) {
                                                                 $noty.close();
                                                             }
                                                         }
@@ -870,7 +857,7 @@
 
                             function addCustomer() {
                                 $.ajax({
-                                    "url": "@(Url.Action("AddCustomerForOrder","Customer"))",
+                                    "url": "@(Url.Action("AddCustomerForOrder", "Customer"))",
                                     "method": "POST",
                                     "data": $("#add-customer-form").serialize(),
                                     "success": function(data) {

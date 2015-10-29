@@ -4,32 +4,31 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BMA.Models;
-using BMA.Business;
 
 namespace BMA.Controllers
 {
     public class AccountController : Controller
     {
-        public ActionResult Login(FormCollection f,string strURL)
+        //
+        // GET: /Account/
+        BMAEntities db = new BMAEntities();
+        public ActionResult Login(FormCollection f, string strURL)
         {
             try
             {
                 string sAccount = f.Get("txtAccount").ToString();
                 string sPassword = f.Get("txtPassword").ToString();
-                User endUser = AccountBusiness.checkLogin(sAccount, sPassword);
-                if (endUser.RoleId == 3)
+                User endUser = db.Users.SingleOrDefault(n => n.Username == sAccount && n.Password == sPassword);
+                if (endUser != null)
                 {
                     Session["User"] = endUser;
+                    Session["Username"] = endUser.Username;
                     Session["UserId"] = endUser.Customers.ElementAt(0).CustomerId;
                     Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber;
-                    return RedirectToAction("Index", "Product");
+                    return RedirectToAction("Index", "Home");
                 }
-                else
-                {
-                    Session["User"] = endUser;
-                    Session["UserRole"] = endUser.Role.RoleId;
-                    return RedirectToAction("Index", "ManageProduct");
-                }
+                ViewBag.Notify = "Sai tài khoản hoặc mật khẩu";
+                return RedirectToAction("Login");
             }
             catch
             {

@@ -15,6 +15,12 @@
         </div>
     </div>
 </section>
+@{
+    int sumTotal = Convert.ToInt32(Model.TotalValue * 0.9);
+    int tax = Convert.ToInt32(Model.TotalValue * 0.1);
+    int oldSumTotal = Convert.ToInt32(oldOrder.TotalValue * 0.9);
+    int oldTax = Convert.ToInt32(oldOrder.TotalValue * 0.1);
+}
 <section>
     <div class="container">
         <div class="service-tab">
@@ -50,15 +56,15 @@
                                 </tr>
                                 <tr>
                                     <td class="text-left">Tổng cộng</td>
-                                    <td class="text-left">@(Model.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    <td class="text-left">@(sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left">Thuế</td>
-                                    <td class="text-left">@(Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    <td class="text-left">@(tax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left">Thành tiền</td>
-                                    <td class="text-left">@((Model.Amount + Model.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    <td class="text-left">@Model.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -113,15 +119,15 @@
                                 </tr>
                                 <tr>
                                     <td class="text-left">Tổng cộng</td>
-                                    <td class="text-left">@(oldOrder.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    <td class="text-left">@(oldSumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left">Thuế</td>
-                                    <td class="text-left">@(oldOrder.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    <td class="text-left">@(oldTax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left">Thành tiền</td>
-                                    <td class="text-left">@((oldOrder.Amount + oldOrder.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    <td class="text-left">@oldOrder.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                 </tr>
                             </tbody>
                         </table>

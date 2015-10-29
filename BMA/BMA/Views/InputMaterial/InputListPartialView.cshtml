@@ -1,2 +1,34 @@
-﻿
-<h1>Danh sách hóa đơn</h1>
+﻿@using BMA.Models
+@model List<BMA.Models.InputBill>
+
+<h3>Danh sách hóa đơn</h3>
+
+<div class="box-body">
+    <table id="example2" class="table table-bordered customer-table">
+        <thead style="font-weight: bold">
+            <tr>
+
+                <th>Mã hóa đơn</th>
+                <th>Nhà cung cấp</th>
+                <th>Ngày nhập</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (InputBill inputBill in Model)
+            {
+                <tr>
+                    <td>
+                        <span>@(inputBill.InputBillCode)</span>    
+                        <input type="hidden" name="txtInputBillId" value="@inputBill.InputBillId" />                
+                    </td>
+                    <td>
+                        @(inputBill.Supplier.SupplierName)
+                    </td>
+                    <td>
+                        @(inputBill.ImportDate.ToString("dd/MM/yyyy"))
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

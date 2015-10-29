@@ -17,7 +17,7 @@
         <!-- box-body -->
         <div class="box-body">
             <form id="updateCartForm" action="@Url.Action("UpdateProductMaterial", "ManageProduct", new { @ProductId = productId, strURL})" method="post">
-                <table id="material-table" class="table table-hover table-bordered">
+                <table id="example2" class="table table-hover table-bordered">
                     <thead style="font-weight: bold">
                         <tr>
                             <th>Tên nguyên liệu</th>
@@ -66,70 +66,51 @@
                     </tbody>
                 </table>
             </form>
+            @*<select class="form-control" name="material">
+                @{foreach (var item in pm)
+                {
+                    <option>@item.ProductMaterialName</option>
+                }}
+            </select>*@
             <div class="box-footer">
                 <a class="btn btn-primary" onclick="document.getElementById('updateCartForm').submit();">Cập nhật</a>
-                <a class="btn btn-yahoo" onclick="show_ListMaterial()">Thêm nguyên liệu</a>
-                <script type="text/javascript">
-                    function show_ListMaterial() {
-                        $.ajax({
-                            url: "@(Url.Action("ListMaterial", "ManageMaterial"))",
-                            data: {
-                                productId: "@productId"
-                            },
-                            method: "POST",
-                            success: function (data) {
-                                document.getElementById('standard-popup-title').innerHTML = "Chọn nguyên liệu";
-                                document.getElementById('standard-popup-body').innerHTML = data;
-                                $('#myStandardModal').modal('show');
-                            },
-                            fail: function (e) {
-                                alert("Have error" + e.toString());
-                            }
-                        })
-
+                <a class="btn btn-yahoo" onclick="open_container2(@productId, '@strURL')">Thêm nguyên liệu</a>
+                <script>
+                    function open_container2(productId, strURL) {
+                        var content =
+                            '<form role="form" action="/ManageProduct/DeleteProductMaterial" method="post" id="form-aprrove">' +
+                                '<div class="form-group">' +
+                                '<input type="hidden" name="productId" value="' + productId + '"/>' +
+                                '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                '</div>' +
+                                '<div class="form-group">' +
+                                '<label>Nguyên liệu: </label>' +
+                                '<select class="form-control" name="material">' +
+                                'foreach (var item in pm)' +
+                                '{' +
+                                    '<option>item.ProductMaterialName</option>' +
+                                '}' +
+                                '</select>' +
+                                '</div>' +
+                                '<div class="form-group">' +
+                                '<label>Số lượng: </label>' +
+                                '<input type="number" min = "1" class="form-control" id="quantity" value="0" name="quantity"/>' +
+                                '</div>' +
+                                '<div class="form-group" style="padding-bottom: 20px;">' +
+                                '<button type="submit" class="btn btn-success pull-right">Đồng ý</button>' +
+                                '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Quay lại</button>' +
+                                '</div>' +
+                                '</form>';
+                        var title = 'Thêm nguyên liệu cho sản phẩm';
+                        var footer = '';
+                        setModalBox(title, content, footer);
+                        $('#myModal').modal('show');
                     }
 
-                    function fnselect() {
-                        var materialId = $(".table tr.selected td:first input").val();
-                        var materialName = $(".table tr.selected td:first span").text();
-                        @*$.ajax({
-                            url: "@Url.Action("AddProductMaterial","ManageProduct")",
-                            data: {
-                            productId: "@productId"
-                        },
-                        })*@
-                        var materialRow = $("<tr>", {
-                            "html": [
-                                $("<td>", {
-                                    "html": materialName
-
-                                }),
-                                $("<td>", {
-                                    "html": $("<input>", {
-                                        "type": "text",
-                                        "name": "txtQuantity",
-                                        "value": 1
-                                    })
-                                }),
-                                $("<td>", {
-                                    "html": $("<a>", {
-                                        "href": "javascript:void(0)",
-                                        "id": "btn-choose",
-                                        "onclick": "",
-                                        "html": "Hủy"
-                                    })
-                                })
-                            ]
-                        });
-                        $("#material-table tbody").append(materialRow);
-                        $('#myStandardModal').modal('hide');
-                        var materialForm = document.getElementById("materialForm");
-                        var idInfo = document.createElement("input");
-                        idInfo.setAttribute("type", "hidden");
-                        idInfo.setAttribute("name", "productMaterialId");
-                        idInfo.setAttribute("value", materialId);
-                        materialForm.appendChild(idInfo);
-                        materialForm.submit();
+                    function setModalBox(title, content, footer) {
+                        document.getElementById('popup-body').innerHTML = content;
+                        document.getElementById('popup-title').innerHTML = title;
+                        document.getElementById('popup-footer').innerHTML = footer;
                     }
                 </script>
 

@@ -19,6 +19,10 @@
     <link href="~/Content/style.css" rel="stylesheet" />
     <!-- Animate css -->
     <link href="~/Content/animate.css" rel="stylesheet" />
+    <!-- Timesliders -->
+    <link href="~/Content/timeslider.css" rel="stylesheet" />
+
+    @RenderSection("InitStyle", false)
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -145,8 +149,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index","ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-                            <li><a href="@Url.Action("Create", "ManageProduct")"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+                            <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
+                            <li><a href="@Url.Action("Create", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -166,8 +170,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index","InputMaterial")"><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
-                            <li><a href="@Url.Action("Add","InputMaterial")"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
+                            <li><a href="@Url.Action("Index","InputMaterial")">><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
+                            <li><a href="@Url.Action("Add","InputMaterial")">><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -180,14 +184,14 @@
                             <li><a href=""><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="order">
                         <a href="#">
                             <i class="fa fa-file-o"></i> <span>Đơn hàng</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index","Order")"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
-                            <li><a href="@Url.Action("Add", "Order")"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
+                            <li id="orderList"><a href="@Url.Action("Index","Order")">><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
+                            <li><a href="@Url.Action("Add", "Order" )">><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
                             <li><a href=""><i class="fa fa-thumbs-o-up"></i>Chấp nhận đơn hàng</a></li>
                         </ul>
                     </li>
@@ -259,6 +263,9 @@
     <script src="~/Scripts/my-own-function.js"></script>
     <!--Noty js-->
     <script src="~/Scripts/jquery.noty.packaged.min.js"></script>
+    <!--Timeslider-->
+    <script src="~/Scripts/timeslider.js"></script>
+    @RenderSection("InitScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({
@@ -283,6 +290,9 @@
             $(this).addClass('selected').siblings().removeClass('selected');
         });
 
+
+
+
         $(document).on("click", "[data-role=remove-row-btn]", function () {
             var productId = $(this).parent().parent().find("td:first input").val();
             $(this).parent().parent().remove();
@@ -302,8 +312,52 @@
                 }
             });
         });
+        $(document).ready(function () {
+            var data = ["<b>Tạo: </b>25/10/2015 22:35",
+                "<b>Duyệt: </b>26/10/2015 22:35" + "<br/><b>Người duyệt: </b> Huỳnh Hữu Trường Giang",
+                "<b>Sản xuất: </b>27/10/2015 22:35",
+                "<b>Giao hàng: </b>28/10/2015 22:35",
+                "<b>Hoàn thành: </b>29/10/2015 22:35"
+            ];
 
+            $("#timeslide").timeslide({
+                number: data.length,
+                completed: 3,
+                renderLabel: function (i) {
+                    return data[i];
+                }
+            });
+        });
+        $("[data-toggle=popover").popover();
     </script>
+    @if (ViewBag.ShortageOfMaterial != null && ViewBag.ShortageOfMaterial)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                var n = noty({
+                    text: 'Không đủ nguyên liệu. Không thể duyệt đơn hàng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'bottomLeft',
+                    theme: 'defaultTheme'
+                });
+            };
+        </script>
+        ViewBag.ShortageOfMaterial = null;
+    }
+    @if (ViewBag.TreeView != null)
+    {
+        <script type="text/javascript">
+            $(document).find("#@(ViewBag.TreeView)").addClass('active');
+        </script>
+    }
+
+    @if (ViewBag.TreeViewMenu != null)
+    {
+        <script type="text/javascript">
+            $(document).find("#@(ViewBag.TreeViewMenu)").addClass('active');
+        </script>
+    }
     <!--Small Modal -->
     <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm ">

@@ -14,7 +14,6 @@ namespace BMA.Models
     
     public partial class InputBill
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public InputBill()
         {
             this.ExportFroms = new HashSet<ExportFrom>();
@@ -27,11 +26,10 @@ namespace BMA.Models
         public string InputRawImage { get; set; }
         public double InputTaxAmount { get; set; }
         public Nullable<int> SupplierId { get; set; }
+        public System.DateTime ImportDate { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ExportFrom> ExportFroms { get; set; }
         public virtual Supplier Supplier { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InputMaterial> InputMaterials { get; set; }
     }
 }
