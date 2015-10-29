@@ -391,6 +391,8 @@ namespace BMA.Business
             }
             // Temp var for total amount
             int totalAmount = 0;
+            // Temp var for tax amount
+            int taxAmount = 0;
             // Creat OrderItemViewModel List and MaterialViewModelList
             List<OrderItemViewModel> orderItemViewModelList = new List<OrderItemViewModel>();
             List<MaterialViewModel> materialViewModelList = new List<MaterialViewModel>();
@@ -407,11 +409,12 @@ namespace BMA.Business
                     orderItem.Quantity = cartViewModel.Quantity;
                     orderItem.RealPrice = cartViewModel.RealPrice;
                     orderItem.Amount = cartViewModel.Quantity * cartViewModel.RealPrice;
-                    var firstOrDefault = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && m.EndDate == null);
-                    if (firstOrDefault != null)
+                    var taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
+                    if (taxRate != null)
                     {
-                        int taxRateTemp = firstOrDefault.TaxRateValue;
+                        int taxRateTemp = taxRate.TaxRateValue;
                         orderItem.TaxAmount = (cartViewModel.Quantity * cartViewModel.RealPrice * taxRateTemp) / 100;
+                        taxAmount += (cartViewModel.Quantity * cartViewModel.RealPrice * taxRateTemp) / 100;
                     }
                     totalAmount += cartViewModel.Quantity * cartViewModel.RealPrice;
                     orderItemViewModel.OrderItem = orderItem;
@@ -489,11 +492,7 @@ namespace BMA.Business
                 }
             }
             result.Order.Amount = totalAmount;
-            TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1);
-            if (taxRate != null)
-            {
-                result.Order.TaxAmount = totalAmount * taxRate.TaxRateValue / 100;
-            }
+            result.Order.TaxAmount = taxAmount;
             result.OrderItemList = orderItemViewModelList;
             result.MaterialList = materialViewModelList;
             // Calculate the Material cost
@@ -517,6 +516,7 @@ namespace BMA.Business
             order.CreateTime = now;
             order.OrderStatus = 2;
             order.DeliveryTime = deliveryDate;
+            order.PlanDeliveryTime = deliveryDate;
             order.DepositAmount = deposit;
             // Temp Bug
             order.StaffApproveUserId = 2;
@@ -768,6 +768,7 @@ namespace BMA.Business
             order.CreateTime = now;
             order.OrderStatus = 2;
             order.DeliveryTime = deliveryDate;
+            order.PlanDeliveryTime = deliveryDate;
             order.DepositAmount = deposit;
             //Temp
             order.StaffApproveUserId = 2;
@@ -907,7 +908,16 @@ namespace BMA.Business
             // Add order to db
             db.Orders.Add(order);
             db.SaveChanges();
-            contextTransaction.Commit();
+            try
+            {
+                contextTransaction.Commit();
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+
             return true;
         }
 
@@ -1557,6 +1567,78 @@ namespace BMA.Business
         }
         #endregion
 
+        #region
+        /// <summary>
+        /// Get min quantity of order
+        /// </summary>
+        /// <returns>The min quantity of order</returns>
+        public int GetMinQuantity()
+        {
+            return db.Policies.FirstOrDefault(m => m.PolicyId == 1).PolicyBound;
+        }
+        #endregion
+
+        #region Get product list
+        /// <summary>
+        /// Get product list
+        /// </summary>
+        /// <returns>List of product in db</returns>
+        public List<Product> GetProductList()
+        {
+            return db.Products.Where(m => m.IsActive).ToList();
+        }
+        #endregion
+        #region
+        /// <summary>
+        /// Check customer field is exist
+        /// </summary>
+        /// <param name="customerEmail">Email</param>
+        /// <param name="customerAddress">Address</param>
+        /// <param name="customerPhoneNumber">Phone</param>
+        /// <param name="customerTaxCode">Tax Code</param>
+        /// <param name="username">Username</param>
+        /// <returns></returns>
+        public int CheckCustomerField(string customerEmail, string customerAddress, string customerPhoneNumber,
+            string customerTaxCode, string username)
+        {
+            // Check Email
+            User checkEmail = db.Users.FirstOrDefault(m => m.Email.Equals(customerEmail.Trim()));
+            if (checkEmail != null)
+            {
+                return 1;
+            }
+
+            // Check Username
+            User checkUsername = db.Users.FirstOrDefault(m => m.Username.Equals(username.Trim()));
+            if (checkUsername != null)
+            {
+                return 2;
+            }
+
+            // Check Address
+            Customer checkAddress = db.Customers.FirstOrDefault(m => m.CustomerAddress.Equals(customerAddress.Trim()));
+            if (checkAddress != null)
+            {
+                return 3;
+            }
+
+            // Check Phone Number
+            Customer checkPhone = db.Customers.FirstOrDefault(m => m.CustomerPhoneNumber.Equals(customerPhoneNumber.Trim()));
+            if (checkPhone != null)
+            {
+                return 4;
+            }
+
+            // Check Tax Code
+            Customer checkTaxCode = db.Customers.FirstOrDefault(m => m.TaxCode.Equals(customerTaxCode.Trim()));
+            if (checkTaxCode != null)
+            {
+                return 5;
+            }
+
+            return 0;
+        }
+        #endregion
     }
 
 }

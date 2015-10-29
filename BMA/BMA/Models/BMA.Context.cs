@@ -37,7 +37,6 @@ namespace BMA.Models
         public virtual DbSet<OtherExpense> OtherExpenses { get; set; }
         public virtual DbSet<OutputBill> OutputBills { get; set; }
         public virtual DbSet<OutputMaterial> OutputMaterials { get; set; }
-        public virtual DbSet<Policy> Policies { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductMaterial> ProductMaterials { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
@@ -48,5 +47,7 @@ namespace BMA.Models
         public virtual DbSet<TaxRate> TaxRates { get; set; }
         public virtual DbSet<TaxType> TaxTypes { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<DiscountByQuantity> DiscountByQuantities { get; set; }
+        public virtual DbSet<Policy> Policies { get; set; }
     }
 }

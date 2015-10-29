@@ -143,9 +143,10 @@ namespace BMA.Controllers
         public ActionResult Add()
         {
             List<CartViewModel> inputList = GetCart();
+            OrderBusiness orderBusiness = new OrderBusiness();
             if (inputList.Count == 0)
             {
-                List<Product> productList = db.Products.Where(m => m.IsActive).ToList();
+                List<Product> productList = orderBusiness.GetProductList();
                 foreach (Product product in productList)
                 {
                     CartViewModel cart = new CartViewModel();
@@ -158,6 +159,9 @@ namespace BMA.Controllers
             }
             List<CartViewModel> cartList = inputList.OrderByDescending(m => m.Quantity).ToList();
             Session["Cart"] = cartList;
+            ViewBag.MinQuantity = orderBusiness.GetMinQuantity();
+            ViewBag.TreeView = "order";
+            ViewBag.TreeViewMenu = "addOrder";
             return View(cartList);
         }
 
@@ -190,6 +194,7 @@ namespace BMA.Controllers
                 {
                     if (cartViewModel.ProductId == productId)
                     {
+                        cartViewModel.RealPrice = 0;
                         cartViewModel.Quantity = 0;
                     }
                 }
@@ -202,18 +207,32 @@ namespace BMA.Controllers
         public int CheckCart()
         {
             List<CartViewModel> cartList = GetCart();
+            // Check Quantity
+            int quantity = 0;
             foreach (CartViewModel cart in cartList)
             {
                 if (cart.Quantity > 0)
                 {
-                    return 1;
+                    quantity += cart.Quantity;
                 }
             }
-            return 0;
+            if (quantity == 0)
+            {
+                return 0;
+            }
+            OrderBusiness orderBusiness = new OrderBusiness();
+            int minQuantity = orderBusiness.GetMinQuantity();
+            if (quantity < minQuantity)
+            {
+                return -1;
+            }
+            return 1;
         }
 
         public ActionResult AddCustomerToOrder()
         {
+            ViewBag.TreeView = "order";
+            ViewBag.TreeViewMenu = "addOrder";
             return View("AddCustomerToOrder");
         }
 
@@ -223,6 +242,13 @@ namespace BMA.Controllers
             List<CartViewModel> inputCartList = GetCart();
             OrderBusiness orderBusiness = new OrderBusiness();
             OrderViewModel order = orderBusiness.MakeOrderViewModel(inputCartList, customerId);
+            if (!order.IsEnoughMaterial)
+            {
+                ViewBag.ShortageOfMaterial = true;
+            }
+            ViewBag.TaxRate = orderBusiness.GetVatRateAtTime(DateTime.Now);
+            ViewBag.TreeView = "order";
+            ViewBag.TreeViewMenu = "addOrder";
             return View(order);
         }
 
@@ -252,6 +278,8 @@ namespace BMA.Controllers
             }
             if (rs == 1)
             {
+                Session["CustomerId"] = null;
+                Session["NewCustomer"] = null;
                 Session["Cart"] = null;
             }
             return rs;
@@ -285,6 +313,7 @@ namespace BMA.Controllers
                 customer.CustomerTaxCode = customerTaxCodeString;
                 customer.Username = usernameString;
                 customer.CustomerEmail = customerEmailString;
+                Session["CustomerId"] = 0;
                 Session["NewCustomer"] = customer;
                 OrderBusiness orderBusiness = new OrderBusiness();
                 OrderViewModel order = orderBusiness.MakeOrderViewForNewCustomerModel(inputCartList, customer);
@@ -455,5 +484,40 @@ namespace BMA.Controllers
             // Bug check order is null or not.
             return View(order);
         }
+
+        #region Set ViewBag when Back to AddCustomerToOrder
+        [HttpPost]
+        public ActionResult BackToAddCustomerToOrder(int customerId)
+        {
+            if (customerId == 0)
+            {
+                CustomerViewModel customer = Session["NewCustomer"] as CustomerViewModel;
+
+                Session["NewCustomer"] = customer;
+
+            }
+            Session["CustomerId"] = customerId;
+
+            return RedirectToAction("AddCustomerToOrder");
+        }
+        #endregion
+
+        #region Check customer field
+
+        [HttpPost]
+        public int CheckCustomerField(FormCollection form)
+        {
+            string customerEmailString = form["customerEmail"];
+            string customerAddressString = form["customerAddress"];
+            string customerPhoneNumberString = form["customerPhoneNumber"];
+            string customerTaxCodeString = form["customerTaxCode"];
+            string usernameString = form["username"];
+
+            OrderBusiness orderBusiness = new OrderBusiness();
+            return orderBusiness.CheckCustomerField(customerEmailString, customerAddressString, customerPhoneNumberString, customerTaxCodeString, usernameString);
+        }
+
+
+        #endregion
     }
 }

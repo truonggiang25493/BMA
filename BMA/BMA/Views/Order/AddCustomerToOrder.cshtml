@@ -1,4 +1,5 @@
-﻿@{
+﻿@using BMA.Models.ViewModel
+@{
     ViewBag.Title = "Tạo mới đơn hàng - Thông tin khách hàng";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
@@ -6,175 +7,455 @@
     <h1>Tạo mới đơn hàng</h1>
 </section>
 <section class="content">
-    <div class="row">
-        <div class="col-xs-12">
-            <h2 class="page-header">
+    <div class="box" style="height: 650px;">
+        <div class="box-header">
+            <h3>
                 Thông tin khách hàng
-            </h2>
+            </h3>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-3">
-            <div class="row" style="margin-left: 20px;">
-                <button class="btn btn-facebook" style="margin-bottom: 10px;" onclick="open_choose_customer()">Chọn khách hàng</button>
-                <br />
-                <button class="btn btn-facebook" onclick="open_add_customer()">Thêm khách hàng</button>
-            </div>
+        <div class="box-body">
+            <div class="col-xs-3">
+                <div class="row" style="margin-left: 20px;">
+                    <button class="btn btn-facebook" style="margin-bottom: 10px;" onclick="open_choose_customer()">Chọn khách hàng</button>
+                    <br />
+                    <button class="btn btn-facebook" onclick="open_add_customer()">Thêm khách hàng</button>
+                </div>
 
-        </div>
-        <div class="col-xs-9" id="announce">
-            <h3>Vui lòng chọn "Thêm khách hàng" hay "Chọn khách hàng" !</h3>
-        </div>
-        <div class="col-xs-9" id="choose-customer" style="display: none">
-            <div class="box">
+            </div>
+            <div class="col-xs-9" id="announce">
+                <h3>Vui lòng chọn "Thêm khách hàng" hay "Chọn khách hàng" !</h3>
+            </div>
+            <div class="col-xs-9" id="choose-customer" style="display: none">
+                <div class="box">
+                    <!--Header-->
+                    <div class="box-header">
+                        <h3>Chọn khách hàng</h3>
+                    </div>
+                    <!--Customer table-->
+                    <div class="box-body" id="customer-table">
+                        <!--Customer table load by ajax-->
+                    </div>
+                    <!--Button-->
+                    <div class="box-footer">
+
+                        <button class="btn btn-success pull-right" onclick="fnselect()">
+                            <i class=" fa fa-check" style="margin-right: 3px;"></i>Chọn
+                        </button>
+
+
+
+                    </div>
+                    <script>
+                        function fnselect() {
+                            var customerId = $(".table tr.selected td:first input").val();
+                            if (customerId === undefined) {
+                                var n = noty({
+                                    text: 'Vui lòng chọn khách hàng !',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'bottomLeft',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else {
+                                var form = document.createElement("form");
+                                form.setAttribute("method", "post");
+                                form.setAttribute("action", "@(Url.Action("CheckoutWithCustomer", "Order"))");
+
+                                var hiddenField = document.createElement("input");
+                                hiddenField.setAttribute("type", "hidden");
+                                hiddenField.setAttribute("name", "customerId");
+                                hiddenField.setAttribute("value", customerId);
+                                form.appendChild(hiddenField);
+                                form.submit();
+                            }
+                        }
+                    </script>
+
+                </div>
+
+            </div>
+            <div class="col-xs-9" id="add-customer" style="display: none">
                 <!--Header-->
-                <div class="box-header">
-                    <h3>Chọn khách hàng</h3>
-                </div>
-                <!--Customer table-->
-                <div class="box-body" id="customer-table">
-                    <!--Customer table load by ajax-->
-                </div>
-                <!--Button-->
-                <div class="box-footer">
-
-                    <button class="btn btn-success pull-right" onclick="fnselect()">
-                        <i class=" fa fa-check"></i>Chọn
-                    </button>
-
-
-
-                </div>
-                <script>
-                    function fnselect() {
-                        var customerId = $(".table tr.selected td:first input").val();
-
-                        var form = document.createElement("form");
-                        form.setAttribute("method", "post");
-                        form.setAttribute("action", "/Order/CheckoutWithCustomer");
-
-                        var hiddenField = document.createElement("input");
-                        hiddenField.setAttribute("type", "hidden");
-                        hiddenField.setAttribute("name", "customerId");
-                        hiddenField.setAttribute("value", customerId);
-                        form.appendChild(hiddenField);
-                        form.submit();
-                    }
-                </script>
-
-            </div>
-
-        </div>
-        <div class="col-xs-9" id="add-customer" style="display: none">
-            <!--Header-->
-            <div class="box">
-                <div class="box-header">
-                    <h3>Thêm khách hàng</h3>
-                </div>
-                <div class="box-body">
-                    <table class="table">
-                        <form action="@Url.Action("CreateCustomerForOrder", "Order")" id="add-customer-form" method="POST">
-                            <tr class="row">
-                                <td class="col-xs-3">
-                                    <label>Tên khách hàng(*): </label>
-                                </td>
-                                <td class="col-xs-9">
-                                    <input type="text" class="col-xs-9" name="customerName" required maxlength="50" />
-                                </td>
-                            </tr>
-                            <tr class="row">
-                                <td class="col-xs-3">
-                                    <label>Tên đăng nhập(*): </label>
-                                </td>
-                                <td class="col-xs-9">
-                                    <input type="text" class="col-xs-9" name="username" required maxlength="50" />
-                                </td>
-                            </tr>
-                            <tr class="row">
-                                <td class="col-xs-3">
-                                    <label>Email(*): </label>
-                                </td>
-                                <td class="col-xs-9">
-                                    <input type="text" class="col-xs-9" name="customerEmail" required maxlength="50" placeholder="Hãy nhập kí tự" />
-                                </td>
-                            </tr>
-                            <tr class="row">
-                                <td class="col-xs-3">
-                                    <label>Địa chỉ(*): </label>
-                                </td>
-                                <td class="col-xs-9">
-                                    <input type="text" class="col-xs-9" name="customerAddress" maxlength="250" required />
-                                </td>
-                            </tr>
-                            <tr class="row">
-                                <td class="col-xs-3">
-                                    <label>Số điện thoại(*): </label>
-                                </td>
-                                <td class="col-xs-9">
-                                    <input type="text" class="col-xs-9" name="customerPhoneNumber" required />
-                                </td>
-                            </tr>
-                            <tr class="row">
-                                <td class="col-xs-3">
-                                    <label>Mã số thuế(*): </label>
-                                </td>
-                                <td class="col-xs-9">
-                                    <input type="text" class="col-xs-9" name="customerTaxCode" required />
-                                </td>
-                            </tr>
-                            <tr class="row" style="text-align: center">
-                                <td>
-                                    <input type="button" name="btn-clear" value="Xóa" />
-                                </td>
-                                <td>
-                                    <input type="submit" name="btn-submit" value="Đồng ý" />
-                                </td>
-                            </tr>
+                <div class="box">
+                    <div class="box-header">
+                        <h3>Thêm khách hàng</h3>
+                    </div>
+                    <div class="box-body">
+                        <form action="@Url.Action("CheckoutWithNewCustomer", "Order")" id="add-customer-form" method="POST">
+                            <table class="table">
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Tên khách hàng(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="customerName" type="text" class="col-xs-9" name="customerName" required maxlength="50" placeholder="Hãy nhập tên khách hàng. Không quá 50 kí tự" />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Tên đăng nhập(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="username" type="text" class="col-xs-9" name="username" required maxlength="50" placeholder="Hãy nhập tên đăng nhập cho khách hàng. Không quá 50 kí tự" />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Email(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="customerEmail" type="email" class="col-xs-9" name="customerEmail" required maxlength="50" placeholder="Hãy email khách hàng. Không quá 50 kí tự" />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Địa chỉ(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="customerAddress" type="text" class="col-xs-9" name="customerAddress" maxlength="250" required placeholder="Hãy địa chỉ khách hàng. Không quá 250 kí tự" />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Số điện thoại(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="customerPhoneNumber" type="text" class="col-xs-9" name="customerPhoneNumber" required placeholder="Hãy nhập số điện thoại khách hàng dạng 0999999999 hoặc 01676666666." />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Mã số thuế(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="customerTaxCode" type="text" class="col-xs-9" name="customerTaxCode" required placeholder="Hãy nhập mã số thuế." />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td colspan="2">
+                                        <label style="font-weight: normal">(<span style="color: red">*</span>) là các trường bắt buộc</label>
+                                    </td>
+                                </tr>
+                            </table>
                         </form>
-                    </table>
-
-                </div>
-                <div class="box-footer">
-
+                    </div>
+                    <div class="box-footer">
+                        <div class="row">
+                            <button class="btn btn-cancel">Xóa</button>
+                            <button class="btn btn-success" onclick="addCustomer()">
+                                Đồng ý
+                                <script type="text/javascript">
+                                    function addCustomer() {
+                                        // Validate Customer Name
+                                        var customerName = $("#customerName").val();
+                                        var username = $("#username").val();
+                                        var email = $("#customerEmail").val();
+                                        var address = $("#customerAddress").val();
+                                        var phoneNumber = $("#customerPhoneNumber").val();
+                                        var taxCode = $("#customerTaxCode").val();
+                                        if (customerName.trim() === '') {
+                                            var n = noty({
+                                                text: 'Tên khách hàng không được trống.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerName").focus();
+                                        } else if (customerName.length > 50) {
+                                            var n = noty({
+                                                text: 'Tên khách hàng không được quá 50 kí tự.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerName").focus();
+                                        }
+                                            // Validate Username
+                                        else if (username.trim() === '') {
+                                            var n = noty({
+                                                text: 'Tên đăng nhập không được trống.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#username").focus();
+                                        } else if (username.length > 50) {
+                                            var n = noty({
+                                                text: 'Tên đăng nhập không được quá 50 kí tự.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#username").focus();
+                                        }
+                                            // Validate email
+                                        else if (email.trim() === '') {
+                                            var n = noty({
+                                                text: 'Email không được trống.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerEmail").focus();
+                                        } else if (email.length > 50) {
+                                            var n = noty({
+                                                text: 'Email không được quá 50 kí tự.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerEmail").focus();
+                                        } else if (!new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i).test(email)) {
+                                            var n = noty({
+                                                text: 'Hãy nhập email đúng định dạng.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerEmail").focus();
+                                        }
+                                            // Validate address
+                                        else if (address.trim() === '') {
+                                            var n = noty({
+                                                text: 'Địa chỉ không được trống.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerAddress").focus();
+                                        } else if (address.length > 250) {
+                                            var n = noty({
+                                                text: 'Địa chỉ không được quá 250 kí tự.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerAddress").focus();
+                                        }
+                                            // Validate Phone Number
+                                        else if (phoneNumber.trim() === '') {
+                                            var n = noty({
+                                                text: 'Số điện thoại không được trống.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerPhoneNumber").focus();
+                                        } else if (!new RegExp(/^\d{10,11}$/).test(phoneNumber)) {
+                                            var n = noty({
+                                                text: 'Hãy nhập số điện thoại đúng.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerPhoneNumber").focus();
+                                        } else if (taxCode.trim() === '') {
+                                            var n = noty({
+                                                text: 'Mã số thuế không được trống.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerTaxCode").focus();
+                                        } else if (!new RegExp(/^\d{10,13}$/).test(taxCode)) {
+                                            var n = noty({
+                                                text: 'Hãy nhập mã số thuế đúng.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerTaxCode").focus();
+                                        } else {
+                                            $.ajax({
+                                                url: "@(Url.Action("CheckCustomerField","Order"))",
+                                                method: "POST",
+                                                data: $("#add-customer-form").serialize(),
+                                                success: function (data) {
+                                                    if (data === '1') {
+                                                        var n = noty({
+                                                            text: 'Email này đã có trong hệ thống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'bottomLeft',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        $("#customerEmail").focus();
+                                                    } else if (data === '2') {
+                                                        var n = noty({
+                                                            text: 'Tên đăng nhập này đã có trong hệ thống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'bottomLeft',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        $("#username").focus();
+                                                    } else if (data === '3') {
+                                                        var n = noty({
+                                                            text: 'Địa chỉ này đã có trong hệ thống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'bottomLeft',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        $("#customerAddress").focus();
+                                                    } else if (data === '4') {
+                                                        var n = noty({
+                                                            text: 'Số điện thoại này đã có trong hệ thống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'bottomLeft',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        $("#customerPhoneNumber").focus();
+                                                    } else if (data === '5') {
+                                                        var n = noty({
+                                                            text: 'Mã số thuế này đã có trong hệ thống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'bottomLeft',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        $("#customerTaxCode").focus();
+                                                    } else if (data === '0') {
+                                                        $("#add-customer-form").submit();
+                                                    }
+                                                },
+                                                fail: function (e) {
+                                                    var n = noty({
+                                                        text: 'Đã có lỗi xảy ra.',
+                                                        type: 'danger',
+                                                        dismissQueue: false,
+                                                        layout: 'bottomLeft',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    }
+                                </script>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <script>
+                function open_choose_customer() {
+                    $.ajax({
+                        url: "@(Url.Action("GetCustomerPartialView", "Customer"))",
+                        method: "GET",
+                        success: function (data) {
+                            $('#customer-table').html(data);
+                        },
+                        fail: function (e) {
+                            alert("Have error" + e.toString());
+                        }
+                    });
+                    $('#announce').hide();
+                    $('#choose-customer').show();
+                    $('#add-customer').hide();
+                }
 
-
+                function open_add_customer() {
+                    $('#announce').hide();
+                    $('#choose-customer').hide();
+                    $('#add-customer').show();
+                }
+            </script>
         </div>
-        <script>
-            function open_choose_customer() {
-                $.ajax({
-                    url: "/Customer/GetCustomerPartialView",
-                    method: "GET",
-                    success: function (data) {
-                        $('#customer-table').html(data);
-                    },
-                    fail: function (e) {
-                        alert("Have error" + e.toString());
-                    }
-                });
-                $('#announce').hide();
-                $('#choose-customer').show();
-                $('#add-customer').hide();
-            }
+        <div class="box-footer" style="margin-top: 30px">
+            <div class="col-xs-12">
 
-            function open_add_customer() {
-                $('#announce').hide();
-                $('#choose-customer').hide();
-                $('#add-customer').show();
-            }
-        </script>
-    </div>
-    <div class="row" style="margin-top: 30px">
-        <div class="col-xs-12">
+                <a class="btn btn-primary" href="@(Url.Action("Add","Order"))">
+                    <i class=" fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
+                </a>
 
-            <a class="btn btn-primary" href="/Order/Add">
-                <i class=" fa fa-backward" style="margin-right: 3px;"></i>Quay lại
-            </a>
-
-            <a class="btn btn-danger pull-right" href="/Order/CancelAddOrder">
-                <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy
-            </a>
+                <a class="btn btn-danger pull-right" href="@(Url.Action("CancelAddOrder","Order"))">
+                    <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy
+                </a>
+            </div>
         </div>
     </div>
+
+
+
 </section>
+@section AddCustomerToOrderScript{
+    @if (Session["CustomerId"] != null)
+    {
+        if ((int)Session["CustomerId"] == 0 && Session["NewCustomer"] != null)
+        {
+            <script type="text/javascript" charset="utf-8">
+                window.onload = function () {
+                    document.getElementById("customerName").value = "@(((CustomerViewModel)Session["NewCustomer"]).CustomerName)";
+                    document.getElementById("username").value = "@(((CustomerViewModel)Session["NewCustomer"]).Username)";
+                    document.getElementById("customerEmail").value = "@(((CustomerViewModel)Session["NewCustomer"]).CustomerEmail)";
+                    document.getElementById("customerAddress").value = "@(((CustomerViewModel)Session["NewCustomer"]).CustomerAddress)";
+                    document.getElementById("customerPhoneNumber").value = "@(((CustomerViewModel)Session["NewCustomer"]).CustomerPhoneNumber)";
+                    document.getElementById("customerTaxCode").value = "@(((CustomerViewModel)Session["NewCustomer"]).CustomerTaxCode)";
+
+                    $('#announce').hide();
+                    $('#choose-customer').hide();
+                    $('#add-customer').show();
+                };
+            </script>
+
+
+        }
+        else if ((int)Session["CustomerId"] != 0)
+        {
+            <script type="text/javascript">
+                window.onload = function () {
+                    $.ajax({
+                        url: "@(Url.Action("GetCustomerPartialView", "Customer"))",
+                        method: "GET",
+                        data: {
+                            customerId: "@(Session["CustomerId"])"
+                        },
+                        success: function (data) {
+                            $('#customer-table').html(data);
+                        },
+                        fail: function (e) {
+                            alert("Have error" + e.toString());
+                        }
+                    });
+                    $('#announce').hide();
+                    $('#choose-customer').show();
+                    $('#add-customer').hide();
+                };
+            </script>
+        }
+    }
+}

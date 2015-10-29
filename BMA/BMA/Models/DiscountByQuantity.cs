@@ -12,10 +12,11 @@ namespace BMA.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Policy
+    public partial class DiscountByQuantity
     {
-        public int PolicyId { get; set; }
-        public string PolicyName { get; set; }
-        public int PolicyBound { get; set; }
+        public int Id { get; set; }
+        public int QuantityFrom { get; set; }
+        public int QuantityTo { get; set; }
+        public int DiscountValue { get; set; }
     }
 }

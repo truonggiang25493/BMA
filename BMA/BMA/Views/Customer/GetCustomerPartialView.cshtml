@@ -10,18 +10,37 @@
     <tbody>
         @foreach (var customer in Model)
         {
-            <tr>
-                <td>
-                    @customer.User.Fullname
-                    <input type="hidden" value="@customer.UserId" />
-                </td>
-                <td>
-                    @customer.CustomerAddress
-                </td>
-                <td>
-                    @customer.CustomerPhoneNumber
-                </td>
-            </tr>
+            if (ViewBag.CustomerId != null && ViewBag.CustomerId == customer.UserId)
+            {
+                <tr class="selected">
+                    <td>
+                        @customer.User.Fullname
+                        <input type="hidden" value="@customer.UserId" />
+                    </td>
+                    <td>
+                        @customer.CustomerAddress
+                    </td>
+                    <td>
+                        @customer.CustomerPhoneNumber
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        @customer.User.Fullname
+                        <input type="hidden" value="@customer.UserId" />
+                    </td>
+                    <td>
+                        @customer.CustomerAddress
+                    </td>
+                    <td>
+                        @customer.CustomerPhoneNumber
+                    </td>
+                </tr>
+            }
+
         }
     </tbody>
 </table>

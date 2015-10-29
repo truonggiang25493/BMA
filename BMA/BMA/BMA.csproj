@@ -166,9 +166,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Business\CustomerBusiness.cs" />
     <Compile Include="Business\InputMaterialBusiness.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
     <Compile Include="Business\SupplierBusiness.cs" />
+    <Compile Include="Business\TaxBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
     <Compile Include="Common\CommonFunction.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -185,6 +187,7 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\TaxController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -211,6 +214,9 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DiscardedInputMaterial.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DiscountByQuantity.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ExportFrom.cs">
@@ -1250,6 +1256,9 @@
     <Content Include="Views\Supplier\AddSupplier.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Error\ManageError.cshtml" />
+    <Content Include="Views\Tax\Index.cshtml" />
+    <Content Include="Views\Order\ExportBill.cshtml" />
+    <Content Include="Views\Order\GetShortageMaterialList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

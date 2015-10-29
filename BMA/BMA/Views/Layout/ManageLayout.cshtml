@@ -17,8 +17,6 @@
     <link href="/Content/AdminLayout/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
     <!-- Own css -->
     <link href="~/Content/style.css" rel="stylesheet" />
-    <!-- Animate css -->
-    <link href="~/Content/animate.css" rel="stylesheet" />
     <!-- Timesliders -->
     <link href="~/Content/timeslider.css" rel="stylesheet" />
 
@@ -116,16 +114,6 @@
                     </div>
                 </div>
                 <div></div>
-                <!-- search form -->
-                <form action="#" method="get" class="sidebar-form">
-                    <div class="input-group">
-                        <input type="text" name="q" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
-                            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
-                        </span>
-                    </div>
-                </form>
-                <!-- /.search form -->
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu">
                     <li>
@@ -190,8 +178,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="orderList"><a href="@Url.Action("Index","Order")">><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
-                            <li><a href="@Url.Action("Add", "Order" )">><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
+                            <li id="orderList"><a href="@Url.Action("Index","Order")"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
+                            <li id="addOrder"><a href="@Url.Action("Add", "Order" )"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
                             <li><a href=""><i class="fa fa-thumbs-o-up"></i>Chấp nhận đơn hàng</a></li>
                         </ul>
                     </li>
@@ -266,6 +254,9 @@
     <!--Timeslider-->
     <script src="~/Scripts/timeslider.js"></script>
     @RenderSection("InitScript", false)
+    @RenderSection("OrderDetailScript", false)
+    @RenderSection("CheckoutWithCustomerScript", false)
+    @RenderSection("AddCustomerToOrderScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({
@@ -330,21 +321,6 @@
         });
         $("[data-toggle=popover").popover();
     </script>
-    @if (ViewBag.ShortageOfMaterial != null && ViewBag.ShortageOfMaterial)
-    {
-        <script type="text/javascript">
-            window.onload = function () {
-                var n = noty({
-                    text: 'Không đủ nguyên liệu. Không thể duyệt đơn hàng.',
-                    type: 'warning',
-                    dismissQueue: false,
-                    layout: 'bottomLeft',
-                    theme: 'defaultTheme'
-                });
-            };
-        </script>
-        ViewBag.ShortageOfMaterial = null;
-    }
     @if (ViewBag.TreeView != null)
     {
         <script type="text/javascript">

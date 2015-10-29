@@ -35,6 +35,15 @@
           <Property Name="DiscardDate" Type="date" Nullable="false" />
           <Property Name="DiscardNote" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
+        <EntityType Name="DiscountByQuantity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuantityFrom" Type="int" Nullable="false" />
+          <Property Name="QuantityTo" Type="int" Nullable="false" />
+          <Property Name="DiscountValue" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="ExportFrom">
           <Key>
             <PropertyRef Name="OutputMaterialId" />
@@ -121,6 +130,7 @@
           <Property Name="StartProduceTime" Type="datetime" />
           <Property Name="Amount" Type="int" Nullable="false" />
           <Property Name="TaxAmount" Type="int" Nullable="false" />
+          <Property Name="DiscountAmount" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="OtherExpense">
           <Key>
@@ -158,9 +168,8 @@
             <PropertyRef Name="PolicyId" />
           </Key>
           <Property Name="PolicyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="PolicyName" Type="nvarchar" MaxLength="50" />
-          <Property Name="PolicyBound" Type="int" />
-          <Property Name="PolicyComparition" Type="nvarchar" MaxLength="10" />
+          <Property Name="PolicyName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PolicyBound" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -546,6 +555,7 @@
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DiscardedInputMaterial" EntityType="Self.DiscardedInputMaterial" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DiscountByQuantity" EntityType="Self.DiscountByQuantity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExportFrom" EntityType="Self.ExportFrom" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GuestInfo" EntityType="Self.GuestInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InputBill" EntityType="Self.InputBill" Schema="dbo" store:Type="Tables" />
@@ -676,7 +686,6 @@
           <EntitySet Name="OtherExpenses" EntityType="BMAModel.OtherExpense" />
           <EntitySet Name="OutputBills" EntityType="BMAModel.OutputBill" />
           <EntitySet Name="OutputMaterials" EntityType="BMAModel.OutputMaterial" />
-          <EntitySet Name="Policies" EntityType="BMAModel.Policy" />
           <EntitySet Name="Products" EntityType="BMAModel.Product" />
           <EntitySet Name="ProductMaterials" EntityType="BMAModel.ProductMaterial" />
           <EntitySet Name="Recipes" EntityType="BMAModel.Recipe" />
@@ -779,6 +788,8 @@
             <End Role="TaxType" EntitySet="TaxTypes" />
             <End Role="TaxRate" EntitySet="TaxRates" />
           </AssociationSet>
+          <EntitySet Name="DiscountByQuantities" EntityType="BMAModel.DiscountByQuantity" />
+          <EntitySet Name="Policies" EntityType="BMAModel.Policy" />
         </EntityContainer>
         <EntityType Name="Category">
           <Key>
@@ -920,6 +931,7 @@
           <NavigationProperty Name="OutputBill" Relationship="BMAModel.FK_Orders_OutputBill_OutputBillId" FromRole="Order" ToRole="OutputBill" />
           <NavigationProperty Name="User" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="Order" ToRole="User" />
           <NavigationProperty Name="User1" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="Order" ToRole="User" />
+          <Property Name="DiscountAmount" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="OtherExpense">
           <Key>
@@ -955,15 +967,6 @@
           <NavigationProperty Name="ExportFroms" Relationship="BMAModel.FK_ExportFrom_OutputMaterial" FromRole="OutputMaterial" ToRole="ExportFrom" />
           <NavigationProperty Name="OrderItem" Relationship="BMAModel.FK_OutputMaterial_OrderItem" FromRole="OutputMaterial" ToRole="OrderItem" />
           <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_OutputMaterial_ProductMaterial" FromRole="OutputMaterial" ToRole="ProductMaterial" />
-        </EntityType>
-        <EntityType Name="Policy">
-          <Key>
-            <PropertyRef Name="PolicyId" />
-          </Key>
-          <Property Name="PolicyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PolicyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PolicyBound" Type="Int32" />
-          <Property Name="PolicyComparition" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -1363,6 +1366,23 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="DiscountByQuantity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuantityFrom" Type="Int32" Nullable="false" />
+          <Property Name="QuantityTo" Type="Int32" Nullable="false" />
+          <Property Name="DiscountValue" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Policy">
+          <Key>
+            <PropertyRef Name="PolicyId" />
+          </Key>
+          <Property Name="PolicyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PolicyName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PolicyBound" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1467,6 +1487,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="BMAModel.Order">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
                 <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="StartProduceTime" ColumnName="StartProduceTime" />
@@ -1525,16 +1546,6 @@
                 <ScalarProperty Name="ExportDate" ColumnName="ExportDate" />
                 <ScalarProperty Name="ExportQuantity" ColumnName="ExportQuantity" />
                 <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Policies">
-            <EntityTypeMapping TypeName="BMAModel.Policy">
-              <MappingFragment StoreEntitySet="Policy">
-                <ScalarProperty Name="PolicyComparition" ColumnName="PolicyComparition" />
-                <ScalarProperty Name="PolicyBound" ColumnName="PolicyBound" />
-                <ScalarProperty Name="PolicyName" ColumnName="PolicyName" />
-                <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1648,6 +1659,25 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DiscountByQuantities">
+            <EntityTypeMapping TypeName="BMAModel.DiscountByQuantity">
+              <MappingFragment StoreEntitySet="DiscountByQuantity">
+                <ScalarProperty Name="DiscountValue" ColumnName="DiscountValue" />
+                <ScalarProperty Name="QuantityTo" ColumnName="QuantityTo" />
+                <ScalarProperty Name="QuantityFrom" ColumnName="QuantityFrom" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Policies">
+            <EntityTypeMapping TypeName="BMAModel.Policy">
+              <MappingFragment StoreEntitySet="Policy">
+                <ScalarProperty Name="PolicyBound" ColumnName="PolicyBound" />
+                <ScalarProperty Name="PolicyName" ColumnName="PolicyName" />
+                <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
