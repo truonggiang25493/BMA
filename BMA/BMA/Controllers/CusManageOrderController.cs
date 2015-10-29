@@ -171,7 +171,7 @@ namespace BMA.Controllers
                 {
                     db.OrderItems.Remove(oldOrderItems[i]);
                 }
-                confirmedOrder.ConfirmDate = DateTime.Now;
+                confirmedOrder.ConfirmTime = DateTime.Now;
                 db.Orders.Remove(oldOrder);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -194,7 +194,7 @@ namespace BMA.Controllers
                 {
                     db.OrderItems.Remove(orderItems[i]);
                 }
-                oldOrder.ConfirmDate = DateTime.Now;
+                oldOrder.ConfirmTime = DateTime.Now;
                 db.Orders.Remove(confirmedOrder);
                 db.SaveChanges();
                 return RedirectToAction("Index");

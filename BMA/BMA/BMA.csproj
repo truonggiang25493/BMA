@@ -39,17 +39,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="jsreport.Client">
-      <HintPath>..\packages\jsreport.Client.0.8.1.0\lib\net45\jsreport.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="jsreport.Embedded, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\jsreport.Embedded.0.8.1.0\lib\net45\jsreport.Embedded.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="jsreport.MVC">
-      <HintPath>..\packages\jsreport.MVC.0.1.4\lib\net45\jsreport.MVC.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -214,6 +203,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BMA.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DiscardedInputMaterial.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DiscountByQuantity.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ExportFrom.cs">
       <DependentUpon>BMA.tt</DependentUpon>
@@ -452,9 +447,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>BMA.edmx</DependentUpon>
       <LastGenOutput>BMA.cs</LastGenOutput>
-    </Content>
-    <Content Include="jsreport-net-embedded.zip">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.ttf" />

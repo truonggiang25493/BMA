@@ -16,7 +16,6 @@ namespace BMA.Models
     {
         public int PolicyId { get; set; }
         public string PolicyName { get; set; }
-        public Nullable<int> PolicyBound { get; set; }
-        public string PolicyComparition { get; set; }
+        public int PolicyBound { get; set; }
     }
 }
