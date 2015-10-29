@@ -154,12 +154,36 @@
                                     @if (orderViewModel.Order.OrderStatus != 5 && orderViewModel.Order.OrderStatus != 6)
                                     {
                                     <!--Hủy-->
-                                        <a class="btn btn-link btn-xs" onclick="open_cancel_order(@orderViewModel.Order.OrderId, @(orderViewModel.Order.DepositAmount))">
+                                        <a class="btn btn-link btn-xs" onclick="open_cancel_order(@orderViewModel.Order.OrderId, @(orderViewModel.Order.DepositAmount),@(orderViewModel.Order.OrderStatus))">
                                             <i class="fa fa-close" style="margin-right: 3px"></i>
                                             Hủy
                                             <script type="text/javascript">
-                                                function open_cancel_order(orderId, deposit) {
-                                                    var contentControl = $("<form>", {
+                                                function open_cancel_order(orderId, deposit, orderStatus) {
+                                                    var body2 = $("<form>", {
+                                                        "action": "@Url.Action("Cancel", "Order")",
+                                                        "method": "post",
+                                                        "class": "form-group",
+                                                        "id": "return-deposit-form",
+                                                        "html": [
+                                                            "Bạn có chắc chắn hủy đơn hàng này không ?",
+                                                            $("<input>", {
+                                                                "type": "hidden",
+                                                                "name": "orderId",
+                                                                "value": orderId
+                                                            }),
+                                                            $("<input>", {
+                                                                "type": "hidden",
+                                                                "name": "isReturnDeposit",
+                                                                "value": "0"
+                                                            }),
+                                                            $("<input>", {
+                                                                "type": "hidden",
+                                                                "name": "returnDeposit",
+                                                                "value": "0"
+                                                            })
+                                                        ]
+                                                    });
+                                                    var body1 = $("<form>", {
                                                         "action": "@Url.Action("Cancel", "Order")",
                                                         "method": "post",
                                                         "class": "form-group",
@@ -210,6 +234,7 @@
                                                                             "<label>Tiền cọc hoàn trả: </lable>",
                                                                             $("<input>", {
                                                                                 "type": "number",
+                                                                                "style": "margin-left: 10px;",
                                                                                 "name": "returnDeposit",
                                                                                 "id": "return_deposit_amount",
                                                                                 "value": deposit,
@@ -223,7 +248,7 @@
                                                         ]
                                                     });
                                                     $(document).on("change", "[data-role=radio-return-deposit]", function () {
-                                                        if ($(this).val() === 1) {
+                                                        if ($(this).val() === "1") {
                                                             $('#return_deposit').show();
                                                             $('#return_deposit_amount').val(deposit);
                                                             $('#return_deposit_amount').attr("max", deposit);
@@ -234,7 +259,7 @@
                                                     });
 
                                                     var title = 'Xác nhận hủy đơn hàng';
-                                                    var footerControl = $("<div>", {
+                                                    var footer1 = $("<div>", {
                                                         "class": "row",
                                                         "html": [
                                                             $("<button>", {
@@ -245,18 +270,44 @@
                                                                 ]
                                                             }),
                                                             $("<button>", {
-                                                                "class": "btn btn-danger",
+                                                                "class": "btn btn-danger pull-right",
                                                                 "style": "margin-right: 10px;",
                                                                 "onclick": "cancel_order()",
                                                                 "html": [
-                                                                    "Hủy"
+                                                                    "Hủy đơn hàng"
                                                                 ]
                                                             })
                                                         ]
                                                     });
-                                                    document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+                                                    var footer2 = $("<div>", {
+                                                        "class": "row",
+                                                        "html": [
+                                                            $("<button>", {
+                                                                "class": "btn btn-primary",
+                                                                "data-dismiss": "modal",
+                                                                "html": [
+                                                                    "Không"
+                                                                ]
+                                                            }),
+                                                            $("<button>", {
+                                                                "class": "btn btn-danger pull-right",
+                                                                "style": "margin-right: 10px;",
+                                                                "onclick": "cancel_order()",
+                                                                "html": [
+                                                                    "Có"
+                                                                ]
+                                                            })
+                                                        ]
+                                                    });
+                                                    if (orderStatus === 0) {
+                                                        document.getElementById('popup-body').innerHTML = body2[0].outerHTML;
+                                                        document.getElementById('popup-footer').innerHTML = footer2[0].outerHTML;
+                                                    } else {
+                                                        document.getElementById('popup-body').innerHTML = body1[0].outerHTML;
+                                                        document.getElementById('popup-footer').innerHTML = footer1[0].outerHTML;
+
+                                                    }
                                                     document.getElementById('popup-title').innerHTML = title;
-                                                    document.getElementById('popup-footer').innerHTML = footerControl[0].outerHTML;
                                                     $('#myModal').modal('show');
                                                 }
 

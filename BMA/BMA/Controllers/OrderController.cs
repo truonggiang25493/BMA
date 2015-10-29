@@ -247,6 +247,7 @@ namespace BMA.Controllers
                 ViewBag.ShortageOfMaterial = true;
             }
             ViewBag.TaxRate = orderBusiness.GetVatRateAtTime(DateTime.Now);
+            Session["CustomerId"] = customerId;
             ViewBag.TreeView = "order";
             ViewBag.TreeViewMenu = "addOrder";
             return View(order);
@@ -485,22 +486,7 @@ namespace BMA.Controllers
             return View(order);
         }
 
-        #region Set ViewBag when Back to AddCustomerToOrder
-        [HttpPost]
-        public ActionResult BackToAddCustomerToOrder(int customerId)
-        {
-            if (customerId == 0)
-            {
-                CustomerViewModel customer = Session["NewCustomer"] as CustomerViewModel;
-
-                Session["NewCustomer"] = customer;
-
-            }
-            Session["CustomerId"] = customerId;
-
-            return RedirectToAction("AddCustomerToOrder");
-        }
-        #endregion
+        
 
         #region Check customer field
 

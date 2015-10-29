@@ -181,24 +181,10 @@
     <!--Button-->
     <div class="row">
         <div class="col-xs-12">
-            <button class="btn btn-primary" style="margin-right: 10px" onclick="backToAddCustomerToOrder()">
-                <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
-                <script type="text/javascript">
-                    function backToAddCustomerToOrder() {
-                        var form = document.createElement("form");
-                        form.setAttribute("method", "post");
-                        form.setAttribute("action", "@(Url.Action("BackToAddCustomerToOrder", "Order"))");
+            <a class="btn btn-primary" style="margin-right: 10px" href="@(Url.Action("AddCustomerToOrder", "Order"))">
+            <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
 
-                        var customerIdField = document.createElement("input");
-                        customerIdField.setAttribute("type", "hidden");
-                        customerIdField.setAttribute("name", "customerId");
-                        customerIdField.setAttribute("value", @Model.Order.CustomerUserId);
-                        form.appendChild(customerIdField);
-
-                        form.submit();
-                    }
-                </script>
-            </button>
+            </a>
             <a class="btn btn-primary" href="@(Url.Action("Add","Order"))">
                 <i class="fa fa-shopping-cart" style="margin-right: 3px;"></i>Chọn sản phẩm
             </a>
