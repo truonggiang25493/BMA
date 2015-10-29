@@ -44,6 +44,7 @@ namespace BMA.Models
         public Nullable<System.DateTime> StartProduceTime { get; set; }
         public int Amount { get; set; }
         public int TaxAmount { get; set; }
+        public int DiscountAmount { get; set; }
     
         public virtual GuestInfo GuestInfo { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
