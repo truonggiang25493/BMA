@@ -55,30 +55,34 @@
                             {
                                 <span class="label label-default">Đã hết</span>
                             }
-                            else if (Model.IsActive)
-                            {
-                                {
-                                    <span class="label label-success">Có thể sử dụng</span>
-                                }
-                            }
+                            
                             else
                             {
-                                <span class="label label-danger">Đã hủy</span>
+                                <span class="label label-success">Có thể sử dụng</span>
                             }
                         </li>
                     </ul>
                     <!-- Trường hợp còn nguyên liệu và trạng thái active mới hiện button -->
-                    @if (Model.IsActive && Model.RemainQuantity != 0)
+                    @if (Model.RemainQuantity != 0)
                     {
                         <div class="row">
-                            <!-- Change stage button -->
+                            <!-- Discard input material button -->
                             <div class="col-xs-12" style="text-align: center">
-                                <button class="btn btn-success" id="btn-approved" onclick="open_container(@(Model.InputMaterialId));">
-
-                                    <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>Thay đổi trạng thái
+                                <button class="btn btn-danger" id="btn-approved" onclick="open_container(@(Model.InputMaterialId));">
+                                    <i class="fa fa-close" style="margin-right: 5%;"></i>Hủy nguyên liệu
                                     <script type="text/javascript">
-                                        function open_container(id) {
-                                            var content = 'Bạn có muốn chuyển nguyên liệu từ trạng thái' + '@(Model.IsActive ? " đang sử dụng " : " đã hủy ")' + 'sang trạng thái' + '@(Model.IsActive ? " đã hủy " : " đang sử dụng ")' + 'không?';
+                                        function open_container(inputMaterialId, discardQuantity, discardNote) {
+                                            var content =
+                                                '<form role="form" action="" method="post" id="form-aprrove">' +
+                                                    '<div class="form-group">' +
+                                                    '<label>Số lượng hủy: </label>' +
+                                                    '<input type="number" min = "1" oninput="maxLengthCheck(this)" max="@Model.RemainQuantity" class="form-control" id="price" value="' + discardQuantity + '" name="discardQuantity"/>' +
+                                                    '</div>' +
+                                                    '<div class="form-group">' +
+                                                    '<label>Ghi chú: </label>' +
+                                                    '<textarea maxlength="200" rows="3" class="form-control" id="discardNote" value="' + discardNote + '" name="discardNote">' + '</textarea>' +
+                                                    '</div>' +
+                                                    '</form>';
                                             var title = 'Thay đổi trạng thái nguyên liệu';
                                             var footer = $("<div>", {
                                                 "class": "row",
@@ -86,7 +90,7 @@
                                                     $("<button>", {
                                                         "class": "btn btn-success pull-right",
                                                         "style": "margin-right: 30%;",
-                                                        "onclick": "change_input_material_stage(" + id + ")",
+                                                        "onclick": "change_input_material_stage(" + inputMaterialId + ")",
                                                         "html": "Đồng ý"
                                                     }),
                                                     $("<button>", {
@@ -114,7 +118,7 @@
                                                 "data": {
                                                     "id": id
                                                 },
-                                                "success": function (data) {
+                                                "success": function(data) {
                                                     if (data === "1") {
                                                         $('#myModal').modal('hide');
                                                         window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial", Model.InputMaterialId)");
@@ -122,15 +126,15 @@
                                                         alert("Khong the");
                                                     }
                                                 },
-                                                "fail": function (e) {
+                                                "fail": function(e) {
                                                     alert("Have error" + e);
                                                 }
                                             });
                                         }
                                     </script>
                                 </button>
-
                             </div>
+                          
                         </div>
                     }
 
@@ -138,35 +142,37 @@
                 </div>
             </div>
         </div>
+        <!-- Tab in right -->
         <div class="col-md-8">
+            <!-- Tab menu -->
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a data-togged="tag" aria-expanded="true" href="#inputBillImage"> Hóa đơn đầu vào</a>
-                    </li>
-                    <li class="active">
-                        <a data-togged="tag" aria-expanded="true" href="#inputMaterialNote"> Ghi chú</a>
-                    </li>
+                    <li class="active"><a href="#inputBillImage" data-toggle="tab">Hóa đơn đầu vào</a></li>
+                    <li><a href="#inputMaterialNote" data-toggle="tab">Ghi chú</a></li>
+                    <li><a href="#discardInfo" data-toggle="tab">Thông tin hủy (Nếu có)</a></li>
                 </ul>
-                <div class="tab-pane active" id="inputBillImage">
-                    <div class="post">
-                        <p>
-                            <img src="~/content/images/inputbill/inputbill.jpg" width="400" height="600" />
-                        </p>
+                <div class="tab-content">
+                    <div class="active tab-pane" id="inputBillImage">
+                        <div class="row" id="inputMaterialTable">
+                        </div>
                     </div>
-                </div>
-                <div class="tab-pane active" id="inputMaterialNote">
-                    <div class="post">
-                        <p>
-                            @if (Model.InputMaterialNote == null)
-                            {
-                                <a>Không có</a>
-                            }
-                            else
-                            {
-                                @Model.InputMaterialNote
-                            }
-                        </p>
+                    <div class="tab-pane" id="inputMaterialNote">
+                        <div>
+                            <p>
+                                @if (Model.InputMaterialNote == null)
+                                {
+                                    <a>Không có</a>
+                                }
+                                else
+                                {
+                                    @Model.InputMaterialNote
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="discardInfo">
+                        <div class="row" id="discardTable">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -175,19 +181,22 @@
     <!--Button-->
     <div class="row">
         <div class="col-xs-12">
-            <!-- Edit button -->
-            <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputMaterial()">
-                <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
-                <script type="text/javascript">
-                    function editInputMaterial() {
-                        window.location.replace("@(Url.Action("EditInputMaterial", "InputMaterial", new {@id = Model.InputMaterialId}))");
-                    }
-                </script>
+            @if (Model.RemainQuantity != 0)
+            {
+                <!-- Edit button -->
+                <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputMaterial()">
+                    <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
+                    <script type="text/javascript">
+                        function editInputMaterial() {
+                            window.location.replace("@(Url.Action("EditInputMaterial", "InputMaterial", new {@id = Model.InputMaterialId}))");
+                        }
+                    </script>
+                </button>
+            }
 
-            </button>
             <!-- Comeback button -->
-            <button class="btn btn-danger" onclick="comebackToIndex()">
-                <i class="fa fa-edit" style="margin-left: 10px;"></i>Quay lại
+            <button class="btn btn-success" onclick="comebackToIndex()">
+                <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
                 <script type="text/javascript">
                     function comebackToIndex() {
                         window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
@@ -197,3 +206,43 @@
         </div>
     </div>
 </section>
+<!-- Get Input Material Table by Input Bill -->
+@section InitScript{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.ajax({
+                url: "@(Url.Action("GetInputMaterialTable", "InputMaterial", new {id = Model.InputBillId}))",
+                method: "GET",
+                success: function(data) {
+                    $("#inputMaterialTable").html(data);
+                },
+                fail: function(e) {
+                    alert(e.toString());
+                }
+            });
+        });
+    </script>
+
+<script type="text/javascript">
+        $(document).ready(function() {
+            $.ajax({
+                url: "@(Url.Action("GetDiscardTable", "DiscardInputMaterial", new {id = Model.InputMaterialId}))",
+                method: "GET",
+                success: function(data) {
+                    $("#discardTable").html(data);
+                },
+                fail: function(e) {
+                    alert(e.toString());
+                }
+            });
+        });
+</script>
+
+    <!--max length for number-->
+    <script>
+        function maxLengthCheck(object) {
+            if (object.value.length > object.maxLength)
+                object.value = object.value.slice(0, object.maxLength)
+        }
+    </script>
+}

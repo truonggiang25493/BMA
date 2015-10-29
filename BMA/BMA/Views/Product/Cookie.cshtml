@@ -1,122 +1,278 @@
 ﻿@using BMA.Models
 @using PagedList.Mvc;
+@using System.Globalization;
 @model PagedList.PagedList<Product>
+@using BMA.Models.ViewModel
 
 @{
-    ViewBag.Title = "Tất cả sản phẩm";
+    ViewBag.Title = "Bánh ngọt";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
+    List<CustomerCartViewModel> lstProductIdCart = ViewBag.fuckTheShit;
+    int quantity = 0;
 }
 
-<script src="~/Content/CustomerLayout/JS/css-pop.js"></script>
-<section class="border-top">
-    <div class="container">
-        <div style="margin-bottom:5px;" class="page-title mrgb5x mrgt6x clearfix">
-            <h4 class="page-name">TÌM KIẾM</h4>
-        </div>
-    </div>
-</section>
-<section>
-    <div class="container">
-        <div class="property-filter clearfix">
-            <div class="filter-type mrgb6x clearfix">
-                <div style="margin-left:-45px;width:108%" class="row">
-                    <ul class="filter-form col-md-6 col-sm-5">
-                        <li>
-                            <div class="select-box col-md-6">
-                                <select class="form-control" name="dropdown">
-                                    <option value="location">Tên sản phẩm</option>
-                                    <option value="type">Nguyên liệu</option>
-                                </select>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="form-section col-md-6">
-                                <input class="form-control" placeholder="">
-                            </div>
-                        </li>
-                    </ul>
-                    <ul style="margin-top:1px;" class="filter-values col-md-3 col-sm-3">
-                        <li>
-                            <div style="width:100%" class="filter-btn col-md-4"> <a href="#" class="filter-property">TÌM KIẾM</a> </div>
-                        </li>
-                    </ul>
+<section class="category-wrapper">
+    <section id="category-intro" class="section-intro scrollme parallaxOffset">
+        <div class="cat-intro animateme" data-when="exit" data-from="0" data-to="1" data-opacity="0" data-translatey="-220" data-rotatez="0" data-crop="true">
+            <div class="cat-intro-text">
+                <div class="display-table hw100">
+                    <div class="display-table-cell hw100">
+                        <div class="box-text-cell-inner white animateme" data-when="exit" data-from="0" data-to="1" data-opacity="0" data-translatey="-260" data-rotatez="0" data-crop="true">
+                            <p> <a style="color:#fff" href="#main-container-wrapper" class="scrollto"><i class="fa fa-2x fa-angle-down"></i></a> </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <!-- -->
+            <img src="/Content/CustomerLayout/Images/slider2.jpg" alt="img" class=" cat-intro-banner">
+        </div>
+    </section>
+    <section class="main-container-wrapper clearfix" id="main-container-wrapper" style="width:1400px;">
+        <div class="container main-container">
             <div class="row">
-                <ul class="filter-list clearfix">
-                    @foreach (var item in Model)
-                    {
-                        <li class="mix sale col-md-3 col-sm-4 mrgb5x" data-price="5">
-                            <div class="property-box animated out" data-delay="0" data-animation="fadeInUp">
-                                <div class="appartment-img">
-                                    <img src="@Url.Content("~/Content/Images/BakeryImages/brood-1.jpg")" class="img-responsive" alt="#" />
-                                    <div class="detail-btn"> <a href="@Url.Action("ProductDetail", "Product", new { @ProductId = item.ProductId})" class="sale">Chi tiết</a> </div>
-                                </div>
-                                <div class="property-text">
-                                    <div style="margin-bottom:-20px;" class="appartment-name">
-                                        <h4>@item.ProductName</h4><br />
-                                    </div>
-                                    <div class="property-price">
-                                        <h3><sup>$</sup><span>@item.ProductStandardPrice</span></h3>
-                                    </div>
-                                    @*<div style="margin-left:60px;" class="detail-btn mrgt3x"> <a href="@Url.Action("AddCart", "Cart", new { @productId = item.ProductId, @strURL = Request.Url.ToString() })" class="sale">Mua hàng</a> </div>*@
-                                    <div style="margin-left:60px;" class="detail-btn mrgt3x">
-                                        <a href="javascript:void(0)" onclick="return openPopup('@item.ProductName','@item.ProductId','@item.ProductStandardPrice');" class="sale">Mua hàng</a>
-                                        <script type="text/javascript">
-                                            var selectDongia = 0;
-                                            function openPopup(productName, productId, dongia) {
-                                                selectDongia = dongia;
-                                                $('#light .totalPriceProduct').text(selectDongia + " Đồng");
-                                                $("#light .popupProductName").text(productName);
-                                                $("#light .hiddenProductID").attr('value', productId);
-                                                $("#light").show();
-                                                $("#fade").show();
+                <div class="catTopBar clearfix">
+                    <div class="catTopBarInner clearfix">
+                        <div class="col-lg-3 col-md-3 col-sm-12">
 
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-12">
+                            <div class="f-right">
+                                <div class="w100  clearfix center-xs-inner">
+                                    <div class="pull-right hidden-xs">
+                                        <p class="pull-right change-view-flat"> <span>View By :</span> <a href="#" title="Grid" class="grid-view"> <i class="fa fa-th-large"></i> </a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*@{
+                        if (lstProductIdCart != null)
+                        {
+                            for (int i = 0; i < lstProductIdCart.Count; i++)
+                            {
+                                if (item.ProductId == lstProductIdCart[i].ProductId)
+                                {
+                                    quantity = lstProductIdCart[i].Quantity;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            quantity = 0;
+                        }
+                    }*@
+                <div class="catColumnWrapper">
+                    <div class="col-lg-12 col-md-12 col-sm-12 categoryColumn">
+                        <div class="row  categoryProduct xsResponse clearfix">
+                            @foreach (var item in Model)
+                            {
+                                <div class="item col-sm-3 col-lg-3 col-md-3 col-xs-6">
+                                    <div class="product">
+                                        <div class="image">
+                                            <div class="quickview">
+                                                <a href="@Url.Action("ProductDetail", "Product", new { @ProductId = item.ProductId })" title="Chi tiết" class="btn btn-xs  btn-quickview" style="font-family: 'Patrick Hand SC'; "> <i class="glyphicon glyphicon-list"> </i> CHI TIẾT </a>
+                                            </div>
+                                            <a><img src="@Url.Content("~/Content/Images/BakeryImages/" + item.ProductImage)" alt="img" class="img-responsive" style="width:378px;height:270px;"></a>
+                                        </div>
+                                        <div class="description" style="margin-bottom:-50px;">
+                                            <h4><a href="product-details.html">@item.ProductName</a></h4>
+                                        </div>
+                                        <div class="price"> <span>@item.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</span> </div>
+                                        <div class="action-control"><a title="Chi tiết" class="btn btn-primary" data-target="#product-details-modal" data-toggle="modal" onclick="return openPopup('@item.ProductName','@item.ProductId','@item.ProductStandardPrice','@item.ProductImage','@item.ProductCode','@quantity');"><span class="add2cart"><i class="glyphicon glyphicon-shopping-cart"></i> Mua hàng </span></a></div>
+
+                                        <script type="text/javascript">
+
+                                            var selectDongia = 0;
+                                            var imageLink;
+                                            function openPopup(productName, productId, price, image, code, quantity) {
+                                                var printPrice = addPeriod(price);
+                                                imageLink = "/Content/Images/BakeryImages/" + image;
+                                                $('#product-details-modal #productPrice').text(printPrice + " Đồng");
+                                                $('#product-details-modal #totalPriceProduct').text(selectDongia + " Đồng");
+                                                $('#product-details-modal #productImage').attr("src", imageLink)
+                                                $('#product-details-modal #productCode').text(code);
+                                                $("#product-details-modal #productName").text(productName);
+                                                $("#product-details-modal .hiddenProductID").attr('value', productId);
+                                                $("#product-details-modal .hiddenProductImage").attr('value', image);
+                                                $('#product-details-modal .inputProductNum').attr('value', quantity);
+                                                $('#product-details-modal .inputProductNum').text(quantity);
+
+                                                $('#product-details-modal .inputProductNum').keyup(function () {
+                                                    selectDongia = price;
+                                                    var total = $(this).val() * selectDongia;
+                                                    total = addPeriod(total);
+                                                    $('#product-details-modal #totalPriceProduct').text(total + " Đồng");
+                                                });
+
+                                                $('#product-details-modal .inputProductNum').keyup(function () {
+                                                    if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
+                                                        this.value = this.value.replace(/[^0-9\.]/g, '');
+                                                    }
+                                                });
+
+                                                function addPeriod(nStr) {
+                                                    nStr += '';
+                                                    x = nStr.split('.');
+                                                    x1 = x[0];
+                                                    x2 = x.length > 1 ? '.' + x[1] : '';
+                                                    var rgx = /(\d+)(\d{3})/;
+                                                    while (rgx.test(x1)) {
+                                                        x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                                                    }
+                                                    return x1 + x2;
+                                                }
                                                 return 1;
                                             }
-                                            $('#light .inputProductNum').keyup(function () {
-                                                var total = $(this).val() * selectDongia;
-                                                $('#light .totalPriceProduct').text(total + " Đồng");
-                                            });
-                                            $('.inputProductNum').keyup(function () {
-                                                if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
-                                                    this.value = this.value.replace(/[^0-9\.]/g, '');
-                                                }
-                                            });
                                         </script>
                                     </div>
                                 </div>
-                            </div>
-                            <div id="light" class="white_content">
-                                <center><h2 class="popupProductName" style="color:#808080">@item.ProductName</h2></center>
-                                <div class="border-top"></div>
-                                <br />
-                                <form action='@Url.Action("AddCart", "Cart", new { @strURL = Request.Url.ToString()})' id="myForm" method="post">
-                                    <table class="popup-table">
-                                        <tr>
-                                            <td>Số lượng: </td>
-                                            <td><input style="width:220px;" type="text" value="" placeholder="Chỉ nhập số" class="inputProductNum" name="inputNumber" /></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Thành tiền: </td>
-                                            <td class="totalPriceProduct"> Đồng</td>
-                                        </tr>
-                                    </table>
-                                    <input type="hidden" class="hiddenProductID" name="productID" value="" />
-                                </form>
-                                <div class="popup-btn"> <a href="#" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Hủy bỏ</a> </div>
-                                <div class="popup-btn" style="margin-right:30px"> <a href="javascript:void(0)" onclick="$('#myForm').submit();document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it"><i class="fa fa-angle-right"></i>Đồng ý</a> </div>
-                            </div>
-                            <div id="fade" class="black_overlay"></div>
-                        </li>
-                    }
-                </ul>
 
-                <div class="numbering">
-                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+                                <div class="modal fade" id="product-details-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:70px;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"> × </button>
+                                            <div class="col-lg-5 col-md-5 col-sm-5  col-xs-12">
+                                                <div class="main-image  col-lg-12 no-padding style3" style="margin-top:50px;">
+                                                    <a class="product-largeimg-link" href="product-details.html">
+                                                        <img src="" class="img-responsive product-largeimg" alt="img" id="productImage" style="width:370px;height:270px;">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 modal-details" style="height: 390px;">
+                                                <form id="addCartForm" action='@Url.Action("AddCart", "Cart", new { @strURL = Request.Url.ToString() })' method="post">
+                                                    <div style="min-height:390px;" class="modal-details-inner">
+                                                        <h2 class="product-title" id="productName" style="font-size:25px;"></h2>
+                                                        <h3 class="details-description">Mã sản phẩm : <span class="price-sales" id="productCode"></span></h3>
+                                                        <input type="hidden" class="hiddenProductID" name="productID" value="" />
+                                                        <input type="hidden" class="hiddenProductImage" name="productImage" value="" />
+                                                        <h3 class="details-description">Đơn giá : <span class="price-sales" id="productPrice"></span></h3>
+
+                                                        <div class="productFilter productFilterLook2">
+                                                            <input type="text" name="inputProductNum" placeholder="Nhập số lượng" class="inputProductNum" style="font-size:16px;padding-bottom:0px;margin-bottom:0px;" value="" required />
+                                                        </div>
+                                                        <h3 class="details-description">Thành tiền : <span id="totalPriceProduct"> </span></h3>
+
+                                                        <div class="cart-actions">
+                                                            <div class="addto">
+                                                                <button onclick="addCartForm.submit(this);" class="button btn-cart cart first" title="Add to Cart" type="submit" style="font-family: 'Patrick Hand SC'">Thêm vào giỏ hàng</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+
+                        <div class="w100 categoryFooter">
+                            <div class="pagination pull-left no-margin-top" style="margin-left:500px;">
+                                @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
+
         </div>
-    </div>
+
+    </section>
 </section>
+
+
+
+<script src="/Content/CustomerLayout/ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
+</script>
+
+<script src="/Content/CustomerLayout/assets/js/hideMaxListItem-min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('ul.long-list').hideMaxListItems({
+            'max': 6,
+            'speed': 500,
+            'moreText': 'VIEW MORE ([COUNT])',
+            'lessText': 'VIEW LESS',
+            'moreHTML': '<p class="maxlist-more"><a href="#">MORE OF THEM</a></p>'
+        });
+    });
+
+
+
+</script>
+
+<script src="/Content/CustomerLayout/assets/js/jquery.scrollme.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var isMobile = function () {
+            //console.log("Navigator: " + navigator.userAgent);
+            return /(iphone|ipod|ipad|android|blackberry|windows ce|palm|symbian)/i.test(navigator.userAgent);
+        };
+
+        if (isMobile()) {
+            // For  mobile , ipad, tab
+            $('.animateme').removeClass('animateme');
+            $('.category-wrapper').addClass('ismobile');
+            $('.main-container-wrapper').addClass('ismobile');
+            $('#category-intro').addClass('ismobile');
+
+        } else {
+        }
+        $('.shrtByP a').click(function () {
+            $('.shrtByP a').removeClass('active');
+            $(this).addClass('active');
+        });
+
+
+        $('.filterToggle').click(function () {
+            $(this).toggleClass('filter-is-off');
+            $('.filterToggle span').toggleClass('is-off');
+            $('.catColumnWrapper').toggleClass('filter-is-off');
+            $('.catColumnWrapper .col-sm-4').toggleClass('col-sm-3 col-lg-3 col-md-3');
+
+            // equal height reload function
+
+            var $elements = $('.categoryProduct > .item');
+            var columns = $elements.detectGridColumns();
+            $elements.equalHeightGrid(columns);
+
+
+            setTimeout(function () {
+                //  reload function after 0.5 second
+                $('.categoryProduct > .item').responsiveEqualHeightGrid();
+            }
+                    , 500);
+
+        });
+
+
+        $('[data-toggle="collapse"]').click(function (e) {
+
+            $('#accordion').on('show.bs.collapse', function (e) {
+                $(e.target).prev().addClass('active').find('span').removeClass('hasPlus').addClass('hasMinus');
+            })
+
+            $('#accordion').on('hide.bs.collapse', function (e) {
+                $(e.target).prev().addClass('active').find('span').addClass('hasPlus').removeClass('hasMinus');
+
+            })
+        });
+
+    }); // end
+
+    $(window).bind('resize load', function () {
+        if ($(this).width() < 767) {
+            $('#accordion .panel-collapse').collapse('hide');
+
+            $('#accordion .panel-heading ').find('span').removeClass('hasMinus').addClass('hasPlus');
+
+        } else {
+            $('#accordion .panel-collapse').removeClass('out').addClass('in').css('height', 'auto');
+            $('#accordion .panel-heading ').find('span').removeClass('hasPlus').addClass('hasMinus');
+        }
+    });
+
+</script>
