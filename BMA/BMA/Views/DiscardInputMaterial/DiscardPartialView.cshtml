@@ -1,0 +1,34 @@
+﻿
+@using System.Globalization
+@using BMA.Models
+@model List<BMA.Models.DiscardedInputMaterial>
+
+<h4 style="margin-left: 10%">Danh sách số lần hủy nguyên liệu</h4>
+<div class="box-body">
+    <table id="example2" class="table table-bordered">
+        <thead style="font-weight: bold">
+            <tr class="row">
+                <th class="col-md-3" style="text-align: center">Số lượng hủy</th>                
+                <th class="col-md-4" style="text-align: center">Ngày hủy</th>
+                <th class="col-md-5" style="text-align: center">Ghi chú</th>              
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DiscardedInputMaterial discardedInputMaterial in Model)
+            
+            {
+                <tr class="row">
+                    <td class="col-md-3" style="text-align: right">
+                        @(discardedInputMaterial.DiscardQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(discardedInputMaterial.InputMaterial.ProductMaterial.ProductMaterialUnit)
+                    </td>                   
+                    <td class="col-md-4" style="text-align: center">
+                        @(discardedInputMaterial.DiscardDate.ToString("dd/MM/yyyy"))
+                    </td>
+                    <td class="col-md-5" style="margin-left: 10%">
+                        @(discardedInputMaterial.DiscardNote)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

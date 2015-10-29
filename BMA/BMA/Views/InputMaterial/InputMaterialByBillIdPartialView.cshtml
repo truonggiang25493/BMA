@@ -1,0 +1,41 @@
+﻿@using System.Globalization
+@using BMA.Models
+@model List<BMA.Models.InputMaterial>
+
+<h4 style="margin-left: 10%">Danh sách nguyên liệu trong cùng hóa đơn</h4>
+
+<div class="box-body">
+    <table id="example2" class="table table-bordered">
+        <thead style="font-weight: bold">
+            <tr class="row">
+
+                <th class="col-md-4">Tên nguyên liệu</th>
+                <th class="col-md-3">Nhập</th>
+                <th class="col-md-3">Tồn kho</th>
+                <th class="col-md-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (InputMaterial inputMaterial in Model)
+            {
+                <tr class="row">
+                    <td class="col-md-4">
+                        <span>@(inputMaterial.ProductMaterial.ProductMaterialName)</span>
+                        <input type="hidden" name="txtInputMaterialId" value="@inputMaterial.InputMaterialId" />
+                    </td>
+                    <td style="text-align: right" class="col-md-3">
+                        @(inputMaterial.ImportQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(inputMaterial.ProductMaterial.ProductMaterialUnit)
+                    </td>
+                    <td style="text-align: right" class="col-md-3">
+                        @(inputMaterial.RemainQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(inputMaterial.ProductMaterial.ProductMaterialUnit)
+                    </td>
+                    <td class="col-md-2">
+                        <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
+                            <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

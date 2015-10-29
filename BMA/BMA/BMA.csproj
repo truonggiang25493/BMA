@@ -166,6 +166,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Business\DiscardInputMaterialBusiness.cs" />
     <Compile Include="Business\InputMaterialBusiness.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
     <Compile Include="Business\SupplierBusiness.cs" />
@@ -175,8 +176,10 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\DiscardInputMaterialController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InputBillController.cs" />
     <Compile Include="Controllers\InputMaterialController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
@@ -275,6 +278,7 @@
     </Compile>
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
+    <Compile Include="Models\ViewModel\DiscardInputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialInfoForProductListViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
@@ -315,6 +319,7 @@
     <Content Include="Content\CustomerLayout\JS\jquery.themepunch.tools.min.js" />
     <Content Include="Content\CustomerLayout\JS\owl.carousel.min.js" />
     <Content Include="Content\CustomerLayout\JS\scripts.js" />
+    <Content Include="Content\Images\RegistryBackground\RegistryBackground.jpg" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
@@ -1250,6 +1255,11 @@
     <Content Include="Views\Supplier\AddSupplier.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Error\ManageError.cshtml" />
+    <Content Include="Views\InputBill\InputBillIndex.cshtml" />
+    <Content Include="Views\InputMaterial\InputMaterialByBillIdPartialView.cshtml" />
+    <Content Include="Views\DiscardInputMaterial\DiscardInputMaterialIndex.cshtml" />
+    <Content Include="Views\InputMaterial\ProductMaterialPartialView.cshtml" />
+    <Content Include="Views\DiscardInputMaterial\DiscardPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
