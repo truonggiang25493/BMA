@@ -169,23 +169,31 @@
     <Compile Include="Business\AccountBusiness.cs" />
     <Compile Include="Business\CusManageOrderBusiness.cs" />
     <Compile Include="Business\CustomerOrderBusiness.cs" />
+    <Compile Include="Business\DiscardInputMaterialBusiness.cs" />
+    <Compile Include="Business\InputMaterialBusiness.cs" />
     <Compile Include="Business\ManageMaterialBusiness.cs" />
     <Compile Include="Business\ManageProductBusiness.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
     <Compile Include="Business\ProductBusiness.cs" />
+    <Compile Include="Business\SupplierBusiness.cs" />
+    <Compile Include="Business\TaxBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CusManageOrderController.cs" />
+    <Compile Include="Controllers\DiscardInputMaterialController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InputMaterialController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManageMaterialController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProcedureController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\TaxController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -280,12 +288,14 @@
     </Compile>
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
+    <Compile Include="Models\ViewModel\DiscardInputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialInfoForProductListViewMode%3b.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderItemViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
     <Compile Include="Models\ViewModel\ShortageMaterialViewModel.cs" />
+    <Compile Include="Models\ViewModel\SupplierViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -1334,6 +1344,19 @@
     <Content Include="Views\ManageMaterial\Index.cshtml" />
     <Content Include="Views\ManageMaterial\ListPartial.cshtml" />
     <Content Include="Views\ManageProduct\AddProduct.cshtml" />
+    <Content Include="Views\InputMaterial\AddInputMaterial.cshtml" />
+    <Content Include="Views\InputMaterial\EditInputMaterial.cshtml" />
+    <Content Include="Views\InputMaterial\InputListPartialView.cshtml" />
+    <Content Include="Views\InputMaterial\InputMaterialByBillIdPartialView.cshtml" />
+    <Content Include="Views\InputMaterial\InputMaterialDetail.cshtml" />
+    <Content Include="Views\InputMaterial\InputMaterialIndex.cshtml" />
+    <Content Include="Views\InputMaterial\ProductMaterialPartialView.cshtml" />
+    <Content Include="Views\DiscardInputMaterial\DiscardInputMaterialIndex.cshtml" />
+    <Content Include="Views\DiscardInputMaterial\DiscardPartialView.cshtml" />
+    <Content Include="Views\Supplier\AddSupplier.cshtml" />
+    <Content Include="Views\Supplier\EditSupplier.cshtml" />
+    <Content Include="Views\Supplier\SupplierDetail.cshtml" />
+    <Content Include="Views\Supplier\SupplierIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
