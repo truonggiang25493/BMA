@@ -39,7 +39,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="jsreport.Client">
+      <HintPath>..\packages\jsreport.Client.0.8.1.0\lib\net45\jsreport.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="jsreport.Embedded, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\jsreport.Embedded.0.8.1.0\lib\net45\jsreport.Embedded.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="jsreport.MVC">
+      <HintPath>..\packages\jsreport.MVC.0.1.4\lib\net45\jsreport.MVC.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PagedList">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
@@ -57,6 +72,30 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -74,36 +113,8 @@
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
     </Reference>
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.0.0\lib\net45\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.1\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <Private>True</Private>
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -168,7 +179,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\AccountBusiness.cs" />
     <Compile Include="Business\CusManageOrderBusiness.cs" />
-    <Compile Include="Business\CustomerOrberBusiness.cs" />
+    <Compile Include="Business\CustomerOrderBusiness.cs" />
     <Compile Include="Business\ManageMaterialBusiness.cs" />
     <Compile Include="Business\ManageProductBusiness.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
@@ -273,47 +284,124 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
+    <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
+    <Compile Include="Models\ViewModel\MaterialInfoForProductListViewMode%3b.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderItemViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
+    <Compile Include="Models\ViewModel\ShortageMaterialViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
-    <Content Include="Content\CustomerLayout\CSS\animate.css" />
-    <Content Include="Content\CustomerLayout\CSS\bootstrap.css" />
-    <Content Include="Content\CustomerLayout\CSS\owl.carousel.css" />
-    <Content Include="Content\CustomerLayout\CSS\photobox.css" />
-    <Content Include="Content\CustomerLayout\CSS\responsive.css" />
-    <Content Include="Content\CustomerLayout\CSS\revolution-slider.css" />
-    <Content Include="Content\CustomerLayout\CSS\style.css" />
-    <Content Include="Content\CustomerLayout\JS\bootstrap-datepicker.min.js" />
-    <Content Include="Content\CustomerLayout\JS\css-pop.js" />
+    <Content Include="Content\CustomerLayout\ajax.googleapis.com\ajax\libs\jquery\1.10.1\jquery.min.js" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\css\bootstrap.css" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Content\CustomerLayout\assets\css\AjaxLoader.gif" />
+    <Content Include="Content\CustomerLayout\assets\css\alpha.css" />
+    <Content Include="Content\CustomerLayout\assets\css\animate.min.css" />
+    <Content Include="Content\CustomerLayout\assets\css\blog.css" />
+    <Content Include="Content\CustomerLayout\assets\css\category-2.css" />
+    <Content Include="Content\CustomerLayout\assets\css\font-awesome.css" />
+    <Content Include="Content\CustomerLayout\assets\css\footable-0.1.css" />
+    <Content Include="Content\CustomerLayout\assets\css\footable.sortable-0.1.css" />
+    <Content Include="Content\CustomerLayout\assets\css\grabbing.png" />
+    <Content Include="Content\CustomerLayout\assets\css\idangerous.swiper.css" />
+    <Content Include="Content\CustomerLayout\assets\css\img\minus.png" />
+    <Content Include="Content\CustomerLayout\assets\css\img\plus.png" />
+    <Content Include="Content\CustomerLayout\assets\css\img\sorting_sprite.png" />
+    <Content Include="Content\CustomerLayout\assets\css\ion.checkRadio.cloudy.css" />
+    <Content Include="Content\CustomerLayout\assets\css\ion.checkRadio.css" />
+    <Content Include="Content\CustomerLayout\assets\css\jquery.mCustomScrollbar.css" />
+    <Content Include="Content\CustomerLayout\assets\css\jquery.minimalect.min.css" />
+    <Content Include="Content\CustomerLayout\assets\css\mCSB_buttons.png" />
+    <Content Include="Content\CustomerLayout\assets\css\owl.carousel.css" />
+    <Content Include="Content\CustomerLayout\assets\css\owl.theme.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-1.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-10.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-11.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-2.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-3.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-4.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-5.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-6.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-7.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-8.css" />
+    <Content Include="Content\CustomerLayout\assets\css\skin-9.css" />
+    <Content Include="Content\CustomerLayout\assets\css\smoothproducts.css" />
+    <Content Include="Content\CustomerLayout\assets\css\story.css" />
+    <Content Include="Content\CustomerLayout\assets\css\style.css" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.svg" />
+    <Content Include="Content\CustomerLayout\assets\ico\apple-touch-icon-114-precomposed.png" />
+    <Content Include="Content\CustomerLayout\assets\ico\apple-touch-icon-144-precomposed.png" />
+    <Content Include="Content\CustomerLayout\assets\ico\apple-touch-icon-72-precomposed.png" />
+    <Content Include="Content\CustomerLayout\assets\ico\favicon.png" />
+    <Content Include="Content\CustomerLayout\assets\js\bootstrap.touchspin.js" />
+    <Content Include="Content\CustomerLayout\assets\js\footable.js" />
+    <Content Include="Content\CustomerLayout\assets\js\footable.sortable.js" />
+    <Content Include="Content\CustomerLayout\assets\js\grids.js" />
+    <Content Include="Content\CustomerLayout\assets\js\helper-plugins\jquery.mousewheel.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\hideMaxListItem-min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\home.js" />
+    <Content Include="Content\CustomerLayout\assets\js\idangerous.swiper-2.1.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\ion-checkRadio\ion.checkRadio.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\jquery.cycle2.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\jquery.easing.1.3.js" />
+    <Content Include="Content\CustomerLayout\assets\js\jquery.mCustomScrollbar.js" />
+    <Content Include="Content\CustomerLayout\assets\js\jquery.minimalect.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\jquery.parallax-1.1.js" />
+    <Content Include="Content\CustomerLayout\assets\js\jquery.scrollme.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\jquery.validate.js" />
+    <Content Include="Content\CustomerLayout\assets\js\jquery.zoom.js" />
+    <Content Include="Content\CustomerLayout\assets\js\jquery\jquery-1.10.1.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\owl.carousel.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\pace.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\product-details.html" />
+    <Content Include="Content\CustomerLayout\assets\js\script.js" />
+    <Content Include="Content\CustomerLayout\assets\js\skrollr.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\smoothproducts-thumb.js" />
+    <Content Include="Content\CustomerLayout\assets\js\smoothproducts.min.js" />
+    <Content Include="Content\CustomerLayout\assets\js\wow.min.js" />
+    <Content Include="Content\CustomerLayout\assets\plugins\magnific\jquery.magnific-popup.min.js" />
+    <Content Include="Content\CustomerLayout\assets\plugins\magnific\magnific-popup.css" />
+    <Content Include="Content\CustomerLayout\assets\plugins\rating\bootstrap-rating.css" />
+    <Content Include="Content\CustomerLayout\assets\plugins\rating\bootstrap-rating.min.js" />
+    <Content Include="Content\CustomerLayout\Images\cart_empty.png" />
+    <Content Include="Content\CustomerLayout\Images\logo.png" />
+    <Content Include="Content\CustomerLayout\Images\slider1.jpg" />
+    <Content Include="Content\CustomerLayout\Images\slider2.jpg" />
+    <Content Include="Content\CustomerLayout\Images\slider3.jpg" />
+    <Content Include="Content\CustomerLayout\site\arrow-left.png" />
+    <Content Include="Content\CustomerLayout\site\arrow-right.png" />
+    <Content Include="Content\CustomerLayout\site\promo\BB2T.jpg" />
+    <Content Include="Content\CustomerLayout\site\promo\BBLN.jpg" />
+    <Content Include="Content\CustomerLayout\site\promo\BMTN.jpg" />
+    <Content Include="Content\CustomerLayout\site\promo\Pudding.jpg" />
     <Content Include="Content\font-awesome-4.3.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.3.0\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\font-awesome-4.3.0\HELP-US-OUT.txt" />
-    <Content Include="Content\Images\BakeryImages\brood-1.jpg" />
-    <Content Include="Content\Images\BakeryImages\logo.jpg" />
-    <Content Include="Content\Images\BakeryImages\superman.png" />
-    <Content Include="Content\Images\BakeryImages\The-Bakery-Logo.png" />
+    <Content Include="Content\Images\BakeryImages\BB1T.jpg" />
+    <Content Include="Content\Images\BakeryImages\BB2T.jpg" />
+    <Content Include="Content\Images\BakeryImages\BBL.jpg" />
+    <Content Include="Content\Images\BakeryImages\BBLN.jpg" />
+    <Content Include="Content\Images\BakeryImages\BBTM.JPG" />
+    <Content Include="Content\Images\BakeryImages\BDX.jpg" />
+    <Content Include="Content\Images\BakeryImages\BMC.jpg" />
+    <Content Include="Content\Images\BakeryImages\BMD.jpg" />
+    <Content Include="Content\Images\BakeryImages\BMDB.jpg" />
+    <Content Include="Content\Images\BakeryImages\BMTN.jpg" />
+    <Content Include="Content\Images\BakeryImages\BQ.jpg" />
+    <Content Include="Content\Images\BakeryImages\BXX.jpg" />
+    <Content Include="Content\Images\BakeryImages\KTC.jpg" />
+    <Content Include="Content\Images\BakeryImages\Pudding.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
-    <Content Include="Content\CustomerLayout\JS\bootstrap.js" />
-    <Content Include="Content\CustomerLayout\JS\jquery-ui.js" />
-    <Content Include="Content\CustomerLayout\JS\jquery.appear.js" />
-    <Content Include="Content\CustomerLayout\JS\jquery.js" />
-    <Content Include="Content\CustomerLayout\JS\jquery.mixitup.min.js" />
-    <Content Include="Content\CustomerLayout\JS\jquery.photobox.js" />
-    <Content Include="Content\CustomerLayout\JS\jquery.themepunch.revolution.js" />
-    <Content Include="Content\CustomerLayout\JS\jquery.themepunch.tools.min.js" />
-    <Content Include="Content\CustomerLayout\JS\owl.carousel.min.js" />
-    <Content Include="Content\CustomerLayout\JS\scripts.js" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -365,6 +453,21 @@
       <DependentUpon>BMA.edmx</DependentUpon>
       <LastGenOutput>BMA.cs</LastGenOutput>
     </Content>
+    <Content Include="jsreport-net-embedded.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regulard41d.eot" />
+    <Content Include="Content\CustomerLayout\assets\css\img\Thumbs.db" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfontd41d.eot" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.eot" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.ttf" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.woff" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.woff2" />
+    <Content Include="Content\CustomerLayout\assets\ico\Thumbs.db" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -1245,9 +1348,6 @@
     <Folder Include="Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>

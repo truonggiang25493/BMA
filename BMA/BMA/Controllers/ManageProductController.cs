@@ -208,10 +208,17 @@ namespace BMA.Controllers
 
         public ActionResult ChangeStatus(int productId, bool status, string strURL)
         {
-            ManageProductBusiness mpb = new ManageProductBusiness();
-            var radioButton = Convert.ToBoolean(Request.Form["status"]);
-            mpb.ChangeStatus(productId, radioButton);
-            return Redirect(strURL);
+            try
+            {
+                ManageProductBusiness mpb = new ManageProductBusiness();
+                var radioButton = Convert.ToBoolean(Request.Form["status"]);
+                mpb.ChangeStatus(productId, radioButton);
+                return Redirect(strURL);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
 
         public ActionResult ProductMaterial(int productId)

@@ -12,7 +12,8 @@ namespace BMA.Controllers
         // GET: /Home/
         public ActionResult Index()
         {
+            ViewBag.Show = "home";
             return View();
         }
-	}
+    }
 }

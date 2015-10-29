@@ -3,125 +3,183 @@
 @{
     ViewBag.Title = "ProductDetail";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
-    IEnumerable<BMA.Models.Recipe> pm = ViewBag.ProductMaterial;
+    IEnumerable<BMA.Models.Recipe> pm = ViewBag.productMaterial;
+    IEnumerable<BMA.Models.Product> pro = ViewBag.otherProduct;
+    int quantity = 0;
 }
 
-<section class="border-top">
-    <div class="container">
-        <div class="page-title mrgb6x mrgt6x clearfix">
-            <h4 class="page-name">@Model.ProductName</h4>
-            <div class="tag-bar"> <a href="#"><span>your aiming holiday</span></a> </div>
+<script>
+    $(document).removeClass("owl-buttons");
+</script>
+<div class="container main-container headerOffset">
+    <div class="row">
+        <div class="breadcrumbDiv col-lg-12">
+            <ul class="breadcrumb">
+                <li> <a href="@Url.Action("Index","Home")">TRANG CHỦ</a> </li>
+                <li> <a href="@Url.Action("Index","Product")">TẤT CẢ SẢN PHẨM</a> </li>
+                @if (Model.CategoryId == 2)
+                {
+                    <li> <a href="@Url.Action("Cookie", "Product")">BÁNH NGỌT</a> </li>
+                }
+                else
+                {
+                    <li> <a href="@Url.Action("Saltine", "Product")">BÁNH MẶN</a> </li>
+                }
+                <li class="active">@Model.ProductName</li>
+            </ul>
         </div>
     </div>
-</section>
-<section>
-    <div class="container">
-        <div class="property-single">
-            <div class="col-md-6 no-padding col-sm-8 animated out" data-delay="0" data-animation="fadeInUp">
-                <div class="property-single-img">
-                    <img src="@Url.Content("~/Content/Images/BakeryImages/" + Model.ProductImage)" class="img-responsive" alt="#" />
-                    <div class="image-detail">
-                        <h5 class="place-name">@Model.ProductName.ToUpper()</h5>
-                        <div class="place-price"><span>@Model.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))<sup>/cái</sup></span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-4 animated out" data-delay="0" data-animation="fadeInUp">
-                <div class="property-heading property-info">
-                    <h4><span>@Model.ProductName.ToUpper()</span></h4>
-                    <p style="font-size:14px;">@Model.Descriptions</p>
-                    @*<div style="margin-top:153px;" class="booking-btn"> <a href="@Url.Action("AddCart", "Cart", new { @productId = Model.ProductId, @strURL = Request.Url.ToString() })" class="book-it">MUA HÀNG</a> </div>*@
-                    <div style="margin-top: 153px;" class="booking-btn">
-                        <a style="color:#ffffff" href="javascript:void(0)" onclick="return openPopup('@Model.ProductName','@Model.ProductId','@Model.ProductStandardPrice');" class="sale">MUA HÀNG</a>
-                        <script type="text/javascript">
-                            var selectDongia = 0;
-                            function openPopup(productName, productId, dongia) {
-                                selectDongia = dongia;
-                                $('#light .totalPriceProduct').text(selectDongia + " Đồng");
-                                $("#light .popupProductName").text(productName);
-                                $("#light .hiddenProductID").attr('value', productId);
-                                $("#light").show();
-                                $("#fade").show();
+    <div class="row transitionfx">
 
-                                return 1;
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <img src="@Url.Content("~/Content/Images/BakeryImages/" + Model.ProductImage)" class="img-responsive" alt="img">
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-5">
+            <h1 class="product-title"> @Model.ProductName</h1>
+            <h3 class="details-description">Mã sản phẩm : <span class="price-sales">@Model.ProductCode</span></h3>
+            <h3 class="details-description">Đơn giá : <span class="price-sales">@Model.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</span></h3>
+
+            <div class="cart-actions" style="margin-top:10px;">
+                <div class="action-control"><a title="Chi tiết" class="btn btn-primary" data-target="#product-details-modal" data-toggle="modal" onclick="return openPopup('@Model.ProductName','@Model.ProductId','@Model.ProductStandardPrice','@Model.ProductImage','@Model.ProductCode','@quantity');"><span class="add2cart"><i class="glyphicon glyphicon-shopping-cart"></i> Mua hàng </span></a></div>
+                <script type="text/javascript">
+
+                    var selectDongia = 0;
+                    var imageLink;
+                    function openPopup(productName, productId, price, image, code, quantity) {
+                        var printPrice = addPeriod(price);
+                        imageLink = "/Content/Images/BakeryImages/" + image;
+                        $('#product-details-modal #productPrice').text(printPrice + " Đồng");
+                        $('#product-details-modal #totalPriceProduct').text(selectDongia + " Đồng");
+                        $('#product-details-modal #productImage').attr("src", imageLink)
+                        $('#product-details-modal #productCode').text(code);
+                        $("#product-details-modal #productName").text(productName);
+                        $("#product-details-modal .hiddenProductID").attr('value', productId);
+                        $("#product-details-modal .hiddenProductImage").attr('value', image);
+                        $('#product-details-modal .inputProductNum').attr('value', quantity);
+                        $('#product-details-modal .inputProductNum').text(quantity);
+
+                        $('#product-details-modal .inputProductNum').keyup(function () {
+                            selectDongia = price;
+                            var total = $(this).val() * selectDongia;
+                            total = addPeriod(total);
+                            $('#product-details-modal #totalPriceProduct').text(total + " Đồng");
+                        });
+
+                        $('#product-details-modal .inputProductNum').keyup(function () {
+                            if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
+                                this.value = this.value.replace(/[^0-9\.]/g, '');
                             }
-                            $('#light .inputProductNum').keyup(function () {
-                                var total = $(this).val() * selectDongia;
-                                $('#light .totalPriceProduct').text(total + " Đồng");
-                            });
-                            $('.inputProductNum').keyup(function () {
-                                if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
-                                    this.value = this.value.replace(/[^0-9\.]/g, '');
+                        });
+
+                        function addPeriod(nStr) {
+                            nStr += '';
+                            x = nStr.split('.');
+                            x1 = x[0];
+                            x2 = x.length > 1 ? '.' + x[1] : '';
+                            var rgx = /(\d+)(\d{3})/;
+                            while (rgx.test(x1)) {
+                                x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                            }
+                            return x1 + x2;
+                        }
+                        return 1;
+                    }
+                </script>
+
+
+
+            </div>
+
+            <div class="product-tab w100 clearfix">
+                <ul class="nav nav-tabs">
+                    <li class="active"> <a href="#material" data-toggle="tab">Nguyên liệu</a></li>
+                    <li><a href="#description" data-toggle="tab">Miêu tả</a></li>
+                    <li> <a href="#note" data-toggle="tab">Ghi chú</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="material">
+                        <table>
+                            <colgroup>
+                                <col style="width:33%">
+                                <col style="width:33%">
+                                <col style="width:33%">
+                            </colgroup>
+                            <tbody>
+                                @foreach (var item in pm)
+                                {
+                                    <tr>
+                                        <td>@item.ProductMaterial.ProductMaterialName :</td>
+                                        <td>@(String.Format("{0} {1}", item.RecipeQuantity, item.ProductMaterial.ProductMaterialUnit))</td>
+                                    </tr>
                                 }
-                            });
-                        </script>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<section>
-    <div class="container">
-        <div class="property-details mrgt4x">
-            <div class="col-md-6 no-padding col-sm-12">
-                <div class="property-features animated out" data-delay="0" data-animation="fadeInUp">
-                    <div class="property-heading">
-                        <h4><span>NGUYÊN LIỆU</span></h4>
-                    </div>
-                    <ul class="features-name col-md-4 col-sm-4">
-                        @foreach (var item in pm)
-                        {
-                            <li><i class="fa fa-check"></i><span>@item.ProductMaterial.ProductMaterialName</span></li>
-                        }
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="property-description animated out" data-delay="0" data-animation="fadeInUp">
-                    <div class="property-heading">
-                        <h4><span>GHI CHÚ</span></h4>
-                    </div>
-                    <p class="note">@Model.Note</p>
-                </div>
-            </div>
-        </div>
-        <div id="light" class="white_content">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="popupProductName" style="margin-left: 150px; font-family: 'Patrick Hand SC'">@Model.ProductName</h3>
-                </div>
-                <div class="modal-body">
-                    <form id="addCartForm" action='@Url.Action("AddCart", "Cart", new { @strURL = Request.Url.ToString()})' method="post">
-                        <table class="popup-table">
-                            <tr>
-                                <td>Số lượng: </td>
-                                <td><input style="width:220px;" type="text" value="" placeholder="Chỉ nhập số - tối đa 9999" class="inputProductNum" id="inputProductNum" name="inputNumber" min="1" maxlength="4" required /></td>
-                            </tr>
-                            <tr>
-                                <td>Thành tiền: </td>
-                                <td class="totalPriceProduct"></td>
-                            </tr>
+                            </tbody>
                         </table>
-                        <input type="hidden" class="hiddenProductID" name="productID" value="" />
-                    </form>
+                    </div>
+                    <div class="tab-pane" id="description">
+                        @Model.Descriptions<br>
+                    </div>
+                    <div class="tab-pane" id="note">
+                        @Model.Note<br>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <div class="popup-btn"> <a href="#" onclick="return submitAddCart();" class="book-it">Đồng ý</a> </div>
-                    <script type="text/javascript">
-                        function submitAddCart() {
-                            document.getElementById("addCartForm").submit();
-                            return 1;
-                        }
-                    </script>
-                    <div class="popup-btn" style="margin-right: 30px; background-color: #a92828"><a href="javascript:void(0)" style="background-color: #a92828" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'" class="book-it">Hủy bỏ</a> </div>
+            </div>
+            <div class="modal fade" id="product-details-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:70px;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button"> × </button>
+                        <div class="col-lg-5 col-md-5 col-sm-5  col-xs-12">
+                            <div class="main-image  col-lg-12 no-padding style3" style="margin-top:50px;">
+                                <a class="product-largeimg-link" href="product-details.html">
+                                    <img src="" class="img-responsive product-largeimg" alt="img" id="productImage" style="width:370px;height:270px;">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 modal-details" style="height: 390px;">
+                            <form id="addCartForm" action='@Url.Action("AddCart", "Cart", new { @strURL = Request.Url.ToString() })' method="post">
+                                <div style="min-height:390px;" class="modal-details-inner">
+                                    <h2 class="product-title" id="productName" style="font-size:25px;"></h2>
+                                    <h3 class="details-description">Mã sản phẩm : <span class="price-sales" id="productCode"></span></h3>
+                                    <input type="hidden" class="hiddenProductID" name="productID" value="" />
+                                    <input type="hidden" class="hiddenProductImage" name="productImage" value="" />
+                                    <h3 class="details-description">Đơn giá : <span class="price-sales" id="productPrice"></span></h3>
+
+                                    <div class="productFilter productFilterLook2">
+                                        <input type="text" name="inputProductNum" placeholder="Nhập số lượng" class="inputProductNum" style="font-size:16px;padding-bottom:0px;margin-bottom:0px;" value="" required />
+                                    </div>
+                                    <h3 class="details-description">Thành tiền : <span id="totalPriceProduct"> </span></h3>
+
+                                    <div class="cart-actions">
+                                        <div class="addto">
+                                            <button onclick="addCartForm.submit(this);" class="button btn-cart cart first" title="Add to Cart" type="submit" style="font-family: 'Patrick Hand SC'">Thêm vào giỏ hàng</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="fade" class="black_overlay"></div>
+
     </div>
-</section>
-}
-
-
+    <div class="row recommended">
+        <h1> SẢN PHẨM KHÁC </h1>
+        <div id="SimilarProductSlider">
+            @foreach (var item in pro)
+            {
+                <div class="item">
+                    <div class="product">
+                        <a href="@Url.Action("ProductDetail", "Product", new { @ProductId = item.ProductId })" class="product-image"><img src="@Url.Content("~/Content/Images/BakeryImages/" + item.ProductImage)" alt="img" style="width:247px;height:214px;"> </a>
+                        <div class="description">
+                            <h4><a href="san-remo-spaghetti.html">@item.ProductName</a></h4>
+                            <div class="price"> <span>@item.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</span> </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div style="clear:both"></div>
+    </div>
+</div>

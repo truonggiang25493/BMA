@@ -5,180 +5,124 @@
 @{
     ViewBag.Title = "Giỏ hàng";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
-}
-@{
     int sumTotal = 0;
 }
 
-<section class="border-top"></section>
-<center><h3 class="cart-title">THÔNG TIN ĐƠN HÀNG</h3></center>
-
-<div style="padding: 0px;">
-    <form id="updateCartForm" action="@Url.Action("UpdateCart", "Cart")" method="post">
-        <table class="table-fill">
-            <thead>
-                <tr>
-                    <th class="text-left">Sản phẩm</th>
-                    <th class="text-left">Đơn giá</th>
-                    <th class="text-left">Số lượng</th>
-                    <th class="text-left">Thành tiền</th>
-                    <th class="text-left">Xóa</th>
-                </tr>
-            </thead>
-
-            <tbody class="table-hover">
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td class="text-left">@item.ProductName</td>
-                        <td class="text-left">@item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                        <td class="text-left1">
-                            <input type="text" value="@item.Quantity" class="inputProductNum" name="txtQuantity" maxlength="4" required />
-                        </td>
-                        <td class="text-left">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                        <td class="cancel-order"><a href="@Url.Action("DeleteCart", "Cart", new { @ProductId = item.ProductId})">Hủy</a></td>
-                    </tr>
-                    sumTotal = sumTotal + @item.Total;
-                }
-            </tbody>
-        </table>
-    </form>
-    @{
-        int totalValue = Convert.ToInt32(sumTotal + sumTotal * 0.1);
-        int taxAmount = Convert.ToInt32(sumTotal * 0.1);
-    }
-
-    <table class="table-fill-2" style="margin-left:5px;">
-        <tbody class="table-hover">
-            <tr>
-                <td class="sum-td">Tổng cộng </td>
-                <td style="font-weight: bolder;" class="text-left">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-            </tr>
-            <tr>
-                <td class="sum-td">Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
-                <td style="font-weight: bolder;" class="text-left">@taxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-            </tr>
-            <tr>
-                <td style="border-bottom:none;" class="sum-td">Thành tiền</td>
-                <td style="min-width:180px;font-weight:bolder;" class="text-left">@totalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-            </tr>
-        </tbody>
-    </table>
-
-    @{
-        TempData["TaxAmount"] = taxAmount;
-        TempData["Amount"] = sumTotal;
-    }
-    <div style="margin-top:-85px;" class="row">
-        <ul class="filter-list clearfix">
-            <li>
-                <div class="property-box animated out" data-delay="0" data-animation="fadeInUp">
-                    <div class="property-text2">
-                        <div style="margin-left: 170px; margin-top: 93px; float: left;" class="detail-btn mrgt3x"><a href="#" onclick="return submitUpdateCart();" class="sale">Cập nhật giỏ hàng</a></div>
-                        <script type="text/javascript">
-                            function submitUpdateCart() {
-                                document.getElementById("updateCartForm").submit();
-                                return 1;
-                            }
-                        </script>
-                    </div>
-                    <div class="property-text2">
-                        <div style="margin-top:31.5px; float:left;margin-left:45px;" class="detail-btn mrgt3x"><a href="@Url.Action("Index", "Product")" class="sale">Tiếp tục mua sắm</a></div>
-                    </div>
-                    <div class="property-text2">
-                        @{
-                            if (Session["BeEdited"] != null)
-                            {
-                                <div class="delete-btn mrgt3x"> <a style="background-color:#ad0707" href="javascript:void(0)" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'" class="sale">Hủy đơn hàng</a> </div>
-                            }
-                            else
-                            {
-                                <div class="delete-btn mrgt3x"> <a href="@Url.Action("DeleteAll", "Cart")" class="sale">Hủy giỏ hàng</a> </div>
-                            }
-                        }
-                    </div>
-                    <div class="property-text2">
-                        @if (Session["BeEdited"] != null)
-                        {
-                            <div class="book-btn mrgt3x"> <a href="#" onclick="document.getElementById('orderForm').submit();" class="sale">Cập nhật đơn hàng</a> </div>
-                        }
-                        else
-                        {
-                            <div class="book-btn mrgt3x"> <a href="#" onclick="document.getElementById('orderForm').submit();" class="sale">Đặt hàng</a> </div>
-                        }
-                    </div>
-                    <div class="property-text2">
-                        @{
-                            if (Session["User"] != null)
-                            {
-                                if (Session["BeEdited"] != null)
-                                {
-                                    int IdToEdit = (int)Session["BeEdited"];
-                                    using (Html.BeginForm("EditOrder", "Cart", new { @orderId = IdToEdit }, FormMethod.Post, new { id = "orderForm" }))
-                                    {
-                                        <table class="table-fill-2" style="margin-top:-363px;float:right">
-                                            <tbody class=" table-hover" style="">
-                                                <tr>
-                                                    <td style="border-bottom: none;width:67%" class="sum-td">Ngày nhận</td>
-                                                    <td><input style="max-height: 100%;" type="datetime" min="@DateTime.Now.ToString()" max="2020-12-31" value="@DateTime.Now.ToString()" name="txtDeliveryDate" required /></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    }
-                                }
-                                else
-                                {
-                                    using (Html.BeginForm("OrderProduct", "Cart", FormMethod.Post, new { id = "orderForm" }))
-                                    {
-                                        <table class="table-fill-2" style="margin-top:-363px;float:right">
-                                            <tbody class=" table-hover" style="">
-                                                <tr>
-                                                    <td style="border-bottom: none;width:67%" class="sum-td">Ngày nhận</td>
-                                                    <td><input style="max-height: 100%;" type="datetime" min="@DateTime.Now.ToString()" max="2020-12-31" value="@DateTime.Now.ToString()" name="txtDeliveryDate" required /></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                using (Html.BeginForm("OrderInfo", "Cart", FormMethod.Post, new { id = "orderForm" }))
-                                {
-                                    <table class="table-fill-2" style="margin-top:-363px;float:right">
-                                        <tbody class=" table-hover" style="">
-                                            <tr>
-                                                <td style="border-bottom: none;width:67%" class="sum-td">Ngày nhận</td>
-                                                <td><input style="max-height: 100%;" type="datetime" min="@DateTime.Now.ToString()" max="2020-12-31" value="@DateTime.Now.ToString()" name="txtDeliveryDate" required /></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                }
-                            }
-                        }
-                    </div>
-                </div>
-            </li>
-        </ul>
+<div class="container main-container headerOffset">
+    <div class="row">
+        <div class="breadcrumbDiv col-lg-12">
+            <ul class="breadcrumb">
+                <li> <a href="@Url.Action("Index","Home")">Trang chủ</a> </li>
+                <li class="active">Giỏ hàng </li>
+            </ul>
+        </div>
     </div>
-
-    @{
-        if (Session["BeEdited"] != null)
-        {
-            <div id="light" class="white_content_delete">
-                <div class="modal-content">
-                    <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
-                        <button type="button" class="close" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
-                        <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-7">
+            <h1 class="section-title-inner"><span><i class="glyphicon glyphicon-shopping-cart"></i> Giỏ hàng </span></h1>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-5 rightSidebar">
+            <h4 class="caps"><a href="@Url.Action("Index","Product")"><i class="fa fa-chevron-left"></i> Tiếp tục mua sắm </a></h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-7">
+            <div class="row userInfo">
+                <div class="col-xs-12 col-sm-12">
+                    <div class="cartContent w100">
+                        <form id="updateCartForm" action="@Url.Action("UpdateCart", "Cart")" method="post">
+                            <table class="cartTable table-responsive" style="width:100%">
+                                <tbody>
+                                    <tr class="CartProduct cartTableHeader">
+                                        <td style="width:15%"> Sản phẩm </td>
+                                        <td style="width:40%"> Chi tiết </td>
+                                        <td style="width:10%" class="delete">&nbsp;</td>
+                                        <td style="width:15%"> Số lượng </td>
+                                        <td style="width:20%"> Tổng </td>
+                                    </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="CartProduct">
+                                            <td class="CartProductThumb"><div> <a href="product-details.html"><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" alt="img"></a> </div></td>
+                                            <td>
+                                                <div class="CartDescription">
+                                                    <h4> <a href="product-details.html">@item.ProductName </a> </h4>
+                                                    <div class="price"> <span>@item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</span></div>
+                                                </div>
+                                            </td>
+                                            <td class="delete"><a href="@Url.Action("DeleteCart", "Cart", new { @ProductId = item.ProductId})" title="Delete"> <i class="glyphicon glyphicon-trash fa-2x"></i></a></td>
+                                            <td><input class="quanitySniper" type="text" value="@item.Quantity" name="quanitySniper"></td>
+                                            <td class="price" style="text-align:right">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        </tr>
+                                        sumTotal = sumTotal + @item.Total;
+                                    }
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
-                    <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Quý khách thực sự muốn hủy đơn hàng này?</div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
-                        <a class="btn btn-primary" href="@Url.Action("CancelOrderConfirm", "CusManageOrder", new { @orderId = (int)Session["BeEdited"]})">Đồng ý</a>
+                    @{
+                        int totalValue = Convert.ToInt32(sumTotal + sumTotal * 0.1);
+                        int taxAmount = Convert.ToInt32(sumTotal * 0.1);
+                    }
+                    <div class="cartFooter w100">
+                        <div class="box-footer">
+                            <div class="pull-left"> <a href="@Url.Action("Index","Product")" class="btn btn-success"> <i class="fa fa-arrow-left"></i> &nbsp; Tiếp tục mua sắm </a> </div>
+                            <div class="pull-right">
+                                <button type="submit" onclick="$(document.getElementById('updateCartForm').submit())" class="btn btn-info"> <i class="fa fa-undo"></i> &nbsp; Cập nhật giỏ hàng </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div id="fade" class="black_overlay"></div>
-        }
-    }
+
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-5 rightSidebar">
+            <div class="contentBox">
+                <div class="w100 costDetails">
+                    <div class="table-block" id="order-detail-content">
+                        <a class="btn btn-primary btn-lg btn-block " title="checkout" href="checkout-0.html" style="margin-bottom:20px"> Đặt hàng &nbsp; <i class="fa fa-arrow-right"></i> </a>
+                        <div class="w100 cartMiniTable">
+                            <table id="cart-summary" class="std table">
+                                <tbody>
+                                    <tr>
+                                        <td>Tổng cộng</td>
+                                        <td class="price">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                    </tr>
+                                    <tr style="">
+                                        <td>Giảm giá</td>
+                                        <td class="price"><span class="success">10.000</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
+                                        <td class="price" id="total-tax">@taxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                    </tr>
+                                    @*@{
+                                        int hihi = int.Parse(totalValue.ToString().Reverse().Aggregate("", (s, c) => s + c));
+                                        string haha = hihi.ToString().Substring(0, 1);
+                                    }*@
+                                    <tr>
+                                        <td>Thành tiền</td>
+                                        <td class=" site-color" id="total-price" style="font-size: 20px; color: #4ec67f !important">@totalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="input-append couponForm">
+                                                <input class="col-lg-12" type="text" placeholder="Ngày nhận hàng">
+                                                @*<button class="col-lg-4 btn btn-success" type="button">Apply!</button>*@
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div style="clear:both"></div>
+    <div style="margin-bottom:50px;"></div>
 </div>

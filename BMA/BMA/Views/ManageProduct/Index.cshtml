@@ -36,14 +36,14 @@
                             <td>@item.ProductName</td>
                             <td>@item.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                             @{
-                        if (item.IsActive)
-                        {
-                            <td><div class="label label-success">Đang sử dụng</div></td>
-                        }
-                        else
-                        {
-                            <td><div class="label label-default">Đã hủy</div></td>
-                        }
+                            if (item.IsActive)
+                            {
+                                <td><div class="label label-success">Đang sử dụng</div></td>
+                            }
+                            else
+                            {
+                                <td><div class="label label-default">Đã hủy</div></td>
+                            }
                             }
                             <td>
                                 @Html.ActionLink("Xem", "Detail", new { ProductId = item.ProductId })

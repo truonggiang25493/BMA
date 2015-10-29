@@ -1,2 +1,63 @@
-﻿
-Thanh Toán(@ViewBag.SumQuantity) 
+﻿@using BMA.Models.ViewModel
+@using System.Globalization
+@model List<CustomerCartViewModel>
+@{
+    List<CustomerCartViewModel> lstProductCart = ViewBag.lstProductCart;
+    int subTotal = 0;
+    int total = 0;
+}
+
+Giỏ hàng(@ViewBag.SumQuantity)<b class="caret"> </b>
+@{
+    if (lstProductCart == null)
+    {
+        <div class="dropdown-menu col-lg-4 col-xs-12 col-md-4">
+            <div class="w100 miniCartTable scroll-pane" style="margin-top:0px;">
+                <table>
+                    <tbody>
+                        <tr class="miniCartProduct">
+                            <td style="50%" class="miniCartProductThumb"><div> <a href="product-details.html"> <img src="@Url.Content("~/Content/CustomerLayout/Images/cart_empty.png")" alt="img" style="margin:0 50px;"> </a> </div></td>
+                            <td style="50%">
+                                <div class="miniCartDescription">
+                                    <h4> <a href="product-details.html"> Không có sản phẩm trong giỏ hàng </a> </h4>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="dropdown-menu col-lg-4 col-xs-12 col-md-4">
+            <div class="w100 miniCartTable scroll-pane" style="margin-top:-15px;">
+                <table>
+                    <tbody>
+                        @foreach (var item in lstProductCart)
+                        {
+                            <tr class="miniCartProduct">
+                                <td style="20%" class="miniCartProductThumb"><div><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" alt="img" style="width:120px;height:100px;"></div></td>
+                                <td style="40%">
+                                    <div class="miniCartDescription">
+                                        <h4> <a style="font-family:'Patrick Hand SC';"> @item.ProductName </a> </h4>
+                                        <div class="price"> <span> @item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) </span> </div>
+                                    </div>
+                                </td>
+                                <td style="10%" class="miniCartQuantity"><a> @item.Quantity Cái</a></td>
+                                <td><input type="hidden" value="@(subTotal = item.Quantity * item.Price)" /></td>
+                            </tr>
+                            <tr style="border:none"><td><input type="hidden" value="@(total = total + subTotal)" /></td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="miniCartFooter text-right" style="">
+                <h4 class="text-right subtotal" style="margin:-5px 0"> Tổng cộng: @total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</h4>
+                <a onclick="return window.location.assign('http://www.w3schools.com')"><div class="btn btn-sm btn-danger"> <i class="fa fa-shopping-cart"> </i> THANH TOÁN </div></a>
+            </div>
+
+        </div>
+    }
+}

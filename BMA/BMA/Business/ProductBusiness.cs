@@ -19,6 +19,11 @@ namespace BMA.Business
             return lstProducts;
         }
 
+        public List<Product> GetOtherProduct(int productId)
+        {
+            List<Product> lstProducts = db.Products.Where(n => n.IsActive && n.ProductId != productId).ToList();
+            return lstProducts;
+        }
         public List<Product> GetCookie()
         {
             var lstCookies = db.Products.Where(n => n.CategoryId == 2 && n.IsActive).ToList();
@@ -37,7 +42,7 @@ namespace BMA.Business
             return productDetail;
         }
 
-        public static List<Recipe> GetProductMaterial(int ProductId)
+        public List<Recipe> GetProductMaterial(int ProductId)
         {
             BMAEntities db = new BMAEntities();
             var lstMaterial = db.Recipes.Where(p => p.ProductId == ProductId).ToList();

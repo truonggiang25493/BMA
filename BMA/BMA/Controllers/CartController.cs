@@ -34,7 +34,8 @@ namespace BMA.Controllers
                     return null;
                 }
                 int productId = int.Parse(f["productID"].ToString());
-                int productNumber = int.Parse(f["inputNumber"].ToString());
+                string productImage = f["productImage"].ToString();
+                int productNumber = int.Parse(f["inputProductNum"].ToString());
 
                 List<CustomerCartViewModel> lstCart = GetCart();
                 CustomerCartViewModel cart = lstCart.Find(n => n.ProductId == productId);
@@ -42,21 +43,25 @@ namespace BMA.Controllers
                 {
                     cart = new CustomerCartViewModel(productId);
                     cart.ProductId = productId;
+                    cart.ProductImage = productImage;
                     cart.Quantity = productNumber;
                     cart.Total = cart.Price * cart.Quantity;
                     lstCart.Add(cart);
+                    ViewBag.lstProductCart = lstCart;
                     return Redirect(strURL);
                 }
                 else
                 {
                     cart.Quantity += productNumber;
-                    if (cart.Quantity > 9999)
+                    if (cart.Quantity > 5000)
                     {
-                        cart.Quantity = 9999;
+                        cart.Quantity = 5000;
                     }
                     cart.Total += cart.Price * cart.Quantity;
+                    ViewBag.lstProductCart = lstCart;
                     return Redirect(strURL);
                 }
+                
             }
             catch (Exception)
             {
@@ -69,7 +74,7 @@ namespace BMA.Controllers
             try
             {
                 List<CustomerCartViewModel> lstCart = GetCart();
-                String[] listQuantity = f["txtQuantity"].ToString().Split(',');
+                String[] listQuantity = f["quanitySniper"].ToString().Split(',');
                 for (int i = 0; i < lstCart.Count; i++)
                 {
                     lstCart[i].Quantity = int.Parse(listQuantity[i]);
@@ -118,7 +123,7 @@ namespace BMA.Controllers
 
         public ActionResult Cart()
         {
-            CustomerOrberBusiness cob = new CustomerOrberBusiness();
+            CustomerOrderBusiness cob = new CustomerOrderBusiness();
             if (Session["Cart"] == null)
             {
                 return RedirectToAction("Index", "Home");
@@ -156,8 +161,13 @@ namespace BMA.Controllers
             {
                 return PartialView();
             }
-            ViewBag.SumQuantity = SumQuantity();
-            ViewBag.TotalQuantity = TotalPrice();
+            if (Session["Cart"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            List<CustomerCartViewModel> lstProductCart = GetCart();
+            ViewBag.SumQuantity = lstProductCart.Count;
+            ViewBag.lstProductCart = lstProductCart;
             return PartialView();
         }
         #endregion
@@ -167,7 +177,7 @@ namespace BMA.Controllers
         {
             try
             {
-                CustomerOrberBusiness cob = new CustomerOrberBusiness();
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
                 List<CustomerCartViewModel> lstCart = new List<CustomerCartViewModel>();
                 lstCart = cob.GetOrderToCart(orderId);
                 if (lstCart != null)
@@ -187,7 +197,7 @@ namespace BMA.Controllers
         {
             try
             {
-                CustomerOrberBusiness cob = new CustomerOrberBusiness();
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
                 if (Session["Cart"] == null)
                 {
                     RedirectToAction("Index", "Product");
@@ -225,7 +235,7 @@ namespace BMA.Controllers
         {
             //try
             //{
-                CustomerOrberBusiness cob = new CustomerOrberBusiness();
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
                 if (Session["Cart"] == null)
                 {
                     RedirectToAction("Index", "Product");
@@ -262,7 +272,7 @@ namespace BMA.Controllers
         {
             try
             {
-                CustomerOrberBusiness cob = new CustomerOrberBusiness();
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
                 if (Session["Cart"] == null)
                 {
                     RedirectToAction("Index", "Product");
@@ -303,7 +313,7 @@ namespace BMA.Controllers
         {
             try
             {
-                CustomerOrberBusiness cob = new CustomerOrberBusiness();
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
                 if (Session["Cart"] == null)
                 {
                     RedirectToAction("Index", "Product");
