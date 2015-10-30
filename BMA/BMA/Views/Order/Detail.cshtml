@@ -28,43 +28,39 @@
             <div class="row" style="margin-left: 1px; margin-bottom: 10px">
                 Mã đơn hàng: <b style="font-size: 17px;">@Model.Order.OrderCode</b>
             </div>
-
-            <div class="row" style="margin-left: 1px;">
-                <b>Thời gian tạo: </b>
-                @Model.Order.CreateTime.ToString(("dd/MM/yyyy HH:mm"))
+            <div class="row">
+                <div id="datetimepicker" class="input-append date">
+                    <input data-format="dd/MM/yyyy hh:mm:ss" type="text" />
+                    <span class="add-on">
+                        <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                        </i>
+                    </span>
+                </div>
             </div>
+
+
             @if (Model.Order.OrderStatus != 0 && Model.Order.OrderStatus != 1)
             {
-                if (Model.Order.ApproveTime != null)
-                {
-                    <div class="row" style="margin-left: 1px;">
-                        <b>Thời gian duyệt: </b>
-                        @(((DateTime)Model.Order.ApproveTime).ToString("dd/MM/yyyy HH:mm"))
-                    </div>
-                }
-                if (Model.Order.User1.Fullname != null)
-                {
-                    <div class="row" style="margin-left: 1px;">
-                        <b>Người duyệt: </b>
-                        @(Model.Order.User1.Fullname)
-                    </div>
-                }
-                if (Model.Order.DepositAmount > 0)
-                {
-                    <div class="row" style="margin-left: 1px;">
-                        <b>Tiền cọc: </b>
-                        @(Model.Order.DepositAmount.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))
-                    </div>
 
+                <div class="row" style="margin-left: 1px;">
+                    <b>Tiền cọc: </b>
+                    @(Model.Order.DepositAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                </div>
+            }
+            @if (Model.Order.OrderStatus != 4 && Model.Order.OrderStatus != 5 && Model.Order.OrderStatus != 6)
+            {
 
-                }
-                if (Model.Order.DeliveryTime != null)
-                {
-                    <div class="row" style="margin-left: 1px;">
-                        <b>Thời gian giao hàng dự kiến: </b>
-                        @(Model.Order.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm"))
-                    </div>
-                }
+                <div class="row" style="margin-left: 1px;">
+                    <b>Thời gian giao hàng dự kiến: </b>
+                    @(Model.Order.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm"))
+                </div>
+            }
+            @if (Model.Order.OrderStatus == 6)
+            {
+                <div class="row" style="margin-left: 1px;">
+                    <b>Tiền cọc hoàn trả: </b>
+                    @(Model.Order.ReturnDeposit.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                </div>
             }
             <div class="row" style="vertical-align: middle; margin-left: 1px;">
                 <b>Trạng thái: </b>
@@ -1184,7 +1180,7 @@
                 }
                 else
                 {
-                    timeslideData += ";<b>Duyệt: </b>" + ((DateTime)Model.Order.ApproveTime).ToString("dd/MM/yyyy HH:mm");
+                    timeslideData += ";<b>Duyệt: </b>" + ((DateTime)Model.Order.ApproveTime).ToString("dd/MM/yyyy HH:mm") + "<br/><b>Người duyệt: </b>" + (Model.Order.User1.Fullname);
                 }
 
             }

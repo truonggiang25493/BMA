@@ -78,7 +78,7 @@
                         <!-- Table row -->
                         <div class="row">
                             <div class="col-xs-12 table-responsive">
-                                <form action="@Url.Action("Edit", "Order" )" method="POST" id="update-product-list">
+                                <form action="@Url.Action(" edit", "Order" )" method="POST" id="update-product-list">
                                     <table class="table table-striped" id="product-table">
                                         <thead style="font-weight: bold">
                                             <tr>
@@ -300,15 +300,6 @@
                         </h2>
                     </div>
                 </div>
-                <!--Material Noti-->
-                @if (!Model.IsEnoughMaterial)
-                {
-                    <div class="row" style="margin-bottom: 10px">
-                        <div class="col-xs-12">
-                            <h2 class="label label-danger" style="font-size: 14pt">Không đủ nguyên liệu. Không cập nhật</h2>
-                        </div>
-                    </div>
-                }
                 <!-- Material Table Content-->
                 <div class="row">
                     <div class="col-xs-12 table-responsive">
@@ -534,6 +525,22 @@
     </section>
 }
 @section EditOrderScript{
+    @if (ViewBag.ShortageOfMaterial != null && ViewBag.ShortageOfMaterial)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                var n = noty({
+                    text: 'Không đủ nguyên liệu. Không thể duyệt đơn hàng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'bottomLeft',
+                    theme: 'defaultTheme'
+                });
+            };
+        </script>
+        ViewBag.ShortageOfMaterial = null;
+    }
+
     <script type="text/javascript">
         function open_update_container(materialCost) {
             var loyalCustControl = $("<div>", {
@@ -573,41 +580,41 @@
                 "id": "form-update",
                 "html": [
                     @(Model.IsLoyal?"loyalCustControl":""),
-    $("<div>", {
-        "class": "form-group",
-        "id": "deposit",
-        "style": "@(Model.IsLoyal?"display:none;":"")",
-        "html": [
-            "<label>Tiền cọc</label>",
-            $("<input>", {
-                "type": "number",
-                "min": materialCost,
-                "class": "form-control",
-                "id": "deposit-amount",
-                "name": "deposit",
-                "value": materialCost
-            })
-        ]
-    }),
-    $("<div>", {
-        "class": "form-group",
-        "html": [
-            '<label>Ngày giao hàng</label>',
-            $("<input>", {
-                "type": "date",
-                "min": "@((DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"))",
-                "class": "form-control",
-                "name": "deliveryDate",
-                "id":"deliveryDate",
-                "value": "@((DateTime.Now.AddDays(1)) >= Model.Order.PlanDeliveryTime ? (DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"):(Model.Order.PlanDeliveryTime).ToString("yyyy-MM-dd"))"
-            }),
-            $("<input>", {
-                "type": "hidden",
-                "name": "orderId",
-                "value": "@Model.Order.OrderId"
-            })
-        ]
-    })
+                    $("<div>", {
+                        "class": "form-group",
+                        "id": "deposit",
+                        "style": "@(Model.IsLoyal?"display:none;":"")",
+                        "html": [
+                            "<label>Tiền cọc</label>",
+                            $("<input>", {
+                                "type": "number",
+                                "min": materialCost,
+                                "class": "form-control",
+                                "id": "deposit-amount",
+                                "name": "deposit",
+                                "value": materialCost
+                            })
+                        ]
+                    }),
+                    $("<div>", {
+                        "class": "form-group",
+                        "html": [
+                            '<label>Ngày giao hàng</label>',
+                            $("<input>", {
+                                "type": "date",
+                                "min": "@((DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"))",
+                                "class": "form-control",
+                                "name": "deliveryDate",
+                                "id":"deliveryDate",
+                                "value": "@((DateTime.Now.AddDays(1)) >= Model.Order.PlanDeliveryTime ? (DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"):(Model.Order.PlanDeliveryTime).ToString("yyyy-MM-dd"))"
+                            }),
+                            $("<input>", {
+                                "type": "hidden",
+                                "name": "orderId",
+                                "value": "@Model.Order.OrderId"
+                            })
+                        ]
+                    })
                 ]
             });
             var title = 'Xác nhận duyệt đơn hàng';
@@ -615,14 +622,14 @@
                 "class": "row",
                 "style": "padding-bottom: 20px;",
                 "html": [
-                     $("<button>", {
-                         "class": "btn btn-success pull-right",
-                         "style": "margin-right: 10px;",
-                         "onclick":"update_order()",
-                         "html": [
-                             "Đồng ý"
-                         ]
-                     }),
+                    $("<button>", {
+                        "class": "btn btn-success pull-right",
+                        "style": "margin-right: 10px;",
+                        "onclick":"update_order()",
+                        "html": [
+                            "Đồng ý"
+                        ]
+                    }),
                     $("<button>", {
                         "class": "btn btn-danger",
                         "style": "margin-right: 10px;",

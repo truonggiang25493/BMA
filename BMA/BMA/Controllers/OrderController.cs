@@ -73,6 +73,10 @@ namespace BMA.Controllers
             {
                 if (orderViewModel.Order.OrderStatus == 0 && !orderViewModel.Order.IsStaffEdit)
                 {
+                    if (!orderViewModel.IsEnoughMaterial)
+                    {
+                        ViewBag.ShortageOfMaterial = true;
+                    }
                     InitiateProductList(orderViewModel.Order.OrderId);
                     return View(orderViewModel);
                 }
