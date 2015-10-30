@@ -30,32 +30,32 @@
         <tr>
             <td></td>
             <td></td>
-            <td rowspan="5" style="vertical-align: middle; text-align: center; padding-left: 120px">
-                <h1>HÓA ĐƠN BÁN HÀNG</h1>
+            <td rowspan="5" style="vertical-align: middle; text-align: center; width: 415px; font-size: 17px;">
+                <h2>HÓA ĐƠN BÁN HÀNG</h2>
             </td>
         </tr>
         <tr>
-            <td colspan="2" style="text-align: center">
+            <td colspan="2" style="text-align: center; width: 415px;">
                 <h3>TIỆM BÁNH DÂU TÂY</h3>
             </td>
         </tr>
         <tr>
-            <td>
+            <td style="width: 115px;">
                 <b>Địa chỉ: </b>
             </td>
-            <td>Công viên phần mềm Quang Trung</td>
+            <td style="width: 315px;">Công viên phần mềm Quang Trung</td>
         </tr>
         <tr>
-            <td>
+            <td style="width: 115px;">
                 <b>Điện thoại: </b>
             </td>
-            <td>097.9758.054</td>
+            <td style="width: 315px;">0979758054</td>
         </tr>
         <tr>
-            <td>
+            <td style="width: 115px;">
                 <b>Mã số thuế: </b>
             </td>
-            <td>013235656897</td>
+            <td style="width: 315px;">013235656897</td>
         </tr>
     </table>
     <!--Customer info-->
@@ -129,10 +129,18 @@
             </tr>
             <tr>
                 <td colspan="4" style="width: 410px; text-align: right; padding-right: 10px;" class="table-cell">
+                    <b>GIẢM: </b>
+                </td>
+                <td style="width: 140px; text-align: right; padding-right: 10px;" class="table-cell">
+                    @(Model.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="width: 410px; text-align: right; padding-right: 10px;" class="table-cell">
                     <b>THÀNH TIỀN</b>
                 </td>
                 <td style="width: 140px; text-align: right; padding-right: 10px;" class="table-cell">
-                    @((Model.Amount + Model.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                    @((Model.Amount + Model.TaxAmount - Model.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
                 </td>
             </tr>
         </tbody>

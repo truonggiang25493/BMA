@@ -19,7 +19,8 @@
     <link href="~/Content/style.css" rel="stylesheet" />
     <!-- Timesliders -->
     <link href="~/Content/timeslider.css" rel="stylesheet" />
-
+    <!--DatetimePicker-->
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     @RenderSection("InitStyle", false)
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -138,7 +139,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-                            <li><a href="@Url.Action("Create", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+                            <li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -253,10 +254,13 @@
     <script src="~/Scripts/jquery.noty.packaged.min.js"></script>
     <!--Timeslider-->
     <script src="~/Scripts/timeslider.js"></script>
+    <!--DatetimePicker-->
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     @RenderSection("InitScript", false)
     @RenderSection("OrderDetailScript", false)
     @RenderSection("CheckoutWithCustomerScript", false)
     @RenderSection("AddCustomerToOrderScript", false)
+    @RenderSection("EditOrderScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({
@@ -303,23 +307,6 @@
                 }
             });
         });
-        $(document).ready(function () {
-            var data = ["<b>Tạo: </b>25/10/2015 22:35",
-                "<b>Duyệt: </b>26/10/2015 22:35" + "<br/><b>Người duyệt: </b> Huỳnh Hữu Trường Giang",
-                "<b>Sản xuất: </b>27/10/2015 22:35",
-                "<b>Giao hàng: </b>28/10/2015 22:35",
-                "<b>Hoàn thành: </b>29/10/2015 22:35"
-            ];
-
-            $("#timeslide").timeslide({
-                number: data.length,
-                completed: 3,
-                renderLabel: function (i) {
-                    return data[i];
-                }
-            });
-        });
-        $("[data-toggle=popover").popover();
     </script>
     @if (ViewBag.TreeView != null)
     {

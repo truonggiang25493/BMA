@@ -147,13 +147,13 @@
                                 Đồng ý
                                 <script type="text/javascript">
                                     function addCustomer() {
-                                        // Validate Customer Name
                                         var customerName = $("#customerName").val();
                                         var username = $("#username").val();
                                         var email = $("#customerEmail").val();
                                         var address = $("#customerAddress").val();
                                         var phoneNumber = $("#customerPhoneNumber").val();
                                         var taxCode = $("#customerTaxCode").val();
+                                        // Validate Customer Name
                                         if (customerName.trim() === '') {
                                             var n = noty({
                                                 text: 'Tên khách hàng không được trống.',
@@ -419,18 +419,18 @@
         {
             <script type="text/javascript" charset="utf-8">
                 window.onload = function () {
-                    $("#customerName").val("@(((CustomerViewModel)Session["NewCustomer"]).CustomerName)");
-                    document.getElementById("username").value = "@(((CustomerViewModel)Session["NewCustomer"]).Username)";
-                    document.getElementById("customerEmail").value = "@(((CustomerViewModel)Session["NewCustomer"]).CustomerEmail)";
-                    document.getElementById("customerAddress").value = "@(((CustomerViewModel)Session["NewCustomer"]).CustomerAddress)";
-                    document.getElementById("customerPhoneNumber").value = "@(((CustomerViewModel)Session["NewCustomer"]).CustomerPhoneNumber)";
-                    document.getElementById("customerTaxCode").value = "@(((CustomerViewModel)Session["NewCustomer"]).CustomerTaxCode)";
+                    $("#customerName").val("@Html.Raw((((CustomerViewModel)Session["NewCustomer"]).CustomerName))");
+                    document.getElementById("username").value = "@Html.Raw((((CustomerViewModel)Session["NewCustomer"]).Username))";
+                    document.getElementById("customerEmail").value = "@Html.Raw((((CustomerViewModel)Session["NewCustomer"]).CustomerEmail))";
+                    document.getElementById("customerAddress").value = "@Html.Raw((((CustomerViewModel)Session["NewCustomer"]).CustomerAddress))";
+                    document.getElementById("customerPhoneNumber").value = "@Html.Raw((((CustomerViewModel)Session["NewCustomer"]).CustomerPhoneNumber))";
+                    document.getElementById("customerTaxCode").value = "@Html.Raw((((CustomerViewModel)Session["NewCustomer"]).CustomerTaxCode))";
 
                     $('#announce').hide();
                     $('#choose-customer').hide();
                     $('#add-customer').show();
                 };
-</script>
+            </script>
 
 
         }

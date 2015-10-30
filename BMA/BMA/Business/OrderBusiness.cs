@@ -640,8 +640,9 @@ namespace BMA.Business
             result.IsGuest = true;
             result.IsLoyal = false;
 
-            // Temp var for total amount
+            // Temp var for total amount, taxAmount
             int totalAmount = 0;
+            int taxAmount = 0;
             // Creat OrderItemViewModel List and MaterialViewModelList
             List<OrderItemViewModel> orderItemViewModelList = new List<OrderItemViewModel>();
             List<MaterialViewModel> materialViewModelList = new List<MaterialViewModel>();
@@ -663,6 +664,7 @@ namespace BMA.Business
                     {
                         int taxRateTemp = firstOrDefault.TaxRateValue;
                         orderItem.TaxAmount = (cartViewModel.Quantity * cartViewModel.RealPrice * taxRateTemp) / 100;
+                        taxAmount += (cartViewModel.Quantity * cartViewModel.RealPrice * taxRateTemp) / 100;
                     }
                     totalAmount += cartViewModel.Quantity * cartViewModel.RealPrice;
                     orderItemViewModel.OrderItem = orderItem;
@@ -741,6 +743,7 @@ namespace BMA.Business
                 }
             }
             result.Order.Amount = totalAmount;
+            result.Order.TaxAmount = taxAmount;
             TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1);
             if (taxRate != null)
             {
@@ -1176,8 +1179,10 @@ namespace BMA.Business
             Order order = new Order();
             order.CreateTime = previousOrder.CreateTime;
             order.OrderStatus = 1;
-            order.DeliveryTime = deliveryDate;
+            order.PlanDeliveryTime = deliveryDate;
             order.DepositAmount = depositAmount;
+            order.Amount = orderViewModel.Order.Amount;
+            order.TaxAmount = orderViewModel.Order.TaxAmount;
             //Temp Bug temp staff approve user id
             order.StaffApproveUserId = 2;
             // Get current identity of Order table
@@ -1194,13 +1199,16 @@ namespace BMA.Business
 
             //Add OrderItem and OutputMaterial 
             #region Add OrderItem, OutputMaterial, ExportFrom, InputMaterial
-            int currentOrderItemId = (int)db.Database.SqlQuery<decimal>("SELECT IDENT_CURRENT('OrderItem')").FirstOrDefault();
-            List<ExportFrom> exportFromList = new List<ExportFrom>();
             List<OrderItem> orderItemList = new List<OrderItem>();
             foreach (OrderItemViewModel orderItemViewModel in orderViewModel.OrderItemList)
             {
                 OrderItem orderItem = orderItemViewModel.OrderItem;
-                currentOrderItemId++;
+                TaxRate taxRate =
+                    db.TaxRates.FirstOrDefault(
+                        m =>
+                            m.TaxTypeId == 1 && previousOrder.CreateTime <= m.EndDate &&
+                            previousOrder.CreateTime >= m.BeginDate);
+                orderItem.TaxAmount = orderItemViewModel.OrderItem.Quantity * orderItemViewModel.OrderItem.RealPrice * taxRate.TaxRateValue / 100;
                 List<OutputMaterial> outputMaterialList = new List<OutputMaterial>();
 
                 foreach (MaterialViewModel materialViewModel in orderItemViewModel.MaterialList)

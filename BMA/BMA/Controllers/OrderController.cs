@@ -64,7 +64,7 @@ namespace BMA.Controllers
             }
             OrderBusiness orderBusiness = new OrderBusiness();
             OrderViewModel orderViewModel = orderBusiness.GetOrderViewModel(id);
-            TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && m.EndDate == null);
+            TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && m.EndDate >= DateTime.Now && m.BeginDate <= DateTime.Now);
             if (taxRate != null)
             {
                 orderViewModel.TaxRate = taxRate.TaxRateValue;
@@ -123,11 +123,47 @@ namespace BMA.Controllers
         }
 
         [HttpPost]
-        public int ApproveOrder(int deposit, DateTime deliveryDate, int orderId)
+        public int ApproveOrder(FormCollection form)
         {
-            OrderBusiness orderBusiness = new OrderBusiness();
-            bool rs = orderBusiness.ApproveOrder(orderId, deposit, deliveryDate);
-            return rs ? 1 : 0;
+            String customerName = form["customerName"];
+            if (customerName == null)
+            {
+
+                int orderId = Convert.ToInt32(form["orderId"]);
+                int deposit = Convert.ToInt32(form["deposit"]);
+                DateTime deliveryDate = Convert.ToDateTime(form["deliveryDate"]);
+
+                OrderBusiness orderBusiness = new OrderBusiness();
+                bool rs = orderBusiness.ApproveOrder(orderId, deposit, deliveryDate);
+                return rs ? 1 : 0;
+            }
+            else
+            {
+                string orderIdString = form["orderId"];
+                string username = form["username"];
+                string email = form["customerEmail"];
+                string customerAddress = form["customerAddress"];
+                string customerPhoneNumber = form["customerPhoneNumber"];
+                string customerTaxCode = form["customerTaxCode"];
+                if (!(customerName.IsEmpty() || orderIdString.IsEmpty() || username.IsEmpty() || email.IsEmpty() ||
+                      customerAddress.IsEmpty() || customerPhoneNumber.IsEmpty() || customerTaxCode.IsEmpty()))
+                {
+                    int orderId = Convert.ToInt32(orderIdString);
+                    int deposit = Convert.ToInt32(form["deposit"]);
+                    DateTime deliveryDate = Convert.ToDateTime(form["deliveryDate"]);
+
+                    OrderBusiness orderBusiness = new OrderBusiness();
+                    bool rs1 = orderBusiness.ApproveOrder(orderId, deposit, deliveryDate);
+                    if (rs1)
+                    {
+                        CustomerBusiness customerBusiness = new CustomerBusiness();
+                        bool rs2 = customerBusiness.AddCustomerForOrder(username, email, customerName, customerAddress,
+                            customerPhoneNumber, customerTaxCode, orderId);
+                        return rs2 ? 1 : 0;
+                    }
+                }
+            }
+            return 0;
         }
 
         private List<CartViewModel> GetCart()
@@ -318,6 +354,8 @@ namespace BMA.Controllers
                 Session["NewCustomer"] = customer;
                 OrderBusiness orderBusiness = new OrderBusiness();
                 OrderViewModel order = orderBusiness.MakeOrderViewForNewCustomerModel(inputCartList, customer);
+                ViewBag.TreeView = "order";
+                ViewBag.TreeViewMenu = "addOrder";
                 return View("CheckoutWithCustomer", order);
             }
             return RedirectToAction("AddCustomerToOrder");
@@ -486,7 +524,7 @@ namespace BMA.Controllers
             return View(order);
         }
 
-        
+
 
         #region Check customer field
 

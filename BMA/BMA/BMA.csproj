@@ -301,6 +301,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\CustomerLayout\CSS\animate.css" />
     <Content Include="Content\CustomerLayout\CSS\bootstrap.css" />
     <Content Include="Content\CustomerLayout\CSS\owl.carousel.css" />
@@ -331,9 +332,11 @@
     <Content Include="Content\CustomerLayout\JS\scripts.js" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\style.css" />
+    <Content Include="Content\timeslider.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.eot" />
@@ -397,6 +400,7 @@
     <Content Include="Scripts\my-own-function.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\timeslider.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Content\AdminLayout\bootstrap\css\bootstrap.css" />
     <Content Include="Content\AdminLayout\bootstrap\css\bootstrap.min.css" />
@@ -1267,6 +1271,10 @@
     <Content Include="Views\Tax\Index.cshtml" />
     <Content Include="Views\Order\ExportBill.cshtml" />
     <Content Include="Views\Order\GetShortageMaterialList.cshtml" />
+    <Content Include="Views\ManageProduct\Detail.cshtml" />
+    <Content Include="Views\ManageProduct\Edit.cshtml" />
+    <Content Include="Views\ManageProduct\ListMaterial.cshtml" />
+    <Content Include="Views\ManageProduct\ProductMaterial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

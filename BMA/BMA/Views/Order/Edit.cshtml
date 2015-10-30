@@ -78,7 +78,7 @@
                         <!-- Table row -->
                         <div class="row">
                             <div class="col-xs-12 table-responsive">
-                                <form action="@Url.Action("Edit", "Order")" method="POST" id="update-product-list">
+                                <form action="@Url.Action("Edit", "Order" )" method="POST" id="update-product-list">
                                     <table class="table table-striped" id="product-table">
                                         <thead style="font-weight: bold">
                                             <tr>
@@ -159,13 +159,13 @@
                                         url: "@Url.Action("UpdateMaterialList","Order")",
                                         method: "POST",
                                         data: $("#update-product-list").serialize(),
-                                        success: function (data) {
+                                        success: function(data) {
                                             $('#material-info').html(data);
                                         },
-                                        fail: function (e) {
+                                        fail: function(e) {
                                             alert("Have error " + e.toString());
                                         }
-                                    })
+                                    });
                                 }
                             </script>
                         </button>
@@ -273,16 +273,16 @@
                         <tr>
                             <th>Tổng cộng: </th>
                             <td style="text-align: right">
-                                @Model.TotalAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
+                                @(Model.Order.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
                             </td>
                         </tr>
                         <tr>
-                            <th>Thuế(VAT): </th>
-                            <td style="text-align: right">@Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <th>Thuế(VAT) @(Model.TaxRate)%: </th>
+                            <td style="text-align: right">@Model.Order.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                         </tr>
                         <tr>
                             <th>Thành tiền: </th>
-                            <td style="text-align: right">@Model.Order.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <td style="text-align: right">@((Model.Order.Amount + Model.Order.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                         </tr>
                     </table>
                 </div>
@@ -357,12 +357,36 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <!--Cancel order-->
-                        <button class="btn btn-danger" onclick="open_cancel_order(@Model.Order.OrderId)">
+                        <button class="btn btn-danger" onclick="open_cancel_order(@Model.Order.OrderId, @Model.Order.DepositAmount,@(Model.Order.OrderStatus))">
                             <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy đơn hàng
                             <script type="text/javascript">
-                                function open_cancel_order(orderId) {
-                                    var contentControl = $("<form>", {
-                                        "action": "@Url.Action("Cancel","Order")",
+                                function open_cancel_order(orderId, deposit, orderStatus) {
+                                    var body2 = $("<form>", {
+                                        "action": "@Url.Action("Cancel", "Order")",
+                                        "method": "post",
+                                        "class": "form-group",
+                                        "id": "return-deposit-form",
+                                        "html": [
+                                            "Bạn có chắc chắn hủy đơn hàng này không ?",
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "orderId",
+                                                "value": orderId
+                                            }),
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "isReturnDeposit",
+                                                "value": "0"
+                                            }),
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "returnDeposit",
+                                                "value": "0"
+                                            })
+                                        ]
+                                    });
+                                    var body1 = $("<form>", {
+                                        "action": "@Url.Action("Cancel", "Order")",
                                         "method": "post",
                                         "class": "form-group",
                                         "id": "return-deposit-form",
@@ -373,20 +397,51 @@
                                                     $("<div>", {
                                                         "class": "form-group",
                                                         "html": [
+                                                            "<label>Có hoàn trả tiền cọc không ?</label>",
                                                             $("<input>", {
                                                                 "type": "hidden",
                                                                 "name": "orderId",
                                                                 "value": orderId
-                                                            }),
+                                                            })
+                                                        ]
+
+                                                    }),
+                                                    $("<div>", {
+                                                        "class": "form-group",
+                                                        "html": [
                                                             $("<input>", {
-                                                                "type": "hidden",
+                                                                "type": "radio",
                                                                 "name": "isReturnDeposit",
-                                                                "value": "0"
+                                                                "value": "1",
+                                                                "style": "margin-left: 10px",
+                                                                "data-role": "radio-return-deposit"
                                                             }),
+                                                            "Có ",
                                                             $("<input>", {
-                                                                "type": "hidden",
+                                                                "type": "radio",
+                                                                "name": "isReturnDeposit",
+                                                                "value": "0",
+                                                                "checked": "checked",
+                                                                "style": "margin-left: 10px",
+                                                                "data-role": "radio-return-deposit"
+                                                            }),
+                                                            "Không"
+                                                        ]
+                                                    }),
+                                                    $("<div>", {
+                                                        "class": "form-group",
+                                                        "id": "return_deposit",
+                                                        "style": "display:none;",
+                                                        "html": [
+                                                            "<label>Tiền cọc hoàn trả: </lable>",
+                                                            $("<input>", {
+                                                                "type": "number",
+                                                                "style": "margin-left: 10px;",
                                                                 "name": "returnDeposit",
-                                                                "value": "0"
+                                                                "id": "return_deposit_amount",
+                                                                "value": deposit,
+                                                                "max": deposit,
+                                                                "min": "0"
                                                             })
                                                         ]
                                                     })
@@ -395,15 +450,18 @@
                                         ]
                                     });
                                     $(document).on("change", "[data-role=radio-return-deposit]", function () {
-                                        if ($(this).val() === 1) {
+                                        if ($(this).val() === "1") {
                                             $('#return_deposit').show();
+                                            $('#return_deposit_amount').val(deposit);
+                                            $('#return_deposit_amount').attr("max", deposit);
                                         } else {
                                             $('#return_deposit').hide();
+                                            $('#return_deposit_amount').val(deposit);
                                         }
                                     });
 
                                     var title = 'Xác nhận hủy đơn hàng';
-                                    var footerControl = $("<div>", {
+                                    var footer1 = $("<div>", {
                                         "class": "row",
                                         "html": [
                                             $("<button>", {
@@ -414,157 +472,59 @@
                                                 ]
                                             }),
                                             $("<button>", {
-                                                "class": "btn btn-danger",
+                                                "class": "btn btn-danger pull-right",
                                                 "style": "margin-right: 10px;",
                                                 "onclick": "cancel_order()",
                                                 "html": [
-                                                    "Hủy"
+                                                    "Hủy đơn hàng"
                                                 ]
                                             })
                                         ]
                                     });
-                                    document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+                                    var footer2 = $("<div>", {
+                                        "class": "row",
+                                        "html": [
+                                            $("<button>", {
+                                                "class": "btn btn-primary",
+                                                "data-dismiss": "modal",
+                                                "html": [
+                                                    "Không"
+                                                ]
+                                            }),
+                                            $("<button>", {
+                                                "class": "btn btn-danger pull-right",
+                                                "style": "margin-right: 10px;",
+                                                "onclick": "cancel_order()",
+                                                "html": [
+                                                    "Có"
+                                                ]
+                                            })
+                                        ]
+                                    });
+                                    if (orderStatus === 0) {
+                                        document.getElementById('popup-body').innerHTML = body2[0].outerHTML;
+                                        document.getElementById('popup-footer').innerHTML = footer2[0].outerHTML;
+                                    } else {
+                                        document.getElementById('popup-body').innerHTML = body1[0].outerHTML;
+                                        document.getElementById('popup-footer').innerHTML = footer1[0].outerHTML;
+
+                                    }
                                     document.getElementById('popup-title').innerHTML = title;
-                                    document.getElementById('popup-footer').innerHTML = footerControl[0].outerHTML;
                                     $('#myModal').modal('show');
                                 }
+
                                 function cancel_order() {
                                     $('#return-deposit-form').submit();
                                 }
                             </script>
+
                         </button>
                         <!--Update order-->
                         @if (Model.IsEnoughMaterial)
                         {
-                            <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container()">
+                            <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container(@Model.MaterialCost)">
                                 <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Cập nhật
-                                <script type="text/javascript">
-                                    function open_update_container() {
-                                        var loyalCustControl = $("<div>", {
-                                            "class": "form-group",
-                                            "html": [
-                                                "<label>Có nhận tiền cọc không ?</label>",
-                                                $("<input>", {
-                                                    "type": "radio",
-                                                    "name": "isDeposit",
-                                                    "value": "yes",
-                                                    "style": "margin-left: 10px",
-                                                    "data-role": "radio-is-deposit"
-                                                }),
-                                                "Có ",
-                                                $("<input>", {
-                                                    "type": "radio",
-                                                    "name": "isDeposit",
-                                                    "value": "no",
-                                                    "style": "margin-left: 10px",
-                                                    "data-role": "radio-is-deposit"
-                                                }),
-                                                "Không"
-                                            ]
-                                        });
-                                        $(document).on("change", "[data-role=radio-is-deposit]", function () {
-                                            if ($(this).val() === "yes") {
-                                                $('#deposit').show();
-                                                $('#deposit-amount').attr("min", @Model.MaterialCost);
-                                                $('#deposit-amount').val(@Model.MaterialCost);
-                                            } else {
-                                                $('#deposit').hide();
-                                                $('#deposit-amount').attr("min", 0);
-                                                $('#deposit-amount').val(0);
-                                            }
-                                        });
-                                        var contentControl = $("<form>", {
-                                            "id": "form-update",
-                                            "html": [
-                                                @(Model.IsLoyal?"loyalCustControl":""),
-                                                $("<div>", {
-                                                    "class": "form-group",
-                                                    "id": "deposit",
-                                                    "style": "@(Model.IsLoyal?"display:none;":"")",
-                                                    "html": [
-                                                        "<label>Tiền cọc</label>",
-                                                        $("<input>", {
-                                                            "type": "number",
-                                                            "min": "@(Model.MaterialCost)",
-                                                            "class": "form-control",
-                                                            "id": "deposit-amount",
-                                                            "name": "deposit",
-                                                            "value": "@(Model.MaterialCost)"
-                                                        })
-                                                    ]
-                                                }),
-                                            $("<div>", {
-                                                "class": "form-group",
-                                                "html": [
-                                                    '<label>Ngày giao hàng</label>',
-                                                    $("<input>", {
-                                                        "type": "date",
-                                                        "min": "@(DateTime.Now.ToString("yyyy-MM-dd"))",
-                                                        "class": "form-control",
-                                                        "name": "deliveryDate",
-                                                        "id":"deliveryDate",
-                                                        "value": "@(((DateTime)Model.Order.DeliveryTime).ToString("yyyy-MM-dd"))"
 
-                                                    }),
-                                                    $("<input>", {
-                                                        "type": "hidden",
-                                                        "name": "orderId",
-                                                        "value": "@Model.Order.OrderId"
-                                                    })
-                                                ]
-                                            })
-                                            ]
-                                        });
-                                        var title = 'Xác nhận duyệt đơn hàng';
-                                        var footer = $("<div>", {
-                                            "class": "row",
-                                            "style": "padding-bottom: 20px;",
-                                            "html": [
-                                                 $("<button>", {
-                                                     "class": "btn btn-success pull-right",
-                                                     "style": "margin-right: 10px;",
-                                                     "onclick":"update_order()",
-                                                     "html": [
-                                                         "Đồng ý"
-                                                     ]
-                                                 }),
-                                                $("<button>", {
-                                                    "class": "btn btn-danger pull-right",
-                                                    "style": "margin-right: 10px;",
-                                                    "data-dismiss": "modal",
-                                                    "html": [
-                                                        "Hủy"
-                                                    ]
-                                                })
-
-                                            ]
-                                        });
-
-                                        document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
-                                        document.getElementById('popup-title').innerHTML = title;
-                                        document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
-
-                                        $('#myModal').modal('show');
-                                    }
-
-                                    function update_order() {
-                                        var deposit_amount = $("#deposit-amount").val();
-                                        var delivery_date = $("#deliveryDate").val();
-                                        var depositAmountControl = $("<input>", {
-                                            type: "hidden",
-                                            name: "depositAmount",
-                                            value: deposit_amount
-                                        });
-                                        var deliveryDateControl = $("<input>", {
-                                            type: "date",
-                                            name: "deliveryDate",
-                                            value: delivery_date
-                                        });
-                                        $("#update-product-list").append(depositAmountControl);
-                                        $("#update-product-list").append(deliveryDateControl);
-                                        $("#update-product-list").submit();
-                                    }
-                                </script>
                             </button>
                         }
                     </div>
@@ -572,5 +532,133 @@
             </div>
         </div>
     </section>
+}
+@section EditOrderScript{
+    <script type="text/javascript">
+        function open_update_container(materialCost) {
+            var loyalCustControl = $("<div>", {
+                "class": "form-group",
+                "html": [
+                    "<label>Có nhận tiền cọc không ?</label>",
+                    $("<input>", {
+                        "type": "radio",
+                        "name": "isDeposit",
+                        "value": "yes",
+                        "style": "margin-left: 10px",
+                        "data-role": "radio-is-deposit"
+                    }),
+                    "Có ",
+                    $("<input>", {
+                        "type": "radio",
+                        "name": "isDeposit",
+                        "value": "no",
+                        "style": "margin-left: 10px",
+                        "data-role": "radio-is-deposit"
+                    }),
+                    "Không"
+                ]
+            });
+            $(document).on("change", "[data-role=radio-is-deposit]", function () {
+                if ($(this).val() === "yes") {
+                    $('#deposit').show();
+                    $('#deposit-amount').attr("min", materialCost);
+                    $('#deposit-amount').val(materialCost);
+                } else {
+                    $('#deposit').hide();
+                    $('#deposit-amount').attr("min", 0);
+                    $('#deposit-amount').val(0);
+                }
+            });
+            var contentControl = $("<form>", {
+                "id": "form-update",
+                "html": [
+                    @(Model.IsLoyal?"loyalCustControl":""),
+    $("<div>", {
+        "class": "form-group",
+        "id": "deposit",
+        "style": "@(Model.IsLoyal?"display:none;":"")",
+        "html": [
+            "<label>Tiền cọc</label>",
+            $("<input>", {
+                "type": "number",
+                "min": materialCost,
+                "class": "form-control",
+                "id": "deposit-amount",
+                "name": "deposit",
+                "value": materialCost
+            })
+        ]
+    }),
+    $("<div>", {
+        "class": "form-group",
+        "html": [
+            '<label>Ngày giao hàng</label>',
+            $("<input>", {
+                "type": "date",
+                "min": "@((DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"))",
+                "class": "form-control",
+                "name": "deliveryDate",
+                "id":"deliveryDate",
+                "value": "@((DateTime.Now.AddDays(1)) >= Model.Order.PlanDeliveryTime ? (DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"):(Model.Order.PlanDeliveryTime).ToString("yyyy-MM-dd"))"
+            }),
+            $("<input>", {
+                "type": "hidden",
+                "name": "orderId",
+                "value": "@Model.Order.OrderId"
+            })
+        ]
+    })
+                ]
+            });
+            var title = 'Xác nhận duyệt đơn hàng';
+            var footer = $("<div>", {
+                "class": "row",
+                "style": "padding-bottom: 20px;",
+                "html": [
+                     $("<button>", {
+                         "class": "btn btn-success pull-right",
+                         "style": "margin-right: 10px;",
+                         "onclick":"update_order()",
+                         "html": [
+                             "Đồng ý"
+                         ]
+                     }),
+                    $("<button>", {
+                        "class": "btn btn-danger",
+                        "style": "margin-right: 10px;",
+                        "data-dismiss": "modal",
+                        "html": [
+                            "Hủy"
+                        ]
+                    })
+
+                ]
+            });
+
+            document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+            document.getElementById('popup-title').innerHTML = title;
+            document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
+
+            $('#myModal').modal('show');
+        }
+
+        function update_order() {
+            var depositAmount = $("#deposit-amount").val();
+            var deliveryDate = $("#deliveryDate").val();
+            var depositAmountControl = $("<input>", {
+                type: "hidden",
+                name: "depositAmount",
+                value: depositAmount
+            });
+            var deliveryDateControl = $("<input>", {
+                type: "date",
+                name: "deliveryDate",
+                value: deliveryDate
+            });
+            $("#update-product-list").append(depositAmountControl);
+            $("#update-product-list").append(deliveryDateControl);
+            $("#update-product-list").submit();
+        }
+    </script>
 }
 <!-- Main content -->
