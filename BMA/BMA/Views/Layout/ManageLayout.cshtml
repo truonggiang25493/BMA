@@ -194,7 +194,7 @@
                             <li><a href=""><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="report">
                         <a href="#">
                             <i class="fa fa-bar-chart"></i> <span>Báo cáo</span>
                             <i class="fa fa-angle-left pull-right"></i>
@@ -202,7 +202,7 @@
                         <ul class="treeview-menu">
                             <li><a href=""><i class="fa fa-usd"></i>Thống kê doanh thu</a></li>
                             <li><a href=""><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
-                            <li><a href=""><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
+                            <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -255,6 +255,8 @@
     <!--Timeslider-->
     <script src="~/Scripts/timeslider.js"></script>
     <!--DatetimePicker-->
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-with-locales.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     @RenderSection("InitScript", false)
     @RenderSection("OrderDetailScript", false)
@@ -281,7 +283,7 @@
             });
             $('#datetimepicker').datetimepicker();
         });
-
+        
         $(document).on("click", ".customer-table tbody tr", function () {
             $(this).addClass('selected').siblings().removeClass('selected');
         });
@@ -289,25 +291,7 @@
 
 
 
-        $(document).on("click", "[data-role=remove-row-btn]", function () {
-            var productId = $(this).parent().parent().find("td:first input").val();
-            $(this).parent().parent().remove();
-            $.ajax({
-                "url": "@(Url.Action("AddProductInProductList", "Order"))",
-                "method": "POST",
-                "data": {
-                    "productId": productId
-                },
-                "success": function (data) {
-                    if (data === "0") {
-                        alert("Không thể hủy");
-                    }
-                },
-                "fail": function (e) {
-                    alert("Have error" + e.toString());
-                }
-            });
-        });
+        
     </script>
     @if (ViewBag.TreeView != null)
     {

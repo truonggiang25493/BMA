@@ -6,7 +6,11 @@
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 @section InitStyle{
-
+    <style>
+        .datetimepicker {
+            z-index: 1151 !important;
+        }
+    </style>
 }
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -22,21 +26,30 @@
             </h2>
         </div>
     </div>
+
+    <!--Bootstrap Datetimepicker-->
+    <div class="row">
+        <div class='col-sm-6'>
+            <div class="form-group">
+                <label>Chọn thời gian: </label>
+                <div class='input-group date' id='datetimepicker'>
+                    <input type='text' id="date" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <!-- Info row -->
     <div class="row invoice-info">
         <div class="col-sm-6 invoice-col">
             <div class="row" style="margin-left: 1px; margin-bottom: 10px">
                 Mã đơn hàng: <b style="font-size: 17px;">@Model.Order.OrderCode</b>
             </div>
-            <div class="row">
-                <div id="datetimepicker" class="input-append date">
-                    <input data-format="dd/MM/yyyy hh:mm:ss" type="text" />
-                    <span class="add-on">
-                        <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-                        </i>
-                    </span>
-                </div>
-            </div>
+
 
 
             @if (Model.Order.OrderStatus != 0 && Model.Order.OrderStatus != 1)
@@ -362,14 +375,18 @@
 
     @if (Model.Order.OrderStatus == 0)
     {
-    <!--Edit button-->
-        <div class="row">
-            <div class="col-xs-12">
-                <button class="btn btn-primary pull-right" style="margin-right: 25px;">
-                    <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
-                </button>
+        if (Model.Order.GuestInfo == null)
+        {
+            <!--Edit button-->
+            <div class="row">
+                <div class="col-xs-12">
+                    <a class="btn btn-primary pull-right" style="margin-right: 25px;" href="@(Url.Action("Edit", "Order", new { id = Model.Order.OrderId }))">
+                        <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
+                    </a>
+                </div>
             </div>
-        </div>
+        }
+
     <!-- Material detail-->
     <!-- Material Table Header-->
         <div class="row" style="margin-top: 15px;">
@@ -751,13 +768,23 @@
                                             "style":"margin-bottom: 0px;",
                                             "html": [
                                                 "<label>Ngày giao hàng</label>",
-                                                $("<input>", {
-                                                    "type": "date",
-                                                    "class": "form-control",
-                                                    "name": "deliveryDate",
-                                                    "value": "@((DateTime.Now.AddDays(1)) >= Model.Order.PlanDeliveryTime ? (DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"):(Model.Order.PlanDeliveryTime).ToString("yyyy-MM-dd"))",
-                                                    "min": "@(DateTime.Now.AddDays(1).ToString("yyyy-MM-dd"))"
+                                                $("<div>", {
+                                                    "class": "input-group date",
+                                                    "id":"datetimepicker",
+                                                    "html":[
+                                                         $("<input>", {
+                                                             "type": "text",
+                                                             "readonly":"readonly",
+                                                             "class": "form-control",
+                                                             "name": "deliveryDate"
+                                                         }),
+                                                         $("<span>", {
+                                                             "class": "input-group-addon",
+                                                             "html" : "<span class='glyphicon glyphicon-calendar'></span>"
+                                                         })
+                                                    ]
                                                 }),
+
                                                 $("<input>", {
                                                     "type": "hidden",
                                                     "name": "orderId",
@@ -1143,6 +1170,14 @@
 
 </section>
 @section OrderDetailScript{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#datetimepicker').datetimepicker({
+                locale: 'vi',
+                ignoreReadonly: true
+            });
+        });
+    </script>
     @if (ViewBag.ShortageOfMaterial != null && ViewBag.ShortageOfMaterial)
     {
         <script type="text/javascript">

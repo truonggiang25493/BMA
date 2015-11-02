@@ -262,6 +262,9 @@
           </Key>
           <Property Name="TaxTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TaxTypeName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Method" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition" Type="nvarchar" MaxLength="50" />
+          <Property Name="Abbreviation" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -1072,6 +1075,9 @@
           <Property Name="TaxTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TaxTypeName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TaxRates" Relationship="BMAModel.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxType" ToRole="TaxRate" />
+          <Property Name="Method" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Abbreviation" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -1644,6 +1650,9 @@
           <EntitySetMapping Name="TaxTypes">
             <EntityTypeMapping TypeName="BMAModel.TaxType">
               <MappingFragment StoreEntitySet="TaxType">
+                <ScalarProperty Name="Abbreviation" ColumnName="Abbreviation" />
+                <ScalarProperty Name="Condition" ColumnName="Condition" />
+                <ScalarProperty Name="Method" ColumnName="Method" />
                 <ScalarProperty Name="TaxTypeName" ColumnName="TaxTypeName" />
                 <ScalarProperty Name="TaxTypeID" ColumnName="TaxTypeID" />
               </MappingFragment>

@@ -63,6 +63,8 @@ namespace BMA.Controllers
                 db.SaveChanges();
             }
             OrderBusiness orderBusiness = new OrderBusiness();
+            int minQuantity = orderBusiness.GetMinQuantity();
+            ViewBag.MinQuantity = minQuantity;
             OrderViewModel orderViewModel = orderBusiness.GetOrderViewModel(id);
             TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && m.EndDate >= DateTime.Now && m.BeginDate <= DateTime.Now);
             if (taxRate != null)
@@ -87,7 +89,7 @@ namespace BMA.Controllers
 
         }
         [HttpPost]
-        public ActionResult Edit(FormCollection form)
+        public int Edit(FormCollection form)
         {
             string orderIdString = form["orderId"];
             string[] productIdString = Regex.Split(form["productId"], ",");
@@ -97,6 +99,7 @@ namespace BMA.Controllers
             string deliveryDateString = form["deliveryDate"];
 
             List<CartViewModel> cartList = new List<CartViewModel>();
+            int totalQuantity = 0;
             if (productIdString.Length == priceString.Length && priceString.Length == quantityString.Length)
             {
                 for (int i = 0; i < productIdString.Length; i++)
@@ -104,26 +107,37 @@ namespace BMA.Controllers
                     CartViewModel cartViewModel = new CartViewModel();
                     cartViewModel.ProductId = Convert.ToInt32(productIdString[i]);
                     cartViewModel.RealPrice = Convert.ToInt32(priceString[i]);
-                    cartViewModel.Quantity = Convert.ToInt32(quantityString[i]);
+                    int quantity = Convert.ToInt32(quantityString[i]);
+                    cartViewModel.Quantity = quantity;
+                    totalQuantity += quantity;
                     cartList.Add(cartViewModel);
                 }
             }
-            if (cartList.Count > 0)
+            if (totalQuantity == 0)
             {
-                int orderId = Convert.ToInt32(orderIdString);
-                int depositAmount = Convert.ToInt32(depositAmountString);
-                DateTime deliveryDate = Convert.ToDateTime(deliveryDateString);
-                bool rs = true;
-                OrderBusiness orderBusiness = new OrderBusiness();
-                rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate);
-                if (rs)
-                {
-                    return RedirectToAction("Index");
-                }
-
+                return -1;
             }
-            // Error page Bug Do not have error page
-            return RedirectToAction("Index");
+            OrderBusiness orderBusiness = new OrderBusiness(); ;
+            int minQuantity = orderBusiness.GetMinQuantity();
+            if (totalQuantity < minQuantity)
+            {
+                ViewBag.MinQuantity = minQuantity;
+                return -2;
+            }
+            int orderId = Convert.ToInt32(orderIdString);
+            int depositAmount = Convert.ToInt32(depositAmountString);
+            DateTime deliveryDate = Convert.ToDateTime(deliveryDateString);
+            bool rs = true;
+            rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate);
+            if (rs)
+            {
+                Session["ProductList"] = null;
+                return 1;
+            }
+
+            return 0;
+
+
         }
 
         [HttpPost]
@@ -421,14 +435,19 @@ namespace BMA.Controllers
         }
 
         [HttpPost]
-        public int RemoveProductInProductList(int productId)
+        public int RemoveProductInProductList(int[] productId)
         {
             List<Product> productList = Session["ProductList"] as List<Product>;
-            List<Product> resultList = new List<Product>();
-            if (productList != null && productList.Count > 0)
+            if (productId.Length > 0)
             {
-                resultList.AddRange(productList.Where(product => product.ProductId != productId));
-                Session["ProductList"] = resultList;
+                foreach (int index in productId)
+                {
+                    if (productList != null && productList.Count > 0)
+                    {
+                        productList.Remove(productList.FirstOrDefault(m => m.ProductId == index));
+                    }
+                }
+                Session["ProductList"] = productList;
                 return 1;
             }
             return 0;

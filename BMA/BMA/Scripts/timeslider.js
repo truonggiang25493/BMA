@@ -24,8 +24,7 @@ $.fn.timeslide = function (params) {
             })
                 .css("left", (percent * (i - 1)) + "%")
                 .css("width", (percent * 2) + "%")
-                .css("display", "inline-block")
-                .css("font-size", "13px");
+                .css("display", "inline-block");
             pointLabels.push(label);
         }
         points.push(point);
