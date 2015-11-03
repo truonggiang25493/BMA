@@ -14,10 +14,9 @@ namespace BMA.Models
     
     public partial class OutputMaterial
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OutputMaterial()
         {
-            this.InputBills = new HashSet<InputBill>();
+            this.ExportFroms = new HashSet<ExportFrom>();
         }
     
         public int OutputMaterialId { get; set; }
@@ -27,9 +26,8 @@ namespace BMA.Models
         public int ProductMaterialId { get; set; }
         public int OrderItemId { get; set; }
     
+        public virtual ICollection<ExportFrom> ExportFroms { get; set; }
         public virtual OrderItem OrderItem { get; set; }
         public virtual ProductMaterial ProductMaterial { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<InputBill> InputBills { get; set; }
     }
 }

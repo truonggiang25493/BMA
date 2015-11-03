@@ -15,12 +15,13 @@ namespace BMA.Models
     public partial class Customer
     {
         public int CustomerId { get; set; }
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public string TaxCode { get; set; }
         public string CustomerAddress { get; set; }
         public string CustomerPhoneNumber { get; set; }
         public bool IsActive { get; set; }
+        public bool IsLoyal { get; set; }
     
-        public virtual AspNetUser AspNetUser { get; set; }
+        public virtual User User { get; set; }
     }
 }

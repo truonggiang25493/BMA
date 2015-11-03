@@ -1,10 +1,10 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <title>@ViewBag.Title</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <link href="/Content/jquery-ui.css" rel="stylesheet" />
     <!-- Bootstrap 3.3.5 -->
     <link href="/Content/AdminLayout/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Font Awesome -->
@@ -17,6 +17,11 @@
     <link href="/Content/AdminLayout/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
     <!-- Own css -->
     <link href="~/Content/style.css" rel="stylesheet" />
+    <!-- Timesliders -->
+    <link href="~/Content/timeslider.css" rel="stylesheet" />
+    <!--DatetimePicker-->
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    @RenderSection("InitStyle", false)
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -110,16 +115,6 @@
                     </div>
                 </div>
                 <div></div>
-                <!-- search form -->
-                <form action="#" method="get" class="sidebar-form">
-                    <div class="input-group">
-                        <input type="text" name="q" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
-                            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
-                        </span>
-                    </div>
-                </form>
-                <!-- /.search form -->
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu">
                     <li>
@@ -143,8 +138,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-                            <li><a href=""><i class="fa fa-plus"></i> Tạo tài sản phẩm</a></li>
+                            <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
+                            <li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -158,6 +153,16 @@
                             <li><a href=""><i class="fa fa-home"></i>Quản lí kho</a></li>
                         </ul>
                     </li>
+                    <li class="treeview" id="inputMaterial">
+                        <a href="#">
+                            <i class="fa fa-flask"></i> <span>Nguyên liệu đầu vào</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li id="listInputMaterial"><a href="@Url.Action("InputMaterialIndex","InputMaterial")"><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
+                            <li id="addInputMaterial"><a href="@Url.Action("AddInputMaterial","InputMaterial")"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
+                        </ul>
+                    </li>
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-truck"></i> <span>Nhà cung cấp</span>
@@ -168,14 +173,14 @@
                             <li><a href=""><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="order">
                         <a href="#">
                             <i class="fa fa-file-o"></i> <span>Đơn hàng</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index","Order")"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
-                            <li><a href="@Url.Action("Add", "Order")"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
+                            <li id="orderList"><a href="@Url.Action("Index","Order")"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
+                            <li id="addOrder"><a href="@Url.Action("Add", "Order" )"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
                             <li><a href=""><i class="fa fa-thumbs-o-up"></i>Chấp nhận đơn hàng</a></li>
                         </ul>
                     </li>
@@ -189,7 +194,7 @@
                             <li><a href=""><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="report">
                         <a href="#">
                             <i class="fa fa-bar-chart"></i> <span>Báo cáo</span>
                             <i class="fa fa-angle-left pull-right"></i>
@@ -197,7 +202,7 @@
                         <ul class="treeview-menu">
                             <li><a href=""><i class="fa fa-usd"></i>Thống kê doanh thu</a></li>
                             <li><a href=""><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
-                            <li><a href=""><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
+                            <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -221,6 +226,48 @@
         </aside>
         <div class="control-sidebar-bg"></div>
     </div><!-- ./wrapper -->
+    <!--Small Modal -->
+    <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="popup-title"></h4>
+                </div>
+                <div class="modal-body" id="popup-body"></div>
+                <div class="modal-footer" id="popup-footer"></div>
+            </div>
+        </div>
+    </div>
+    <!--End of small modal-->
+    <!--Standard Modal -->
+    <div class="modal fade" id="myStandardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="standard-popup-title"></h4>
+                </div>
+                <div class="modal-body" id="standard-popup-body"></div>
+                <div class="modal-footer" id="standard-popup-footer"></div>
+            </div>
+        </div>
+    </div>
+    <!--End of standard modal-->
+    <!--Large Modal -->
+    <div class="modal fade bs-example-modal-lg" id="myLargeModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="large-popup-title"></h4>
+                </div>
+                <div class="modal-body" id="large-popup-body"></div>
+                <div class="modal-footer" id="large-popup-footer"></div>
+            </div>
+        </div>
+    </div>
+    <!--End of large modal-->
     <!-- jQuery 2.1.4 -->
     <script src="/Content/AdminLayout/plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.5 -->
@@ -243,6 +290,22 @@
     <script src="/Content/AdminLayout/plugins/datatables/dataTables.bootstrap.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="/Content/AdminLayout/dist/js/demo.js"></script>
+    <!--Own js function-->
+    <script src="~/Scripts/my-own-function.js"></script>
+    <!--Noty js-->
+    <script src="~/Scripts/jquery.noty.packaged.min.js"></script>
+    <!--Timeslider-->
+    <script src="~/Scripts/timeslider.js"></script>
+    <!--DatetimePicker-->
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-with-locales.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    @RenderSection("InitScript", false)
+    @RenderSection("OrderDetailScript", false)
+    @RenderSection("CheckoutWithCustomerScript", false)
+    @RenderSection("AddCustomerToOrderScript", false)
+    @RenderSection("EditOrderScript", false)
+    @RenderSection("AddOrderScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({
@@ -261,24 +324,31 @@
                 "info": true,
                 "autoWidth": false
             });
+            $('#datetimepicker').datetimepicker();
         });
-        $(document).on("click", ".table tbody tr", function () {
+
+        $(document).on("click", ".customer-table tbody tr", function () {
             $(this).addClass('selected').siblings().removeClass('selected');
         });
+
+
+
+
+
     </script>
-    <!-- Modal -->
-    <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm ">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="popup-title"></h4>
-                </div>
-                <div class="modal-body" id="popup-body"></div>
-                <div class="modal-footer" id="popup-footer"></div>
-            </div>
-        </div>
-    </div>
-    <!--End of modal-->
+    @if (ViewBag.TreeView != null)
+    {
+        <script type="text/javascript">
+            $(document).find("#@(ViewBag.TreeView)").addClass('active');
+        </script>
+    }
+
+    @if (ViewBag.TreeViewMenu != null)
+    {
+        <script type="text/javascript">
+            $(document).find("#@(ViewBag.TreeViewMenu)").addClass('active');
+        </script>
+    }
+
 </body>
 </html>

@@ -1,0 +1,146 @@
+﻿@using System.Globalization
+@using BMA.Common
+@using BMA.Models
+@model List<Supplier>
+
+@{
+    ViewBag.Title = "Thêm nhà cung cấp";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+<section class="content-header">
+    <h1 align="center" style="margin-top: 2%">Thêm nhà cung cấp</h1>
+</section>
+<section>
+    <div style="margin-top: 5%">
+        <div class="row">
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+                <div class="box box-primary">
+                    <form id="add-supplier-form">
+                        <div class="box-body box-profile">
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Nhà cung cấp(*):</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="text" name="txtSupplierName" style="width: 95%" />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Địa chỉ(*):</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <textarea name="txtSupplierAddress" maxlength="200" rows="3" style="width: 95%"></textarea>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Số điện thoại(*):</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="number" name="txtSupplierPhoneNumber" style="width: 95%" oninput="maxLengthCheck(this)" maxlength="11" min="1000000" max="99999999999" placeholder="nhập số từ 7-11 chữ số" />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>E-mail(*):</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="email" name="txtSupplierEmail" style="width: 95%" placeholder="Email có dạng abc@xyz.mn..."/>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Mã số thuế(*):</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="number" name="txtSupplierTaxCode" style="width: 95%" oninput="maxLengthCheck(this)" maxlength="13" min="1000000000" max="9999999999999" placeholder="nhập số từ 10-13 chữ số"/>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-12">
+                                    <b>(*): Thông tin bắt buộc</b>
+                                </div>
+                                </div>
+                            </div>
+                    </form>
+                    <div class="box-footer">
+                        <!-- "Thêm mới" button -->
+                        <button class="btn btn-primary pull-right" style="margin-right: 10%;" onclick="addSupplier()">
+                            <i class="fa fa-edit" style="margin-right: 3px;"></i>Thêm mới
+                            <script type="text/javascript">
+                                function addSupplier() {
+                                    $.ajax({
+                                        url: "@(Url.Action("AddSupplier", "Supplier"))",
+                                        method: "POST",
+                                        data: $("#add-supplier-form").serialize(),
+                                        success: function (data) {
+                                            if (data === "1") {
+                                                var n1 = noty({
+                                                    text: 'Thêm nhà cung cấp thành công',
+                                                    type: 'success',
+                                                    dismissQueue: false,
+                                                    layout: 'bottomLeft',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("SupplierIndex", "Supplier"))");
+                                                }, 4000);
+                                            } else {
+                                                var n2 = noty({
+                                                    text: 'Không thể thêm nhà cung cấp',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'bottomLeft',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                            }
+                                        },
+                                        fail: function (e) {
+                                            var n2 = noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }
+                                    });
+                                }
+                            </script>
+                        </button>
+                        <!-- "Hủy" button -->
+                        <button class="btn btn-danger pull-right" style="margin-right: 35%;" onclick="cancelAddSupplier()">
+                            <i class="fa fa-edit" style="margin-right: 3px;"></i>Hủy
+                            <script type="text/javascript">
+                                function cancelAddSupplier() {
+                                    window.location.replace("@(Url.Action("SupplierIndex", "Supplier"))");
+                                }
+                            </script>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!--max length for number-->
+    <script>
+        function maxLengthCheck(object) {
+            if (object.value.length > object.maxLength)
+                object.value = object.value.slice(0, object.maxLength)
+        }
+    </script>
+
+
+
+
+</section>

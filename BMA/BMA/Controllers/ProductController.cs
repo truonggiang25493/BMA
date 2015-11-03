@@ -6,43 +6,62 @@ using System.Web.Mvc;
 using PagedList;
 using PagedList.Mvc;
 using BMA.Models;
+using BMA.Business;
+using BMA.Models.ViewModel;
 
 namespace BMA.Controllers
 {
     public class ProductController : Controller
     {
-        BMAEntities db = new BMAEntities();
         //
         // GET: /Product/
         public ActionResult Index(int? page)
         {
+            ViewBag.Show = "product";
             int pageSize = 12;
             int pageNumber = (page ?? 1);
-            var lstProducts = db.Products.Where(n=>n.IsActive).ToList().ToPagedList(pageNumber, pageSize);
-            return View(lstProducts);
+            ProductBusiness pb = new ProductBusiness();
+            List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
+            ViewBag.lstProductCart = lstProductCart;
+            var lstProduct = pb.GetProduct().ToPagedList(pageNumber, pageSize);
+            return View(lstProduct);
         }
 
         public ActionResult Cookie(int? page)
         {
+            ViewBag.Show = "product";
             int pageSize = 12;
             int pageNumber = (page ?? 1);
-            var lstCookies = db.Products.Where(n => n.Category.CategoryName == "Bánh ngọt" && n.IsActive).ToList().ToPagedList(pageNumber, pageSize);
+            ProductBusiness pb = new ProductBusiness();
+            List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
+            ViewBag.lstProductCart = lstProductCart;
+            var lstCookies = pb.GetCookie().ToPagedList(pageNumber, pageSize);
             return View(lstCookies);
         }
 
         public ActionResult Saltine(int? page)
         {
+            ViewBag.Show = "product";
             int pageSize = 12;
             int pageNumber = (page ?? 1);
-            var lstSaltine = db.Products.Where(n => n.Category.CategoryName == "Bánh mặn" && n.IsActive).ToList().ToPagedList(pageNumber, pageSize);
+            ProductBusiness pb = new ProductBusiness();
+            List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
+            ViewBag.lstProductCart = lstProductCart;
+            var lstSaltine = pb.GetSaltine().ToPagedList(pageNumber, pageSize);
             return View(lstSaltine);
         }
 
         public ActionResult ProductDetail(int ProductId)
         {
-            var productDetail = db.Products.SingleOrDefault(n => n.ProductId == ProductId);
-            var productMaterial = db.Recipes.Where(p => p.ProductId == productDetail.ProductId).ToList();
-            ViewBag.ProductMaterial = productMaterial;
+            ViewBag.Show = "product";
+            ProductBusiness pb = new ProductBusiness();
+            List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
+            ViewBag.lstProductCart = lstProductCart;
+            var productDetail = pb.GetProductDetail(ProductId);
+            var productMaterial = pb.GetProductMaterial(ProductId);
+            var otherProduct = pb.GetOtherProduct(ProductId).Take(10);
+            ViewBag.otherProduct = otherProduct;
+            ViewBag.productMaterial = productMaterial;
             if (productDetail == null)
             {
                 RedirectToAction("Index", "Error");

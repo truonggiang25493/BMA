@@ -1,0 +1,121 @@
+﻿@using System.Globalization
+@model IEnumerable<BMA.Models.Recipe>
+@{
+    ViewBag.Title = "Chỉnh sửa nguyên liệu sản phẩm";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+    string productName = ViewBag.productName;
+    int productId = ViewBag.productId;
+    string strURL = Request.Url.ToString();
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>Nguyên liệu của "@productName"</h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="box">
+        <!-- box-body -->
+        <div class="box-body">
+            <form id="updateCartForm" action="@Url.Action("UpdateProductMaterial", "ManageProduct", new { @ProductId = productId, strURL})" method="post">
+                <table id="example2" class="table table-hover table-bordered">
+                    <thead style="font-weight: bold">
+                        <tr>
+                            <th>Tên nguyên liệu</th>
+                            <th>Số lượng</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ProductMaterial.ProductMaterialName</td>
+                                <td><input type="text" name="txtQuantity" value="@item.RecipeQuantity" /></td>
+                                <td>
+                                    <a href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductId, @item.ProductMaterialId, '@productName', '@strURL')">Hủy</a>
+                                    <script>
+                                        function open_container(productId, productMaterialId, productName, strURL) {
+                                            var content =
+                                                '<form role="form" action="/ManageProduct/DeleteProductMaterial" method="post" id="form-aprrove">' +
+                                                    '<div class="form-group">' +
+                                                    '<label>Bạn thực sự muốn hủy nguyên liệu này khỏi ' + productName + ' ?</label>' +
+                                                    '<input type="hidden" name="productId" value="' + productId + '"/>' +
+                                                    '<input type="hidden" name="productMaterialId" value="' + productMaterialId + '"/>' +
+                                                    '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                                    '</div>' +
+                                                    '<div class="form-group" style="padding-bottom: 20px;">' +
+                                                    '<button type="submit" class="btn btn-success pull-right">Đồng ý</button>' +
+                                                    '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Quay lại</button>' +
+                                                    '</div>' +
+                                                    '</form>';
+                                            var title = 'Bỏ nguyên liệu khỏi sản phẩm';
+                                            var footer = '';
+                                            setModalBox(title, content, footer);
+                                            $('#myModal').modal('show');
+                                        }
+
+                                        function setModalBox(title, content, footer) {
+                                            document.getElementById('popup-body').innerHTML = content;
+                                            document.getElementById('popup-title').innerHTML = title;
+                                            document.getElementById('popup-footer').innerHTML = footer;
+                                        }
+                                    </script>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </form>
+            @*<select class="form-control" name="material">
+                @{foreach (var item in pm)
+                {
+                    <option>@item.ProductMaterialName</option>
+                }}
+            </select>*@
+            <div class="box-footer">
+                <a class="btn btn-primary" onclick="document.getElementById('updateCartForm').submit();">Cập nhật</a>
+                <a class="btn btn-yahoo" onclick="open_container2(@productId, '@strURL')">Thêm nguyên liệu</a>
+                <script>
+                    function open_container2(productId, strURL) {
+                        var content =
+                            '<form role="form" action="/ManageProduct/DeleteProductMaterial" method="post" id="form-aprrove">' +
+                                '<div class="form-group">' +
+                                '<input type="hidden" name="productId" value="' + productId + '"/>' +
+                                '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                '</div>' +
+                                '<div class="form-group">' +
+                                '<label>Nguyên liệu: </label>' +
+                                '<select class="form-control" name="material">' +
+                                'foreach (var item in pm)' +
+                                '{' +
+                                    '<option>item.ProductMaterialName</option>' +
+                                '}' +
+                                '</select>' +
+                                '</div>' +
+                                '<div class="form-group">' +
+                                '<label>Số lượng: </label>' +
+                                '<input type="number" min = "1" class="form-control" id="quantity" value="0" name="quantity"/>' +
+                                '</div>' +
+                                '<div class="form-group" style="padding-bottom: 20px;">' +
+                                '<button type="submit" class="btn btn-success pull-right">Đồng ý</button>' +
+                                '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Quay lại</button>' +
+                                '</div>' +
+                                '</form>';
+                        var title = 'Thêm nguyên liệu cho sản phẩm';
+                        var footer = '';
+                        setModalBox(title, content, footer);
+                        $('#myModal').modal('show');
+                    }
+
+                    function setModalBox(title, content, footer) {
+                        document.getElementById('popup-body').innerHTML = content;
+                        document.getElementById('popup-title').innerHTML = title;
+                        document.getElementById('popup-footer').innerHTML = footer;
+                    }
+                </script>
+
+                <a style="float:right" href="@Url.Action("AddMaterial", "ManageMaterial")" class="btn btn-danger">Tạo mới nguyên liệu</a>
+            </div>
+        </div>
+    </div>
+</section>

@@ -14,7 +14,6 @@ namespace BMA.Models
     
     public partial class ProductMaterial
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ProductMaterial()
         {
             this.InputMaterials = new HashSet<InputMaterial>();
@@ -27,12 +26,10 @@ namespace BMA.Models
         public string ProductMaterialUnit { get; set; }
         public int CurrentQuantity { get; set; }
         public Nullable<int> StandardQuantity { get; set; }
+        public bool IsActive { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InputMaterial> InputMaterials { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OutputMaterial> OutputMaterials { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }

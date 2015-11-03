@@ -1,0 +1,220 @@
+﻿@using System.Globalization
+@using BMA.Common
+@using BMA.Models
+@model List<ProductMaterial>
+
+@{
+    ViewBag.Title = "Thêm nguyên liệu đầu vào";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+    <section class="content-header">
+        <h1 style="margin-top: 1%;text-align: center">Thêm nguyên liệu đầu vào</h1>
+    </section>
+    <section>
+        <div style="margin-top: 2%">
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-6">
+                    <div class="box box-primary">
+                        <form id="add-input-material-form">
+                            <div class="box-body box-profile">
+                                <!-- Choose product material -->
+                                <div class="row" style="margin-bottom: 17px;">
+                                    <div class="col-xs-5">
+                                        <b style="color: #ff0000">*</b><b>Nguyên liệu:</b>
+                                    </div>
+                                    <div class="col-xs-7" id="product-material-info">
+                                        <input type="text" name="productMaterialName" id="productMaterialName" readonly style="margin-bottom: 10px; width: 95%" />
+                                        <input type="hidden" name="productMaterialId" id="productMaterialId" />
+                                        <a class="btn btn-success" id="add-product-material" onclick="open_choose_product_material()">
+                                            Chọn nguyên liệu
+                                            <script type="text/javascript">
+                                                function open_choose_product_material() {
+                                                    $.ajax({
+                                                        url: "@(Url.Action("GetProductMaterialList", "InputMaterial"))",
+                                                        method: "POST",
+                                                        success: function (data) {
+                                                            var chooseButton = $("<button>", {
+                                                                "class": "btn btn-success",
+                                                                "onclick": "choose_product_material()",
+                                                                "html": "Chọn nguyên liệu"
+                                                            });
+                                                            document.getElementById('standard-popup-body').innerHTML = data;
+                                                            document.getElementById('standard-popup-footer').innerHTML = chooseButton[0].outerHTML;
+                                                            $('#myStandardModal').modal('show');
+                                                        }
+                                                    });
+                                                }
+
+                                                function choose_product_material() {
+                                                    var productMaterialName = $(".table tr.selected td:first span").html();
+                                                    var productMaterialId = $(".table tr.selected td:first input").val();
+
+                                                    $("#productMaterialName").val(productMaterialName);
+                                                    $("#productMaterialId").val(productMaterialId);
+                                                    $('#myStandardModal').modal('hide');
+                                                }
+                                            </script>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 17px;">
+                                    <div class="col-xs-5">
+                                        <b style="color: #ff0000">*</b><b>Số lượng: </b>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <input type="number" name="txtInportQuantity" oninput="maxLengthCheck(this)" maxlength="6" min="1" max="999999" style="width: 95%" placeholder="nhập số từ 1-6 chữ số" />
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 17px;">
+                                    <div class="col-xs-5">
+                                        <b style="color: #ff0000">*</b><b>Tổng giá: </b>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <input type="number" name="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="7" min="1" max="9999999" style="width: 95%" placeholder="nhập số từ 1-7 chữ số" />
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 17px;">
+                                    <div class="col-xs-5">
+                                        <b style="color: #ff0000">*</b><b>Ngày nhập: </b>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <input type="date" required min="2015-01-01" max="2020-12-31" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="txtImportDate" style="width: 95%" />
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 17px;">
+                                    <div class="col-xs-5">
+                                        <b style="color: #ff0000">*</b><b>Ngày hết hạn: </b>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <input type="date" required min="2015-01-01" max="2020-12-31" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="txtInputMaterialExpiryDate" style="width: 95%" />
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 17px;">
+                                    <div class="col-xs-5">
+                                        <b>Ghi chú: </b>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <textarea name="txtInputMaterialNote" maxlength="200" rows="3" style="width: 95%"></textarea>
+                                    </div>
+                                </div>
+                                <!-- Choose input bill -->
+                                <div class="row" style="margin-bottom: 17px;">
+                                    <div class="col-xs-5">
+                                        <b style="color: #ff0000">*</b><b>Mã hóa đơn: </b>
+                                    </div>
+                                    <div class="col-xs-7" id="order-info">
+                                        <input type="text" name="inputBillCode" id="inputBillCode" readonly style="margin-bottom: 10px; width: 95%" />
+                                        <input type="hidden" name="inputBillId" id="inputBillId" />
+                                        <a class="btn btn-success" id="add-bill" onclick="open_choose_bill()">
+                                            Chọn hóa đơn
+                                            <script type="text/javascript">
+                                                function open_choose_bill() {
+                                                    $.ajax({
+                                                        url: "@(Url.Action("GetInputList", "InputMaterial"))",
+                                                        method: "POST",
+                                                        success: function (data) {
+                                                            var chooseButton = $("<button>", {
+                                                                "class": "btn btn-success",
+                                                                "onclick": "choose_bill()",
+                                                                "html": "Chọn hóa đơn"
+                                                            });
+                                                            document.getElementById('standard-popup-body').innerHTML = data;
+                                                            document.getElementById('standard-popup-footer').innerHTML = chooseButton[0].outerHTML;
+                                                            $('#myStandardModal').modal('show');
+                                                        }
+                                                    });
+                                                }
+
+                                                function choose_bill() {
+                                                    var billCode = $(".table tr.selected td:first span").html();
+                                                    var billId = $(".table tr.selected td:first input").val();
+
+                                                    $("#inputBillCode").val(billCode);
+                                                    $("#inputBillId").val(billId);
+                                                    $('#myStandardModal').modal('hide');
+                                                }
+                                            </script>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 17px;">
+                                    <div class="col-xs-12">
+                                        <b>(*): Bắt buộc</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="box-footer">
+                            <!-- "Thêm mới" button -->
+                            <button class="btn btn-primary pull-right" style="margin-right: 5%;" onclick="addInputMaterial()">
+                                <i class="fa fa-edit" style="margin-right: 1%;"></i>Thêm mới
+                                <script type="text/javascript">
+                                    function addInputMaterial() {
+                                        $.ajax({
+                                            url: "@(Url.Action("AddInputMaterial", "InputMaterial"))",
+                                            method: "POST",
+                                            data: $("#add-input-material-form").serialize(),
+                                            success: function (data) {
+                                                if (data === "1") {
+                                                    var n1 = noty({
+                                                        text: 'Thêm nguyên liệu thành công',
+                                                        type: 'success',
+                                                        dismissQueue: false,
+                                                        layout: 'bottomLeft',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1500
+                                                    });
+                                                    window.setTimeout(function () {
+                                                        window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
+                                                    }, 4000);
+                                                } else {
+                                                    var n2 = noty({
+                                                        text: 'Không thể thêm nguyên liệu đầu vào',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'bottomLeft',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                }
+                                            },
+                                            fail: function (e) {
+                                                var n2 = noty({
+                                                    text: 'Đã có lỗi xảy ra',
+                                                    type: 'error',
+                                                    dismissQueue: false,
+                                                    layout: 'bottomLeft',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                            }
+                                        });
+                                    }
+                                </script>
+                            </button>
+                            <!-- "Hủy" button -->
+                            <button class="btn btn-danger pull-right" style="margin-right: 40%;" onclick="cancelAddInputMaterial()">
+                                <i class="fa fa-edit" style="margin-right: 1%;"></i>Hủy
+                                <script type="text/javascript">
+                                    function cancelAddInputMaterial() {
+                                        window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
+                                    }
+                                </script>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!--max length for number-->
+        <script>
+            function maxLengthCheck(object) {
+                if (object.value.length > object.maxLength)
+                    object.value = object.value.slice(0, object.maxLength)
+            }
+        </script>
+    </section>

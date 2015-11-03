@@ -12,6 +12,7 @@ namespace BMA.Controllers
         // GET: /Procedure/
         public ActionResult Index()
         {
+            ViewBag.Show = "procedure";
             return View();
         }
 	}

@@ -1,120 +1,343 @@
 ﻿<!DOCTYPE html>
-
-<html>
+<html lang="en">
+<!-- Mirrored from templatecycle.com/tshop/v-1.4/white/index5.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 27 Oct 2015 07:07:03 GMT -->
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    @Styles.Render("~/CustomerCss")
-    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.title</title>
+    <script type="text/javascript" src="/Content/CustomerLayout/assets/js/jquery/jquery-1.10.1.min.js"></script>
+
+    <link href="/Content/CustomerLayout/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <link id="pagestyle" rel="stylesheet" type="text/css" href="/Content/CustomerLayout/assets/css/skin-11.css">
+    <link href="~/Content/CustomerLayout/assets/css/animate.min.css" rel="stylesheet" />
+    <link href="/Content/CustomerLayout/assets/css/style.css" rel="stylesheet">
+    <link href="/Content/CustomerLayout/assets/css/category-2.css" rel="stylesheet">
+    <link href="~/Content/AdminLayout/plugins/datepicker/datepicker3.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script>
+        paceOptions = {
+            elements: true
+        };
+    </script>
+    <script src="/Content/CustomerLayout/assets/js/pace.min.js"></script>
+    <script src="/Content/CustomerLayout/assets/js/pace.min.js"></script>
+    <script type="text/javascript">
+        function swapStyleSheet(sheet) {
+            document.getElementById('pagestyle').setAttribute('href', sheet);
+        }
+    </script>
+    <style>
+        .themeControll {
+            background: #2d3e50;
+            height: auto;
+            width: 100px;
+            position: fixed;
+            left: 0;
+            padding: 20px;
+            top: 20%;
+            z-index: 999999;
+            -webkit-transform: translateX(0);
+            -moz-transform: translateX(0);
+            -o-transform: translateX(0);
+            -ms-transform: translateX(0);
+            transform: translateX(0);
+            opacity: 1;
+            -ms-filter: none;
+            filter: none;
+            -webkit-transition: opacity .5s linear,-webkit-transform .7s cubic-bezier(.56,.48,0,.99);
+            -moz-transition: opacity .5s linear,-moz-transform .7s cubic-bezier(.56,.48,0,.99);
+            -o-transition: opacity .5s linear,-o-transform .7s cubic-bezier(.56,.48,0,.99);
+            -ms-transition: opacity .5s linear,-ms-transform .7s cubic-bezier(.56,.48,0,.99);
+            transition: opacity .5s linear,transform .7s cubic-bezier(.56,.48,0,.99);
+        }
+
+            .themeControll.active {
+                display: block;
+                -webkit-transform: translateX(-100px);
+                -moz-transform: translateX(-100px);
+                -o-transform: translateX(-100px);
+                -ms-transform: translateX(-1020px);
+                transform: translateX(-100px);
+                -webkit-transition: opacity .5s linear,-webkit-transform .7s cubic-bezier(.56,.48,0,.99);
+                -moz-transition: opacity .5s linear,-moz-transform .7s cubic-bezier(.56,.48,0,.99);
+                -o-transition: opacity .5s linear,-o-transform .7s cubic-bezier(.56,.48,0,.99);
+                -ms-transition: opacity .5s linear,-ms-transform .7s cubic-bezier(.56,.48,0,.99);
+                transition: opacity .5s linear,transform .7s cubic-bezier(.56,.48,0,.99);
+            }
+
+            .themeControll a {
+                border-radius: 3px;
+                clear: both;
+                display: block;
+                height: 25px;
+                margin-bottom: 4px;
+                width: 50px;
+            }
+
+        .tbtn {
+            background: #2D3E50;
+            color: #FFFFFF !important;
+            font-size: 30px;
+            height: auto;
+            padding: 10px;
+            position: absolute;
+            right: -40px;
+            top: 0;
+            width: 40px;
+            cursor: pointer;
+        }
+
+        @@media (max-width: 780px) {
+            .themeControll {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="top-bar" style="padding-bottom:-200px;max-height:100px;">
-        <div class="container">
-            <div class=" navigation clearfix">
-                <div class="menu">
-                    <nav class="navbar navbar-default">
-                        <div id="navbar" class="navbar-collapse collapse pull-right">
-                            <ul class="nav navbar-nav">
-                                <li><i class="fa fa-shopping-cart"></i></li>
-                                <li style="margin-left:-20px;"><a href="/Cart/Cart"><span>@Html.Action("CartPartial", "Cart")</span></a></li>
-                                @if (Session["User"] != null)
-                                {
-                                    <li><i class="fa fa-user"></i></li>
-                                    <li>
-                                        <a aria-expanded="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">@Session["Username"]</a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li>@Html.ActionLink("Quản lý tài khoản", "Index", "Product")</li>
-                                            <li>@Html.ActionLink("Quản lý đơn hàng", "Index", "CusManageOrder")</li>
-                                            <li>@Html.ActionLink("Đăng xuất", "Logout", "Account")</li>
-                                        </ul>
-                                    </li>
-                                }
-                                else
-                                {
-                                    <li><i class="fa fa-sign-in"></i></li>
-                                    <li><a href="javascript:void(0)" onclick="document.getElementById('lightLogin').style.display = 'block'; document.getElementById('fadeLogin').style.display = 'block'" class="sale">Đăng Nhập</a></li>
-                                }
-                            </ul>
+    <div class="modal signUpContent fade" id="ModalLogin" tabindex="-1" role="dialog" style="margin-top:50px;">
+        <div class="modal-dialog ">
+            <div class="modal-content" style="width:400px;margin-left:40px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> &times; </button>
+                    <h4 class="modal-title-site text-center" style="font-family: 'Patrick Hand SC';font-size:25px;"> Đăng nhập </h4>
+                </div>
+                <form action='@Url.Action("Login", "Account", new { @strURL = Request.Url.ToString()})' id="loginForm" method="post">
+                    <div class="modal-body">
+                        <div class="form-group login-username">
+                            <div>
+                                <input name="txtAccount" id="login-user" class="form-control input" size="20" placeholder="Nhập tài khoản" type="text" required>
+                            </div>
                         </div>
-                    </nav>
+                        <div class="form-group login-password">
+                            <div>
+                                <input name="txtPassword" id="login-password" class="form-control input" size="20" placeholder="Nhập mật khẩu" type="password" required>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <input name="submit" class="btn  btn-block btn-lg btn-primary" value="ĐĂNG NHẬP" type="submit">
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    @*<div class="modal signUpContent fade" id="ModalSignup" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> &times; </button>
+                    <h3 class="modal-title-site text-center"> ĐĂNG KÝ </h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group reg-username">
+                        <div>
+                            <input name="txtUsername" class="form-control input" size="20" placeholder="Nhập tên tài khoản" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group reg-password">
+                        <div>
+                            <input name="txtPassword" class="form-control input" size="20" placeholder="Nhập mật khẩu" type="password">
+                        </div>
+                    </div>
+                    <div class="form-group reg-password">
+                        <div>
+                            <input name="txtPasswordConfirm" class="form-control input" size="20" placeholder="Nhập lại mật khẩu" type="password">
+                        </div>
+                    </div>
+                    <div class="form-group reg-email">
+                        <div>
+                            <input name="txtEmail" class="form-control input" size="20" placeholder="Nhập Email" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group reg-email">
+                        <div>
+                            <input name="txtPhonenumber" class="form-control input" size="20" placeholder="Nhập số điện thoại" type="text">
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <input name="submit" class="btn  btn-block btn-lg btn-primary" value="ĐĂNG KÝ" type="submit">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <p class="text-center"> Là thành viên? <a data-toggle="modal" data-dismiss="modal" href="#ModalLogin"> Đăng nhập </a> </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>*@
+
+
+    <div class="navbar navbar-tshop navbar-fixed-top megamenu" role="navigation">
+        <div class="navbar-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6">
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6 no-margin no-padding">
+                        <div class="pull-right">
+                            @if (Session["User"] != null)
+                            {
+                                <ul class="userMenu">
+                                    <li> <a href="@Url.Action("Index", "CusManage")"><span class="hidden-xs"><i class="fa fa-street-view"></i> Quản lý</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                    <li> <a href="@Url.Action("Logout", "Account")"><span class="hidden-xs"><i class="fa fa-sign-out"></i> Đăng xuất </span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                </ul>
+                            }
+                            else
+                            {
+                                <ul class="userMenu">
+                                    <li> <a href="#" data-toggle="modal" data-target="#ModalLogin"><i class="fa fa-sign-in"></i> <span class="hidden-xs">Đăng nhập</span> <i class="glyphicon glyphicon-log-in hide visible-xs "></i> </a> </li>
+                                </ul>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <header>
-        <div class="logo"><a href="index.html"><img style="width:201px;height:65px;margin-left:75px;margin-top:20px;" src="~/Content/Images/BakeryImages/logo.jpg" alt="#" /> </a></div>
+
         <div class="container">
-            <div class="navigation clearfix">
-                <div class="menu">
-                    <nav class="navbar navbar-default">
-                        <div id="navbar" class="navbar-collapse collapse pull-right">
-                            <ul class="nav navbar-nav">
-                                <li>@Html.ActionLink("TRANG CHỦ", "Index", "Home")</li>
-                                <li>
-                                    <a aria-expanded="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">SẢN PHẨM</a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li>@Html.ActionLink("Tất cả", "Index", "Product")</li>
-                                        <li>@Html.ActionLink("Bánh ngọt", "Cookie", "Product")</li>
-                                        <li>@Html.ActionLink("Bánh mặn", "Saltine", "Product")</li>
-                                    </ul>
-                                </li>
-                                <li>@Html.ActionLink("QUY TRÌNH ĐẶT HÀNG", "Index", "Procedure")</li>
-                                <li>@Html.ActionLink("LIÊN HỆ", "Index", "Contact")</li>
-                            </ul>
-                        </div>
-                    </nav>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only"> Toggle navigation </span> <span class="icon-bar"> </span> <span class="icon-bar"> </span> <span class="icon-bar"> </span> </button>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-cart"> <i class="fa fa-shopping-cart colorWhite"> </i> <span class="cartRespons colorWhite"> Cart ($210.00) </span> </button>
+                <a class="navbar-brand"> <img style="width:130px;height:75px;margin-top:-20px;" src="/Content/CustomerLayout/Images/logo.png" alt="TSHOP"> </a>
+
+                <div class="search-box pull-right hidden-lg hidden-md hidden-sm">
+                    <div class="input-group">
+                        <button class="btn btn-nobg getFullSearch" type="button"> <i class="fa fa-search"> </i> </button>
+                    </div>
+
                 </div>
             </div>
-        </div>
-    </header>
 
-    <div>
-        @RenderBody()
-    </div>
-    <div id="lightLogin" class="white_content_login">
-        @*<center><h2 style="color:#808080">Đăng Nhập</h2></center>
-            <div class="border-top"></div>
-            <br />*@
-        <div class="modal-content">
-            <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
-                <h4 class="modal-title ng-binding" style="color:white"></h4>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li id="home"> <a href="@Url.Action("Index", "Home")"> Trang chủ </a> </li>
+                    <li class="dropdown megamenu-fullwidth" id="product">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#"> Sản phẩm <b class="caret"> </b> </a>
+                        <ul class="dropdown-menu">
+                            <li class="megamenu-content ">
+                                <ul class="col-lg-3  col-sm-3 col-md-3  col-xs-4">
+                                    <li> <a class="newProductMenuBlock" href="@Url.Action("Index","Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/BB2T.jpg" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Tất cả sản phẩm </span> </a> </li>
+                                </ul>
+                                <ul class="col-lg-3  col-sm-3 col-md-3 col-xs-4">
+                                    <li> <a class="newProductMenuBlock" href="@Url.Action("Saltine", "Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/BMTN.JPG" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Bánh mặn </span> </a> </li>
+                                </ul>
+                                <ul class="col-lg-3  col-sm-3 col-md-3 col-xs-4">
+                                    <li> <a class="newProductMenuBlock" href="@Url.Action("Cookie","Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/Pudding.jpg" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Bánh ngọt </span> </a> </li>
+                                </ul>
+                                <ul class="col-lg-3  col-sm-3 col-md-3 col-xs-4">
+                                    <li> <a class="newProductMenuBlock" href="@Url.Action("Index","Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/BBLN.jpg" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Đang khuyến mãi </span> </a> </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="" id="procedure"> <a href="@Url.Action("Index", "Procedure")"> Quy trình đặt hàng </a> </li>
+                </ul>
+
+                <div class="nav navbar-nav navbar-right hidden-xs">
+                    <div class="dropdown  cartMenu">
+                        <a class=" dropdown-toggle" data-toggle="dropdown" style="padding-right: 5px; padding-left: 5px;cursor:default;"> <i class="fa fa-shopping-cart"> </i> <span class="cartRespons">@Html.Action("CartPartial", "Cart") </span></a>
+                    </div>
+                </div>
+
             </div>
-            <form action='@Url.Action("Login", "Account", new { @strURL = Request.Url.ToString()})' id="loginForm" method="post">
-                <table class="popup-table">
-                    <tr>
-                        <td><i class="fa fa-user fa-2x"></i></td>
-                        <td><input style="width:220px;margin-left:30px;" type="text" value="" placeholder="Tên đăng nhập" name="txtAccount" required /></td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-lock fa-2x"></i></td>
-                        <td><input style="width:220px;margin-left:30px;" type="password" value="" placeholder="Mật khẩu" name="txtPassword" required /></td>
-                    </tr>
-                </table>
-                <input type="hidden" class="hiddenProductID" name="productID" value="" />
-            </form>
-            <div class="modal-footer">
-                <a class="btn btn-default" onclick="document.getElementById('lightLogin').style.display = 'none'; document.getElementById('fadeLogin').style.display = 'none'">Hủy bỏ</a>
-                <a style="margin-right:32px;" class="btn btn-primary" href="#" onclick="return submitLogin();">Đăng nhập</a>
-            </div>
+
         </div>
-        @*<div class="popup-btn" style="margin-right: 30px; margin-top: 10px;"> <a href="#" onclick="return submitLogin();" class="book-it">Đăng nhập</a> </div>
-            <div class="popup-btn" style="margin-right:120px;margin-top:10px;"> <a href="#" onclick="document.getElementById('lightLogin').style.display = 'none'; document.getElementById('fadeLogin').style.display = 'none'" class="book-it">Hủy bỏ</a> </div>*@
-        <script type="text/javascript">
-            function submitLogin() {
-                document.getElementById("loginForm").submit();
-                return 1;
-            }
-        </script>
-
     </div>
-    <div id="fadeLogin" class="black_overlay"></div>
 
-    <footer class="bg-color">
-        <div class="lower-footer">
-            <p>Bakery Management System - MGV | Copyright 2015</p>
+    @RenderBody()
+    <footer>
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="pull-left"> &copy; MGV Bakery 2015. All right reserved. </p>
+            </div>
         </div>
     </footer>
 
-    @Scripts.Render("~/CustomerJs")
+
+
+    <script src="/Content/CustomerLayout/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Content/CustomerLayout/assets/js/footable.js"></script>
+    <script src="~/Content/CustomerLayout/assets/js/footable.sortable.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.footable').footable();
+        });
+    </script>
+
+    <script src="/Content/CustomerLayout/assets/js/idangerous.swiper-2.1.min.js"></script>
+    <script>
+        var mySwiper = new Swiper('.swiper-container', {
+            pagination: '.box-pagination',
+            keyboardControl: true,
+            paginationClickable: true,
+            slidesPerView: 'auto',
+            autoResize: true,
+            resizeReInit: true,
+        })
+
+        $('.prevControl').on('click', function (e) {
+            e.preventDefault()
+            mySwiper.swipePrev()
+        })
+        $('.nextControl').on('click', function (e) {
+            e.preventDefault()
+            mySwiper.swipeNext()
+        })
+    </script>
+
+    <script src="/Content/CustomerLayout/assets/js/jquery.cycle2.min.js"></script>
+
+    <script src="/Content/CustomerLayout/assets/js/jquery.easing.1.3.js"></script>
+
+    <script type="text/javascript" src="/Content/CustomerLayout/assets/js/jquery.parallax-1.1.js"></script>
+
+    <script type="text/javascript" src="/Content/CustomerLayout/assets/js/helper-plugins/jquery.mousewheel.min.js"></script>
+
+    <script type="text/javascript" src="/Content/CustomerLayout/assets/js/jquery.mCustomScrollbar.js"></script>
+
+    <script type="text/javascript" src="/Content/CustomerLayout/assets/js/ion-checkRadio/ion.checkRadio.min.js"></script>
+
+    <script src="/Content/CustomerLayout/assets/js/grids.js"></script>
+    <script src="/Content/CustomerLayout/assets/js/owl.carousel.min.js"></script>
+
+    <script src="/Content/CustomerLayout/assets/js/jquery.minimalect.min.js"></script>
+
+    <script src="/Content/CustomerLayout/assets/js/bootstrap.touchspin.js"></script>
+
+    <script src="/Content/CustomerLayout/assets/js/home.js"></script>
+
+    <script src="/Content/CustomerLayout/assets/js/script.js"></script>
+    <script src="~/Scripts/jquery.noty.packaged.min.js"></script>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        (function () { try { var s, a, i, j, r, c, l = document.getElementsByTagName("a"), t = document.createElement("textarea"); for (i = 0; l.length - i; i++) { try { a = l[i].getAttribute("href"); if (a && a.indexOf("/cdn-cgi/l/email-protection") > -1 && (a.length > 28)) { s = ''; j = 27 + 1 + a.indexOf("/cdn-cgi/l/email-protection"); if (a.length > j) { r = parseInt(a.substr(j, 2), 16); for (j += 2; a.length > j && a.substr(j, 1) != 'X'; j += 2) { c = parseInt(a.substr(j, 2), 16) ^ r; s += String.fromCharCode(c); } j += 1; s += a.substr(j, a.length - j); } t.innerHTML = s.replace(/</g, "&lt;").replace(/>/g, "&gt;"); l[i].setAttribute("href", "mailto:" + t.value); } } catch (e) { } } } catch (e) { } })();
+        /* ]]> */
+
+    </script>
+    @if (ViewBag.Show != null)
+    {
+        <script type="text/javascript">
+            $(document).find("#@ViewBag.Show").addClass('active');
+        </script>
+    }
 </body>
+<!-- Mirrored from templatecycle.com/tshop/v-1.4/white/index5.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 27 Oct 2015 07:07:25 GMT -->
 </html>

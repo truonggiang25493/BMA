@@ -2,50 +2,34 @@
     ViewBag.Title = "Trang chủ";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
 }
+<div class="container main-container headerOffset globalPaddingBottom">
+    <div class="row">
+        <div class=" image-show-case-wrapper center-block relative col-lg-12">
+            <div id="imageShowCase" class="owl-carousel owl-theme">
+                <div class="product-slide">
+                    <a href="#"><img class="img-responsive" src="/Content/CustomerLayout/Images/slider1.jpg" alt="img"></a>
+                </div>
 
-<section class="border-top-slider"></section>
+                <div class="product-slide">
+                    <a href="#"><img class="img-responsive" src="/Content/CustomerLayout/Images/slider2.jpg" alt="img"></a>
+                </div>
 
-<div id="mainslider">
-    <div class="slider">
-        <div class="fullscreen-container">
-            <div class="fullscreenbanner">
-                <ul>
-                    <li data-transition="slide" data-slotamount="10">
-                        <img class="img-responsive" alt="" src="@Url.Content("~/Content/Images/BakeryImages/brood-1.jpg")" />
-                        <div class="caption sfb"
-                             data-x="center"
-                             data-y="160"
-                             data-speed="1000"
-                             data-start="1000"
-                             data-easing="easeOutExpo">
-                        </div>
-                    </li>
-                    <li data-transition="slide" data-slotamount="10">
-                        <img class="img-responsive" alt="" src="@Url.Content("~/Content/Images/BakeryImages/brood-1.jpg")" />
-                        <div class="caption sfb"
-                             data-x="center"
-                             data-y="center"
-                             data-speed="1000"
-                             data-start="1000"
-                             data-easing="easeOutExpo">
-                        </div>
-                    </li>
-                    <li data-transition="slide" data-slotamount="10">
-                        <img class="img-responsive" alt="" src="@Url.Content("~/Content/Images/BakeryImages/brood-1.jpg")" />
-                        <div class="caption sfb"
-                             data-x="center"
-                             data-y="center"
-                             data-speed="1000"
-                             data-start="1000"
-                             data-easing="easeOutExpo">                          
-                        </div>
-                    </li>
-                </ul>
+                <div class="product-slide">
+                    <a href="#"><img class="img-responsive" src="/Content/CustomerLayout/Images/slider3.jpg" alt="img"></a>
+                </div>
+
             </div>
+
+            <div style="clear:both;"></div>
+            <a id="ps-next" class="ps-nav"> <img src="/Content/CustomerLayout/site/arrow-right.png" alt="N E X T"> </a> <a id="ps-prev" class="ps-nav"> <img src="/Content/CustomerLayout/site/arrow-left.png" alt="P R E V"></a>
+        </div>
+
+    </div>
+    <div style="clear:both"></div>
+    <div class="row">
+        <div class="col-lg-12">
+            <hr class="hr3">
         </div>
     </div>
 </div>
-
-
-
 

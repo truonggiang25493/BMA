@@ -14,7 +14,6 @@ namespace BMA.Models
     
     public partial class Product
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product()
         {
             this.OrderItems = new HashSet<OrderItem>();
@@ -27,16 +26,14 @@ namespace BMA.Models
         public string Unit { get; set; }
         public string Descriptions { get; set; }
         public string Note { get; set; }
-        public string ProductImgage { get; set; }
+        public string ProductImage { get; set; }
         public int ProductStandardPrice { get; set; }
         public Nullable<int> CategoryId { get; set; }
         public bool IsActive { get; set; }
         public string ProductCode { get; set; }
     
         public virtual Category Category { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderItem> OrderItems { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }

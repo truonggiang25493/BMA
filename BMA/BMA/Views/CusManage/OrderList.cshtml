@@ -1,0 +1,141 @@
+﻿@using BMA.Models
+@using PagedList.Mvc;
+@using System.Globalization
+@using BMA.Common;
+
+@model PagedList.PagedList<Order>
+
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+    IEnumerable<BMA.Models.OrderItem> oi = ViewBag.orderItemList;
+}
+<link href="~/Content/CustomerLayout/assets/css/footable-0.1.css" rel="stylesheet" />
+<link href="~/Content/CustomerLayout/assets/css/footable.sortable-0.1.css" rel="stylesheet" />
+
+<div class="container main-container headerOffset">
+    <div class="row">
+        <div class="breadcrumbDiv col-lg-12">
+            <ul class="breadcrumb">
+                <li> <a href="@Url.Action("Index", "Home")">Trang chủ</a> </li>
+                <li><a href="@Url.Action("Index", "CusManage")"> Quản lý</a> </li>
+                <li class="active"> Danh sách đơn hàng </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-7">
+            <h1 class="section-title-inner"><span><i class="fa fa-list-alt"></i> Danh sách đơn hàng </span></h1>
+            <div class="row userInfo">
+                <div class="col-lg-12">
+                    <h2 class="block-title-2"> Đơn hàng của bạn </h2>
+                </div>
+                <div class="col-xs-12 col-sm-12">
+                    <table class="footable">
+                        <thead>
+                            <tr>
+                                <th data-class="expand" data-sort-initial="true"> <span title="table sorted by this column on load">Mã đơn hàng</span> </th>
+                                <th data-hide="phone,tablet" data-sort-ignore="true">Số loại sản phẩm</th>
+                                <th data-hide="phone,tablet" data-sort-ignore="true">Thành tiền</th>
+                                <th data-hide="phone,tablet"><strong></strong></th>
+                                <th data-hide="default"> Ngày tạo </th>
+                                <th data-hide="default" data-type="numeric"> Ngày giao hàng (dự kiến) </th>
+                                <th data-hide="phone" data-type="numeric"> Trạng thái  </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                int count = 0;
+                                <tr>
+                                    <td>@item.OrderCode</td>
+                                    @for (int i = 0; i < oi.Count(); i++)
+                                    {
+                                        if (oi.ElementAt(i).OrderId == item.OrderId)
+                                        {
+                                            count++;
+                                        }
+                                    }
+                                    <td>@count <small> sản phẩm</small></td>
+                                    <td><a href="#" target="_blank">@((item.Amount + item.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</a></td>
+                                    <td>
+                                        <ul style="margin-top:10px;">
+                                            <li style="display:inline;"><a href="@Url.Action("OrderDetail", "CusManage", new { @orderId = item.OrderId})" class="btn btn-detail btn-sm" style="border:1px solid black"><i class="fa fa-navicon"></i> Chi tiết</a> </li>
+                                            <li style="display:inline;"><a href="@Url.Action("OrderDetail", "CusManage", new { @orderId = item.OrderId})" class="btn btn-edit btn-sm" style="border:1px solid black"><i class="fa fa-cog"></i> Chỉnh sửa</a></li>
+                                            @if (item.OrderStatus == 6)
+                                            {
+
+                                            }
+                                            else
+                                            {
+                                                <li style="display:inline;"><a data-target="#product-details-modal" data-toggle="modal" class="btn btn-delete btn-sm" style="border:1px solid black"><i class="fa fa-close"></i> Hủy</a></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>@item.CreateTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td data-value="78025368997">@item.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td data-value="3">
+                                        @if (item.OrderStatus == 0)
+                                        {
+                                            <span class="label label-warning">@CommonData.Status[item.OrderStatus]</span>
+                                        }
+                                        @if (item.OrderStatus == 2)
+                                        {
+                                            <span class="label label-primary">@CommonData.Status[item.OrderStatus]</span>
+                                        }
+                                        @if (item.OrderStatus == 3 || item.OrderStatus == 4)
+                                        {
+                                            <span class="label label-info">@CommonData.Status[item.OrderStatus]</span>
+                                        }
+                                        @if (item.OrderStatus == 5)
+                                        {
+                                            <span class="label label-success">@CommonData.Status[item.OrderStatus]</span>
+                                        }
+                                        @if (item.OrderStatus == 6)
+                                        {
+                                            <span class="label label-default">@CommonData.Status[item.OrderStatus]</span>
+                                        }
+                                    </td>
+                                </tr>
+                                <div class="modal fade col-md-4 col-center" id="product-details-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:70px">
+                                    <div class="modal-dialog panel panel-default">
+                                        <div class=" panel-heading">
+                                            <h3 class="panel-title"><strong>Xác nhận</strong></h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <ul>
+                                                @if (item.OrderStatus == 0)
+                                                {
+                                                    <li> <span class="address-line1"> Quý khách thực sự muốn hủy đơn hàng này ? </span></li>
+                                                }
+                                                else
+                                                {
+                                                    <li> <span class="address-line1"> Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc.<br /> Quý khách có muốn hủy đơn hàng này không ? </span></li>
+                                                }
+
+                                            </ul>
+                                        </div>
+                                        <div class="panel-footer panel-footer-address"><a class="btn btn-sm btn-danger" href="@Url.Action("CancelOrderConfirm", "CusManage", new { @orderId = item.OrderId, @strURL = Request.Url.ToString()})" style="margin-left:310px;"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
+                                    </div>
+                                </div>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-12 clearfix">
+                    <ul class="pager">
+                        <li class="previous pull-right"><a href="@Url.Action("Index","Product")"> <i class="fa fa-home"></i> Tới cửa hàng </a></li>
+                        <li class="next pull-left"><a onclick="javascript:history.back(-1);"> &larr; Quay lai trang quản lý</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-5"> </div>
+    </div>
+
+    <div style="clear:both"></div>
+</div>
+
+<div class="gap"> </div>

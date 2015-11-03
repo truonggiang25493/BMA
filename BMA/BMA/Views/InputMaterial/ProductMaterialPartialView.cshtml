@@ -1,0 +1,31 @@
+﻿
+@using BMA.Models
+@model List<BMA.Models.ProductMaterial>
+
+<h3 style="text-align: center">Danh sách nguyên liệu</h3>
+
+<div class="box-body">
+    <table id="example2" class="table table-bordered customer-table">
+        <thead style="font-weight: bold">
+            <tr>
+
+                <th>Nguyên liệu</th>
+                <th>Đơn vị tính</th>               
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ProductMaterial productMaterial in Model)
+            {
+                <tr>
+                    <td>
+                        <span>@(productMaterial.ProductMaterialName)</span>
+                        <input type="hidden" name="txtProductMaterialId" value="@productMaterial.ProductMaterialId" />
+                    </td>
+                    <td>
+                        @(productMaterial.ProductMaterialUnit)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
