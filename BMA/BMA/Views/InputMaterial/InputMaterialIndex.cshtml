@@ -17,57 +17,52 @@
         <div class="box-body">
             <table id="example2" class="table table-hover table-bordered">
                 <thead style="font-weight: bold">
-                    <tr>
+                    <tr class="row">
 
-                        <th>Tên nguyên liệu</th>
-                        <th>Số lượng</th>
-                        <th>Tồn kho</th>
-                        <th>Đơn vị tính</th>
-                        <th>Ngày nhập</th>
-                        <th>Ngày hết hạn</th>
-                        <th>Trạng thái</th>
-                        <th></th>
+                        <th class="col-md-2">Nguyên liệu</th>
+                        <th class="col-md-2">Nhập</th>
+                        <th class="col-md-2">Tồn kho</th>
+                        <th class="col-md-2">Ngày nhập</th>
+                        <th class="col-md-2">Ngày hết hạn</th>
+                        <th class="col-md-1">Trạng thái</th>
+                        <th class="col-md-1"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (InputMaterial inputMaterial in Model)
                     {
-                        <tr>
+                        <tr class="row">
 
-                            <td>@inputMaterial.ProductMaterial.ProductMaterialName</td>
-                            <td>@inputMaterial.ImportQuantity</td>
-                            <td>@inputMaterial.RemainQuantity</td>
-                            <td>@inputMaterial.ProductMaterial.ProductMaterialUnit</td>
-                            <td>@inputMaterial.ImportDate.ToString("dd/MM/yyyy")</td>
-                            <td>@inputMaterial.InputMaterialExpiryDate.ToString("dd/MM/yyyy")</td>
+                            <td class="col-md-2" style="text-align: center">@inputMaterial.ProductMaterial.ProductMaterialName</td>
+                            <td class="col-md-2" style="text-align: right">@inputMaterial.ImportQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @inputMaterial.ProductMaterial.ProductMaterialUnit</td>
+                            <td class="col-md-2" style="text-align: right">@inputMaterial.RemainQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @inputMaterial.ProductMaterial.ProductMaterialUnit</td>
+
+                            <td class="col-md-2" style="text-align: center">@inputMaterial.ImportDate.ToString("dd/MM/yyyy")</td>
+                            <td class="col-md-2" style="text-align: center">@inputMaterial.InputMaterialExpiryDate.ToString("dd/MM/yyyy")</td>
                             @if (inputMaterial.RemainQuantity == 0)
                             {
-                                <td>
+                                <td class="col-md-1">
                                     <span class="label label-default">Đã hết</span>
                                 </td>
-                                <td>
-                                    @Html.ActionLink("Xem", "InputMaterialDetail", new { id = inputMaterial.InputMaterialId })
+                                <td class="col-md-1">
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                    </a>
                                 </td>
                             }
-                            else if (inputMaterial.IsActive)
-                            {
-                                <td>
-                                    <span class="label label-success">Có thể sử dụng</span>
-                                </td>
-                                <td>
-                                    @Html.ActionLink("Xem", "InputMaterialDetail", new { id = inputMaterial.InputMaterialId })
-                                </td>
-                            }
+
                             else
                             {
-                                <td>
-                                    <span class="label label-danger">Đã hủy</span>
+                                <td class="col-md-1">
+                                    <span class="label label-success">Có thể sử dụng</span>
                                 </td>
-                                <td>
-                                    @Html.ActionLink("Xem", "InputMaterialDetail", new { id = inputMaterial.InputMaterialId })
+                                <td class="col-md-1">
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                    </a>
                                 </td>
                             }
-                            }
+
                         </tr>
                     }
                 </tbody>

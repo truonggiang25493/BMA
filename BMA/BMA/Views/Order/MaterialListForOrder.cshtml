@@ -143,7 +143,7 @@
                 <!--Update order-->
                 @if (Model.IsEnough)
                 {
-                    <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container()">
+                    <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container(@Model.MaterialCost)">
                         <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Cập nhật
                     </button>
                 }

@@ -8,11 +8,12 @@
 <section class="content-header">
     <h1>Xác nhận</h1>
 </section>
-<section class="content">
+<section class="invoice">
     <!--Title row-->
     <div class="row">
         <div class="col-xs-12">
             <h2 class="page-header">
+                <i class="fa fa-navicon" style="margin-right: 3px;"></i>
                 Thông tin đơn hàng
             </h2>
         </div>
@@ -24,21 +25,39 @@
             {
                 <div>
                     Thành viên:
-                    <b>@Model.OrderPersonName</b>
+                    <b style="font-size: 17px">@Model.OrderPersonName</b>
                 </div>
-                <div>@Model.OrderPersonAddress</div>
-                <div>Điện thoại: @Model.OrderPersonPhoneNumber</div>
-                <div>Mã số thuế: @Model.OrderPersonTaxCode</div>
+                <div>
+                    <b>Địa chỉ: </b>
+                    @Model.OrderPersonAddress
+                </div>
+                <div>
+                    <b>Điện thoại: </b>
+                    @Model.OrderPersonPhoneNumber
+                </div>
+                <div>
+                    <b>Mã số thuế: </b>
+                    @Model.OrderPersonTaxCode
+                </div>
             }
             else
             {
                 <div>
                     Khách hàng:
-                    <b>@Model.OrderPersonName</b>
+                    <b style="font-size: 17px">@Model.OrderPersonName</b>
                 </div>
-                <div>@Model.OrderPersonAddress</div>
-                <div>Điện thoại: @Model.OrderPersonPhoneNumber</div>
-                <div>Mã số thuế: @Model.OrderPersonTaxCode</div>
+                <div>
+                    <b>Địa chỉ: </b>
+                    @Model.OrderPersonAddress
+                </div>
+                <div>
+                    <b>Điện thoại: </b>
+                    @Model.OrderPersonPhoneNumber
+                </div>
+                <div>
+                    <b>Mã số thuế: </b>
+                    @Model.OrderPersonTaxCode
+                </div>
             }
         </div>
     </div>
@@ -46,6 +65,7 @@
     <div class="row" style="margin-top: 15px;">
         <div class="col-xs-12">
             <h2 class="page-header">
+                <i class="fa fa-shopping-cart" style="margin-right: 3px;"></i>
                 Thông tin sản phẩm
             </h2>
         </div>
@@ -79,23 +99,28 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-9"></div>
-        <div class=" col-xs-3">
+        <div class="col-md-8"></div>
+        <div class=" col-md-4">
             <div class="table-responsive">
                 <table class="table">
                     <tr>
                         <th>Tổng cộng: </th>
                         <td style="text-align: right">
-                            @Model.TotalAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
+                            @Model.Order.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
                         </td>
                     </tr>
                     <tr>
-                        <th>Thuế(VAT) : </th>
-                        <td style="text-align: right">@Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        <th>Giảm: </th>
+                        <td style="text-align: right">@Model.Order.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                     </tr>
                     <tr>
+                        <th>Thuế(VAT) @(ViewBag.TaxRate)%: </th>
+                        <td style="text-align: right">@Model.Order.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                    </tr>
+
+                    <tr>
                         <th>Thành tiền: </th>
-                        <td style="text-align: right">@((@Model.TotalAmount + Model.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                        <td style="text-align: right">@((@Model.Order.Amount + Model.Order.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                     </tr>
                 </table>
             </div>
@@ -107,19 +132,11 @@
     <div class="row" style="margin-top: 15px;">
         <div class="col-xs-12">
             <h2 class="page-header">
+                <i class="fa fa-cubes" style="margin-right: 3px;"></i>
                 Thông tin nguyên liệu
             </h2>
         </div>
     </div>
-    <!--Material Noti-->
-    @if (!Model.IsEnoughMaterial)
-    {
-        <div class="row">
-            <div class="col-xs-12">
-                <h2 class="label label-danger" style="font-size: 14pt">Không đủ nguyên liệu</h2>
-            </div>
-        </div>
-    }
     <!-- Material Table Content-->
     <div class="row">
         <div class="col-xs-12 table-responsive">
@@ -169,17 +186,16 @@
     <!--Button-->
     <div class="row">
         <div class="col-xs-12">
-            <button class="btn btn-primary" style="margin-right: 10px">
-                <i class="fa fa-backward" style="margin-right: 3px;"></i>Quay lại
-            </button>
-            <a class="btn btn-primary" href="/Order/Add">
+            <a class="btn btn-primary" style="margin-right: 10px" href="@(Url.Action("AddCustomerToOrder", "Order"))">
+                <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
+
+            </a>
+            <a class="btn btn-primary" href="@(Url.Action("Add","Order"))">
                 <i class="fa fa-shopping-cart" style="margin-right: 3px;"></i>Chọn sản phẩm
             </a>
-
-            <a class="btn btn-danger pull-right" href="/Order/CancelAddOrder">
+            <a class="btn btn-danger pull-right" href="@(Url.Action("CancelAddOrder","Order"))">
                 <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy
             </a>
-
             @if (Model.IsEnoughMaterial)
             {
                 <button class="btn btn-success pull-right" id="btn-approved" onclick="open_container();" style="margin-right: 10px">
@@ -189,7 +205,7 @@
                             var loyalCustControl = $("<div>", {
                                 "class": "form-group",
                                 "html": [
-                                     "<label>Có nhận tiền cọc không ?</label>",
+                                    "<label>Có nhận tiền cọc không ?</label>",
                                     $("<input>", {
                                         "type": "radio",
                                         "name": "isDeposit",
@@ -201,6 +217,7 @@
                                     $("<input>", {
                                         "type": "radio",
                                         "name": "isDeposit",
+                                        "checked":"checked",
                                         "value": "no",
                                         "style": "margin-left: 10px",
                                         "data-role": "radio-is-deposit"
@@ -216,8 +233,6 @@
                                 }
                             });
                             var contentControl = $("<form>", {
-                                "action": "@Url.Action("AddOrderForCustomer", "Order")",
-                                "method": "post",
                                 "id": "form-aprrove",
                                 "html": [
                                     @(Model.IsLoyal?"loyalCustControl":""),
@@ -240,56 +255,69 @@
                                     $("<div>", {
                                         "class": "form-group",
                                         "html": [
-                                            '<label>Ngày giao hàng</label>',
-                                            $("<input>", {
-                                                "type": "date",
-                                                "min": "@(DateTime.Now.ToString("yyyy-MM-dd"))",
-                                                "class": "form-control",
-                                                "name": "deliveryDate",
-                                                "value": "@(DateTime.Now.ToString("yyyy-MM-dd"))"
+                                            "<label>Thời gian giao hàng</label>",
+                                            $("<div>", {
+                                                "class": "input-group date",
+                                                "id": "datetimepicker",
+                                                "html": [
+                                                    $("<input>", {
+                                                        "type": "text",
+                                                        "readonly": "readonly",
+                                                        "data-format":"dd/MM/yyyy HH:mm",
+                                                        "class": "form-control",
+                                                        "name": "deliveryDate"
+                                                    }),
+                                                    $("<span>", {
+                                                        "class": "input-group-addon",
+                                                        "html" : "<span class='glyphicon glyphicon-calendar'></span>"
+                                                    })
+                                                ]
                                             }),
+
                                             $("<input>", {
                                                 "type": "hidden",
-                                                "name": "customerId",
-                                                "value": "@Model.Order.CustomerUserId"
-                                            })
-                                        ]
-                                    }),
-                                    $("<div>", {
-                                        "class": "form-group",
-                                        "style": "padding-bottom: 20px;",
-                                        "html": [
-                                            $("<button>", {
-                                                "class": "btn btn-danger pull-right",
-                                                "data-dismiss": "modal",
-                                                "html": [
-                                                    "Hủy"
-                                                ]
-                                            }),
-                                            $("<button>", {
-                                                "class": "btn btn-success pull-right",
-                                                "style": "margin-right: 10px;",
-                                                "type": "submit",
-                                                "html": [
-                                                    "Đồng ý"
-                                                ]
+                                                "name": "orderId",
+                                                "value": "@Model.Order.OrderId"
                                             })
                                         ]
                                     })
                                 ]
                             });
                             var title = 'Xác nhận duyệt đơn hàng';
-                            var footer = '';
-                            setModalBox(title, contentControl[0].outerHTML, footer);
+
+                            var footer = $("<div>", {
+                                "class": "row",
+                                "style": "margin-right: 10px;",
+                                "html": [
+                                    $("<button>", {
+                                        "class": "btn btn-danger pull-right",
+                                        "data-dismiss": "modal",
+                                        "html": [
+                                            "Hủy"
+                                        ]
+                                    }),
+                                    $("<button>", {
+                                        "class": "btn btn-success pull-right",
+                                        "style": "margin-right: 10px;",
+                                        "onclick": "addOrder()",
+                                        "html": [
+                                            "Đồng ý"
+                                        ]
+                                    })
+                                ]
+                            });
+                            document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+                            document.getElementById('popup-title').innerHTML = title;
+                            document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
+                            $('#datetimepicker').datetimepicker({
+                                locale: 'vi',
+                                ignoreReadonly: true,
+                                defaultDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",
+                                minDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))"
+                            });
                             $('#myModal').modal('show');
                         }
 
-                        function setModalBox(title, content, footer) {
-                            document.getElementById('popup-body').innerHTML = content;
-                            document.getElementById('popup-title').innerHTML = title;
-                            document.getElementById('popup-footer').innerHTML = footer;
-
-                        }
                         function show_deposit() {
                             $('#deposit').show();
                             $('#deposit-amount').attr("min", @Model.MaterialCost);
@@ -300,6 +328,52 @@
                             $('#deposit').hide();
                             $('#deposit-amount').attr("min", 0);
                             $('#deposit-amount').val(0);
+                        }
+
+                        function addOrder() {
+                            $.ajax({
+                                url: "@(Url.Action("AddOrderForCustomer", "Order"))",
+                                method: "POST",
+                                data: $("#form-aprrove").serialize(),
+                                success: function(data) {
+                                    if (data === "1") {
+                                        $('#myModal').modal('hide');
+                                        var n = noty({
+                                            text: 'Thêm đơn hàng thành công',
+                                            type: 'success',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 3000
+                                        });
+                                        window.setTimeout(function() {
+                                            window.location.replace("@(Url.Action("Index", "Order"))");
+                                        }, 4000);
+
+                                    } else {
+                                        $('#myModal').modal('hide');
+                                        var n = noty({
+                                            text: 'Không thể thêm đơn hàng',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
+                                },
+                                fail: function(e) {
+                                    $('#myModal').modal('hide');
+                                    var n = noty({
+                                        text: 'Đã có lỗi xảy ra',
+                                        type: 'error',
+                                        dismissQueue: false,
+                                        layout: 'bottomRight',
+                                        theme: 'defaultTheme',
+                                        timeout: 1000
+                                    });
+                                }
+                            });
                         }
                     </script>
                 </button>
@@ -312,3 +386,36 @@
     </div>
 
 </section>
+@section CheckoutWithCustomerScript{
+    <script type="text/javascript">
+        var tempFunction;
+
+        $(document).ready(function () {
+            tempFunction = $.fn.modal.Constructor.prototype.enforceFocus;
+        });
+
+        $(document).on("show", "#myModal", function() {
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+        });
+
+        $(document).on("hidden", "#myModal", function() {
+            $.fn.modal.Constructor.prototype.enforceFocus = tempFunction;
+        });
+    </script>
+
+    @if (ViewBag.ShortageOfMaterial != null && ViewBag.ShortageOfMaterial)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                var n = noty({
+                    text: 'Không đủ nguyên liệu. Không thể duyệt đơn hàng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'bottomLeft',
+                    theme: 'defaultTheme'
+                });
+            };
+        </script>
+        ViewBag.ShortageOfMaterial = null;
+    }
+}

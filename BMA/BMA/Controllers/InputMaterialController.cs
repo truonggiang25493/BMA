@@ -22,6 +22,8 @@ namespace BMA.Controllers
 
         public ActionResult InputMaterialIndex()
         {
+            ViewBag.TreeView = "inputMaterial";
+            ViewBag.TreeViewMenu = "listInputMaterial";
             var inputMaterialslList = InputMaterialBusiness.GetInputMaterialList();
             if (inputMaterialslList == null)
             {
@@ -35,6 +37,7 @@ namespace BMA.Controllers
         #region Get Input Material Detail
         public ActionResult InputMaterialDetail(int id)
         {
+            ViewBag.TreeView = "inputMaterial";
             InputMaterial inputMaterialDetail = inputMaterialBusiness.GetInputMaterial(id);
             if (inputMaterialDetail == null)
             {
@@ -67,6 +70,8 @@ namespace BMA.Controllers
 
         public ActionResult AddInputMaterial()
         {
+            ViewBag.TreeView = "inputMaterial";
+            ViewBag.TreeViewMenu = "addInputMaterial";
             List<ProductMaterial> productMaterials = db.ProductMaterials.ToList();
             return View(productMaterials);
         }
@@ -76,7 +81,7 @@ namespace BMA.Controllers
         public int AddInputMaterial(FormCollection f)
         {
 
-            String productMaterialId = f["txtProductMaterialId"];
+            String productMaterialId = f["productMaterialId"];
             String inportQuantity = f["txtInportQuantity"];
             String inputMaterialPrice = f["txtInputMaterialPrice"];
             String importDate = f["txtImportDate"];
@@ -93,6 +98,7 @@ namespace BMA.Controllers
                 inputMaterial.InputMaterialNote = inputMaterialNote;
                 inputMaterial.InputBillId = int.Parse(inputBillId);
                 inputMaterial.ProductMaterialId = int.Parse(productMaterialId);
+                inputMaterial.RemainQuantity = int.Parse(inportQuantity);
                 inputMaterial.IsActive = true;
             }
             catch (Exception)
@@ -120,6 +126,22 @@ namespace BMA.Controllers
         {
             List<InputBill> inputBillList = db.InputBills.ToList();
             return PartialView("InputListPartialView", inputBillList);
+        }
+        #endregion
+
+        #region Get Popup Product Material
+        public ActionResult GetProductMaterialList()
+        {
+            List<ProductMaterial> productMaterialList = db.ProductMaterials.ToList();
+            return PartialView("ProductMaterialPartialView", productMaterialList);
+        }
+        #endregion
+
+        #region Get Table Input Material by Input Bill
+        public ActionResult GetInputMaterialTable(int id)
+        {
+            List<InputMaterial> inputMaterialList = db.InputMaterials.Where(n => n.InputBillId == id).ToList();
+            return PartialView("InputMaterialByBillIdPartialView", inputMaterialList);
         }
         #endregion
 
@@ -167,6 +189,7 @@ namespace BMA.Controllers
             return 0;
         }
         #endregion
+
 
 
     }

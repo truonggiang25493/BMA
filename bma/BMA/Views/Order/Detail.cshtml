@@ -6,7 +6,7 @@
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 @section InitStyle{
-    
+
 }
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -294,7 +294,7 @@
         </div>
     </div>
     @section InitScript{
-        
+
     }
     <!--Timeslide-->
     <div class="row" style="margin: 0px 1px 25px">
@@ -616,7 +616,7 @@
                                                     "min": "@(DateTime.Now.ToString("yyyy-MM-dd"))",
                                                     "class": "form-control",
                                                     "name": "deliveryDate",
-                                                    "value": "@(((DateTime) Model.Order.DeliveryTime).ToString("yyyy-MM-dd"))"
+                                                    "value": "@(DateTime.Now > Model.Order.PlanDeliveryTime ? DateTime.Now.ToString("yyyy-MM-dd"):(Model.Order.PlanDeliveryTime).ToString("yyyy-MM-dd"))"
 
                                                 }),
                                                 $("<input>", {
@@ -907,3 +907,20 @@
     </div>
 
 </section>
+@section OrderDetailScript{
+    @if (ViewBag.ShortageOfMaterial != null && ViewBag.ShortageOfMaterial)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                var n = noty({
+                    text: 'Không đủ nguyên liệu. Không thể duyệt đơn hàng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'bottomLeft',
+                    theme: 'defaultTheme'
+                });
+            };
+        </script>
+        ViewBag.ShortageOfMaterial = null;
+    }
+}

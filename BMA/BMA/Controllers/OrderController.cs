@@ -18,6 +18,7 @@ namespace BMA.Controllers
         // GET: Order
         public ActionResult Index()
         {
+            Session["Cart"] = null;
             ViewBag.TreeView = "order";
             ViewBag.TreeViewMenu = "orderList";
             ViewBag.Title = "Danh sách đơn hàng";
@@ -55,7 +56,7 @@ namespace BMA.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Chỉnh sửa đơn hàng";
-
+            ViewBag.TreeView = "order";
             Order order = db.Orders.FirstOrDefault(m => m.OrderId == id);
             if (order != null)
             {
@@ -63,8 +64,13 @@ namespace BMA.Controllers
                 db.SaveChanges();
             }
             OrderBusiness orderBusiness = new OrderBusiness();
+            int minQuantity = orderBusiness.GetMinQuantity();
+            ViewBag.MinQuantity = minQuantity;
+
+            List<DiscountByQuantity> discountByQuantityList = orderBusiness.GetDiscountByQuantityList();
+            ViewBag.DiscountByQuantityList = discountByQuantityList;
             OrderViewModel orderViewModel = orderBusiness.GetOrderViewModel(id);
-            TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && m.EndDate == null);
+            TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && m.EndDate >= DateTime.Now && m.BeginDate <= DateTime.Now);
             if (taxRate != null)
             {
                 orderViewModel.TaxRate = taxRate.TaxRateValue;
@@ -73,6 +79,10 @@ namespace BMA.Controllers
             {
                 if (orderViewModel.Order.OrderStatus == 0 && !orderViewModel.Order.IsStaffEdit)
                 {
+                    if (!orderViewModel.IsEnoughMaterial)
+                    {
+                        ViewBag.ShortageOfMaterial = true;
+                    }
                     InitiateProductList(orderViewModel.Order.OrderId);
                     return View(orderViewModel);
                 }
@@ -83,7 +93,7 @@ namespace BMA.Controllers
 
         }
         [HttpPost]
-        public ActionResult Edit(FormCollection form)
+        public int Edit(FormCollection form)
         {
             string orderIdString = form["orderId"];
             string[] productIdString = Regex.Split(form["productId"], ",");
@@ -93,6 +103,7 @@ namespace BMA.Controllers
             string deliveryDateString = form["deliveryDate"];
 
             List<CartViewModel> cartList = new List<CartViewModel>();
+            int totalQuantity = 0;
             if (productIdString.Length == priceString.Length && priceString.Length == quantityString.Length)
             {
                 for (int i = 0; i < productIdString.Length; i++)
@@ -100,129 +111,151 @@ namespace BMA.Controllers
                     CartViewModel cartViewModel = new CartViewModel();
                     cartViewModel.ProductId = Convert.ToInt32(productIdString[i]);
                     cartViewModel.RealPrice = Convert.ToInt32(priceString[i]);
-                    cartViewModel.Quantity = Convert.ToInt32(quantityString[i]);
+                    int quantity = Convert.ToInt32(quantityString[i]);
+                    cartViewModel.Quantity = quantity;
+                    totalQuantity += quantity;
                     cartList.Add(cartViewModel);
                 }
             }
-            if (cartList.Count > 0)
+            if (totalQuantity == 0)
             {
-                int orderId = Convert.ToInt32(orderIdString);
-                int depositAmount = Convert.ToInt32(depositAmountString);
-                DateTime deliveryDate = Convert.ToDateTime(deliveryDateString);
-                bool rs = true;
+                return -1;
+            }
+            OrderBusiness orderBusiness = new OrderBusiness(); ;
+            int minQuantity = orderBusiness.GetMinQuantity();
+            if (totalQuantity < minQuantity)
+            {
+                ViewBag.MinQuantity = minQuantity;
+                return -2;
+            }
+            int orderId = Convert.ToInt32(orderIdString);
+            int depositAmount = Convert.ToInt32(depositAmountString);
+            DateTime deliveryDate = Convert.ToDateTime(deliveryDateString);
+            bool rs = true;
+            rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate);
+            if (rs)
+            {
+                Session["ProductList"] = null;
+                return 1;
+            }
+
+            return 0;
+
+
+        }
+
+        [HttpPost]
+        public int ApproveOrder(FormCollection form)
+        {
+            String customerName = form["customerName"];
+            if (customerName == null)
+            {
+
+                int orderId = Convert.ToInt32(form["orderId"]);
+                int deposit = Convert.ToInt32(form["deposit"]);
+                DateTime deliveryDate = Convert.ToDateTime(form["deliveryDate"]);
+
                 OrderBusiness orderBusiness = new OrderBusiness();
-                rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate);
-                if (rs)
-                {
-                    return RedirectToAction("Index");
-                }
-
+                bool rs = orderBusiness.ApproveOrder(orderId, deposit, deliveryDate);
+                return rs ? 1 : 0;
             }
-            // Error page Bug Do not have error page
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public int ApproveOrder(int deposit, DateTime deliveryDate, int orderId)
-        {
-            OrderBusiness orderBusiness = new OrderBusiness();
-            bool rs = orderBusiness.ApproveOrder(orderId, deposit, deliveryDate);
-            return rs ? 1 : 0;
-        }
-
-        private List<CartViewModel> GetCart()
-        {
-            List<CartViewModel> cartList = Session["Cart"] as List<CartViewModel>;
-            if (cartList == null)
+            else
             {
-                cartList = new List<CartViewModel>();
-                Session["Cart"] = cartList;
-            }
-            return cartList;
-        }
-        public ActionResult Add()
-        {
-            List<CartViewModel> inputList = GetCart();
-            if (inputList.Count == 0)
-            {
-                List<Product> productList = db.Products.Where(m => m.IsActive).ToList();
-                foreach (Product product in productList)
+                string orderIdString = form["orderId"];
+                string username = form["username"];
+                string email = form["customerEmail"];
+                string customerAddress = form["customerAddress"];
+                string customerPhoneNumber = form["customerPhoneNumber"];
+                string customerTaxCode = form["customerTaxCode"];
+                if (!(customerName.IsEmpty() || orderIdString.IsEmpty() || username.IsEmpty() || email.IsEmpty() ||
+                      customerAddress.IsEmpty() || customerPhoneNumber.IsEmpty() || customerTaxCode.IsEmpty()))
                 {
-                    CartViewModel cart = new CartViewModel();
-                    cart.ProductId = product.ProductId;
-                    cart.ProductName = product.ProductName;
-                    cart.Quantity = 0;
-                    cart.StandardPrice = product.ProductStandardPrice;
-                    inputList.Add(cart);
-                }
-            }
-            List<CartViewModel> cartList = inputList.OrderByDescending(m => m.Quantity).ToList();
-            Session["Cart"] = cartList;
-            return View(cartList);
-        }
+                    int orderId = Convert.ToInt32(orderIdString);
+                    int deposit = Convert.ToInt32(form["deposit"]);
+                    DateTime deliveryDate = Convert.ToDateTime(form["deliveryDate"]);
 
-        [HttpPost]
-        public ActionResult AddProductToOrder(int productId, int price, int quantity)
-        {
-            List<CartViewModel> cartList = GetCart();
-            if (cartList.Count != 0)
-            {
-                foreach (CartViewModel cartViewModel in cartList)
-                {
-                    if (cartViewModel.ProductId == productId)
+                    OrderBusiness orderBusiness = new OrderBusiness();
+                    bool rs1 = orderBusiness.ApproveOrder(orderId, deposit, deliveryDate);
+                    if (rs1)
                     {
-                        cartViewModel.Quantity = quantity;
-                        cartViewModel.RealPrice = price;
+                        CustomerBusiness customerBusiness = new CustomerBusiness();
+                        bool rs2 = customerBusiness.AddCustomerForOrder(username, email, customerName, customerAddress,
+                            customerPhoneNumber, customerTaxCode, orderId);
+                        return rs2 ? 1 : 0;
                     }
-                }
-            }
-            Session["Cart"] = cartList;
-            return RedirectToAction("Add");
-        }
-
-        [HttpPost]
-        public ActionResult RemoveProductFromOrder(int productId)
-        {
-            List<CartViewModel> cartList = GetCart();
-            if (cartList.Count != 0)
-            {
-                foreach (CartViewModel cartViewModel in cartList)
-                {
-                    if (cartViewModel.ProductId == productId)
-                    {
-                        cartViewModel.Quantity = 0;
-                    }
-                }
-            }
-            Session["Cart"] = cartList;
-            return RedirectToAction("Add");
-        }
-
-        [HttpPost]
-        public int CheckCart()
-        {
-            List<CartViewModel> cartList = GetCart();
-            foreach (CartViewModel cart in cartList)
-            {
-                if (cart.Quantity > 0)
-                {
-                    return 1;
                 }
             }
             return 0;
         }
 
+        [HttpPost]
+        public int AddToCart(int[] productId, int[] productQuantity, int[] productPrice)
+        {
+            List<CartViewModel> cartList = new List<CartViewModel>();
+            if (productId != null && productQuantity != null && productPrice != null && productId.Length > 0 &&
+                productQuantity.Length > 0 && productPrice.Length > 0 && productId.Length == productQuantity.Length && productQuantity.Length == productPrice.Length)
+            {
+                for (int i = 0; i < productId.Length; i++)
+                {
+                    OrderBusiness orderBusiness = new OrderBusiness();
+                    Product product = orderBusiness.GetProductById(productId[i]);
+                    CartViewModel cartViewModel = new CartViewModel
+                    {
+                        ProductId = productId[i],
+                        ProductName = product.ProductName,
+                        Quantity = productQuantity[i],
+                        RealPrice = productPrice[i],
+                        StandardPrice = product.ProductStandardPrice
+                    };
+
+                    cartList.Add(cartViewModel);
+                }
+
+            }
+            if (cartList.Count > 0)
+            {
+                Session["Cart"] = cartList;
+                return 1;
+            }
+            return 0;
+        }
+
+
+        public ActionResult Add()
+        {
+            OrderBusiness orderBusiness = new OrderBusiness();
+            InitiateProductList(null);
+            ViewBag.MinQuantity = orderBusiness.GetMinQuantity();
+            ViewBag.TreeView = "order";
+            ViewBag.TreeViewMenu = "addOrder";
+            return View();
+        }
+
+
+
+
+
         public ActionResult AddCustomerToOrder()
         {
+            ViewBag.TreeView = "order";
+            ViewBag.TreeViewMenu = "addOrder";
             return View("AddCustomerToOrder");
         }
 
         [HttpPost]
         public ActionResult CheckoutWithCustomer(int customerId)
         {
-            List<CartViewModel> inputCartList = GetCart();
+            List<CartViewModel> inputCartList = Session["Cart"] as List<CartViewModel>;
             OrderBusiness orderBusiness = new OrderBusiness();
             OrderViewModel order = orderBusiness.MakeOrderViewModel(inputCartList, customerId);
+            if (!order.IsEnoughMaterial)
+            {
+                ViewBag.ShortageOfMaterial = true;
+            }
+            ViewBag.TaxRate = orderBusiness.GetVatRateAtTime(DateTime.Now);
+            Session["CustomerId"] = customerId;
+            ViewBag.TreeView = "order";
+            ViewBag.TreeViewMenu = "addOrder";
             return View(order);
         }
 
@@ -252,6 +285,8 @@ namespace BMA.Controllers
             }
             if (rs == 1)
             {
+                Session["CustomerId"] = null;
+                Session["NewCustomer"] = null;
                 Session["Cart"] = null;
             }
             return rs;
@@ -266,7 +301,7 @@ namespace BMA.Controllers
         [HttpPost]
         public ActionResult CheckoutWithNewCustomer(FormCollection form)
         {
-            List<CartViewModel> inputCartList = GetCart();
+            List<CartViewModel> inputCartList = Session["Cart"] as List<CartViewModel>;
 
             string customerNameString = form["customerName"];
             string customerEmailString = form["customerEmail"];
@@ -285,9 +320,12 @@ namespace BMA.Controllers
                 customer.CustomerTaxCode = customerTaxCodeString;
                 customer.Username = usernameString;
                 customer.CustomerEmail = customerEmailString;
+                Session["CustomerId"] = 0;
                 Session["NewCustomer"] = customer;
                 OrderBusiness orderBusiness = new OrderBusiness();
                 OrderViewModel order = orderBusiness.MakeOrderViewForNewCustomerModel(inputCartList, customer);
+                ViewBag.TreeView = "order";
+                ViewBag.TreeViewMenu = "addOrder";
                 return View("CheckoutWithCustomer", order);
             }
             return RedirectToAction("AddCustomerToOrder");
@@ -315,48 +353,95 @@ namespace BMA.Controllers
                 return RedirectToAction(url);
             }
         }
-        private List<Product> InitiateProductList(int orderId)
+        private void InitiateProductList(int? orderId)
         {
             List<Product> productList = db.Products.Where(m => m.IsActive).ToList();
-            List<Product> resultList = new List<Product>();
-            Order order = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
-            if (productList.Count > 0 && order != null)
+            if (orderId == null)
             {
-                foreach (Product product in productList)
+                List<CartViewModel> cartList = Session["Cart"] as List<CartViewModel>;
+                if (cartList != null)
                 {
-                    bool check = true;
-                    foreach (OrderItem orderItem in order.OrderItems)
+                    foreach (CartViewModel cartViewModel in cartList)
                     {
-                        if (orderItem.ProductId == product.ProductId)
-                        {
-                            check = false;
-                        }
-                    }
-                    if (check)
-                    {
-                        resultList.Add(product);
+                        productList.Remove(productList.FirstOrDefault(m => m.ProductId == cartViewModel.ProductId));
                     }
                 }
+                Session["ProductListForAdd"] = productList;
             }
-            Session["ProductList"] = resultList;
-            return resultList;
+            else
+            {
+                List<Product> resultList = new List<Product>();
+                Order order = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
+                if (productList.Count > 0 && order != null)
+                {
+                    foreach (Product product in productList)
+                    {
+                        bool check = true;
+                        foreach (OrderItem orderItem in order.OrderItems)
+                        {
+                            if (orderItem.ProductId == product.ProductId)
+                            {
+                                check = false;
+                            }
+                        }
+                        if (check)
+                        {
+                            resultList.Add(product);
+                        }
+                    }
+                }
+                Session["ProductList"] = resultList;
+            }
         }
         [HttpPost]
-        public ActionResult GetListOfProductToAdd(int orderId)
+        public ActionResult GetListOfProductToAdd(int? orderId)
         {
-            List<Product> productList = Session["ProductList"] as List<Product>;
+            List<Product> productList = new List<Product>();
+            if (orderId != null)
+            {
+                productList = Session["ProductList"] as List<Product>;
+            }
+            else
+            {
+                productList = Session["ProductListForAdd"] as List<Product>;
+            }
+
             return PartialView(productList);
         }
 
         [HttpPost]
-        public int RemoveProductInProductList(int productId)
+        public int RemoveProductInProductList(int[] productId)
         {
             List<Product> productList = Session["ProductList"] as List<Product>;
-            List<Product> resultList = new List<Product>();
-            if (productList != null && productList.Count > 0)
+            if (productId.Length > 0)
             {
-                resultList.AddRange(productList.Where(product => product.ProductId != productId));
-                Session["ProductList"] = resultList;
+                foreach (int index in productId)
+                {
+                    if (productList != null && productList.Count > 0)
+                    {
+                        productList.Remove(productList.FirstOrDefault(m => m.ProductId == index));
+                    }
+                }
+                Session["ProductList"] = productList;
+                return 1;
+            }
+            return 0;
+        }
+
+        [HttpPost]
+        public int RemoveProductInProductListForAdd(int[] productId)
+        {
+            List<Product> productList = Session["ProductListForAdd"] as List<Product>;
+            if (productId.Length > 0)
+            {
+                foreach (int index in productId)
+                {
+                    if (productList != null && productList.Count > 0)
+                    {
+                        productList.Remove(productList.FirstOrDefault(m => m.ProductId == index));
+                    }
+                }
+                Session["ProductListForAdd"] = productList;
                 return 1;
             }
             return 0;
@@ -366,6 +451,36 @@ namespace BMA.Controllers
         public int AddProductInProductList(int productId)
         {
             List<Product> productList = Session["ProductList"] as List<Product>;
+            Product product = db.Products.FirstOrDefault(m => m.ProductId == productId && m.IsActive);
+            if (product != null)
+            {
+                if (productList != null && productList.Count > 0)
+                {
+                    bool check = true;
+                    foreach (Product product1 in productList)
+                    {
+                        if (product1.ProductId == productId)
+                        {
+                            check = false;
+                        }
+                    }
+                    if (check)
+                    {
+                        productList.Add(product);
+                    }
+                    return 1;
+                }
+                return 0;
+            }
+
+
+            return 0;
+        }
+
+        [HttpPost]
+        public int AddProductInProductListForAdd(int productId)
+        {
+            List<Product> productList = Session["ProductListForAdd"] as List<Product>;
             Product product = db.Products.FirstOrDefault(m => m.ProductId == productId && m.IsActive);
             if (product != null)
             {
@@ -455,5 +570,25 @@ namespace BMA.Controllers
             // Bug check order is null or not.
             return View(order);
         }
+
+
+
+        #region Check customer field
+
+        [HttpPost]
+        public int CheckCustomerField(FormCollection form)
+        {
+            string customerEmailString = form["customerEmail"];
+            string customerAddressString = form["customerAddress"];
+            string customerPhoneNumberString = form["customerPhoneNumber"];
+            string customerTaxCodeString = form["customerTaxCode"];
+            string usernameString = form["username"];
+
+            OrderBusiness orderBusiness = new OrderBusiness();
+            return orderBusiness.CheckCustomerField(customerEmailString, customerAddressString, customerPhoneNumberString, customerTaxCodeString, usernameString);
+        }
+
+
+        #endregion
     }
 }
