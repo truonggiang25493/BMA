@@ -99,8 +99,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-9"></div>
-        <div class=" col-xs-3">
+        <div class="col-md-8"></div>
+        <div class=" col-md-4">
             <div class="table-responsive">
                 <table class="table">
                     <tr>
@@ -110,9 +110,14 @@
                         </td>
                     </tr>
                     <tr>
+                        <th>Giảm: </th>
+                        <td style="text-align: right">@Model.Order.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                    </tr>
+                    <tr>
                         <th>Thuế(VAT) @(ViewBag.TaxRate)%: </th>
                         <td style="text-align: right">@Model.Order.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                     </tr>
+
                     <tr>
                         <th>Thành tiền: </th>
                         <td style="text-align: right">@((@Model.Order.Amount + Model.Order.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
@@ -182,7 +187,7 @@
     <div class="row">
         <div class="col-xs-12">
             <a class="btn btn-primary" style="margin-right: 10px" href="@(Url.Action("AddCustomerToOrder", "Order"))">
-            <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
+                <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
 
             </a>
             <a class="btn btn-primary" href="@(Url.Action("Add","Order"))">
@@ -250,18 +255,29 @@
                                     $("<div>", {
                                         "class": "form-group",
                                         "html": [
-                                            '<label>Ngày giao hàng</label>',
-                                            $("<input>", {
-                                                "type": "date",
-                                                "min": "@((DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"))",
-                                                "class": "form-control",
-                                                "name": "deliveryDate",
-                                                "value": "@((DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"))"
+                                            "<label>Thời gian giao hàng</label>",
+                                            $("<div>", {
+                                                "class": "input-group date",
+                                                "id": "datetimepicker",
+                                                "html": [
+                                                    $("<input>", {
+                                                        "type": "text",
+                                                        "readonly": "readonly",
+                                                        "data-format":"dd/MM/yyyy HH:mm",
+                                                        "class": "form-control",
+                                                        "name": "deliveryDate"
+                                                    }),
+                                                    $("<span>", {
+                                                        "class": "input-group-addon",
+                                                        "html" : "<span class='glyphicon glyphicon-calendar'></span>"
+                                                    })
+                                                ]
                                             }),
+
                                             $("<input>", {
                                                 "type": "hidden",
-                                                "name": "customerId",
-                                                "value": "@Model.Order.CustomerUserId"
+                                                "name": "orderId",
+                                                "value": "@Model.Order.OrderId"
                                             })
                                         ]
                                     })
@@ -293,6 +309,12 @@
                             document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
                             document.getElementById('popup-title').innerHTML = title;
                             document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
+                            $('#datetimepicker').datetimepicker({
+                                locale: 'vi',
+                                ignoreReadonly: true,
+                                defaultDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",
+                                minDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))"
+                            });
                             $('#myModal').modal('show');
                         }
 
@@ -365,6 +387,22 @@
 
 </section>
 @section CheckoutWithCustomerScript{
+    <script type="text/javascript">
+        var tempFunction;
+
+        $(document).ready(function () {
+            tempFunction = $.fn.modal.Constructor.prototype.enforceFocus;
+        });
+
+        $(document).on("show", "#myModal", function() {
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+        });
+
+        $(document).on("hidden", "#myModal", function() {
+            $.fn.modal.Constructor.prototype.enforceFocus = tempFunction;
+        });
+    </script>
+
     @if (ViewBag.ShortageOfMaterial != null && ViewBag.ShortageOfMaterial)
     {
         <script type="text/javascript">

@@ -1,6 +1,6 @@
 ﻿@using System.Globalization
+@using BMA.Models
 @using BMA.Models.ViewModel
-@model List<CartViewModel>
 @{
     ViewBag.Title = "Tạo mới đơn hàng - Chọn sản phẩm";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
@@ -17,165 +17,182 @@
             </h2>
         </div>
         <div class="box-body">
-            <div class="col-xs-12 table-responsive">
-                <!--List of product form-->
-                <!--Product table-->
-                <table id="example1" class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="col-xs-3" style="text-align: center">Tên sản phẩm</th>
-                            <th class="col-xs-2" style="text-align: center">Đơn giá</th>
-                            <th class="col-xs-2" style="text-align: center">Số lượng</th>
-                            <th class="col-xs-2" style="text-align: center">Thành tiền</th>
-                            <th class="col-xs-3"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (CartViewModel product in Model)
-                        {
-                            <tr>
-                                <td class="col-xs-3" style="vertical-align: middle;">
-                                    <input type="hidden" name="productId" value="@product.ProductId" />
-                                    <input type="hidden" name="productName" value="@product.ProductName" />
-                                    @product.ProductName
-                                </td>
-                                <td class="col-xs-2" style="vertical-align: middle; text-align: right;">
-                                    @if (product.RealPrice == 0)
-                                    {
-                                        <label style="color: black; font-weight: normal">@(product.StandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</label>
-                                    }
-                                    @if (product.RealPrice != 0 && product.RealPrice == product.StandardPrice)
-                                    {
-                                        <label style="color: black; font-weight: bold">@(product.StandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</label>
-                                    }
-                                    @if (product.RealPrice != 0 && product.RealPrice != product.StandardPrice)
-                                    {
-                                        <label style="color: blue; font-weight: bold">@(product.RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</label>
-                                    }
+            <!-- Table row -->
+            @if (HttpContext.Current.Session["Cart"] != null)
+            {
+                <div class="row" id="product-info">
+                    <div class="col-md-12 table-responsive">
+                        <form method="POST" id="add-product-list">
+                            <table class="table table-striped" id="product-table">
+                                <thead style="font-weight: bold">
+                                    <tr>
+                                        <th>
+                                            Tên sản phẩm
 
-                                </td>
-                                <td class="col-xs-2" style="vertical-align: middle; text-align: right;">
-                                    @if (product.Quantity != 0)
+                                        </th>
+                                        <th>Đơn giá</th>
+                                        <th>Số lượng</th>
+                                        <th style="text-align: right">Thành tiền</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (CartViewModel cartViewModel in (Session["Cart"] as List<CartViewModel>))
                                     {
-                                        @(product.Quantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                @(cartViewModel.ProductName)
+                                                <input type="hidden" name="productId" value="@(cartViewModel.ProductId)" />
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                <input type="number" name="productPrice" min="1000" value="@(cartViewModel.RealPrice)" />
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                <input type="number" name="productQuantity" min="1" value="@(cartViewModel.Quantity)" />
+                                            </td>
+                                            <td style="text-align: right; vertical-align: middle;">
+                                                <span id="orderItemAmount">@((cartViewModel.RealPrice * cartViewModel.Quantity).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span>
+                                            </td>
+                                            <td style="text-align: center; vertical-align: middle;">
+                                                <a class="btn btn-warning" data-role="remove-row-btn">Hủy</a>
+                                            </td>
+                                        </tr>
                                     }
-                                </td>
-                                <td class="col-xs-2" style="text-align: right; vertical-align: middle;">
-                                    @if (product.Quantity != 0)
-                                    {
-                                        @((product.Quantity * product.RealPrice).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
-                                    }
-                                </td>
-                                <td class="col-xs-3" style="vertical-align: middle;">
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row" style="display: none;" id="product-info">
+                    <div class="col-md-12 table-responsive">
+                        <form method="POST" id="add-product-list">
+                            <table class="table table-striped" id="product-table">
+                                <thead style="font-weight: bold">
+                                    <tr>
+                                        <th>
+                                            Tên sản phẩm
 
-                                    @if (product.Quantity != 0)
-                                    {
-                                        <button class="btn btn-primary btn-sm" id="btn-choose" style="margin-right: 10px" onclick="openContainer(@product.ProductId, '@product.ProductName', @(product.RealPrice == 0 ? product.StandardPrice : product.RealPrice), @product.Quantity)">
-                                            <i class="fa fa-edit" style="margin-right: 3px"></i>Chỉnh sửa
-                                        </button>
-                                        <button class="btn btn-warning btn-sm" id="btn-remove" onclick="removeProductFromOrder(@product.ProductId)">
-                                            <i class="fa fa-remove" style="margin-right: 3px"></i>Hủy
-                                        </button>
-                                    }
-                                    else
-                                    {
-                                        <button class="btn btn-success btn-sm" id="btn-choose" onclick="openContainer(@product.ProductId, '@product.ProductName', @(product.RealPrice == 0 ? product.StandardPrice : product.RealPrice), @product.Quantity)">
-                                            <i class="fa fa-check" style="margin-right: 3px"></i>Chọn
-                                        </button>
-                                    }
-                                    <script>
-                                        function openContainer(productId, productName, price, quantity) {
-                                            var contentControl = $("<form>", {
-                                                "role": "form",
-                                                "action": "@(Url.Action("AddProductToOrder", "Order"))",
-                                                "method": "POST",
-                                                "id": "form-aprrove",
+                                        </th>
+                                        <th>Đơn giá</th>
+                                        <th>Số lượng</th>
+                                        <th style="text-align: right">Thành tiền</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            }
+
+
+            <div class="row">
+                <!--Add more product button-->
+                <button class="btn btn-success" style="margin-left: 15px;" onclick="show_list_product()">
+                    <i class="fa fa-plus" style="margin-right: 3px"></i>Thêm sản phẩm
+                    <script type="text/javascript">
+                        function show_list_product() {
+                            $.ajax({
+                                url: "@(Url.Action("GetListOfProductToAdd", "Order"))",
+                                method: "POST",
+                                success: function (data) {
+                                    document.getElementById('standard-popup-title').innerHTML = "Chọn sản phẩm";
+                                    document.getElementById('standard-popup-body').innerHTML = data;
+                                    $('#myStandardModal').modal('show');
+                                },
+                                fail: function (e) {
+                                    alert("Have error" + e.toString());
+                                }
+                            });
+                        }
+
+                        function fnselect() {
+                            var selectedIds = [];
+                            var selectedName = [];
+                            var selectedPrice = [];
+
+                            $(".multiple-choice-table tr.selected").each(function (index, row) {
+                                selectedIds.push($(row).find("td:first input").val());
+                                selectedName.push($(row).find("td:first span").text());
+                                selectedPrice.push($(row).find("td:nth-child(2) span").text());
+                            });
+
+
+                            $.ajax({
+                                "url": "@Url.Action("RemoveProductInProductListForAdd", "Order")",
+                                "method": "POST",
+                                "data": JSON.stringify({ "productId": selectedIds }),
+                                "dataType": 'json',
+                                "contentType": 'application/json',
+                                "success": function (data) {
+                                    if (data === 1) {
+                                        $('#myStandardModal').modal('hide');
+                                        for (i = 0; i < selectedIds.length; i++) {
+                                            var productRow = $("<tr>", {
                                                 "html": [
-                                                    $("<div>", {
-                                                        "class": "form-group",
+                                                    $("<td>", {
+                                                        "style": "vertical-align: middle;",
                                                         "html": [
-                                                            $("<label>", {
-                                                                "html": productName
-                                                            }),
+                                                            selectedName[i],
                                                             $("<input>", {
                                                                 "type": "hidden",
                                                                 "name": "productId",
-                                                                "value": productId
+                                                                "value": selectedIds[i]
                                                             })
                                                         ]
                                                     }),
-                                                    $("<div>", {
-                                                        "class": "form-group",
-                                                        "html": [
-                                                            "<label>Giá: </label>",
-                                                            $("<input>", {
-                                                                "class": "form-control",
-                                                                "type": "number",
-                                                                "name": "price",
-                                                                "value": price,
-                                                                "min": "1",
-                                                                "id": "price"
-                                                            })
-                                                        ]
+                                                    $("<td>", {
+                                                        "style": "vertical-align: middle;",
+                                                        "html": $("<input>", {
+                                                            "type": "number",
+                                                            "name": "productPrice",
+                                                            "value": selectedPrice[i]
+                                                        })
                                                     }),
-                                                    $("<div>", {
-                                                        "class": "form-group",
-                                                        "html": [
-                                                            "<label>Số lượng: </label>",
-                                                            $("<input>", {
-                                                                "class": "form-control",
-                                                                "type": "number",
-                                                                "name": "quantity",
-                                                                "value": (quantity > 0 ? quantity : 1),
-                                                                "min": "1",
-                                                                "id": "quantity"
-                                                            })
-                                                        ]
+                                                    $("<td>", {
+                                                        "style": "vertical-align: middle;",
+                                                        "html": $("<input>", {
+                                                            "type": "number",
+                                                            "name": "productQuantity",
+                                                            "value": "1",
+                                                            "min": "1"
+                                                        })
                                                     }),
-                                                    $("<div>", {
-                                                        "class": "form-group",
-                                                        "style": "padding-bottom: 20px;",
-                                                        "html": [
-                                                            $("<button>", {
-                                                                "class": "btn btn-danger",
-                                                                "type": "button",
-                                                                "data-dismiss": "modal",
-                                                                "html": "Hủy"
-                                                            }),
-                                                            $("<button>", {
-                                                                "class": "btn btn-success pull-right",
-                                                                "type": "submit",
-                                                                "style": "margin-right: 10px;",
-                                                                "html": "Đồng ý"
-                                                            })
-                                                        ]
+                                                    $("<td>", {
+                                                        "style": "text-align: right; vertical-align: middle;",
+                                                        "html": $("<span>", {
+                                                            id: "orderItemAmount",
+                                                            "html": formatCurrency(selectedPrice[i])
+                                                        })
+                                                    }),
+                                                    $("<td>", {
+                                                        "style": "text-align: center; vertical-align: middle;",
+                                                        "html": $("<a>", {
+                                                            "class": "btn btn-warning",
+                                                            "data-role": "remove-row-btn",
+                                                            "html": "Hủy"
+                                                        })
                                                     })
                                                 ]
                                             });
-                                            var title = 'Chọn sản phẩm';
-                                            document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
-                                            document.getElementById('popup-title').innerHTML = title;
-                                            $('#myModal').modal('show');
+                                            $("#product-table tbody").append(productRow);
                                         }
-
-                                        function removeProductFromOrder(productId) {
-                                            var form = document.createElement('form');
-                                            form.setAttribute('method', 'POST');
-                                            form.setAttribute('action', "@Url.Action("RemoveProductFromOrder", "Order")");
-                                            var myvar = document.createElement('input');
-                                            myvar.setAttribute('name', 'productId');
-                                            myvar.setAttribute('type', 'hidden');
-                                            myvar.setAttribute('value', productId);
-                                            form.appendChild(myvar);
-                                            document.body.appendChild(form);
-                                            form.submit();
-                                        }
-                                    </script>
-                                </td>
-                            </tr>
+                                        $("#product-info").show();
+                                    } else {
+                                        alert("Không thể thêm sản phẩm");
+                                    }
+                                },
+                                "fail": function (e) {
+                                    alert("Have error" + e.toString());
+                                }
+                            });
                         }
-                    </tbody>
-                </table>
+                    </script>
+                </button>
             </div>
         </div>
         <div class="box-footer">
@@ -190,43 +207,85 @@
                     <i class="fa fa-edit" style="margin-right: 3px;"></i>Tiếp tục
                     <script type="text/javascript">
                         function checkCart() {
-                            $.ajax({
-                                url: "@(Url.Action("CheckCart", "Order"))",
-                                method: "POST",
-                                success: function (data) {
-                                    if (data === "1") {
+                            var totalQuantity = 0;
+                            $("#product-table tbody tr").each(function(index, element) {
+                                var productQuantity = $(element).find("td:nth-child(3) input").val();
+                                totalQuantity += parseInt(productQuantity);
+                            });
+
+                            if (totalQuantity === 0) {
+                                var n = noty({
+                                    text: 'Vui lòng có một sản phẩm có số lượng lớn hơn 0',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'bottomLeft',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (totalQuantity < @((int) ViewBag.MinQuantity)) {
+                                noty({
+                                    text: "Số lượng sản phẩm phải lớn hơn " + "@(((int) ViewBag.MinQuantity).ToString())",
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'bottomLeft',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                            });
+                        } else {
+                                    var listId = [];
+                        var listQuantity = [];
+                        var listPrice = [];
+                        $("#product-table tbody tr").each(function(index, element) {
+                            listId.push($(element).find("td:first input").val());
+                            listQuantity.push($(element).find("td:nth-child(3) input").val());
+                            listPrice.push($(element).find("td:nth-child(2) input").val());
+                        });
+                        $.ajax({
+                            "url": "@(Url.Action("AddToCart","Order"))",
+                            "method": "POST",
+                            "data": JSON.stringify({
+                                "productId": listId,
+                                "productQuantity": listQuantity,
+                                "productPrice": listPrice
+                            }),
+                            "dataType": 'json',
+                            "contentType": 'application/json',
+                            "success": function(data) {
+                                if (data === 1) {
+                                    noty({
+                                        text: "Hoàn tất chọn sản phẩm",
+                                        type: 'success',
+                                        dismissQueue: false,
+                                        layout: 'bottomLeft',
+                                        theme: 'defaultTheme',
+                                        timeout: 3000
+                                    });
+                                    window.setTimeout(function() {
                                         window.location.replace("@(Url.Action("AddCustomerToOrder", "Order"))");
-                                    } else if (data === "0") {
-                                        var n = noty({
-                                            text: 'Vui lòng có một sản phẩm có số lượng lớn hơn 0',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'bottomLeft',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                    } else if (data === "-1") {
-                                        var n = noty({
-                                            text: 'Số lượng sản phẩm phải lớn hơn ' + '@(((int)ViewBag.MinQuantity).ToString())',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'bottomLeft',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                    }
-                                },
-                                fail: function (e) {
-                                    var n = noty({
-                                        text: 'Đã có lỗi xảy ra',
-                                        type: 'error',
+                                    }, 4000);
+                                } else {
+                                    noty({
+                                        text: 'Không thể chọn sản phẩm',
+                                        type: 'warning',
                                         dismissQueue: false,
                                         layout: 'bottomLeft',
                                         theme: 'defaultTheme',
                                         timeout: 1000
                                     });
                                 }
-                            });
+                            },
+                            "fail":function(e) {
+                                noty({
+                                    text: 'Đã có lỗi xảy ra',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'bottomLeft',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            }
+                        });
+                        }
                         }
                     </script>
                 </a>
@@ -238,3 +297,51 @@
 
 
 </section>
+@section AddOrderScript{
+    <script>
+        $(document).on("click", ".multiple-choice-table tbody tr", function () {
+            if ($(this).attr('class') === 'selected') {
+                $(this).removeClass('selected');
+            } else {
+                $(this).addClass('selected');
+            }
+        });
+
+        $(document).on("keyup click", "input[type='number']", function () {
+            var quantity = $(this).val();
+            var price = $(this).parent().parent().find("td:nth-child(2) input").val();
+            var amount = quantity * price;
+            $(this).parent().parent().find("td:nth-child(4) span").html(formatCurrency(amount));
+        });
+
+        $(document).on("click", "[data-role=remove-row-btn]", function () {
+            var productId = $(this).parent().parent().find("td:first input").val();
+            $(this).parent().parent().remove();
+            $.ajax({
+                "url": "@(Url.Action("AddProductInProductListForAdd", "Order"))",
+                "method": "POST",
+                "data": {
+                    "productId": productId
+                },
+                "success": function (data) {
+                    if (data === "0") {
+                        noty({
+                            text: 'Không hủy sản phẩm khỏi đơn hàng',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'bottomLeft',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    } else {
+                        $("#material-info").hide();
+                    }
+
+                },
+                "fail": function (e) {
+                    alert("Have error" + e.toString());
+                }
+            });
+        });
+    </script>
+}

@@ -1,5 +1,4 @@
 ﻿@using System.Globalization
-@using BMA.Models
 @model BMA.Models.Order
 
 @{
@@ -21,6 +20,8 @@
         #order-table {
             border-collapse: collapse;
         }
+
+        @@page { size: auto;  margin: 0; }
     </style>
 </head>
 <body onload="window.print();">

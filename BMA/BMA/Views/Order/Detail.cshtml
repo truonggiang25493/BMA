@@ -5,13 +5,7 @@
     ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
-@section InitStyle{
-    <style>
-        .datetimepicker {
-            z-index: 1151 !important;
-        }
-    </style>
-}
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>Chi tiết đơn hàng</h1>
@@ -26,26 +20,9 @@
             </h2>
         </div>
     </div>
-
-    <!--Bootstrap Datetimepicker-->
-    <div class="row">
-        <div class='col-sm-6'>
-            <div class="form-group">
-                <label>Chọn thời gian: </label>
-                <div class='input-group date' id='datetimepicker'>
-                    <input type='text' id="date" class="form-control" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
     <!-- Info row -->
     <div class="row invoice-info">
-        <div class="col-sm-6 invoice-col">
+        <div class="col-md-6 invoice-col">
             <div class="row" style="margin-left: 1px; margin-bottom: 10px">
                 Mã đơn hàng: <b style="font-size: 17px;">@Model.Order.OrderCode</b>
             </div>
@@ -66,6 +43,20 @@
                 <div class="row" style="margin-left: 1px;">
                     <b>Thời gian giao hàng dự kiến: </b>
                     @(Model.Order.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm"))
+                </div>
+            }
+            @if (Model.Order.OrderStatus >= 2 && Model.Order.StaffApproveUserId != null)
+            {
+                <div class="row" style="margin-left: 1px;">
+                    <b>Người duyệt: </b>
+                    @(Model.Order.User1.Fullname)
+                </div>
+            }
+            @if (Model.Order.OrderNote != null)
+            {
+                <div class="row" style="margin-left: 1px;">
+                    <b>Ghi chú: </b>
+                    @(Model.Order.OrderNote)
                 </div>
             }
             @if (Model.Order.OrderStatus == 6)
@@ -281,7 +272,7 @@
                 }
             </div>
         </div>
-        <div class="col-sm-6 invoice-col">
+        <div class="col-md-6 invoice-col">
             @if (!Model.IsGuest)
             {
                 <div style="margin-bottom: 10px;">
@@ -350,8 +341,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-9"></div>
-        <div class=" col-xs-3">
+        <div class="col-md-8"></div>
+        <div class=" col-md-4">
             <div class="table-responsive">
                 <table class="table">
                     <tr>
@@ -361,12 +352,17 @@
                         </td>
                     </tr>
                     <tr>
+                        <th>Giảm: </th>
+                        <td style="text-align: right">@Model.Order.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                    </tr>
+                    <tr>
                         <th>Thuế(VAT) @(ViewBag.TaxRate)%: </th>
                         <td style="text-align: right">@Model.Order.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                     </tr>
+
                     <tr>
                         <th>Thành tiền: </th>
-                        <td style="text-align: right">@((Model.Order.Amount + Model.Order.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                        <td style="text-align: right">@((Model.Order.Amount + Model.Order.TaxAmount - Model.Order.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                     </tr>
                 </table>
             </div>
@@ -747,7 +743,7 @@
                                     "html": [
                                         @(Model.IsLoyal ? "loyalCustControl" : ""),
                                         $("<div>", {
-                                            "class":"form-group",
+                                            "class": "form-group",
                                             "id": "deposit",
                                             "style": "margin-bottom: 0px; @(Model.IsLoyal ? "display:none;" : "")",
                                             "html": [
@@ -760,28 +756,28 @@
                                                     "name": "deposit",
                                                     "value": "@(Model.MaterialCost)"
                                                 })
-
                                             ]
                                         }),
                                         $("<div>", {
                                             "class": "form-group",
-                                            "style":"margin-bottom: 0px;",
+                                            "style": "margin-bottom: 0px;",
                                             "html": [
-                                                "<label>Ngày giao hàng</label>",
+                                                "<label>Thời gian giao hàng</label>",
                                                 $("<div>", {
                                                     "class": "input-group date",
-                                                    "id":"datetimepicker",
-                                                    "html":[
-                                                         $("<input>", {
-                                                             "type": "text",
-                                                             "readonly":"readonly",
-                                                             "class": "form-control",
-                                                             "name": "deliveryDate"
-                                                         }),
-                                                         $("<span>", {
-                                                             "class": "input-group-addon",
-                                                             "html" : "<span class='glyphicon glyphicon-calendar'></span>"
-                                                         })
+                                                    "id": "datetimepicker",
+                                                    "html": [
+                                                        $("<input>", {
+                                                            "type": "text",
+                                                            "readonly": "readonly",
+                                                            "data-format":"dd/MM/yyyy HH:mm",
+                                                            "class": "form-control",
+                                                            "name": "deliveryDate"
+                                                        }),
+                                                        $("<span>", {
+                                                            "class": "input-group-addon",
+                                                            "html" : "<span class='glyphicon glyphicon-calendar'></span>"
+                                                        })
                                                     ]
                                                 }),
 
@@ -817,6 +813,14 @@
                                     ]
                                 });
                                 setModalBox(title, contentControl[0].outerHTML, footer[0].outerHTML);
+
+                                $('#datetimepicker').datetimepicker({
+                                    locale: 'vi',
+                                    ignoreReadonly: true,
+                                    defaultDate: "@(Model.Order.PlanDeliveryTime >= DateTime.Now.AddDays(1) ? Model.Order.PlanDeliveryTime.ToString("MM/dd/yyyy HH:mm") : DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",
+                                    minDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))"
+                                });
+
                                 $('#myModal').modal('show');
                             }
 
@@ -1171,11 +1175,19 @@
 </section>
 @section OrderDetailScript{
     <script type="text/javascript">
+
+        var tempFunction;
+
         $(document).ready(function () {
-            $('#datetimepicker').datetimepicker({
-                locale: 'vi',
-                ignoreReadonly: true
-            });
+            tempFunction = $.fn.modal.Constructor.prototype.enforceFocus;
+        });
+
+        $(document).on("show", "#myModal", function() {
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+        });
+
+        $(document).on("hidden", "#myModal", function() {
+            $.fn.modal.Constructor.prototype.enforceFocus = tempFunction;
         });
     </script>
     @if (ViewBag.ShortageOfMaterial != null && ViewBag.ShortageOfMaterial)
@@ -1200,7 +1212,7 @@
         {
             if (Model.Order.OrderStatus >= 0)
             {
-                timeslideData += "<b>Tạo: </b>" + Model.Order.CreateTime.ToString("dd/MM/yyyy HH:mm");
+                timeslideData += "<b>Tạo</b><br/>" + Model.Order.CreateTime.ToString("dd/MM/yyyy HH:mm");
             }
             if (Model.Order.OrderStatus == 1)
             {
@@ -1211,25 +1223,25 @@
             {
                 if (Model.Order.ConfirmTime != null)
                 {
-                    timeslideData += ";<b>Xác nhận: </b>" + ((DateTime)Model.Order.ConfirmTime).ToString("dd/MM/yyyy HH:mm");
+                    timeslideData += ";<b>Xác nhận</b></br>" + ((DateTime)Model.Order.ConfirmTime).ToString("dd/MM/yyyy HH:mm");
                 }
                 else
                 {
-                    timeslideData += ";<b>Duyệt: </b>" + ((DateTime)Model.Order.ApproveTime).ToString("dd/MM/yyyy HH:mm") + "<br/><b>Người duyệt: </b>" + (Model.Order.User1.Fullname);
+                    timeslideData += ";<b>Duyệt</b><br/>" + ((DateTime)Model.Order.ApproveTime).ToString("dd/MM/yyyy HH:mm");
                 }
 
             }
             if (Model.Order.OrderStatus >= 3)
             {
-                timeslideData += ";<b>Sản xuất: </b>" + ((DateTime)Model.Order.StartProduceTime).ToString("dd/MM/yyyy HH:mm");
+                timeslideData += ";<b>Sản xuất</b><br/>" + ((DateTime)Model.Order.StartProduceTime).ToString("dd/MM/yyyy HH:mm");
             }
             if (Model.Order.OrderStatus >= 4)
             {
-                timeslideData += ";<b>Giao hàng: </b>" + ((DateTime)Model.Order.DeliveryTime).ToString("dd/MM/yyyy HH:mm");
+                timeslideData += ";<b>Giao hàng</b><br/>" + ((DateTime)Model.Order.DeliveryTime).ToString("dd/MM/yyyy HH:mm");
             }
             if (Model.Order.OrderStatus == 5)
             {
-                timeslideData += ";<b>Hoàn thành: </b>" + ((DateTime)Model.Order.FinishTime).ToString("dd/MM/yyyy HH:mm");
+                timeslideData += ";<b>Hoàn thành</b><br/>" + ((DateTime)Model.Order.FinishTime).ToString("dd/MM/yyyy HH:mm");
             }
         }
     }

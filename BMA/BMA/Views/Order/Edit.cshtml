@@ -72,13 +72,14 @@
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">
-                            Thông tin sản phẩm
-                        </h3>
+                            <h3 class="box-title">
+                                Thông tin sản phẩm
+                            </h3>
                     </div>
                     <div class="box-body">
                         <!-- Table row -->
                         <div class="row">
-                            <div class="col-xs-12 table-responsive">
+                            <div class="col-md-12 table-responsive">
                                 <form action="@Url.Action("Edit", "Order" )" method="POST" id="update-product-list">
                                     <table class="table table-striped" id="product-table">
                                         <thead style="font-weight: bold">
@@ -127,7 +128,7 @@
         </div>
         <!--List of button-->
         <div class="row">
-            <div class="col-xs-9">
+            <div class="col-md-8">
                 <div class="row">
                     <div class="col-xs-12" style="margin-top: 8%">
                         <!--Back button-->
@@ -143,18 +144,29 @@
                             <script type="text/javascript">
                                 function update_material_list() {
                                     var totalAmount = 0;
+                                    var totalQuantity = 0;
                                     $("#product-table tbody tr").each(function(index,element) {
                                         var productPrice = $(element).find("td:nth-child(2) input").val();
                                         var productQuantity = $(element).find("td:nth-child(3) input").val();
+                                        totalQuantity += parseInt(productQuantity);
                                         var amount = productPrice * productQuantity;
                                         totalAmount += amount;
                                         $(element).find("td:nth-child(4) span").text(formatCurrency(amount));
                                     });
+
                                     $("#total-table tr:first td").text(formatCurrency(totalAmount));
-                                    var totalTax = totalAmount * @(Model.TaxRate) / 100;
-                                    $("#total-table tr:nth-child(2) td").text(formatCurrency(totalTax));
-                                    var totalValue = totalAmount + totalTax;
-                                    $("#total-table tr:nth-child(3) td").text(formatCurrency(totalValue));
+                                    var discount = 0;
+                                    if (totalQuantity >= 501 && totalQuantity <= 1000) {
+                                        discount = (totalAmount * 5/100);
+                                    }else if (totalQuantity >= 1001 && totalQuantity <= 10000) {
+                                        discount = (totalAmount * 10/100);
+                                    }
+                                    $("#total-table tr:nth-child(2) td").text(formatCurrency(discount));
+                                    var totalTax = (totalAmount-discount) * @(Model.TaxRate) / 100;
+                                    $("#total-table tr:nth-child(3) td").text(formatCurrency(totalTax));
+
+                                    var totalValue = totalAmount + totalTax-discount;
+                                    $("#total-table tr:nth-child(4) td").text(formatCurrency(totalValue));
 
                                     $.ajax({
                                         url: "@Url.Action("UpdateMaterialList","Order")",
@@ -193,97 +205,96 @@
                                         }
                                     });
                                 }
+                                function fnselect() {
+                                    var selectedIds = [];
+                                    var selectedName = [];
+                                    var selectedPrice = [];
+
+                                    $(".multiple-choice-table tr.selected").each(function(index, row) {
+                                        selectedIds.push($(row).find("td:first input").val());
+                                        selectedName.push($(row).find("td:first span").text());
+                                        selectedPrice.push($(row).find("td:nth-child(2) span").text());
+                                    });
+
+
+                                    $.ajax({
+                                        "url": "@Url.Action("RemoveProductInProductList", "Order")",
+                                        "method": "POST",
+                                        "data": JSON.stringify({ "productId": selectedIds }),
+                                        "dataType": 'json',
+                                        "contentType": 'application/json',
+                                        "success": function (data) {
+                                            if (data === 1) {
+                                                $('#myStandardModal').modal('hide');
+                                                for (i = 0; i < selectedIds.length; i++) {
+                                                    var productRow = $("<tr>", {
+                                                        "html": [
+                                                            $("<td>", {
+                                                                "style":"vertical-align: middle;",
+                                                                "html": [
+                                                                    selectedName[i],
+                                                                    $("<input>", {
+                                                                        "type": "hidden",
+                                                                        "name": "productId",
+                                                                        "value": selectedIds[i]
+                                                                    })
+                                                                ]
+                                                            }),
+                                                            $("<td>", {
+                                                                "style":"vertical-align: middle;",
+                                                                "html": $("<input>", {
+                                                                    "type": "number",
+                                                                    "name": "productPrice",
+                                                                    "value": selectedPrice[i]
+                                                                })
+                                                            }),
+                                                            $("<td>", {
+                                                                "style":"vertical-align: middle;",
+                                                                "html": $("<input>", {
+                                                                    "type": "number",
+                                                                    "name": "productQuantity",
+                                                                    "value": "1",
+                                                                    "min": "1"
+                                                                })
+                                                            }),
+                                                            $("<td>", {
+                                                                "style": "text-align: right; vertical-align: middle;",
+                                                                "html": $("<span>", {
+                                                                    id:"orderItemAmount",
+                                                                    "html":formatCurrency(selectedPrice[i])
+                                                                })
+                                                            }),
+                                                            $("<td>", {
+                                                                "style": "text-align: center; vertical-align: middle;",
+                                                                "html": $("<a>", {
+                                                                    "class": "btn btn-warning",
+                                                                    "data-role": "remove-row-btn",
+                                                                    "html": "Hủy"
+                                                                })
+                                                            })
+                                                        ]
+                                                    });
+                                                    $("#product-table tbody").append(productRow);
+                                                }
+                                                $("#updateInfo").show();
+                                                $("#material-info").hide();
+                                            } else {
+                                                alert("Không thể thêm sản phẩm");
+                                            }
+                                        },
+                                        "fail": function (e) {
+                                            alert("Have error" + e.toString());
+                                        }
+                                    });
+                                }
                             </script>
                         </button>
-                        <script type="text/javascript">
-                            function fnselect() {
-                                var selectedIds = [];
-                                var selectedName = [];
-                                var selectedPrice = [];
 
-                                $(".multiple-choice-table tr.selected").each(function(index, row) {
-                                    selectedIds.push($(row).find("td:first input").val());
-                                    selectedName.push($(row).find("td:first span").text());
-                                    selectedPrice.push($(row).find("td:nth-child(2) span").text());
-                                });
-
-
-                                $.ajax({
-                                    "url": "@Url.Action("RemoveProductInProductList", "Order")",
-                                    "method": "POST",
-                                    "data": JSON.stringify({ "productId": selectedIds }),
-                                    "dataType": 'json',
-                                    "contentType": 'application/json',
-                                    "success": function (data) {
-                                        if (data === 1) {
-                                            $('#myStandardModal').modal('hide');
-                                            for (i = 0; i < selectedIds.length; i++) {
-                                                var productRow = $("<tr>", {
-                                                    "html": [
-                                                        $("<td>", {
-                                                            "style":"vertical-align: middle;",
-                                                            "html": [
-                                                                selectedName[i],
-                                                                $("<input>", {
-                                                                    "type": "hidden",
-                                                                    "name": "productId",
-                                                                    "value": selectedIds[i]
-                                                                })
-                                                            ]
-                                                        }),
-                                                        $("<td>", {
-                                                            "style":"vertical-align: middle;",
-                                                            "html": $("<input>", {
-                                                                "type": "number",
-                                                                "name": "productPrice",
-                                                                "value": selectedPrice[i]
-                                                            })
-                                                        }),
-                                                        $("<td>", {
-                                                            "style":"vertical-align: middle;",
-                                                            "html": $("<input>", {
-                                                                "type": "number",
-                                                                "name": "productQuantity",
-                                                                "value": "1",
-                                                                "min": "1"
-                                                            })
-                                                        }),
-                                                        $("<td>", {
-                                                            "style": "text-align: right; vertical-align: middle;",
-                                                            "html": $("<span>", {
-                                                                id:"orderItemAmount",
-                                                                "html":formatCurrency(selectedPrice[i])
-                                                            })
-                                                        }),
-                                                        $("<td>", {
-                                                            "style": "text-align: center; vertical-align: middle;",
-                                                            "html": $("<a>", {
-                                                                "class": "btn btn-warning",
-                                                                "data-role": "remove-row-btn",
-                                                                "html": "Hủy"
-                                                            })
-                                                        })
-                                                    ]
-                                                });
-                                                $("#product-table tbody").append(productRow);
-                                            }
-                                            $("#updateInfo").show();
-                                            $("#material-info").hide();
-                                        } else {
-                                            alert("Không thể thêm sản phẩm");
-                                        }
-                                    },
-                                    "fail": function (e) {
-                                        alert("Have error" + e.toString());
-                                    }
-                                });
-                            }
-                        </script>
 
                     </div>
                 </div>
             </div>
-            <div class=" col-xs-3">
+            <div class=" col-md-4">
                 <div class="table-responsive">
                     <table class="table" id="total-table">
                         <tr>
@@ -293,12 +304,17 @@
                             </td>
                         </tr>
                         <tr>
+                            <th>Giảm: </th>
+                            <td style="text-align: right">@Model.Order.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        </tr>
+                        <tr>
                             <th>Thuế(VAT) @(Model.TaxRate)%: </th>
                             <td style="text-align: right">@Model.Order.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                         </tr>
+
                         <tr>
                             <th>Thành tiền: </th>
-                            <td style="text-align: right">@((Model.Order.Amount + Model.Order.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                            <td style="text-align: right">@((Model.Order.Amount + Model.Order.TaxAmount - Model.Order.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                         </tr>
                     </table>
                 </div>
@@ -542,6 +558,25 @@
     </section>
 }
 @section EditOrderScript{
+    <script type="text/javascript">
+
+        var tempFunction;
+
+        $(document).ready(function () {
+            tempFunction = $.fn.modal.Constructor.prototype.enforceFocus;
+        });
+
+        $(document).on("show", "#myModal", function() {
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+        });
+
+        $(document).on("hidden", "#myModal", function() {
+            $.fn.modal.Constructor.prototype.enforceFocus = tempFunction;
+        });
+    </script>
+
+
+
     @if (ViewBag.ShortageOfMaterial != null && ViewBag.ShortageOfMaterial)
     {
         <script type="text/javascript">
@@ -644,20 +679,30 @@
                 $("<div>", {
                     "class": "form-group",
                     "html": [
-                        '<label>Ngày giao hàng</label>',
-                        $("<input>", {
-                            "type": "date",
-                            "min": "@((DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"))",
-                            "class": "form-control",
-                            "name": "deliveryDate",
-                            "id": "deliveryDate",
-                            "value": "@((DateTime.Now.AddDays(1)) >= Model.Order.PlanDeliveryTime ? (DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd") : (Model.Order.PlanDeliveryTime).ToString("yyyy-MM-dd"))"
-                        }),
-                        $("<input>", {
-                            "type": "hidden",
-                            "name": "orderId",
-                            "value": "@Model.Order.OrderId"
-                        })
+                            "<label>Thời gian giao hàng</label>",
+                            $("<div>", {
+                                "class": "input-group date",
+                                "id": "datetimepicker",
+                                "html": [
+                                    $("<input>", {
+                                        "type": "text",
+                                        "readonly": "readonly",
+                                        "data-format":"dd/MM/yyyy HH:mm",
+                                        "class": "form-control",
+                                        "name": "deliveryDate"
+                                    }),
+                                    $("<span>", {
+                                        "class": "input-group-addon",
+                                        "html" : "<span class='glyphicon glyphicon-calendar'></span>"
+                                    })
+                                ]
+                            }),
+
+                            $("<input>", {
+                                "type": "hidden",
+                                "name": "orderId",
+                                "value": "@Model.Order.OrderId"
+                            })
                     ]
                 })
             ]
@@ -689,7 +734,12 @@
         document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
         document.getElementById('popup-title').innerHTML = title;
         document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
-
+        $('#datetimepicker').datetimepicker({
+            locale: 'vi',
+            ignoreReadonly: true,
+            defaultDate: "@(Model.Order.PlanDeliveryTime >= DateTime.Now.AddDays(1) ? Model.Order.PlanDeliveryTime.ToString("MM/dd/yyyy HH:mm") : DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",
+            minDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))"
+        });
         $('#myModal').modal('show');
         }
         }

@@ -393,6 +393,8 @@ namespace BMA.Business
             int totalAmount = 0;
             // Temp var for tax amount
             int taxAmount = 0;
+
+            int totalQuantity = 0;
             // Creat OrderItemViewModel List and MaterialViewModelList
             List<OrderItemViewModel> orderItemViewModelList = new List<OrderItemViewModel>();
             List<MaterialViewModel> materialViewModelList = new List<MaterialViewModel>();
@@ -417,6 +419,7 @@ namespace BMA.Business
                         taxAmount += (cartViewModel.Quantity * cartViewModel.RealPrice * taxRateTemp) / 100;
                     }
                     totalAmount += cartViewModel.Quantity * cartViewModel.RealPrice;
+                    totalQuantity += cartViewModel.Quantity;
                     orderItemViewModel.OrderItem = orderItem;
                     orderItemViewModel.ProductName = cartViewModel.ProductName;
 
@@ -493,6 +496,20 @@ namespace BMA.Business
             }
             result.Order.Amount = totalAmount;
             result.Order.TaxAmount = taxAmount;
+
+            DiscountByQuantity discountByQuantity =
+                db.DiscountByQuantities.FirstOrDefault(
+                    m => m.QuantityFrom <= totalQuantity && m.QuantityTo >= totalQuantity);
+
+            if (discountByQuantity != null)
+            {
+                result.Order.DiscountAmount = totalAmount * discountByQuantity.DiscountValue / 100;
+            }
+            else
+            {
+                result.Order.DiscountAmount = 0;
+            }
+
             result.OrderItemList = orderItemViewModelList;
             result.MaterialList = materialViewModelList;
             // Calculate the Material cost
@@ -511,6 +528,7 @@ namespace BMA.Business
             DbContextTransaction contextTransaction = db.Database.BeginTransaction();
             // Add order
             Order order = new Order();
+            order = orderViewModel.Order;
             DateTime now = DateTime.Now;
             order.ApproveTime = now;
             order.CreateTime = now;
@@ -526,6 +544,8 @@ namespace BMA.Business
             var currentOrderId = db.Database.SqlQuery<decimal>("SELECT IDENT_CURRENT('Orders')").FirstOrDefault();
             String orderCode = "O" + now.ToString("yyyyMMdd") + (((currentOrderId + 1) % 10000)).ToString(new string('0', 4));
             order.OrderCode = orderCode;
+
+
 
             //Add customer
             Customer customer = db.Customers.FirstOrDefault(m => m.UserId == customerId && m.IsActive);
@@ -640,9 +660,10 @@ namespace BMA.Business
             result.IsGuest = true;
             result.IsLoyal = false;
 
-            // Temp var for total amount, taxAmount
+            // Temp var for total amount, taxAmount, discount
             int totalAmount = 0;
             int taxAmount = 0;
+            int totalQuantity = 0;
             // Creat OrderItemViewModel List and MaterialViewModelList
             List<OrderItemViewModel> orderItemViewModelList = new List<OrderItemViewModel>();
             List<MaterialViewModel> materialViewModelList = new List<MaterialViewModel>();
@@ -667,6 +688,7 @@ namespace BMA.Business
                         taxAmount += (cartViewModel.Quantity * cartViewModel.RealPrice * taxRateTemp) / 100;
                     }
                     totalAmount += cartViewModel.Quantity * cartViewModel.RealPrice;
+                    totalQuantity += cartViewModel.Quantity;
                     orderItemViewModel.OrderItem = orderItem;
                     orderItemViewModel.ProductName = cartViewModel.ProductName;
 
@@ -742,6 +764,19 @@ namespace BMA.Business
                     materialViewModel.IsEnough = true;
                 }
             }
+
+            DiscountByQuantity discountByQuantity =
+                db.DiscountByQuantities.FirstOrDefault(
+                    m => m.QuantityFrom >= totalQuantity && m.QuantityTo <= totalQuantity);
+            if (discountByQuantity != null)
+            {
+                result.Order.DiscountAmount = totalAmount * discountByQuantity.DiscountValue / 100;
+            }
+            else
+            {
+                result.Order.DiscountAmount = 0;
+            }
+
             result.Order.Amount = totalAmount;
             result.Order.TaxAmount = taxAmount;
             TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1);
@@ -766,6 +801,7 @@ namespace BMA.Business
             DbContextTransaction contextTransaction = db.Database.BeginTransaction();
             // Add order
             Order order = new Order();
+            order = orderViewModel.Order;
             DateTime now = DateTime.Now;
             order.ApproveTime = now;
             order.CreateTime = now;
@@ -1596,6 +1632,12 @@ namespace BMA.Business
             return db.Products.Where(m => m.IsActive).ToList();
         }
         #endregion
+
+        public Product GetProductById(int productId)
+        {
+            return db.Products.FirstOrDefault(m => m.ProductId == productId && m.IsActive);
+        }
+
         #region
         /// <summary>
         /// Check customer field is exist
@@ -1647,6 +1689,11 @@ namespace BMA.Business
             return 0;
         }
         #endregion
+
+        public List<DiscountByQuantity> GetDiscountByQuantityList()
+        {
+            return db.DiscountByQuantities.ToList();
+        }
     }
 
 }
