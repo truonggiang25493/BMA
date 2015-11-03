@@ -40,6 +40,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -165,7 +171,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
-    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\CusManageOrderController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
@@ -293,7 +300,7 @@
     <Content Include="Content\CustomerLayout\JS\jquery.themepunch.tools.min.js" />
     <Content Include="Content\CustomerLayout\JS\owl.carousel.min.js" />
     <Content Include="Content\CustomerLayout\JS\scripts.js" />
-    <Content Include="Content\style.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -1166,7 +1173,6 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\ManageProduct\Index.cshtml" />
     <Content Include="Views\Product\ProductDetail.cshtml" />
-    <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Content\AdminLayout\bootstrap\css\bootstrap.css.map" />
@@ -1196,20 +1202,25 @@
     <Content Include="Content\AdminLayout\plugins\input-mask\phone-codes\phone-be.json" />
     <Content Include="Content\AdminLayout\plugins\input-mask\phone-codes\phone-codes.json" />
     <Content Include="Views\Layout\ManageLayout.cshtml" />
+    <Content Include="Views\Order\Detail.cshtml" />
     <Content Include="Views\Order\Delete.cshtml" />
     <Content Include="Views\Order\Edit.cshtml" />
     <Content Include="Views\Cart\Cart.cshtml" />
     <Content Include="Views\Cart\CartPartial.cshtml" />
-    <Content Include="Views\Order\Detail.cshtml" />
-    <Content Include="Views\Order\Add.cshtml" />
-    <Content Include="Views\Order\Checkout.cshtml" />
-    <Content Include="Views\Order\AddCustomerToOrder.cshtml" />
-    <Content Include="Views\Customer\GetCustomerPartialView.cshtml" />
-    <Content Include="Views\Order\CheckoutWithCustomer.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Cart\OrderInfo.cshtml" />
+    <Content Include="Views\Cart\OrderSuccess.cshtml" />
+    <Content Include="Views\CusManageOrder\Index.cshtml" />
+    <Content Include="Views\CusManageOrder\OrderDetail.cshtml" />
+    <Content Include="Views\CusManageOrder\CancelOrder.cshtml" />
+    <Content Include="Views\CusManageOrder\ConfirmOrder.cshtml" />
+    <Content Include="Views\CusManageOrder\CancelBothOrder.cshtml" />
+    <Content Include="Views\Cart\GetOrderToCart.cshtml" />
+    <Content Include="Views\CusManageOrder\ConfirmIndex.cshtml" />
+    <Content Include="Views\Cart\EditOrderSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\InputMaterial\" />
     <Folder Include="Views\Shared\" />
   </ItemGroup>
   <ItemGroup>

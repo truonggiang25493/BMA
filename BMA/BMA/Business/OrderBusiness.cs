@@ -467,7 +467,7 @@ namespace BMA.Business
             TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1);
             if (taxRate != null)
             {
-                result.TaxAmount = totalAmount * taxRate.TaxRateValue / 100;
+                result.TaxAmount = (int)Math.Floor(totalAmount * taxRate.TaxRateValue / 100);
             }
             result.OrderItemList = orderItemViewModelList;
             result.MaterialList = materialViewModelList;
