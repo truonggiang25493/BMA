@@ -17,26 +17,27 @@ namespace BMA.Business
 
         #region Get current tax rates
 
-        public List<TaxRate> GetCurrentTaxRate()
-        {
-            List<TaxRate> result = new List<TaxRate>();
-            // Get current VAT
-            TaxRate vatTaxRate = db.TaxRates.FirstOrDefault(m => m.TaxType.Abbreviation.Equals("GTGT") && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
-            result.Add(vatTaxRate);
+        
+        //public List<TaxRate> GetCurrentTaxRate()
+        //{
+        //    List<TaxRate> result = new List<TaxRate>();
+        //    // Get current VAT
+        //    TaxRate vatTaxRate = db.TaxRates.FirstOrDefault(m => m.TaxType.Abbreviation.Equals("GTGT") && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
+        //    result.Add(vatTaxRate);
 
-            // Get current TNDN
-            // Temp income
+        //    // Get current TNDN
+        //    // Temp income
 
-            Int64 previousYearIncome = 1000000000;
-            List<TaxRate> tndnTaxRateList = db.TaxRates.Where(m => m.TaxType.Abbreviation.Equals("TNDN") && m.TaxType.Method.Equals("Khấu trừ") && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate).ToList();
-            foreach (TaxRate taxRate in tndnTaxRateList)
-            {
-                string[] condition = taxRate.TaxType.Condition.Split(',');
+        //    Int64 previousYearIncome = 1000000000;
+        //    List<TaxRate> tndnTaxRateList = db.TaxRates.Where(m => m.TaxType.Abbreviation.Equals("TNDN") && m.TaxType.Method.Equals("Khấu trừ") && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate).ToList();
+        //    foreach (TaxRate taxRate in tndnTaxRateList)
+        //    {
+        //        string[] condition = taxRate.TaxType.Condition.Split(',');
 
-            }
-            //result.Add(tndnTaxRate);
-            return result;
-        }
+        //    }
+        //    //result.Add(tndnTaxRate);
+        //    return result;
+        //}
         #endregion
 
         #region

@@ -12,15 +12,15 @@ namespace BMA.Controllers
     public class TaxController : Controller
     {
         // GET: Tax
-        public ActionResult Index()
-        {
-            ViewBag.Title = "Báo cáo thuế";
-            ViewBag.TreeView = "report";
-            ViewBag.TreeViewMenu = "taxRepory";
-            TaxBusiness taxBusiness = new TaxBusiness();
-            List<TaxRate> taxRateList = taxBusiness.GetCurrentTaxRate();
-            return View(taxRateList);
-        }
+        //public ActionResult Index()
+        //{
+        //    ViewBag.Title = "Báo cáo thuế";
+        //    ViewBag.TreeView = "report";
+        //    ViewBag.TreeViewMenu = "taxRepory";
+        //    TaxBusiness taxBusiness = new TaxBusiness();
+        //    List<TaxRate> taxRateList = taxBusiness.GetCurrentTaxRate();
+        //    return View(taxRateList);
+        //}
 
         // Change VAT
         [HttpPost]
