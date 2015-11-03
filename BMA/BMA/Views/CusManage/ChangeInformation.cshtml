@@ -1,0 +1,156 @@
+﻿@model BMA.Models.User
+
+@{
+    ViewBag.Title = "Thay đổi thông tin cá nhân";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+}
+
+<div class="container main-container headerOffset">
+    <div class="row">
+        <div class="breadcrumbDiv col-lg-12">
+            <ul class="breadcrumb">
+                <li> <a href="@Url.Action("Index", "Home")">Trang chủ</a> </li>
+                <li><a href="@Url.Action("Index", "CusManage")"> Quản lý</a> </li>
+                <li class="active"> Thông tin cá nhân </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-7">
+            <h1 class="section-title-inner"><span><i class="glyphicon glyphicon-user"></i> Thông tin cá nhân </span></h1>
+            <div class="row userInfo">
+                <div class="col-lg-12">
+                    <h2 class="block-title-2"> Hãy đảm bảo cập nhật thông tin cá nhân của bạn nếu thay đổi </h2>
+                </div>
+                <form role="form" action="@Url.Action("ChangeInformation", "CusManage")" method="post" id="informationForm">
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="form-group required">
+                            <label for="InputName">Họ tên <sup>*</sup> </label>
+                            <input required pattern=".{6,}" title="Họ tên phải lớn hơn 6 ký tự" maxlength="50" type="text" class="form-control" value="@Model.Fullname" id="InputName" placeholder="Nhập họ tên" name="txtName">
+                        </div>
+                        <div class="form-group required">
+                            <label for="InputLastName">Địa chỉ <sup>*</sup> </label>
+                            <input required maxlength="250" type="text" class="form-control" value="@Model.Customers.ElementAt(0).CustomerAddress" id="InputAddress" placeholder="Nhập địa chỉ" name=txtAdress>
+                        </div>
+                        <div class="form-group required">
+                            <label for="InputEmail"> Email <sup>*</sup></label>
+                            <input required pattern=".{5,}" title="Email phải lớn hơn 5 ký tự" maxlength="250" type="email" class="form-control" value="@Model.Email" id="InputEmail" placeholder="Nhập email - example@gmail.com" name="txtEmail">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="form-group required">
+                            <label for="InputName">Mã số thuế<sup>*</sup> </label>
+                            <input required maxlength="13" type="tel" class="form-control" value="@Model.Customers.ElementAt(0).TaxCode" id="InputTaxCode" placeholder="Nhập mã số thuế" name="txtTaxCode">
+                        </div>
+                        <div class="form-group required">
+                            <label for="InputLastName">Số điện thoại <sup>*</sup> </label>
+                            <input required maxlength="12" type="tel" class="form-control" value="@Model.Customers.ElementAt(0).CustomerPhoneNumber" id="InputPhone" placeholder="Nhập số điện thoại" name="txtPhone">
+                        </div>
+                    </div>
+
+                </form>
+                <div class="col-md-12">
+                    <button onclick="return validateInput()" class="btn  btn-primary"><i class="fa fa-save"></i> &nbsp; Thay đổi </button>
+                </div>
+                <script type="text/javascript">
+                    function validateInput() {
+                        var txtName = $("#InputName").val();
+                        var txtAddress = $("#InputAddress").val();
+                        var txtEmail = $("#InputEmail").val();
+                        var txtTaxCode = $("#InputTaxCode").val();
+                        var txtPhone = $("#InputPhone").val();
+
+
+                        if (txtName.trim() === '') {
+                            noty({
+                                text: 'Họ tên không được để trống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (txtAddress.trim() === '') {
+                            noty({
+                                text: 'Địa chỉ không được để trống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (txtEmail.trim() === '') {
+                            noty({
+                                text: 'Email không được để trống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (isNaN(txtTaxCode)) {
+                            noty({
+                                text: 'Mã số thuế phải là số.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (isNaN(txtPhone)) {
+                            noty({
+                                text: 'Số điện thoại phải là số.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else {
+                            $.ajax({
+                                url: "@(Url.Action("ChangeInformation", "CusManage"))",
+                                method: "POST",
+                                data: $("#informationForm").serialize(),
+                                success: function (data) {
+                                        noty({
+                                            text: 'Thay đổi thông tin thành công',
+                                            type: 'success',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                        window.setTimeout(function () {
+                                            window.location.replace("@(Url.Action("Index", "CusManage"))");
+                                        }, 3000);
+                                },
+                                fail: function () {
+                                    noty({
+                                        text: 'Đã có lỗi xảy ra',
+                                        type: 'error',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 1000
+                                    });
+                                }
+                            })
+                        }
+                    }
+                </script>
+                <div class="col-md-12 clearfix">
+                    <ul class="pager">
+                        <li class="previous pull-right"><a href="@Url.Action("Index","Product")"> <i class="fa fa-home"></i> Tới cửa hàng </a></li>
+                        <li class="next pull-left"><a onclick="javascript:history.back(-1);"> &larr; Quay lai trang quản lý</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-5"> </div>
+    </div>
+
+    <div style="clear:both"></div>
+</div>
+
+<div class="gap"> </div>

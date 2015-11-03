@@ -5652,3 +5652,13 @@ div.quickview {
 
 .reviewtitle {
 }
+
+.btn-detail:hover{
+    background-color:#2ecc71;
+}
+.btn-delete:hover{
+    background-color:#d9534f;
+}
+.btn-edit:hover{
+    background-color:#5bc0de;
+}

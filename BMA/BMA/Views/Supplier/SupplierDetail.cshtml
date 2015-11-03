@@ -1,5 +1,4 @@
-﻿
-@using System.Globalization
+﻿@using System.Globalization
 @using BMA.Models
 @model BMA.Models.Supplier
 
@@ -19,7 +18,7 @@
     <form id="edit-input-material-form"></form>
     <div class="row">
         <!-- Info row -->
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="box box-primary">
                 <div class="box-body box-profile">
                     <h3 class="profile-username text-center">
@@ -51,7 +50,10 @@
                                 <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>Thay đổi trạng thái
                                 <script type="text/javascript">
                                     function open_container(id) {
-                                        var content = 'Bạn có muốn thay đổi trạng thái của nhà cung cấp từ' + '@(Model.IsActive ? " đang hoạt động " : " ngừng hoạt động ")' + 'sang trạng thái' + '@(Model.IsActive ? " ngừng hoạt động " : " đang hoạt động ")' + 'không?';
+                                        var content = $("<div>", {
+                                            "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
+                                        });
+
                                         var title = 'Thay đổi trạng thái nguyên liệu';
                                         var footer = $("<div>", {
                                             "class": "row",
@@ -70,7 +72,7 @@
                                                 })
                                             ]
                                         });
-                                        setModalBox(title, content, footer[0].outerHTML);
+                                        setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
                                         $('#myModal').modal('show');
                                     }
 
@@ -109,7 +111,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active">
@@ -153,8 +155,8 @@
 
             </button>
             <!-- Comeback button -->
-            <button class="btn btn-danger" onclick="comebackToIndex()">
-                <i class="fa fa-edit" style="margin-left: 10px;"></i>Quay lại
+            <button class="btn btn-success" onclick="comebackToIndex()">
+                <i class="fa fa-arrow-left" style="margin-right: 2px;"></i>Quay lại trang danh sách
                 <script type="text/javascript">
                     function comebackToIndex() {
                         window.location.replace("@(Url.Action("SupplierIndex", "Supplier"))");

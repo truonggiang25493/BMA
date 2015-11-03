@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>@ViewBag.title</title>
+    <script type="text/javascript" src="/Content/CustomerLayout/assets/js/jquery/jquery-1.10.1.min.js"></script>
 
     <link href="/Content/CustomerLayout/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
 
     <link id="pagestyle" rel="stylesheet" type="text/css" href="/Content/CustomerLayout/assets/css/skin-11.css">
-
+    <link href="~/Content/CustomerLayout/assets/css/animate.min.css" rel="stylesheet" />
     <link href="/Content/CustomerLayout/assets/css/style.css" rel="stylesheet">
     <link href="/Content/CustomerLayout/assets/css/category-2.css" rel="stylesheet">
-
+    <link href="~/Content/AdminLayout/plugins/datepicker/datepicker3.css" rel="stylesheet" />
     <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
@@ -100,12 +101,12 @@
     </style>
 </head>
 <body>
-    <div class="modal signUpContent fade" id="ModalLogin" tabindex="-1" role="dialog">
+    <div class="modal signUpContent fade" id="ModalLogin" tabindex="-1" role="dialog" style="margin-top:50px;">
         <div class="modal-dialog ">
-            <div class="modal-content">
+            <div class="modal-content" style="width:400px;margin-left:40px;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> &times; </button>
-                    <h3 class="modal-title-site text-center"> Đăng nhập </h3>
+                    <h4 class="modal-title-site text-center" style="font-family: 'Patrick Hand SC';font-size:25px;"> Đăng nhập </h4>
                 </div>
                 <form action='@Url.Action("Login", "Account", new { @strURL = Request.Url.ToString()})' id="loginForm" method="post">
                     <div class="modal-body">
@@ -127,11 +128,6 @@
 
                     </div>
                 </form>
-                <div class="modal-footer">
-                    <p class="text-center">
-                        Chưa có tài khoản? <a data-toggle="modal" data-dismiss="modal" href="#ModalSignup"> Đăng ký. </a> <br>
-                    </p>
-                </div>
             </div>
 
         </div>
@@ -139,7 +135,7 @@
     </div>
 
 
-    <div class="modal signUpContent fade" id="ModalSignup" tabindex="-1" role="dialog">
+    @*<div class="modal signUpContent fade" id="ModalSignup" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -186,7 +182,7 @@
 
         </div>
 
-    </div>
+    </div>*@
 
 
     <div class="navbar navbar-tshop navbar-fixed-top megamenu" role="navigation">
@@ -200,16 +196,14 @@
                             @if (Session["User"] != null)
                             {
                                 <ul class="userMenu">
-                                    <li> <a href="account-1.html"><span class="hidden-xs"> Quản lý tài khoản</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
-                                    <li> <a href="account-1.html"><span class="hidden-xs"> Quản lý đơn hàng</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
-                                    <li> <a href="@Url.Action("Logout", "Account")"><span class="hidden-xs"> Đăng xuất </span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                    <li> <a href="@Url.Action("Index", "CusManage")"><span class="hidden-xs"><i class="fa fa-street-view"></i> Quản lý</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                    <li> <a href="@Url.Action("Logout", "Account")"><span class="hidden-xs"><i class="fa fa-sign-out"></i> Đăng xuất </span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
                                 </ul>
                             }
                             else
                             {
                                 <ul class="userMenu">
-                                    <li> <a href="#" data-toggle="modal" data-target="#ModalLogin"> <span class="hidden-xs">Đăng nhập</span> <i class="glyphicon glyphicon-log-in hide visible-xs "></i> </a> </li>
-                                    <li class="hidden-xs"> <a href="#" data-toggle="modal" data-target="#ModalSignup"> Đăng ký </a> </li>
+                                    <li> <a href="#" data-toggle="modal" data-target="#ModalLogin"><i class="fa fa-sign-in"></i> <span class="hidden-xs">Đăng nhập</span> <i class="glyphicon glyphicon-log-in hide visible-xs "></i> </a> </li>
                                 </ul>
                             }
                         </div>
@@ -222,7 +216,7 @@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only"> Toggle navigation </span> <span class="icon-bar"> </span> <span class="icon-bar"> </span> <span class="icon-bar"> </span> </button>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-cart"> <i class="fa fa-shopping-cart colorWhite"> </i> <span class="cartRespons colorWhite"> Cart ($210.00) </span> </button>
-                <a class="navbar-brand " href="index.html"> <img style="width:130px;height:75px;margin-top:-20px;" src="/Content/CustomerLayout/Images/logo.png" alt="TSHOP"> </a>
+                <a class="navbar-brand"> <img style="width:130px;height:75px;margin-top:-20px;" src="/Content/CustomerLayout/Images/logo.png" alt="TSHOP"> </a>
 
                 <div class="search-box pull-right hidden-lg hidden-md hidden-sm">
                     <div class="input-group">
@@ -258,8 +252,8 @@
                 </ul>
 
                 <div class="nav navbar-nav navbar-right hidden-xs">
-                    <div class="dropdown  cartMenu " style="">
-                        <a class=" dropdown-toggle" data-toggle="dropdown" style="padding-right: 0px; padding-left: 5px;"> <i class="fa fa-shopping-cart"> </i> <span class="cartRespons">@Html.Action("CartPartial", "Cart") </span></a>
+                    <div class="dropdown  cartMenu">
+                        <a class=" dropdown-toggle" data-toggle="dropdown" style="padding-right: 5px; padding-left: 5px;cursor:default;"> <i class="fa fa-shopping-cart"> </i> <span class="cartRespons">@Html.Action("CartPartial", "Cart") </span></a>
                     </div>
                 </div>
 
@@ -278,8 +272,16 @@
     </footer>
 
 
-    <script type="text/javascript" src="/Content/CustomerLayout/assets/js/jquery/jquery-1.10.1.min.js"></script>
+
     <script src="/Content/CustomerLayout/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Content/CustomerLayout/assets/js/footable.js"></script>
+    <script src="~/Content/CustomerLayout/assets/js/footable.sortable.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.footable').footable();
+        });
+    </script>
+
     <script src="/Content/CustomerLayout/assets/js/idangerous.swiper-2.1.min.js"></script>
     <script>
         var mySwiper = new Swiper('.swiper-container', {
@@ -323,6 +325,7 @@
     <script src="/Content/CustomerLayout/assets/js/home.js"></script>
 
     <script src="/Content/CustomerLayout/assets/js/script.js"></script>
+    <script src="~/Scripts/jquery.noty.packaged.min.js"></script>
     <script type="text/javascript">
         /* <![CDATA[ */
         (function () { try { var s, a, i, j, r, c, l = document.getElementsByTagName("a"), t = document.createElement("textarea"); for (i = 0; l.length - i; i++) { try { a = l[i].getAttribute("href"); if (a && a.indexOf("/cdn-cgi/l/email-protection") > -1 && (a.length > 28)) { s = ''; j = 27 + 1 + a.indexOf("/cdn-cgi/l/email-protection"); if (a.length > j) { r = parseInt(a.substr(j, 2), 16); for (j += 2; a.length > j && a.substr(j, 1) != 'X'; j += 2) { c = parseInt(a.substr(j, 2), 16) ^ r; s += String.fromCharCode(c); } j += 1; s += a.substr(j, a.length - j); } t.innerHTML = s.replace(/</g, "&lt;").replace(/>/g, "&gt;"); l[i].setAttribute("href", "mailto:" + t.value); } } catch (e) { } } } catch (e) { } })();

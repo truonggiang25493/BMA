@@ -16,6 +16,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <h2 class="page-header">
+                    <i class="fa fa-navicon" style="margin-right: 3px;"></i>
                     Thông tin đơn hàng
                 </h2>
             </div>
@@ -71,14 +72,15 @@
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">
-                            Thông tin sản phẩm
-                        </h3>
+                            <h3 class="box-title">
+                                Thông tin sản phẩm
+                            </h3>
                     </div>
                     <div class="box-body">
                         <!-- Table row -->
                         <div class="row">
-                            <div class="col-xs-12 table-responsive">
-                                <form action="@Url.Action("Edit", "Order")" method="POST" id="update-product-list">
+                            <div class="col-md-12 table-responsive">
+                                <form action="@Url.Action("Edit", "Order" )" method="POST" id="update-product-list">
                                     <table class="table table-striped" id="product-table">
                                         <thead style="font-weight: bold">
                                             <tr>
@@ -97,20 +99,20 @@
                                             @foreach (OrderItem orderItem in Model.Order.OrderItems)
                                             {
                                                 <tr>
-                                                    <td>
+                                                    <td style="vertical-align: middle;">
                                                         @(orderItem.Product.ProductName)
                                                         <input type="hidden" name="productId" value="@(orderItem.ProductId)" />
                                                     </td>
-                                                    <td>
+                                                    <td style="vertical-align: middle;">
                                                         <input type="number" name="productPrice" min="1000" value="@(orderItem.RealPrice)" />
                                                     </td>
-                                                    <td>
-                                                        <input type="number" name="productQuantity" min="0" value="@(orderItem.Quantity)" />
+                                                    <td style="vertical-align: middle;">
+                                                        <input type="number" name="productQuantity" min="1" value="@(orderItem.Quantity)" />
                                                     </td>
-                                                    <td style="text-align: right">
+                                                    <td style="text-align: right; vertical-align: middle;">
                                                         <span id="orderItemAmount">@(orderItem.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span>
                                                     </td>
-                                                    <td style="text-align: center">
+                                                    <td style="text-align: center; vertical-align: middle;">
                                                         <a class="btn btn-warning" data-role="remove-row-btn">Hủy</a>
                                                     </td>
                                                 </tr>
@@ -126,46 +128,59 @@
         </div>
         <!--List of button-->
         <div class="row">
-            <div class="col-xs-9">
+            <div class="col-md-8">
                 <div class="row">
                     <div class="col-xs-12" style="margin-top: 8%">
                         <!--Back button-->
                         <button class="btn btn-primary">
-                            <i class="fa fa-backward" style="margin-right: 3px"></i>Quay lại
+                            <i class="fa fa-arrow-left" style="margin-right: 3px"></i>Quay lại
                         </button>
 
 
 
                         <!--Update order-->
-                        <button class="btn btn-primary pull-right" style="margin-right: 10px;" onclick="update_material_list()">
+                        <button class="btn btn-primary pull-right" style="margin-right: 10px; display: none;" id="updateInfo" onclick="update_material_list()">
                             <i class="fa fa-refresh" style="margin-right: 3px"></i>Cập nhật danh sách
                             <script type="text/javascript">
                                 function update_material_list() {
                                     var totalAmount = 0;
+                                    var totalQuantity = 0;
                                     $("#product-table tbody tr").each(function(index,element) {
                                         var productPrice = $(element).find("td:nth-child(2) input").val();
                                         var productQuantity = $(element).find("td:nth-child(3) input").val();
+                                        totalQuantity += parseInt(productQuantity);
                                         var amount = productPrice * productQuantity;
                                         totalAmount += amount;
                                         $(element).find("td:nth-child(4) span").text(formatCurrency(amount));
                                     });
+
                                     $("#total-table tr:first td").text(formatCurrency(totalAmount));
-                                    var totalTax = totalAmount * @(Model.TaxRate) / 100;
-                                    $("#total-table tr:nth-child(2) td").text(formatCurrency(totalTax));
-                                    var totalValue = totalAmount + totalTax;
-                                    $("#total-table tr:nth-child(3) td").text(formatCurrency(totalValue));
+                                    var discount = 0;
+                                    if (totalQuantity >= 501 && totalQuantity <= 1000) {
+                                        discount = (totalAmount * 5/100);
+                                    }else if (totalQuantity >= 1001 && totalQuantity <= 10000) {
+                                        discount = (totalAmount * 10/100);
+                                    }
+                                    $("#total-table tr:nth-child(2) td").text(formatCurrency(discount));
+                                    var totalTax = (totalAmount-discount) * @(Model.TaxRate) / 100;
+                                    $("#total-table tr:nth-child(3) td").text(formatCurrency(totalTax));
+
+                                    var totalValue = totalAmount + totalTax-discount;
+                                    $("#total-table tr:nth-child(4) td").text(formatCurrency(totalValue));
 
                                     $.ajax({
                                         url: "@Url.Action("UpdateMaterialList","Order")",
                                         method: "POST",
                                         data: $("#update-product-list").serialize(),
-                                        success: function (data) {
+                                        success: function(data) {
                                             $('#material-info').html(data);
+                                            $("#material-info").show();
+                                            $("#updateInfo").hide();
                                         },
-                                        fail: function (e) {
+                                        fail: function(e) {
                                             alert("Have error " + e.toString());
                                         }
-                                    })
+                                    });
                                 }
                             </script>
                         </button>
@@ -190,99 +205,116 @@
                                         }
                                     });
                                 }
-                            </script>
-                        </button>
-                        <script type="text/javascript">
-                            function fnselect() {
-                                var productId = $(".table tr.selected td:first input").val();
-                                var productName = $(".table tr.selected td:first span").text();
-                                var price = $(".table tr.selected td:nth-child(2) span").text();
+                                function fnselect() {
+                                    var selectedIds = [];
+                                    var selectedName = [];
+                                    var selectedPrice = [];
 
-                                $.ajax({
-                                    "url": "@Url.Action("RemoveProductInProductList", "Order")",
-                                    "method": "POST",
-                                    "data": {
-                                        "productId": productId
-                                    },
-                                    "success": function (data) {
-                                        if (data === "1") {
-                                            $('#myStandardModal').modal('hide');
+                                    $(".multiple-choice-table tr.selected").each(function(index, row) {
+                                        selectedIds.push($(row).find("td:first input").val());
+                                        selectedName.push($(row).find("td:first span").text());
+                                        selectedPrice.push($(row).find("td:nth-child(2) span").text());
+                                    });
 
-                                            var productRow = $("<tr>", {
-                                                "html": [
-                                                    $("<td>", {
+
+                                    $.ajax({
+                                        "url": "@Url.Action("RemoveProductInProductList", "Order")",
+                                        "method": "POST",
+                                        "data": JSON.stringify({ "productId": selectedIds }),
+                                        "dataType": 'json',
+                                        "contentType": 'application/json',
+                                        "success": function (data) {
+                                            if (data === 1) {
+                                                $('#myStandardModal').modal('hide');
+                                                for (i = 0; i < selectedIds.length; i++) {
+                                                    var productRow = $("<tr>", {
                                                         "html": [
-                                                            productName,
-                                                            $("<input>", {
-                                                                "type": "hidden",
-                                                                "name": "productId",
-                                                                "value": productId
+                                                            $("<td>", {
+                                                                "style":"vertical-align: middle;",
+                                                                "html": [
+                                                                    selectedName[i],
+                                                                    $("<input>", {
+                                                                        "type": "hidden",
+                                                                        "name": "productId",
+                                                                        "value": selectedIds[i]
+                                                                    })
+                                                                ]
+                                                            }),
+                                                            $("<td>", {
+                                                                "style":"vertical-align: middle;",
+                                                                "html": $("<input>", {
+                                                                    "type": "number",
+                                                                    "name": "productPrice",
+                                                                    "value": selectedPrice[i]
+                                                                })
+                                                            }),
+                                                            $("<td>", {
+                                                                "style":"vertical-align: middle;",
+                                                                "html": $("<input>", {
+                                                                    "type": "number",
+                                                                    "name": "productQuantity",
+                                                                    "value": "1",
+                                                                    "min": "1"
+                                                                })
+                                                            }),
+                                                            $("<td>", {
+                                                                "style": "text-align: right; vertical-align: middle;",
+                                                                "html": $("<span>", {
+                                                                    id:"orderItemAmount",
+                                                                    "html":formatCurrency(selectedPrice[i])
+                                                                })
+                                                            }),
+                                                            $("<td>", {
+                                                                "style": "text-align: center; vertical-align: middle;",
+                                                                "html": $("<a>", {
+                                                                    "class": "btn btn-warning",
+                                                                    "data-role": "remove-row-btn",
+                                                                    "html": "Hủy"
+                                                                })
                                                             })
                                                         ]
-                                                    }),
-                                                    $("<td>", {
-                                                        "html": $("<input>", {
-                                                            "type": "number",
-                                                            "name": "productPrice",
-                                                            "value": price
-                                                        })
-                                                    }),
-                                                    $("<td>", {
-                                                        "html": $("<input>", {
-                                                            "type": "number",
-                                                            "name": "productQuantity",
-                                                            "value": "1",
-                                                            "min": "1"
-                                                        })
-                                                    }),
-                                                    $("<td>", {
-                                                        "style": "text-align: right",
-                                                        "html": $("<span>", {
-                                                            id:"orderItemAmount",
-                                                            "html":price
-                                                        })
-                                                    }),
-                                                    $("<td>", {
-                                                        "style": "text-align: center",
-                                                        "html": $("<a>", {
-                                                            "class": "btn btn-warning",
-                                                            "data-role": "remove-row-btn",
-                                                            "html": "Hủy"
-                                                        })
-                                                    })
-                                                ]
-                                            });
-                                            $("#product-table tbody").append(productRow);
-                                        } else {
-                                            alert("Không thể thêm sản phẩm");
+                                                    });
+                                                    $("#product-table tbody").append(productRow);
+                                                }
+                                                $("#updateInfo").show();
+                                                $("#material-info").hide();
+                                            } else {
+                                                alert("Không thể thêm sản phẩm");
+                                            }
+                                        },
+                                        "fail": function (e) {
+                                            alert("Have error" + e.toString());
                                         }
-                                    },
-                                    "fail": function (e) {
-                                        alert("Have error" + e.toString());
-                                    }
-                                });
-                            }
-                        </script>
+                                    });
+                                }
+                            </script>
+                        </button>
+
 
                     </div>
                 </div>
             </div>
-            <div class=" col-xs-3">
+            <div class=" col-md-4">
                 <div class="table-responsive">
                     <table class="table" id="total-table">
                         <tr>
                             <th>Tổng cộng: </th>
                             <td style="text-align: right">
-                                @Model.TotalAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))
+                                @(Model.Order.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
                             </td>
                         </tr>
                         <tr>
-                            <th>Thuế(VAT): </th>
-                            <td style="text-align: right">@Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <th>Giảm: </th>
+                            <td style="text-align: right">@Model.Order.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                         </tr>
                         <tr>
+                            <th>Thuế(VAT) @(Model.TaxRate)%: </th>
+                            <td style="text-align: right">@Model.Order.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        </tr>
+
+                        <tr>
                             <th>Thành tiền: </th>
-                            <td style="text-align: right">@Model.Order.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <td style="text-align: right">@((Model.Order.Amount + Model.Order.TaxAmount - Model.Order.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                         </tr>
                     </table>
                 </div>
@@ -296,19 +328,11 @@
                 <div class="row" style="margin-top: 15px;">
                     <div class="col-xs-12">
                         <h2 class="page-header">
+                            <i class="fa fa-cubes" style="margin-right: 3px;"></i>
                             Thông tin nguyên liệu
                         </h2>
                     </div>
                 </div>
-                <!--Material Noti-->
-                @if (!Model.IsEnoughMaterial)
-                {
-                    <div class="row" style="margin-bottom: 10px">
-                        <div class="col-xs-12">
-                            <h2 class="label label-danger" style="font-size: 14pt">Không đủ nguyên liệu. Không cập nhật</h2>
-                        </div>
-                    </div>
-                }
                 <!-- Material Table Content-->
                 <div class="row">
                     <div class="col-xs-12 table-responsive">
@@ -357,12 +381,36 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <!--Cancel order-->
-                        <button class="btn btn-danger" onclick="open_cancel_order(@Model.Order.OrderId)">
+                        <button class="btn btn-danger" onclick="open_cancel_order(@Model.Order.OrderId, @Model.Order.DepositAmount,@(Model.Order.OrderStatus))">
                             <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy đơn hàng
                             <script type="text/javascript">
-                                function open_cancel_order(orderId) {
-                                    var contentControl = $("<form>", {
-                                        "action": "@Url.Action("Cancel","Order")",
+                                function open_cancel_order(orderId, deposit, orderStatus) {
+                                    var body2 = $("<form>", {
+                                        "action": "@Url.Action("Cancel", "Order")",
+                                        "method": "post",
+                                        "class": "form-group",
+                                        "id": "return-deposit-form",
+                                        "html": [
+                                            "Bạn có chắc chắn hủy đơn hàng này không ?",
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "orderId",
+                                                "value": orderId
+                                            }),
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "isReturnDeposit",
+                                                "value": "0"
+                                            }),
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "returnDeposit",
+                                                "value": "0"
+                                            })
+                                        ]
+                                    });
+                                    var body1 = $("<form>", {
+                                        "action": "@Url.Action("Cancel", "Order")",
                                         "method": "post",
                                         "class": "form-group",
                                         "id": "return-deposit-form",
@@ -373,20 +421,51 @@
                                                     $("<div>", {
                                                         "class": "form-group",
                                                         "html": [
+                                                            "<label>Có hoàn trả tiền cọc không ?</label>",
                                                             $("<input>", {
                                                                 "type": "hidden",
                                                                 "name": "orderId",
                                                                 "value": orderId
-                                                            }),
+                                                            })
+                                                        ]
+
+                                                    }),
+                                                    $("<div>", {
+                                                        "class": "form-group",
+                                                        "html": [
                                                             $("<input>", {
-                                                                "type": "hidden",
+                                                                "type": "radio",
                                                                 "name": "isReturnDeposit",
-                                                                "value": "0"
+                                                                "value": "1",
+                                                                "style": "margin-left: 10px",
+                                                                "data-role": "radio-return-deposit"
                                                             }),
+                                                            "Có ",
                                                             $("<input>", {
-                                                                "type": "hidden",
+                                                                "type": "radio",
+                                                                "name": "isReturnDeposit",
+                                                                "value": "0",
+                                                                "checked": "checked",
+                                                                "style": "margin-left: 10px",
+                                                                "data-role": "radio-return-deposit"
+                                                            }),
+                                                            "Không"
+                                                        ]
+                                                    }),
+                                                    $("<div>", {
+                                                        "class": "form-group",
+                                                        "id": "return_deposit",
+                                                        "style": "display:none;",
+                                                        "html": [
+                                                            "<label>Tiền cọc hoàn trả: </lable>",
+                                                            $("<input>", {
+                                                                "type": "number",
+                                                                "style": "margin-left: 10px;",
                                                                 "name": "returnDeposit",
-                                                                "value": "0"
+                                                                "id": "return_deposit_amount",
+                                                                "value": deposit,
+                                                                "max": deposit,
+                                                                "min": "0"
                                                             })
                                                         ]
                                                     })
@@ -395,15 +474,18 @@
                                         ]
                                     });
                                     $(document).on("change", "[data-role=radio-return-deposit]", function () {
-                                        if ($(this).val() === 1) {
+                                        if ($(this).val() === "1") {
                                             $('#return_deposit').show();
+                                            $('#return_deposit_amount').val(deposit);
+                                            $('#return_deposit_amount').attr("max", deposit);
                                         } else {
                                             $('#return_deposit').hide();
+                                            $('#return_deposit_amount').val(deposit);
                                         }
                                     });
 
                                     var title = 'Xác nhận hủy đơn hàng';
-                                    var footerControl = $("<div>", {
+                                    var footer1 = $("<div>", {
                                         "class": "row",
                                         "html": [
                                             $("<button>", {
@@ -414,157 +496,59 @@
                                                 ]
                                             }),
                                             $("<button>", {
-                                                "class": "btn btn-danger",
+                                                "class": "btn btn-danger pull-right",
                                                 "style": "margin-right: 10px;",
                                                 "onclick": "cancel_order()",
                                                 "html": [
-                                                    "Hủy"
+                                                    "Hủy đơn hàng"
                                                 ]
                                             })
                                         ]
                                     });
-                                    document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+                                    var footer2 = $("<div>", {
+                                        "class": "row",
+                                        "html": [
+                                            $("<button>", {
+                                                "class": "btn btn-primary",
+                                                "data-dismiss": "modal",
+                                                "html": [
+                                                    "Không"
+                                                ]
+                                            }),
+                                            $("<button>", {
+                                                "class": "btn btn-danger pull-right",
+                                                "style": "margin-right: 10px;",
+                                                "onclick": "cancel_order()",
+                                                "html": [
+                                                    "Có"
+                                                ]
+                                            })
+                                        ]
+                                    });
+                                    if (orderStatus === 0) {
+                                        document.getElementById('popup-body').innerHTML = body2[0].outerHTML;
+                                        document.getElementById('popup-footer').innerHTML = footer2[0].outerHTML;
+                                    } else {
+                                        document.getElementById('popup-body').innerHTML = body1[0].outerHTML;
+                                        document.getElementById('popup-footer').innerHTML = footer1[0].outerHTML;
+
+                                    }
                                     document.getElementById('popup-title').innerHTML = title;
-                                    document.getElementById('popup-footer').innerHTML = footerControl[0].outerHTML;
                                     $('#myModal').modal('show');
                                 }
+
                                 function cancel_order() {
                                     $('#return-deposit-form').submit();
                                 }
                             </script>
+
                         </button>
                         <!--Update order-->
                         @if (Model.IsEnoughMaterial)
                         {
-                            <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container()">
+                            <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container(@Model.MaterialCost)">
                                 <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Cập nhật
-                                <script type="text/javascript">
-                                    function open_update_container() {
-                                        var loyalCustControl = $("<div>", {
-                                            "class": "form-group",
-                                            "html": [
-                                                "<label>Có nhận tiền cọc không ?</label>",
-                                                $("<input>", {
-                                                    "type": "radio",
-                                                    "name": "isDeposit",
-                                                    "value": "yes",
-                                                    "style": "margin-left: 10px",
-                                                    "data-role": "radio-is-deposit"
-                                                }),
-                                                "Có ",
-                                                $("<input>", {
-                                                    "type": "radio",
-                                                    "name": "isDeposit",
-                                                    "value": "no",
-                                                    "style": "margin-left: 10px",
-                                                    "data-role": "radio-is-deposit"
-                                                }),
-                                                "Không"
-                                            ]
-                                        });
-                                        $(document).on("change", "[data-role=radio-is-deposit]", function () {
-                                            if ($(this).val() === "yes") {
-                                                $('#deposit').show();
-                                                $('#deposit-amount').attr("min", @Model.MaterialCost);
-                                                $('#deposit-amount').val(@Model.MaterialCost);
-                                            } else {
-                                                $('#deposit').hide();
-                                                $('#deposit-amount').attr("min", 0);
-                                                $('#deposit-amount').val(0);
-                                            }
-                                        });
-                                        var contentControl = $("<form>", {
-                                            "id": "form-update",
-                                            "html": [
-                                                @(Model.IsLoyal?"loyalCustControl":""),
-                                                $("<div>", {
-                                                    "class": "form-group",
-                                                    "id": "deposit",
-                                                    "style": "@(Model.IsLoyal?"display:none;":"")",
-                                                    "html": [
-                                                        "<label>Tiền cọc</label>",
-                                                        $("<input>", {
-                                                            "type": "number",
-                                                            "min": "@(Model.MaterialCost)",
-                                                            "class": "form-control",
-                                                            "id": "deposit-amount",
-                                                            "name": "deposit",
-                                                            "value": "@(Model.MaterialCost)"
-                                                        })
-                                                    ]
-                                                }),
-                                            $("<div>", {
-                                                "class": "form-group",
-                                                "html": [
-                                                    '<label>Ngày giao hàng</label>',
-                                                    $("<input>", {
-                                                        "type": "date",
-                                                        "min": "@(DateTime.Now.ToString("yyyy-MM-dd"))",
-                                                        "class": "form-control",
-                                                        "name": "deliveryDate",
-                                                        "id":"deliveryDate",
-                                                        "value": "@(((DateTime)Model.Order.DeliveryTime).ToString("yyyy-MM-dd"))"
 
-                                                    }),
-                                                    $("<input>", {
-                                                        "type": "hidden",
-                                                        "name": "orderId",
-                                                        "value": "@Model.Order.OrderId"
-                                                    })
-                                                ]
-                                            })
-                                            ]
-                                        });
-                                        var title = 'Xác nhận duyệt đơn hàng';
-                                        var footer = $("<div>", {
-                                            "class": "row",
-                                            "style": "padding-bottom: 20px;",
-                                            "html": [
-                                                 $("<button>", {
-                                                     "class": "btn btn-success pull-right",
-                                                     "style": "margin-right: 10px;",
-                                                     "onclick":"update_order()",
-                                                     "html": [
-                                                         "Đồng ý"
-                                                     ]
-                                                 }),
-                                                $("<button>", {
-                                                    "class": "btn btn-danger pull-right",
-                                                    "style": "margin-right: 10px;",
-                                                    "data-dismiss": "modal",
-                                                    "html": [
-                                                        "Hủy"
-                                                    ]
-                                                })
-
-                                            ]
-                                        });
-
-                                        document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
-                                        document.getElementById('popup-title').innerHTML = title;
-                                        document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
-
-                                        $('#myModal').modal('show');
-                                    }
-
-                                    function update_order() {
-                                        var deposit_amount = $("#deposit-amount").val();
-                                        var delivery_date = $("#deliveryDate").val();
-                                        var depositAmountControl = $("<input>", {
-                                            type: "hidden",
-                                            name: "depositAmount",
-                                            value: deposit_amount
-                                        });
-                                        var deliveryDateControl = $("<input>", {
-                                            type: "date",
-                                            name: "deliveryDate",
-                                            value: delivery_date
-                                        });
-                                        $("#update-product-list").append(depositAmountControl);
-                                        $("#update-product-list").append(deliveryDateControl);
-                                        $("#update-product-list").submit();
-                                    }
-                                </script>
                             </button>
                         }
                     </div>
@@ -572,5 +556,310 @@
             </div>
         </div>
     </section>
+}
+@section EditOrderScript{
+    <script type="text/javascript">
+
+        var tempFunction;
+
+        $(document).ready(function () {
+            tempFunction = $.fn.modal.Constructor.prototype.enforceFocus;
+        });
+
+        $(document).on("show", "#myModal", function() {
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+        });
+
+        $(document).on("hidden", "#myModal", function() {
+            $.fn.modal.Constructor.prototype.enforceFocus = tempFunction;
+        });
+    </script>
+
+
+
+    @if (ViewBag.ShortageOfMaterial != null && ViewBag.ShortageOfMaterial)
+    {
+        <script type="text/javascript">
+            window.onload = function() {
+                var n = noty({
+                    text: 'Không đủ nguyên liệu. Không thể duyệt đơn hàng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'bottomLeft',
+                    theme: 'defaultTheme'
+                });
+            };
+        </script>
+        ViewBag.ShortageOfMaterial = null;
+    }
+
+    <script type="text/javascript">
+        function open_update_container(materialCost) {
+            var totalQuantity = 0;
+            $("#product-table tbody tr").each(function(index, element) {
+                var productQuantity = $(element).find("td:nth-child(3) input").val();
+                if (productQuantity <= 0) {
+                    noty({
+                        text: 'Số lượng phải lớn hơn 0',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'bottomLeft',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                    $(element).find("td:nth-child(3) input").focus();
+                }
+                totalQuantity += productQuantity;
+            });
+            if (totalQuantity < @(ViewBag.MinQuantity)) {
+                noty({
+                text: 'Tổng số lượng phải lớn hơn @(ViewBag.MinQuantity)',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'bottomLeft',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+        } else
+        {
+        var loyalCustControl = $("<div>", {
+            "class": "form-group",
+            "html": [
+                "<label>Có nhận tiền cọc không ?</label>",
+                $("<input>", {
+                    "type": "radio",
+                    "name": "isDeposit",
+                    "value": "yes",
+                    "style": "margin-left: 10px",
+                    "data-role": "radio-is-deposit"
+                }),
+                "Có ",
+                $("<input>", {
+                    "type": "radio",
+                    "name": "isDeposit",
+                    "value": "no",
+                    "selected":"selected",
+                    "style": "margin-left: 10px",
+                    "data-role": "radio-is-deposit"
+                }),
+                "Không"
+            ]
+        });
+        $(document).on("change", "[data-role=radio-is-deposit]", function() {
+            if ($(this).val() === "yes") {
+                $('#deposit').show();
+                $('#deposit-amount').attr("min", materialCost);
+                $('#deposit-amount').val(materialCost);
+            } else {
+                $('#deposit').hide();
+                $('#deposit-amount').attr("min", 0);
+                $('#deposit-amount').val(0);
+            }
+        });
+        var contentControl = $("<form>", {
+            "id": "form-update",
+            "html": [
+                @(Model.IsLoyal ? "loyalCustControl" : ""),
+                $("<div>", {
+                    "class": "form-group",
+                    "id": "deposit",
+                    "style": "@(Model.IsLoyal ? "display:none;" : "")",
+                    "html": [
+                        "<label>Tiền cọc</label>",
+                        $("<input>", {
+                            "type": "number",
+                            "min": materialCost,
+                            "class": "form-control",
+                            "id": "deposit-amount",
+                            "name": "deposit",
+                            "value": materialCost
+                        })
+                    ]
+                }),
+                $("<div>", {
+                    "class": "form-group",
+                    "html": [
+                            "<label>Thời gian giao hàng</label>",
+                            $("<div>", {
+                                "class": "input-group date",
+                                "id": "datetimepicker",
+                                "html": [
+                                    $("<input>", {
+                                        "type": "text",
+                                        "readonly": "readonly",
+                                        "data-format":"dd/MM/yyyy HH:mm",
+                                        "class": "form-control",
+                                        "name": "deliveryDate"
+                                    }),
+                                    $("<span>", {
+                                        "class": "input-group-addon",
+                                        "html" : "<span class='glyphicon glyphicon-calendar'></span>"
+                                    })
+                                ]
+                            }),
+
+                            $("<input>", {
+                                "type": "hidden",
+                                "name": "orderId",
+                                "value": "@Model.Order.OrderId"
+                            })
+                    ]
+                })
+            ]
+        });
+        var title = 'Xác nhận duyệt đơn hàng';
+        var footer = $("<div>", {
+            "class": "row",
+            "style": "padding-bottom: 20px;",
+            "html": [
+                $("<button>", {
+                    "class": "btn btn-success pull-right",
+                    "style": "margin-right: 10px;",
+                    "onclick": "update_order()",
+                    "html": [
+                        "Đồng ý"
+                    ]
+                }),
+                $("<button>", {
+                    "class": "btn btn-danger",
+                    "style": "margin-right: 10px;",
+                    "data-dismiss": "modal",
+                    "html": [
+                        "Hủy"
+                    ]
+                })
+            ]
+        });
+
+        document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+        document.getElementById('popup-title').innerHTML = title;
+        document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
+        $('#datetimepicker').datetimepicker({
+            locale: 'vi',
+            ignoreReadonly: true,
+            defaultDate: "@(Model.Order.PlanDeliveryTime >= DateTime.Now.AddDays(1) ? Model.Order.PlanDeliveryTime.ToString("MM/dd/yyyy HH:mm") : DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",
+            minDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))"
+        });
+        $('#myModal').modal('show');
+        }
+        }
+
+        function update_order() {
+            var depositAmount = $("#deposit-amount").val();
+            var deliveryDate = $("#deliveryDate").val();
+            var depositAmountControl = $("<input>", {
+                type: "hidden",
+                name: "depositAmount",
+                value: depositAmount
+            });
+            var deliveryDateControl = $("<input>", {
+                type: "date",
+                name: "deliveryDate",
+                value: deliveryDate
+            });
+            $("#update-product-list").append(depositAmountControl);
+            $("#update-product-list").append(deliveryDateControl);
+            $.ajax({
+                url: "@(Url.Action("Edit", "Order"))",
+                method: "POST",
+                data: $("#update-product-list").serialize(),
+                success: function(data) {
+                    if (data === "-1") {
+                        noty({
+                            text: 'Tổng lượng phải lớn hơn 0',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'bottomLeft',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }else if (data === "-2") {
+
+                        noty({
+                            text: 'Tổng lượng phải lớn hơn @(ViewBag.MinQuantity)',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'bottomLeft',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+
+                    } else if (data === "0") {
+                        noty({
+                            text: 'Không thể chỉnh sửa',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'bottomLeft',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+
+                    } else {
+                        noty({
+                            text: 'Chỉnh sửa đơn hàng thành công. Đơn hàng chuyển sang trạng thái <b>Chờ xác nhận</b>',
+                            type: 'success',
+                            dismissQueue: false,
+                            layout: 'bottomLeft',
+                            theme: 'defaultTheme',
+                            timeout: 3000
+                        });
+                        window.setTimeout(function() {
+                            window.location.replace("@(Url.Action("Index", "Order"))");
+                        }, 4000);
+                    }
+                }
+            });
+        }
+
+        $(document).on("click", ".multiple-choice-table tbody tr", function() {
+            if ($(this).attr('class') === 'selected') {
+                $(this).removeClass('selected');
+            } else {
+                $(this).addClass('selected');
+            }
+        });
+
+        $(document).on("keyup click", "input[name='productQuantity']", function() {
+            $("#updateInfo").show();
+            $("#material-info").hide();
+        });
+
+        $(document).on("keyup click", "input[name='productPrice']", function() {
+            $("#updateInfo").show();
+            $("#material-info").hide();
+        });
+
+        $(document).on("click", "[data-role=remove-row-btn]", function () {
+            var productId = $(this).parent().parent().find("td:first input").val();
+            $(this).parent().parent().remove();
+            $.ajax({
+                "url": "@(Url.Action("AddProductInProductList", "Order"))",
+                "method": "POST",
+                "data": {
+                    "productId": productId
+                },
+                "success": function (data) {
+                    if (data === "0") {
+                        noty({
+                            text: 'Không hủy sản phẩm khỏi đơn hàng',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'bottomLeft',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    } else {
+                        $("#updateInfo").show();
+                        $("#material-info").hide();
+                    }
+
+                },
+                "fail": function (e) {
+                    alert("Have error" + e.toString());
+                }
+            });
+        });
+
+    </script>
 }
 <!-- Main content -->

@@ -21,9 +21,6 @@ namespace BMA.Models
     
         public int TaxTypeID { get; set; }
         public string TaxTypeName { get; set; }
-        public string Method { get; set; }
-        public string Condition { get; set; }
-        public string Abbreviation { get; set; }
     
         public virtual ICollection<TaxRate> TaxRates { get; set; }
     }

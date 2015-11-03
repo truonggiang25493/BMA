@@ -40,7 +40,12 @@
                                     <span class="label label-success">Đang hoạt động</span>
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Xem", "SupplierDetail", new { id = supplier.SupplierId })
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("SupplierDetail", "Supplier", new {id = supplier.SupplierId}))">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                    </a>
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("EditSupplier", "Supplier", new { id = supplier.SupplierId }))">
+                                        <i class="fa fa-edit" style="margin-right: 3px"></i>Sửa
+                                    </a>
                                 </td>
                             }
                             else
@@ -49,7 +54,9 @@
                                     <span class="label label-danger">Ngừng hoạt động</span>
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Xem", "SupplierDetail", new { id = supplier.SupplierId })
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("SupplierDetail", "Supplier", new { id = supplier.SupplierId }))">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                    </a>
                                 </td>
                             }
                         </tr>

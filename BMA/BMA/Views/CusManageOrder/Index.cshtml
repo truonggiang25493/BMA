@@ -27,70 +27,68 @@
                     </ul>
                 </div>
             </div>
-            <div>
-                <div>
-                    <div class="rightbar-heading" style="float:right;margin-right:-60px;">
-                        <h4>DANH SÁCH ĐƠN HÀNG</h4>
-                    </div>
-                    <table class="table-fill">
-                        <thead style="">
-                            <tr>
-                                <th class="text-left">Mã đơn hàng</th>
-                                <th class="text-left">Ngày tạo</th>
-                                <th class="text-left">Trạng thái</th>
-                                <th class="text-left" style="width:50%;" colspan="3"><center>Thay đổi</center></th>
-                            </tr>
-                        </thead>
-
-                        <tbody class="table-hover">
-                            @foreach (var item in Model)
-                            {
+            <div class="col-md-9 col-sm-7">
+                <div class="tab-content mrgb7x animated out" data-delay="0" data-animation="fadeInUp">
+                    <div id="booking" class="tab-pane fade in active">
+                        <div class="rightbar-heading" style="float:right;margin-right:-60px;">
+                            <h4>DANH SÁCH ĐƠN HÀNG</h4>
+                        </div>
+                        <table class="table-fill" style="width:110%;margin-top:0px;margin-left:-20px;">
+                            <thead>
                                 <tr>
-                                    <td class="text-left"><a href="@Url.Action("OrderDetail", "CusManageOrder", new { @orderId = item.OrderId})">@item.OrderCode</a></td>
-                                    <td class="text-left">@item.CreateTime.ToString("dd/MM/yyyy hh:mm tt")</td>
-                                    @if (item.OrderStatus == 0)
-                                    {
-                                        <td class="text-left"><div class="label label-warning">@CommonData.Status[item.OrderStatus]</div></td>
-                                    }
-                                    @if (item.OrderStatus == 2)
-                                    {
-                                        <td class="text-left"><div class="label label-primary">@CommonData.Status[item.OrderStatus]</div></td>
-                                    }
-                                    @if (item.OrderStatus == 3 || item.OrderStatus == 4)
-                                    {
-                                        <td class="text-left"><div class="label label-info">@CommonData.Status[item.OrderStatus]</div></td>
-                                    }
-                                    @if (item.OrderStatus == 5)
-                                    {
-                                        <td class="text-left"><div class="label label-success">@CommonData.Status[item.OrderStatus]</div></td>
-                                    }
-                                    @if (item.OrderStatus == 6)
-                                    {
-                                        <td class="text-left"><div class="label label-primary">@CommonData.Status[item.OrderStatus]</div></td>
-                                    }
-                                    <td class="cancel-order"><a href="@Url.Action("OrderDetail", "CusManageOrder", new { @orderId = item.OrderId})">Xem </a></td>
-                                    @if (item.OrderStatus == 0)
-                                    {
-                                        <td class="cancel-order"><a href="@Url.Action("GetOrderToCart", "Cart", new { @orderId = item.OrderId })">Sửa</a></td>
-                                    }
-                                    else
-                                    {
-                                        <td class="text-left">Không thể sửa</td>
-                                    }
-                                    @if (item.OrderStatus == 5 || item.OrderStatus == 6)
-                                    {
-                                        <td class="text-left">Không thể hủy</td>
-                                    }
-                                    else
-                                    {
-                                        <td class="cancel-order"><a href="@Url.Action("CancelOrder", "CusManageOrder", new { @orderId = item.OrderId})">Hủy</a></td>
-                                    }
+                                    <th class="text-left">Mã đơn hàng</th>
+                                    <th class="text-left">Ngày tạo</th>
+                                    <th class="text-left">Trạng thái</th>
+                                    <th class="text-left" style="width:50%;" colspan="4"><center>Thay đổi</center></th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                    <div class="numbering">
-                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+                            </thead>
+
+                            <tbody class="table-hover">
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-left"><a href="@Url.Action("OrderDetail", "CusManageOrder", new { @orderId = item.OrderId})">@item.OrderCode</a></td>
+                                        <td class="text-left">@item.CreateTime.ToString("dd/MM/yyyy")</td>
+                                        @if (item.OrderStatus == 0)
+                                        {
+                                            <td class="text-left"><div class="btn btn-primary">@CommonData.Status[item.OrderStatus]</div></td>
+                                        }
+                                        @if (item.OrderStatus == 2 || item.OrderStatus == 3 || item.OrderStatus == 4)
+                                        {
+                                            <td class="text-left"><div class="btn btn-warning">@CommonData.Status[item.OrderStatus]</div></td>
+                                        }
+                                        @if (item.OrderStatus == 5)
+                                        {
+                                            <td class="text-left"><div class="btn btn-success">@CommonData.Status[item.OrderStatus]</div></td>
+                                        }
+                                        @if (item.OrderStatus == 6)
+                                        {
+                                            <td class="text-left"><div class="btn btn-cancel">@CommonData.Status[item.OrderStatus]</div></td>
+                                        }                                       
+                                        <td class="cancel-order"><a href="@Url.Action("OrderDetail", "CusManageOrder", new { @orderId = item.OrderId})">Chi tiết </a></td>
+                                        @if (item.OrderStatus == 0)
+                                        {
+                                            <td class="cancel-order"><a href="@Url.Action("GetOrderToCart", "Cart", new { @orderId = item.OrderId })">Chỉnh sửa </a></td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-left">Không thể sửa</td>
+                                        }
+                                        @if (item.OrderStatus == 5 || item.OrderStatus == 6)
+                                        {
+                                            <td class="text-left">Không thể hủy</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="cancel-order"><a href="@Url.Action("CancelOrder", "CusManageOrder", new { @orderId = item.OrderId})">Hủy đơn hàng </a></td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="numbering">
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+                        </div>
                     </div>
                 </div>
             </div>

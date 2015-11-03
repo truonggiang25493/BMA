@@ -22,7 +22,7 @@
     <!--DatetimePicker-->
     <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     @RenderSection("InitStyle", false)
-</head>
+   </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
         <header class="main-header">
@@ -122,14 +122,14 @@
                             <i class="fa fa-home"></i> <span>Thông tin cửa hàng</span>
                         </a>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="staff">
                         <a href="#">
                             <i class="fa fa-user"></i> <span>Nhân viên</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
-                            <li><a href=""><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
+                            <li id="listStaff"><a href=""><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
+                            <li id="addStaff"><a href=""><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -139,7 +139,11 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
+<<<<<<< HEAD
+                            <li><a href="@Url.Action("AddProduct", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+=======
                             <li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+>>>>>>> 1d0ab64994e6cf30f3c65e1a389b7111901dee1e
                         </ul>
                     </li>
                     <li class="treeview">
@@ -163,14 +167,14 @@
                             <li id="addInputMaterial"><a href="@Url.Action("AddInputMaterial","InputMaterial")"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="supplier">
                         <a href="#">
                             <i class="fa fa-truck"></i> <span>Nhà cung cấp</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
-                            <li><a href=""><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
+                            <li id="listSupplier"><a href="@Url.Action("SupplierIndex","Supplier")"><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
+                            <li id="addSupplier"><a href="@Url.Action("AddSupplier","Supplier")"><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
                         </ul>
                     </li>
                     <li class="treeview" id="order">
@@ -301,11 +305,15 @@
     <script src="~/Scripts/moment-with-locales.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     @RenderSection("InitScript", false)
+<<<<<<< HEAD
+    @RenderSection("AddInputMaterialScript", false)
+=======
     @RenderSection("OrderDetailScript", false)
     @RenderSection("CheckoutWithCustomerScript", false)
     @RenderSection("AddCustomerToOrderScript", false)
     @RenderSection("EditOrderScript", false)
     @RenderSection("AddOrderScript", false)
+>>>>>>> 1d0ab64994e6cf30f3c65e1a389b7111901dee1e
     <script>
         $(function () {
             $('#example2').DataTable({

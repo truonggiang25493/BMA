@@ -1,5 +1,4 @@
-﻿
-@using System.Globalization
+﻿@using System.Globalization
 @using BMA.Common
 @using BMA.Models
 @model BMA.Models.Supplier
@@ -10,15 +9,15 @@
 }
 
 <section class="content-header">
-    <h1>Chỉnh sửa thông tin nhà cung cấp</h1>
+    <h1 style="text-align: center">Chỉnh sửa thông tin nhà cung cấp</h1>
 </section>
 <section>
 
-    <div style="margin-top: 5%">
+    <div style="margin-top: 2%">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="box box-primary">
                     <!-- Edit form -->
                     <form id="edit-supplier-form">
@@ -26,97 +25,176 @@
                         <div class="box-body box-profile">
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Tên nhà cung cấp:</b>
+                                    <b>Tên nhà cung cấp<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="text" value="@Model.SupplierName" name="txtSupplierName" style="width: 80%"/>
+                                    <input type="text" required value="@Model.SupplierName" name="txtSupplierName" id="txtSupplierName" style="width: 95%" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Địa chỉ:</b>
+                                    <b>Địa chỉ<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <textarea name="txtSupplierAddress" maxlength="200" rows="3" style="width: 80%">@Model.SupplierAddress</textarea>
+                                    <textarea name="txtSupplierAddress" id="txtSupplierAddress" required maxlength="200" rows="3" style="width: 95%">@Model.SupplierAddress</textarea>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Số điện thoại:</b>
+                                    <b>Số điện thoại<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="number" value="@Model.SupplierPhoneNumber" name="txtSupplierPhoneNumber" style="width: 80%"/>
+                                    <input type="text" required value="@Model.SupplierPhoneNumber" name="txtSupplierPhoneNumber" id="txtSupplierPhoneNumber" style="width: 95%" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>E-mail:</b>
+                                    <b>E-mail<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="email" value="@Model.SupplierEmail" name="txtSupplierEmail" style="width: 80%"/>
+                                    <input type="email" required value="@Model.SupplierEmail" name="txtSupplierEmail" id="txtSupplierEmail" style="width: 95%" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Mã số thuế:</b>
+                                    <b>Mã số thuế<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="number" value="@Model.SupplierTaxCode" name="txtSupplierTaxCode" style="width: 80%"/>
+                                    <input type="text" required value="@Model.SupplierTaxCode" name="txtSupplierTaxCode" id="txtSupplierTaxCode" style="width: 95%" />
                                 </div>
                             </div>
                         </div>
+                        <div class="row" style="margin-bottom: 17px;">
+                            <div class="col-xs-12">
+                                <b><b style="color: #ff0000">*</b>: Thông tin bắt buộc</b>
+                            </div>
+                        </div>
+
                     </form>
                     <!-- Update button -->
-                    <div class="box-footer">
-                        <button class="btn btn-primary pull-right" style="margin-right: 10%;" onclick="editSupplier()">
+                    <div class="box box-footer">
+                        <button class="btn btn-primary pull-right" style="margin-right: 2%; margin-bottom: 2%" onclick="editSupplier()">
                             <i class="fa fa-edit" style="margin-right: 3px;"></i>Cập nhật
                             <script type="text/javascript">
                                 function editSupplier() {
-                                    $.ajax({
-                                        url: "@(Url.Action("EditSupplier","Supplier"))",
-                                        method: "POST",
-                                        data: $("#edit-input-material-form").serialize(),
-                                        success: function(data) {
-                                            if (data === "1") {
-                                                var n1 = noty({
-                                                    text: 'Chỉnh sửa nhà cung cấp thành công',
-                                                    type: 'success',
-                                                    dismissQueue: false,
-                                                    layout: 'bottomLeft',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 1500
-                                                });
-                                                window.setTimeout(function() {
-                                                    window.location.replace("@(Url.Action("SupplierIndex", "Supplier"))");
-                                                }, 4000);
-                                            } else {
-                                                var n2 = noty({
-                                                    text: 'Không thể chỉnh sửa thông tin nhà cung cấp',
+                                    var supplierName = $("#txtSupplierName").val();
+                                    var supplierAddress = $("#txtSupplierAddress").val();
+                                    var supplierPhoneNumber = $("#txtSupplierPhoneNumber").val();
+                                    var supplierTaxCode = $("#txtSupplierTaxCode").val();
+
+                                    if (supplierName.trim() === '') {
+                                        noty({
+                                            text: 'Tên nhà cung cấp không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (supplierAddress.trim() === '') {
+                                        noty({
+                                            text: 'Địa chỉ nhà cung cấp không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (supplierPhoneNumber.trim() === '') {
+                                        noty({
+                                            text: 'Số điện thoại nhà cung cấp không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else
+                                        if (isNaN(supplierPhoneNumber)) {
+                                            noty({
+                                                text: 'Số điện thoại nhà cung cấp không đúng.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'bottomLeft',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        } else
+                                            if (supplierTaxCode.trim() === '') {
+                                                noty({
+                                                    text: 'Mã số thuế nhà cung cấp không được trống.',
                                                     type: 'warning',
                                                     dismissQueue: false,
                                                     layout: 'bottomLeft',
                                                     theme: 'defaultTheme',
                                                     timeout: 1000
                                                 });
-                                            }
-                                        },
-                                        fail: function(e) {
-                                            var n2 = noty({
-                                                text: 'Đã có lỗi xảy ra',
-                                                type: 'error',
-                                                dismissQueue: false,
-                                                layout: 'bottomLeft',
-                                                theme: 'defaultTheme',
-                                                timeout: 1000
-                                            });
-                                        }
-                                    });
+                                            } else
+                                                if (isNaN(supplierTaxCode)) {
+                                                    noty({
+                                                        text: 'Mã số thuế nhà cung cấp không đúng.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'bottomLeft',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                } else
+                                                    if (supplierTaxCode.trim() === '') {
+                                                        noty({
+                                                            text: 'Mã số thuế nhà cung cấp không được trống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'bottomLeft',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                    } else
+                                                        $.ajax({
+                                                            url: "@(Url.Action("EditSupplier","Supplier"))",
+                                                            method: "POST",
+                                                            data: $("#edit-supplier-form").serialize(),
+                                                            success: function (data) {
+                                                                if (data === "1") {
+                                                                    noty({
+                                                                        text: 'Chỉnh sửa nhà cung cấp thành công',
+                                                                        type: 'success',
+                                                                        dismissQueue: false,
+                                                                        layout: 'bottomLeft',
+                                                                        theme: 'defaultTheme',
+                                                                        timeout: 1500
+                                                                    });
+                                                                    window.setTimeout(function () {
+                                                                        window.location.replace("@(Url.Action("SupplierIndex", "Supplier"))");
+                                                                    }, 4000);
+                                                                } else {
+                                                                    noty({
+                                                                        text: 'Không thể chỉnh sửa thông tin nhà cung cấp',
+                                                                        type: 'warning',
+                                                                        dismissQueue: false,
+                                                                        layout: 'bottomLeft',
+                                                                        theme: 'defaultTheme',
+                                                                        timeout: 1000
+                                                                    });
+                                                                }
+                                                            },
+                                                            fail: function () {
+                                                                noty({
+                                                                    text: 'Đã có lỗi xảy ra',
+                                                                    type: 'error',
+                                                                    dismissQueue: false,
+                                                                    layout: 'bottomLeft',
+                                                                    theme: 'defaultTheme',
+                                                                    timeout: 1000
+                                                                });
+                                                            }
+                                                        });
                                 }
                             </script>
                         </button>
                         <!-- Comeback button -->
-                        <button class="btn btn-danger" onclick="comebackToIndex()">
-                            <i class="fa fa-edit" style="margin-left: 10px;"></i>Quay lại
+                        <button class="btn btn-success" onclick="comebackToIndex()">
+                            <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại trang chi tiết
                             <script type="text/javascript">
                                 function comebackToIndex() {
                                     window.location.replace("@(Url.Action("SupplierDetail", "Supplier", new {@id = Model.SupplierId}))");
@@ -126,6 +204,10 @@
                     </div>
                 </div>
 
+
+
+            </div>
+            <div class="col-md-3">
             </div>
         </div>
     </div>
@@ -133,7 +215,7 @@
     <script>
         function maxLengthCheck(object) {
             if (object.value.length > object.maxLength)
-                object.value = object.value.slice(0, object.maxLength)
+                object.value = object.value.slice(0, object.maxLength);
         }
     </script>
 </section>

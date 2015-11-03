@@ -6,13 +6,14 @@ using BMA.Models;
 
 namespace BMA.Business
 {
-    public class CusManageOrderBusiness
+    public class CusManageBusiness
     {
         private readonly BMAEntities db;
-        public CusManageOrderBusiness()
+        public CusManageBusiness()
         {
             db = new BMAEntities();
         }
+
         public List<Order> GetOrder(int cusId)
         {
             List<Order> orderToCheck = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != 1).ToList();

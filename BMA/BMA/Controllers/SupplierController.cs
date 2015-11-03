@@ -21,6 +21,8 @@ namespace BMA.Controllers
         #region Get supplier list
         public ActionResult SupplierIndex()
         {
+            ViewBag.TreeView = "supplier";
+            ViewBag.TreeViewMenu = "listSupplier";
             var supplierslList = SupplierBusiness.GetSupplierList();
             if (supplierslList == null)
             {
@@ -33,6 +35,7 @@ namespace BMA.Controllers
         #region Get Input Material Detail
         public ActionResult SupplierDetail(int id)
         {
+            ViewBag.TreeView = "supplier";
             Supplier supplierDetail = supplierBusiness.GetSupplier(id);
             if (supplierDetail == null)
             {
@@ -65,9 +68,8 @@ namespace BMA.Controllers
         #region Edit Supplier View
         public ActionResult EditSupplier(int id)
         {
+            ViewBag.TreeView = "supplier";
             Supplier supplier = db.Suppliers.SingleOrDefault(m => m.SupplierId == id);
-            var productMaterial = db.ProductMaterials.ToList();
-            ViewBag.productMaterial = productMaterial;
             return View(supplier);
         }
         #endregion    
@@ -99,12 +101,15 @@ namespace BMA.Controllers
         #region Add New Supplier View
         public ActionResult AddSupplier()
         {
+            ViewBag.TreeView = "supplier";
+            ViewBag.TreeViewMenu = "addSupplier";
             return View("AddSupplier");
         }
         #endregion
-        [HttpPost]
+
         #region Add New Supplier
-        public int AddSupplier(FormCollection f)
+        [HttpPost]
+    public int AddSupplier(FormCollection f)
         {
 
             String supplierName = f["txtSupplierName"];

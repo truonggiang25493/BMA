@@ -5,8 +5,10 @@
 @{
     ViewBag.Title = "Giỏ hàng";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
+    BMA.Models.DiscountByQuantity dbq = ViewBag.discount;
     int sumTotal = 0;
 }
+
 
 <div class="container main-container headerOffset">
     <div class="row">
@@ -34,8 +36,7 @@
                             <table class="cartTable table-responsive" style="width:100%">
                                 <tbody>
                                     <tr class="CartProduct cartTableHeader">
-                                        <td style="width:15%"> Sản phẩm </td>
-                                        <td style="width:40%"> Chi tiết </td>
+                                        <td style="width:55%" colspan="2"> Sản phẩm </td>
                                         <td style="width:10%" class="delete">&nbsp;</td>
                                         <td style="width:15%"> Số lượng </td>
                                         <td style="width:20%"> Tổng </td>
@@ -43,7 +44,7 @@
                                     @foreach (var item in Model)
                                     {
                                         <tr class="CartProduct">
-                                            <td class="CartProductThumb"><div> <a href="product-details.html"><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" alt="img"></a> </div></td>
+                                            <td class="CartProductThumb"><div> <a href="@Url.Action("ProductDetail","Product",new{@productId = item.ProductId})"><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" alt="img"></a> </div></td>
                                             <td>
                                                 <div class="CartDescription">
                                                     <h4> <a href="product-details.html">@item.ProductName </a> </h4>
@@ -51,7 +52,7 @@
                                                 </div>
                                             </td>
                                             <td class="delete"><a href="@Url.Action("DeleteCart", "Cart", new { @ProductId = item.ProductId})" title="Delete"> <i class="glyphicon glyphicon-trash fa-2x"></i></a></td>
-                                            <td><input class="quanitySniper" type="text" value="@item.Quantity" name="quanitySniper"></td>
+                                            <td><input class="quanitySniper" id="quanitySniper" min="1" max="5000" type="text" value="@item.Quantity" name="quanitySniper"></td>
                                             <td class="price" style="text-align:right">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                         </tr>
                                         sumTotal = sumTotal + @item.Total;
@@ -60,15 +61,21 @@
                             </table>
                         </form>
                     </div>
+
+
                     @{
-                        int totalValue = Convert.ToInt32(sumTotal + sumTotal * 0.1);
+                        //int discount = Convert.ToInt32(Convert.ToInt32(dbq.DiscountValue) * 0.01 * sumTotal);
+                        //int cosAfterDiscount = sumTotal - discount;
                         int taxAmount = Convert.ToInt32(sumTotal * 0.1);
+                        int totalValue = sumTotal + taxAmount;
+                        TempData["Amount"] = sumTotal;
+                        TempData["TaxAmount"] = taxAmount;
                     }
                     <div class="cartFooter w100">
                         <div class="box-footer">
                             <div class="pull-left"> <a href="@Url.Action("Index","Product")" class="btn btn-success"> <i class="fa fa-arrow-left"></i> &nbsp; Tiếp tục mua sắm </a> </div>
                             <div class="pull-right">
-                                <button type="submit" onclick="$(document.getElementById('updateCartForm').submit())" class="btn btn-info"> <i class="fa fa-undo"></i> &nbsp; Cập nhật giỏ hàng </button>
+                                <button type="submit" onclick="$(document.getElementById('updateCartForm').submit())" id="Update" class="btn btn-info"> <i class="fa fa-undo"></i> &nbsp; Cập nhật giỏ hàng </button>
                             </div>
                         </div>
                     </div>
@@ -80,7 +87,7 @@
             <div class="contentBox">
                 <div class="w100 costDetails">
                     <div class="table-block" id="order-detail-content">
-                        <a class="btn btn-primary btn-lg btn-block " title="checkout" href="checkout-0.html" style="margin-bottom:20px"> Đặt hàng &nbsp; <i class="fa fa-arrow-right"></i> </a>
+                        <a class="btn btn-primary btn-lg btn-block " title="checkout" href="@Url.Action("ProceedCheckout","Cart")" style="margin-bottom:20px"> Đặt hàng &nbsp; <i class="fa fa-arrow-right"></i> </a>
                         <div class="w100 cartMiniTable">
                             <table id="cart-summary" class="std table">
                                 <tbody>
@@ -88,28 +95,51 @@
                                         <td>Tổng cộng</td>
                                         <td class="price">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                     </tr>
-                                    <tr style="">
+                                    @*<tr style="">
                                         <td>Giảm giá</td>
-                                        <td class="price"><span class="success">10.000</span></td>
+                                        <td class="price"><span class="success">@(discount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
                                     </tr>
+                                    <tr style="">
+                                        <td>Sau giảm giá</td>
+                                        <td class="price"><span class="success">@(cosAfterDiscount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                    </tr>*@
                                     <tr>
                                         <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
                                         <td class="price" id="total-tax">@taxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                     </tr>
                                     @*@{
-                                        int hihi = int.Parse(totalValue.ToString().Reverse().Aggregate("", (s, c) => s + c));
-                                        string haha = hihi.ToString().Substring(0, 1);
-                                    }*@
+                                            int hihi = int.Parse(totalValue.ToString().Reverse().Aggregate("", (s, c) => s + c));
+                                            string haha = hihi.ToString().Substring(0, 1);
+                                        }*@
                                     <tr>
                                         <td>Thành tiền</td>
                                         <td class=" site-color" id="total-price" style="font-size: 20px; color: #4ec67f !important">@totalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            <div class="input-append couponForm">
-                                                <input class="col-lg-12" type="text" placeholder="Ngày nhận hàng">
-                                                @*<button class="col-lg-4 btn btn-success" type="button">Apply!</button>*@
+                                            <div class='col-sm-6'>
+                                                <div class="form-group">
+                                                    <div class='input-group date' id='datetimepicker'>
+                                                        <input type='text' class="form-control" />
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <script src="https://code.jquery.com/jquery.js"></script>
+                                            <script src="~/Content/AdminLayout/bootstrap/js/bootstrap.js"></script>
+                                            <script src="~/Content/AdminLayout/plugins/datepicker/bootstrap-datepicker.js"></script>
+
+                                            <script type="text/javascript">
+                                                $(document).ready(function () {
+                                                    $('#datetimepicker').datetimepicker({                                                        
+                                                    });
+                                                });
+                                            </script>
+                                            @*<div class="input-append couponForm">
+                                                <input id="datetimepicker" class="col-lg-12" type="text" placeholder="Ngày nhận hàng">
+                                            </div>*@
                                         </td>
                                     </tr>
                                 </tbody>
@@ -125,4 +155,17 @@
     </div>
     <div style="clear:both"></div>
     <div style="margin-bottom:50px;"></div>
+
 </div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.quanitySniper').keypress(function (e) {
+            var key_codes = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
+            if (!($.inArray(e.which, key_codes) >= 0)) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
