@@ -16,8 +16,13 @@
     </div>
 </section>
 @{
-    int sumTotal = Convert.ToInt32(Model.TotalValue * 0.9);
-    int tax = Convert.ToInt32(Model.TotalValue * 0.1);
+    int sumTotal = 0;
+    int tax = 0;
+    foreach (var item in oi)
+    {
+        sumTotal = sumTotal + item.Amount;
+        tax = tax + item.TaxAmount;
+    }
 }
 <section>
     <div class="container">
@@ -55,6 +60,10 @@
                                     <td class="text-left">@Model.CreateTime.ToShortDateString()</td>
                                 </tr>
                                 <tr>
+                                    <td class="text-left">Ngày nhận hàng</td>
+                                    <td class="text-left">@Model.DeliveryTime.ToString().AsDateTime().ToString("dd/MM/yyyy")</td>
+                                </tr>
+                                <tr>
                                     <td class="text-left">Trạng thái</td>
                                     @if (Model.OrderStatus == 0)
                                     {
@@ -76,13 +85,14 @@
                                     {
                                         <td class="text-left"><div class="btn btn-danger">@CommonData.Status[Model.OrderStatus]</div></td>
                                     }
+
                                 </tr>
                                 <tr>
                                     <td class="text-left">Tổng cộng</td>
                                     <td class="text-left">@(sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-left">Thuế</td>
+                                    <td class="text-left">Thuế VAT(10%)</td>
                                     <td class="text-left">@(tax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                 </tr>
                                 <tr>
@@ -116,7 +126,6 @@
                                 }
                             </tbody>
                         </table>
-
                         @if (Model.OrderStatus == 5 || Model.OrderStatus == 6)
                         {
                             <div style="margin: 40px 0px 40px 0px; background-color: #808080" class="send-msg"><a style="background-color:#808080" class="submit-button">KHÔNG THỂ HỦY</a></div>
@@ -128,27 +137,28 @@
                     </div>
                 </div>
             </div>
-            <div id="light" class="white_content_delete">
-                <div class="modal-content">
-                    <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
-                        <button type="button" class="close" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
-                        <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
-                    </div>
-                    @if (Model.OrderStatus == 0)
-                    {
-                        <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Quý khách thực sự muốn hủy đơn hàng này?</div>
-                    }
-                    else
-                    {
-                        <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc.<br /> Quý khách có muốn hủy đơn hàng này không ?</div>
-                    }
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
-                        <a class="btn btn-primary" href="@Url.Action("CancelOrderConfirm", "CusManageOrder", new { @orderId = Model.OrderId })">Đồng ý</a>
-                    </div>
-                </div>
-            </div>
-            <div id="fade" class="black_overlay"></div>
         </div>
     </div>
 </section>
+<div id="light" class="white_content_delete">
+    <div class="modal-content">
+        <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
+            <button type="button" class="close" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
+            <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
+        </div>
+        @if (Model.OrderStatus == 0)
+        {
+            <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Quý khách thực sự muốn hủy đơn hàng này?</div>
+        }
+        else
+        {
+            <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc.<br /> Quý khách có muốn hủy đơn hàng này không ?</div>
+        }
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="document.getElementById('light').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
+            <a class="btn btn-primary" href="@Url.Action("CancelOrderConfirm", "CusManageOrder", new { @orderId = Model.OrderId })">Đồng ý</a>
+        </div>
+    </div>
+</div>
+<div id="fade" class="black_overlay"></div>
+
