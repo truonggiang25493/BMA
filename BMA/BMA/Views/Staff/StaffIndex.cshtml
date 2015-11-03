@@ -1,14 +1,15 @@
-﻿@using System.Globalization
+﻿
+@using System.Globalization
 @using BMA.Common
 @using BMA.Models
-@model IEnumerable<BMA.Models.Supplier>
+@model IEnumerable<BMA.Models.Staff>
 @{
-    ViewBag.Title = "Danh sách nhà cung cấp";
+    ViewBag.Title = "Danh sách nhân viên";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 
 <section class="content-header">
-    <h1>Danh sách nhà cung cấp</h1>
+    <h1>Danh sách nhân viên</h1>
 </section>
 <!-- Main content -->
 <section class="content">
@@ -19,33 +20,28 @@
                 <thead style="font-weight: bold">
                     <tr>
 
-                        <th>Tên nhà cung cấp</th>
-                        <th>Địa chỉ</th>
+                        <th>Tên nhân viên</th>
+                        <th>Tên tài khoản</th>
                         <th>Số điện thoại</th>
                         <th>Trạng thái</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (Supplier supplier in Model)
+                    @foreach (Staff staff in Model)
                     {
                         <tr>
 
-                            <td>@supplier.SupplierName</td>
-                            <td>@supplier.SupplierAddress</td>
-                            <td>@supplier.SupplierPhoneNumber</td>
-                            @if (supplier.IsActive)
+                            <td>@staff.User.Fullname</td>
+                            <td>@staff.User.Username</td>
+                            <td>@staff.StaffPhoneNumber</td>
+                            @if (staff.IsActive)
                             {
                                 <td>
                                     <span class="label label-success">Đang hoạt động</span>
                                 </td>
                                 <td>
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("SupplierDetail", "Supplier", new {id = supplier.SupplierId}))">
-                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
-                                    </a>
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("EditSupplier", "Supplier", new { id = supplier.SupplierId }))">
-                                        <i class="fa fa-edit" style="margin-right: 3px"></i>Sửa
-                                    </a>
+                                    @Html.ActionLink("Xem", "StaffDetail", new { id = staff.StaffId })
                                 </td>
                             }
                             else
@@ -54,9 +50,7 @@
                                     <span class="label label-danger">Ngừng hoạt động</span>
                                 </td>
                                 <td>
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("SupplierDetail", "Supplier", new { id = supplier.SupplierId }))">
-                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
-                                    </a>
+                                    @Html.ActionLink("Xem", "StaffDetail", new { id = staff.StaffId })
                                 </td>
                             }
                         </tr>

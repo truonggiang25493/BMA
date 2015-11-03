@@ -30,12 +30,12 @@
                             <a class="pull-right">@Model.ImportQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @Model.ProductMaterial.ProductMaterialUnit</a>
                         </li>
                         <li class="list-group-item">
-                            <b>Số lượng tồn kho: </b>
-                            <a class="pull-right">@Model.RemainQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @Model.ProductMaterial.ProductMaterialUnit</a>
+                            <b>Giá nhập kho: </b>
+                            <a class="pull-right">@Model.InputMaterialPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</a>
                         </li>
                         <li class="list-group-item">
-                            <b>Giá nhập kho: </b>
-                            <a class="pull-right">@Model.InputMaterialPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))/@Model.ProductMaterial.ProductMaterialUnit</a>
+                            <b>Số lượng tồn kho: </b>
+                            <a class="pull-right">@Model.RemainQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @Model.ProductMaterial.ProductMaterialUnit</a>
                         </li>
                         <li class="list-group-item">
                             <b>Ngày nhập kho: </b>
@@ -51,19 +51,23 @@
                         </li>
                         <li class="list-group-item">
                             <b>Trạng thái: </b>
-                            @if (Model.RemainQuantity == 0)
+                            @if (DateTime.Compare(Model.InputMaterialExpiryDate, DateTime.Today) != 1)
+                            {
+                                <span class="label label-danger">Hết hạn sử dụng</span>
+                            }
+                            else if (Model.RemainQuantity == 0)
                             {
                                 <span class="label label-default">Đã hết</span>
                             }
-                            
+
                             else
                             {
                                 <span class="label label-success">Có thể sử dụng</span>
                             }
                         </li>
                     </ul>
-                    <!-- Trường hợp còn nguyên liệu và trạng thái active mới hiện button -->
-                    @if (Model.RemainQuantity != 0)
+                    <!-- Trường hợp còn nguyên liệu và còn hạn sử dụng mới hiện button -->
+                    @if ((Model.RemainQuantity != 0) && (DateTime.Compare(@Model.InputMaterialExpiryDate, DateTime.Today) >= 1))
                     {
                         <div class="row">
                             <!-- Discard input material button -->
@@ -73,7 +77,7 @@
                                     <script type="text/javascript">
                                         function open_container(inputMaterialId, discardQuantity, discardNote) {
                                             var content =
-                                                '<form role="form" action="" method="post" id="form-aprrove">' +
+                                                '<form role="form" action="" method="post" id="discard-form">' +
                                                     '<div class="form-group">' +
                                                     '<label>Số lượng hủy: </label>' +
                                                     '<input type="number" min = "1" oninput="maxLengthCheck(this)" max="@Model.RemainQuantity" class="form-control" id="price" value="' + discardQuantity + '" name="discardQuantity"/>' +
@@ -83,14 +87,14 @@
                                                     '<textarea maxlength="200" rows="3" class="form-control" id="discardNote" value="' + discardNote + '" name="discardNote">' + '</textarea>' +
                                                     '</div>' +
                                                     '</form>';
-                                            var title = 'Thay đổi trạng thái nguyên liệu';
+                                            var title = 'Hủy nguyên liệu';
                                             var footer = $("<div>", {
                                                 "class": "row",
                                                 "html": [
                                                     $("<button>", {
                                                         "class": "btn btn-success pull-right",
                                                         "style": "margin-right: 30%;",
-                                                        "onclick": "change_input_material_stage(" + inputMaterialId + ")",
+                                                        "onclick": "discard_input_material(" + inputMaterialId + ")",
                                                         "html": "Đồng ý"
                                                     }),
                                                     $("<button>", {
@@ -111,14 +115,14 @@
                                             document.getElementById('popup-footer').innerHTML = footer;
                                         }
 
-                                        function change_input_material_stage(id) {
+                                        function discard_input_material(id) {
                                             $.ajax({
-                                                "url": "@(Url.Action("ChangeInputMaterialStatus", "InputMaterial"))",
+                                                "url": "@(Url.Action("DiscardInputMaterial", "DiscardInputMaterial"))",
                                                 "method": "POST",
                                                 "data": {
                                                     "id": id
                                                 },
-                                                "success": function(data) {
+                                                "success": function (data) {
                                                     if (data === "1") {
                                                         $('#myModal').modal('hide');
                                                         window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial", Model.InputMaterialId)");
@@ -126,7 +130,7 @@
                                                         alert("Khong the");
                                                     }
                                                 },
-                                                "fail": function(e) {
+                                                "fail": function (e) {
                                                     alert("Have error" + e);
                                                 }
                                             });
@@ -134,13 +138,20 @@
                                     </script>
                                 </button>
                             </div>
-                          
+
                         </div>
                     }
-
-
                 </div>
             </div>
+            <!-- Comeback button -->
+            <button class="btn btn-success" onclick="comebackToIndex()">
+                <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại trang danh sách
+                <script type="text/javascript">
+                    function comebackToIndex() {
+                        window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
+                    }
+                </script>
+            </button>
         </div>
         <!-- Tab in right -->
         <div class="col-md-8">
@@ -152,10 +163,12 @@
                     <li><a href="#discardInfo" data-toggle="tab">Thông tin hủy (Nếu có)</a></li>
                 </ul>
                 <div class="tab-content">
+                    <!-- Input Bill List -->
                     <div class="active tab-pane" id="inputBillImage">
                         <div class="row" id="inputMaterialTable">
                         </div>
                     </div>
+                    <!-- Input Material Note -->
                     <div class="tab-pane" id="inputMaterialNote">
                         <div>
                             <p>
@@ -170,6 +183,7 @@
                             </p>
                         </div>
                     </div>
+                    <!-- Input Material Discard -->
                     <div class="tab-pane" id="discardInfo">
                         <div class="row" id="discardTable">
                         </div>
@@ -181,7 +195,7 @@
     <!--Button-->
     <div class="row">
         <div class="col-xs-12">
-            @if (Model.RemainQuantity != 0)
+            @if (Model.RemainQuantity != 0 && (DateTime.Compare(@Model.InputMaterialExpiryDate, DateTime.Today) >= 1))
             {
                 <!-- Edit button -->
                 <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputMaterial()">
@@ -194,49 +208,41 @@
                 </button>
             }
 
-            <!-- Comeback button -->
-            <button class="btn btn-success" onclick="comebackToIndex()">
-                <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
-                <script type="text/javascript">
-                    function comebackToIndex() {
-                        window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
-                    }
-                </script>
-            </button>
+
         </div>
     </div>
 </section>
 <!-- Get Input Material Table by Input Bill -->
 @section InitScript{
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $.ajax({
                 url: "@(Url.Action("GetInputMaterialTable", "InputMaterial", new {id = Model.InputBillId}))",
                 method: "GET",
-                success: function(data) {
+                success: function (data) {
                     $("#inputMaterialTable").html(data);
                 },
-                fail: function(e) {
+                fail: function (e) {
                     alert(e.toString());
                 }
             });
         });
     </script>
 
-<script type="text/javascript">
-        $(document).ready(function() {
+    <script type="text/javascript">
+        $(document).ready(function () {
             $.ajax({
                 url: "@(Url.Action("GetDiscardTable", "DiscardInputMaterial", new {id = Model.InputMaterialId}))",
                 method: "GET",
-                success: function(data) {
+                success: function (data) {
                     $("#discardTable").html(data);
                 },
-                fail: function(e) {
+                fail: function (e) {
                     alert(e.toString());
                 }
             });
         });
-</script>
+    </script>
 
     <!--max length for number-->
     <script>

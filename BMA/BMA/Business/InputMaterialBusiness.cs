@@ -11,13 +11,18 @@ namespace BMA.Business
 {
     public class InputMaterialBusiness
     {
-        private static BMAEntities db = new BMAEntities();
+        private static BMAEntities db;
 
+        public InputMaterialBusiness()
+        {
+            db = new BMAEntities();
+        }
 
         #region Get Input Material List
 
         public static List<InputMaterial> GetInputMaterialList()
         {
+            
             List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderBy(n => n.InputMaterialExpiryDate).ToList();
             return inputMaterialslList;
         }
@@ -116,6 +121,10 @@ namespace BMA.Business
             {
                 string s = e.ToString();
                 return false;
+            }
+            finally
+            {
+                db.Dispose();
             }
             return true;
         }

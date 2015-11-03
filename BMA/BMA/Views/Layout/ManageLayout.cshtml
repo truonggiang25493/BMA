@@ -23,7 +23,7 @@
     <link href="~/Content/timeslider.css" rel="stylesheet" />
 
     @RenderSection("InitStyle", false)
-</head>
+   </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
         <header class="main-header">
@@ -133,14 +133,14 @@
                             <i class="fa fa-home"></i> <span>Thông tin cửa hàng</span>
                         </a>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="staff">
                         <a href="#">
                             <i class="fa fa-user"></i> <span>Nhân viên</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
-                            <li><a href=""><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
+                            <li id="listStaff"><a href=""><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
+                            <li id="addStaff"><a href=""><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -150,7 +150,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-                            <li><a href="@Url.Action("Create", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+                            <li><a href="@Url.Action("AddProduct", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -174,14 +174,14 @@
                             <li id="addInputMaterial"><a href="@Url.Action("AddInputMaterial","InputMaterial")"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="supplier">
                         <a href="#">
                             <i class="fa fa-truck"></i> <span>Nhà cung cấp</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
-                            <li><a href=""><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
+                            <li id="listSupplier"><a href="@Url.Action("SupplierIndex","Supplier")"><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
+                            <li id="addSupplier"><a href="@Url.Action("AddSupplier","Supplier")"><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
                         </ul>
                     </li>
                     <li class="treeview" id="order">
@@ -266,6 +266,7 @@
     <!--Timeslider-->
     <script src="~/Scripts/timeslider.js"></script>
     @RenderSection("InitScript", false)
+    @RenderSection("AddInputMaterialScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({

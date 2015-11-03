@@ -9,70 +9,88 @@
 }
 
 <section class="content-header">
-    <h1>Chỉnh sửa nguyên liệu đầu vào</h1>
+    <h1 style="text-align: center">Chỉnh sửa nguyên liệu đầu vào</h1>
 </section>
-<section>
-
-    <div style="margin-top: 5%">
+<section class="content">
+    <div style="margin-top: 2%">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-8">
                 <div class="box box-primary">
                     <!-- Update form -->
-                    <form id="edit-input-material-form">
-                        <input type="hidden" name="InputMaterialId" value="@Model.InputMaterialId"/>
+                    <form id="edit-input-material-form" style="margin-top: 2%">
+                        <input type="hidden" name="InputMaterialId" id="InputMaterialId" value="@Model.InputMaterialId" />
                         <div class="box-body box-profile">
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Tên nguyên liệu:</b>
+                                    <b>Tên nguyên liệu<b style="color: #ff0000">*</b>:</b>
                                 </div>
-                                <div class="col-xs-7">
-                                    <select name="txtProductMaterialId" style="width: 80%">
-                                        @foreach (ProductMaterial item in pm)
-                                        {
-                                            if (item.ProductMaterialId == Model.ProductMaterial.ProductMaterialId)
-                                            {
-                                                <option value="@Model.ProductMaterial.ProductMaterialId" selected>@item.ProductMaterialName</option>
+                                <div class="col-xs-7" id="product-material-info">
+                                    <input type="text" name="productMaterialName" id="productMaterialName" readonly style="margin-right: 2%; width: 55%" value="@Model.ProductMaterial.ProductMaterialName" />
+                                    <input type="hidden" name="productMaterialId" id="productMaterialId" value="@Model.ProductMaterial.ProductMaterialId"/>
+                                    <a class="btn btn-success btn-xs" id="add-product-material" onclick="open_choose_product_material()">
+                                        Chọn nguyên liệu
+                                        <script type="text/javascript">
+                                            function open_choose_product_material() {
+                                                $.ajax({
+                                                    url: "@(Url.Action("GetProductMaterialList", "InputMaterial"))",
+                                                    method: "POST",
+                                                    success: function (data) {
+                                                        var chooseButton = $("<button>", {
+                                                            "class": "btn btn-success",
+                                                            "onclick": "choose_product_material()",
+                                                            "html": "Chọn nguyên liệu"
+                                                        });
+                                                        document.getElementById('popup-body').innerHTML = data;
+                                                        document.getElementById('popup-footer').innerHTML = chooseButton[0].outerHTML;
+                                                        $('#myModal').modal('show');
+                                                    }
+                                                });
                                             }
-                                            else
-                                            {
-                                                <option value="">@(item.ProductMaterialName)</option>
+
+                                            function choose_product_material() {
+                                                var productMaterialName = $("[data-role=product-material] tr.selected td:first span").html();
+                                                var productMaterialId = $("[data-role=product-material] tr.selected td:first input").val();
+
+                                                $("#productMaterialName").val(productMaterialName);
+                                                $("#productMaterialId").val(productMaterialId);
+                                                $('#myModal').modal('hide');
                                             }
-                                        }
-                                    </select>
+                                        </script>
+                                    </a>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Số lượng nhập: </b>
+                                    <b>Số lượng nhập<b style="color: #ff0000">*</b>: </b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="number" value="@Model.ImportQuantity" name="txtInportQuantity" required oninput="maxLengthCheck(this)" maxlength="6" min="1" max="999999" style="width: 80%" placeholder="nhập số từ 1-6 chữ số"/>
+                                    <input type="number" value="@Model.ImportQuantity" name="txtImportQuantity" id="txtImportQuantity" required oninput="maxLengthCheck(this)" maxlength="6" min="1" max="999999" style="width: 55%" placeholder="nhập số từ 1-6 chữ số" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Tổng giá nhập kho: </b>
+                                    <b>Tổng giá nhập kho<b style="color: #ff0000">*</b>: </b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="number" value="@Model.InputMaterialPrice" name="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="7" min="1" max="9999999" style="width: 80%" placeholder="nhập số từ 1-7 chữ số"/>
+                                    <input type="number" value="@Model.InputMaterialPrice" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="7" min="1" max="9999999" style="width: 55%" placeholder="nhập số từ 1-7 chữ số" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Ngày nhập kho: </b>
+                                    <b>Ngày nhập kho<b style="color: #ff0000">*</b>: </b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="date" value="@(Model.ImportDate.ToString("yyyy-MM-dd"))" required min=" 2015-01-01" max="2020-12-31" name="txtImportDate" style="width: 80%"/>
+                                    <input type="date" value="@(Model.ImportDate.ToString("yyyy-MM-dd"))" required min=" 2015-01-01" max="2020-12-31" name="txtImportDate" id="txtImportDate" style="width: 55%" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Ngày hết hạn: </b>
+                                    <b>Ngày hết hạn<b style="color: #ff0000">*</b>: </b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="date" value="@Model.InputMaterialExpiryDate.ToString("yyyy-MM-dd")" required min="2015-01-01" max="2020-12-31" name="txtInputMaterialExpiryDate" style="width: 80%"/>
+                                    <input type="date" value="@Model.InputMaterialExpiryDate.ToString("yyyy-MM-dd")" required min="2015-01-01" max="2020-12-31" name="txtInputMaterialExpiryDate" id="txtInputMaterialExpiryDate" style="width: 55%" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -80,24 +98,24 @@
                                     <b>Ghi chú: </b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <textarea name="txtInputMaterialNote" maxlength="200" rows="3" style="width: 80%">@Model.InputMaterialNote</textarea>
+                                    <textarea name="txtInputMaterialNote" id="txtInputMaterialNote" maxlength="200" rows="3" style="width: 55%">@Model.InputMaterialNote</textarea>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Thuộc hóa đơn: </b>
+                                    <b>Thuộc hóa đơn<b style="color: #ff0000">*</b>: </b>
                                 </div>
                                 <div class="col-xs-7" id="order-info">
-                                    <input type="text" name="inputBillCode" value="@Model.InputBill.InputBillCode" readonly style="margin-bottom: 10px; width: 80%"/>
-                                    <input type="hidden" name="inputBillId" id="inputBillId" value="@Model.InputBill.InputBillId"/>
-                                    <button class="btn btn-success" id="add-bill" onclick="open_choose_bill()">
+                                    <input type="text" name="inputBillCode" id="inputBillCode" value="@Model.InputBill.InputBillCode" readonly style="margin-bottom: 10px; width: 55%;" />
+                                    <input type="hidden" name="inputBillId" id="inputBillId" value="@Model.InputBill.InputBillId" />
+                                    <a class="btn btn-success btn-xs" id="add-bill" onclick="open_choose_bill()">
                                         Chọn hóa đơn
                                         <script type="text/javascript">
                                             function open_choose_bill() {
                                                 $.ajax({
-                                                    url: "@(Url.Action("GetInputList", "InputMaterial"))",
+                                                    url: "@(Url.Action("GetInputBillList", "InputMaterial"))",
                                                     method: "POST",
-                                                    success: function(data) {
+                                                    success: function (data) {
                                                         var chooseButton = $("<button>", {
                                                             "class": "btn btn-success",
                                                             "onclick": "choose_bill()",
@@ -116,79 +134,168 @@
                                                 $("#order-info input").val(billCode);
                                             }
                                         </script>
-                                    </button>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-12">
+                                    <b><b style="color: #ff0000">*</b>: Thông tin bắt buộc</b>
                                 </div>
                             </div>
                         </div>
                     </form>
                     <!-- Update button -->
-                    <div class="box-footer">
-                        <button class="btn btn-primary pull-right" style="margin-right: 10%;" onclick="editInputMaterial()">
+                    <div class="box box-footer">
+                        <button class="btn btn-primary pull-right" style="margin-right: 2%; margin-bottom: 2%" onclick="editInputMaterial()">
                             <i class="fa fa-edit" style="margin-right: 3px;"></i>Cập nhật
                             <script type="text/javascript">
                                 function editInputMaterial() {
-                                    $.ajax({
-                                        url: "@(Url.Action("EditInputMaterial","InputMaterial"))",
-                                        method: "POST",
-                                        data: $("#edit-input-material-form").serialize(),
-                                        success: function(data) {
-                                            if (data === "1") {
-                                                var n1 = noty({
-                                                    text: 'Chỉnh sửa nguyên liệu thành công',
-                                                    type: 'success',
-                                                    dismissQueue: false,
-                                                    layout: 'bottomLeft',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 1500
-                                                });
-                                                window.setTimeout(function() {
-                                                    window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
-                                                }, 4000);
-                                            } else {
-                                                var n2 = noty({
-                                                    text: 'Không thể chỉnh sửa nguyên liệu đầu vào',
-                                                    type: 'warning',
+                                    var productMaterialName = $("#productMaterialName").val();
+                                    var txtImportQuantity = $("#txtImportQuantity").val();
+                                    var txtInputMaterialPrice = $("#txtInputMaterialPrice").val();
+                                    var txtImportDate = $("#txtImportDate").val();
+                                    var txtInputMaterialExpiryDate = $("#txtInputMaterialExpiryDate").val();
+                                    var inputBillCode = $("#inputBillCode").val();
+
+                                    if (productMaterialName.trim() === '') {
+                                        noty({
+                                            text: 'Tên nguyên liệu đầu vào không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (isNaN(txtImportQuantity)) {
+                                        noty({
+                                            text: 'Số lượng nguyên liệu đầu vào phải là số.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (txtImportQuantity.trim() === '') {
+                                        noty({
+                                            text: 'Số lượng nguyên liệu đầu vào không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (isNaN(txtInputMaterialPrice)) {
+                                        noty({
+                                            text: 'Tổng giá nguyên liệu đầu vào phải là số.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (txtInputMaterialPrice.trim() === '') {
+                                        noty({
+                                            text: 'Tổng giá nguyên liệu đầu vào không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (txtImportDate.trim() === '') {
+                                        noty({
+                                            text: 'Ngày nhập nguyên liệu không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (txtInputMaterialExpiryDate.trim() === '') {
+                                        noty({
+                                            text: 'Ngày hết hạn nguyên liệu không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (inputBillCode.trim() === '') {
+                                        noty({
+                                            text: 'Hóa đơn nhập không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'bottomLeft',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else {
+                                        $.ajax({
+                                            url: "@(Url.Action("EditInputMaterial", "InputMaterial"))",
+                                            method: "POST",
+                                            data: $("#edit-input-material-form").serialize(),
+                                            success: function (data) {
+                                                if (data === "1") {
+                                                    noty({
+                                                        text: 'Chỉnh sửa nguyên liệu thành công',
+                                                        type: 'success',
+                                                        dismissQueue: false,
+                                                        layout: 'bottomLeft',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1500
+                                                    });
+                                                    window.setTimeout(function () {
+                                                        window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
+                                                    }, 2000);
+                                                } else {
+                                                    noty({
+                                                        text: 'Không thể chỉnh sửa nguyên liệu đầu vào',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'bottomLeft',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                }
+                                            },
+                                            fail: function () {
+                                                noty({
+                                                    text: 'Đã có lỗi xảy ra',
+                                                    type: 'error',
                                                     dismissQueue: false,
                                                     layout: 'bottomLeft',
                                                     theme: 'defaultTheme',
                                                     timeout: 1000
                                                 });
                                             }
-                                        },
-                                        fail: function(e) {
-                                            var n2 = noty({
-                                                text: 'Đã có lỗi xảy ra',
-                                                type: 'error',
-                                                dismissQueue: false,
-                                                layout: 'bottomLeft',
-                                                theme: 'defaultTheme',
-                                                timeout: 1000
-                                            });
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
                             </script>
                         </button>
                         <!-- Comeback button -->
-                        <button class="btn btn-danger" onclick="comebackToIndex()">
-                            <i class="fa fa-edit" style="margin-left: 10px;"></i>Quay lại
-                            <script type="text/javascript">
-                                function comebackToIndex() {
-                                    window.location.replace("@(Url.Action("InputMaterialDetail", "InputMaterial", new {@id = Model.InputMaterialId}))");
-                                }
-                            </script>
+                        <script type="text/javascript">
+                            function comebackToIndex() {
+                                window.location.replace("@(Url.Action("InputMaterialDetail", "InputMaterial", new {@id = Model.InputMaterialId}))");
+                            }
+                        </script>
+                        <button class="btn btn-success" onclick="comebackToIndex()" style="margin-left: 2%; margin-bottom: 2%">
+                            <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại trang chi tiết
                         </button>
                     </div>
                 </div>
 
             </div>
+            <div class="col-md-2">
+            </div>
         </div>
+
     </div>
     <!--max length for number-->
     <script>
         function maxLengthCheck(object) {
             if (object.value.length > object.maxLength)
-                object.value = object.value.slice(0, object.maxLength)
+                object.value = object.value.slice(0, object.maxLength);
         }
     </script>
 </section>

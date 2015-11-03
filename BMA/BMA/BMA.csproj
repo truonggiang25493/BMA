@@ -175,6 +175,7 @@
     <Compile Include="Business\ManageProductBusiness.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
     <Compile Include="Business\ProductBusiness.cs" />
+    <Compile Include="Business\StaffBusiness.cs" />
     <Compile Include="Business\SupplierBusiness.cs" />
     <Compile Include="Business\TaxBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CusManageOrderController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DiscardInputMaterialController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -192,6 +194,7 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProcedureController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\TaxController.cs" />
     <Compile Include="Global.asax.cs">
@@ -1357,6 +1360,11 @@
     <Content Include="Views\Supplier\EditSupplier.cshtml" />
     <Content Include="Views\Supplier\SupplierDetail.cshtml" />
     <Content Include="Views\Supplier\SupplierIndex.cshtml" />
+    <Content Include="Views\Customer\Contact\Index.cshtml" />
+    <Content Include="Views\Customer\GetCustomerPartialView.cshtml" />
+    <Content Include="Views\Staff\StaffIndex.cshtml" />
+    <Content Include="Views\Staff\StaffDetail.cshtml" />
+    <Content Include="Views\DiscardInputMaterial\DiscardView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

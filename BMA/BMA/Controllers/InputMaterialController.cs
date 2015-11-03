@@ -18,7 +18,7 @@ namespace BMA.Controllers
         private BMAEntities db = new BMAEntities();
         private InputMaterialBusiness inputMaterialBusiness = new InputMaterialBusiness();
 
-        #region Get Input Material List
+        #region Get Input Material Index
 
         public ActionResult InputMaterialIndex()
         {
@@ -67,7 +67,6 @@ namespace BMA.Controllers
         #endregion
 
         #region Add New Input Material View
-
         public ActionResult AddInputMaterial()
         {
             ViewBag.TreeView = "inputMaterial";
@@ -81,8 +80,8 @@ namespace BMA.Controllers
         public int AddInputMaterial(FormCollection f)
         {
 
-            String productMaterialId = f["productMaterialId"];
-            String inportQuantity = f["txtInportQuantity"];
+            String productMaterialIdString = f["productMaterialId"];
+            String importQuantity = f["txtImportQuantity"];
             String inputMaterialPrice = f["txtInputMaterialPrice"];
             String importDate = f["txtImportDate"];
             String inputMaterialExpiryDate = f["txtInputMaterialExpiryDate"];
@@ -91,14 +90,15 @@ namespace BMA.Controllers
             InputMaterial inputMaterial = new InputMaterial();
             try
             {
-                inputMaterial.ImportQuantity = int.Parse(inportQuantity);
+                inputMaterial.ImportQuantity = int.Parse(importQuantity);
                 inputMaterial.InputMaterialPrice = int.Parse(inputMaterialPrice);
                 inputMaterial.ImportDate = Convert.ToDateTime(importDate);
                 inputMaterial.InputMaterialExpiryDate = Convert.ToDateTime(inputMaterialExpiryDate);
                 inputMaterial.InputMaterialNote = inputMaterialNote;
                 inputMaterial.InputBillId = int.Parse(inputBillId);
-                inputMaterial.ProductMaterialId = int.Parse(productMaterialId);
-                inputMaterial.RemainQuantity = int.Parse(inportQuantity);
+                int productMaterialId = int.Parse(productMaterialIdString);
+                inputMaterial.ProductMaterialId = productMaterialId;
+                inputMaterial.RemainQuantity = int.Parse(importQuantity);
                 inputMaterial.IsActive = true;
             }
             catch (Exception)
@@ -122,7 +122,7 @@ namespace BMA.Controllers
 
         [HttpPost]
         #region Get Popup Input Bill
-        public ActionResult GetInputList()
+        public ActionResult GetInputBillList()
         {
             List<InputBill> inputBillList = db.InputBills.ToList();
             return PartialView("InputListPartialView", inputBillList);
@@ -158,8 +158,8 @@ namespace BMA.Controllers
         #region Edit Input Material
         public int EditInputMaterial(FormCollection f)
         {
-            String productMaterialIdString = f["txtProductMaterialId"];
-            String inportQuantityString = f["txtInportQuantity"];
+            String productMaterialIdString = f["productMaterialId"];
+            String importQuantityString = f["txtImportQuantity"];
             String inputMaterialPriceString = f["txtInputMaterialPrice"];
             String importDateString = f["txtImportDate"];
             String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
@@ -168,20 +168,18 @@ namespace BMA.Controllers
             String inputMaterialIdString = f["InputMaterialId"];
 
             if (
-                !(productMaterialIdString.IsEmpty() || inportQuantityString.IsEmpty() ||
+                !(productMaterialIdString.IsEmpty() || importQuantityString.IsEmpty() ||
                   inputMaterialPriceString.IsEmpty() || importDateString.IsEmpty() ||
                   inputMaterialExpiryDateString.IsEmpty() || inputMaterialNote.IsEmpty() || inputBillIdString.IsEmpty() ||
                   inputMaterialIdString.IsEmpty()))
             {
                 int inputMaterialId = Convert.ToInt32(inputMaterialIdString);
-                int importQuantity = Convert.ToInt32(inportQuantityString);
+                int importQuantity = Convert.ToInt32(importQuantityString);
                 int productMaterialId = Convert.ToInt32(productMaterialIdString);
                 int inputMaterialPrice = Convert.ToInt32(inputMaterialPriceString);
                 DateTime importDate = Convert.ToDateTime(importDateString);
                 DateTime inputMaterialExpiryDate = Convert.ToDateTime(inputMaterialExpiryDateString);
                 int inputBillId = Convert.ToInt32(inputBillIdString);
-
-
 
                 bool result = InputMaterialBusiness.EditInputMaterial(inputMaterialId, importQuantity, productMaterialId, inputMaterialPrice, importDate, inputMaterialExpiryDate, inputBillId, inputMaterialNote);
                 return result ? 1 : 0;
@@ -189,9 +187,6 @@ namespace BMA.Controllers
             return 0;
         }
         #endregion
-
-
-
     }
 }
 

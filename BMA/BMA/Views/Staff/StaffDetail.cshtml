@@ -1,33 +1,38 @@
-﻿@using System.Globalization
+﻿
+@using System.Globalization
 @using BMA.Models
-@model BMA.Models.Supplier
+@model BMA.Models.Staff
 
 
 
 @{
-    ViewBag.Title = "Chi tiết nhà cung cấp";
+    ViewBag.Title = "Thông tin chi tiết nhân viên";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>Chi tiết nhà cung cấp</h1>
+    <h1>Thông tin chi tiết nhân viên</h1>
 </section>
 <section class="content">
     <!--Title row-->
     <form id="edit-input-material-form"></form>
     <div class="row">
         <!-- Info row -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="box box-primary">
                 <div class="box-body box-profile">
                     <h3 class="profile-username text-center">
-                        @Model.SupplierName
+                        @Model.User.Fullname
                     </h3>
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
+                            <b>Tên tài khoản: </b>
+                            <a class="pull-right">@Model.User.Username</a>
+                        </li>
+                        <li class="list-group-item">
                             <b>Số điện thoại: </b>
-                            <a class="pull-right">@Model.SupplierPhoneNumber</a>
+                            <a class="pull-right">@Model.StaffPhoneNumber</a>
                         </li>
                         <li class="list-group-item">
                             <b>Trạng thái: </b>
@@ -46,22 +51,19 @@
                         <!-- Change stage button -->
                         <div class="col-xs-12" style="text-align: center">
 
-                            <button class="btn btn-success" id="btn-approved" onclick="open_container(@(Model.SupplierId));">
+                            <button class="btn btn-success" id="btn-approved" onclick="open_container(@(Model.StaffId));">
                                 <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>Thay đổi trạng thái
                                 <script type="text/javascript">
                                     function open_container(id) {
-                                        var content = $("<div>", {
-                                            "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
-                                        });
-
-                                        var title = 'Thay đổi trạng thái nguyên liệu';
+                                        var content = 'Bạn có muốn thay đổi trạng thái của nhân viên từ' + '@(Model.IsActive ? " đang hoạt động " : " ngừng hoạt động ")' + 'sang trạng thái' + '@(Model.IsActive ? " ngừng hoạt động " : " đang hoạt động ")' + 'không?';
+                                        var title = 'Thay đổi trạng thái nhân viên';
                                         var footer = $("<div>", {
                                             "class": "row",
                                             "html": [
                                                 $("<button>", {
                                                     "class": "btn btn-success pull-right",
                                                     "style": "margin-right: 30%;",
-                                                    "onclick": "change_supplier_status(" + id + ")",
+                                                    "onclick": "change_staff_status(" + id + ")",
                                                     "html": "Đồng ý"
                                                 }),
                                                 $("<button>", {
@@ -72,7 +74,7 @@
                                                 })
                                             ]
                                         });
-                                        setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+                                        setModalBox(title, content, footer[0].outerHTML);
                                         $('#myModal').modal('show');
                                     }
 
@@ -82,9 +84,9 @@
                                         document.getElementById('popup-footer').innerHTML = footer;
                                     }
 
-                                    function change_supplier_status(id) {
+                                    function change_staff_status(id) {
                                         $.ajax({
-                                            "url": "@(Url.Action("ChangeSupplierStatus", "Supplier"))",
+                                            "url": "@(Url.Action("ChangeStaffStatus", "Staff"))",
                                             "method": "POST",
                                             "data": {
                                                 "id": id
@@ -92,7 +94,7 @@
                                             "success": function (data) {
                                                 if (data === "1") {
                                                     $('#myModal').modal('hide');
-                                                    window.location.replace("@Url.Action("SupplierIndex", "Supplier", Model.SupplierId)");
+                                                    window.location.replace("@Url.Action("StaffIndex", "Staff", Model.StaffId)");
                                                 } else {
                                                     alert("Khong the");
                                                 }
@@ -111,7 +113,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active">
@@ -121,18 +123,14 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="activity">
                         <div class="post">
-                            <p>
-                                <div class="list-group-item">
-                                    <b>Mã số thuế: </b>
-                                    <a class="pull-right">@Model.SupplierTaxCode</a>
-                                </div>
+                            <p>                               
                                 <div class="list-group-item">
                                     <b>Địa chỉ: </b>
-                                    <a class="pull-right">@Model.SupplierAddress</a>
+                                    <a class="pull-right">@Model.StaffAddress</a>
                                 </div>
                                 <div class="list-group-item">
                                     <b>E-mail: </b>
-                                    <a class="pull-right">@Model.SupplierEmail</a>
+                                    <a class="pull-right">@Model.User.Email</a>
                                 </div>
                             </p>
                         </div>
@@ -149,17 +147,17 @@
                 <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
                 <script type="text/javascript">
                     function editInputMaterial() {
-                        window.location.replace("@(Url.Action("EditSupplier", "Supplier", new {@id = Model.SupplierId}))");
+                        window.location.replace("@(Url.Action("EditSupplier", "Supplier", new {@id = Model.StaffId}))");
                     }
                 </script>
 
             </button>
             <!-- Comeback button -->
-            <button class="btn btn-success" onclick="comebackToIndex()">
-                <i class="fa fa-arrow-left" style="margin-right: 2px;"></i>Quay lại trang danh sách
+            <button class="btn btn-danger" onclick="comebackToIndex()">
+                <i class="fa fa-edit" style="margin-left: 10px;"></i>Quay lại
                 <script type="text/javascript">
                     function comebackToIndex() {
-                        window.location.replace("@(Url.Action("SupplierIndex", "Supplier"))");
+                        window.location.replace("@(Url.Action("StaffIndex", "Staff"))");
                     }
                 </script>
             </button>

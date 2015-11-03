@@ -1,41 +1,85 @@
 ﻿@using System.Globalization
 @using BMA.Models
+@using Microsoft.Ajax.Utilities
 @model List<BMA.Models.InputMaterial>
 
 <h4 style="margin-left: 10%">Danh sách nguyên liệu trong cùng hóa đơn</h4>
 
 <div class="box-body">
-    <table id="example2" class="table table-bordered">
+    <table id="example" class="table table-bordered table-striped dataTable">
         <thead style="font-weight: bold">
             <tr class="row">
 
-                <th class="col-md-4">Tên nguyên liệu</th>
-                <th class="col-md-3">Nhập</th>
-                <th class="col-md-3">Tồn kho</th>
-                <th class="col-md-2"></th>
+                <th class="col-md-3" style="text-align: center">Nguyên liệu</th>
+                <th class="col-md-2" style="text-align: center">Nhập</th>
+                <th class="col-md-2" style="text-align: center">Tồn kho</th>
+                <th class="col-md-2" style="text-align: center">Trạng thái</th>
+                <th class="col-md-3"></th>
             </tr>
         </thead>
         <tbody>
             @foreach (InputMaterial inputMaterial in Model)
             {
                 <tr class="row">
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <span>@(inputMaterial.ProductMaterial.ProductMaterialName)</span>
                         <input type="hidden" name="txtInputMaterialId" value="@inputMaterial.InputMaterialId" />
                     </td>
-                    <td style="text-align: right" class="col-md-3">
+                    <td style="text-align: right" class="col-md-2">
                         @(inputMaterial.ImportQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(inputMaterial.ProductMaterial.ProductMaterialUnit)
                     </td>
-                    <td style="text-align: right" class="col-md-3">
+                    <td style="text-align: right" class="col-md-2">
                         @(inputMaterial.RemainQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(inputMaterial.ProductMaterial.ProductMaterialUnit)
                     </td>
-                    <td class="col-md-2">
-                        <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
-                            <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
-                        </a>
-                    </td>
+                    @if (DateTime.Compare(inputMaterial.InputMaterialExpiryDate, DateTime.Today) < 1)
+                    {
+                        <td class="col-md-2">
+                            <span class="label label-danger">Hết hạn sử dụng</span>
+                        </td>
+                        <td class="col-md-3">
+                            <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
+                                <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                            </a>
+                        </td>
+                    }
+                    else
+                        if (inputMaterial.RemainQuantity == 0)
+                        {
+                            <td class="col-md-2">
+                                <span class="label label-default">Đã hết</span>
+                            </td>
+                            <td class="col-md-3">
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col-md-2">
+                                <span class="label label-success">Có thể sử dụng</span>
+                            </td>
+                            <td class="col-md-3">
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem</a>
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputMaterial", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
+                                    <i class="fa fa-edit" style="margin-right: 3px"></i>Sửa</a>
+                            </td>
+                        }
                 </tr>
             }
         </tbody>
     </table>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "iDisplayLength": 5,
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": false,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>

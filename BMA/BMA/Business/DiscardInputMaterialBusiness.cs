@@ -9,15 +9,16 @@ namespace BMA.Business
     public class DiscardInputMaterialBusiness
     {
         private static BMAEntities db = new BMAEntities();
-        public bool AddDiscardInputMaterial(DiscardedInputMaterial discardInputMaterial)
+        #region Add discard for input material
+        public static bool DiscardInputMaterial(DiscardedInputMaterial discardedInputMaterial)
         {
-            if (discardInputMaterial == null)
+            if (discardedInputMaterial == null)
             {
                 return false;
             }
             try
             {
-                db.DiscardedInputMaterials.Add(discardInputMaterial);
+                db.DiscardedInputMaterials.Add(discardedInputMaterial);
                 db.SaveChanges();
             }
             catch (Exception e)
@@ -25,8 +26,8 @@ namespace BMA.Business
                 string s = e.ToString();
                 return false;
             }
-            return true; 
-            
+            return true;
         }
+        #endregion
     }
 }

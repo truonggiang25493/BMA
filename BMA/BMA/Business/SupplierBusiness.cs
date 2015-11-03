@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Linq;
 using BMA.Models;
-using BMA.Models.ViewModel;
-using Microsoft.Owin;
 
 namespace BMA.Business
 {
