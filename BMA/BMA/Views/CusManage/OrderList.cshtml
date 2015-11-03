@@ -61,16 +61,25 @@
                                     <td>
                                         <ul style="margin-top:10px;">
                                             <li style="display:inline;"><a href="@Url.Action("OrderDetail", "CusManage", new { @orderId = item.OrderId})" class="btn btn-detail btn-sm" style="border:1px solid black"><i class="fa fa-navicon"></i> Chi tiết</a> </li>
-                                            <li style="display:inline;"><a href="@Url.Action("OrderDetail", "CusManage", new { @orderId = item.OrderId})" class="btn btn-edit btn-sm" style="border:1px solid black"><i class="fa fa-cog"></i> Chỉnh sửa</a></li>
+                                            <li style="display:inline;"><a href="@Url.Action("GetOrderToCart", "Cart", new { @orderId = item.OrderId })" class="btn btn-edit btn-sm" style="border:1px solid black"><i class="fa fa-cog"></i> Chỉnh sửa</a></li>
                                             @if (item.OrderStatus == 6)
                                             {
 
                                             }
                                             else
                                             {
-                                                <li style="display:inline;"><a data-target="#product-details-modal" data-toggle="modal" class="btn btn-delete btn-sm" style="border:1px solid black"><i class="fa fa-close"></i> Hủy</a></li>
+                                                <li style="display:inline;"><a data-target="#product-details-modal" data-toggle="modal" class="btn btn-delete btn-sm" onclick="return openPopup('@item.OrderStatus');" style="border:1px solid black"><i class="fa fa-close"></i> Hủy</a></li>
                                             }
                                         </ul>
+                                        <script type="text/javascript">
+                                            function openPopup(orderStatus) {
+                                                if (orderStatus == 0) {
+                                                    $('#product-details-modal #confirmRequest').text('Quý khách thực sự muốn hủy đơn hàng này ?');
+                                                } else {
+                                                    $('#product-details-modal #confirmRequest').text('Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc. Quý khách có muốn hủy đơn hàng này không ? ');
+                                                }
+                                            }
+                                        </script>
                                     </td>
                                     <td>@item.CreateTime.ToString("dd/MM/yyyy HH:mm")</td>
                                     <td data-value="78025368997">@item.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
@@ -104,15 +113,7 @@
                                         </div>
                                         <div class="panel-body">
                                             <ul>
-                                                @if (item.OrderStatus == 0)
-                                                {
-                                                    <li> <span class="address-line1"> Quý khách thực sự muốn hủy đơn hàng này ? </span></li>
-                                                }
-                                                else
-                                                {
-                                                    <li> <span class="address-line1"> Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc.<br /> Quý khách có muốn hủy đơn hàng này không ? </span></li>
-                                                }
-
+                                                <li><span class="address-line1" id="confirmRequest"></span></li>
                                             </ul>
                                         </div>
                                         <div class="panel-footer panel-footer-address"><a class="btn btn-sm btn-danger" href="@Url.Action("CancelOrderConfirm", "CusManage", new { @orderId = item.OrderId, @strURL = Request.Url.ToString()})" style="margin-left:310px;"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>

@@ -146,18 +146,12 @@ namespace BMA.Controllers
         public ActionResult Cart()
         {
             CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            int quantity = 0;
             if (Session["Cart"] == null)
             {
                 return RedirectToAction("Index", "Home");
             }
             ViewBag.taxRate = cob.GetTaxRate();
             List<CustomerCartViewModel> lstCart = GetCart();
-            //foreach (var item in lstCart)
-            //{
-            //    quantity += item.Quantity;
-            //}
-            //ViewBag.discount = cob.checkDiscount(quantity);
             return View(lstCart);
         }
 
