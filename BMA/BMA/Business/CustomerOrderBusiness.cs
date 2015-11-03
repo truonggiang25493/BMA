@@ -148,6 +148,40 @@ namespace BMA.Business
             return true;
         }
 
+        //public bool GuestOrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount, List<CustomerCartViewModel> cart, string sName, string sPhone, string sEmail)
+        //{
+        //    Order order = new Order();
+        //    order.OrderCode = orderTime;
+        //    order.CreateTime = DateTime.Now;
+        //    order.PlanDeliveryTime = planDeliveryDate;
+        //    order.DepositAmount = 0;
+        //    order.IsStaffEdit = false;
+        //    order.CustomerEditingFlag = false;
+        //    order.OrderStatus = 0;
+        //    order.Amount = Amount;
+        //    order.TaxAmount = taxAmount;
+        //    GuestInfo guestInfo = db.GuestInfoes.SingleOrDefault(n => n.GuestInfoName == sName && n.GuestInfoPhone == sPhone && n.GuestInfoEmail == sEmail);
+        //    order.GuestInfoId = guestInfo.GuestInfoId;
+        //    db.Orders.Add(order);
+        //    db.SaveChanges();
+        //    string orderNumber = order.OrderId.ToString().PadLeft(4, '0');
+        //    order.OrderCode = String.Format("{0}{1}{2}", 'O', orderTime, orderNumber);
+        //    db.SaveChanges();
+        //    foreach (var item in cart)
+        //    {
+        //        OrderItem orderDetail = new OrderItem();
+        //        orderDetail.OrderId = order.OrderId;
+        //        orderDetail.ProductId = item.ProductId;
+        //        orderDetail.Quantity = item.Quantity;
+        //        orderDetail.RealPrice = item.Price;
+        //        orderDetail.Amount = item.Total;
+        //        orderDetail.TaxAmount = Convert.ToInt32(item.Total * 0.1);
+        //        db.OrderItems.Add(orderDetail);
+        //    }
+        //    db.SaveChanges();
+        //    return true;
+        //}
+
         public string GetOrderCode()
         {
             List<Order> lstOrder = db.Orders.OrderBy(n => n.OrderId).ToList();
@@ -161,5 +195,49 @@ namespace BMA.Business
             string orderCode = order.OrderCode;
             return orderCode;
         }
+
+        public List<OrderItem> OrderSuccess()
+        {
+            List<Order> lstOrder = db.Orders.OrderBy(n => n.OrderId).ToList();
+            int orderId = lstOrder.LastOrDefault().OrderId;
+            List<OrderItem> lstOrderItem = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+            return lstOrderItem;
+        }
+
+        public bool checkUserDuplicate(string Email, string phoneNumber)
+        {
+            var checkUser = db.Users.SingleOrDefault(n => n.Email == Email);
+            var checkCustomer = db.Customers.SingleOrDefault(n => n.UserId == checkUser.UserId);
+            if (checkUser == null && checkCustomer.CustomerPhoneNumber == phoneNumber)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public DiscountByQuantity checkDiscount(int quantity)
+        {
+            var discountCate = db.DiscountByQuantities.ToList();
+            int discountId = 0;
+            foreach (var item in discountCate)
+            {
+                if (quantity >= item.QuantityFrom && quantity < item.QuantityTo)
+                {
+                    discountId = item.Id;
+                }
+            }
+            var discount = db.DiscountByQuantities.SingleOrDefault(n => n.Id == discountId);
+            return discount;
+        }
+
+        //public bool checkGuestDuplicate(string Name, string phoneNumber, string Email)
+        //{
+        //    var checkGuest = db.GuestInfoes.SingleOrDefault(n => n.GuestInfoName == Name && n.GuestInfoPhone == phoneNumber && n.GuestInfoEmail == Email);
+        //    if (checkGuest == null)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
     }
 }

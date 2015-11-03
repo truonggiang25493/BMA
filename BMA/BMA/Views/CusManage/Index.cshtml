@@ -1,0 +1,49 @@
+﻿@using BMA.Models
+@{
+    ViewBag.Title = "Quản lý";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+    int cusId = (Session["User"] as User).UserId;
+}
+
+<div class="container main-container headerOffset">
+    <div class="row">
+        <div class="breadcrumbDiv col-lg-12">
+            <ul class="breadcrumb">
+                <li> <a href="@Url.Action("Index", "Home")">Trang chủ</a> </li>
+                <li class="active"> Quản lý </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-7">
+            <h1 class="section-title-inner"><span><i class="fa fa-unlock-alt"></i> Quản lý thông tin </span></h1>
+            <div class="row userInfo">
+                <div class="col-xs-12 col-sm-12">
+                    <h2 class="block-title-2"><span>Bạn có thể quản lý thông tin cá nhân và những đơn hàng đã đặt</span></h2>
+                    <ul class="myAccountList row">
+                        <li class="col-lg-2 col-md-2 col-sm-3 col-xs-4  text-center ">
+                            <div class="thumbnail equalheight"> <a title="Orders" href="@Url.Action("OrderList", "CusManage")"><i class="fa fa-calendar"></i> Lịch sử đơn hàng </a> </div>
+                        </li>
+                        <li class="col-lg-2 col-md-2 col-sm-3 col-xs-4  text-center ">
+                            <div class="thumbnail equalheight"> <a title="Orders" href="@Url.Action("ConfirmList", "CusManage")"><i class="fa fa-check"></i> Đơn hàng cần xác nhận </a> </div>
+                        </li>
+                        <li class="col-lg-2 col-md-2 col-sm-3 col-xs-4  text-center ">
+                            <div class="thumbnail equalheight"> <a title="Personal information" href="@Url.Action("ChangeInformation", "CusManage", new { @UserId = cusId })"><i class="fa fa-cog"></i> Thay đổi thông tin cá nhân</a> </div>
+                        </li>
+                        <li class="col-lg-2 col-md-2 col-sm-3 col-xs-4  text-center ">
+                            <div class="thumbnail equalheight"> <a title="Change password" href="@Url.Action("ChangePassword", "CusManage", new { @UserId = cusId })"> <i class="fa fa-edit"> </i> Thay đổi mật khẩu</a> </div>
+                        </li>
+                    </ul>
+                    <div class="clear clearfix"> </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-5"> </div>
+    </div>
+
+    <div style="clear:both"></div>
+</div>
+
+<div class="gap"> </div>
+

@@ -13,16 +13,6 @@ namespace BMA.Controllers
 {
     public class ProductController : Controller
     {
-        public List<CustomerCartViewModel> GetCart()
-        {
-            List<CustomerCartViewModel> lstCart = Session["Cart"] as List<CustomerCartViewModel>;
-            if (lstCart == null)
-            {
-                lstCart = new List<CustomerCartViewModel>();
-                Session["Cart"] = lstCart;
-            }
-            return lstCart;
-        }
         //
         // GET: /Product/
         public ActionResult Index(int? page)
@@ -31,8 +21,8 @@ namespace BMA.Controllers
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ProductBusiness pb = new ProductBusiness();
-            List<CustomerCartViewModel> lstProductCart = GetCart();
-            ViewBag.fuckTheShit = lstProductCart;
+            List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
+            ViewBag.lstProductCart = lstProductCart;
             var lstProduct = pb.GetProduct().ToPagedList(pageNumber, pageSize);
             return View(lstProduct);
         }
@@ -43,6 +33,8 @@ namespace BMA.Controllers
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ProductBusiness pb = new ProductBusiness();
+            List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
+            ViewBag.lstProductCart = lstProductCart;
             var lstCookies = pb.GetCookie().ToPagedList(pageNumber, pageSize);
             return View(lstCookies);
         }
@@ -53,6 +45,8 @@ namespace BMA.Controllers
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ProductBusiness pb = new ProductBusiness();
+            List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
+            ViewBag.lstProductCart = lstProductCart;
             var lstSaltine = pb.GetSaltine().ToPagedList(pageNumber, pageSize);
             return View(lstSaltine);
         }
@@ -61,6 +55,8 @@ namespace BMA.Controllers
         {
             ViewBag.Show = "product";
             ProductBusiness pb = new ProductBusiness();
+            List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
+            ViewBag.lstProductCart = lstProductCart;
             var productDetail = pb.GetProductDetail(ProductId);
             var productMaterial = pb.GetProductMaterial(ProductId);
             var otherProduct = pb.GetOtherProduct(ProductId).Take(10);

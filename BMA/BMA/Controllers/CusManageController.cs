@@ -9,36 +9,103 @@ using PagedList.Mvc;
 using System.Net;
 using System.Data;
 using System.Data.Entity;
+using BMA.Business;
 
 namespace BMA.Controllers
 {
-    public class CusManageOrderController : Controller
+    public class CusManageController : Controller
     {
         BMAEntities db = new BMAEntities();
-        public ActionResult Index(int? page)
+
+        public ActionResult Index()
         {
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult ChangeInformation(int UserId)
+        {
+            AccountBusiness ab = new AccountBusiness();
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var user = ab.GetUser(UserId);
+            return View(user);
+        }
+        [HttpPost, ActionName("ChangeInformation")]
+        public ActionResult ChangeInformationConfirm(FormCollection f)
+        {
+            AccountBusiness ab = new AccountBusiness();
+            int cusUserId = Convert.ToInt32(Session["UserId"]);
+            string sName = f["txtName"];
+            string sAddress = f["txtAdress"];
+            string sEmail = f["txtEmail"];
+            string sTaxCode = f["txtTaxCode"];
+            string sPhone = f["txtPhone"];
+            ab.ChangeInformation(cusUserId, sName, sEmail, sAddress, sTaxCode, sPhone);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult ChangePassword(int UserId)
+        {
+            AccountBusiness ab = new AccountBusiness();
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var user = ab.GetUser(UserId);
+            return View(user);
+        }
+        [HttpPost, ActionName("ChangePassword")]
+        public ActionResult ChangePasswordConfirm(FormCollection f)
+        {
+            AccountBusiness ab = new AccountBusiness();
+            int cusUserId = Convert.ToInt32(Session["UserId"]);
+            string sOldPass = f["txtOldPass"];
+            string sNewPass = f["txtNewPass"];
+            string sNewPassConfirm = f["txtNewPassConfirm"];
+            if (!ab.checkPass(cusUserId, sOldPass))
+            {
+                TempData["checkOldPass"] = "Mật khẩu không đúng! Vui lòng thử lại.";
+                return RedirectToAction("ChangePassword", new { UserId = cusUserId });
+            }
+            if (sOldPass == sNewPass)
+            {
+                TempData["checkUnchange"] = "Mật khẩu mới và mật khẩu cũ giống nhau! Vui lòng thử lại.";
+                return RedirectToAction("ChangePassword", new { UserId = cusUserId });
+            }
+            if (sNewPass != sNewPassConfirm)
+            {
+                TempData["checkConfirmPass"] = "Mật khẩu và mật khẩu xác nhận không trùng khớp.";
+                return RedirectToAction("ChangePassword", new { UserId = cusUserId });
+            }
+            ab.ChangePassword(cusUserId, sNewPass);
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult OrderList(int? page)
+        {
+            CusManageBusiness cmb = new CusManageBusiness();
             try
             {
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
                 if (Session["User"] != null)
                 {
-                    int cusId = Convert.ToInt32(Session["UserId"]);
-                    List<Order> orderToCheck = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != 1).ToList();
-                    var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList();
-                    List<int> checkId = new List<int> { };
-                    for (int i = 0; i < confirmOrderList.Count; i++)
+                    int cusId = Convert.ToInt32(Session["CusUserId"]);
+                    List<OrderItem> orderItemList = new List<OrderItem>();
+                    var orderList = cmb.GetOrder(cusId).ToPagedList(pageNumber, pageSize);
+                    foreach (var item in orderList)
                     {
-                        checkId.Insert(i, (int)confirmOrderList[i].PreviousOrderId);
-                        for (int j = 0; j < orderToCheck.Count; j++)
-                        {
-                            if (orderToCheck[j].OrderId == checkId[i])
-                            {
-                                orderToCheck.RemoveAt(j);
-                            }
-                        }
+                        orderItemList = orderItemList.Union(cmb.GetOrderItem(item.OrderId)).ToList();
                     }
-                    var orderList = orderToCheck.OrderByDescending(n=>n.CreateTime).ToPagedList(pageNumber, pageSize);
+                    ViewBag.orderItemList = orderItemList;
                     return View(orderList);
                 }
                 return RedirectToAction("Index", "Home");
@@ -47,19 +114,26 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "Error");
             }
-            
+
         }
 
-        public ActionResult ConfirmIndex(int? page)
+        public ActionResult ConfirmList(int? page)
         {
+            CusManageBusiness cmb = new CusManageBusiness();
             try
             {
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
                 if (Session["User"] != null)
                 {
-                    int cusUserId = Convert.ToInt32(Session["UserId"]);
-                    var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusUserId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList().ToPagedList(pageNumber, pageSize);
+                    int cusUserId = Convert.ToInt32(Session["CusUserId"]);
+                    List<OrderItem> orderItemList = new List<OrderItem>();
+                    var confirmOrderList = cmb.GetConfirmOrder(cusUserId).ToPagedList(pageNumber, pageSize);
+                    foreach (var item in confirmOrderList)
+                    {
+                        orderItemList = orderItemList.Union(cmb.GetOrderItem(item.OrderId)).ToList();
+                    }
+                    ViewBag.orderItemList = orderItemList;
                     return View(confirmOrderList);
                 }
                 return RedirectToAction("Index", "Home");
@@ -69,14 +143,18 @@ namespace BMA.Controllers
 
                 return RedirectToAction("Index", "Error");
             }
-            
+
         }
         public ActionResult OrderDetail(int orderId)
         {
+            CusManageBusiness cmb = new CusManageBusiness();
+            CustomerOrderBusiness cob = new CustomerOrderBusiness();
             try
             {
-                Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+
+                var order = cmb.GetOrderDetail(orderId);
+                var orderItems = cmb.GetOrderItem(orderId);
+                ViewBag.taxRate = cob.GetTaxRate();
                 ViewBag.orderItems = orderItems;
                 return View(order);
             }
@@ -84,7 +162,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "Error");
             }
-            
+
         }
 
         public ActionResult CancelOrder(int? orderId)
@@ -108,10 +186,10 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "Error");
             }
-            
+
         }
 
-        public ActionResult CancelOrderConfirm(int orderId)
+        public ActionResult CancelOrderConfirm(int orderId, string strURL)
         {
             try
             {
@@ -133,9 +211,9 @@ namespace BMA.Controllers
             }
             catch (DataException)
             {
-                return RedirectToAction("CancelOrder");
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            return Redirect(strURL);
         }
 
         #region ConfirmOrder
@@ -156,7 +234,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "Error");
             }
-           
+
         }
 
         public ActionResult AcceptEditedOrder(int orderId)
@@ -179,7 +257,7 @@ namespace BMA.Controllers
             catch (Exception)
             {
                 return RedirectToAction("Index", "Error");
-            }            
+            }
         }
 
         public ActionResult CancelEditedOrder(int orderId)
@@ -202,7 +280,7 @@ namespace BMA.Controllers
             catch (Exception)
             {
                 return RedirectToAction("Index", "Error");
-            }         
+            }
         }
 
 
@@ -231,7 +309,7 @@ namespace BMA.Controllers
             catch (Exception)
             {
                 return RedirectToAction("Index", "Error");
-            }         
+            }
         }
 
         public ActionResult CancelBothOrderConfirm(int orderId, int oldOrderId)
@@ -260,7 +338,7 @@ namespace BMA.Controllers
             catch (Exception)
             {
                 return RedirectToAction("Index", "Error");
-            }          
+            }
         }
         #endregion
     }
