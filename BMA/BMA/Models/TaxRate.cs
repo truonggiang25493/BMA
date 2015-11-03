@@ -17,7 +17,7 @@ namespace BMA.Models
         public int TaxRateId { get; set; }
         public System.DateTime BeginDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
-        public double TaxRateValue { get; set; }
+        public int TaxRateValue { get; set; }
         public int TaxTypeId { get; set; }
     
         public virtual TaxType TaxType { get; set; }

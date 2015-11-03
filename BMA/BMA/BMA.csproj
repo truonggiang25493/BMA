@@ -166,33 +166,38 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Business\AccountBusiness.cs" />
+    <Compile Include="Business\CusManageBusiness.cs" />
+    <Compile Include="Business\CustomerBusiness.cs" />
+    <Compile Include="Business\CustomerOrderBusiness.cs" />
+    <Compile Include="Business\DiscardInputMaterialBusiness.cs" />
+    <Compile Include="Business\InputMaterialBusiness.cs" />
+    <Compile Include="Business\ManageMaterialBusiness.cs" />
+    <Compile Include="Business\ManageProductBusiness.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
+    <Compile Include="Business\ProductBusiness.cs" />
+    <Compile Include="Business\StaffBusiness.cs" />
+    <Compile Include="Business\SupplierBusiness.cs" />
+    <Compile Include="Business\TaxBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CusManageOrderController.cs" />
+    <Compile Include="Controllers\DiscardInputMaterialController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InputBillController.cs" />
+    <Compile Include="Controllers\InputMaterialController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProcedureController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\StaffController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetRole.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUser.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUserClaim.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUserLogin.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BMA.Context.cs">
       <AutoGen>True</AutoGen>
@@ -214,6 +219,15 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Customer.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DiscardedInputMaterial.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DiscountByQuantity.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ExportFrom.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GuestInfo.cs">
@@ -240,6 +254,9 @@
     <Compile Include="Models\OutputMaterial.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Policy.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Product.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -247,6 +264,9 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Recipe.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Role.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Staff.cs">
@@ -264,11 +284,18 @@
     <Compile Include="Models\TaxType.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
+    <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
+    <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
+    <Compile Include="Models\ViewModel\MaterialInfoForProductListViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderItemViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
+    <Compile Include="Models\ViewModel\ShortageMaterialViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -1218,6 +1245,19 @@
     <Content Include="Views\Cart\GetOrderToCart.cshtml" />
     <Content Include="Views\CusManageOrder\ConfirmIndex.cshtml" />
     <Content Include="Views\Cart\EditOrderSuccess.cshtml" />
+    <Content Include="Views\Supplier\AddSupplier.cshtml" />
+    <Content Include="Views\Supplier\EditSupplier.cshtml" />
+    <Content Include="Views\Supplier\SupplierDetail.cshtml" />
+    <Content Include="Views\Supplier\SupplierIndex.cshtml" />
+    <Content Include="Views\InputMaterial\AddInputMaterial.cshtml" />
+    <Content Include="Views\InputMaterial\EditInputMaterial.cshtml" />
+    <Content Include="Views\InputMaterial\InputListPartialView.cshtml" />
+    <Content Include="Views\InputMaterial\InputMaterialByBillIdPartialView.cshtml" />
+    <Content Include="Views\InputMaterial\InputMaterialDetail.cshtml" />
+    <Content Include="Views\InputMaterial\InputMaterialIndex.cshtml" />
+    <Content Include="Views\InputMaterial\ProductMaterialPartialView.cshtml" />
+    <Content Include="Views\Staff\StaffDetail.cshtml" />
+    <Content Include="Views\Staff\StaffIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
