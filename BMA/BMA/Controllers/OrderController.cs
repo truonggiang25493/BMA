@@ -336,7 +336,6 @@ namespace BMA.Controllers
             OrderBusiness orderBusiness = new OrderBusiness();
             bool rs = orderBusiness.Cancel(orderId, returnDeposit, isReturnDeposit);
             // Call cancel order from OrderBusiness
-
             if (rs)
             {
                 return RedirectToAction("Index");
@@ -344,7 +343,6 @@ namespace BMA.Controllers
             else
             {
                 // Error message
-
                 // Ridirect to url
                 if (url == null || url.IsEmpty())
                 {
