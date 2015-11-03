@@ -1,16 +1,17 @@
 .timeslide-container {
     width: 100%;
     height: 20px;
-    border: 1px solid black;
-    border-radius: 2px;
+    border: 1px solid #f2f2f2;
+    border-radius: 10px;
     position: relative;
     overflow: hidden;
-    background: green;
+    background: #f2f2f2;
 }
 
 .timeslide-slider {
     position: absolute;
-    background: white;
+    background: #018a00;
+    border-radius: 10px;
     top: 0;
     height: 20px;
     left: 0;
@@ -21,9 +22,9 @@
     top: 0;
     width: 17px;
     height: 17px;
-    border: 3px solid white;
+    border: 2px solid white;
     border-radius: 10px;
-    background: blue;
+    background: #013602;
 }
 
     .timeslide-container .point:nth-child(2) {
@@ -39,6 +40,7 @@
     position: absolute;
     top: 100%;
     text-align: center;
+    font-size: 12px;
 }
 
     .point-label:nth-child(2) {

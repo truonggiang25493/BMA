@@ -5,6 +5,58 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -18,31 +70,11 @@
             <PropertyRef Name="CustomerId" />
           </Key>
           <Property Name="CustomerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="TaxCode" Type="varchar" MaxLength="20" />
           <Property Name="CustomerAddress" Type="nvarchar" MaxLength="200" />
           <Property Name="CustomerPhoneNumber" Type="nvarchar" MaxLength="20" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
-          <Property Name="IsLoyal" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="DiscardedInputMaterial">
-          <Key>
-            <PropertyRef Name="DiscardId" />
-          </Key>
-          <Property Name="DiscardId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="InputMaterialId" Type="int" Nullable="false" />
-          <Property Name="DiscardQuantity" Type="int" Nullable="false" />
-          <Property Name="DiscardDate" Type="date" Nullable="false" />
-          <Property Name="DiscardNote" Type="nvarchar" MaxLength="200" Nullable="false" />
-        </EntityType>
-        <EntityType Name="DiscountByQuantity">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="QuantityFrom" Type="int" Nullable="false" />
-          <Property Name="QuantityTo" Type="int" Nullable="false" />
-          <Property Name="DiscountValue" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ExportFrom">
           <Key>
@@ -51,7 +83,6 @@
           </Key>
           <Property Name="OutputMaterialId" Type="int" Nullable="false" />
           <Property Name="InputbillId" Type="int" Nullable="false" />
-          <Property Name="ExportFromQuantity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="GuestInfo">
           <Key>
@@ -73,7 +104,6 @@
           <Property Name="InputRawImage" Type="nvarchar" MaxLength="200" />
           <Property Name="InputTaxAmount" Type="float" Nullable="false" />
           <Property Name="SupplierId" Type="int" />
-          <Property Name="ImportDate" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="InputMaterial">
           <Key>
@@ -83,7 +113,7 @@
           <Property Name="ImportQuantity" Type="int" Nullable="false" />
           <Property Name="RemainQuantity" Type="int" Nullable="false" />
           <Property Name="InputMaterialPrice" Type="float" Nullable="false" />
-          <Property Name="ImportDate" Type="date" Nullable="false" />
+          <Property Name="ImportDate" Type="date" />
           <Property Name="InputMaterialExpiryDate" Type="date" Nullable="false" />
           <Property Name="InputMaterialNote" Type="nvarchar" MaxLength="500" />
           <Property Name="InputBillId" Type="int" Nullable="false" />
@@ -109,28 +139,20 @@
           <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OrderCode" Type="varchar" MaxLength="13" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
-          <Property Name="PlanDeliveryTime" Type="datetime" Nullable="false" />
+          <Property Name="DeliveryTime" Type="date" />
           <Property Name="ApproveTime" Type="datetime" />
           <Property Name="OrderNote" Type="nvarchar" MaxLength="200" />
           <Property Name="DepositAmount" Type="int" Nullable="false" />
-          <Property Name="ConfirmTime" Type="datetime" />
-          <Property Name="CustomerUserId" Type="int" />
-          <Property Name="StaffApproveUserId" Type="int" />
+          <Property Name="ConfirmDate" Type="date" />
+          <Property Name="CustomerUserId" Type="nvarchar" MaxLength="128" />
+          <Property Name="StaffApproveUserId" Type="nvarchar" MaxLength="128" />
           <Property Name="IsStaffEdit" Type="bit" Nullable="false" />
-          <Property Name="CustomerEditingFlag" Type="bit" Nullable="false" />
+          <Property Name="Flag" Type="bit" Nullable="false" />
           <Property Name="OutputBillId" Type="int" />
           <Property Name="OrderStatus" Type="int" Nullable="false" />
           <Property Name="PreviousOrderId" Type="int" />
+          <Property Name="TotalValue" Type="int" Nullable="false" />
           <Property Name="GuestInfoId" Type="int" />
-          <Property Name="ReturnDeposit" Type="int" Nullable="false" />
-          <Property Name="CancelUserId" Type="int" />
-          <Property Name="CancelTime" Type="datetime" />
-          <Property Name="FinishTime" Type="datetime" />
-          <Property Name="DeliveryTime" Type="datetime" />
-          <Property Name="StartProduceTime" Type="datetime" />
-          <Property Name="Amount" Type="int" Nullable="false" />
-          <Property Name="TaxAmount" Type="int" Nullable="false" />
-          <Property Name="DiscountAmount" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="OtherExpense">
           <Key>
@@ -163,14 +185,6 @@
           <Property Name="ProductMaterialId" Type="int" Nullable="false" />
           <Property Name="OrderItemId" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Policy">
-          <Key>
-            <PropertyRef Name="PolicyId" />
-          </Key>
-          <Property Name="PolicyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="PolicyName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="PolicyBound" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="ProductId" />
@@ -181,7 +195,7 @@
           <Property Name="Unit" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Descriptions" Type="nvarchar" MaxLength="500" />
           <Property Name="Note" Type="nvarchar" MaxLength="500" />
-          <Property Name="ProductImage" Type="nvarchar" MaxLength="200" />
+          <Property Name="ProductImgage" Type="nvarchar" MaxLength="200" />
           <Property Name="ProductStandardPrice" Type="int" Nullable="false" />
           <Property Name="CategoryId" Type="int" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -196,7 +210,6 @@
           <Property Name="ProductMaterialUnit" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CurrentQuantity" Type="int" Nullable="false" />
           <Property Name="StandardQuantity" Type="int" />
-          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Recipe">
           <Key>
@@ -207,19 +220,12 @@
           <Property Name="ProductMaterialId" Type="int" Nullable="false" />
           <Property Name="RecipeQuantity" Type="float" Nullable="false" />
         </EntityType>
-        <EntityType Name="Role">
-          <Key>
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="RoleId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
-        </EntityType>
         <EntityType Name="Staff">
           <Key>
             <PropertyRef Name="StaffId" />
           </Key>
           <Property Name="StaffId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="StaffAddress" Type="nvarchar" MaxLength="200" />
           <Property Name="StaffPhoneNumber" Type="nvarchar" MaxLength="20" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -229,11 +235,11 @@
             <PropertyRef Name="SupplierId" />
           </Key>
           <Property Name="SupplierId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SupplierName" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="SupplierAddress" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="SupplierPhoneNumber" Type="char" MaxLength="12" Nullable="false" />
-          <Property Name="SupplierEmail" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="SupplierTaxCode" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="SupplierName" Type="nvarchar" MaxLength="200" />
+          <Property Name="SupplierAddress" Type="nvarchar" MaxLength="200" />
+          <Property Name="SupplierPhoneNumber" Type="char" MaxLength="12" />
+          <Property Name="SupplierEmail" Type="nvarchar" MaxLength="50" />
+          <Property Name="SupplierTaxCode" Type="char" MaxLength="20" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
@@ -253,7 +259,7 @@
           <Property Name="TaxRateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BeginDate" Type="date" Nullable="false" />
           <Property Name="EndDate" Type="date" />
-          <Property Name="TaxRateValue" Type="int" Nullable="false" />
+          <Property Name="TaxRateValue" Type="float" Nullable="false" />
           <Property Name="TaxTypeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TaxType">
@@ -262,18 +268,6 @@
           </Key>
           <Property Name="TaxTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TaxTypeName" Type="nvarchar" MaxLength="200" Nullable="false" />
-        </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="varchar" MaxLength="50" />
-          <Property Name="RoleId" Type="int" Nullable="false" />
-          <Property Name="Fullname" Type="nvarchar" MaxLength="50" />
-          <Property Name="Email" Type="varchar" MaxLength="250" />
-          <Property Name="IsConfirmed" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK__Orders_Orders_OrderId">
           <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
@@ -287,6 +281,78 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_AspNetUserClaims_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUserLogins_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUserRoles_AspNetRoles_RoleId">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1" />
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUserRoles_AspNetRoles_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_Customer_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_Staff_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Category_Category_CategoryId">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Category1" Type="Self.Category" Multiplicity="0..1" />
@@ -296,30 +362,6 @@
             </Principal>
             <Dependent Role="Category1">
               <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Customer_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Customer">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DiscardedInputMaterial_InputMaterial">
-          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="1" />
-          <End Role="DiscardedInputMaterial" Type="Self.DiscardedInputMaterial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InputMaterial">
-              <PropertyRef Name="InputMaterialId" />
-            </Principal>
-            <Dependent Role="DiscardedInputMaterial">
-              <PropertyRef Name="InputMaterialId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -407,6 +449,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Orders_AspNetUsers_CustomerUserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="CustomerUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_AspNetUsers_StaffApproveUserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="StaffApproveUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_GuestInfo">
           <End Role="GuestInfo" Type="Self.GuestInfo" Multiplicity="0..1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -428,30 +494,6 @@
             </Principal>
             <Dependent Role="Orders">
               <PropertyRef Name="OutputBillId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_User_CustomerOrder">
-          <End Role="User" Type="Self.User" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="CustomerUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_User_StaffApprove">
-          <End Role="User" Type="Self.User" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="StaffApproveUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -515,18 +557,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Staff_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Staff">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TaxRate_TaxType_TaxRateId">
           <End Role="TaxType" Type="Self.TaxType" Multiplicity="1" />
           <End Role="TaxRate" Type="Self.TaxRate" Multiplicity="*" />
@@ -539,23 +569,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_User_Role">
-          <End Role="Role" Type="Self.Role" Multiplicity="1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="RoleId" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="RoleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="BMAModelStoreContainer">
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DiscardedInputMaterial" EntityType="Self.DiscardedInputMaterial" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DiscountByQuantity" EntityType="Self.DiscountByQuantity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExportFrom" EntityType="Self.ExportFrom" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GuestInfo" EntityType="Self.GuestInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InputBill" EntityType="Self.InputBill" Schema="dbo" store:Type="Tables" />
@@ -565,32 +586,45 @@
           <EntitySet Name="OtherExpense" EntityType="Self.OtherExpense" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OutputBill" EntityType="Self.OutputBill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OutputMaterial" EntityType="Self.OutputMaterial" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Policy" EntityType="Self.Policy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductMaterial" EntityType="Self.ProductMaterial" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Staff" EntityType="Self.Staff" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TaxRate" EntityType="Self.TaxRate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TaxType" EntityType="Self.TaxType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Orders_Orders_OrderId" Association="Self.FK__Orders_Orders_OrderId">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="Orders1" EntitySet="Orders" />
           </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserClaims_AspNetUsers_UserId" Association="Self.FK_AspNetUserClaims_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserLogins_AspNetUsers_UserId" Association="Self.FK_AspNetUserLogins_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserRoles_AspNetRoles_RoleId" Association="Self.FK_AspNetUserRoles_AspNetRoles_RoleId">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserRoles_AspNetRoles_UserId" Association="Self.FK_AspNetUserRoles_AspNetRoles_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_Customer_UserId" Association="Self.FK_AspNetUsers_Customer_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Customer" EntitySet="Customer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_Staff_UserId" Association="Self.FK_AspNetUsers_Staff_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Staff" EntitySet="Staff" />
+          </AssociationSet>
           <AssociationSet Name="FK_Category_Category_CategoryId" Association="Self.FK_Category_Category_CategoryId">
             <End Role="Category" EntitySet="Category" />
             <End Role="Category1" EntitySet="Category" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Customer_User" Association="Self.FK_Customer_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="Customer" EntitySet="Customer" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DiscardedInputMaterial_InputMaterial" Association="Self.FK_DiscardedInputMaterial_InputMaterial">
-            <End Role="InputMaterial" EntitySet="InputMaterial" />
-            <End Role="DiscardedInputMaterial" EntitySet="DiscardedInputMaterial" />
           </AssociationSet>
           <AssociationSet Name="FK_ExportFrom_InputBill" Association="Self.FK_ExportFrom_InputBill">
             <End Role="InputBill" EntitySet="InputBill" />
@@ -620,20 +654,20 @@
             <End Role="Product" EntitySet="Product" />
             <End Role="OrderItem" EntitySet="OrderItem" />
           </AssociationSet>
+          <AssociationSet Name="FK_Orders_AspNetUsers_CustomerUserId" Association="Self.FK_Orders_AspNetUsers_CustomerUserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_AspNetUsers_StaffApproveUserId" Association="Self.FK_Orders_AspNetUsers_StaffApproveUserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
           <AssociationSet Name="FK_Orders_GuestInfo" Association="Self.FK_Orders_GuestInfo">
             <End Role="GuestInfo" EntitySet="GuestInfo" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_OutputBill_OutputBillId" Association="Self.FK_Orders_OutputBill_OutputBillId">
             <End Role="OutputBill" EntitySet="OutputBill" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_User_CustomerOrder" Association="Self.FK_Orders_User_CustomerOrder">
-            <End Role="User" EntitySet="User" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_User_StaffApprove" Association="Self.FK_Orders_User_StaffApprove">
-            <End Role="User" EntitySet="User" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_OutputMaterial_OrderItem" Association="Self.FK_OutputMaterial_OrderItem">
@@ -656,29 +690,22 @@
             <End Role="ProductMaterial" EntitySet="ProductMaterial" />
             <End Role="Recipe" EntitySet="Recipe" />
           </AssociationSet>
-          <AssociationSet Name="FK_Staff_User" Association="Self.FK_Staff_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="Staff" EntitySet="Staff" />
-          </AssociationSet>
           <AssociationSet Name="FK_TaxRate_TaxType_TaxRateId" Association="Self.FK_TaxRate_TaxType_TaxRateId">
             <End Role="TaxType" EntitySet="TaxType" />
             <End Role="TaxRate" EntitySet="TaxRate" />
-          </AssociationSet>
-          <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
-            <End Role="Role" EntitySet="Role" />
-            <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="BMAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="BMAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="BMAEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AspNetRoles" EntityType="BMAModel.AspNetRole" />
+          <EntitySet Name="AspNetUserClaims" EntityType="BMAModel.AspNetUserClaim" />
+          <EntitySet Name="AspNetUserLogins" EntityType="BMAModel.AspNetUserLogin" />
+          <EntitySet Name="AspNetUsers" EntityType="BMAModel.AspNetUser" />
           <EntitySet Name="Categories" EntityType="BMAModel.Category" />
           <EntitySet Name="Customers" EntityType="BMAModel.Customer" />
-          <EntitySet Name="DiscardedInputMaterials" EntityType="BMAModel.DiscardedInputMaterial" />
-          <EntitySet Name="DiscountByQuantities" EntityType="BMAModel.DiscountByQuantity" />
-          <EntitySet Name="ExportFroms" EntityType="BMAModel.ExportFrom" />
           <EntitySet Name="GuestInfoes" EntityType="BMAModel.GuestInfo" />
           <EntitySet Name="InputBills" EntityType="BMAModel.InputBill" />
           <EntitySet Name="InputMaterials" EntityType="BMAModel.InputMaterial" />
@@ -687,17 +714,38 @@
           <EntitySet Name="OtherExpenses" EntityType="BMAModel.OtherExpense" />
           <EntitySet Name="OutputBills" EntityType="BMAModel.OutputBill" />
           <EntitySet Name="OutputMaterials" EntityType="BMAModel.OutputMaterial" />
-          <EntitySet Name="Policies" EntityType="BMAModel.Policy" />
           <EntitySet Name="Products" EntityType="BMAModel.Product" />
           <EntitySet Name="ProductMaterials" EntityType="BMAModel.ProductMaterial" />
           <EntitySet Name="Recipes" EntityType="BMAModel.Recipe" />
-          <EntitySet Name="Roles" EntityType="BMAModel.Role" />
           <EntitySet Name="Staffs" EntityType="BMAModel.Staff" />
           <EntitySet Name="Suppliers" EntityType="BMAModel.Supplier" />
           <EntitySet Name="sysdiagrams" EntityType="BMAModel.sysdiagram" />
           <EntitySet Name="TaxRates" EntityType="BMAModel.TaxRate" />
           <EntitySet Name="TaxTypes" EntityType="BMAModel.TaxType" />
-          <EntitySet Name="Users" EntityType="BMAModel.User" />
+          <AssociationSet Name="FK_AspNetUserClaims_AspNetUsers_UserId" Association="BMAModel.FK_AspNetUserClaims_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserLogins_AspNetUsers_UserId" Association="BMAModel.FK_AspNetUserLogins_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_Customer_UserId" Association="BMAModel.FK_AspNetUsers_Customer_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_Staff_UserId" Association="BMAModel.FK_AspNetUsers_Staff_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Staff" EntitySet="Staffs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_AspNetUsers_CustomerUserId" Association="BMAModel.FK_Orders_AspNetUsers_CustomerUserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_AspNetUsers_StaffApproveUserId" Association="BMAModel.FK_Orders_AspNetUsers_StaffApproveUserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
           <AssociationSet Name="FK_Category_Category_CategoryId" Association="BMAModel.FK_Category_Category_CategoryId">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Category1" EntitySet="Categories" />
@@ -705,22 +753,6 @@
           <AssociationSet Name="FK_Product_Category_CategoryId" Association="BMAModel.FK_Product_Category_CategoryId">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Product" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Customer_User" Association="BMAModel.FK_Customer_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Customer" EntitySet="Customers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DiscardedInputMaterial_InputMaterial" Association="BMAModel.FK_DiscardedInputMaterial_InputMaterial">
-            <End Role="InputMaterial" EntitySet="InputMaterials" />
-            <End Role="DiscardedInputMaterial" EntitySet="DiscardedInputMaterials" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ExportFrom_InputBill" Association="BMAModel.FK_ExportFrom_InputBill">
-            <End Role="InputBill" EntitySet="InputBills" />
-            <End Role="ExportFrom" EntitySet="ExportFroms" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ExportFrom_OutputMaterial" Association="BMAModel.FK_ExportFrom_OutputMaterial">
-            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
-            <End Role="ExportFrom" EntitySet="ExportFroms" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_GuestInfo" Association="BMAModel.FK_Orders_GuestInfo">
             <End Role="GuestInfo" EntitySet="GuestInfoes" />
@@ -758,14 +790,6 @@
             <End Role="OutputBill" EntitySet="OutputBills" />
             <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK_Orders_User_CustomerOrder" Association="BMAModel.FK_Orders_User_CustomerOrder">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_User_StaffApprove" Association="BMAModel.FK_Orders_User_StaffApprove">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
           <AssociationSet Name="FK_OutputMaterial_ProductMaterial" Association="BMAModel.FK_OutputMaterial_ProductMaterial">
             <End Role="ProductMaterial" EntitySet="ProductMaterials" />
             <End Role="OutputMaterial" EntitySet="OutputMaterials" />
@@ -778,19 +802,73 @@
             <End Role="ProductMaterial" EntitySet="ProductMaterials" />
             <End Role="Recipe" EntitySet="Recipes" />
           </AssociationSet>
-          <AssociationSet Name="FK_User_Role" Association="BMAModel.FK_User_Role">
-            <End Role="Role" EntitySet="Roles" />
-            <End Role="User" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Staff_User" Association="BMAModel.FK_Staff_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Staff" EntitySet="Staffs" />
-          </AssociationSet>
           <AssociationSet Name="FK_TaxRate_TaxType_TaxRateId" Association="BMAModel.FK_TaxRate_TaxType_TaxRateId">
             <End Role="TaxType" EntitySet="TaxTypes" />
             <End Role="TaxRate" EntitySet="TaxRates" />
           </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="BMAModel.AspNetUserRoles">
+            <End Role="AspNetRole" EntitySet="AspNetRoles" />
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="ExportFrom" Association="BMAModel.ExportFrom">
+            <End Role="InputBill" EntitySet="InputBills" />
+            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="AspNetRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="BMAModel.AspNetUserRoles" FromRole="AspNetRole" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="BMAModel.FK_AspNetUserClaims_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogin">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="BMAModel.FK_AspNetUserLogins_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="BMAModel.FK_AspNetUserClaims_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="BMAModel.FK_AspNetUserLogins_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
+          <NavigationProperty Name="Customers" Relationship="BMAModel.FK_AspNetUsers_Customer_UserId" FromRole="AspNetUser" ToRole="Customer" />
+          <NavigationProperty Name="Staffs" Relationship="BMAModel.FK_AspNetUsers_Staff_UserId" FromRole="AspNetUser" ToRole="Staff" />
+          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_AspNetUsers_CustomerUserId" FromRole="AspNetUser" ToRole="Order" />
+          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_AspNetUsers_StaffApproveUserId" FromRole="AspNetUser" ToRole="Order" />
+          <NavigationProperty Name="AspNetRoles" Relationship="BMAModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+        </EntityType>
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -807,44 +885,12 @@
             <PropertyRef Name="CustomerId" />
           </Key>
           <Property Name="CustomerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="TaxCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="CustomerAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="CustomerPhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="IsLoyal" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="BMAModel.FK_Customer_User" FromRole="Customer" ToRole="User" />
-        </EntityType>
-        <EntityType Name="DiscardedInputMaterial">
-          <Key>
-            <PropertyRef Name="DiscardId" />
-          </Key>
-          <Property Name="DiscardId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InputMaterialId" Type="Int32" Nullable="false" />
-          <Property Name="DiscardQuantity" Type="Int32" Nullable="false" />
-          <Property Name="DiscardDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="DiscardNote" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="InputMaterial" Relationship="BMAModel.FK_DiscardedInputMaterial_InputMaterial" FromRole="DiscardedInputMaterial" ToRole="InputMaterial" />
-        </EntityType>
-        <EntityType Name="DiscountByQuantity">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QuantityFrom" Type="Int32" Nullable="false" />
-          <Property Name="QuantityTo" Type="Int32" Nullable="false" />
-          <Property Name="DiscountValue" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ExportFrom">
-          <Key>
-            <PropertyRef Name="OutputMaterialId" />
-            <PropertyRef Name="InputbillId" />
-          </Key>
-          <Property Name="OutputMaterialId" Type="Int32" Nullable="false" />
-          <Property Name="InputbillId" Type="Int32" Nullable="false" />
-          <Property Name="ExportFromQuantity" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="InputBill" Relationship="BMAModel.FK_ExportFrom_InputBill" FromRole="ExportFrom" ToRole="InputBill" />
-          <NavigationProperty Name="OutputMaterial" Relationship="BMAModel.FK_ExportFrom_OutputMaterial" FromRole="ExportFrom" ToRole="OutputMaterial" />
+          <NavigationProperty Name="AspNetUser" Relationship="BMAModel.FK_AspNetUsers_Customer_UserId" FromRole="Customer" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="GuestInfo">
           <Key>
@@ -867,10 +913,9 @@
           <Property Name="InputRawImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="InputTaxAmount" Type="Double" Nullable="false" />
           <Property Name="SupplierId" Type="Int32" />
-          <Property Name="ImportDate" Type="DateTime" Nullable="false" Precision="0" />
-          <NavigationProperty Name="ExportFroms" Relationship="BMAModel.FK_ExportFrom_InputBill" FromRole="InputBill" ToRole="ExportFrom" />
           <NavigationProperty Name="Supplier" Relationship="BMAModel.FK_InputBill_Supplier_SupplierId" FromRole="InputBill" ToRole="Supplier" />
           <NavigationProperty Name="InputMaterials" Relationship="BMAModel.FK_InputMaterial_InputBill_InputBillId" FromRole="InputBill" ToRole="InputMaterial" />
+          <NavigationProperty Name="OutputMaterials" Relationship="BMAModel.ExportFrom" FromRole="InputBill" ToRole="OutputMaterial" />
         </EntityType>
         <EntityType Name="InputMaterial">
           <Key>
@@ -880,13 +925,12 @@
           <Property Name="ImportQuantity" Type="Int32" Nullable="false" />
           <Property Name="RemainQuantity" Type="Int32" Nullable="false" />
           <Property Name="InputMaterialPrice" Type="Double" Nullable="false" />
-          <Property Name="ImportDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ImportDate" Type="DateTime" Precision="0" />
           <Property Name="InputMaterialExpiryDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="InputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="InputBillId" Type="Int32" Nullable="false" />
           <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="DiscardedInputMaterials" Relationship="BMAModel.FK_DiscardedInputMaterial_InputMaterial" FromRole="InputMaterial" ToRole="DiscardedInputMaterial" />
           <NavigationProperty Name="InputBill" Relationship="BMAModel.FK_InputMaterial_InputBill_InputBillId" FromRole="InputMaterial" ToRole="InputBill" />
           <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="InputMaterial" ToRole="ProductMaterial" />
         </EntityType>
@@ -912,35 +956,27 @@
           <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="OrderCode" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="PlanDeliveryTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DeliveryTime" Type="DateTime" Precision="0" />
           <Property Name="ApproveTime" Type="DateTime" Precision="3" />
           <Property Name="OrderNote" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="DepositAmount" Type="Int32" Nullable="false" />
-          <Property Name="ConfirmTime" Type="DateTime" Precision="3" />
-          <Property Name="CustomerUserId" Type="Int32" />
-          <Property Name="StaffApproveUserId" Type="Int32" />
+          <Property Name="ConfirmDate" Type="DateTime" Precision="0" />
+          <Property Name="CustomerUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="StaffApproveUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="IsStaffEdit" Type="Boolean" Nullable="false" />
-          <Property Name="CustomerEditingFlag" Type="Boolean" Nullable="false" />
+          <Property Name="Flag" Type="Boolean" Nullable="false" />
           <Property Name="OutputBillId" Type="Int32" />
           <Property Name="OrderStatus" Type="Int32" Nullable="false" />
           <Property Name="PreviousOrderId" Type="Int32" />
+          <Property Name="TotalValue" Type="Int32" Nullable="false" />
           <Property Name="GuestInfoId" Type="Int32" />
-          <Property Name="ReturnDeposit" Type="Int32" Nullable="false" />
-          <Property Name="CancelUserId" Type="Int32" />
-          <Property Name="CancelTime" Type="DateTime" Precision="3" />
-          <Property Name="FinishTime" Type="DateTime" Precision="3" />
-          <Property Name="DeliveryTime" Type="DateTime" Precision="3" />
-          <Property Name="StartProduceTime" Type="DateTime" Precision="3" />
-          <Property Name="Amount" Type="Int32" Nullable="false" />
-          <Property Name="TaxAmount" Type="Int32" Nullable="false" />
-          <Property Name="DiscountAmount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="BMAModel.FK_Orders_AspNetUsers_CustomerUserId" FromRole="Order" ToRole="AspNetUser" />
+          <NavigationProperty Name="AspNetUser1" Relationship="BMAModel.FK_Orders_AspNetUsers_StaffApproveUserId" FromRole="Order" ToRole="AspNetUser" />
           <NavigationProperty Name="GuestInfo" Relationship="BMAModel.FK_Orders_GuestInfo" FromRole="Order" ToRole="GuestInfo" />
           <NavigationProperty Name="OrderItems" Relationship="BMAModel.FK_OrderItem_Orders_OrderId" FromRole="Order" ToRole="OrderItem" />
           <NavigationProperty Name="Orders1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order" ToRole="Order1" />
           <NavigationProperty Name="Order1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order1" ToRole="Order" />
           <NavigationProperty Name="OutputBill" Relationship="BMAModel.FK_Orders_OutputBill_OutputBillId" FromRole="Order" ToRole="OutputBill" />
-          <NavigationProperty Name="User" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="Order" ToRole="User" />
-          <NavigationProperty Name="User1" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="Order" ToRole="User" />
         </EntityType>
         <EntityType Name="OtherExpense">
           <Key>
@@ -973,17 +1009,9 @@
           <Property Name="OutputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
           <Property Name="OrderItemId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="ExportFroms" Relationship="BMAModel.FK_ExportFrom_OutputMaterial" FromRole="OutputMaterial" ToRole="ExportFrom" />
           <NavigationProperty Name="OrderItem" Relationship="BMAModel.FK_OutputMaterial_OrderItem" FromRole="OutputMaterial" ToRole="OrderItem" />
           <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_OutputMaterial_ProductMaterial" FromRole="OutputMaterial" ToRole="ProductMaterial" />
-        </EntityType>
-        <EntityType Name="Policy">
-          <Key>
-            <PropertyRef Name="PolicyId" />
-          </Key>
-          <Property Name="PolicyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PolicyName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PolicyBound" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="InputBills" Relationship="BMAModel.ExportFrom" FromRole="OutputMaterial" ToRole="InputBill" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -995,7 +1023,7 @@
           <Property Name="Unit" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Descriptions" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ProductImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ProductImgage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="ProductStandardPrice" Type="Int32" Nullable="false" />
           <Property Name="CategoryId" Type="Int32" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
@@ -1013,7 +1041,6 @@
           <Property Name="ProductMaterialUnit" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CurrentQuantity" Type="Int32" Nullable="false" />
           <Property Name="StandardQuantity" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="InputMaterials" Relationship="BMAModel.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="InputMaterial" />
           <NavigationProperty Name="OutputMaterials" Relationship="BMAModel.FK_OutputMaterial_ProductMaterial" FromRole="ProductMaterial" ToRole="OutputMaterial" />
           <NavigationProperty Name="Recipes" Relationship="BMAModel.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="Recipe" />
@@ -1029,35 +1056,27 @@
           <NavigationProperty Name="Product" Relationship="BMAModel.FK_Recipe_Product_ProductId" FromRole="Recipe" ToRole="Product" />
           <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="Recipe" ToRole="ProductMaterial" />
         </EntityType>
-        <EntityType Name="Role">
-          <Key>
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="RoleId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Users" Relationship="BMAModel.FK_User_Role" FromRole="Role" ToRole="User" />
-        </EntityType>
         <EntityType Name="Staff">
           <Key>
             <PropertyRef Name="StaffId" />
           </Key>
           <Property Name="StaffId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="StaffAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="StaffPhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="BMAModel.FK_Staff_User" FromRole="Staff" ToRole="User" />
+          <NavigationProperty Name="AspNetUser" Relationship="BMAModel.FK_AspNetUsers_Staff_UserId" FromRole="Staff" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
             <PropertyRef Name="SupplierId" />
           </Key>
           <Property Name="SupplierId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SupplierName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="SupplierAddress" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="SupplierPhoneNumber" Type="String" Nullable="false" MaxLength="12" FixedLength="true" Unicode="false" />
-          <Property Name="SupplierEmail" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="SupplierTaxCode" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="SupplierName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="SupplierAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="SupplierPhoneNumber" Type="String" MaxLength="12" FixedLength="true" Unicode="false" />
+          <Property Name="SupplierEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SupplierTaxCode" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="InputBills" Relationship="BMAModel.FK_InputBill_Supplier_SupplierId" FromRole="Supplier" ToRole="InputBill" />
         </EntityType>
@@ -1078,7 +1097,7 @@
           <Property Name="TaxRateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="BeginDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="EndDate" Type="DateTime" Precision="0" />
-          <Property Name="TaxRateValue" Type="Int32" Nullable="false" />
+          <Property Name="TaxRateValue" Type="Double" Nullable="false" />
           <Property Name="TaxTypeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TaxType" Relationship="BMAModel.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxRate" ToRole="TaxType" />
         </EntityType>
@@ -1090,23 +1109,78 @@
           <Property Name="TaxTypeName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TaxRates" Relationship="BMAModel.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxType" ToRole="TaxRate" />
         </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RoleId" Type="Int32" Nullable="false" />
-          <Property Name="Fullname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Customers" Relationship="BMAModel.FK_Customer_User" FromRole="User" ToRole="Customer" />
-          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="User" ToRole="Order" />
-          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="User" ToRole="Order" />
-          <NavigationProperty Name="Role" Relationship="BMAModel.FK_User_Role" FromRole="User" ToRole="Role" />
-          <NavigationProperty Name="Staffs" Relationship="BMAModel.FK_Staff_User" FromRole="User" ToRole="Staff" />
-        </EntityType>
+        <Association Name="FK_AspNetUserClaims_AspNetUsers_UserId">
+          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="BMAModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaim">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUserLogins_AspNetUsers_UserId">
+          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="BMAModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_Customer_UserId">
+          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="BMAModel.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_Staff_UserId">
+          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="BMAModel.Staff" Role="Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_AspNetUsers_CustomerUserId">
+          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="CustomerUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_AspNetUsers_StaffApproveUserId">
+          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="StaffApproveUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Category_Category_CategoryId">
           <End Type="BMAModel.Category" Role="Category" Multiplicity="1" />
           <End Type="BMAModel.Category" Role="Category1" Multiplicity="0..1" />
@@ -1128,54 +1202,6 @@
             </Principal>
             <Dependent Role="Product">
               <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Customer_User">
-          <End Type="BMAModel.User" Role="User" Multiplicity="1" />
-          <End Type="BMAModel.Customer" Role="Customer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Customer">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DiscardedInputMaterial_InputMaterial">
-          <End Type="BMAModel.InputMaterial" Role="InputMaterial" Multiplicity="1" />
-          <End Type="BMAModel.DiscardedInputMaterial" Role="DiscardedInputMaterial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InputMaterial">
-              <PropertyRef Name="InputMaterialId" />
-            </Principal>
-            <Dependent Role="DiscardedInputMaterial">
-              <PropertyRef Name="InputMaterialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ExportFrom_InputBill">
-          <End Type="BMAModel.InputBill" Role="InputBill" Multiplicity="1" />
-          <End Type="BMAModel.ExportFrom" Role="ExportFrom" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InputBill">
-              <PropertyRef Name="InputBillId" />
-            </Principal>
-            <Dependent Role="ExportFrom">
-              <PropertyRef Name="InputbillId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ExportFrom_OutputMaterial">
-          <End Type="BMAModel.OutputMaterial" Role="OutputMaterial" Multiplicity="1" />
-          <End Type="BMAModel.ExportFrom" Role="ExportFrom" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OutputMaterial">
-              <PropertyRef Name="OutputMaterialId" />
-            </Principal>
-            <Dependent Role="ExportFrom">
-              <PropertyRef Name="OutputMaterialId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1287,30 +1313,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Orders_User_CustomerOrder">
-          <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="CustomerUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_User_StaffApprove">
-          <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="StaffApproveUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OutputMaterial_ProductMaterial">
           <End Type="BMAModel.ProductMaterial" Role="ProductMaterial" Multiplicity="1" />
           <End Type="BMAModel.OutputMaterial" Role="OutputMaterial" Multiplicity="*" />
@@ -1347,30 +1349,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_User_Role">
-          <End Type="BMAModel.Role" Role="Role" Multiplicity="1" />
-          <End Type="BMAModel.User" Role="User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="RoleId" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="RoleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Staff_User">
-          <End Type="BMAModel.User" Role="User" Multiplicity="1" />
-          <End Type="BMAModel.Staff" Role="Staff" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Staff">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TaxRate_TaxType_TaxRateId">
           <End Type="BMAModel.TaxType" Role="TaxType" Multiplicity="1" />
           <End Type="BMAModel.TaxRate" Role="TaxRate" Multiplicity="*" />
@@ -1383,12 +1361,66 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="AspNetUserRoles">
+          <End Type="BMAModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
+          <End Type="BMAModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+        </Association>
+        <Association Name="ExportFrom">
+          <End Type="BMAModel.InputBill" Role="InputBill" Multiplicity="*" />
+          <End Type="BMAModel.OutputMaterial" Role="OutputMaterial" Multiplicity="*" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BMAModelStoreContainer" CdmEntityContainer="BMAEntities">
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="BMAModel.AspNetRole">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="BMAModel.AspNetUserClaim">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="BMAModel.AspNetUserLogin">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="BMAModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="BMAModel.Category">
               <MappingFragment StoreEntitySet="Category">
@@ -1401,43 +1433,12 @@
           <EntitySetMapping Name="Customers">
             <EntityTypeMapping TypeName="BMAModel.Customer">
               <MappingFragment StoreEntitySet="Customer">
-                <ScalarProperty Name="IsLoyal" ColumnName="IsLoyal" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="CustomerPhoneNumber" ColumnName="CustomerPhoneNumber" />
                 <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
                 <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DiscardedInputMaterials">
-            <EntityTypeMapping TypeName="BMAModel.DiscardedInputMaterial">
-              <MappingFragment StoreEntitySet="DiscardedInputMaterial">
-                <ScalarProperty Name="DiscardNote" ColumnName="DiscardNote" />
-                <ScalarProperty Name="DiscardDate" ColumnName="DiscardDate" />
-                <ScalarProperty Name="DiscardQuantity" ColumnName="DiscardQuantity" />
-                <ScalarProperty Name="InputMaterialId" ColumnName="InputMaterialId" />
-                <ScalarProperty Name="DiscardId" ColumnName="DiscardId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DiscountByQuantities">
-            <EntityTypeMapping TypeName="BMAModel.DiscountByQuantity">
-              <MappingFragment StoreEntitySet="DiscountByQuantity">
-                <ScalarProperty Name="DiscountValue" ColumnName="DiscountValue" />
-                <ScalarProperty Name="QuantityTo" ColumnName="QuantityTo" />
-                <ScalarProperty Name="QuantityFrom" ColumnName="QuantityFrom" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ExportFroms">
-            <EntityTypeMapping TypeName="BMAModel.ExportFrom">
-              <MappingFragment StoreEntitySet="ExportFrom">
-                <ScalarProperty Name="ExportFromQuantity" ColumnName="ExportFromQuantity" />
-                <ScalarProperty Name="InputbillId" ColumnName="InputbillId" />
-                <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1455,7 +1456,6 @@
           <EntitySetMapping Name="InputBills">
             <EntityTypeMapping TypeName="BMAModel.InputBill">
               <MappingFragment StoreEntitySet="InputBill">
-                <ScalarProperty Name="ImportDate" ColumnName="ImportDate" />
                 <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
                 <ScalarProperty Name="InputTaxAmount" ColumnName="InputTaxAmount" />
                 <ScalarProperty Name="InputRawImage" ColumnName="InputRawImage" />
@@ -1497,28 +1497,20 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="BMAModel.Order">
               <MappingFragment StoreEntitySet="Orders">
-                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
-                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="StartProduceTime" ColumnName="StartProduceTime" />
-                <ScalarProperty Name="DeliveryTime" ColumnName="DeliveryTime" />
-                <ScalarProperty Name="FinishTime" ColumnName="FinishTime" />
-                <ScalarProperty Name="CancelTime" ColumnName="CancelTime" />
-                <ScalarProperty Name="CancelUserId" ColumnName="CancelUserId" />
-                <ScalarProperty Name="ReturnDeposit" ColumnName="ReturnDeposit" />
                 <ScalarProperty Name="GuestInfoId" ColumnName="GuestInfoId" />
+                <ScalarProperty Name="TotalValue" ColumnName="TotalValue" />
                 <ScalarProperty Name="PreviousOrderId" ColumnName="PreviousOrderId" />
                 <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
                 <ScalarProperty Name="OutputBillId" ColumnName="OutputBillId" />
-                <ScalarProperty Name="CustomerEditingFlag" ColumnName="CustomerEditingFlag" />
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
                 <ScalarProperty Name="IsStaffEdit" ColumnName="IsStaffEdit" />
                 <ScalarProperty Name="StaffApproveUserId" ColumnName="StaffApproveUserId" />
                 <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
-                <ScalarProperty Name="ConfirmTime" ColumnName="ConfirmTime" />
+                <ScalarProperty Name="ConfirmDate" ColumnName="ConfirmDate" />
                 <ScalarProperty Name="DepositAmount" ColumnName="DepositAmount" />
                 <ScalarProperty Name="OrderNote" ColumnName="OrderNote" />
                 <ScalarProperty Name="ApproveTime" ColumnName="ApproveTime" />
-                <ScalarProperty Name="PlanDeliveryTime" ColumnName="PlanDeliveryTime" />
+                <ScalarProperty Name="DeliveryTime" ColumnName="DeliveryTime" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="OrderCode" ColumnName="OrderCode" />
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
@@ -1559,15 +1551,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Policies">
-            <EntityTypeMapping TypeName="BMAModel.Policy">
-              <MappingFragment StoreEntitySet="Policy">
-                <ScalarProperty Name="PolicyBound" ColumnName="PolicyBound" />
-                <ScalarProperty Name="PolicyName" ColumnName="PolicyName" />
-                <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="BMAModel.Product">
               <MappingFragment StoreEntitySet="Product">
@@ -1575,7 +1558,7 @@
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="ProductStandardPrice" ColumnName="ProductStandardPrice" />
-                <ScalarProperty Name="ProductImage" ColumnName="ProductImage" />
+                <ScalarProperty Name="ProductImgage" ColumnName="ProductImgage" />
                 <ScalarProperty Name="Note" ColumnName="Note" />
                 <ScalarProperty Name="Descriptions" ColumnName="Descriptions" />
                 <ScalarProperty Name="Unit" ColumnName="Unit" />
@@ -1588,7 +1571,6 @@
           <EntitySetMapping Name="ProductMaterials">
             <EntityTypeMapping TypeName="BMAModel.ProductMaterial">
               <MappingFragment StoreEntitySet="ProductMaterial">
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
                 <ScalarProperty Name="CurrentQuantity" ColumnName="CurrentQuantity" />
                 <ScalarProperty Name="ProductMaterialUnit" ColumnName="ProductMaterialUnit" />
@@ -1603,14 +1585,6 @@
                 <ScalarProperty Name="RecipeQuantity" ColumnName="RecipeQuantity" />
                 <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="BMAModel.Role">
-              <MappingFragment StoreEntitySet="Role">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1668,19 +1642,22 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="BMAModel.User">
-              <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="BMAModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetUser">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="AspNetRole">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="ExportFrom" TypeName="BMAModel.ExportFrom" StoreEntitySet="ExportFrom">
+            <EndProperty Name="OutputMaterial">
+              <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
+            </EndProperty>
+            <EndProperty Name="InputBill">
+              <ScalarProperty Name="InputBillId" ColumnName="InputbillId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

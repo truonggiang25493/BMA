@@ -40,7 +40,7 @@ Giỏ hàng(@ViewBag.SumQuantity)<b class="caret"> </b>
                                 <td style="20%" class="miniCartProductThumb"><div><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" alt="img" style="width:120px;height:100px;"></div></td>
                                 <td style="40%">
                                     <div class="miniCartDescription">
-                                        <h4> <a style="font-family:'Patrick Hand SC';"> @item.ProductName </a> </h4>
+                                        <h4> <a style="font-family:'Patrick Hand SC';cursor:default"> @item.ProductName </a> </h4>
                                         <div class="price"> <span> @item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) </span> </div>
                                     </div>
                                 </td>
@@ -53,11 +53,11 @@ Giỏ hàng(@ViewBag.SumQuantity)<b class="caret"> </b>
                 </table>
             </div>
 
-            <div class="miniCartFooter text-right" style="">
+            <div class="miniCartFooter text-right" style="margin-top:-15px;">
                 <h4 class="text-right subtotal" style="margin:-5px 0"> Tổng cộng: @total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</h4>
-                <a onclick="return window.location.assign('http://www.w3schools.com')"><div class="btn btn-sm btn-danger"> <i class="fa fa-shopping-cart"> </i> THANH TOÁN </div></a>
+                <a onclick="return window.location.assign('http://www.w3schools.com')"><div style="font-family: 'Patrick Hand SC'"></div></a>
+                <button onclick="return window.location.assign('/Cart/Cart')" class="btn btn-sm btn-danger" style="font-family: 'Patrick Hand SC'"><i class="fa fa-shopping-cart"></i> THANH TOÁN</button>
             </div>
-
         </div>
     }
 }

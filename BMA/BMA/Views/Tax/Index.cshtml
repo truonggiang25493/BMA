@@ -1,4 +1,5 @@
-﻿@model List<BMA.Models.TaxRate>
+﻿@using System.Globalization
+@model List<BMA.Models.TaxRate>
 @{
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
@@ -13,13 +14,13 @@
             <div class="nav-tabs-custom">
                 <!--Menu-->
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#vat" data-toggle="tab">Thuế giá trị gia tăng(VAT)</a></li>
-                    <li><a href="#tndn" data-toggle="tab">Thuế thu nhập doanh nghiệp(TNDN)</a></li>
+                    <li class=""><a href="#vat" data-toggle="tab">Thuế giá trị gia tăng(VAT)</a></li>
+                    <li class="active"><a href="#tndn" data-toggle="tab">Thuế thu nhập doanh nghiệp(TNDN)</a></li>
                 </ul>
                 <!--Tab content-->
                 <div class="tab-content">
                     <!--VAT-->
-                    <div class="active tab-pane" id="vat">
+                    <div class="tab-pane" id="vat">
                         <div class="row">
                             <div class="col-xs-12">
                                 <h2 class="page-header">Thuế giá trị gia tăng(VAT)</h2>
@@ -158,32 +159,128 @@
                         </div>
                     </div>
                     <!--TNDN-->
-                    <div class="tab-pane" id="tndn">
+                    <div class="active tab-pane" id="tndn">
                         <div class="row">
-                            <div class="col-xs-12">
+                            <div class="col-md-12">
                                 <h2 class="page-header">Thuế thu nhập doanh nghiệp(TNDN)</h2>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                Tỉ suất thuế TNDN hiện tại: 10%
-                                <button class="btn btn-primary btn-xs" style="margin-left: 10px">
-                                    <i class="fa fa-edit"></i>
-                                    Thay đổi
-                                </button>
+                        <!--Tax rate-->
+                        <div class="box">
+                            <div class="box-header">
+                                <h3 class="box-title">Tỉ suất thuế hiện tại</h3>
                             </div>
+                            <!--PP khấu trừ-->
+                            <div class="box-body" id="deductWay">
+                                <div class="row">
+                                    <div class="col-md-8">Phương pháp tính thuế áp dụng:</div>
+                                    <div class="col-md-2">
+                                        <b>Khấu trừ</b>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-primary btn-xs">
+                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
+                                            Thay đổi
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 10px; margin-top: 10px;">
+                                    <div class="col-md-8">
+                                        Tổng thu nhập năm @(DateTime.Now.AddYears(-1).Year):
+                                    </div>
+                                    <div class="col-md-2">
+                                        <b>@(19000000000.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-primary btn-xs">
+                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
+                                            Thay đổi
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        Tỉ suất thuế TNDN :
+                                    </div>
+                                    <div class="col-md-2">
+                                        <b>10%</b>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-primary btn-xs">
+                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
+                                            Thay đổi
+                                        </button>
+                                    </div>
 
-                        </div>
-                        <div class="row" style="margin-top: 10px">
-                            <div class="col-xs-12" style="vertical-align: middle">
-                                Xem báo cáo thuế VAT năm
-                                <input type="number" id="year" min="1990" max="@(DateTime.Now.Year)" value="@(DateTime.Now.Year - 1)" />
-                                <button class="btn btn-primary btn-xs" style="margin-left: 10px">
-                                    <i class="fa fa-bar-chart" style="margin-right: 3px"></i>
-                                    Thống kê
-                                </button>
+                                </div>
+                            </div>
+                            <!--PP trực tiếp-->
+                            <div class="box-body" id="directWay" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-8">Phương pháp tính thuế áp dụng:</div>
+                                    <div class="col-md-2">
+                                        <b>Trực tiếp</b>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-primary btn-xs">
+                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
+                                            Thay đổi
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 10px; margin-top: 10px;">
+                                    <div class="col-md-8">
+                                        Loại hình kinh doanh:
+                                    </div>
+                                    <div class="col-md-2">
+                                        <b>Hàng hóa</b>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-primary btn-xs">
+                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
+                                            Thay đổi
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        Tỉ suất thuế TNDN hiện tại:
+                                    </div>
+                                    <div class="col-md-2">
+                                        <b>1%</b>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-primary btn-xs">
+                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
+                                            Thay đổi
+                                        </button>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
+                        <!--Tax report-->
+                        <div class="box">
+                            <div class="box-header">
+                                <div class="box-title">
+                                    Báo cáo thuế TNDN
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <!--Option-->
+                                <div class="row">
+                                    <div class="col-md-12" style="vertical-align: middle; ">
+                                        <span style="margin-right: 10px;">Xem báo cáo thuế VAT năm</span>
+                                        <input type="number" id="year" min="1990" max="@(DateTime.Now.Year)" value="@(DateTime.Now.Year - 1)" />
+                                        <button class="btn btn-primary btn-xs" style="margin-left: 10px">
+                                            <i class="fa fa-bar-chart" style="margin-right: 3px"></i>
+                                            Thống kê
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

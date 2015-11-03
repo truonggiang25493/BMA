@@ -14,12 +14,7 @@ $.fn.timeslide = function (params) {
     var percent = (100 / (params.number - 1));
     for (var i = 0; i < params.number; i++) {
         var point = $("<div>", {
-            "class": "point",
-            "data-toggle": "popover",
-            "data-content": "Content",
-            "data-container": "document",
-            "data-placement": "top",
-            "title": "Title"
+            "class": "point"
         }).css("left", (percent * (i) - 2) + "%")
             .addClass(params.pointClass);
         if (params.renderLabel != undefined) {
@@ -29,13 +24,12 @@ $.fn.timeslide = function (params) {
             })
                 .css("left", (percent * (i - 1)) + "%")
                 .css("width", (percent * 2) + "%")
-                .css("display", "inline-block")
-                .css("font-size", "13px");
+                .css("display", "inline-block");
             pointLabels.push(label);
         }
         points.push(point);
     }
-    var donePercent = 100 * params.completed / (1 + params.number) + 2;
+    var donePercent = 100 * (params.completed - 1) / (params.number - 1);
 
     var slider = $("<div>", {
         "class": "timeslide-slider " + params.sliderClass

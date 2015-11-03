@@ -1,0 +1,62 @@
+﻿@using System.Globalization
+@using BMA.Models.ViewModel
+@model List<ShortageMaterialViewModel>
+@if (Model != null && Model.Count > 0)
+{
+    <div class="row" style="margin: 0px 10px">
+        <div class="col-xs-12">
+            <div class="row">
+                <table id="example2" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Tên nguyên liệu</th>
+                            <th>Số lượng trong kho</th>
+                            <th>Số lượng cần</th>
+                            <th>Chi tiết</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (ShortageMaterialViewModel shortageMaterial in Model)
+                        {
+                            <tr>
+                                <td style="vertical-align: middle;">
+                                    @shortageMaterial.ProductMaterialName
+                                </td>
+                                <td style="vertical-align: middle; text-align: right">
+                                    @shortageMaterial.CurrentQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @(shortageMaterial.ProductMaterialUnit)
+                                </td>
+                                <td style="vertical-align: middle; text-align: center;">
+                                    @shortageMaterial.NeedQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @(shortageMaterial.ProductMaterialUnit)
+                                </td>
+                                <td>
+                                    @foreach (ShortageMaterialInOrderViewModel shortageMaterialInOrder in shortageMaterial.ShortageMaterialInOrderList)
+                                    {
+                                        <div class="row" style="font-weight: normal;">
+                                            <div class="col-xs-8">
+                                                Đơn hàng <b>@(shortageMaterialInOrder.OrderCode)</b>
+                                                :
+
+                                            </div>
+                                            <div class="col-xs-4" style="text-align: right">@(shortageMaterialInOrder.NeedQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(shortageMaterial.ProductMaterialUnit)</div>
+                                        </div>
+                                    }
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <button class="btn btn-info">
+                                        <i class="fa fa-inbox" style="margin-right: 3px"></i>Nhập nguyên liệu
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h4>Không có nguyên liệu thiếu</h4>
+}
+
