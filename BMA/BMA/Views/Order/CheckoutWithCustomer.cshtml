@@ -84,14 +84,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 0; i < Model.OrderItemList.Count; i++)
+                    @for (int i = 0; i < Model.Order.OrderItems.Count; i++)
                     {
                         <tr>
                             <td>@(i + 1)</td>
-                            <td>@Model.OrderItemList.ElementAt(i).ProductName</td>
-                            <td>@Model.OrderItemList.ElementAt(i).OrderItem.RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                            <td>@Model.OrderItemList.ElementAt(i).OrderItem.Quantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                            <td style="text-align: right">@Model.OrderItemList.ElementAt(i).OrderItem.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <td>@Model.Order.OrderItems.ElementAt(i).Product.ProductName</td>
+                            <td>@Model.Order.OrderItems.ElementAt(i).RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <td>@Model.Order.OrderItems.ElementAt(i).Quantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <td style="text-align: right">@Model.Order.OrderItems.ElementAt(i).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                         </tr>
                     }
                 </tbody>
@@ -273,11 +273,15 @@
                                                     })
                                                 ]
                                             }),
-
                                             $("<input>", {
                                                 "type": "hidden",
                                                 "name": "orderId",
                                                 "value": "@Model.Order.OrderId"
+                                            }),
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "customerId",
+                                                "value": "@(HttpContext.Current.Session["CustomerId"])"
                                             })
                                         ]
                                     })
@@ -338,11 +342,11 @@
                                 success: function(data) {
                                     if (data === "1") {
                                         $('#myModal').modal('hide');
-                                        var n = noty({
+                                        noty({
                                             text: 'Thêm đơn hàng thành công',
                                             type: 'success',
                                             dismissQueue: false,
-                                            layout: 'bottomLeft',
+                                            layout: 'topCenter',
                                             theme: 'defaultTheme',
                                             timeout: 3000
                                         });
@@ -356,7 +360,7 @@
                                             text: 'Không thể thêm đơn hàng',
                                             type: 'warning',
                                             dismissQueue: false,
-                                            layout: 'bottomLeft',
+                                            layout: 'topCenter',
                                             theme: 'defaultTheme',
                                             timeout: 1000
                                         });
@@ -411,7 +415,7 @@
                     text: 'Không đủ nguyên liệu. Không thể duyệt đơn hàng.',
                     type: 'warning',
                     dismissQueue: false,
-                    layout: 'bottomLeft',
+                    layout: 'topCenter',
                     theme: 'defaultTheme'
                 });
             };

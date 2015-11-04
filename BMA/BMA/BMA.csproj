@@ -179,6 +179,7 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CusManageController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -282,9 +283,8 @@
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
-    <Compile Include="Models\ViewModel\MaterialInfoForProductListViewMode%3b.cs" />
+    <Compile Include="Models\ViewModel\MaterialInfoForProductListViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
-    <Compile Include="Models\ViewModel\OrderItemViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
     <Compile Include="Models\ViewModel\ShortageMaterialViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1343,6 +1343,12 @@
     <Content Include="Views\CusManage\Index.cshtml" />
     <Content Include="Views\CusManage\ChangeInformation.cshtml" />
     <Content Include="Views\CusManage\ChangePassword.cshtml" />
+    <Content Include="Views\Order\MaterialListForOrder.cshtml" />
+    <Content Include="Views\Order\GetListOfProductToAdd.cshtml" />
+    <Content Include="Views\Order\GetShortageMaterialList.cshtml" />
+    <Content Include="Views\Order\ExportBill.cshtml" />
+    <Content Include="Views\Customer\Contact\Index.cshtml" />
+    <Content Include="Views\Customer\GetCustomerPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
