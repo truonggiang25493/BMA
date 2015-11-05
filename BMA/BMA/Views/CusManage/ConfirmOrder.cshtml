@@ -7,208 +7,513 @@
     IEnumerable<BMA.Models.OrderItem> oi = ViewBag.orderItems;
     IEnumerable<BMA.Models.OrderItem> ooi = ViewBag.oldOrderItems;
     BMA.Models.Order oldOrder = ViewBag.oldOrder;
+    BMA.Models.DiscountByQuantity dbqc = ViewBag.DiscountConfirm;
+    BMA.Models.DiscountByQuantity dbqo = ViewBag.DiscountOld;
 }
 
-<section class="border-top">
-    <div class="container">
-        <div class="page-title mrgb5x mrgt6x clearfix">
-            <h4 class="page-name">Quản lý đơn hàng</h4>
+@*<section class="border-top">
+        <div class="container">
+            <div class="page-title mrgb5x mrgt6x clearfix">
+                <h4 class="page-name">Quản lý đơn hàng</h4>
+            </div>
+        </div>
+    </section>
+    @{
+        int sumTotal = Convert.ToInt32(Model.TotalValue * 0.9);
+        int tax = Convert.ToInt32(Model.TotalValue * 0.1);
+        int oldSumTotal = Convert.ToInt32(oldOrder.TotalValue * 0.9);
+        int oldTax = Convert.ToInt32(oldOrder.TotalValue * 0.1);
+    }
+    <section>
+        <div class="container">
+            <div class="service-tab">
+                <div class="col-md-3 no-padding col-sm-5 animated out" data-delay="0" data-animation="fadeInUp">
+                    <div class="tab-section">
+                        <ul class="nav nav-stacked">
+                            <li><a href="/CusManageOrder/Index" aria-expanded="true"><span class="tab-border">DANH SÁCH ĐƠN HÀNG</span></a></li>
+                            <li class="active"><a href="/CusManageOrder/ConfirmIndex"><span class="tab-border">XÁC NHẬN ĐƠN HÀNG</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <h2 style="margin-left:300px;">Đơn hàng cũ</h2>
+                <div class="col-md-9 col-sm-7">
+                    <div class="tab-content mrgb7x animated out" data-delay="0" data-animation="fadeInUp">
+                        <div id="booking" class="tab-pane fade in active">
+                            <div class="rightbar-heading" style="float:right">
+                                <h4>THÔNG TIN ĐƠN HÀNG</h4>
+                            </div>
+                            <table class="table-fill" style="margin-top:0px;">
+                                <tbody class="table-hover">
+                                    <tr>
+                                        <td class="text-left">Mã đơn hàng</td>
+                                        <td class="text-left">@oldOrder.OrderCode</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Thời gian tạo</td>
+                                        <td class="text-left">@oldOrder.CreateTime.ToShortDateString()</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Trạng thái</td>
+                                        <td class="text-left"><div class="btn btn-primary">@CommonData.Status[oldOrder.OrderStatus]</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Tổng cộng</td>
+                                        <td class="text-left">@(oldSumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Thuế</td>
+                                        <td class="text-left">@(oldTax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Thành tiền</td>
+                                        <td class="text-left">@oldOrder.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="rightbar-heading" style="float:right">
+                                <h4>SẢN PHẨM TRONG ĐƠN HÀNG</h4>
+                            </div>
+                            <table class="table-fill">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Tên sản phẩm</th>
+                                        <th class="text-left">Đơn giá</th>
+                                        <th class="text-left">Số lượng</th>
+                                        <th class="text-left">Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-hover">
+                                    @foreach (var item in ooi)
+                                    {
+                                        <tr>
+                                            <td class="text-left">@item.Product.ProductName</td>
+                                            <td class="text-left">@item.RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                            <td class="text-left">@item.Quantity</td>
+                                            <td class="text-left">@item.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                <h2 style="margin-left:300px;">Đơn hàng mới</h2>
+                <div class="col-md-9 col-sm-7" style="float:right">
+                    <div class="tab-content mrgb7x animated out" data-delay="0" data-animation="fadeInUp">
+                        <div id="booking" class="tab-pane fade in active">
+                            <div class="rightbar-heading" style="float:right">
+                                <h4>THÔNG TIN ĐƠN HÀNG</h4>
+                            </div>
+                            <table class="table-fill" style="margin-top:0px;">
+                                <tbody class="table-hover">
+                                    <tr>
+                                        <td class="text-left">Mã đơn hàng</td>
+                                        <td class="text-left">@Model.OrderCode</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Thời gian tạo</td>
+                                        <td class="text-left">@Model.CreateTime.ToShortDateString()</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Trạng thái</td>
+                                        <td class="text-left"><div class="btn btn-danger">@CommonData.Status[Model.OrderStatus]</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Tổng cộng</td>
+                                        <td class="text-left">@(sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Thuế</td>
+                                        <td class="text-left">@(tax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Thành tiền</td>
+                                        <td class="text-left">@Model.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="rightbar-heading" style="float:right">
+                                <h4>SẢN PHẨM TRONG ĐƠN HÀNG</h4>
+                            </div>
+                            <table class="table-fill">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Tên sản phẩm</th>
+                                        <th class="text-left">Đơn giá</th>
+                                        <th class="text-left">Số lượng</th>
+                                        <th class="text-left">Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-hover">
+                                    @foreach (var item in oi)
+                                    {
+                                        <tr>
+                                            <td class="text-left">@item.Product.ProductName</td>
+                                            <td class="text-left">@item.RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                            <td class="text-left">@item.Quantity</td>
+                                            <td class="text-left">@item.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div style="margin: 40px 0px 40px 25px; background-color: #5cb85c" class="send-msg"><a href="javascript:void(0)" onclick="document.getElementById('lightAccept').style.display = 'block'; document.getElementById('fade').style.display = 'block'" style="background-color: #5cb85c" class="submit-button">CHẤP NHẬN</a></div>
+                            <div style="margin: 40px 0px 40px 25px; background-color:#ad0707" class="send-msg"><a href="javascript:void(0)" onclick="document.getElementById('lightCancel').style.display = 'block'; document.getElementById('fade').style.display = 'block'" style="background-color:#ad0707" class="submit-button">HỦY THAY ĐỔI</a></div>
+                            <div style="margin: 40px 0px 40px 0px; background-color:#ad0707" class="send-msg"><a href="javascript:void(0)" onclick="document.getElementById('lightCancelBoth').style.display = 'block'; document.getElementById('fade').style.display = 'block'" style="background-color:#ad0707" class="submit-button">HỦY ĐƠN HÀNG</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="lightCancelBoth" class="white_content_delete">
+        <div class="modal-content">
+            <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
+                <button type="button" class="close" onclick="document.getElementById('lightCancelBoth').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
+                <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
+            </div>
+            <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc.<br /> Quý khách có muốn hủy đơn hàng này không ?</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="document.getElementById('lightCancelBoth').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
+                <a class="btn btn-primary" href="@Url.Action("CancelBothOrderConfirm", "CusManageOrder", new { @orderId = Model.OrderId, @oldOrderId = oldOrder.OrderId })">Đồng ý</a>
+            </div>
         </div>
     </div>
-</section>
-@{
-    int sumTotal = Convert.ToInt32(Model.TotalValue * 0.9);
-    int tax = Convert.ToInt32(Model.TotalValue * 0.1);
-    int oldSumTotal = Convert.ToInt32(oldOrder.TotalValue * 0.9);
-    int oldTax = Convert.ToInt32(oldOrder.TotalValue * 0.1);
-}
-<section>
-    <div class="container">
-        <div class="service-tab">
-            <div class="col-md-3 no-padding col-sm-5 animated out" data-delay="0" data-animation="fadeInUp">
-                <div class="tab-section">
-                    <ul class="nav nav-stacked">
-                        <li><a href="/CusManageOrder/Index" aria-expanded="true"><span class="tab-border">DANH SÁCH ĐƠN HÀNG</span></a></li>
-                        <li class="active"><a href="/CusManageOrder/ConfirmIndex"><span class="tab-border">XÁC NHẬN ĐƠN HÀNG</span></a></li>
+    <div id="fade" class="black_overlay"></div>
+
+    <div id="lightCancel" class="white_content_delete">
+        <div class="modal-content">
+            <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
+                <button type="button" class="close" onclick="document.getElementById('lightCancel').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
+                <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
+            </div>
+            <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Nếu hủy thay đổi thì đơn hàng được chỉnh sửa sẽ bị xóa.<br /> Quý khách có muốn hủy thay đổi này không ?</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="document.getElementById('lightCancel').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
+                <a class="btn btn-primary" href="@Url.Action("CancelEditedOrder", "CusManageOrder", new { @orderId = Model.OrderId})">Đồng ý</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="lightAccept" class="white_content_delete">
+        <div class="modal-content">
+            <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
+                <button type="button" class="close" onclick="document.getElementById('lightAccept').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
+                <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
+            </div>
+            <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Sau khi chấp nhận đơn hàng sẽ được tiến hành thực hiện.<br /> Cám ơn quý khách !</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="document.getElementById('lightAccept').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
+                <a class="btn btn-primary" href="@Url.Action("AcceptEditedOrder", "CusManageOrder", new { @orderId = Model.OrderId })">Đồng ý</a>
+            </div>
+        </div>
+    </div>
+    <div id="fade" class="black_overlay"></div>*@
+
+<div class="container main-container headerOffset">
+    <div class="row">
+        <div class="breadcrumbDiv col-lg-12">
+            <ul class="breadcrumb">
+                <li> <a href="@Url.Action("Index", "Home")">Trang chủ</a> </li>
+                <li> <a href="@Url.Action("Index", "CusManage")"> Quản lý</a> </li>
+                @{
+                    if (Model.OrderStatus == 1)
+                    {
+                        <li> <a href="@Url.Action("ConfirmList", "CusManage")">Danh sách đơn hàng</a> </li>
+                    }
+                    else
+                    {
+                        <li> <a href="@Url.Action("OrderList", "CusManage")">Danh sách đơn hàng</a> </li>
+                    }
+                }
+                <li class="active"> Xác nhận đơn hàng </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-7">
+            <h1 class="section-title-inner"><span><i class="fa fa-list-alt"></i> Đơn hàng cũ </span></h1>
+            <div class="row userInfo">
+                <div class="col-lg-12">
+                    <h2 class="block-title-2"> Chi tiết đơn hàng của bạn </h2>
+                </div>
+                <div class="statusContent">
+                    <div class="col-sm-6">
+                        <div class=" statusTop">
+                            <p><strong>Trạng thái: </strong><span class="label label-warning">@CommonData.Status[oldOrder.OrderStatus]</span></p>
+                            <p><strong>Ngày đặt hàng:</strong> @oldOrder.CreateTime.ToString("dd/MM/yyyy HH:mm")</p>
+                            <p><strong>Ngày giao hàng (dự kiến):</strong> @oldOrder.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm")</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="order-box">
+                            <div class="order-box-header">
+                                Thành tiền
+                            </div>
+                            <div class="order-box-content">
+                                <table id="cart-summary" class="std table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Tổng cộng</td>
+                                            <td class="price">@oldOrder.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Giảm giá(@string.Format("{0}{1}", dbqo.DiscountValue, "%"))</td>
+                                            <td class="price"><span class="success">@(oldOrder.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sau giảm giá</td>
+                                            <td class="price"><span class="success">@((oldOrder.Amount - Model.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
+                                            <td class="price" id="total-tax">@oldOrder.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Thành tiền</td>
+                                            <td class=" site-color" id="total-price" style="font-size: 20px; color: #4ec67f !important">@((oldOrder.TaxAmount + (oldOrder.Amount - oldOrder.DiscountAmount)).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight:bold">Thời gian nhận hàng (dự kiến)</td>
+                                            <td class="price" id="total-tax">@(oldOrder.PlanDeliveryTime.ToString("MM/dd/yyyy HH:mm"))</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 clearfix">
+                        <div class="order-box">
+                            <div class="order-box-header">
+                                Danh sách sản phẩm
+                            </div>
+                            <div class="order-box-content">
+                                <div class="table-responsive">
+                                    <table class="order-details-cart">
+                                        <tbody>
+                                            @foreach (var item in ooi)
+                                            {
+                                                <tr class="cartProduct">
+                                                    <td class="cartProductThumb" style="width:20%"><div> <a href="product-details.html"> <img alt="img" src="@Url.Content("~/Content/Images/BakeryImages/" + item.Product.ProductImage)" style="width:86px;height:58px;"> </a> </div></td>
+                                                    <td style="width:40%">
+                                                        <div class="miniCartDescription">
+                                                            <h4> <a href="#"> @item.Product.ProductName </a> </h4>
+                                                            <div class="price"> <span> @item.Product.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</span> </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="" style="width:10%"> X @item.Quantity </td>
+                                                    <td class="" style="width:15%"><span> @((item.Quantity * item.Product.ProductStandardPrice).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-5"> </div>
+    </div>
+    <div style="margin:50px;"></div>
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-7">
+            <h1 class="section-title-inner"><span><i class="fa fa-list-alt"></i> Đơn hàng sau khi chỉnh sửa </span></h1>
+            <div class="row userInfo">
+                <div class="col-lg-12">
+                    <h2 class="block-title-2"> Chi tiết đơn hàng của bạn </h2>
+                </div>
+                <div class="statusContent">
+                    <div class="col-sm-6">
+                        <div class=" statusTop">
+                            @if (Model.OrderStatus == 0)
+                            {
+                                <p><strong>Trạng thái: </strong><span class="label label-warning">@CommonData.Status[Model.OrderStatus]</span></p>
+                            }
+                            @if (Model.OrderStatus == 1)
+                            {
+                                <p><strong>Trạng thái: </strong><span class="label label-danger">@CommonData.Status[Model.OrderStatus]</span></p>
+                            }
+                            @if (Model.OrderStatus == 2)
+                            {
+                                <p><strong>Trạng thái: </strong><span class="label label-primary">@CommonData.Status[Model.OrderStatus]</span></p>
+                            }
+                            @if (Model.OrderStatus == 3 || Model.OrderStatus == 4)
+                            {
+                                <p><strong>Trạng thái: </strong><span class="label label-info">@CommonData.Status[Model.OrderStatus]</span></p>
+                            }
+                            @if (Model.OrderStatus == 5)
+                            {
+                                <p><strong>Trạng thái: </strong><span class="label label-success">@CommonData.Status[Model.OrderStatus]</span></p>
+                            }
+                            @if (Model.OrderStatus == 6)
+                            {
+                                <p><strong>Trạng thái: </strong><span class="label label-default">@CommonData.Status[Model.OrderStatus]</span></p>
+                            }
+                            <p><strong>Ngày đặt hàng:</strong> @Model.CreateTime.ToString("dd/MM/yyyy HH:mm")</p>
+                            <p><strong>Ngày giao hàng (dự kiến):</strong> @Model.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm")</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="order-box">
+                            <div class="order-box-header">
+                                Thành tiền
+                            </div>
+                            <div class="order-box-content">
+                                <table id="cart-summary" class="std table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Tổng cộng</td>
+                                            <td class="price">@Model.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Giảm giá(@string.Format("{0}{1}", dbqc.DiscountValue, "%"))</td>
+                                            <td class="price"><span class="success">@(Model.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sau giảm giá</td>
+                                            <td class="price"><span class="success">@((Model.Amount - Model.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
+                                            <td class="price" id="total-tax">@Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Thành tiền</td>
+                                            <td class=" site-color" id="total-price" style="font-size: 20px; color: #4ec67f !important">@((Model.TaxAmount + (Model.Amount - Model.DiscountAmount)).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight:bold">Thời gian nhận hàng (dự kiến)</td>
+                                            <td class="price" id="total-tax">@(Model.PlanDeliveryTime.ToString("MM/dd/yyyy HH:mm"))</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 clearfix">
+                        <div class="order-box">
+                            <div class="order-box-header">
+                                Danh sách sản phẩm
+                            </div>
+                            <div class="order-box-content">
+                                <div class="table-responsive">
+                                    <table class="order-details-cart">
+                                        <tbody>
+                                            @foreach (var item in oi)
+                                            {
+                                                <tr class="cartProduct">
+                                                    <td class="cartProductThumb" style="width:20%"><div> <a href="product-details.html"> <img alt="img" src="@Url.Content("~/Content/Images/BakeryImages/" + item.Product.ProductImage)" style="width:86px;height:58px;"> </a> </div></td>
+                                                    <td style="width:40%">
+                                                        <div class="miniCartDescription">
+                                                            <h4> <a href="#"> @item.Product.ProductName </a> </h4>
+                                                            <div class="price"> <span> @item.Product.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</span> </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="" style="width:10%"> X @item.Quantity </td>
+                                                    <td class="" style="width:15%"><span> @((item.Quantity * item.Product.ProductStandardPrice).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-12">
+                    <ul class="previous pull-right">
+                        <li style="display:inline;"><a data-target="#deleteAllConfirm" data-toggle="modal" onclick="return deleteBothPopup(@Model.OrderId)" class="btn btn-delete btn-sm" style="border: 1px solid black;"><i class="fa fa-close"></i> Hủy đơn hàng</a></li>
+                        <li style="display:inline;margin:0 10px;"><a data-target="#deleteChangeConfirm" data-toggle="modal" onclick="return deleteChangePopup(@Model.OrderId)" class="btn btn-deleteChange btn-sm" style="border: 1px solid black;"><i class="fa fa-close"></i> Hủy thay đổi</a> </li>
+                        <li style="display:inline;"><a data-target="#approveChangeConfirm" data-toggle="modal" onclick="return approveChangePopup(@Model.OrderId)" class="btn btn-edit btn-sm" style="border: 1px solid black;"><i class="fa fa-cog"></i> Xác nhận</a></li>
+                        @*<li style="display:inline;margin:0 10px;"><a href="@Url.Action("CancelOrderConfirm", "CusManage", new { @orderId = Model.OrderId })" class="btn btn-deleteChange btn-sm" style="border: 1px solid black;"><i class="fa fa-close"></i> Hủy thay đổi</a> </li>
+                        <li style="display:inline;"><a href="@Url.Action("AcceptEditedOrder", "CusManage", new { @orderId = Model.OrderId })" class="btn btn-edit btn-sm" style="border: 1px solid black;"><i class="fa fa-cog"></i> Xác nhận</a></li>*@
+                    </ul>
+                </div>
+
+                <script type="text/javascript">
+                    var deleteLink;
+                    function deleteBothPopup(orderId) {
+                        deleteBothLink = "/CusManage/CancelBothOrder?orderId=" + orderId;
+                        $('#deleteAllConfirm #deleteBothRequest').attr("href", deleteBothLink);
+                    }
+
+                    function deleteChangePopup(orderId) {
+                        deleteEditedLink = "/CusManage/CancelEditedOrder?orderId=" + orderId;
+                        $('#deleteChangeConfirm #deleteChangeRequest').attr("href", deleteEditedLink);
+                    }
+
+                    function approveChangePopup(orderId) {
+                        approveLink = "/CusManage/AcceptEditedOrder?orderId=" + orderId;
+                        $('#approveChangeConfirm #approveRequest').attr("href", approveLink);
+                    }
+                </script>
+
+                <div class="col-lg-12 clearfix">
+                    <ul class="pager">
+                        <li class="previous pull-right"><a href="@Url.Action("Index","Product")"> <i class="fa fa-home"></i> Tới cửa hàng </a></li>
+                        <li class="next pull-left"><a onclick="javascript:history.back(-1);"> &larr; Quay lai trang quản lý</a></li>
                     </ul>
                 </div>
             </div>
-            <h2 style="margin-left:300px;">Đơn hàng cũ</h2>
-            <div class="col-md-9 col-sm-7">
-                <div class="tab-content mrgb7x animated out" data-delay="0" data-animation="fadeInUp">
-                    <div id="booking" class="tab-pane fade in active">
-                        <div class="rightbar-heading" style="float:right">
-                            <h4>THÔNG TIN ĐƠN HÀNG</h4>
-                        </div>
-                        <table class="table-fill" style="margin-top:0px;">
-                            <tbody class="table-hover">
-                                <tr>
-                                    <td class="text-left">Mã đơn hàng</td>
-                                    <td class="text-left">@oldOrder.OrderCode</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Thời gian tạo</td>
-                                    <td class="text-left">@oldOrder.CreateTime.ToShortDateString()</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Trạng thái</td>
-                                    <td class="text-left"><div class="btn btn-primary">@CommonData.Status[oldOrder.OrderStatus]</div></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Tổng cộng</td>
-                                    <td class="text-left">@(oldSumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Thuế</td>
-                                    <td class="text-left">@(oldTax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Thành tiền</td>
-                                    <td class="text-left">@oldOrder.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                </tr>
-                            </tbody>
-                        </table>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-5"> </div>
 
-                        <div class="rightbar-heading" style="float:right">
-                            <h4>SẢN PHẨM TRONG ĐƠN HÀNG</h4>
-                        </div>
-                        <table class="table-fill">
-                            <thead>
-                                <tr>
-                                    <th class="text-left">Tên sản phẩm</th>
-                                    <th class="text-left">Đơn giá</th>
-                                    <th class="text-left">Số lượng</th>
-                                    <th class="text-left">Thành tiền</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-hover">
-                                @foreach (var item in ooi)
-                                {
-                                    <tr>
-                                        <td class="text-left">@item.Product.ProductName</td>
-                                        <td class="text-left">@item.RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                        <td class="text-left">@item.Quantity</td>
-                                        <td class="text-left">@item.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                        
-                    </div>
-                </div>
-            </div>
 
-            <h2 style="margin-left:300px;">Đơn hàng mới</h2>
-            <div class="col-md-9 col-sm-7" style="float:right">
-                <div class="tab-content mrgb7x animated out" data-delay="0" data-animation="fadeInUp">
-                    <div id="booking" class="tab-pane fade in active">
-                        <div class="rightbar-heading" style="float:right">
-                            <h4>THÔNG TIN ĐƠN HÀNG</h4>
-                        </div>
-                        <table class="table-fill" style="margin-top:0px;">
-                            <tbody class="table-hover">
-                                <tr>
-                                    <td class="text-left">Mã đơn hàng</td>
-                                    <td class="text-left">@Model.OrderCode</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Thời gian tạo</td>
-                                    <td class="text-left">@Model.CreateTime.ToShortDateString()</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Trạng thái</td>
-                                    <td class="text-left"><div class="btn btn-danger">@CommonData.Status[Model.OrderStatus]</div></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Tổng cộng</td>
-                                    <td class="text-left">@(sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Thuế</td>
-                                    <td class="text-left">@(tax.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Thành tiền</td>
-                                    <td class="text-left">@Model.TotalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="rightbar-heading" style="float:right">
-                            <h4>SẢN PHẨM TRONG ĐƠN HÀNG</h4>
-                        </div>
-                        <table class="table-fill">
-                            <thead>
-                                <tr>
-                                    <th class="text-left">Tên sản phẩm</th>
-                                    <th class="text-left">Đơn giá</th>
-                                    <th class="text-left">Số lượng</th>
-                                    <th class="text-left">Thành tiền</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-hover">
-                                @foreach (var item in oi)
-                                {
-                                    <tr>
-                                        <td class="text-left">@item.Product.ProductName</td>
-                                        <td class="text-left">@item.RealPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                        <td class="text-left">@item.Quantity</td>
-                                        <td class="text-left">@item.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                        <div style="margin: 40px 0px 40px 25px; background-color: #5cb85c" class="send-msg"><a href="javascript:void(0)" onclick="document.getElementById('lightAccept').style.display = 'block'; document.getElementById('fade').style.display = 'block'" style="background-color: #5cb85c" class="submit-button">CHẤP NHẬN</a></div>
-                        <div style="margin: 40px 0px 40px 25px; background-color:#ad0707" class="send-msg"><a href="javascript:void(0)" onclick="document.getElementById('lightCancel').style.display = 'block'; document.getElementById('fade').style.display = 'block'" style="background-color:#ad0707" class="submit-button">HỦY THAY ĐỔI</a></div>
-                        <div style="margin: 40px 0px 40px 0px; background-color:#ad0707" class="send-msg"><a href="javascript:void(0)" onclick="document.getElementById('lightCancelBoth').style.display = 'block'; document.getElementById('fade').style.display = 'block'" style="background-color:#ad0707" class="submit-button">HỦY ĐƠN HÀNG</a></div>
-                    </div>
+
+        <div class="modal fade col-md-4 col-center" id="deleteAllConfirm" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:70px">
+            <div class="modal-dialog panel panel-default" style="width:438px;">
+                <div class=" panel-heading">
+                    <h3 class="panel-title"><strong>Xác nhận</strong></h3>
                 </div>
+                <div class="panel-body">
+                    <ul>
+                        <li> <span class="address-line1"> Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc. Quý khách có muốn hủy đơn hàng này không ? </span></li>
+                    </ul>
+                </div>
+                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="deleteBothRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
             </div>
         </div>
-    </div>
-</section>
 
-<div id="lightCancelBoth" class="white_content_delete">
-    <div class="modal-content">
-        <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
-            <button type="button" class="close" onclick="document.getElementById('lightCancelBoth').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
-            <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
+        <div class="modal fade col-md-4 col-center" id="deleteChangeConfirm" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:70px">
+            <div class="modal-dialog panel panel-default" style="width:438px;">
+                <div class=" panel-heading">
+                    <h3 class="panel-title"><strong>Xác nhận</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li> <span class="address-line1"> Nếu hủy thay đổi thì đơn hàng sẽ như cũ. Quý khách có muốn hủy thay đổi không ? </span></li>
+                    </ul>
+                </div>
+                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="deleteChangeRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
+            </div>
         </div>
-        <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc.<br /> Quý khách có muốn hủy đơn hàng này không ?</div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="document.getElementById('lightCancelBoth').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
-            <a class="btn btn-primary" href="@Url.Action("CancelBothOrderConfirm", "CusManageOrder", new { @orderId = Model.OrderId, @oldOrderId = oldOrder.OrderId })">Đồng ý</a>
+
+        <div class="modal fade col-md-4 col-center" id="approveChangeConfirm" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:70px">
+            <div class="modal-dialog panel panel-default" style="width:438px;">
+                <div class=" panel-heading">
+                    <h3 class="panel-title"><strong>Xác nhận</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li> <span class="address-line1"> Sau khi xác nhận, đơn hàng sẽ được tiến hành. Cám ơn quý khách. </span></li>
+                    </ul>
+                </div>
+                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="approveRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
+            </div>
         </div>
+
     </div>
+
+    <div style="clear:both"></div>
 </div>
-<div id="fade" class="black_overlay"></div>
-
-<div id="lightCancel" class="white_content_delete">
-    <div class="modal-content">
-        <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
-            <button type="button" class="close" onclick="document.getElementById('lightCancel').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
-            <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
-        </div>
-        <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Nếu hủy thay đổi thì đơn hàng được chỉnh sửa sẽ bị xóa.<br /> Quý khách có muốn hủy thay đổi này không ?</div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="document.getElementById('lightCancel').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
-            <a class="btn btn-primary" href="@Url.Action("CancelEditedOrder", "CusManageOrder", new { @orderId = Model.OrderId})">Đồng ý</a>
-        </div>
-    </div>
-</div>
-
-
-<div id="lightAccept" class="white_content_delete">
-    <div class="modal-content">
-        <div class="modal-header dialog-header-confirm" style="background-color:#332e2e;">
-            <button type="button" class="close" onclick="document.getElementById('lightAccept').style.display = 'none'; document.getElementById('fade').style.display = 'none'">×</button>
-            <h4 class="modal-title ng-binding" style="color:white"><i class="fa fa-check-square-o"></i>Xác nhận lại</h4>
-        </div>
-        <div class="modal-body ng-binding" ng-bind-html-unsafe="msg">Sau khi chấp nhận đơn hàng sẽ được tiến hành thực hiện.<br /> Cám ơn quý khách !</div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="document.getElementById('lightAccept').style.display = 'none'; document.getElementById('fade').style.display = 'none'">Quay lại</button>
-            <a class="btn btn-primary" href="@Url.Action("AcceptEditedOrder", "CusManageOrder", new { @orderId = Model.OrderId })">Đồng ý</a>
-        </div>
-    </div>
-</div>
-<div id="fade" class="black_overlay"></div>
-

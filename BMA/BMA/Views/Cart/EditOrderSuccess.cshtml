@@ -1,46 +1,65 @@
-﻿@{
+﻿@using BMA.Models
+@using BMA.Models.ViewModel
+@using System.Globalization;
+@model IEnumerable<BMA.Models.OrderItem>
+@{
     ViewBag.Title = "Thành công";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
+    int total = 0;
 }
 
-<section class="border-top">
-    <div class="container" style="margin-left:550px;">
-        <div class="page-title mrgb4x mrgt6x clearfix">
-            <h4 class="page-name">CHỈNH SỬA ĐƠN HÀNG THÀNH CÔNG</h4>
+<div class="container main-container headerOffset">
+    <div class="row">
+        <div class="breadcrumbDiv col-lg-12">
+            <ul class="breadcrumb">
+                <li> <a href="@Url.Action("Index","Home")">Trang chủ</a> </li>
+                <li> <a href="@Url.Action("Cart","Cart")">Giỏ hàng</a> </li>
+                <li><a href="@Url.Action("ProceedCheckout", "Cart")">Đặt hàng</a></li>
+                <li class="active">Thành công</li>
+            </ul>
         </div>
     </div>
-</section>
-<section style="margin-left:400px;">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-9">
-                <div class="contact-us animated out" data-delay="0" data-animation="fadeInUp">
-                    <div class="post-form row">
-                        <form id="review-form" method="post" name="postreview">
-                            <div style="margin-bottom:60px;" class="col-md-6">
-                                <div class="contact-info-rightbar animated out" data-delay="0" data-animation="fadeInUp">
-                                    <div class="rightbar-heading">
-                                        <h4>Thông tin đơn hàng</h4>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Mã đơn hàng : @TempData["orderCode"]</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Khách hàng : @TempData["userName"]</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Số điện thoại : @TempData["phoneNumber"]</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Ngày giao hàng : @TempData["deliveryDate"].ToString().AsDateTime().ToString("dd/MM/yyyy")</label>
-                                </div>
-                            </div>
-                        </form>
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="row userInfo">
+                <div class="thanxContent text-center">
+                    <h1> Mã đơn hàng của bạn :<a href="#">@TempData["orderCode"]</a></h1>
+                    <h4> Ngày nhận hàng : @((Session["DeliveryDate"]).ToString().AsDateTime().ToString("dd/MM/yyyy HH:mm"))</h4>
+                    @{
+                        total = (Model.ElementAt(0).Order.TaxAmount + (Model.ElementAt(0).Order.Amount - Model.ElementAt(0).Order.DiscountAmount));
+                    }
+                    <h2><b>Thành tiền (Đã bao gồm VAT) : @total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</b> </h2>
+                </div>
+                <div class="col-lg-7 col-center" style="margin-bottom:50px;">
+                    <h4></h4>
+                    <div class="cartContent table-responsive  w100">
+                        <table style="width:100%" class="cartTable cartTableBorder">
+                            <tbody>
+                                <tr class="CartProduct  cartTableHeader">
+                                    <td colspan="2"> Những sản phẩm được giao </td>
+                                    <td style="width:35%"></td>
+                                </tr>
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="CartProduct">
+                                        <td class="CartProductThumb"><div> <a href="#"><img alt="img" src="@Url.Content("~/Content/Images/BakeryImages/" + @item.Product.ProductImage)"></a> </div></td>
+                                        <td>
+                                            <div class="CartDescription">
+                                                <h4> <a href="product-details.html">@item.Product.ProductName</a> </h4>
+                                                <div class="price"> <span>@item.Product.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</span></div>
+                                            </div>
+                                        </td>
+                                        <td class="price">@((item.Product.ProductStandardPrice * item.Quantity).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
 
+        </div>
+
+    </div>
+    <div style="clear:both"></div>
+</div>

@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = "Xác nhận đơn hàng";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
-    //BMA.Models.DiscountByQuantity dbq = ViewBag.discount;
+    BMA.Models.DiscountByQuantity dbq = TempData["Discount"] as DiscountByQuantity;
     int sumTotal = 0;
 }
 
@@ -46,10 +46,10 @@
                                         @foreach (var item in Model)
                                         {
                                             <tr class="CartProduct">
-                                                <td class="CartProductThumb"><div> <a href="#"><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" style="width:86px;height:53px;"></a> </div></td>
+                                                <td class="CartProductThumb"><div> <a href="#"><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" style="width:86px;height:58px;"></a> </div></td>
                                                 <td>
                                                     <div class="CartDescription">
-                                                        <h4> <a href="product-details.html">@item.ProductName </a> </h4>
+                                                        <h4>@item.ProductName</h4>
                                                     </div>
                                                 </td>
                                                 <td class="delete"><div class="price ">@item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) </div></td>
@@ -63,10 +63,10 @@
                             </div>
 
                             @{
-                                //int discount = Convert.ToInt32(Convert.ToInt32(dbq.DiscountValue) * 0.01 * sumTotal);
-                                //int cosAfterDiscount = sumTotal - discount;
-                                int taxAmount = Convert.ToInt32(sumTotal * 0.1);
-                                int totalValue = sumTotal + taxAmount;
+                                int discount = Convert.ToInt32(Convert.ToInt32(dbq.DiscountValue) * 0.01 * sumTotal);
+                                int cosAfterDiscount = sumTotal - discount;
+                                int taxAmount = Convert.ToInt32(cosAfterDiscount * 0.1);
+                                int totalValue = taxAmount + cosAfterDiscount;
                             }
                             <div class="w100 costDetails">
                                 <div class="table-block" id="order-detail-content">
@@ -75,14 +75,14 @@
                                             <td>Tổng cộng</td>
                                             <td class="price">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                         </tr>
-                                        @*<tr style="">
-                                            <td>Giảm giá</td>
+                                        <tr>
+                                            <td>Giảm giá(@string.Format("{0}{1}", dbq.DiscountValue, "%"))</td>
                                             <td class="price"><span class="success">@(discount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
                                         </tr>
-                                        <tr style="">
+                                        <tr>
                                             <td>Sau giảm giá</td>
                                             <td class="price"><span class="success">@(cosAfterDiscount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
-                                        </tr>*@
+                                        </tr>
                                         <tr>
                                             <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
                                             <td class="price" id="total-tax">@taxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
@@ -92,11 +92,8 @@
                                             <td class=" site-color" id="total-price" style="font-size: 20px; color: #4ec67f !important">@totalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2">
-                                                <div class="input-append couponForm">
-                                                    <input id="datetimepicker" class="col-lg-12" type="text" placeholder="Ngày nhận hàng">
-                                                </div>
-                                            </td>
+                                            <td style="font-weight:bold">Ngày nhận hàng</td>
+                                            <td class="price" id="total-tax">@((Session["DeliveryDate"]).ToString().AsDateTime().ToString("MM/dd/yyyy HH:mm"))</td>
                                         </tr>
                                         <tbody></tbody>
                                     </table>
@@ -114,9 +111,19 @@
                             @{
                                 if (Session["User"] != null)
                                 {
-                                    <a href="@Url.Action("OrderProduct","Cart")" class="btn btn-primary btn-small ">
-                                        Xác nhận &nbsp; <i class="fa fa-check"></i>
-                                    </a>
+                                    if (Session["BeEdited"] != null)
+                                    {
+                                        <a href="@Url.Action("EditOrder", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"]) })" c class="btn btn-primary btn-small ">
+                                            Xác nhận &nbsp; <i class="fa fa-check"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("OrderProduct","Cart")" class="btn btn-primary btn-small ">
+                                            Xác nhận &nbsp; <i class="fa fa-check"></i>
+                                        </a>
+                                    }
+
                                 }
                                 else
                                 {

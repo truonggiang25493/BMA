@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BMA.Models;
+using System.Security.Cryptography;
+using System.Web.Security;
 
 namespace BMA.Business
 {
@@ -13,10 +15,32 @@ namespace BMA.Business
         {
             db = new BMAEntities();
         }
+        //public User checkLogin(string account, string password)
+        //{
+        //    User endUser = db.Users.SingleOrDefault(n => n.Username == account);
+        //    if (endUser != null)
+        //    {
+        //        if (endUser.Password == CreatePasswordHash(password, endUser.Salt))
+        //        {
+        //            return endUser;
+        //        }
+        //    }
+        //    return null;
+        //}
+
         public User checkLogin(string account, string password)
         {
-            User endUser = db.Users.SingleOrDefault(n => n.Username == account && n.Password == password);
-            return endUser;
+            User endUser = db.Users.SingleOrDefault(n => n.Username == account);
+            if (endUser != null)
+            {
+                string salt = endUser.Password.Substring(endUser.Password.Length - 88);
+                //string passToCompare = endUser.Password.Remove(endUser.Password.Length - 88);
+                if (endUser.Password == CreatePasswordHash(password, salt))
+                {
+                    return endUser;
+                }
+            }
+            return null;
         }
 
         public User GetUser(int cusId)
@@ -39,16 +63,35 @@ namespace BMA.Business
         public bool checkPass(int cusId, string oldPass)
         {
             User user = db.Users.SingleOrDefault(n => n.UserId == cusId);
+            string salt = user.Password.Substring(user.Password.Length - 88);
+            oldPass = CreatePasswordHash(oldPass, salt);
             if (user.Password == oldPass)
             {
                 return true;
             }
             return false;
         }
+
+        private static string CreateSalt()
+        {
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            byte[] byteArr = new byte[64];
+            rng.GetBytes(byteArr);
+            return Convert.ToBase64String(byteArr);
+        }
+
+        private static string CreatePasswordHash(string password, string salt)
+        {
+            string passwordSalt = String.Concat(password, salt);
+            string hashedPwd = FormsAuthentication.HashPasswordForStoringInConfigFile(passwordSalt, "sha1");
+            string completePws = string.Format("{0}{1}", hashedPwd, salt);
+            return completePws;
+        }
         public bool ChangePassword(int cusId, string newPass)
         {
             User user = db.Users.SingleOrDefault(n => n.UserId == cusId);
-            user.Password = newPass;
+            //user.Salt = CreateSalt();
+            user.Password = CreatePasswordHash(newPass, CreateSalt());
             db.SaveChanges();
             return true;
         }
