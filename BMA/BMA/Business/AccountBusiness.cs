@@ -95,5 +95,10 @@ namespace BMA.Business
             db.SaveChanges();
             return true;
         }
+
+        public string CreatePassword(string rawPassword)
+        {
+            return CreatePasswordHash(rawPassword, CreateSalt());
+        }
     }
 }
