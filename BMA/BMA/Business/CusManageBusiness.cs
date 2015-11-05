@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BMA.Models;
+using System.Data.Entity;
 
 namespace BMA.Business
 {
@@ -104,17 +105,61 @@ namespace BMA.Business
 
         public bool CancelEditedOrder(int orderId)
         {
-            Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-            List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-            Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-            oldOrder.OrderStatus = 0;
-            for (int i = 0; i < orderItems.Count; i++)
+            Order order = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
+            DbContextTransaction contextTransaction = db.Database.BeginTransaction();
+            foreach (OrderItem orderItem in order.OrderItems)
             {
-                db.OrderItems.Remove(orderItems[i]);
+                foreach (OutputMaterial outputMaterial in orderItem.OutputMaterials)
+                {
+                    foreach (ExportFrom exportFrom in outputMaterial.ExportFroms)
+                    {
+
+                        // Return InputMaterial
+                        int productMaterialId = outputMaterial.ProductMaterialId;
+                        InputMaterial inputMaterial = db.InputMaterials.FirstOrDefault(
+                            m => m.ProductMaterialId == productMaterialId && m.InputBillId == exportFrom.InputbillId);
+                        if (inputMaterial != null)
+                        {
+                            inputMaterial.RemainQuantity += exportFrom.ExportFromQuantity;
+                        }
+                        // Return ProductMaterial
+                        ProductMaterial productMaterial =
+                            db.ProductMaterials.FirstOrDefault(m => m.ProductMaterialId == productMaterialId);
+                        if (productMaterial != null)
+                        {
+                            productMaterial.CurrentQuantity += exportFrom.ExportFromQuantity;
+                        }
+
+                    }
+                    db.SaveChanges();
+                    // Remove ExportFrom
+                    db.ExportFroms.RemoveRange(outputMaterial.ExportFroms);
+
+                }
+                // Remove OutputMaterial
+                db.OutputMaterials.RemoveRange(orderItem.OutputMaterials);
             }
-            oldOrder.ConfirmTime = DateTime.Now;
-            db.Orders.Remove(confirmedOrder);
+            order.ReturnDeposit = 0;
+            // Change order status become "Hủy"
+            order.OrderStatus = 6;
+            order.CancelTime = DateTime.Now;
+            //Temp Bug
+            order.CancelUserId = 2;
+
             db.SaveChanges();
+            // Commit transaction
+            try
+            {
+                contextTransaction.Commit();
+            }
+            catch (Exception)
+            {
+                contextTransaction.Rollback();
+            }
+            finally
+            {
+                contextTransaction.Dispose();
+            }
             return true;
         }
 

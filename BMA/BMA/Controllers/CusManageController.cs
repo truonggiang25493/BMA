@@ -98,7 +98,7 @@ namespace BMA.Controllers
                 int pageNumber = (page ?? 1);
                 if (Session["User"] != null)
                 {
-                    int cusId = Convert.ToInt32(Session["CusUserId"]);
+                    int cusId = Convert.ToInt32(Session["UserId"]);
                     List<OrderItem> orderItemList = new List<OrderItem>();
                     var orderList = cmb.GetOrder(cusId).ToPagedList(pageNumber, pageSize);
                     foreach (var item in orderList)
@@ -126,7 +126,7 @@ namespace BMA.Controllers
                 int pageNumber = (page ?? 1);
                 if (Session["User"] != null)
                 {
-                    int cusUserId = Convert.ToInt32(Session["CusUserId"]);
+                    int cusUserId = Convert.ToInt32(Session["UserId"]);
                     List<OrderItem> orderItemList = new List<OrderItem>();
                     var confirmOrderList = cmb.GetConfirmOrder(cusUserId).ToPagedList(pageNumber, pageSize);
                     foreach (var item in confirmOrderList)
@@ -151,11 +151,16 @@ namespace BMA.Controllers
             CustomerOrderBusiness cob = new CustomerOrderBusiness();
             try
             {
-
+                int quantity = 0;
                 var order = cmb.GetOrderDetail(orderId);
                 var orderItems = cmb.GetOrderItem(orderId);
                 ViewBag.taxRate = cob.GetTaxRate();
                 ViewBag.orderItems = orderItems;
+                foreach (var item in orderItems)
+                {
+                    quantity += item.Quantity;
+                }
+                ViewBag.Discount = cob.checkDiscount(quantity);
                 return View(order);
             }
             catch (Exception)
@@ -193,21 +198,8 @@ namespace BMA.Controllers
         {
             try
             {
-                Order order = db.Orders.Find(orderId);
-                if (order.OrderStatus == 0)
-                {
-                    List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-                    for (int i = 0; i < orderItems.Count; i++)
-                    {
-                        db.OrderItems.Remove(orderItems[i]);
-                    }
-                    db.Orders.Remove(order);
-                }
-                else
-                {
-                    order.OrderStatus = 6;
-                }
-                db.SaveChanges();
+                OrderBusiness ob = new OrderBusiness();
+                ob.Cancel(orderId, 0, 0);
             }
             catch (DataException)
             {
@@ -219,12 +211,28 @@ namespace BMA.Controllers
         #region ConfirmOrder
         public ActionResult ConfirmOrder(int orderId)
         {
+            CusManageBusiness cmb = new CusManageBusiness();
+            CustomerOrderBusiness cob = new CustomerOrderBusiness();
+            int quantityConfirm = 0;
+            int quantityOld = 0;
             try
             {
-                Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-                Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-                List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
+                Order confirmedOrder = cmb.GetOrderDetail(orderId);
+                List<OrderItem> orderItems = cmb.GetOrderItem(orderId);
+                int? previousId = confirmedOrder.PreviousOrderId;
+                Order oldOrder = cmb.GetOrderDetail(previousId);
+                List<OrderItem> oldOrderItems = cmb.GetOrderItem(previousId);
+                foreach (var item in orderItems)
+                {
+                    quantityConfirm += item.Quantity;
+                }
+                ViewBag.DiscountConfirm = cob.checkDiscount(quantityConfirm);
+                foreach (var item in oldOrderItems)
+                {
+                    quantityOld += item.Quantity;
+                }
+                ViewBag.DiscountOld = cob.checkDiscount(quantityOld);
+                ViewBag.taxRate = cob.GetTaxRate();
                 ViewBag.oldOrder = oldOrder;
                 ViewBag.orderItems = orderItems;
                 ViewBag.oldOrderItems = oldOrderItems;
@@ -241,17 +249,8 @@ namespace BMA.Controllers
         {
             try
             {
-                Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-                Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-                List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
-                confirmedOrder.OrderStatus = 2;
-                for (int i = 0; i < oldOrderItems.Count; i++)
-                {
-                    db.OrderItems.Remove(oldOrderItems[i]);
-                }
-                confirmedOrder.ConfirmTime = DateTime.Now;
-                db.Orders.Remove(oldOrder);
-                db.SaveChanges();
+                CusManageBusiness cmb = new CusManageBusiness();
+                cmb.AcceptEditedOrder(orderId);
                 return RedirectToAction("Index");
             }
             catch (Exception)
@@ -264,17 +263,8 @@ namespace BMA.Controllers
         {
             try
             {
-                Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-                Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-                oldOrder.OrderStatus = 0;
-                for (int i = 0; i < orderItems.Count; i++)
-                {
-                    db.OrderItems.Remove(orderItems[i]);
-                }
-                oldOrder.ConfirmTime = DateTime.Now;
-                db.Orders.Remove(confirmedOrder);
-                db.SaveChanges();
+                CusManageBusiness cmb = new CusManageBusiness();
+                cmb.CancelEditedOrder(orderId);
                 return RedirectToAction("Index");
             }
             catch (Exception)
@@ -283,63 +273,48 @@ namespace BMA.Controllers
             }
         }
 
-
-        public ActionResult CancelBothOrder(int? orderId, int? oldOrderId)
+        public ActionResult CancelBothOrder(int orderId)
         {
             try
             {
-                if (orderId == null || oldOrderId == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-                Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-                List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
-                ViewBag.oldOrder = oldOrder;
-                ViewBag.orderItems = orderItems;
-                ViewBag.oldOrderItems = oldOrderItems;
-                ViewBag.oldOrder = oldOrder;
-                if (confirmedOrder == null || oldOrder == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(confirmedOrder);
+                OrderBusiness ob = new OrderBusiness();
+                ob.Cancel(orderId, 0, 0);
+                return RedirectToAction("ConfirmList", "CusManage");
             }
-            catch (Exception)
+            catch (DataException)
             {
-                return RedirectToAction("Index", "Error");
-            }
-        }
-
-        public ActionResult CancelBothOrderConfirm(int orderId, int oldOrderId)
-        {
-            try
-            {
-                Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-                List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
-                Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
-                List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
-
-                for (int i = 0; i < oldOrderItems.Count; i++)
-                {
-                    db.OrderItems.Remove(oldOrderItems[i]);
-                }
-                db.Orders.Remove(oldOrder);
-
-                for (int i = 0; i < orderItems.Count; i++)
-                {
-                    db.OrderItems.Remove(orderItems[i]);
-                }
-                db.Orders.Remove(confirmedOrder);
-                db.SaveChanges();
                 return RedirectToAction("Index");
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("Index", "Error");
-            }
+            }    
         }
+
+        //public ActionResult CancelBothOrderConfirm(int orderId, int oldOrderId)
+        //{
+        //    try
+        //    {
+        //        Order confirmedOrder = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+        //        List<OrderItem> orderItems = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+        //        Order oldOrder = db.Orders.SingleOrDefault(x => x.OrderId == confirmedOrder.PreviousOrderId);
+        //        List<OrderItem> oldOrderItems = db.OrderItems.Where(x => x.OrderId == confirmedOrder.PreviousOrderId).ToList();
+
+        //        for (int i = 0; i < oldOrderItems.Count; i++)
+        //        {
+        //            db.OrderItems.Remove(oldOrderItems[i]);
+        //        }
+        //        db.Orders.Remove(oldOrder);
+
+        //        for (int i = 0; i < orderItems.Count; i++)
+        //        {
+        //            db.OrderItems.Remove(orderItems[i]);
+        //        }
+        //        db.Orders.Remove(confirmedOrder);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return RedirectToAction("Index", "Error");
+        //    }
+        //}
         #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿@using BMA.Models
 @using BMA.Common
+@using System.Globalization;
 @using PagedList.Mvc;
 @model PagedList.PagedList<Order>
 
@@ -30,7 +31,13 @@
                     <h2 class="block-title-2"> Đơn hàng của bạn </h2>
                 </div>
                 <div class="col-xs-12 col-sm-12">
-                    <table class="footable">
+                    @if (Model.Count == 0)
+                    {
+                        <h2 style="color:red">Hiện không có đơn hàng nào cần xác nhận.</h2>
+                    }
+                    else
+                    {
+                        <table class="footable">
                         <thead>
                             <tr>
                                 <th data-class="expand" data-sort-initial="true"> <span title="table sorted by this column on load">Mã đơn hàng</span> </th>
@@ -56,13 +63,22 @@
                                         }
                                     }
                                     <td>@count <small> sản phẩm</small></td>
-                                    <td><a href="#" target="_blank">-</a></td>
+                                    <td><a href="#" target="_blank">@((item.Amount + item.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</a></td>
                                     <td>
                                         <ul>
-                                            <li style="display:inline;"><a href="@Url.Action("OrderDetail", "CusManage", new { @orderId = item.OrderId})" class="btn btn-sm" style="border:1px solid black"><i class="fa fa-navicon"></i> Chi tiết</a> </li>
-                                            <li style="display:inline;"><a href="@Url.Action("GetOrderToCart", "Cart", new { @orderId = item.OrderId })" class="btn btn-sm" style="border:1px solid black"><i class="fa fa-cog"></i> Chỉnh sửa</a></li>
-                                            <li style="display:inline;"><a data-target="#product-details-modal" data-toggle="modal" class="btn btn-delete btn-sm" style="border:1px solid black"><i class="fa fa-close"></i> Hủy</a></li>
+                                            <li style="display:inline;"><a href="@Url.Action("OrderDetail", "CusManage", new { @orderId = item.OrderId})" class="btn btn-detail btn-sm" style="border:1px solid black"><i class="fa fa-navicon"></i> Chi tiết</a> </li>
+                                            <li style="display:inline;"><a href="@Url.Action("ConfirmOrder", "CusManage", new { @orderId = item.OrderId })" class="btn btn-edit btn-sm" style="border:1px solid black"><i class="fa fa-cog"></i> Xác nhận</a></li>
+                                            <li style="display:inline;"><a data-target="#product-details-modal" data-toggle="modal" onclick="return openPopup(@item.OrderId)" class="btn btn-delete btn-sm" style="border:1px solid black"><i class="fa fa-close"></i> Hủy</a></li>
                                         </ul>
+                                        <script type="text/javascript">
+                                            var strURL = window.location.href;
+                                            var deleteLink;
+                                            function openPopup(orderId) {
+                                                deleteLink = "/CusManage/CancelOrderConfirm?orderId=" + orderId + "&strURL=" + strURL;
+                                                $('#product-details-modal #deleteRequest').attr("href", deleteLink);
+                                            }
+                                        </script>
+
                                     </td>
                                     <td>@item.CreateTime.ToString("dd/MM/yyyy HH:mm")</td>
                                     <td data-value="78025368997">@item.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
@@ -70,23 +86,26 @@
                                         <span class="label label-danger">@CommonData.Status[item.OrderStatus]</span>
                                     </td>
                                 </tr>
-                                <div class="modal fade col-md-4 col-center" id="product-details-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:70px">
-                                    <div class="modal-dialog panel panel-default">
-                                        <div class=" panel-heading">
-                                        <h3 class="panel-title"><strong>Xác nhận</strong></h3>
-                                    </div>
-                                        <div class="panel-body">
-                                            <ul>
-                                                <li> <span class="address-line1"> Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc. Quý khách có muốn hủy đơn hàng này không ? </span></li>
-                                            </ul>
-                                        </div>
-                                        <div class="panel-footer panel-footer-address"><a class="btn btn-sm btn-danger" href="@Url.Action("CancelOrderConfirm", "CusManage", new { @orderId = item.OrderId, @strURL = Request.Url.ToString()})" style="margin-left:310px;"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
-                                    </div>
-                                </div>
                             }
                         </tbody>
                     </table>
+                    }                    
                 </div>
+
+                <div class="modal fade col-md-4 col-center" id="product-details-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:70px">
+                    <div class="modal-dialog panel panel-default">
+                        <div class=" panel-heading">
+                            <h3 class="panel-title"><strong>Xác nhận</strong></h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li> <span class="address-line1"> Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc. Quý khách có muốn hủy đơn hàng này không ? </span></li>
+                            </ul>
+                        </div>
+                        <div class="panel-footer panel-footer-address" style="padding-left:270px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="deleteRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
+                    </div>
+                </div>
+
                 <div class="col-md-12 clearfix">
                     <ul class="pager">
                         <li class="previous pull-right"><a href="@Url.Action("Index","Product")"> <i class="fa fa-home"></i> Tới cửa hàng </a></li>

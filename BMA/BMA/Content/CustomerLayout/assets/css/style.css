@@ -5662,3 +5662,6 @@ div.quickview {
 .btn-edit:hover{
     background-color:#5bc0de;
 }
+.btn-deleteChange:hover{
+    background-color:#f39c12;
+}

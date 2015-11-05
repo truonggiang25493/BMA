@@ -12,13 +12,14 @@ namespace BMA.Controllers
     {
         //
         // GET: /Account/
+        [HttpPost]
         public ActionResult Login(FormCollection f, string strURL)
         {
             AccountBusiness ab = new AccountBusiness();
             try
             {
-                string sAccount = f.Get("txtAccount").ToString();
-                string sPassword = f.Get("txtPassword").ToString();
+                string sAccount = f.Get("txtAccount");
+                string sPassword = f.Get("txtPassword");
                 User endUser = ab.checkLogin(sAccount, sPassword);
                 if (endUser.RoleId == 3)
                 {
