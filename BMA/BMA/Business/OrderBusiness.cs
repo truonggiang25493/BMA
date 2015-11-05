@@ -26,36 +26,13 @@ namespace BMA.Business
             {
                 //Get Basic Info
                 result.Order = order;
-                int taxAmount = 0;
-                int totalAmount = 0;
-                //Get Order item info, TaxAmount, TotalAmount
-                List<OrderItemViewModel> orderItemViewModelList = new List<OrderItemViewModel>();
-                List<OrderItem> orderItemList = db.OrderItems.Where(m => m.OrderId == orderId).ToList();
-                foreach (OrderItem orderItem in orderItemList)
-                {
-                    OrderItemViewModel orderItemViewModel = new OrderItemViewModel();
-                    orderItemViewModel.OrderItem = orderItem;
-                    orderItemViewModel.MaterialList = GetMaterialListForOrderItem(orderItem.OrderItemId);
-                    taxAmount += orderItem.TaxAmount;
-                    totalAmount += orderItem.Amount;
-                    Product productTemp = db.Products.FirstOrDefault(m => m.ProductId == orderItem.ProductId);
-                    if (productTemp != null)
-                    {
-                        orderItemViewModel.ProductName = productTemp.ProductName;
-                    }
-                    orderItemViewModelList.Add(orderItemViewModel);
-                    if (order.DeliveryTime != null) ((DateTime)order.DeliveryTime).ToString("yyyy-MM-dd");
-                }
-                result.Order.TaxAmount = taxAmount;
-                result.Order.Amount = totalAmount;
-                result.OrderItemList = orderItemViewModelList;
                 //Get Material info
-                List<MaterialViewModel> materialViewModelListTemp = GetMaterialListForOrder(orderId);
+                List<MaterialViewModel> materialViewModelList = GetMaterialListForOrder(orderId);
                 // Check the order is enough material or not
                 result.IsEnoughMaterial = true;
                 if (result.Order.OrderStatus == 0)
                 {
-                    foreach (MaterialViewModel materialViewModel in materialViewModelListTemp)
+                    foreach (MaterialViewModel materialViewModel in materialViewModelList)
                     {
                         if (!materialViewModel.IsEnough)
                         {
@@ -65,7 +42,7 @@ namespace BMA.Business
                 }
 
 
-                result.MaterialList = materialViewModelListTemp;
+                result.MaterialList = materialViewModelList;
                 List<InputMaterialViewModel> inputMaterialViewModelListTemp = GetInputMaterialList(result.MaterialList);
                 // Get Material Cost
                 if (inputMaterialViewModelListTemp.Count != 0)
@@ -104,7 +81,7 @@ namespace BMA.Business
             }
             return result;
         }
-        public List<MaterialViewModel> GetMaterialListForOrder(int orderId)
+        private List<MaterialViewModel> GetMaterialListForOrder(int orderId)
         {
             List<MaterialViewModel> resultList = new List<MaterialViewModel>();
             Order order = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
@@ -114,7 +91,7 @@ namespace BMA.Business
                 // Scan all of Order Item List to calc the amount of all material and add into resultList
                 foreach (var orderItem in order.OrderItems)
                 {
-                    List<MaterialViewModel> materialListForOrderItem = GetMaterialListForOrderItem(orderItem.OrderItemId);
+                    List<MaterialViewModel> materialListForOrderItem = GetMaterialListForOrderItem(orderItem.Product.ProductId, orderItem.Quantity);
                     if (materialListForOrderItem != null)
                     {
                         foreach (MaterialViewModel materialViewModelForOrderItem in materialListForOrderItem)
@@ -171,18 +148,23 @@ namespace BMA.Business
             }
             return resultList;
         }
-
-        public List<MaterialViewModel> GetMaterialListForOrderItem(int orderItemId)
+        /// <summary>
+        /// Get Material list for order item (Product with quantity
+        /// </summary>
+        /// <param name="productId">Product Id</param>
+        /// <param name="quantity">Quantity</param>
+        /// <returns>List of Material View Model</returns>
+        private List<MaterialViewModel> GetMaterialListForOrderItem(int productId, int quantity)
         {
             List<MaterialViewModel> resultList = new List<MaterialViewModel>();
-            OrderItem orderItem = db.OrderItems.FirstOrDefault(m => m.OrderItemId == orderItemId);
-            if (orderItem != null)
+            Product product = db.Products.FirstOrDefault(m => m.ProductId == productId);
+            if (product != null)
             {
-                foreach (Recipe recipe in orderItem.Product.Recipes)
+                foreach (Recipe recipe in product.Recipes)
                 {
                     MaterialViewModel materialViewModel = new MaterialViewModel();
                     materialViewModel.ProductMaterialId = recipe.ProductMaterialId;
-                    materialViewModel.NeedQuantity = (int)Math.Floor(recipe.RecipeQuantity * orderItem.Quantity);
+                    materialViewModel.NeedQuantity = (int)Math.Floor(recipe.RecipeQuantity * quantity);
                     materialViewModel.StorageQuantity = recipe.ProductMaterial.CurrentQuantity;
                     materialViewModel.Unit = recipe.ProductMaterial.ProductMaterialUnit;
                     materialViewModel.ProductMaterialName = recipe.ProductMaterial.ProductMaterialName;
@@ -191,6 +173,7 @@ namespace BMA.Business
             }
             return resultList;
         }
+
         public List<InputMaterialViewModel> GetInputMaterialList(List<MaterialViewModel> inputList)
         {
             List<MaterialViewModel> materialList = new List<MaterialViewModel>();
@@ -256,35 +239,37 @@ namespace BMA.Business
             return result;
         }
 
-        public bool ApproveOrder(int orderId, int deposit, DateTime deliveryTime)
+        public int ApproveOrder(int orderId, int deposit, DateTime deliveryTime, int staffUserId, CustomerViewModel newCustomer)
         {
             OrderViewModel orderViewModel = GetOrderViewModel(orderId);
             if (orderViewModel.Order.CustomerEditingFlag)
             {
-                return false;
+                return -1;
             }
             if (orderViewModel == null)
             {
-                return false;
+                return -2;
             }
             if (orderViewModel.Order.OrderStatus != 0)
             {
-                return false;
+                return -3;
             }
             if (!orderViewModel.IsEnoughMaterial)
             {
-                return false;
+                return -4;
             }
             DbContextTransaction contextTransaction = db.Database.BeginTransaction();
             #region Update OutputMaterial; ExportFrom and InputMaterial
-            foreach (OrderItemViewModel orderItemViewModel in orderViewModel.OrderItemList)
+            foreach (OrderItem orderItem in orderViewModel.Order.OrderItems)
             {
-                foreach (MaterialViewModel materialViewModel in orderItemViewModel.MaterialList)
+                List<MaterialViewModel> materialListForOrderItem =
+                    GetMaterialListForOrderItem(orderItem.Product.ProductId, orderItem.Quantity);
+                foreach (MaterialViewModel materialViewModel in materialListForOrderItem)
                 {
                     OutputMaterial outputMaterial = new OutputMaterial();
                     outputMaterial.ExportQuantity = materialViewModel.NeedQuantity;
                     outputMaterial.ProductMaterialId = materialViewModel.ProductMaterialId;
-                    outputMaterial.OrderItemId = orderItemViewModel.OrderItem.OrderItemId;
+                    outputMaterial.OrderItemId = orderItem.OrderItemId;
                     //Get list of InputMaterial available order by importTime descending
                     List<InputMaterial> tempList = db.InputMaterials.Where(
                         m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderBy(m => m.ImportDate).ToList();
@@ -329,7 +314,7 @@ namespace BMA.Business
                 if (productMaterial == null)
                 {
                     contextTransaction.Rollback();
-                    return false;
+                    return 0;
                 }
                 productMaterial.CurrentQuantity -= materialViewModel.NeedQuantity;
                 db.SaveChanges();
@@ -341,15 +326,59 @@ namespace BMA.Business
             if (order == null)
             {
                 contextTransaction.Rollback();
-                return false;
+                return -2;
             }
             order.OrderStatus = 2;
-            order.DeliveryTime = deliveryTime;
+            order.PlanDeliveryTime = deliveryTime;
             order.ApproveTime = DateTime.Now;
             order.DepositAmount = deposit;
-            //Bug
-            order.StaffApproveUserId = 2;
-            db.SaveChanges();
+            order.StaffApproveUserId = staffUserId;
+
+            if (newCustomer != null)
+            {
+                Customer customer = new Customer
+                {
+                    CustomerAddress = newCustomer.CustomerAddress,
+                    CustomerPhoneNumber = newCustomer.CustomerPhoneNumber,
+                    TaxCode = newCustomer.CustomerTaxCode,
+                    IsActive = true,
+                    IsLoyal = false
+                };
+                List<Customer> customers = new List<Customer> { customer };
+
+                User user = new User
+                {
+                    Fullname = newCustomer.CustomerName,
+                    Email = newCustomer.CustomerEmail,
+                    Username = newCustomer.Username,
+                    //Bug Generate password
+                    Password = "123456"
+                };
+
+                Role role = db.Roles.FirstOrDefault(m => m.Name.Equals("Customer"));
+                user.Role = role;
+                user.Customers = customers;
+
+                order.User = user;
+
+                // Remove Guest Info
+                GuestInfo guestInfo = order.GuestInfo;
+                if (guestInfo != null)
+                {
+                    order.GuestInfo = null;
+                    db.GuestInfoes.Remove(guestInfo);
+                }
+            }
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+
             #endregion
 
             try
@@ -359,7 +388,7 @@ namespace BMA.Business
             catch (Exception)
             {
                 contextTransaction.Rollback();
-                return false;
+                return 0;
             }
             finally
             {
@@ -367,66 +396,76 @@ namespace BMA.Business
             }
 
 
-            return true;
+            return 1;
         }
-
-        public OrderViewModel MakeOrderViewModel(List<CartViewModel> cartList, int customerId)
+        /// <summary>
+        /// Make OrderViewModel
+        /// </summary>
+        /// <param name="cartList">List of product</param>
+        /// <param name="customerId">The ID of the customer in DB</param>
+        /// <param name="customerInput">The new customer info</param>
+        /// <returns></returns>
+        public OrderViewModel MakeOrderViewModel(List<CartViewModel> cartList, int? customerId, CustomerViewModel customerInput)
         {
             OrderViewModel result = new OrderViewModel();
             // Create new order
             Order order = new Order();
-            order.CustomerUserId = customerId;
-            result.Order = order;
-            //Add info for OrderView
-            //Customer info
-            Customer customer = db.Customers.FirstOrDefault(m => m.UserId == customerId && m.IsActive);
-            if (customer != null)
+            if (customerId != null && customerInput == null)
             {
-                result.OrderPersonName = customer.User.Fullname;
-                result.OrderPersonAddress = customer.CustomerAddress;
-                result.OrderPersonPhoneNumber = customer.CustomerPhoneNumber;
-                result.OrderPersonTaxCode = customer.TaxCode;
-                result.IsGuest = false;
-                result.IsLoyal = customer.IsLoyal;
+                order.CustomerUserId = customerId;
+                //Add info for OrderView
+                //Customer info
+                Customer customer = db.Customers.FirstOrDefault(m => m.UserId == customerId && m.IsActive);
+                if (customer != null)
+                {
+                    result.OrderPersonName = customer.User.Fullname;
+                    result.OrderPersonAddress = customer.CustomerAddress;
+                    result.OrderPersonPhoneNumber = customer.CustomerPhoneNumber;
+                    result.OrderPersonTaxCode = customer.TaxCode;
+                    result.IsGuest = false;
+                    result.IsLoyal = customer.IsLoyal;
+                }
             }
+            else if (customerId == null && customerInput != null)
+            {
+                order.CustomerUserId = 0;
+                //Add new customer info for OrderView
+                //Customer info
+
+                result.OrderPersonName = customerInput.CustomerName;
+                result.OrderPersonAddress = customerInput.CustomerAddress;
+                result.OrderPersonPhoneNumber = customerInput.CustomerPhoneNumber;
+                result.OrderPersonTaxCode = customerInput.CustomerTaxCode;
+                result.IsGuest = true;
+                result.IsLoyal = false;
+            }
+
             // Temp var for total amount
             int totalAmount = 0;
-            // Temp var for tax amount
-            int taxAmount = 0;
-
+            // Taemp var for total quantity
             int totalQuantity = 0;
             // Creat OrderItemViewModel List and MaterialViewModelList
-            List<OrderItemViewModel> orderItemViewModelList = new List<OrderItemViewModel>();
+            List<OrderItem> orderItemList = new List<OrderItem>();
             List<MaterialViewModel> materialViewModelList = new List<MaterialViewModel>();
 
             foreach (CartViewModel cartViewModel in cartList)
             {
                 if (cartViewModel.Quantity != 0)
                 {
-                    List<MaterialViewModel> materialViewModelListForOrderItem = new List<MaterialViewModel>();
-                    OrderItemViewModel orderItemViewModel = new OrderItemViewModel();
-                    //Create OrderItemViewModel and add to list
+                    //Create OrderItem and add to list
                     OrderItem orderItem = new OrderItem();
-                    orderItem.ProductId = cartViewModel.ProductId;
+                    Product product = db.Products.FirstOrDefault(m => m.ProductId == cartViewModel.ProductId);
+                    orderItem.Product = product;
                     orderItem.Quantity = cartViewModel.Quantity;
                     orderItem.RealPrice = cartViewModel.RealPrice;
                     orderItem.Amount = cartViewModel.Quantity * cartViewModel.RealPrice;
-                    var taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
-                    if (taxRate != null)
-                    {
-                        int taxRateTemp = taxRate.TaxRateValue;
-                        orderItem.TaxAmount = (cartViewModel.Quantity * cartViewModel.RealPrice * taxRateTemp) / 100;
-                        taxAmount += (cartViewModel.Quantity * cartViewModel.RealPrice * taxRateTemp) / 100;
-                    }
+                    orderItemList.Add(orderItem);
+
                     totalAmount += cartViewModel.Quantity * cartViewModel.RealPrice;
                     totalQuantity += cartViewModel.Quantity;
-                    orderItemViewModel.OrderItem = orderItem;
-                    orderItemViewModel.ProductName = cartViewModel.ProductName;
-
 
                     //Create MaterialViewModel and add to list
                     // Get Product in DB
-                    Product product = db.Products.FirstOrDefault(m => m.ProductId == cartViewModel.ProductId);
                     if (product != null)
                     {
                         foreach (Recipe recipe in product.Recipes)
@@ -468,19 +507,14 @@ namespace BMA.Business
                                     materialViewModelList.Add(materialViewModel);
                                 }
                             }
-                            //Create MaterialViewModel for OrderItem
-                            MaterialViewModel materialViewModelForOrderItem = new MaterialViewModel();
-                            materialViewModelForOrderItem.ProductMaterialId = recipe.ProductMaterialId;
-                            materialViewModelForOrderItem.NeedQuantity = (int)Math.Floor(recipe.RecipeQuantity * cartViewModel.Quantity);
-                            materialViewModelListForOrderItem.Add(materialViewModelForOrderItem);
+
                         }
                     }
-                    orderItemViewModel.MaterialList = materialViewModelListForOrderItem;
-                    orderItemViewModelList.Add(orderItemViewModel);
                 }
             }
 
             // Complete attribute in order
+            //Check enough material for order
             result.IsEnoughMaterial = true;
             foreach (MaterialViewModel materialViewModel in materialViewModelList)
             {
@@ -494,23 +528,35 @@ namespace BMA.Business
                     materialViewModel.IsEnough = true;
                 }
             }
-            result.Order.Amount = totalAmount;
-            result.Order.TaxAmount = taxAmount;
 
+
+            int discountAmount = 0;
             DiscountByQuantity discountByQuantity =
                 db.DiscountByQuantities.FirstOrDefault(
                     m => m.QuantityFrom <= totalQuantity && m.QuantityTo >= totalQuantity);
 
             if (discountByQuantity != null)
             {
-                result.Order.DiscountAmount = totalAmount * discountByQuantity.DiscountValue / 100;
-            }
-            else
-            {
-                result.Order.DiscountAmount = 0;
+                discountAmount = totalAmount * discountByQuantity.DiscountValue / 100;
             }
 
-            result.OrderItemList = orderItemViewModelList;
+            int totalTax = 0;
+            TaxRate taxRate =
+                db.TaxRates.FirstOrDefault(
+                    m =>
+                        m.TaxType.Abbreviation.Equals("GTGT") && m.BeginDate <= DateTime.Now &&
+                        m.EndDate >= DateTime.Now);
+            if (taxRate != null)
+            {
+                totalTax = (totalAmount - discountAmount) * taxRate.TaxRateValue / 100;
+            }
+
+            order.Amount = totalAmount;
+            order.DiscountAmount = discountAmount;
+            order.TaxAmount = totalTax;
+            order.OrderItems = orderItemList;
+            result.Order = order;
+
             result.MaterialList = materialViewModelList;
             // Calculate the Material cost
             List<InputMaterialViewModel> inputMaterialList = GetInputMaterialList(materialViewModelList);
@@ -518,9 +564,20 @@ namespace BMA.Business
             return result;
         }
 
-        public bool AddOrderForCustomer(List<CartViewModel> cartList, int customerId, int deposit, DateTime deliveryDate)
+
+        /// <summary>
+        /// Add new order
+        /// </summary>
+        /// <param name="cartList">List of product</param>
+        /// <param name="customerUserId">If add for customer in DB, the ID of user of customer</param>
+        /// <param name="inputCustomer">If add for new customer</param>
+        /// <param name="staffUserId">Adding statff user id</param>
+        /// <param name="deposit">Deposit</param>
+        /// <param name="deliveryDate">Delivery Date</param>
+        /// <returns></returns>
+        public bool AddOrder(List<CartViewModel> cartList, int? customerUserId, CustomerViewModel inputCustomer, int staffUserId, int deposit, DateTime deliveryDate)
         {
-            OrderViewModel orderViewModel = MakeOrderViewModel(cartList, customerId);
+            OrderViewModel orderViewModel = MakeOrderViewModel(cartList, customerUserId, null);
             if (orderViewModel == null)
             {
                 return false;
@@ -536,34 +593,69 @@ namespace BMA.Business
             order.DeliveryTime = deliveryDate;
             order.PlanDeliveryTime = deliveryDate;
             order.DepositAmount = deposit;
-            // Temp Bug
-            order.StaffApproveUserId = 2;
-            //Temp
-            order.StaffApproveUserId = 2;
+            order.StaffApproveUserId = staffUserId;
+
             // Get current identity of Order table
             var currentOrderId = db.Database.SqlQuery<decimal>("SELECT IDENT_CURRENT('Orders')").FirstOrDefault();
             String orderCode = "O" + now.ToString("yyyyMMdd") + (((currentOrderId + 1) % 10000)).ToString(new string('0', 4));
             order.OrderCode = orderCode;
 
-
-
-            //Add customer
-            Customer customer = db.Customers.FirstOrDefault(m => m.UserId == customerId && m.IsActive);
-            if (customer != null)
+            // Customer
+            // Exist User
+            if (customerUserId != null && inputCustomer == null)
             {
-                order.CustomerUserId = customer.UserId;
+                order.CustomerUserId = customerUserId;
+            }
+            // New User
+            else if (customerUserId == null && inputCustomer != null)
+            {
+                //Add customer
+                User checkUser = db.Users.FirstOrDefault(m => m.Username == inputCustomer.Username ||
+                    m.Email == inputCustomer.CustomerEmail);
+                Customer checkCustomer =
+                    db.Customers.FirstOrDefault(
+                        m =>
+                            m.CustomerAddress == inputCustomer.CustomerAddress ||
+                            m.CustomerPhoneNumber == inputCustomer.CustomerPhoneNumber ||
+                            m.TaxCode == inputCustomer.CustomerTaxCode);
+                if (checkUser == null && checkCustomer == null)
+                {
+                    // Create user
+                    Role role = db.Roles.FirstOrDefault(m => m.Name.Equals("Customer"));
+                    User user = new User
+                    {
+                        Username = inputCustomer.Username,
+                        Email = inputCustomer.CustomerEmail,
+                        // Bug Generate password
+                        Password = "123456",
+                        Role = role,
+                        Fullname = inputCustomer.CustomerName
+
+                    };
+
+
+                    // Creat customer
+                    Customer customer = new Customer
+                    {
+                        CustomerAddress = inputCustomer.CustomerAddress,
+                        CustomerPhoneNumber = inputCustomer.CustomerPhoneNumber,
+                        TaxCode = inputCustomer.CustomerTaxCode,
+                        IsActive = true
+                    };
+
+                    user.Customers.Add(customer);
+                    order.User = user;
+                }
+
             }
 
             #region Add OrderItem, OutputMaterial, ExportFrom, InputMaterial
-            int currentOrderItemId = (int)db.Database.SqlQuery<decimal>("SELECT IDENT_CURRENT('OrderItem')").FirstOrDefault();
-            List<OrderItem> orderItemList = new List<OrderItem>();
-            foreach (OrderItemViewModel orderItemViewModel in orderViewModel.OrderItemList)
+            foreach (OrderItem orderItem in orderViewModel.Order.OrderItems)
             {
-                OrderItem orderItem = orderItemViewModel.OrderItem;
-                currentOrderItemId++;
                 List<OutputMaterial> outputMaterialList = new List<OutputMaterial>();
-
-                foreach (MaterialViewModel materialViewModel in orderItemViewModel.MaterialList)
+                List<MaterialViewModel> materialListForOrderItem = GetMaterialListForOrderItem(orderItem.Product.ProductId,
+                    orderItem.Quantity);
+                foreach (MaterialViewModel materialViewModel in materialListForOrderItem)
                 {
                     OutputMaterial outputMaterial = new OutputMaterial();
                     outputMaterial.ExportQuantity = materialViewModel.NeedQuantity;
@@ -599,9 +691,7 @@ namespace BMA.Business
                     outputMaterialList.Add(outputMaterial);
                 }
                 orderItem.OutputMaterials = outputMaterialList;
-                orderItemList.Add(orderItem);
             }
-            order.OrderItems = orderItemList;
             #endregion
 
 
@@ -643,332 +733,23 @@ namespace BMA.Business
             return true;
         }
 
-        public OrderViewModel MakeOrderViewForNewCustomerModel(List<CartViewModel> cartList, CustomerViewModel customer)
-        {
-            OrderViewModel result = new OrderViewModel();
-            // Create new order
-            Order order = new Order();
-            order.CustomerUserId = 0;
-            result.Order = order;
-            //Add new customer info for OrderView
-            //Customer info
-
-            result.OrderPersonName = customer.CustomerName;
-            result.OrderPersonAddress = customer.CustomerAddress;
-            result.OrderPersonPhoneNumber = customer.CustomerPhoneNumber;
-            result.OrderPersonTaxCode = customer.CustomerTaxCode;
-            result.IsGuest = true;
-            result.IsLoyal = false;
-
-            // Temp var for total amount, taxAmount, discount
-            int totalAmount = 0;
-            int taxAmount = 0;
-            int totalQuantity = 0;
-            // Creat OrderItemViewModel List and MaterialViewModelList
-            List<OrderItemViewModel> orderItemViewModelList = new List<OrderItemViewModel>();
-            List<MaterialViewModel> materialViewModelList = new List<MaterialViewModel>();
-
-            foreach (CartViewModel cartViewModel in cartList)
-            {
-                if (cartViewModel.Quantity != 0)
-                {
-                    List<MaterialViewModel> materialViewModelListForOrderItem = new List<MaterialViewModel>();
-                    OrderItemViewModel orderItemViewModel = new OrderItemViewModel();
-                    //Create OrderItemViewModel and add to list
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.ProductId = cartViewModel.ProductId;
-                    orderItem.Quantity = cartViewModel.Quantity;
-                    orderItem.RealPrice = cartViewModel.RealPrice;
-                    orderItem.Amount = cartViewModel.Quantity * cartViewModel.RealPrice;
-                    var firstOrDefault = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && m.EndDate == null);
-                    if (firstOrDefault != null)
-                    {
-                        int taxRateTemp = firstOrDefault.TaxRateValue;
-                        orderItem.TaxAmount = (cartViewModel.Quantity * cartViewModel.RealPrice * taxRateTemp) / 100;
-                        taxAmount += (cartViewModel.Quantity * cartViewModel.RealPrice * taxRateTemp) / 100;
-                    }
-                    totalAmount += cartViewModel.Quantity * cartViewModel.RealPrice;
-                    totalQuantity += cartViewModel.Quantity;
-                    orderItemViewModel.OrderItem = orderItem;
-                    orderItemViewModel.ProductName = cartViewModel.ProductName;
-
-
-                    //Create MaterialViewModel and add to list
-                    // Get Product in DB
-                    Product product = db.Products.FirstOrDefault(m => m.ProductId == cartViewModel.ProductId && m.IsActive);
-                    if (product != null)
-                    {
-                        foreach (Recipe recipe in product.Recipes)
-                        {
-                            if (materialViewModelList.Count == 0)
-                            {
-                                MaterialViewModel materialViewModel = new MaterialViewModel();
-                                // Get each product material and multiply with quantity
-                                ProductMaterial productMaterial = recipe.ProductMaterial;
-                                materialViewModel.ProductMaterialId = productMaterial.ProductMaterialId;
-                                materialViewModel.ProductMaterialName = productMaterial.ProductMaterialName;
-                                materialViewModel.NeedQuantity =
-                                    (int)Math.Floor(recipe.RecipeQuantity * cartViewModel.Quantity);
-                                materialViewModel.StorageQuantity = productMaterial.CurrentQuantity;
-                                // Add into MaterialViewModelList
-                                materialViewModelList.Add(materialViewModel);
-                            }
-                            else
-                            {
-                                bool check = true;
-                                foreach (MaterialViewModel materialViewModel in materialViewModelList)
-                                {
-                                    if (materialViewModel.ProductMaterialId == recipe.ProductMaterialId)
-                                    {
-                                        materialViewModel.NeedQuantity +=
-                                            (int)Math.Floor(recipe.RecipeQuantity * cartViewModel.Quantity);
-                                        check = false;
-                                    }
-                                }
-                                if (check)
-                                {
-                                    MaterialViewModel materialViewModel = new MaterialViewModel();
-                                    // Get each product material and multiply with quantity
-                                    materialViewModel.ProductMaterialId = recipe.ProductMaterialId;
-                                    materialViewModel.ProductMaterialName = recipe.ProductMaterial.ProductMaterialName;
-                                    materialViewModel.NeedQuantity =
-                                        (int)Math.Floor(recipe.RecipeQuantity * cartViewModel.Quantity);
-                                    materialViewModel.StorageQuantity = recipe.ProductMaterial.CurrentQuantity;
-                                    // Add into MaterialViewModelList
-                                    materialViewModelList.Add(materialViewModel);
-                                }
-                            }
-                            //Create MaterialViewModel for OrderItem
-                            MaterialViewModel materialViewModelForOrderItem = new MaterialViewModel();
-                            materialViewModelForOrderItem.ProductMaterialId = recipe.ProductMaterialId;
-                            materialViewModelForOrderItem.NeedQuantity = (int)Math.Floor(recipe.RecipeQuantity * cartViewModel.Quantity);
-                            materialViewModelListForOrderItem.Add(materialViewModelForOrderItem);
-                        }
-                    }
-                    orderItemViewModel.MaterialList = materialViewModelListForOrderItem;
-                    orderItemViewModelList.Add(orderItemViewModel);
-                }
-            }
-
-            // Complete attribute in order
-            result.IsEnoughMaterial = true;
-            foreach (MaterialViewModel materialViewModel in materialViewModelList)
-            {
-                if (materialViewModel.NeedQuantity > materialViewModel.StorageQuantity)
-                {
-                    materialViewModel.IsEnough = false;
-                    result.IsEnoughMaterial = false;
-                }
-                else
-                {
-                    materialViewModel.IsEnough = true;
-                }
-            }
-
-            DiscountByQuantity discountByQuantity =
-                db.DiscountByQuantities.FirstOrDefault(
-                    m => m.QuantityFrom >= totalQuantity && m.QuantityTo <= totalQuantity);
-            if (discountByQuantity != null)
-            {
-                result.Order.DiscountAmount = totalAmount * discountByQuantity.DiscountValue / 100;
-            }
-            else
-            {
-                result.Order.DiscountAmount = 0;
-            }
-
-            result.Order.Amount = totalAmount;
-            result.Order.TaxAmount = taxAmount;
-            TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1);
-            if (taxRate != null)
-            {
-                result.Order.TaxAmount = totalAmount * taxRate.TaxRateValue / 100;
-            }
-            result.OrderItemList = orderItemViewModelList;
-            result.MaterialList = materialViewModelList;
-            // Calculate the Material cost
-            List<InputMaterialViewModel> inputMaterialList = GetInputMaterialList(materialViewModelList);
-            result.MaterialCost = GetMaterialCost(inputMaterialList);
-            return result;
-        }
-        public bool AddOrderForNewCustomer(List<CartViewModel> cartList, CustomerViewModel inputCustomer, int deposit, DateTime deliveryDate)
-        {
-            OrderViewModel orderViewModel = MakeOrderViewForNewCustomerModel(cartList, inputCustomer);
-            if (orderViewModel == null)
-            {
-                return false;
-            }
-            DbContextTransaction contextTransaction = db.Database.BeginTransaction();
-            // Add order
-            Order order = new Order();
-            order = orderViewModel.Order;
-            DateTime now = DateTime.Now;
-            order.ApproveTime = now;
-            order.CreateTime = now;
-            order.OrderStatus = 2;
-            order.DeliveryTime = deliveryDate;
-            order.PlanDeliveryTime = deliveryDate;
-            order.DepositAmount = deposit;
-            //Temp
-            order.StaffApproveUserId = 2;
-            // Get current identity of Order table
-            var currentOrderId = db.Database.SqlQuery<decimal>("SELECT IDENT_CURRENT('Orders')").FirstOrDefault();
-            String orderCode = "0" + now.ToString("yyyyMMdd") + (((currentOrderId + 1) % 10000)).ToString(new string('0', 4));
-            order.OrderCode = orderCode;
-
-            //Add customer
-            User checkUser = db.Users.FirstOrDefault(m => m.Username == inputCustomer.Username ||
-                m.Email == inputCustomer.CustomerEmail);
-            Customer checkCustomer =
-                db.Customers.FirstOrDefault(
-                    m =>
-                        m.CustomerAddress == inputCustomer.CustomerAddress ||
-                        m.CustomerPhoneNumber == inputCustomer.CustomerPhoneNumber ||
-                        m.TaxCode == inputCustomer.CustomerTaxCode);
-            if (checkUser == null && checkCustomer == null)
-            {
-                // Create user
-                Role role = db.Roles.FirstOrDefault(m => m.Name.Equals("Customer"));
-                User user = new User
-                {
-                    Username = inputCustomer.Username,
-                    Email = inputCustomer.CustomerEmail,
-                    // Bug Generate password
-                    Password = "123456",
-                    Role = role,
-                    Fullname = inputCustomer.CustomerName
-
-                };
-
-
-                // Creat customer
-                Customer customer = new Customer
-                {
-                    CustomerAddress = inputCustomer.CustomerAddress,
-                    CustomerPhoneNumber = inputCustomer.CustomerPhoneNumber,
-                    TaxCode = inputCustomer.CustomerTaxCode,
-                    IsActive = true
-                };
-
-                user.Customers.Add(customer);
-                order.User = user;
-            }
-
-
-            //Add OrderItem and OutputMaterial 
-            List<OrderItem> orderItemList = new List<OrderItem>();
-            foreach (OrderItemViewModel orderItemViewModel in orderViewModel.OrderItemList)
-            {
-                OrderItem orderItem = orderItemViewModel.OrderItem;
-                List<OutputMaterial> outputMaterialList = new List<OutputMaterial>();
-
-                foreach (MaterialViewModel materialViewModel in orderItemViewModel.MaterialList)
-                {
-                    OutputMaterial outputMaterial = new OutputMaterial();
-                    outputMaterial.ExportQuantity = materialViewModel.NeedQuantity;
-                    outputMaterial.ProductMaterialId = materialViewModel.ProductMaterialId;
-                    //Get list of InputMaterial available order by importTime descending
-                    List<InputMaterial> tempList = db.InputMaterials.Where(
-                        m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderBy(m => m.ImportDate).ToList();
-                    //Compare each input material with material ViewModel and merge each material of orderItem to input material
-                    //Compare each input material with material ViewModel and merge each material of orderItem to input material
-                    foreach (InputMaterial inputMaterial in tempList)
-                    {
-                        if (materialViewModel.NeedQuantity > 0)
-                        {
-                            ExportFrom exportFrom = new ExportFrom();
-                            if (inputMaterial.RemainQuantity >= materialViewModel.NeedQuantity)
-                            {
-                                exportFrom.ExportFromQuantity = materialViewModel.NeedQuantity;
-                                inputMaterial.RemainQuantity -= materialViewModel.NeedQuantity;
-                                materialViewModel.NeedQuantity = 0;
-
-                            }
-                            else
-                            {
-                                materialViewModel.NeedQuantity -= inputMaterial.RemainQuantity;
-                                exportFrom.ExportFromQuantity = inputMaterial.RemainQuantity;
-                                inputMaterial.RemainQuantity = 0;
-                            }
-                            InputBill inputBill = inputMaterial.InputBill;
-                            // Get info for ExportFrom
-                            exportFrom.InputBill = inputBill;
-                            // Add input bill to output material
-                            outputMaterial.ExportFroms.Add(exportFrom);
-                        }
-                    }
-                    outputMaterialList.Add(outputMaterial);
-                }
-                orderItem.OutputMaterials = outputMaterialList;
-                orderItemList.Add(orderItem);
-            }
-            order.OrderItems = orderItemList;
-
-
-            #region Update InputMaterial and ProductMaterial
-
-            foreach (MaterialViewModel materialViewModel in orderViewModel.MaterialList)
-            {
-                //Update currentQuantity of product material
-                ProductMaterial productMaterial =
-                    db.ProductMaterials.FirstOrDefault(m => m.ProductMaterialId == materialViewModel.ProductMaterialId);
-                if (productMaterial == null)
-                {
-                    return false;
-                }
-                productMaterial.CurrentQuantity -= materialViewModel.NeedQuantity;
-                db.SaveChanges();
-
-                //Compare each input material with material ViewModel and update the remainQuantity in input material
-                List<InputMaterial> tempList = db.InputMaterials.Where(
-                      m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderBy(m => m.ImportDate).ToList();
-
-                foreach (InputMaterial inputMaterial in tempList)
-                {
-                    if (materialViewModel.NeedQuantity > 0)
-                    {
-                        if (inputMaterial.RemainQuantity >= materialViewModel.NeedQuantity)
-                        {
-                            inputMaterial.RemainQuantity -= materialViewModel.NeedQuantity;
-                            db.SaveChanges();
-                            materialViewModel.NeedQuantity = 0;
-                        }
-                        else
-                        {
-                            materialViewModel.NeedQuantity -= inputMaterial.RemainQuantity;
-                            inputMaterial.RemainQuantity = 0;
-                            db.SaveChanges();
-                        }
-                    }
-                }
-
-            }
-            #endregion
-            // Add order to db
-            db.Orders.Add(order);
-            db.SaveChanges();
-            try
-            {
-                contextTransaction.Commit();
-            }
-            catch (Exception)
-            {
-
-                return false;
-            }
-
-            return true;
-        }
 
         public bool Cancel(int orderId, int returnDeposit, int isReturnDeposit)
         {
             Order order = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
             if (order != null)
             {
-                #region If status is "Chờ xử lý) (0) just remove from DB
+                #region If status is "Chờ xử lý) (0) remove order from DB. If GuestInfo is exist, remove GuestInfo
                 if (order.OrderStatus == 0)
                 {
                     db.OrderItems.RemoveRange(order.OrderItems);
+                    if (order.GuestInfo != null)
+                    {
+                        GuestInfo guestInfo = order.GuestInfo;
+
+                        order.GuestInfo = null;
+                        db.GuestInfoes.Remove(guestInfo);
+                    }
                     db.Orders.Remove(order);
                     db.SaveChanges();
                 }
@@ -1187,25 +968,13 @@ namespace BMA.Business
         }
 
         public bool UpdateOrder(List<CartViewModel> cartList, int orderId, int depositAmount,
-            DateTime deliveryDate)
+            DateTime deliveryDate, int staffUserId)
         {
-            User customerUser = new User();
-            CustomerViewModel customer = new CustomerViewModel();
+
             Order previousOrder = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
-            if (previousOrder != null)
-            {
-                customerUser = db.Customers.FirstOrDefault(m => m.UserId == previousOrder.CustomerUserId && m.IsActive).User;
-                if (customerUser != null)
-                {
-                    customer.Username = customerUser.Username;
-                    customer.CustomerEmail = customerUser.Email;
-                    customer.CustomerName = customerUser.Fullname;
-                    customer.CustomerAddress = customerUser.Customers.ElementAt(0).CustomerAddress;
-                    customer.CustomerPhoneNumber = customerUser.Customers.ElementAt(0).CustomerPhoneNumber;
-                    customer.CustomerTaxCode = customerUser.Customers.ElementAt(0).TaxCode;
-                }
-            }
-            OrderViewModel orderViewModel = MakeOrderViewForNewCustomerModel(cartList, customer);
+
+            OrderViewModel orderViewModel = MakeOrderViewModel(cartList, previousOrder.User.UserId, null);
+
             if (orderViewModel == null)
             {
                 return false;
@@ -1219,35 +988,32 @@ namespace BMA.Business
             order.DepositAmount = depositAmount;
             order.Amount = orderViewModel.Order.Amount;
             order.TaxAmount = orderViewModel.Order.TaxAmount;
-            //Temp Bug temp staff approve user id
-            order.StaffApproveUserId = 2;
+            order.StaffApproveUserId = staffUserId;
             // Get current identity of Order table
             order.OrderCode = previousOrder.OrderCode;
 
             //Add customer
-            order.User = customerUser;
+            order.User = previousOrder.User;
 
             // Update prevoius order
             previousOrder.IsStaffEdit = true;
             order.PreviousOrderId = previousOrder.OrderId;
-            // Bug ask when customer confirm
             order.IsStaffEdit = false;
 
             //Add OrderItem and OutputMaterial 
             #region Add OrderItem, OutputMaterial, ExportFrom, InputMaterial
             List<OrderItem> orderItemList = new List<OrderItem>();
-            foreach (OrderItemViewModel orderItemViewModel in orderViewModel.OrderItemList)
+            foreach (OrderItem orderItem in orderViewModel.Order.OrderItems)
             {
-                OrderItem orderItem = orderItemViewModel.OrderItem;
                 TaxRate taxRate =
                     db.TaxRates.FirstOrDefault(
                         m =>
                             m.TaxTypeId == 1 && previousOrder.CreateTime <= m.EndDate &&
                             previousOrder.CreateTime >= m.BeginDate);
-                orderItem.TaxAmount = orderItemViewModel.OrderItem.Quantity * orderItemViewModel.OrderItem.RealPrice * taxRate.TaxRateValue / 100;
                 List<OutputMaterial> outputMaterialList = new List<OutputMaterial>();
-
-                foreach (MaterialViewModel materialViewModel in orderItemViewModel.MaterialList)
+                List<MaterialViewModel> materialListForOrderItem = GetMaterialListForOrderItem(orderItem.Product.ProductId,
+                    orderItem.Quantity);
+                foreach (MaterialViewModel materialViewModel in materialListForOrderItem)
                 {
                     OutputMaterial outputMaterial = new OutputMaterial();
                     outputMaterial.ExportQuantity = materialViewModel.NeedQuantity;
@@ -1332,7 +1098,7 @@ namespace BMA.Business
             foreach (OrderItem orderItem in order.OrderItems)
             {
                 // Get material list for each order item
-                List<MaterialViewModel> materialListForOrderItem = GetMaterialListForOrderItem(orderItem.OrderItemId);
+                List<MaterialViewModel> materialListForOrderItem = GetMaterialListForOrderItem(orderItem.Product.ProductId, orderItem.Quantity);
 
                 // Check each material in materialListForOrderItem, if NeedQuantity > Storage Quantity, return false
                 // else if materialViewModelList does not have any member, add into it
@@ -1390,7 +1156,7 @@ namespace BMA.Business
                     foreach (OrderItem orderItem in order.OrderItems)
                     {
                         // Get material list for each order item
-                        List<MaterialViewModel> materialListForOrderItem = GetMaterialListForOrderItem(orderItem.OrderItemId);
+                        List<MaterialViewModel> materialListForOrderItem = GetMaterialListForOrderItem(orderItem.Product.ProductId, orderItem.Quantity);
                         // If processList does not have any member, add new ShortageMaterialInOrderViewModel
                         // Else check each member of processList depends on ProductMaterialId, if has plus NeedQuantity and add 
                         //  If if check the ShortageMaterialInOrderViewModel, does not have add new

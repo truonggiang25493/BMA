@@ -4,7 +4,7 @@
 <h3>Danh sách hóa đơn</h3>
 
 <div class="box-body">
-    <table id="example2" class="table table-bordered customer-table">
+    <table id="example2" data-role="input-bill" class="table table-bordered customer-table">
         <thead style="font-weight: bold">
             <tr>
 
@@ -18,8 +18,8 @@
             {
                 <tr>
                     <td>
-                        <span>@(inputBill.InputBillCode)</span>    
-                        <input type="hidden" name="txtInputBillId" value="@inputBill.InputBillId" />                
+                        <span>@(inputBill.InputBillCode)</span>
+                        <input type="hidden" name="txtInputBillId" value="@inputBill.InputBillId" />
                     </td>
                     <td>
                         @(inputBill.Supplier.SupplierName)

@@ -21,7 +21,10 @@
             border-collapse: collapse;
         }
 
-        @@page { size: auto;  margin: 0; }
+        @@page {
+            size: auto;
+            margin: 0;
+        }
     </style>
 </head>
 <body onload="window.print();">
@@ -165,9 +168,13 @@
         <tr>
             <td style="width: 415px; text-align: center">
                 KHÁCH HÀNG
+                <br /><br /><br /><br /><br /><br /><br />
+                @(Model.User.Fullname)
             </td>
             <td style="width: 415px; text-align: center">
                 NGƯỜI BÁN HÀNG
+                <br /><br /><br /><br /><br /><br /><br />
+                @(ViewBag.ManagerName)
             </td>
         </tr>
     </table>

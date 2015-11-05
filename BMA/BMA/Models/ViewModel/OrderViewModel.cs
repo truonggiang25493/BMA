@@ -22,8 +22,6 @@ namespace BMA.Models.ViewModel
         public String OrderPersonTaxCode { get; set; }
         public bool IsGuest { get; set; }
         public bool IsLoyal { get; set; }
-        // Order item info
-        public List<OrderItemViewModel> OrderItemList { get; set; }
         // Material Info
         public List<MaterialViewModel> MaterialList { get; set; }
 

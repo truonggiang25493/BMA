@@ -71,10 +71,11 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">
+                        <div class="box-title">
                             <h3 class="box-title">
                                 Thông tin sản phẩm
                             </h3>
+                        </div>
                     </div>
                     <div class="box-body">
                         <!-- Table row -->
@@ -585,7 +586,7 @@
                     text: 'Không đủ nguyên liệu. Không thể duyệt đơn hàng.',
                     type: 'warning',
                     dismissQueue: false,
-                    layout: 'bottomLeft',
+                    layout: 'topCenter',
                     theme: 'defaultTheme'
                 });
             };
@@ -603,7 +604,7 @@
                         text: 'Số lượng phải lớn hơn 0',
                         type: 'warning',
                         dismissQueue: false,
-                        layout: 'bottomLeft',
+                        layout: 'topCenter',
                         theme: 'defaultTheme',
                         timeout: 1000
                     });
@@ -616,7 +617,7 @@
                 text: 'Tổng số lượng phải lớn hơn @(ViewBag.MinQuantity)',
                 type: 'warning',
                 dismissQueue: false,
-                layout: 'bottomLeft',
+                layout: 'topCenter',
                 theme: 'defaultTheme',
                 timeout: 1000
             });
@@ -637,6 +638,7 @@
                 $("<input>", {
                     "type": "radio",
                     "name": "isDeposit",
+                    "checked":"checked",
                     "value": "no",
                     "selected":"selected",
                     "style": "margin-left: 10px",
@@ -686,6 +688,7 @@
                                 "html": [
                                     $("<input>", {
                                         "type": "text",
+                                        "id":"deliveryDateTime",
                                         "readonly": "readonly",
                                         "data-format":"dd/MM/yyyy HH:mm",
                                         "class": "form-control",
@@ -746,14 +749,14 @@
 
         function update_order() {
             var depositAmount = $("#deposit-amount").val();
-            var deliveryDate = $("#deliveryDate").val();
+            var deliveryDate = $("#deliveryDateTime").val();
             var depositAmountControl = $("<input>", {
                 type: "hidden",
                 name: "depositAmount",
                 value: depositAmount
             });
             var deliveryDateControl = $("<input>", {
-                type: "date",
+                type: "hidden",
                 name: "deliveryDate",
                 value: deliveryDate
             });
@@ -765,41 +768,57 @@
                 data: $("#update-product-list").serialize(),
                 success: function(data) {
                     if (data === "-1") {
+                        $('#myModal').modal('hide');
                         noty({
                             text: 'Tổng lượng phải lớn hơn 0',
                             type: 'warning',
                             dismissQueue: false,
-                            layout: 'bottomLeft',
+                            layout: 'topCenter',
                             theme: 'defaultTheme',
                             timeout: 1000
                         });
                     }else if (data === "-2") {
-
+                        $('#myModal').modal('hide');
                         noty({
                             text: 'Tổng lượng phải lớn hơn @(ViewBag.MinQuantity)',
                             type: 'warning',
                             dismissQueue: false,
-                            layout: 'bottomLeft',
+                            layout: 'topCenter',
                             theme: 'defaultTheme',
                             timeout: 1000
                         });
 
                     } else if (data === "0") {
+                        $('#myModal').modal('hide');
                         noty({
                             text: 'Không thể chỉnh sửa',
                             type: 'warning',
                             dismissQueue: false,
-                            layout: 'bottomLeft',
+                            layout: 'topCenter',
                             theme: 'defaultTheme',
                             timeout: 1000
                         });
 
+                    }else if (data === "-7") {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Vui lòng đăng nhập với tài khoản nhân viên',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 3000
+                        });
+                        window.setTimeout(function() {
+                            window.location.replace("@(Url.Action("Index", "Home"))");
+                        }, 4000);
                     } else {
+                        $('#myModal').modal('hide');
                         noty({
                             text: 'Chỉnh sửa đơn hàng thành công. Đơn hàng chuyển sang trạng thái <b>Chờ xác nhận</b>',
                             type: 'success',
                             dismissQueue: false,
-                            layout: 'bottomLeft',
+                            layout: 'topCenter',
                             theme: 'defaultTheme',
                             timeout: 3000
                         });
@@ -844,7 +863,7 @@
                             text: 'Không hủy sản phẩm khỏi đơn hàng',
                             type: 'warning',
                             dismissQueue: false,
-                            layout: 'bottomLeft',
+                            layout: 'topCenter',
                             theme: 'defaultTheme',
                             timeout: 1000
                         });
