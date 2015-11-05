@@ -229,7 +229,7 @@ namespace BMA.Controllers
             int amount = Convert.ToInt32(TempData["Amount"]);
             int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
             int discount = Convert.ToInt32(TempData["DiscountAmount"]);
-            int cusUserId = Convert.ToInt32(Session["CusUserId"]);
+            int cusUserId = Convert.ToInt32(Session["UserId"]);
             if (Session["User"] != null)
             {
                 TempData["userName"] = (Session["User"] as User).Username;
@@ -264,7 +264,7 @@ namespace BMA.Controllers
             int amount = Convert.ToInt32(TempData["Amount"]);
             int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
             int discount = Convert.ToInt32(TempData["DiscountAmount"]);
-            int cusUserId = Convert.ToInt32(Session["CusUserId"]);
+            int cusUserId = Convert.ToInt32(Session["UserId"]);
             if (Session["User"] != null)
             {
                 TempData["userName"] = (Session["User"] as User).Username;
@@ -317,7 +317,7 @@ namespace BMA.Controllers
                 TempData["Notify"] = "Sai tài khoản hoặc mật khẩu";
                 return RedirectToAction("OrderInfo");
             }
-            int cusUserId = Convert.ToInt32(Session["CusUserId"]);
+            int cusUserId = Convert.ToInt32(Session["UserId"]);
             DateTime planDeliveryDate = Convert.ToDateTime(Session["DeliveryDate"]);
             cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
             TempData["orderCode"] = cob.GetOrderCode();

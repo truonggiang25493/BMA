@@ -98,7 +98,7 @@ namespace BMA.Controllers
                 int pageNumber = (page ?? 1);
                 if (Session["User"] != null)
                 {
-                    int cusId = Convert.ToInt32(Session["CusUserId"]);
+                    int cusId = Convert.ToInt32(Session["UserId"]);
                     List<OrderItem> orderItemList = new List<OrderItem>();
                     var orderList = cmb.GetOrder(cusId).ToPagedList(pageNumber, pageSize);
                     foreach (var item in orderList)
@@ -126,7 +126,7 @@ namespace BMA.Controllers
                 int pageNumber = (page ?? 1);
                 if (Session["User"] != null)
                 {
-                    int cusUserId = Convert.ToInt32(Session["CusUserId"]);
+                    int cusUserId = Convert.ToInt32(Session["UserId"]);
                     List<OrderItem> orderItemList = new List<OrderItem>();
                     var confirmOrderList = cmb.GetConfirmOrder(cusUserId).ToPagedList(pageNumber, pageSize);
                     foreach (var item in confirmOrderList)

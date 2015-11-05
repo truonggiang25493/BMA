@@ -276,7 +276,6 @@
           <Property Name="Fullname" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="varchar" MaxLength="250" />
           <Property Name="IsConfirmed" Type="bit" Nullable="false" />
-          <Property Name="Salt" Type="varchar(max)" />
         </EntityType>
         <Association Name="FK__Orders_Orders_OrderId">
           <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
@@ -1106,7 +1105,6 @@
           <Property Name="Fullname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="Salt" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Customers" Relationship="BMAModel.FK_Customer_User" FromRole="User" ToRole="Customer" />
           <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="User" ToRole="Order" />
           <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="User" ToRole="Order" />
@@ -1679,7 +1677,6 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="BMAModel.User">
               <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="Salt" ColumnName="Salt" />
                 <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Fullname" ColumnName="Fullname" />

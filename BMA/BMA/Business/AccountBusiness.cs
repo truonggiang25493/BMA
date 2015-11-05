@@ -30,7 +30,7 @@ namespace BMA.Business
 
         public User checkLogin(string account, string password)
         {
-            User endUser = db.Users.SingleOrDefault(n => n.Username == account);
+            User endUser = db.Users.SingleOrDefault(n => n.Username.Equals(account));
             if (endUser != null)
             {
                 string salt = endUser.Password.Substring(endUser.Password.Length - 88);
