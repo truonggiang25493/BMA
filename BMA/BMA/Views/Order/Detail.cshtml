@@ -354,6 +354,10 @@
                         <td style="text-align: right">@Model.Order.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                     </tr>
                     <tr>
+                        <th>Giá sau giảm: </th>
+                        <td style="text-align: right">@((Model.Order.Amount - Model.Order.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                    </tr>
+                    <tr>
                         <th>Thuế(VAT) @(ViewBag.TaxRate)%: </th>
                         <td style="text-align: right">@Model.Order.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                     </tr>
