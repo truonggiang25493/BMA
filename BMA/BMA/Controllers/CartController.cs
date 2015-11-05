@@ -36,8 +36,6 @@ namespace BMA.Controllers
                 int productId = int.Parse(f["productID"].ToString());
                 string productImage = f["productImage"].ToString();
                 int productNumber = int.Parse(f["txtQuantity"].ToString());
-                int checkQuantity = 0;
-
                 List<CustomerCartViewModel> lstCart = GetCart();
                 CustomerCartViewModel product = lstCart.Find(n => n.ProductId == productId);
                 if (product == null)
@@ -47,37 +45,12 @@ namespace BMA.Controllers
                     product.ProductImage = productImage;
                     product.Quantity = productNumber;
                     product.Total = product.Price * product.Quantity;
-
-                    //Kiểm tra tổng sp giỏ hàng đã lớn hơn 10k hay chưa
-                    foreach (var item in lstCart)
-                    {
-                        checkQuantity += item.Quantity;
-                    }
-                    if ((checkQuantity + productNumber) > 10000)
-                    {
-                        return Redirect(strURL);
-                    }
-
                     lstCart.Add(product);
                     ViewBag.lstProductCart = lstCart;
                 }
                 else
                 {
                     product.Quantity = productNumber;
-                    if (product.Quantity > 5000)
-                    {
-                        product.Quantity = 5000;
-                    }
-                    //Kiểm tra tổng sp giỏ hàng đã lớn hơn 10k hay chưa
-                    foreach (var item in lstCart)
-                    {
-                        checkQuantity += item.Quantity;
-                    }
-                    if ((checkQuantity + productNumber) > 10000)
-                    {
-                        return Redirect(strURL);
-                    }
-
                     product.Total = product.Price * product.Quantity;
                     ViewBag.lstProductCart = lstCart;
                     return Redirect(strURL);
@@ -95,7 +68,12 @@ namespace BMA.Controllers
         {
             try
             {
+                int checkQuantity = 0;
                 List<CustomerCartViewModel> lstCart = GetCart();
+                foreach (var item in lstCart)
+                {
+                    checkQuantity += item.Quantity;
+                }
                 String[] listQuantity = f["quanitySniper"].ToString().Split(',');
                 for (int i = 0; i < lstCart.Count; i++)
                 {
@@ -145,14 +123,35 @@ namespace BMA.Controllers
 
         public ActionResult Cart()
         {
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            if (Session["Cart"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                int quantity = 0;
+                if (Session["Cart"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                ViewBag.taxRate = cob.GetTaxRate();
+                List<CustomerCartViewModel> lstCart = GetCart();
+                foreach (var item in lstCart)
+                {
+                    quantity += item.Quantity;
+                }
+                if (quantity > 10000)
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+                else
+                {
+                    TempData["Discount"] = cob.checkDiscount(quantity);
+                    return View(lstCart);
+                }
+                
             }
-            ViewBag.taxRate = cob.GetTaxRate();
-            List<CustomerCartViewModel> lstCart = GetCart();
-            return View(lstCart);
+            catch
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
 
         private int SumQuantity()
@@ -200,6 +199,7 @@ namespace BMA.Controllers
             try
             {
                 CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                cob.TurnFlagOn(orderId);
                 List<CustomerCartViewModel> lstCart = new List<CustomerCartViewModel>();
                 lstCart = cob.GetOrderToCart(orderId);
                 if (lstCart != null)
@@ -217,57 +217,18 @@ namespace BMA.Controllers
 
         public ActionResult EditOrder(FormCollection f, int orderId)
         {
-            try
-            {
-                CustomerOrderBusiness cob = new CustomerOrderBusiness();
-                if (Session["Cart"] == null)
-                {
-                    RedirectToAction("Index", "Product");
-                }
-                List<CustomerCartViewModel> cart = GetCart();
-                DateTime planDeliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
-                int amount = Convert.ToInt32(TempData["Amount"]);
-                int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
-                int cusUserId = Convert.ToInt32(Session["CusUserId"]);
-                if (Session["User"] != null)
-                {
-                    TempData["userName"] = (Session["User"] as User).Username;
-                    TempData["phoneNumber"] = Session["Phonenumber"].ToString();
-                }
-                else
-                {
-                    RedirectToAction("Index", "Product");
-                }
-                cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, cusUserId, cart);
-                TempData["orderCode"] = cob.EditGetOrderCode(orderId);
-                TempData["deliveryDate"] = planDeliveryDate;
-                Session["Cart"] = null;
-                Session["BeEdited"] = null;
-                return RedirectToAction("EditOrderSuccess", "Cart");
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("Index", "Error");
-            }
-        }
 
-
-        //For customer order
-        public ActionResult OrderProduct()
-        {
-            //try
-            //{
             CustomerOrderBusiness cob = new CustomerOrderBusiness();
             if (Session["Cart"] == null)
             {
-                RedirectToAction("Index", "Product");
+                return RedirectToAction("Index", "Product");
             }
             List<CustomerCartViewModel> cart = GetCart();
-            string orderTime = DateTime.Now.ToString("yyyyMMdd");
-            //DateTime planDeliveryDate = DateTime.Parse(Session["DeliveryDate"].ToString());
+            //DateTime planDeliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
             DateTime planDeliveryDate = DateTime.Now;
             int amount = Convert.ToInt32(TempData["Amount"]);
             int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
+            int discount = Convert.ToInt32(TempData["DiscountAmount"]);
             int cusUserId = Convert.ToInt32(Session["CusUserId"]);
             if (Session["User"] != null)
             {
@@ -278,16 +239,46 @@ namespace BMA.Controllers
             {
                 RedirectToAction("Index", "Product");
             }
-            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, cusUserId, cart);
+            cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
+            cob.TurnFlagOff(orderId);
+            TempData["orderCode"] = cob.EditGetOrderCode(orderId);
             Session["DeliveryDate"] = planDeliveryDate;
+            Session["Cart"] = null;
+            Session["BeEdited"] = null;
+            return RedirectToAction("EditOrderSuccess", new { orderId = orderId });
+        }
+
+
+        //For customer order
+        public ActionResult OrderProduct()
+        {
+
+            CustomerOrderBusiness cob = new CustomerOrderBusiness();
+            if (Session["Cart"] == null)
+            {
+                return RedirectToAction("Index", "Product");
+            }
+            List<CustomerCartViewModel> cart = GetCart();
+            string orderTime = DateTime.Now.ToString("yyyyMMdd");
+            DateTime planDeliveryDate = DateTime.Parse(Session["DeliveryDate"].ToString());
+            int amount = Convert.ToInt32(TempData["Amount"]);
+            int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
+            int discount = Convert.ToInt32(TempData["DiscountAmount"]);
+            int cusUserId = Convert.ToInt32(Session["CusUserId"]);
+            if (Session["User"] != null)
+            {
+                TempData["userName"] = (Session["User"] as User).Username;
+                TempData["phoneNumber"] = Session["Phonenumber"].ToString();
+            }
+            else
+            {
+                RedirectToAction("Index", "Product");
+            }
+            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
             TempData["orderCode"] = cob.GetOrderCode();
             Session["Cart"] = null;
             return RedirectToAction("OrderSuccess", "Cart");
-            //}
-            //catch
-            //{
-            //    return RedirectToAction("Index", "Error");
-            //}
+
         }
 
         //For customer after enter information
@@ -297,17 +288,24 @@ namespace BMA.Controllers
             CustomerOrderBusiness cob = new CustomerOrderBusiness();
             if (Session["Cart"] == null)
             {
-                RedirectToAction("Index", "Product");
+                return RedirectToAction("Index", "Product");
             }
             List<CustomerCartViewModel> cart = GetCart();
             string orderTime = DateTime.Now.ToString("yyyyMMdd");
             int amount = Convert.ToInt32(TempData["Amount"]);
             int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
+            int discount = Convert.ToInt32(TempData["DiscountAmount"]);
             string sAccount = f.Get("txtAccount").ToString();
             string sPassword = f.Get("txtPassword").ToString();
             User endUser = ab.checkLogin(sAccount, sPassword);
             if (endUser != null)
             {
+                int checkRole = endUser.RoleId;
+                if (checkRole != 3)
+                {
+                    TempData["Notify"] = "Tài khoản không hợp lệ";
+                    return RedirectToAction("OrderInfo");
+                }
                 Session["User"] = endUser;
                 Session["UserId"] = endUser.UserId;
                 Session["CusUserId"] = endUser.Customers.ElementAt(0).CustomerId;
@@ -320,10 +318,8 @@ namespace BMA.Controllers
                 return RedirectToAction("OrderInfo");
             }
             int cusUserId = Convert.ToInt32(Session["CusUserId"]);
-            //DateTime planDeliveryDate = Convert.ToDateTime(Session["DeliveryDate"]);
-            DateTime planDeliveryDate = DateTime.Now;
-            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, cusUserId, cart);
-            Session["DeliveryDate"] = planDeliveryDate;
+            DateTime planDeliveryDate = Convert.ToDateTime(Session["DeliveryDate"]);
+            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
             TempData["orderCode"] = cob.GetOrderCode();
             Session["Cart"] = null;
             return RedirectToAction("OrderSuccess", "Cart");
@@ -332,48 +328,46 @@ namespace BMA.Controllers
 
         public ActionResult GuestOrderProduct(FormCollection f)
         {
-            
-                CustomerOrderBusiness cob = new CustomerOrderBusiness();
-                if (Session["Cart"] == null)
-                {
-                    RedirectToAction("Index", "Product");
-                }
-                List<CustomerCartViewModel> cart = GetCart();
-                string orderTime = DateTime.Now.ToString("yyyyMMdd");
-                int amount = Convert.ToInt32(TempData["Amount"]);
-                int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
-                //DateTime planDeliveryDate = Convert.ToDateTime(Session["DeliveryDate"]);
-                DateTime planDeliveryDate = DateTime.Now;
-                string sName = f.Get("txtName").ToString();
-                string sPhone = f.Get("txtPhoneNumber").ToString();
-                string sAddress = f.Get("txtAddress").ToString();
-                string sEmail = f.Get("txtEmail").ToString();
 
-                if (sName == null || sPhone == null || sAddress == null || sEmail == null)
-                {
-                    RedirectToAction("OrderInfo");
-                }
-                //Kiểm tra guest đó có tồn tại trong dtb user hoặc guest chưa
-                if (cob.checkUserDuplicate(sEmail, sPhone))
-                {
-                    TempData["guestError"] = "Email và số điện thoại đã tồn tại, nếu đã có tài khoản xin vui lòng đăng nhập.";
-                    return RedirectToAction("OrderInfo");
-                }
+            CustomerOrderBusiness cob = new CustomerOrderBusiness();
+            if (Session["Cart"] == null)
+            {
+                return RedirectToAction("Index", "Product");
+            }
+            List<CustomerCartViewModel> cart = GetCart();
+            string orderTime = DateTime.Now.ToString("yyyyMMdd");
+            int amount = Convert.ToInt32(TempData["Amount"]);
+            int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
+            int discount = Convert.ToInt32(TempData["DiscountAmount"]);
+            DateTime planDeliveryDate = Convert.ToDateTime(Session["DeliveryDate"]);
+            string sName = f.Get("txtName").ToString();
+            string sPhone = f.Get("txtPhoneNumber").ToString();
+            string sAddress = f.Get("txtAddress").ToString();
+            string sEmail = f.Get("txtEmail").ToString();
 
-                //if (cob.checkGuestDuplicate(sName, sPhone, sEmail))
-                //{
-                //    cob.GuestOrderProduct(orderTime, planDeliveryDate, amount, taxAmount, cart, sName, sPhone, sEmail);
-                //}
-                else
-                {
-                    cob.GuestOrderProduct(orderTime, planDeliveryDate, amount, taxAmount, cart, sName, sPhone, sAddress, sEmail);
-                }
+            if (sName == null || sPhone == null || sAddress == null || sEmail == null)
+            {
+                RedirectToAction("OrderInfo");
+            }
+            //Kiểm tra guest đó có tồn tại trong dtb user hoặc guest chưa
+            if (cob.checkUserDuplicate(sEmail, sPhone))
+            {
+                TempData["guestError"] = "Email và số điện thoại đã tồn tại, nếu đã có tài khoản xin vui lòng đăng nhập.";
+                return RedirectToAction("OrderInfo");
+            }
 
-                Session["DeliveryDate"] = planDeliveryDate;
-                TempData["orderCode"] = cob.GetOrderCode();
-                Session["Cart"] = null;
-                return RedirectToAction("OrderSuccess", "Cart");
-         
+            //if (cob.checkGuestDuplicate(sName, sPhone, sEmail))
+            //{
+            //    cob.GuestOrderProduct(orderTime, planDeliveryDate, amount, taxAmount, cart, sName, sPhone, sEmail);
+            //}
+            else
+            {
+                cob.GuestOrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cart, sName, sPhone, sAddress, sEmail);
+            }
+            TempData["orderCode"] = cob.GetOrderCode();
+            Session["Cart"] = null;
+            return RedirectToAction("OrderSuccess", "Cart");
+
         }
 
         public ActionResult ProceedCheckout(FormCollection f)
@@ -385,12 +379,14 @@ namespace BMA.Controllers
                 return RedirectToAction("Index", "Home");
             }
             ViewBag.taxRate = cob.GetTaxRate();
+            string planDeliveryDate = f["txtDelivery"].ToString();
+            Session["DeliveryDate"] = planDeliveryDate;
             List<CustomerCartViewModel> lstCart = GetCart();
-            //foreach (var item in lstCart)
-            //{
-            //    quantity += item.Quantity;
-            //}
-            //ViewBag.discount = cob.checkDiscount(quantity);
+            foreach (var item in lstCart)
+            {
+                quantity += item.Quantity;
+            }
+            TempData["Discount"] = cob.checkDiscount(quantity);
             return View(lstCart);
         }
         public ActionResult OrderInfo(FormCollection f)
@@ -415,9 +411,11 @@ namespace BMA.Controllers
             return View(lstOrderItems);
         }
 
-        public ActionResult EditOrderSuccess()
+        public ActionResult EditOrderSuccess(int orderId)
         {
-            return View();
+            CustomerOrderBusiness cob = new CustomerOrderBusiness();
+            var lstOrderItems = cob.EditOrderSuccess(orderId);
+            return View(lstOrderItems);
         }
         #endregion
     }

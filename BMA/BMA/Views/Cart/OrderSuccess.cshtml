@@ -5,6 +5,7 @@
 @{
     ViewBag.Title = "Thành công";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
+    int total = 0;
 }
 
 <div class="container main-container headerOffset">
@@ -22,15 +23,10 @@
         <div class="col-lg-12 ">
             <div class="row userInfo">
                 <div class="thanxContent text-center">
-                    <h1> Mã đơn hàng của bạn :<a href="#">@Model.First().Order.OrderCode</a></h1>
-                    <h4> Ngày nhận hàng : @((Session["DeliveryDate"]).ToString().AsDateTime().ToString("dd/MM/yyyy HH:mm"))</h4>
+                    <h1> Mã đơn hàng của bạn :<a href="#">@TempData["orderCode"]</a></h1>
+                    <h4 style="font-weight:bold"> Ngày nhận hàng : @((Session["DeliveryDate"]).ToString().AsDateTime().ToString("MM/dd/yyyy HH:mm"))</h4>
                     @{
-                        var total = 0;
-                        foreach (var item in Model)
-                        {
-                            total += item.RealPrice * item.Quantity;
-                        }
-                        total = Convert.ToInt32(total * 1.1);
+                        total = (Model.ElementAt(0).Order.TaxAmount + (Model.ElementAt(0).Order.Amount - Model.ElementAt(0).Order.DiscountAmount));
                     }
                     <h2><b>Thành tiền (Đã bao gồm VAT) : @total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</b> </h2>
                 </div>

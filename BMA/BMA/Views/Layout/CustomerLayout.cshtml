@@ -15,6 +15,8 @@
     <link href="/Content/CustomerLayout/assets/css/style.css" rel="stylesheet">
     <link href="/Content/CustomerLayout/assets/css/category-2.css" rel="stylesheet">
     <link href="~/Content/AdminLayout/plugins/datepicker/datepicker3.css" rel="stylesheet" />
+    <!--DatetimePicker-->
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
@@ -136,53 +138,53 @@
 
 
     @*<div class="modal signUpContent fade" id="ModalSignup" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> &times; </button>
-                    <h3 class="modal-title-site text-center"> ĐĂNG KÝ </h3>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group reg-username">
-                        <div>
-                            <input name="txtUsername" class="form-control input" size="20" placeholder="Nhập tên tài khoản" type="text">
-                        </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> &times; </button>
+                        <h3 class="modal-title-site text-center"> ĐĂNG KÝ </h3>
                     </div>
-                    <div class="form-group reg-password">
-                        <div>
-                            <input name="txtPassword" class="form-control input" size="20" placeholder="Nhập mật khẩu" type="password">
+                    <div class="modal-body">
+                        <div class="form-group reg-username">
+                            <div>
+                                <input name="txtUsername" class="form-control input" size="20" placeholder="Nhập tên tài khoản" type="text">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group reg-password">
-                        <div>
-                            <input name="txtPasswordConfirm" class="form-control input" size="20" placeholder="Nhập lại mật khẩu" type="password">
+                        <div class="form-group reg-password">
+                            <div>
+                                <input name="txtPassword" class="form-control input" size="20" placeholder="Nhập mật khẩu" type="password">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group reg-email">
-                        <div>
-                            <input name="txtEmail" class="form-control input" size="20" placeholder="Nhập Email" type="text">
+                        <div class="form-group reg-password">
+                            <div>
+                                <input name="txtPasswordConfirm" class="form-control input" size="20" placeholder="Nhập lại mật khẩu" type="password">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group reg-email">
-                        <div>
-                            <input name="txtPhonenumber" class="form-control input" size="20" placeholder="Nhập số điện thoại" type="text">
+                        <div class="form-group reg-email">
+                            <div>
+                                <input name="txtEmail" class="form-control input" size="20" placeholder="Nhập Email" type="text">
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div>
-                            <input name="submit" class="btn  btn-block btn-lg btn-primary" value="ĐĂNG KÝ" type="submit">
+                        <div class="form-group reg-email">
+                            <div>
+                                <input name="txtPhonenumber" class="form-control input" size="20" placeholder="Nhập số điện thoại" type="text">
+                            </div>
                         </div>
-                    </div>
+                        <div>
+                            <div>
+                                <input name="submit" class="btn  btn-block btn-lg btn-primary" value="ĐĂNG KÝ" type="submit">
+                            </div>
+                        </div>
 
+                    </div>
+                    <div class="modal-footer">
+                        <p class="text-center"> Là thành viên? <a data-toggle="modal" data-dismiss="modal" href="#ModalLogin"> Đăng nhập </a> </p>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <p class="text-center"> Là thành viên? <a data-toggle="modal" data-dismiss="modal" href="#ModalLogin"> Đăng nhập </a> </p>
-                </div>
+
             </div>
 
-        </div>
-
-    </div>*@
+        </div>*@
 
 
     <div class="navbar navbar-tshop navbar-fixed-top megamenu" role="navigation">
@@ -326,6 +328,10 @@
 
     <script src="/Content/CustomerLayout/assets/js/script.js"></script>
     <script src="~/Scripts/jquery.noty.packaged.min.js"></script>
+    <!--DatetimePicker-->
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-with-locales.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript">
         /* <![CDATA[ */
         (function () { try { var s, a, i, j, r, c, l = document.getElementsByTagName("a"), t = document.createElement("textarea"); for (i = 0; l.length - i; i++) { try { a = l[i].getAttribute("href"); if (a && a.indexOf("/cdn-cgi/l/email-protection") > -1 && (a.length > 28)) { s = ''; j = 27 + 1 + a.indexOf("/cdn-cgi/l/email-protection"); if (a.length > j) { r = parseInt(a.substr(j, 2), 16); for (j += 2; a.length > j && a.substr(j, 1) != 'X'; j += 2) { c = parseInt(a.substr(j, 2), 16) ^ r; s += String.fromCharCode(c); } j += 1; s += a.substr(j, a.length - j); } t.innerHTML = s.replace(/</g, "&lt;").replace(/>/g, "&gt;"); l[i].setAttribute("href", "mailto:" + t.value); } } catch (e) { } } } catch (e) { } })();

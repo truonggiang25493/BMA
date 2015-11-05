@@ -9,6 +9,7 @@
     List<CustomerCartViewModel> lstProductCart = ViewBag.lstProductCart;
     int quantity = 0;
     int selectDongia = 0;
+    int sumQuantity = 0;
 }
 
 <script>
@@ -39,19 +40,29 @@
         </div>
 
         <div class="col-lg-6 col-md-6 col-sm-5">
-            @for (int i = 0; i < lstProductCart.Count; i++)
+            @if (lstProductCart != null)
             {
-                if (Model.ProductId == lstProductCart[i].ProductId)
+                for (int i = 0; i < lstProductCart.Count; i++)
                 {
-                    quantity = lstProductCart[i].Quantity;
-                    selectDongia = Model.ProductStandardPrice * quantity;
-                    break;
+                    sumQuantity += lstProductCart[i].Quantity;
                 }
-                else
+            }
+            @if (lstProductCart != null)
+            {
+                for (int i = 0; i < lstProductCart.Count; i++)
                 {
-                    quantity = 0;
-                }
+                    if (Model.ProductId == lstProductCart[i].ProductId)
+                    {
+                        quantity = lstProductCart[i].Quantity;
+                        selectDongia = Model.ProductStandardPrice * quantity;
+                        break;
+                    }
+                    else
+                    {
+                        quantity = 0;
+                    }
 
+                }
             }
             <h1 class="product-title"> @Model.ProductName</h1>
             <h3 class="details-description">Mã sản phẩm : <span class="price-sales">@Model.ProductCode</span></h3>
@@ -172,9 +183,9 @@
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button"> × </button>
                         <div class="col-lg-6 col-md-6 col-sm-6  col-xs-12">
                             <div class="main-image  col-lg-12 no-padding style3" style="margin-top:30px;margin-left:30px">
-                                <a class="product-largeimg-link" href="product-details.html">
+                                <div class="product-largeimg-link">
                                     <img src="" class="img-responsive product-largeimg" alt="img" id="productImage" style="width:400px;height:300px;">
-                                </a>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 modal-details" style="height: 380px;">
@@ -188,16 +199,61 @@
 
                                     <div class="productFilter productFilterLook2">
                                         <div style="width:50%">
-                                            <input type="text" name="txtQuantity" placeholder="Nhập số lượng" class="quanitySniper" style="font-size:16px;padding-bottom:0px;min-width:158px;" value="" required />
+                                            <input type="text" name="txtQuantity" maxlength="5" placeholder="Nhập số lượng" class="quanitySniper" style="font-size:16px;padding-bottom:0px;min-width:158px;" value="" required />
                                         </div>
                                     </div>
                                     <h3 class="details-description">Thành tiền : <span id="totalPriceProduct"> </span></h3>
 
                                     <div class="cart-actions">
                                         <div class="addto">
-                                            <button onclick="addCartForm.submit(this);" class="button btn-cart cart first" title="Add to Cart" type="submit" style="font-family: 'Patrick Hand SC'">Thêm vào giỏ hàng</button>
+                                            <button onclick="return validateInput('@sumQuantity')" class="button btn-cart cart first" title="Add to Cart" style="font-family: 'Patrick Hand SC'">Thêm vào giỏ hàng</button>
                                         </div>
                                     </div>
+                                    <script type="text/javascript">
+                                        function toNumber(str) {
+                                            return str * 1;
+                                        }
+
+                                        function validateInput(sumQuantity) {
+                                            var txtQuantity = $("#quantityCheck").val();
+                                            var numQuantity = toNumber(txtQuantity);
+                                            var numSumQuantity = toNumber(sumQuantity);
+                                            sumQuantity = numQuantity + numSumQuantity;
+                                            if (txtQuantity.trim() === '') {
+                                                noty({
+                                                    text: 'Số lượng không được để trống.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            } else if (txtQuantity < 1 || txtQuantity > 5000) {
+                                                noty({
+                                                    text: 'Số lượng phải lớn hơn 1 và nhỏ hơn 5000.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            }
+                                            else if (sumQuantity > 10000) {
+                                                noty({
+                                                    text: 'Số lượng sản phẩm trong đơn hàng không được trên 10000',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            }
+                                            else {
+                                                $("#addCartForm").submit();
+                                            }
+                                        }
+                                    </script>
+
                                 </div>
                             </form>
                         </div>

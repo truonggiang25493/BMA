@@ -22,6 +22,22 @@ namespace BMA.Business
             var taxRate = db.TaxRates.SingleOrDefault(n => n.TaxTypeId == 1);
             return taxRate;
         }
+
+        public bool TurnFlagOn(int orderId)
+        {
+            Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+            order.CustomerEditingFlag = true;
+            db.SaveChanges();
+            return true;
+        }
+
+        public bool TurnFlagOff(int orderId)
+        {
+            Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+            order.CustomerEditingFlag = false;
+            db.SaveChanges();
+            return true;
+        }
         public List<CustomerCartViewModel> GetOrderToCart(int orderId)
         {
             List<CustomerCartViewModel> lstCart = new List<CustomerCartViewModel>();
@@ -36,6 +52,7 @@ namespace BMA.Business
                     {
                         cart = new CustomerCartViewModel(orderItems[i].ProductId);
                         cart.ProductId = orderItems[i].ProductId;
+                        cart.ProductImage = orderItems[i].Product.ProductImage;
                         cart.ProductName = orderItems[i].Product.ProductName;
                         cart.Quantity = orderItems[i].Quantity;
                         cart.Price = orderItems[i].RealPrice;
@@ -47,12 +64,13 @@ namespace BMA.Business
             return lstCart;
         }
 
-        public bool EditOrder(int orderId, DateTime planDeliveryDate, int Amount, int taxAmount, int cusUserId, List<CustomerCartViewModel> cart)
+        public bool EditOrder(int orderId, DateTime planDeliveryDate, int Amount, int taxAmount, int discount,int cusUserId, List<CustomerCartViewModel> cart)
         {
             Order order = db.Orders.Find(orderId);
             order.PlanDeliveryTime = planDeliveryDate;
             order.Amount = Amount;
             order.TaxAmount = taxAmount;
+            order.DiscountAmount = discount;
             order.CustomerUserId = cusUserId;
             db.SaveChanges();
             List<OrderItem> orderItem = db.OrderItems.Where(n => n.OrderId == order.OrderId).ToList();
@@ -74,7 +92,7 @@ namespace BMA.Business
             db.SaveChanges();
             return true;
         }
-        public bool OrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount, int cusUserId, List<CustomerCartViewModel> cart)
+        public bool OrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount,int discount, int cusUserId, List<CustomerCartViewModel> cart)
         {
             Order order = new Order();
             order.OrderCode = orderTime;
@@ -86,6 +104,7 @@ namespace BMA.Business
             order.OrderStatus = 0;
             order.Amount = Amount;
             order.TaxAmount = taxAmount;
+            order.DiscountAmount = discount;
             order.CustomerUserId = cusUserId;
             db.Orders.Add(order);
             db.SaveChanges();
@@ -108,7 +127,7 @@ namespace BMA.Business
         }
 
 
-        public bool GuestOrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount, List<CustomerCartViewModel> cart, string sName, string sPhone, string sAddress, string sEmail)
+        public bool GuestOrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount,int discount, List<CustomerCartViewModel> cart, string sName, string sPhone, string sAddress, string sEmail)
         {
             Order order = new Order();
             order.OrderCode = orderTime;
@@ -120,6 +139,7 @@ namespace BMA.Business
             order.OrderStatus = 0;
             order.Amount = Amount;
             order.TaxAmount = taxAmount;
+            order.DiscountAmount = discount;
             GuestInfo guestInfo = new GuestInfo();
             guestInfo.GuestInfoName = sName;
             guestInfo.GuestInfoPhone = sPhone;
@@ -204,15 +224,21 @@ namespace BMA.Business
             return lstOrderItem;
         }
 
+        public List<OrderItem> EditOrderSuccess(int orderId)
+        {
+            List<OrderItem> lstOrderItem = db.OrderItems.Where(n => n.OrderId == orderId).ToList();
+            return lstOrderItem;
+        }
+
         public bool checkUserDuplicate(string Email, string phoneNumber)
         {
             var checkUser = db.Users.SingleOrDefault(n => n.Email == Email);
             var checkCustomer = db.Customers.SingleOrDefault(n => n.UserId == checkUser.UserId);
             if (checkUser == null && checkCustomer.CustomerPhoneNumber == phoneNumber)
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
 
         public DiscountByQuantity checkDiscount(int quantity)
@@ -221,7 +247,7 @@ namespace BMA.Business
             int discountId = 0;
             foreach (var item in discountCate)
             {
-                if (quantity >= item.QuantityFrom && quantity < item.QuantityTo)
+                if (quantity >= item.QuantityFrom && quantity <= item.QuantityTo)
                 {
                     discountId = item.Id;
                 }
