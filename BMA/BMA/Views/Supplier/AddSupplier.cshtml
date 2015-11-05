@@ -76,6 +76,7 @@
                                 function addSupplier() {
                                     var supplierName = $("#txtSupplierName").val();
                                     var supplierAddress = $("#txtSupplierAddress").val();
+                                    var supplierEmail = $("#txtSupplierEmail").val();
                                     var supplierPhoneNumber = $("#txtSupplierPhoneNumber").val();
                                     var supplierTaxCode = $("#txtSupplierTaxCode").val();
 
@@ -84,7 +85,7 @@
                                             text: 'Tên nhà cung cấp không được trống.',
                                             type: 'warning',
                                             dismissQueue: false,
-                                            layout: 'bottomLeft',
+                                            layout: 'topCenter',
                                             theme: 'defaultTheme',
                                             timeout: 1000
                                         });
@@ -93,7 +94,7 @@
                                             text: 'Địa chỉ nhà cung cấp không được trống.',
                                             type: 'warning',
                                             dismissQueue: false,
-                                            layout: 'bottomLeft',
+                                            layout: 'topCenter',
                                             theme: 'defaultTheme',
                                             timeout: 1000
                                         });
@@ -102,91 +103,122 @@
                                             text: 'Số điện thoại nhà cung cấp không được trống.',
                                             type: 'warning',
                                             dismissQueue: false,
-                                            layout: 'bottomLeft',
+                                            layout: 'topCenter',
                                             theme: 'defaultTheme',
                                             timeout: 1000
                                         });
-
+                                    }
+                                    else if (isNaN(supplierPhoneNumber)) {
+                                        noty({
+                                            text: 'Số điện thoại nhà cung cấp không đúng.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
+                                    else if (!new RegExp(/^\d{10,11}$/).test(supplierPhoneNumber)) {
+                                        noty({
+                                            text: 'Hãy nhập số điện thoại đúng.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                        $("#txtSupplierPhoneNumber").focus();
+                                    }
+                                    else if (!new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i).test(supplierEmail)) {
+                                         noty({
+                                            text: 'Hãy nhập email đúng định dạng.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                        $("#txtSupplierEmail").focus();
+                                    }
+                                    else if (supplierTaxCode.trim() === '') {
+                                        noty({
+                                            text: 'Mã số thuế nhà cung cấp không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
+                                    else if (!new RegExp(/^\d{10,13}$/).test(supplierTaxCode)) {
+                                         noty({
+                                            text: 'Hãy nhập mã số thuế đúng.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                        $("#txtSupplierTaxCode").focus();
+                                    }
+                                    else if (isNaN(supplierTaxCode)) {
+                                        noty({
+                                            text: 'Mã số thuế nhà cung cấp không đúng.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (supplierTaxCode.trim() === '') {
+                                        noty({
+                                            text: 'Mã số thuế nhà cung cấp không được trống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
                                     } else
-                                        if (isNaN(supplierPhoneNumber)) {
-                                            noty({
-                                                text: 'Số điện thoại nhà cung cấp không đúng.',
-                                                type: 'warning',
-                                                dismissQueue: false,
-                                                layout: 'bottomLeft',
-                                                theme: 'defaultTheme',
-                                                timeout: 1000
-                                            });
-                                        } else
-                                            if (supplierTaxCode.trim() === '') {
-                                                noty({
-                                                    text: 'Mã số thuế nhà cung cấp không được trống.',
-                                                    type: 'warning',
-                                                    dismissQueue: false,
-                                                    layout: 'bottomLeft',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 1000
-                                                });
-                                            } else
-                                                if (isNaN(supplierTaxCode)) {
+                                        $.ajax({
+                                            url: "@(Url.Action("AddSupplier", "Supplier"))",
+                                            method: "POST",
+                                            data: $("#add-supplier-form").serialize(),
+                                            success: function (data) {
+                                                if (data === "1") {
                                                     noty({
-                                                        text: 'Mã số thuế nhà cung cấp không đúng.',
-                                                        type: 'warning',
+                                                        text: 'Thêm nhà cung cấp thành công',
+                                                        type: 'success',
                                                         dismissQueue: false,
-                                                        layout: 'bottomLeft',
+                                                        layout: 'topCenter',
                                                         theme: 'defaultTheme',
                                                         timeout: 1000
                                                     });
-                                                } else
-                                                    if (supplierTaxCode.trim() === '') {
-                                                        noty({
-                                                            text: 'Mã số thuế nhà cung cấp không được trống.',
-                                                            type: 'warning',
-                                                            dismissQueue: false,
-                                                            layout: 'bottomLeft',
-                                                            theme: 'defaultTheme',
-                                                            timeout: 1000
-                                                        });
-                                                    } else
-                                                        $.ajax({
-                                                            url: "@(Url.Action("AddSupplier", "Supplier"))",
-                                                            method: "POST",
-                                                            data: $("#add-supplier-form").serialize(),
-                                                            success: function (data) {
-                                                                if (data === "1") {
-                                                                    noty({
-                                                                        text: 'Thêm nhà cung cấp thành công',
-                                                                        type: 'success',
-                                                                        dismissQueue: false,
-                                                                        layout: 'bottomLeft',
-                                                                        theme: 'defaultTheme',
-                                                                        timeout: 1000
-                                                                    });
-                                                                    window.setTimeout(function () {
-                                                                        window.location.replace("@(Url.Action("SupplierIndex", "Supplier"))");
-                                                                    }, 4000);
-                                                                } else {
-                                                                    noty({
-                                                                        text: 'Không thể thêm nhà cung cấp',
-                                                                        type: 'warning',
-                                                                        dismissQueue: false,
-                                                                        layout: 'bottomLeft',
-                                                                        theme: 'defaultTheme',
-                                                                        timeout: 1000
-                                                                    });
-                                                                }
-                                                            },
-                                                            fail: function () {
-                                                                noty({
-                                                                    text: 'Đã có lỗi xảy ra',
-                                                                    type: 'error',
-                                                                    dismissQueue: false,
-                                                                    layout: 'bottomLeft',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 1000
-                                                                });
-                                                            }
-                                                        });
+                                                    window.setTimeout(function () {
+                                                        window.location.replace("@(Url.Action("SupplierIndex", "Supplier"))");
+                                                    }, 4000);
+                                                } else {
+                                                    noty({
+                                                        text: 'Không thể thêm nhà cung cấp',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                }
+                                            },
+                                            fail: function () {
+                                                noty({
+                                                    text: 'Đã có lỗi xảy ra',
+                                                    type: 'error',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                            }
+                                        });
                                 }
                             </script>
                         </button>
@@ -216,8 +248,4 @@
                 object.value = object.value.slice(0, object.maxLength);
         }
     </script>
-
-
-
-
 </section>

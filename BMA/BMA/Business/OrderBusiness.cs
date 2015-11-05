@@ -345,14 +345,14 @@ namespace BMA.Business
                     IsLoyal = false
                 };
                 List<Customer> customers = new List<Customer> { customer };
-
+                AccountBusiness accountBusiness = new AccountBusiness();
                 User user = new User
                 {
                     Fullname = newCustomer.CustomerName,
                     Email = newCustomer.CustomerEmail,
                     Username = newCustomer.Username,
                     //Bug Generate password
-                    Password = "123456"
+                    Password = accountBusiness.CreatePassword("123456")
                 };
 
                 Role role = db.Roles.FirstOrDefault(m => m.Name.Equals("Customer"));
@@ -620,6 +620,8 @@ namespace BMA.Business
                             m.TaxCode == inputCustomer.CustomerTaxCode);
                 if (checkUser == null && checkCustomer == null)
                 {
+                    AccountBusiness accountBusiness = new AccountBusiness();
+
                     // Create user
                     Role role = db.Roles.FirstOrDefault(m => m.Name.Equals("Customer"));
                     User user = new User
@@ -627,7 +629,7 @@ namespace BMA.Business
                         Username = inputCustomer.Username,
                         Email = inputCustomer.CustomerEmail,
                         // Bug Generate password
-                        Password = "123456",
+                        Password = accountBusiness.CreatePassword("123456"),
                         Role = role,
                         Fullname = inputCustomer.CustomerName
 
