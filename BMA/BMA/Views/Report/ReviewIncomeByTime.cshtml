@@ -54,10 +54,6 @@
         </div>
     </div>
     <!--Table-->
-    @*<div class="row" id="income-report-table">
-
-
-        </div>*@
     <div class="row">
         <div class="col-md-12">
             <div class="box box-primary">
@@ -84,7 +80,7 @@
                                     <td>@(weeklyResult.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                     <td>
                                         <a href="@(Url.Action("ReviewIncomeByTimeDetail", "Report", new { startDate = weeklyResult.StartDate.Value, endDate = weeklyResult.EndDate.Value }))" class="btn btn-info btn-xs">
-                                        <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
+                                            <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
                                         </a>
                                     </td>
                                 </tr>
@@ -233,15 +229,7 @@
                 }
             });
         });
-
-        @*function reload(input) {
-            var dateRange = input.split(" - ");
-            var start = dateRange[0];
-            var end = dateRange[1];
-            window.location.replace("@(Url.Action("ReviewIncomeByTime", "Report"))" + "?start=" + start + "&end=" + end);
-        }*@
         function myFctIn(area, ctx, data, statdata, posi, posj, othervars) {
-            var index = posj;
             $("#income-table tbody tr:nth-child(" + (posj + 1) + ")").addClass('selected').siblings().removeClass('selected');
         };
     </script>
