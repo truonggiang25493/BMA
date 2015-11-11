@@ -68,3 +68,6 @@ fieldset[disabled] .btn-cancel.active {
   color: #fff;
   background-color: #777;
 }
+.unborder {
+    border: 0;
+}

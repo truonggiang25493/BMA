@@ -196,15 +196,26 @@ namespace BMA.Controllers
 
         public ActionResult CancelOrderConfirm(int orderId, string strURL)
         {
-            try
+            // Check autherization
+            User customerUser = Session["User"] as User;
+            if (customerUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 3)
             {
-                OrderBusiness ob = new OrderBusiness();
-                ob.Cancel(orderId, 0, 0);
+                Session["Cart"] = null;
+                return RedirectToAction("Index", "Home");
             }
-            catch (DataException)
+            else
             {
-                return RedirectToAction("Index");
+                try
+                {
+                    OrderBusiness ob = new OrderBusiness();
+                    ob.Cancel(orderId, 0, 0, customerUser.UserId);
+                }
+                catch (DataException)
+                {
+                    return RedirectToAction("Index");
+                }
             }
+
             return Redirect(strURL);
         }
 
@@ -275,16 +286,27 @@ namespace BMA.Controllers
 
         public ActionResult CancelBothOrder(int orderId)
         {
-            try
+            // Check autherization
+            User customerUser = Session["User"] as User;
+            if (customerUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 3)
             {
-                OrderBusiness ob = new OrderBusiness();
-                ob.Cancel(orderId, 0, 0);
-                return RedirectToAction("ConfirmList", "CusManage");
+                Session["Cart"] = null;
+                return RedirectToAction("Index", "Home");
             }
-            catch (DataException)
+            else
             {
-                return RedirectToAction("Index");
-            }    
+                try
+                {
+                    OrderBusiness ob = new OrderBusiness();
+                    ob.Cancel(orderId, 0, 0, customerUser.UserId);
+                    return RedirectToAction("ConfirmList", "CusManage");
+                }
+                catch (DataException)
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+
         }
 
         //public ActionResult CancelBothOrderConfirm(int orderId, int oldOrderId)

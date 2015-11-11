@@ -259,6 +259,7 @@ namespace BMA.Business
                 return -4;
             }
             DbContextTransaction contextTransaction = db.Database.BeginTransaction();
+            DateTime now = DateTime.Now;
             #region Update OutputMaterial; ExportFrom and InputMaterial
             foreach (OrderItem orderItem in orderViewModel.Order.OrderItems)
             {
@@ -269,6 +270,7 @@ namespace BMA.Business
                     OutputMaterial outputMaterial = new OutputMaterial();
                     outputMaterial.ExportQuantity = materialViewModel.NeedQuantity;
                     outputMaterial.ProductMaterialId = materialViewModel.ProductMaterialId;
+                    outputMaterial.ExportTime = now;
                     outputMaterial.OrderItemId = orderItem.OrderItemId;
                     //Get list of InputMaterial available order by importTime descending
                     List<InputMaterial> tempList = db.InputMaterials.Where(
@@ -330,7 +332,7 @@ namespace BMA.Business
             }
             order.OrderStatus = 2;
             order.PlanDeliveryTime = deliveryTime;
-            order.ApproveTime = DateTime.Now;
+            order.ApproveTime = now;
             order.DepositAmount = deposit;
             order.StaffApproveUserId = staffUserId;
 
@@ -736,7 +738,7 @@ namespace BMA.Business
         }
 
 
-        public bool Cancel(int orderId, int returnDeposit, int isReturnDeposit)
+        public bool Cancel(int orderId, int returnDeposit, int isReturnDeposit, int userId)
         {
             Order order = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
             if (order != null)
@@ -816,8 +818,7 @@ namespace BMA.Business
                     // Change order status become "Hủy"
                     order.OrderStatus = 6;
                     order.CancelTime = DateTime.Now;
-                    //Temp Bug
-                    order.CancelUserId = 2;
+                    order.CancelUserId = userId;
 
                     db.SaveChanges();
                     // Commit transaction
@@ -849,6 +850,8 @@ namespace BMA.Business
                     }
                     // Update order status
                     order.OrderStatus = 6;
+                    order.CancelTime = DateTime.Now;
+                    order.CancelUserId = userId;
                     db.SaveChanges();
                 }
                 #endregion

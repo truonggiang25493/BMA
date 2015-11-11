@@ -1,0 +1,64 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ReviewRevenueByProduct</title>
+</head>
+<body>
+    <canvas id="canvas" height="600" width="1000"></canvas>
+    <script src="~/Scripts/ChartNew.js"></script>
+    <script type="text/javascript">
+        var linedata = {
+            labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7"],
+            datasets: [
+                {
+                    fillColor: "rgba(220,220,220,0.5)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointStrokeColor: "#fff",
+                    data: [1000000, 1500000, 1700000, 2500000, 1600000, 2570000, 1400000],
+                    title: "Năm 2014"
+                },
+                {
+                    fillColor: "rgba(151,187,205,0.5)",
+                    strokeColor: "rgba(151,187,205,1)",
+                    pointColor: "rgba(151,187,205,1)",
+                    pointStrokeColor: "#fff",
+                    data: [1300000, 1500000, 1400000, 1900000, 1600000, 1700000, 1000000],
+                    title: "Năm 2015"
+                }
+            ]
+        }
+        var opt1 = {
+            legend: true,
+            graphTitleFontSize: 18,
+            graphMin: 0,
+            responsive: true,
+            xAxisLabel: "Thời gian",
+            yAxisUnit: "đồng",
+            yAxisLabel: "Thu nhập",
+            thousandSeparator: ".",
+            // Specify the number of Y-scales to display
+            scaleOverride: true,
+            // The start value of the scale
+            scaleStartValue: 0,
+            // The number of Y-scales to display
+            scaleSteps: 5,
+            // The width between two Y-scale
+            scaleStepWidth: 500000,
+            // The space between the X Axis (on position 0) can be filled or not
+            datasetFill: false,
+            annotateDisplay: true
+
+        }
+        window.onload = function () {
+            new Chart(document.getElementById("canvas").getContext("2d")).Line(linedata, opt1);
+        }
+    </script>
+</body>
+</html>

@@ -65,6 +65,10 @@
                     <b>Tiền cọc hoàn trả: </b>
                     @(Model.Order.ReturnDeposit.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
                 </div>
+                <div class="row" style="margin-left: 1px;">
+                    <b>Người hủy: </b>
+                    @(Model.Order.User2.Fullname)
+                </div>
             }
             <div class="row" style="vertical-align: middle; margin-left: 1px;">
                 <b>Trạng thái: </b>
@@ -114,14 +118,14 @@
                     }
                     if (Model.Order.OrderStatus == 2 || Model.Order.OrderStatus == 3)
                     {
-                        <button class="btn btn-success btn-xs" onclick="openChangeOrderStatePopup(@Model.Order.OrderId, @Model.Order.OrderStatus)">
+                        <button class="btn btn-success btn-xs" id="changeOrderStatus" onclick="openChangeOrderStatePopup(@Model.Order.OrderId, @Model.Order.OrderStatus)">
                             <i class="fa fa-edit"></i>
                             Thay đổi
                         </button>
                     }
                     if (Model.Order.OrderStatus == 4)
                     {
-                        <button class="btn btn-success btn-xs" onclick="openChangeOrderStatePopup(@Model.Order.OrderId, @Model.Order.OrderStatus)">
+                        <button class="btn btn-success btn-xs" id="changeOrderStatus" onclick="openChangeOrderStatePopup(@Model.Order.OrderId, @Model.Order.OrderStatus)">
                             <i class="fa fa-edit"></i>
                             Thay đổi
                         </button>
@@ -191,6 +195,7 @@
                         }
 
                         function changeOrderState(orderId, orderStatus) {
+
                             $.ajax({
                                 "url": "@(Url.Action("ChangeOrderState", "Order"))",
                                 "method": "POST",
@@ -214,6 +219,7 @@
                                             }, 4000);
                                         }
                                         if (orderStatus === 3) {
+                                            $("#changeOrderStatus").attr("onclick", "");
                                             var n = noty({
                                                 text: 'Bạn có muốn xuất hóa đơn không ?',
                                                 buttons: [
@@ -261,7 +267,7 @@
                                         text: 'Đã có lỗi xảy ra',
                                         type: 'error',
                                         dismissQueue: false,
-                                        layout: 'bottomRight',
+                                        layout: 'topCenter',
                                         theme: 'defaultTheme',
                                         timeout: 2000
                                     });
@@ -632,6 +638,7 @@
                                         $("<input>", {
                                             "type": "radio",
                                             "name": "isDeposit",
+                                            "selected":"selected",
                                             "value": "no",
                                             "style": "margin-left: 10px",
                                             "data-role": "radio-is-deposit"
@@ -855,7 +862,7 @@
                                             theme: 'defaultTheme',
                                             timeout: 2000
                                         });
-                                        $("#deposit-amount").focus();
+                                        $("#deposit-amount").focus();F
                                     } else {
                                         $.ajax({
                                             url: "@Url.Action("ApproveOrder", "Order")",
