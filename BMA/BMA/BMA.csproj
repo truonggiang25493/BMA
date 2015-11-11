@@ -200,6 +200,7 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\TaxController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1379,6 +1380,9 @@
     <Content Include="Views\Order\ExportBill.cshtml" />
     <Content Include="Views\Customer\Contact\Index.cshtml" />
     <Content Include="Views\Customer\GetCustomerPartialView.cshtml" />
+    <Content Include="Views\CusManageOrder\ConfirmIndex.cshtml" />
+    <Content Include="Views\CusManageOrder\Index.cshtml" />
+    <Content Include="Views\CusManageOrder\OrderDetail.cshtml" />
     <Content Include="Views\DiscardInputMaterial\DiscardInputMaterialIndex.cshtml" />
     <Content Include="Views\DiscardInputMaterial\DiscardPartialView.cshtml" />
     <Content Include="Views\DiscardInputMaterial\DiscardView.cshtml" />
