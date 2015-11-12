@@ -32,7 +32,7 @@ namespace BMA.Controllers
         }
         #endregion
 
-        #region Get Input Material Detail
+        #region Get Supplier Detail
         public ActionResult SupplierDetail(int id)
         {
             ViewBag.TreeView = "supplier";
@@ -52,7 +52,6 @@ namespace BMA.Controllers
         [HttpPost]
         public int ChangeSupplierStatus(int id)
         {
-            SupplierBusiness supplierBusiness = new SupplierBusiness();
             Boolean result = SupplierBusiness.ChangeSupplierStatus(id);
             if (result)
             {
@@ -63,6 +62,16 @@ namespace BMA.Controllers
                 return 0;
             }
         }
+        #endregion
+
+        #region Get input bill by supplier
+
+        public ActionResult GetInputBillBySupplierTable(int id)
+        {
+            List<InputBill> inputBillBySupplierList = db.InputBills.Where(n => n.SupplierId == id).ToList();
+            return PartialView("InputBillBySupplier", inputBillBySupplierList);
+        }
+
         #endregion
 
         #region Edit Supplier View
@@ -145,5 +154,39 @@ namespace BMA.Controllers
 
         }
         #endregion
+
+        #region Check supplier information is exsited in database
+
+        [HttpPost]
+        public int CheckSupplierInfo(FormCollection form)
+        {
+            string supplierName = form["txtSupplierName"];
+            string supplierAddress = form["txtSupplierAddress"];
+            string supplierPhoneNumber = form["txtSupplierPhoneNumber"];
+            string supplierEmail = form["txtSupplierEmail"];
+            string supplierTaxCode = form["txtSupplierTaxCode"];
+
+            return supplierBusiness.CheckSupplierInfo(supplierName, supplierAddress, supplierPhoneNumber, supplierEmail, supplierTaxCode);
+        }
+        #endregion
+
+        #region Check supplier information is exsited in database when edit
+
+        [HttpPost]
+        public int CheckSupplierInfoInEdit(FormCollection form)
+        {
+            SupplierBusiness supplierBusiness = new SupplierBusiness();
+            string supplierName = form["txtSupplierName"];
+            string supplierAddress = form["txtSupplierAddress"];
+            string supplierPhoneNumber = form["txtSupplierPhoneNumber"];
+            string supplierEmail = form["txtSupplierEmail"];
+            string supplierTaxCode = form["txtSupplierTaxCode"];
+            int supplierId = Convert.ToInt32(form["SupplierId"]);
+
+            return supplierBusiness.CheckSupplierInfoInEdit(supplierName, supplierAddress, supplierPhoneNumber, supplierEmail, supplierTaxCode, supplierId);
+        }
+        #endregion
+
+
     }
 }

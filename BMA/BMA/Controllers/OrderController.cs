@@ -89,7 +89,7 @@ namespace BMA.Controllers
                 Order order = db.Orders.FirstOrDefault(m => m.OrderId == id);
                 if (order != null)
                 {
-                    order.CustomerEditingFlag = true;
+                    order.IsStaffEdit = true;
                     db.SaveChanges();
                 }
                 OrderBusiness orderBusiness = new OrderBusiness();
@@ -204,7 +204,8 @@ namespace BMA.Controllers
 
                     int orderId = Convert.ToInt32(form["orderId"]);
                     int deposit = Convert.ToInt32(form["deposit"]);
-                    DateTime deliveryDate = Convert.ToDateTime(form["deliveryDate"]);
+                    string deliveryDateString = form["deliveryDate"];
+                    DateTime deliveryDate = DateTime.ParseExact(deliveryDateString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
 
                     OrderBusiness orderBusiness = new OrderBusiness();
 
@@ -470,7 +471,7 @@ namespace BMA.Controllers
             else
             {
                 OrderBusiness orderBusiness = new OrderBusiness();
-                bool rs = orderBusiness.Cancel(orderId, returnDeposit, isReturnDeposit);
+                bool rs = orderBusiness.Cancel(orderId, returnDeposit, isReturnDeposit, staffUser.UserId);
                 // Call cancel order from OrderBusiness
                 if (rs)
                 {
@@ -754,5 +755,8 @@ namespace BMA.Controllers
 
 
         #endregion
+
+
+
     }
 }

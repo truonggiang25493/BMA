@@ -1,1 +1,62 @@
-﻿
+﻿@using System.Globalization
+@using BMA.Common
+@using BMA.Models
+@model IEnumerable<BMA.Models.InputBill>
+@{
+    ViewBag.Title = "Danh sách hóa đơn đầu vào";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+<section class="content-header">
+    <h1>Danh sách hóa đơn đầu vào</h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="box">
+        <!-- box-body -->
+        <div class="box-body">
+            <table id="example1" class="table table-hover table-bordered">
+                <thead style="font-weight: bold">
+                    <tr>
+
+                        <th>Mã hóa đơn</th>
+                        <th>Nhà cung cấp</th>
+                        <th>Ngày nhập</th>
+                        <th>Chi phí (Đã tính thuế)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (InputBill inputBill in Model)
+                    {
+                        <tr>
+                            <td>@inputBill.InputBillCode</td>
+                            <td>@inputBill.Supplier.SupplierName</td>
+                            <td>@inputBill.ImportDate.ToString("dd/MM/yyyy")</td>
+                            <td>@((inputBill.InputBillAmount + inputBill.InputTaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                            <td>
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputBillDetail", "InputBill", new {id = inputBill.InputBillId}))">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                </a>
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("EditSupplier", "Supplier", new {id = inputBill.InputBillId}))">
+                                    <i class="fa fa-edit" style="margin-right: 3px"></i>Sửa
+                                </a>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="box-footer">
+            <button class="btn btn-bitbucket pull-left" onclick="addNewInputMaterial()">
+                <i class="fa fa-edit" style="margin-right: 3px;"></i>Thêm mới
+                <script type="text/javascript">
+                    function addNewInputMaterial() {
+                        window.location.replace("@(Url.Action("AddSupplier", "Supplier"))");
+                    }
+                </script>
+            </button>
+        </div>
+    </div>
+</section>

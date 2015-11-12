@@ -20,36 +20,21 @@ namespace BMA.Controllers
 
 
         #region Get discard by input material id
+
         public ActionResult GetDiscardTable(int id)
         {
-            List<DiscardedInputMaterial> discardedInputMaterialList = db.DiscardedInputMaterials.Where(n => n.InputMaterialId == id).ToList();
-
-            if (discardedInputMaterialList != null)
-            {
-                return PartialView("DiscardPartialView", discardedInputMaterialList);
-            }
-            else
-            {
-                return null;
-            }
+            List<DiscardedInputMaterial> discardedInputMaterialList =
+                db.DiscardedInputMaterials.Where(n => n.InputMaterialId == id).ToList();
+            return PartialView("DiscardPartialView", discardedInputMaterialList);
         }
-        #endregion
 
-
-        #region Get Discard Input Material
-        public ActionResult DiscardInputMaterial()
-        {
-            
-            List<DiscardedInputMaterial> discardedInputMaterials = db.DiscardedInputMaterials.ToList();
-            return View(discardedInputMaterials);
-        }
         #endregion
 
         [HttpPost]
         #region Add discard for input material
         public int DiscardInputMaterial(FormCollection f, int inputMaterialId)
         {
-            InputMaterial inputMaterial = db.InputMaterials.SingleOrDefault(m => m.InputMaterialId==inputMaterialId);
+            InputMaterial inputMaterial = db.InputMaterials.SingleOrDefault(m => m.InputMaterialId == inputMaterialId);
             String discardQuantityString = f["discardQuantity"];
             String discardNote = f["discardNote"];
             DiscardedInputMaterial discardedInputMaterial = new DiscardedInputMaterial();
