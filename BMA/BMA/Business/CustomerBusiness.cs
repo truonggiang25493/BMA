@@ -8,11 +8,11 @@ namespace BMA.Business
 {
     public class CustomerBusiness
     {
-        private BMAEntities db;
+        static BMAEntities db;
 
         public CustomerBusiness()
         {
-            db = new BMAEntities();
+             db = new BMAEntities();
         }
 
         public List<Customer> GetCustomerList()
@@ -81,6 +81,56 @@ namespace BMA.Business
 
             }
             return false;
+        }
+        #endregion
+
+        #region Get customer index
+        public static List<Customer> GetCustomerIndex()
+        {
+            List<Customer> customerList = db.Customers.OrderBy(n => n.IsActive).ToList();
+            return customerList;
+        }
+        #endregion
+
+        #region View customer detail
+        public Customer GetCustomerDetail(int id)
+        {
+            Customer customerDetail = db.Customers.SingleOrDefault(n => n.CustomerId == id);
+            return customerDetail;
+        }
+        #endregion
+
+        #region Change customer status
+        public static bool ChangeCustomerStatus(int id)
+        {
+            var customerDetail = db.Customers.SingleOrDefault(n => n.CustomerId == id);
+            if (customerDetail != null)
+            {
+                if (customerDetail.IsActive)
+                {
+                    customerDetail.IsActive = false;
+
+                }
+                else
+                {
+                    customerDetail.IsActive = true;
+                }
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception)
+                {
+
+                    return false;
+                }
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
         }
         #endregion
 

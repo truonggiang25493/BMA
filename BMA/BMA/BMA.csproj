@@ -171,6 +171,7 @@
     <Compile Include="Business\CustomerBusiness.cs" />
     <Compile Include="Business\CustomerOrderBusiness.cs" />
     <Compile Include="Business\DiscardInputMaterialBusiness.cs" />
+    <Compile Include="Business\InputBillBusiness.cs" />
     <Compile Include="Business\InputMaterialBusiness.cs" />
     <Compile Include="Business\ManageMaterialBusiness.cs" />
     <Compile Include="Business\ManageProductBusiness.cs" />
@@ -1357,7 +1358,7 @@
     <Content Include="Views\Order\GetShortageMaterialList.cshtml" />
     <Content Include="Views\Order\ExportBill.cshtml" />
     <Content Include="Views\Customer\Contact\Index.cshtml" />
-    <Content Include="Views\Customer\GetCustomerPartialView.cshtml" />
+    <Content Include="Views\Order\GetCustomerPartialView.cshtml" />
     <Content Include="Views\CusManageOrder\ConfirmIndex.cshtml" />
     <Content Include="Views\CusManageOrder\Index.cshtml" />
     <Content Include="Views\CusManageOrder\OrderDetail.cshtml" />
@@ -1378,6 +1379,16 @@
     <Content Include="Views\Supplier\EditSupplier.cshtml" />
     <Content Include="Views\Supplier\SupplierDetail.cshtml" />
     <Content Include="Views\Supplier\SupplierIndex.cshtml" />
+    <Content Include="Views\Customer\CustomerIndex.cshtml" />
+    <Content Include="Views\Customer\CustomerDetail.cshtml" />
+    <Content Include="Views\Customer\OrderedByCustomerPartialView.cshtml" />
+    <Content Include="Views\Staff\AddStaff.cshtml" />
+    <Content Include="Views\InputBill\InputBillDetail.cshtml" />
+    <Content Include="Views\InputBill\InputMaterialInBillPartialView.cshtml" />
+    <Content Include="Views\InputBill\AddInputBill.cshtml" />
+    <Content Include="Views\InputBill\SupplierPartialView.cshtml" />
+    <Content Include="Views\Supplier\InputBillBySupplier.cshtml" />
+    <Content Include="Views\Staff\StaffEditInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

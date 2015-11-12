@@ -1,5 +1,4 @@
-﻿
-@using System.Globalization
+﻿@using System.Globalization
 @using BMA.Models
 @model BMA.Models.Staff
 
@@ -12,155 +11,140 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>Thông tin chi tiết nhân viên</h1>
+    <h1><i class="fa fa-user" style="margin-right: 5px"></i>Thông tin chi tiết nhân viên</h1>
 </section>
 <section class="content">
     <!--Title row-->
-    <form id="edit-input-material-form"></form>
-    <div class="row">
-        <!-- Info row -->
-        <div class="col-md-3">
-            <div class="box box-primary">
-                <div class="box-body box-profile">
-                    <h3 class="profile-username text-center">
-                        @Model.User.Fullname
-                    </h3>
-                    <ul class="list-group list-group-unbordered">
-                        <li class="list-group-item">
-                            <b>Tên tài khoản: </b>
-                            <a class="pull-right">@Model.User.Username</a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Số điện thoại: </b>
-                            <a class="pull-right">@Model.StaffPhoneNumber</a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Trạng thái: </b>
-                            @if (Model.IsActive)
-                            {
-                                <span class="label label-success">Đang hoạt động</span>
-                            }
-                            else
-                            {
-                                <span class="label label-danger">Ngừng hoạt động</span>
-                            }
-                        </li>
-
-                    </ul>
-                    <div class="row">
-                        <!-- Change stage button -->
-                        <div class="col-xs-12" style="text-align: center">
-
-                            <button class="btn btn-success" id="btn-approved" onclick="open_container(@(Model.StaffId));">
-                                <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>Thay đổi trạng thái
-                                <script type="text/javascript">
-                                    function open_container(id) {
-                                        var content = 'Bạn có muốn thay đổi trạng thái của nhân viên từ' + '@(Model.IsActive ? " đang hoạt động " : " ngừng hoạt động ")' + 'sang trạng thái' + '@(Model.IsActive ? " ngừng hoạt động " : " đang hoạt động ")' + 'không?';
-                                        var title = 'Thay đổi trạng thái nhân viên';
-                                        var footer = $("<div>", {
-                                            "class": "row",
-                                            "html": [
-                                                $("<button>", {
-                                                    "class": "btn btn-success pull-right",
-                                                    "style": "margin-right: 30%;",
-                                                    "onclick": "change_staff_status(" + id + ")",
-                                                    "html": "Đồng ý"
-                                                }),
-                                                $("<button>", {
-                                                    "class": "btn btn-danger",
-                                                    "style": "margin-right: 10px;",
-                                                    "data-dismiss": "modal",
-                                                    "html": "Hủy"
-                                                })
-                                            ]
-                                        });
-                                        setModalBox(title, content, footer[0].outerHTML);
-                                        $('#myModal').modal('show');
-                                    }
-
-                                    function setModalBox(title, content, footer) {
-                                        document.getElementById('popup-body').innerHTML = content;
-                                        document.getElementById('popup-title').innerHTML = title;
-                                        document.getElementById('popup-footer').innerHTML = footer;
-                                    }
-
-                                    function change_staff_status(id) {
-                                        $.ajax({
-                                            "url": "@(Url.Action("ChangeStaffStatus", "Staff"))",
-                                            "method": "POST",
-                                            "data": {
-                                                "id": id
-                                            },
-                                            "success": function (data) {
-                                                if (data === "1") {
-                                                    $('#myModal').modal('hide');
-                                                    window.location.replace("@Url.Action("StaffIndex", "Staff", Model.StaffId)");
-                                                } else {
-                                                    alert("Khong the");
+    
+        <div class="row">
+            <!-- Info row -->
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="box box-primary">
+                    <div class="box-body box-profile">
+                        <h3 class="profile-username text-center">
+                            @Model.User.Fullname
+                        </h3>
+                        <div class="nav-tabs-custom" style="margin-top: 5%">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a data-togged="tag" aria-expanded="true"> Thông tin chi tiết</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="activity">
+                                    <div class="post">
+                                        <p>
+                                            <div class="list-group-item">
+                                                <b>Tên tài khoản: </b>
+                                                <a class="col-lg-pull-2">@Model.User.Username</a>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <b>Địa chỉ: </b>
+                                                <a class="col-lg-pull-2">@Model.StaffAddress</a>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <b>Số điện thoại: </b>
+                                                <a class="col-lg-pull-2">@Model.StaffPhoneNumber</a>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <b>E-mail: </b>
+                                                <a class="col-lg-pull-2">@Model.User.Email</a>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <b>Trạng thái: </b>
+                                                @if (Model.IsActive)
+                                                {
+                                                    <span class="label label-success">Đang hoạt động</span>
+                                                    <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));">
+                                                        <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>Thay đổi trạng thái
+                                                    </button>
                                                 }
-                                            },
-                                            "fail": function (e) {
-                                                alert("Have error" + e);
-                                            }
-                                        });
+                                                else
+                                                {
+                                                    <span class="label label-danger">Ngừng hoạt động</span>
+                                                    <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));">
+                                                        <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>Thay đổi trạng thái
+                                                    </button>
+                                                }
+                                            </div>
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Comeback button -->
+                            <button class="btn btn-danger pull-left" style="margin-left: 25px;" onclick="comebackToIndex()">
+                                <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
+                                <script type="text/javascript">
+                                    function comebackToIndex() {
+                                        window.location.replace("@(Url.Action("StaffIndex", "Staff"))");
                                     }
                                 </script>
                             </button>
-
                         </div>
                     </div>
 
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
-            <div class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a data-togged="tag" aria-expanded="true"> Thông tin chi tiết</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="activity">
-                        <div class="post">
-                            <p>                               
-                                <div class="list-group-item">
-                                    <b>Địa chỉ: </b>
-                                    <a class="pull-right">@Model.StaffAddress</a>
-                                </div>
-                                <div class="list-group-item">
-                                    <b>E-mail: </b>
-                                    <a class="pull-right">@Model.User.Email</a>
-                                </div>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--Button-->
-    <div class="row">
-        <div class="col-xs-12">
-            <!-- Edit button -->
-            <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputMaterial()">
-                <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
-                <script type="text/javascript">
-                    function editInputMaterial() {
-                        window.location.replace("@(Url.Action("EditSupplier", "Supplier", new {@id = Model.StaffId}))");
-                    }
-                </script>
-
-            </button>
-            <!-- Comeback button -->
-            <button class="btn btn-danger" onclick="comebackToIndex()">
-                <i class="fa fa-edit" style="margin-left: 10px;"></i>Quay lại
-                <script type="text/javascript">
-                    function comebackToIndex() {
-                        window.location.replace("@(Url.Action("StaffIndex", "Staff"))");
-                    }
-                </script>
-            </button>
-        </div>
-    </div>
+        <div class="col-md-2"></div>
+    
 </section>
+<script type="text/javascript">
+    function open_container(id) {
+        var content = $("<div>", {
+            "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
+        });
+
+        var title = 'Thay đổi trạng thái nguyên liệu';
+        var footer = $("<div>", {
+            "class": "row",
+            "html": [
+                $("<button>", {
+                    "class": "btn btn-success pull-right",
+                    "style": "margin-right: 30%;",
+                    "onclick": "change_staff_status(" + id + ")",
+                    "html": "Đồng ý"
+                }),
+                $("<button>", {
+                    "class": "btn btn-danger",
+                    "style": "margin-right: 10px;",
+                    "data-dismiss": "modal",
+                    "html": "Hủy"
+                })
+            ]
+        });
+        setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+        $('#myModal').modal('show');
+    }
+
+    function setModalBox(title, content, footer) {
+        document.getElementById('popup-body').innerHTML = content;
+        document.getElementById('popup-title').innerHTML = title;
+        document.getElementById('popup-footer').innerHTML = footer;
+    }
+
+    function change_staff_status(id) {
+        $.ajax({
+            "url": "@(Url.Action("ChangeStaffStatus", "Staff"))",
+            "method": "POST",
+            "data": {
+                "id": id
+            },
+            "success": function (data) {
+                if (data === "1") {
+                    $('#myModal').modal('hide');
+                    window.location.replace("@Url.Action("StaffIndex", "Staff", Model.StaffId)");
+                } else {
+                    alert("Khong the");
+                }
+            },
+            "fail": function (e) {
+                alert("Have error" + e);
+            }
+        });
+    }
+</script>
