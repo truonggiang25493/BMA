@@ -1,12 +1,12 @@
 ﻿@model BMA.Models.ProductMaterial
 
 @{
-    ViewBag.Title = "Thêm mới";
+    ViewBag.Title = "Chỉnh sửa nguyên liệu";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 <section class="content-header">
     <h1>
-        Thêm mới nguyên liệu
+        Chỉnh sửa nguyên liệu
     </h1>
 </section>
 <section class="content">
@@ -22,20 +22,21 @@
                     <div class="box-body">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tên nguyên liệu <span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="txtName" value="" placeholder="Nhập tên nguyên liệu" id="materialName">
+                            <input type="text" class="form-control" name="txtName" value="@Model.ProductMaterialName" placeholder="Nhập tên nguyên liệu" id="materialName">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Đơn vị tính <span style="color:red">*</span></label><br />
-                            <input type="text" class="form-control" name="txtUnit" value="" placeholder="Nhập đơn vị" id="materialUnit">
-                        </div><div class="form-group">
-                            <label for="exampleInputEmail1">Số lượng tối thiểu <span style="color:red">*</span></label><br />
-                            <input type="text" class="form-control" name="txtSQuantity" value="" placeholder="Nhập đơn vị" id="materialSQuantity">
+                            <input type="text" class="form-control" name="txtUnit" value="@Model.ProductMaterialUnit" placeholder="Nhập đơn vị" id="materialUnit">
                         </div>
-                    </div><!-- /.box-body -->
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Số lượng tối thiểu <span style="color:red">*</span></label><br />
+                            <input type="text" class="form-control" name="txtSQuantity" value="@Model.StandardQuantity" placeholder="Nhập đơn vị" id="materialSQuantity">
+                        </div>
+                    </div>
                 </form>
 
                 <div class="box-footer">
-                    <button onclick="return checkValidate()" class="btn btn-danger" value="AddMaterial">Thêm mới</button>
+                    <button onclick="return checkValidate()" class="btn btn-danger" value="AddMaterial">Cập nhật</button>
                     <script type="text/javascript">
                         function checkValidate() {
                             var txtName = $("#materialName").val();
@@ -98,13 +99,13 @@
                                 });
                             } else {
                                 $.ajax({
-                                    "url": "@(Url.Action("AddMaterial", "ManageMaterial"))",
+                                    "url": "@(Url.Action("Edit", "ManageMaterial", new { materialId = Model.ProductMaterialId}))",
                                     "method": "POST",
                                     "data": $("#myForm").serialize(),
                                     "success": function (data) {
                                         if (data === "1") {
                                             noty({
-                                                text: 'Thêm mới nguyên liệu thành công',
+                                                text: 'Chỉnh sửa nguyên liệu thành công',
                                                 type: 'success',
                                                 dismissQueue: false,
                                                 layout: 'topCenter',

@@ -25,7 +25,6 @@ namespace BMA.Models
         public int Quantity { get; set; }
         public int RealPrice { get; set; }
         public int Amount { get; set; }
-        public int TaxAmount { get; set; }
     
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }

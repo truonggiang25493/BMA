@@ -20,12 +20,41 @@ namespace BMA.Business
             return productMaterial;
         }
 
-        public bool AddMaterial(string materialName, string materialUnit, int quantity)
+        public ProductMaterial GetMaterialDetail(int materialId)
+        {
+            var materialDetail = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == materialId);
+            return materialDetail;
+        }
+
+        public List<Recipe> GetListProduct(int materialId)
+        {
+            var lstProduct = db.Recipes.Where(p => p.ProductMaterialId == materialId).ToList();
+            return lstProduct;
+        }
+        public bool ChangeStatus(int materialId, bool status)
+        {
+            var material = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == materialId);
+            material.IsActive = status;
+            db.SaveChanges();
+            return true;
+        }
+
+        public bool Edit(int materialId, string materialName, string materialUnit, int materialSQuantity)
+        {
+            ProductMaterial productMaterial = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == materialId);
+            productMaterial.ProductMaterialName = materialName;
+            productMaterial.ProductMaterialUnit = materialUnit;
+            productMaterial.StandardQuantity = materialSQuantity;
+            db.SaveChanges();
+            return true;
+        }
+        public bool AddMaterial(string materialName, string materialUnit,int materialSQuantity)
         {
             ProductMaterial productMaterial = new ProductMaterial();
             productMaterial.ProductMaterialName = materialName;
             productMaterial.ProductMaterialUnit = materialUnit;
-            productMaterial.CurrentQuantity = quantity;
+            productMaterial.CurrentQuantity = 0;
+            productMaterial.StandardQuantity = materialSQuantity;
             productMaterial.IsActive = true;
             db.ProductMaterials.Add(productMaterial);
             db.SaveChanges();

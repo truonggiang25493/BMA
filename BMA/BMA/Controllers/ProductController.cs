@@ -15,7 +15,7 @@ namespace BMA.Controllers
     {
         //
         // GET: /Product/
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, FormCollection f)
         {
             ViewBag.Show = "product";
             int pageSize = 12;
@@ -24,6 +24,10 @@ namespace BMA.Controllers
             List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
             ViewBag.lstProductCart = lstProductCart;
             var lstProduct = pb.GetProduct().ToPagedList(pageNumber, pageSize);
+            if (!String.IsNullOrEmpty(f["txtSearch"]))
+            {
+                lstProduct = pb.SearchProduct(f["txtSearch"]).ToPagedList(pageNumber, pageSize);
+            }          
             return View(lstProduct);
         }
 

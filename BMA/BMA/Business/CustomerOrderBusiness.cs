@@ -86,7 +86,6 @@ namespace BMA.Business
                 orderDetail.Quantity = item.Quantity;
                 orderDetail.RealPrice = item.Price;
                 orderDetail.Amount = item.Total;
-                orderDetail.TaxAmount = Convert.ToInt32(item.Total * 0.1);
                 db.OrderItems.Add(orderDetail);
             }
             db.SaveChanges();
@@ -119,7 +118,6 @@ namespace BMA.Business
                 orderDetail.Quantity = item.Quantity;
                 orderDetail.RealPrice = item.Price;
                 orderDetail.Amount = item.Total;
-                orderDetail.TaxAmount = Convert.ToInt32(item.Total * 0.1);
                 db.OrderItems.Add(orderDetail);
             }
             db.SaveChanges();
@@ -161,7 +159,6 @@ namespace BMA.Business
                 orderDetail.Quantity = item.Quantity;
                 orderDetail.RealPrice = item.Price;
                 orderDetail.Amount = item.Total;
-                orderDetail.TaxAmount = Convert.ToInt32(item.Total * 0.1);
                 db.OrderItems.Add(orderDetail);
             }
             db.SaveChanges();

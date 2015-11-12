@@ -433,31 +433,11 @@
                 </div>
                 <div class="col-md-12">
                     <ul class="previous pull-right">
-                        <li style="display:inline;"><a data-target="#deleteAllConfirm" data-toggle="modal" onclick="return deleteBothPopup(@Model.OrderId)" class="btn btn-delete btn-sm" style="border: 1px solid black;"><i class="fa fa-close"></i> Hủy đơn hàng</a></li>
-                        <li style="display:inline;margin:0 10px;"><a data-target="#deleteChangeConfirm" data-toggle="modal" onclick="return deleteChangePopup(@Model.OrderId)" class="btn btn-deleteChange btn-sm" style="border: 1px solid black;"><i class="fa fa-close"></i> Hủy thay đổi</a> </li>
-                        <li style="display:inline;"><a data-target="#approveChangeConfirm" data-toggle="modal" onclick="return approveChangePopup(@Model.OrderId)" class="btn btn-edit btn-sm" style="border: 1px solid black;"><i class="fa fa-cog"></i> Xác nhận</a></li>
-                        @*<li style="display:inline;margin:0 10px;"><a href="@Url.Action("CancelOrderConfirm", "CusManage", new { @orderId = Model.OrderId })" class="btn btn-deleteChange btn-sm" style="border: 1px solid black;"><i class="fa fa-close"></i> Hủy thay đổi</a> </li>
-                        <li style="display:inline;"><a href="@Url.Action("AcceptEditedOrder", "CusManage", new { @orderId = Model.OrderId })" class="btn btn-edit btn-sm" style="border: 1px solid black;"><i class="fa fa-cog"></i> Xác nhận</a></li>*@
+                        <li style="display:inline;"><a data-target="#deleteAllConfirm" data-toggle="modal" class="btn btn-delete btn-sm" style="border: 1px solid black;"><i class="fa fa-close"></i> Hủy đơn hàng</a></li>
+                        <li style="display:inline;margin:0 10px;"><a data-target="#deleteChangeConfirm" data-toggle="modal" class="btn btn-deleteChange btn-sm" style="border: 1px solid black;"><i class="fa fa-close"></i> Hủy thay đổi</a> </li>
+                        <li style="display:inline;"><a data-target="#approveChangeConfirm" data-toggle="modal" class="btn btn-edit btn-sm" style="border: 1px solid black;"><i class="fa fa-cog"></i> Xác nhận</a></li>
                     </ul>
                 </div>
-
-                <script type="text/javascript">
-                    var deleteLink;
-                    function deleteBothPopup(orderId) {
-                        deleteBothLink = "/CusManage/CancelBothOrder?orderId=" + orderId;
-                        $('#deleteAllConfirm #deleteBothRequest').attr("href", deleteBothLink);
-                    }
-
-                    function deleteChangePopup(orderId) {
-                        deleteEditedLink = "/CusManage/CancelEditedOrder?orderId=" + orderId;
-                        $('#deleteChangeConfirm #deleteChangeRequest').attr("href", deleteEditedLink);
-                    }
-
-                    function approveChangePopup(orderId) {
-                        approveLink = "/CusManage/AcceptEditedOrder?orderId=" + orderId;
-                        $('#approveChangeConfirm #approveRequest').attr("href", approveLink);
-                    }
-                </script>
 
                 <div class="col-lg-12 clearfix">
                     <ul class="pager">
@@ -481,7 +461,7 @@
                         <li> <span class="address-line1"> Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc. Quý khách có muốn hủy đơn hàng này không ? </span></li>
                     </ul>
                 </div>
-                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="deleteBothRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
+                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return deleteBoth(@Model.OrderId)" id="deleteBothRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
             </div>
         </div>
 
@@ -495,7 +475,7 @@
                         <li> <span class="address-line1"> Nếu hủy thay đổi thì đơn hàng sẽ như cũ. Quý khách có muốn hủy thay đổi không ? </span></li>
                     </ul>
                 </div>
-                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="deleteChangeRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
+                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return deleteEdited(@Model.OrderId)" id="deleteChangeRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
             </div>
         </div>
 
@@ -506,13 +486,110 @@
                 </div>
                 <div class="panel-body">
                     <ul>
-                        <li> <span class="address-line1"> Sau khi xác nhận, đơn hàng sẽ được tiến hành. Cám ơn quý khách. </span></li>
+                        <li> <span class="address-line1"> Sau khi xác nhận, đơn hàng sẽ được tiến hành. Xác nhận ?</span></li>
                     </ul>
                 </div>
-                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="approveRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
+                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return approveEdited(@Model.OrderId)" id="approveRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
             </div>
         </div>
 
+        <script type="text/javascript">
+            function deleteBoth(orderId) {
+                $.ajax({
+                    url: "/CusManage/CancelBothOrder?orderId=" + orderId,
+                    data: "/CusManage/CancelBothOrder?orderId=" + orderId,
+                    success: function (data) {
+                        if (data === "1") {
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("ConfirmList", "CusManage"))");
+                            }, 1500);
+                            noty({
+                                text: 'Hủy đơn hàng thành công',
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    fail: function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                })
+            }
+
+            function deleteEdited(orderId) {
+                $.ajax({
+                    url: "/CusManage/CancelEditedOrder?orderId=" + orderId,
+                    data: "/CusManage/CancelEditedOrder?orderId=" + orderId,
+                    success: function (data) {
+                        if (data === "1") {
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("ConfirmList", "CusManage"))");
+                            }, 3000);
+                            noty({
+                                text: 'Hủy đơn hàng chỉnh sửa thành công',
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    fail: function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                })
+            }
+
+            function approveEdited(orderId) {
+                $.ajax({
+                    url: "/CusManage/AcceptEditedOrder?orderId=" + orderId,
+                    data: "/CusManage/AcceptEditedOrder?orderId=" + orderId,
+                    success: function (data) {
+                        if (data === "1") {
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("ConfirmList", "CusManage"))");
+                            }, 1500);
+                            noty({
+                                text: 'Chấp nhận đơn hàng thành công. Đơn hàng sẽ được tiến hành, cám ơn quý khách.',
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });                         
+                        }
+                    },
+                    fail: function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                })
+            }
+        </script>
     </div>
 
     <div style="clear:both"></div>

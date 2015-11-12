@@ -139,11 +139,10 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-<<<<<<< HEAD
-                            <li><a href="@Url.Action("AddProduct", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
-=======
-                            <li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
->>>>>>> 1d0ab64994e6cf30f3c65e1a389b7111901dee1e
+                            <li><a href="@Url.Action("AddProduct", "ManageProduct" )"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+
+                            @*<li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>*@
+
                         </ul>
                     </li>
                     <li class="treeview">
@@ -305,15 +304,15 @@
     <script src="~/Scripts/moment-with-locales.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     @RenderSection("InitScript", false)
-<<<<<<< HEAD
+
     @RenderSection("AddInputMaterialScript", false)
-=======
+
     @RenderSection("OrderDetailScript", false)
     @RenderSection("CheckoutWithCustomerScript", false)
     @RenderSection("AddCustomerToOrderScript", false)
     @RenderSection("EditOrderScript", false)
     @RenderSection("AddOrderScript", false)
->>>>>>> 1d0ab64994e6cf30f3c65e1a389b7111901dee1e
+
     <script>
         $(function () {
             $('#example2').DataTable({
