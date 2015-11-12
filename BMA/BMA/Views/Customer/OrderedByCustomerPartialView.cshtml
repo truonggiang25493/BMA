@@ -1,0 +1,78 @@
+﻿@using BMA.Models
+@model List<Order>
+
+
+<div class="box-body">
+    <table id="example" class="table table-bordered table-striped dataTable">
+        <thead style="font-weight: bold">
+            <tr class="row">
+                <th class="col-md-3" style="text-align: center">Mã đơn hàng</th>
+                <th class="col-md-3" style="text-align: center">Ngày khởi tạo</th>
+                <th class="col-md-3" style="text-align: center">Trạng thái</th>
+                <th class="col-md-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Order order in Model)
+            {
+                <tr class="row">
+                    <td class="col-md-3" style="text-align: center">
+                        <span>@(order.OrderCode)</span>
+                    </td>
+                    <td style="text-align: center" class="col-md-3">
+                        <span>@(@order.CreateTime.ToString("dd/MM/yyyy"))</span>
+                    </td>
+                    <td style="text-align: left" class="col-md-3">
+                        @if (order.OrderStatus == 0)
+                        {
+                            <span class="label label-danger">Chờ xử lí</span>
+                        }
+                        else if (order.OrderStatus == 1)
+                        {
+                            <span class="label label-warning">Chờ xác nhận</span>
+                        }
+                        else if (order.OrderStatus == 2)
+                        {
+                            <span class="label label-primary">Đã duyệt</span>
+                        }
+                        else if (order.OrderStatus == 3)
+                        {
+                            <span class="label label-info">Đang sản xuất</span>
+                        }
+                        else if (order.OrderStatus == 4)
+                        {
+                            <span class="label label-info">Đang giao hàng</span>
+                        }
+                        else if (order.OrderStatus == 5)
+                        {
+                            <span class="label label-success">Đã hoàn thành</span>
+                        }
+                        else if (order.OrderStatus == 6)
+                        {
+                            <span class="label label-default">Hủy</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "Order", new {id = order.OrderId}))">
+                            <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                            Xem
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "iDisplayLength": 5,
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": false,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>

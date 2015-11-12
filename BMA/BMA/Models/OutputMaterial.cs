@@ -14,21 +14,19 @@ namespace BMA.Models
     
     public partial class OutputMaterial
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OutputMaterial()
         {
-            this.ExportFroms = new HashSet<ExportFrom>();
+            this.ExportFrom = new HashSet<ExportFrom>();
         }
     
         public int OutputMaterialId { get; set; }
         public int ExportQuantity { get; set; }
-        public Nullable<System.DateTime> ExportTime { get; set; }
+        public Nullable<System.DateTime> ExportDate { get; set; }
         public string OutputMaterialNote { get; set; }
         public int ProductMaterialId { get; set; }
         public int OrderItemId { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ExportFrom> ExportFroms { get; set; }
+        public virtual ICollection<ExportFrom> ExportFrom { get; set; }
         public virtual OrderItem OrderItem { get; set; }
         public virtual ProductMaterial ProductMaterial { get; set; }
     }

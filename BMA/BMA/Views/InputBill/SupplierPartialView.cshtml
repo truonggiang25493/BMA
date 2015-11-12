@@ -1,0 +1,34 @@
+﻿@using BMA.Models
+@model List<BMA.Models.Supplier>
+
+<h3 style="text-align: center">Danh sách nhà cung cấp</h3>
+
+<div class="box-body">
+    <table id="example2" data-role="supplier" class="table table-bordered customer-table">
+        <thead style="font-weight: bold">
+            <tr>
+                <th>Tên nhà cung cấp</th>
+                <th>Số điện thoại</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (Supplier supplier in Model)
+            {
+                if (supplier.IsActive)
+                {
+                    <tr>
+                        <td>
+                            <span>@(supplier.SupplierName)</span>
+                            <input type="hidden" name="txtSupplierId" value="@supplier.SupplierId" />
+                        </td>
+                        <td>
+                            @(supplier.SupplierPhoneNumber)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

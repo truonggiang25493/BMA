@@ -14,10 +14,9 @@ namespace BMA.Models
     
     public partial class Order
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Order()
         {
-            this.OrderItems = new HashSet<OrderItem>();
+            this.OrderItem = new HashSet<OrderItem>();
             this.Orders1 = new HashSet<Order>();
         }
     
@@ -48,14 +47,11 @@ namespace BMA.Models
         public int DiscountAmount { get; set; }
     
         public virtual GuestInfo GuestInfo { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderItem> OrderItem { get; set; }
         public virtual ICollection<Order> Orders1 { get; set; }
-        public virtual Order Order1 { get; set; }
+        public virtual Order Orders2 { get; set; }
         public virtual OutputBill OutputBill { get; set; }
         public virtual User User { get; set; }
         public virtual User User1 { get; set; }
-        public virtual User User2 { get; set; }
     }
 }

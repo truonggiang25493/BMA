@@ -1,0 +1,117 @@
+﻿@using System.Globalization
+@using BMA.Models
+@model BMA.Models.InputBill
+
+
+
+@{
+    ViewBag.Title = "Chi tiết hóa đơn đầu vào";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1 style="text-align: center">Chi tiết hóa đơn đầu vào</h1>
+</section>
+<section class="content">
+    <!--Title row-->
+    <form id="edit-input-material-form"></form>
+    <div class="row">
+        <!-- Info row -->
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <h3 class="profile-username text-center">
+                        Mã hóa đơn: @Model.InputBillCode
+                    </h3>
+                    <div style="margin-top: 5%"></div>
+                    <div class="nav-tabs-custom" style="margin-top: 5%">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#supplierInformation" data-toggle="tab">Thông tin chi tiết</a></li>
+                            <li><a href="#inputMaterialList" data-toggle="tab">Danh sách hóa đơn đã nhập</a></li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <!-- Input Bill Infomation -->
+                            <div class="active tab-pane" id="supplierInformation">
+                                <p>
+                                    <div class="list-group-item">
+                                        <b>Nhà cung cấp: </b>
+                                        <a class="col-lg-pull-2">@Model.Supplier.SupplierName</a>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <b>Ngày nhập: </b>
+                                        <a class="col-lg-pull-2">@Model.ImportDate.ToString("dd/MM/yyyy")</a>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <b>Chi phí (Chưa tính thuế): </b>
+                                        <a class="col-lg-pull-2">@Model.InputBillAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</a>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <b>Thuế (VAT): </b>
+                                        <a class="col-lg-pull-2">@Model.InputTaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</a>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <b>Tổng cộng (Đã có thuế): </b>
+                                        <a></a>
+                                        <a class="col-lg-pull-2">@((Model.InputBillAmount + Model.InputTaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</a>
+                                    </div>
+                                </p>
+                            </div>
+                            <!-- Input Material in Input Bill List -->
+                            <div class="tab-pane" id="inputMaterialList">
+                                <div class="row" id="inputMaterialTable">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Change stage button -->
+                        <div class="col-xs-12" style="text-align: center">
+                            <!-- Edit button -->
+                            <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputBill()">
+                                <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
+                                <script type="text/javascript">
+                                    function editInputBill() {
+                                        window.location.replace("@(Url.Action("EditSupplier", "Supplier", new {@id = Model.SupplierId}))");
+                                    }
+                                </script>
+                            </button>
+                            <!-- Comeback button -->
+                            <button class="btn btn-success pull-left" style="margin-left: 25px;" onclick="comebackToIndex()">
+                                <i class="fa fa-arrow-left" style="margin-right: 2px;"></i>Quay lại trang danh sách
+                                <script type="text/javascript">
+                                    function comebackToIndex() {
+                                        window.location.replace("@(Url.Action("InputBillIndex", "InputBill"))");
+                                    }
+                                </script>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+</section>
+<!-- Get Input Material Table by Input Bill -->
+@section InputBillDetailScript{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.ajax({
+                url: "@(Url.Action("GetInputMaterialInBill", "InputBill", new {id = Model.InputBillId}))",
+                method: "GET",
+                success: function(data) {
+                    $("#inputMaterialTable").html(data);
+                },
+                fail: function(e) {
+                    alert(e.toString());
+                }
+            });
+        });
+    </script>
+}

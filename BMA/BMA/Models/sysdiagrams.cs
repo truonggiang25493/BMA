@@ -12,19 +12,12 @@ namespace BMA.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class GuestInfo
+    public partial class sysdiagrams
     {
-        public GuestInfo()
-        {
-            this.Orders = new HashSet<Order>();
-        }
-    
-        public int GuestInfoId { get; set; }
-        public string GuestInfoName { get; set; }
-        public string GuestInfoPhone { get; set; }
-        public string GuestInfoAddress { get; set; }
-        public string GuestInfoEmail { get; set; }
-    
-        public virtual ICollection<Order> Orders { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }
