@@ -1,22 +1,21 @@
 ﻿@model BMA.Models.Product
 
 @{
-    ViewBag.Title = "Chỉnh sửa";
+    ViewBag.Title = "Thêm sản phẩm";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
     IEnumerable<BMA.Models.Category> cg = ViewBag.category;
-    IEnumerable<BMA.Models.Recipe> materialList = ViewBag.materialList;
 }
 
 <section class="content-header">
     <h1>
-        Sửa thông tin sản phẩm
+        Thêm mới sản phẩm
     </h1>
 </section>
 <!-- Main content -->
 <section class="content">
     <div class="row">
         <!-- left column -->
-        <form role="form" action="/ManageProduct/Edit" id="myForm" method="post" enctype="multipart/form-data">
+        <form role="form" action="/ManageProduct/AddProduct" id="productInforForm" method="post">
             <div class="col-md-6">
                 <!-- general form elements -->
                 <div class="box box-success">
@@ -29,32 +28,32 @@
                     <div class="box-body">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tên sản phẩm <span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="productName" value="@Model.ProductName" placeholder="Nhập tên sản phẩm" id="productName" required>
+                            <input type="text" class="form-control" name="productName" value="" placeholder="Nhập tên sản phẩm" id="productName" required>
                             @Html.ValidationMessageFor(model => model.ProductName)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Đơn vị tính <span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="productUnit" value="@Model.Unit" placeholder="Nhập đơn vị" id="productUnit" required>
+                            <input type="text" class="form-control" name="productUnit" value="" placeholder="Nhập đơn vị" id="productUnit" required>
                             @Html.ValidationMessageFor(model => model.Unit)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Trọng lượng (gam)<span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="productWeight" value="@Model.ProductWeight" min="100" max="2000" placeholder="Nhập trọng lượng bánh" id="productWeight" required>
+                            <input type="text" class="form-control" name="productWeight" value="" min="100" max="2000" placeholder="Nhập trọng lượng bánh" id="productWeight" required>
                             @Html.ValidationMessageFor(model => model.ProductWeight)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Mô tả sản phẩm</label>
-                            <textarea rows="3" class="form-control" name="productDes" placeholder="Mô tả" id="productDes">@Model.Descriptions</textarea>
+                            <textarea rows="3" class="form-control" name="productDes" placeholder="Mô tả" id="productDes"></textarea>
                             @Html.ValidationMessageFor(model => model.Descriptions)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Ghi chú</label>
-                            <input type="text" class="form-control" name="productNote" value="@Model.Note" placeholder="Ghi chú" id="productNote">
+                            <input type="text" class="form-control" name="productNote" value="" placeholder="Ghi chú" id="productNote">
                             @Html.ValidationMessageFor(model => model.Note)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Giá gốc (ngàn đồng)<span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="productPrice" value="@Model.ProductStandardPrice" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
+                            <input type="text" class="form-control" name="productPrice" value="" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
                             @Html.ValidationMessageFor(model => model.ProductStandardPrice)
                         </div>
                         <div class="form-group">
@@ -70,7 +69,7 @@
                 </div><!-- /.box -->
             </div><!--/.col (left) -->
         </form>
-        <form role="form" action="/ManageProduct/EditImage" id="imageForm" method="post" enctype="multipart/form-data">
+        <form role="form" action="/ManageProduct/AddImage" id="imageForm" method="post" enctype="multipart/form-data">
             <div class="col-md-6">
                 <!-- Horizontal Form -->
                 <div class="box box-info">
@@ -82,12 +81,12 @@
                     <div class="box-body">
                         <div class="form-group" style="margin-left:0px;">
                             <label for="exampleInputFile">Hình ảnh</label>
-                            <input type="file" value="@Model.ProductImage" name="file" id="file" onchange="show(this)">
+                            <input type="file" value="" name="file" id="file" onchange="show(this)">
                             <div style="margin-top:10px;">
                                 <img id="user_img"
                                      height="300"
                                      width="506"
-                                     style="border:solid" src="@Url.Content("/Content/Images/BakeryImages/" + @Model.ProductImage)"/>
+                                     style="border:solid" />
                             </div>
                             <script type="text/javascript">
                                 function show(input) {
@@ -121,26 +120,7 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach (var item in materialList)
-                                {
-                                    <tr>
-                                        <td style="vertical-align: middle;">
-                                            @(item.ProductMaterial.ProductMaterialName)
-                                            <input type="hidden" name="productId" value="@(item.ProductMaterial.ProductMaterialId)" />
-                                        </td>
-                                        <td style="vertical-align: middle;">
-                                            <input type="number" name="productQuantity" min="1" value="@(item.RecipeQuantity)" />
-                                        </td>
-                                        <td style="vertical-align: middle;">
-                                            <span id="orderItemAmount">@item.ProductMaterial.ProductMaterialUnit</span>
-                                        </td>
-                                        <td style="text-align: center; vertical-align: middle;">
-                                            <a class="btn btn-warning" data-role="remove-row-btn">Hủy</a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </form>
                     <div class="box-footer">
@@ -150,9 +130,6 @@
                             function show_ListMaterial() {
                                 $.ajax({
                                     url: "@(Url.Action("GetListMaterialToAdd", "ManageProduct"))",
-                                    data: {
-                                        productId: "@Model.ProductId"
-                                    },
                                     method: "POST",
                                     success: function (data) {
                                         document.getElementById('standard-popup-title').innerHTML = "Chọn nguyên liệu";
@@ -178,7 +155,7 @@
 
 
                                 $.ajax({
-                                    "url": "@Url.Action("RemoveMaterialInProductList", "ManageProduct")",
+                                    "url": "@Url.Action("RemoveMaterialFromListToAdd", "ManageProduct")",
                                     "method": "POST",
                                     "data": JSON.stringify({ "materialId": selectedIds }),
                                     "dataType": 'json',
@@ -206,7 +183,7 @@
                                                                 "type": "number",
                                                                 "name": "productQuantity",
                                                                 "value": "1",
-                                                                "min": "1"
+                                                                "min": "1",
                                                             })
                                                         }),
                                                         $("<td>", {
@@ -247,7 +224,7 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <button type="submit" class="btn btn-primary" onclick="return checkValidate()" value="EditMaterial">Cập nhật</button>
+            <button type="submit" class="btn btn-primary" onclick="return checkValidate()" value="AddMaterial">Thêm mới</button>
             <script type="text/javascript">
                 function getFileName(s) {
                     var n = s.lastIndexOf("\\");
@@ -268,10 +245,6 @@
 
                     var lstId = [];
                     var lstQuantity = [];
-
-                    if (fileName == "") {
-                        fileName = "@Model.ProductImage";
-                    }
                     $("#material-table tbody tr").each(function (index, element) {
                         lstId.push($(element).find("td:first input").val());
                         lstQuantity.push($(element).find("td:nth-child(2) input").val());
@@ -430,10 +403,9 @@
                             "success": function (data) {
                                 if (data === 1) {
                                     $.ajax({
-                                        "url": "@(Url.Action("Edit", "ManageProduct", new { ProductId = @Model.ProductId}))",
+                                        "url": "@(Url.Action("AddProduct", "ManageProduct"))",
                                         "method": "POST",
                                         "data": JSON.stringify({
-                                            "productId": "@(Model.ProductId)",
                                             "productName": txtName,
                                             "productUnit": txtUnit,
                                             "productWeight": txtWeight,
@@ -451,7 +423,7 @@
                                         "success": function (data) {
                                             if (data === 2) {
                                                 noty({
-                                                    text: 'Chỉnh sửa sản phẩm thành công',
+                                                    text: 'Thêm sản phẩm thành công',
                                                     type: 'success',
                                                     dismissQueue: false,
                                                     layout: 'topCenter',
@@ -544,7 +516,7 @@
             var materialId = $(this).parent().parent().find("td:first input").val();
             $(this).parent().parent().remove();
             $.ajax({
-                "url": "@(Url.Action("AddMaterialInMaterialList", "ManageProduct"))",
+                "url": "@(Url.Action("AddMaterialInMaterialListToAdd", "ManageProduct"))",
                 "method": "POST",
                 "data": {
                     "materialId": materialId

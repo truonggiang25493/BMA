@@ -14,12 +14,14 @@ namespace BMA.Models
     
     public partial class User
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
-            this.Customer = new HashSet<Customer>();
+            this.Customers = new HashSet<Customer>();
             this.Orders = new HashSet<Order>();
             this.Orders1 = new HashSet<Order>();
-            this.Staff = new HashSet<Staff>();
+            this.Orders2 = new HashSet<Order>();
+            this.Staffs = new HashSet<Staff>();
         }
     
         public int UserId { get; set; }
@@ -30,10 +32,16 @@ namespace BMA.Models
         public string Email { get; set; }
         public bool IsConfirmed { get; set; }
     
-        public virtual ICollection<Customer> Customer { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Customer> Customers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order> Orders2 { get; set; }
         public virtual Role Role { get; set; }
-        public virtual ICollection<Staff> Staff { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Staff> Staffs { get; set; }
     }
 }

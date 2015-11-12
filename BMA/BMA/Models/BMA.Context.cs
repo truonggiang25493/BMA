@@ -27,31 +27,31 @@ namespace BMA.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Category> Category { get; set; }
-        public virtual DbSet<Customer> Customer { get; set; }
-        public virtual DbSet<DiscardedInputMaterial> DiscardedInputMaterial { get; set; }
-        public virtual DbSet<DiscountByQuantity> DiscountByQuantity { get; set; }
-        public virtual DbSet<ExportFrom> ExportFrom { get; set; }
-        public virtual DbSet<GuestInfo> GuestInfo { get; set; }
-        public virtual DbSet<InputBill> InputBill { get; set; }
-        public virtual DbSet<InputMaterial> InputMaterial { get; set; }
-        public virtual DbSet<OrderItem> OrderItem { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<DiscardedInputMaterial> DiscardedInputMaterials { get; set; }
+        public virtual DbSet<DiscountByQuantity> DiscountByQuantities { get; set; }
+        public virtual DbSet<ExportFrom> ExportFroms { get; set; }
+        public virtual DbSet<GuestInfo> GuestInfoes { get; set; }
+        public virtual DbSet<InputBill> InputBills { get; set; }
+        public virtual DbSet<InputMaterial> InputMaterials { get; set; }
+        public virtual DbSet<OrderItem> OrderItems { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<OtherExpense> OtherExpense { get; set; }
-        public virtual DbSet<OutputBill> OutputBill { get; set; }
-        public virtual DbSet<OutputMaterial> OutputMaterial { get; set; }
-        public virtual DbSet<Policy> Policy { get; set; }
-        public virtual DbSet<Product> Product { get; set; }
-        public virtual DbSet<ProductMaterial> ProductMaterial { get; set; }
-        public virtual DbSet<Recipe> Recipe { get; set; }
-        public virtual DbSet<Role> Role { get; set; }
-        public virtual DbSet<Staff> Staff { get; set; }
-        public virtual DbSet<StoreInfo> StoreInfo { get; set; }
-        public virtual DbSet<Supplier> Supplier { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
-        public virtual DbSet<TaxRate> TaxRate { get; set; }
-        public virtual DbSet<TaxType> TaxType { get; set; }
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<OtherExpense> OtherExpenses { get; set; }
+        public virtual DbSet<OutputBill> OutputBills { get; set; }
+        public virtual DbSet<OutputMaterial> OutputMaterials { get; set; }
+        public virtual DbSet<Policy> Policies { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ProductMaterial> ProductMaterials { get; set; }
+        public virtual DbSet<Recipe> Recipes { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Staff> Staffs { get; set; }
+        public virtual DbSet<StoreInfo> StoreInfoes { get; set; }
+        public virtual DbSet<Supplier> Suppliers { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<TaxRate> TaxRates { get; set; }
+        public virtual DbSet<TaxType> TaxTypes { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     
         public virtual ObjectResult<sp_GetIncomeMonthly_Result> sp_GetIncomeMonthly(Nullable<int> startMonth, Nullable<int> startYear, Nullable<int> endMonth, Nullable<int> endYear)
         {

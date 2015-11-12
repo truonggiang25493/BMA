@@ -86,7 +86,6 @@ namespace BMA.Business
                 orderDetail.Quantity = item.Quantity;
                 orderDetail.RealPrice = item.Price;
                 orderDetail.Amount = item.Total;
-                //orderDetail.TaxAmount = Convert.ToInt32(item.Total * 0.1);
                 db.OrderItems.Add(orderDetail);
             }
             db.SaveChanges();
@@ -119,7 +118,6 @@ namespace BMA.Business
                 orderDetail.Quantity = item.Quantity;
                 orderDetail.RealPrice = item.Price;
                 orderDetail.Amount = item.Total;
-                //orderDetail.TaxAmount = Convert.ToInt32(item.Total * 0.1);
                 db.OrderItems.Add(orderDetail);
             }
             db.SaveChanges();
@@ -161,7 +159,6 @@ namespace BMA.Business
                 orderDetail.Quantity = item.Quantity;
                 orderDetail.RealPrice = item.Price;
                 orderDetail.Amount = item.Total;
-                //orderDetail.TaxAmount = Convert.ToInt32(item.Total * 0.1);
                 db.OrderItems.Add(orderDetail);
             }
             db.SaveChanges();
@@ -233,21 +230,12 @@ namespace BMA.Business
         public bool checkUserDuplicate(string Email, string phoneNumber)
         {
             var checkUser = db.Users.SingleOrDefault(n => n.Email == Email);
-            if (checkUser != null)
+            var checkCustomer = db.Customers.SingleOrDefault(n => n.UserId == checkUser.UserId);
+            if (checkUser == null && checkCustomer.CustomerPhoneNumber == phoneNumber)
             {
-                return false;
+                return true;
             }
-            var checkStaff = db.Staffs.SingleOrDefault(s => s.StaffPhoneNumber.Equals((phoneNumber)));
-            if (checkStaff != null)
-            {
-                return false;
-            }
-            var checkCustomer = db.Customers.SingleOrDefault(s => s.CustomerPhoneNumber.Equals((phoneNumber)));
-            if (checkCustomer != null)
-            {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public DiscountByQuantity checkDiscount(int quantity)

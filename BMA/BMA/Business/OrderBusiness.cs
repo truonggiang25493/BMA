@@ -376,7 +376,7 @@ namespace BMA.Business
             {
                 db.SaveChanges();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return 0;
             }
