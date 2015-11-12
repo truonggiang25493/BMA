@@ -157,7 +157,7 @@
           </Key>
           <Property Name="OutputMaterialId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ExportQuantity" Type="int" Nullable="false" />
-          <Property Name="ExportDate" Type="date" />
+          <Property Name="ExportTime" Type="datetime" />
           <Property Name="OutputMaterialNote" Type="nvarchar" MaxLength="500" />
           <Property Name="ProductMaterialId" Type="int" Nullable="false" />
           <Property Name="OrderItemId" Type="int" Nullable="false" />
@@ -445,6 +445,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Orders_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="CancelUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_User_CustomerOrder">
           <End Role="User" Type="Self.User" Multiplicity="0..1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -657,6 +669,10 @@
             <End Role="OutputBill" EntitySet="OutputBill" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
+          <AssociationSet Name="FK_Orders_User" Association="Self.FK_Orders_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
           <AssociationSet Name="FK_Orders_User_CustomerOrder" Association="Self.FK_Orders_User_CustomerOrder">
             <End Role="User" EntitySet="User" />
             <End Role="Orders" EntitySet="Orders" />
@@ -703,6 +719,20 @@
     <edmx:ConceptualModels>
       <Schema Namespace="BMAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="BMAEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="sp_GetIncomeMonthly" ReturnType="Collection(BMAModel.sp_GetIncomeMonthly_Result)">
+            <Parameter Name="startMonth" Mode="In" Type="Int32" />
+            <Parameter Name="startYear" Mode="In" Type="Int32" />
+            <Parameter Name="endMonth" Mode="In" Type="Int32" />
+            <Parameter Name="endYear" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetIncomeWeekly" ReturnType="Collection(BMAModel.sp_GetIncomeWeekly_Result)">
+            <Parameter Name="start_Date" Mode="In" Type="DateTime" />
+            <Parameter Name="end_Date" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetIncomeYearly" ReturnType="Collection(BMAModel.sp_GetIncomeYearly_Result)">
+            <Parameter Name="startYear" Mode="In" Type="Int32" />
+            <Parameter Name="endYear" Mode="In" Type="Int32" />
+          </FunctionImport>
           <EntitySet Name="Categories" EntityType="BMAModel.Category" />
           <EntitySet Name="Customers" EntityType="BMAModel.Customer" />
           <EntitySet Name="DiscardedInputMaterials" EntityType="BMAModel.DiscardedInputMaterial" />
@@ -788,6 +818,10 @@
             <End Role="OutputBill" EntitySet="OutputBills" />
             <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
+          <AssociationSet Name="FK_Orders_User" Association="BMAModel.FK_Orders_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
           <AssociationSet Name="FK_Orders_User_CustomerOrder" Association="BMAModel.FK_Orders_User_CustomerOrder">
             <End Role="User" EntitySet="Users" />
             <End Role="Order" EntitySet="Orders" />
@@ -820,21 +854,29 @@
             <End Role="TaxType" EntitySet="TaxTypes" />
             <End Role="TaxRate" EntitySet="TaxRates" />
           </AssociationSet>
-          <FunctionImport Name="sp_GetIncomeMonthly" ReturnType="Collection(BMAModel.sp_GetIncomeMonthly_Result)">
-            <Parameter Name="startMonth" Mode="In" Type="Int32" />
-            <Parameter Name="startYear" Mode="In" Type="Int32" />
-            <Parameter Name="endMonth" Mode="In" Type="Int32" />
-            <Parameter Name="endYear" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="sp_GetIncomeWeekly" ReturnType="Collection(BMAModel.sp_GetIncomeWeekly_Result)">
-            <Parameter Name="start_Date" Mode="In" Type="DateTime" />
-            <Parameter Name="end_Date" Mode="In" Type="DateTime" />
-          </FunctionImport>
-          <FunctionImport Name="sp_GetIncomeYearly" ReturnType="Collection(BMAModel.sp_GetIncomeYearly_Result)">
-            <Parameter Name="startYear" Mode="In" Type="Int32" />
-            <Parameter Name="endYear" Mode="In" Type="Int32" />
-          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="sp_GetIncomeMonthly_Result">
+          <Property Type="Int32" Name="MonthNo" Nullable="true" />
+          <Property Type="Int32" Name="YearNo" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
+          <Property Type="Int32" Name="OtherExpense" Nullable="true" />
+          <Property Type="Int32" Name="Income" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetIncomeWeekly_Result">
+          <Property Type="DateTime" Name="StartDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
+          <Property Type="Int32" Name="Income" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetIncomeYearly_Result">
+          <Property Type="Int32" Name="YearNo" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
+          <Property Type="Int32" Name="OtherExpense" Nullable="true" />
+          <Property Type="Int32" Name="Income" Nullable="true" />
+        </ComplexType>
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -982,8 +1024,9 @@
           <NavigationProperty Name="Orders1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order" ToRole="Order1" />
           <NavigationProperty Name="Order1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order1" ToRole="Order" />
           <NavigationProperty Name="OutputBill" Relationship="BMAModel.FK_Orders_OutputBill_OutputBillId" FromRole="Order" ToRole="OutputBill" />
-          <NavigationProperty Name="User" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="Order" ToRole="User" />
-          <NavigationProperty Name="User1" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="Order" ToRole="User" />
+          <NavigationProperty Name="User" Relationship="BMAModel.FK_Orders_User" FromRole="Order" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="Order" ToRole="User" />
+          <NavigationProperty Name="User2" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="Order" ToRole="User" />
         </EntityType>
         <EntityType Name="OtherExpense">
           <Key>
@@ -1012,7 +1055,7 @@
           </Key>
           <Property Name="OutputMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ExportQuantity" Type="Int32" Nullable="false" />
-          <Property Name="ExportDate" Type="DateTime" Precision="0" />
+          <Property Name="ExportTime" Type="DateTime" Precision="3" />
           <Property Name="OutputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
           <Property Name="OrderItemId" Type="Int32" Nullable="false" />
@@ -1160,8 +1203,9 @@
           <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Customers" Relationship="BMAModel.FK_Customer_User" FromRole="User" ToRole="Customer" />
-          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="User" ToRole="Order" />
-          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_User" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="Orders2" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="User" ToRole="Order" />
           <NavigationProperty Name="Role" Relationship="BMAModel.FK_User_Role" FromRole="User" ToRole="Role" />
           <NavigationProperty Name="Staffs" Relationship="BMAModel.FK_Staff_User" FromRole="User" ToRole="Staff" />
         </EntityType>
@@ -1345,6 +1389,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Orders_User">
+          <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="CancelUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_User_CustomerOrder">
           <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
           <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
@@ -1441,34 +1497,46 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="sp_GetIncomeMonthly_Result">
-          <Property Type="Int32" Name="MonthNo" Nullable="true" />
-          <Property Type="Int32" Name="YearNo" Nullable="true" />
-          <Property Type="Int32" Name="Revenue" Nullable="true" />
-          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
-          <Property Type="Int32" Name="OtherExpense" Nullable="true" />
-          <Property Type="Int32" Name="Income" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="sp_GetIncomeWeekly_Result">
-          <Property Type="DateTime" Name="StartDate" Nullable="true" Precision="23" />
-          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="Revenue" Nullable="true" />
-          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
-          <Property Type="Int32" Name="Income" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="sp_GetIncomeYearly_Result">
-          <Property Type="Int32" Name="YearNo" Nullable="true" />
-          <Property Type="Int32" Name="Revenue" Nullable="true" />
-          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
-          <Property Type="Int32" Name="OtherExpense" Nullable="true" />
-          <Property Type="Int32" Name="Income" Nullable="true" />
-        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BMAModelStoreContainer" CdmEntityContainer="BMAEntities">
+          <FunctionImportMapping FunctionImportName="sp_GetIncomeMonthly" FunctionName="BMAModel.Store.sp_GetIncomeMonthly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetIncomeMonthly_Result">
+                <ScalarProperty Name="MonthNo" ColumnName="MonthNo" />
+                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
+                <ScalarProperty Name="OtherExpense" ColumnName="OtherExpense" />
+                <ScalarProperty Name="Income" ColumnName="Income" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetIncomeWeekly" FunctionName="BMAModel.Store.sp_GetIncomeWeekly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetIncomeWeekly_Result">
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
+                <ScalarProperty Name="Income" ColumnName="Income" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetIncomeYearly" FunctionName="BMAModel.Store.sp_GetIncomeYearly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetIncomeYearly_Result">
+                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
+                <ScalarProperty Name="OtherExpense" ColumnName="OtherExpense" />
+                <ScalarProperty Name="Income" ColumnName="Income" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="BMAModel.Category">
               <MappingFragment StoreEntitySet="Category">
@@ -1632,7 +1700,7 @@
                 <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
                 <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
                 <ScalarProperty Name="OutputMaterialNote" ColumnName="OutputMaterialNote" />
-                <ScalarProperty Name="ExportDate" ColumnName="ExportDate" />
+                <ScalarProperty Name="ExportTime" ColumnName="ExportTime" />
                 <ScalarProperty Name="ExportQuantity" ColumnName="ExportQuantity" />
                 <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
               </MappingFragment>
@@ -1776,40 +1844,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="sp_GetIncomeMonthly" FunctionName="BMAModel.Store.sp_GetIncomeMonthly">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="BMAModel.sp_GetIncomeMonthly_Result">
-                <ScalarProperty Name="MonthNo" ColumnName="MonthNo" />
-                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
-                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
-                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
-                <ScalarProperty Name="OtherExpense" ColumnName="OtherExpense" />
-                <ScalarProperty Name="Income" ColumnName="Income" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_GetIncomeWeekly" FunctionName="BMAModel.Store.sp_GetIncomeWeekly">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="BMAModel.sp_GetIncomeWeekly_Result">
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
-                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
-                <ScalarProperty Name="Income" ColumnName="Income" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_GetIncomeYearly" FunctionName="BMAModel.Store.sp_GetIncomeYearly">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="BMAModel.sp_GetIncomeYearly_Result">
-                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
-                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
-                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
-                <ScalarProperty Name="OtherExpense" ColumnName="OtherExpense" />
-                <ScalarProperty Name="Income" ColumnName="Income" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

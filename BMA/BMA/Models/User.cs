@@ -20,8 +20,8 @@ namespace BMA.Models
             this.Customers = new HashSet<Customer>();
             this.Orders = new HashSet<Order>();
             this.Orders1 = new HashSet<Order>();
-            this.Staffs = new HashSet<Staff>();
             this.Orders2 = new HashSet<Order>();
+            this.Staffs = new HashSet<Staff>();
         }
     
         public int UserId { get; set; }
@@ -38,10 +38,10 @@ namespace BMA.Models
         public virtual ICollection<Order> Orders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order> Orders2 { get; set; }
         public virtual Role Role { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Staff> Staffs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order> Orders2 { get; set; }
     }
 }

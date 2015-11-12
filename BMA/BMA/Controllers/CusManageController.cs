@@ -204,7 +204,8 @@ namespace BMA.Controllers
             try
             {
                 OrderBusiness ob = new OrderBusiness();
-                ob.Cancel(orderId, 0, 0);
+                int userId = Convert.ToInt32(Session["UserId"]);
+                ob.Cancel(orderId, 0, 0, userId);
             }
             catch (DataException)
             {
@@ -283,7 +284,8 @@ namespace BMA.Controllers
             try
             {
                 OrderBusiness ob = new OrderBusiness();
-                ob.Cancel(orderId, 0, 0);
+                int userId = Convert.ToInt32(Session["UserId"]);
+                ob.Cancel(orderId, 0, 0, userId);
                 return 1;
             }
             catch (DataException)
