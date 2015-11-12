@@ -16,8 +16,8 @@ namespace BMA.Models
     {
         public Product()
         {
-            this.OrderItem = new HashSet<OrderItem>();
-            this.Recipe = new HashSet<Recipe>();
+            this.OrderItems = new HashSet<OrderItem>();
+            this.Recipes = new HashSet<Recipe>();
         }
     
         public int ProductId { get; set; }
@@ -33,7 +33,7 @@ namespace BMA.Models
         public string ProductCode { get; set; }
     
         public virtual Category Category { get; set; }
-        public virtual ICollection<OrderItem> OrderItem { get; set; }
-        public virtual ICollection<Recipe> Recipe { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }

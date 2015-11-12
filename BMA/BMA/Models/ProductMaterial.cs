@@ -16,9 +16,9 @@ namespace BMA.Models
     {
         public ProductMaterial()
         {
-            this.InputMaterial = new HashSet<InputMaterial>();
-            this.OutputMaterial = new HashSet<OutputMaterial>();
-            this.Recipe = new HashSet<Recipe>();
+            this.InputMaterials = new HashSet<InputMaterial>();
+            this.OutputMaterials = new HashSet<OutputMaterial>();
+            this.Recipes = new HashSet<Recipe>();
         }
     
         public int ProductMaterialId { get; set; }
@@ -28,8 +28,8 @@ namespace BMA.Models
         public Nullable<int> StandardQuantity { get; set; }
         public bool IsActive { get; set; }
     
-        public virtual ICollection<InputMaterial> InputMaterial { get; set; }
-        public virtual ICollection<OutputMaterial> OutputMaterial { get; set; }
-        public virtual ICollection<Recipe> Recipe { get; set; }
+        public virtual ICollection<InputMaterial> InputMaterials { get; set; }
+        public virtual ICollection<OutputMaterial> OutputMaterials { get; set; }
+        public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }

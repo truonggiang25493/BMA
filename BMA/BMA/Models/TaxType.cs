@@ -16,7 +16,7 @@ namespace BMA.Models
     {
         public TaxType()
         {
-            this.TaxRate = new HashSet<TaxRate>();
+            this.TaxRates = new HashSet<TaxRate>();
         }
     
         public int TaxTypeID { get; set; }
@@ -25,6 +25,6 @@ namespace BMA.Models
         public string Condition { get; set; }
         public string Abbreviation { get; set; }
     
-        public virtual ICollection<TaxRate> TaxRate { get; set; }
+        public virtual ICollection<TaxRate> TaxRates { get; set; }
     }
 }

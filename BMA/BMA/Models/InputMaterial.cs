@@ -16,7 +16,7 @@ namespace BMA.Models
     {
         public InputMaterial()
         {
-            this.DiscardedInputMaterial = new HashSet<DiscardedInputMaterial>();
+            this.DiscardedInputMaterials = new HashSet<DiscardedInputMaterial>();
         }
     
         public int InputMaterialId { get; set; }
@@ -30,7 +30,7 @@ namespace BMA.Models
         public int ProductMaterialId { get; set; }
         public bool IsActive { get; set; }
     
-        public virtual ICollection<DiscardedInputMaterial> DiscardedInputMaterial { get; set; }
+        public virtual ICollection<DiscardedInputMaterial> DiscardedInputMaterials { get; set; }
         public virtual InputBill InputBill { get; set; }
         public virtual ProductMaterial ProductMaterial { get; set; }
     }

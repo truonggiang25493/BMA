@@ -16,7 +16,7 @@ namespace BMA.Models
     {
         public Order()
         {
-            this.OrderItem = new HashSet<OrderItem>();
+            this.OrderItems = new HashSet<OrderItem>();
             this.Orders1 = new HashSet<Order>();
         }
     
@@ -47,11 +47,12 @@ namespace BMA.Models
         public int DiscountAmount { get; set; }
     
         public virtual GuestInfo GuestInfo { get; set; }
-        public virtual ICollection<OrderItem> OrderItem { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<Order> Orders1 { get; set; }
-        public virtual Order Orders2 { get; set; }
+        public virtual Order Order1 { get; set; }
         public virtual OutputBill OutputBill { get; set; }
         public virtual User User { get; set; }
         public virtual User User1 { get; set; }
+        public virtual User User2 { get; set; }
     }
 }

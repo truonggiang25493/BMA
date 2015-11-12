@@ -16,7 +16,7 @@ namespace BMA.Models
     {
         public Supplier()
         {
-            this.InputBill = new HashSet<InputBill>();
+            this.InputBills = new HashSet<InputBill>();
         }
     
         public int SupplierId { get; set; }
@@ -27,6 +27,6 @@ namespace BMA.Models
         public string SupplierTaxCode { get; set; }
         public bool IsActive { get; set; }
     
-        public virtual ICollection<InputBill> InputBill { get; set; }
+        public virtual ICollection<InputBill> InputBills { get; set; }
     }
 }

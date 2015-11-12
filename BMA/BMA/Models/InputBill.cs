@@ -16,8 +16,8 @@ namespace BMA.Models
     {
         public InputBill()
         {
-            this.ExportFrom = new HashSet<ExportFrom>();
-            this.InputMaterial = new HashSet<InputMaterial>();
+            this.ExportFroms = new HashSet<ExportFrom>();
+            this.InputMaterials = new HashSet<InputMaterial>();
         }
     
         public int InputBillId { get; set; }
@@ -28,8 +28,8 @@ namespace BMA.Models
         public Nullable<int> SupplierId { get; set; }
         public System.DateTime ImportDate { get; set; }
     
-        public virtual ICollection<ExportFrom> ExportFrom { get; set; }
+        public virtual ICollection<ExportFrom> ExportFroms { get; set; }
         public virtual Supplier Supplier { get; set; }
-        public virtual ICollection<InputMaterial> InputMaterial { get; set; }
+        public virtual ICollection<InputMaterial> InputMaterials { get; set; }
     }
 }

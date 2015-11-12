@@ -16,7 +16,7 @@ namespace BMA.Models
     {
         public OrderItem()
         {
-            this.OutputMaterial = new HashSet<OutputMaterial>();
+            this.OutputMaterials = new HashSet<OutputMaterial>();
         }
     
         public int OrderItemId { get; set; }
@@ -26,8 +26,8 @@ namespace BMA.Models
         public int RealPrice { get; set; }
         public int Amount { get; set; }
     
-        public virtual Order Orders { get; set; }
+        public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }
-        public virtual ICollection<OutputMaterial> OutputMaterial { get; set; }
+        public virtual ICollection<OutputMaterial> OutputMaterials { get; set; }
     }
 }

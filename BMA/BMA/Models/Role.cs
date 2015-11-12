@@ -16,12 +16,12 @@ namespace BMA.Models
     {
         public Role()
         {
-            this.User = new HashSet<User>();
+            this.Users = new HashSet<User>();
         }
     
         public int RoleId { get; set; }
         public string Name { get; set; }
     
-        public virtual ICollection<User> User { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

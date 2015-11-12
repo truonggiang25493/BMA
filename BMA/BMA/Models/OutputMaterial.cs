@@ -16,17 +16,17 @@ namespace BMA.Models
     {
         public OutputMaterial()
         {
-            this.ExportFrom = new HashSet<ExportFrom>();
+            this.ExportFroms = new HashSet<ExportFrom>();
         }
     
         public int OutputMaterialId { get; set; }
         public int ExportQuantity { get; set; }
-        public Nullable<System.DateTime> ExportDate { get; set; }
+        public Nullable<System.DateTime> ExportTime { get; set; }
         public string OutputMaterialNote { get; set; }
         public int ProductMaterialId { get; set; }
         public int OrderItemId { get; set; }
     
-        public virtual ICollection<ExportFrom> ExportFrom { get; set; }
+        public virtual ICollection<ExportFrom> ExportFroms { get; set; }
         public virtual OrderItem OrderItem { get; set; }
         public virtual ProductMaterial ProductMaterial { get; set; }
     }
