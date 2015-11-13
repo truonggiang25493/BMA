@@ -19,6 +19,25 @@ namespace BMA.Business
             return lstProducts;
         }
 
+        public List<Product> SearchProduct(string searchString)
+        {
+            var lstProducts = db.Products.Where(n => n.ProductName.Contains(searchString) && n.IsActive).ToList();
+            return lstProducts;
+        }
+
+        public List<Product> SearchMaterial(string searchString)
+        {
+            var material = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialName.Contains(searchString));
+            var lstProductIds = db.Recipes.Where(n=>n.ProductMaterialId == material.ProductMaterialId).Select(n => n.ProductId).ToList();
+            Product product;
+            List<Product> lstProducts = new List<Product>();
+            foreach (var item in lstProductIds)
+            {
+                product = db.Products.SingleOrDefault(n => n.ProductId == item && n.IsActive);
+                lstProducts.Add(product);
+            }
+            return lstProducts;
+        }
         public List<Product> GetOtherProduct(int productId)
         {
             List<Product> lstProducts = db.Products.Where(n => n.IsActive && n.ProductId != productId).ToList();

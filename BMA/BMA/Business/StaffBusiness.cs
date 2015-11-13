@@ -11,7 +11,6 @@ namespace BMA.Business
         private static BMAEntities db = new BMAEntities();
 
         #region Get staff list
-
         public List<Staff> GetStaffList()
         {
             List<Staff> staffList = db.Staffs.OrderBy(n => n.IsActive).ToList();
@@ -49,6 +48,99 @@ namespace BMA.Business
                 catch (Exception)
                 {
 
+                    return false;
+                }
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
+
+        #region Add new staff
+        public static bool AddStaff(Staff staff)
+        {
+            if (staff == null)
+            {
+                return false;
+            }
+            try
+            {
+                db.Staffs.Add(staff);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                string s = e.ToString();
+                return false;
+            }
+            return true;
+        }
+        #endregion
+
+        #region Check Staff Infomation
+        public int CheckStaffInfo(string staffUserAccount, string staffPhoneNumber, string staffEmail)
+        {
+            User checkStaffUserName = db.Users.FirstOrDefault(m => m.Username.Equals(staffUserAccount.Trim()));
+            if (checkStaffUserName != null)
+            {
+                return 1;
+            }
+            Staff checkStaffPhoneNumber = db.Staffs.FirstOrDefault(m => m.StaffPhoneNumber.Equals(staffPhoneNumber.Trim()));
+            if (checkStaffPhoneNumber != null)
+            {
+                return 2;
+            }
+            User checkStaffEmail = db.Users.FirstOrDefault(m => m.Email.Equals(staffEmail.Trim()));
+            if (checkStaffEmail != null)
+            {
+                return 3;
+            }            
+            return 0;
+        }
+
+        #endregion
+
+        #region Check Staff Infomation When Editting
+        public int CheckStaffInfoInEdit(string staffPhoneNumber, string staffEmail, int id)
+        {
+            Staff checkStaffPhoneNumber = db.Staffs.FirstOrDefault(m => m.StaffPhoneNumber.Equals(staffPhoneNumber.Trim()) && m.UserId != id);
+            if (checkStaffPhoneNumber != null)
+            {
+                return 1;
+            }
+            User checkStaffEmail = db.Users.FirstOrDefault(m => m.Email.Equals(staffEmail.Trim()) && m.UserId != id);
+            if (checkStaffEmail != null)
+            {
+                return 2;
+            }
+            return 0;
+        }
+
+        #endregion
+
+        #region Edit supplier
+        public static bool EditStaffInfo(int staffId, String staffName, String staffAddress, String staffPhoneNumber, String staffEmail)
+        {
+            var staffDetail = db.Staffs.SingleOrDefault(n => n.StaffId == staffId);
+            if (staffDetail != null)
+            {
+                try
+                {
+                    staffDetail.StaffId = staffId;
+                    staffDetail.User.Fullname = staffName;
+                    staffDetail.User.Email = staffEmail;
+                    staffDetail.StaffAddress = staffAddress;
+                    staffDetail.StaffPhoneNumber = staffPhoneNumber;
+
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    string s = e.ToString();
                     return false;
                 }
                 return true;

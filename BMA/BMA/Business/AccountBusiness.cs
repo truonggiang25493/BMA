@@ -48,6 +48,16 @@ namespace BMA.Business
             User user = db.Users.SingleOrDefault(n => n.UserId == cusId);
             return user;
         }
+
+        public bool checkEmailExisted(int cusUserId,string Email)
+        {
+            var checkUser = db.Users.SingleOrDefault(n => n.Email == Email && n.UserId != cusUserId);
+            if (checkUser != null)
+            {
+                return true;
+            }
+            return false;
+        }
         public bool ChangeInformation(int cusId, string name, string email, string address, string taxCode, string phone)
         {
             User user = db.Users.SingleOrDefault(n => n.UserId == cusId);

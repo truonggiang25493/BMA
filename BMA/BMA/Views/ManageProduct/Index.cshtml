@@ -32,27 +32,45 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.ProductCode</td>
-                            <td>@item.ProductName</td>
-                            <td>@item.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                            <td class="col-md-2">@item.ProductCode</td>
+                            <td class="col-md-4">@item.ProductName</td>
+                            <td class="col-md-1">@item.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                             @{
-                            if (item.IsActive)
+                        if (item.IsActive)
+                        {
+                            <td class="col-md-2"><div class="label label-success">Đang sử dụng</div></td>
+                        }
+                        else
+                        {
+                            <td class="col-md-2"><div class="label label-default">Đã hủy</div></td>
+                        }
+                            }
+                            <td class="">
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "ManageProduct", new { ProductId = item.ProductId }))">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                                    Xem
+                                </a>
+                            </td>
+                            @if (item.IsActive)
                             {
-                                <td><div class="label label-success">Đang sử dụng</div></td>
+                                <td>
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "ManageProduct", new { ProductId = item.ProductId }))">
+                                        <i class="fa fa-edit" style="margin-right: 3px"></i>
+                                        Sửa
+                                    </a>
+                                </td>
                             }
                             else
                             {
-                                <td><div class="label label-default">Đã hủy</div></td>
+                                <td>
+
+                                </td>
                             }
-                            }
                             <td>
-                                @Html.ActionLink("Xem", "Detail", new { ProductId = item.ProductId })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Sửa", "Edit", new { ProductId = item.ProductId })
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductId, '@item.ProductName', '@strURL')">Đổi trạng thái</a>
+                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductId, '@item.ProductName', '@strURL')">
+                                    <i class="fa fa-refresh" style="margin-right: 3px"></i>
+                                    Đổi trạng thái
+                                </a>
                                 <script>
                                     function open_container(productId, productName, strURL, isActive) {
                                         var content =
@@ -63,7 +81,7 @@
                                                 '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
                                                 '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
                                                 '</div>' +
-                                                 '<div class="form-group">' +                                                 
+                                                 '<div class="form-group">' +
                                                  '<input type="radio" name="status" value="True" checked> Sử dụng' +
                                                 '</div>' +
                                                  '<div class="form-group">' +
@@ -91,6 +109,9 @@
                     }
                 </tbody>
             </table>
+            <div class="box-footer clearfix">
+                <a href="@Url.Action("AddProduct","ManageProduct")" class="btn btn-sm btn-info btn-flat pull-left">Thêm sản phẩm mới</a>
+            </div>
         </div>
     </div>
 </section>

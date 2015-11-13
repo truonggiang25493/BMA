@@ -3,78 +3,567 @@
 @{
     ViewBag.Title = "Chỉnh sửa";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
+    IEnumerable<BMA.Models.Category> cg = ViewBag.category;
+    IEnumerable<BMA.Models.Recipe> materialList = ViewBag.materialList;
 }
+
 <section class="content-header">
     <h1>
         Sửa thông tin sản phẩm
     </h1>
 </section>
+<!-- Main content -->
 <section class="content">
     <div class="row">
-        <div class="col-md-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Chi tiết sản phẩm</h3>
-                </div><!-- /.box-header -->
-                <!-- form start -->
-                <form role="form" action="/ManageProduct/Edit" method="post">
-                    @Html.HiddenFor(model => model.ProductId)
+        <!-- left column -->
+        <form role="form" action="/ManageProduct/Edit" id="myForm" method="post" enctype="multipart/form-data">
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Thông tin sản phẩm</h3><br />
+                        <label class="box-title" style="color:#ff0000">@TempData["Error"]</label>
+                    </div><!-- /.box-header -->
+                    <!-- form start -->
+                    @Html.AntiForgeryToken()
                     <div class="box-body">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Tên sản phẩm</label>
-                            <input type="text" class="form-control" name="productName" value="@Model.ProductName" id="" placeholder="">
+                            <label for="exampleInputEmail1">Tên sản phẩm <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productName" value="@Model.ProductName" placeholder="Nhập tên sản phẩm" id="productName" required>
+                            @Html.ValidationMessageFor(model => model.ProductName)
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Đơn vị tính</label><br />
-                            <select class="form-control" name="productUnit">
-                                @if (Model.Unit == "cái")
-                                {
-                                    <option value="Bịch">Bịch</option>
-                                    <option value="Cái" selected>Cái</option>
-                                }
-                                else
-                                {
-                                    <option value="Bịch" selected>Bịch</option>
-                                    <option value="Cái">Cái</option>
-                                }
-                            </select>
+                            <label for="exampleInputEmail1">Đơn vị tính <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productUnit" value="@Model.Unit" placeholder="Nhập đơn vị" id="productUnit" required>
+                            @Html.ValidationMessageFor(model => model.Unit)
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Trọng lượng</label>
-                            <input type="text" class="form-control" name="productWeight" value="@Model.ProductWeight" id="" placeholder="">
+                            <label for="exampleInputEmail1">Trọng lượng (gam)<span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productWeight" value="@Model.ProductWeight" min="100" max="2000" placeholder="Nhập trọng lượng bánh" id="productWeight" required>
+                            @Html.ValidationMessageFor(model => model.ProductWeight)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Mô tả sản phẩm</label>
-                            <input type="text" class="form-control" name="productDes" value="@Model.Descriptions" id="" placeholder="">
+                            <textarea rows="3" class="form-control" name="productDes" placeholder="Mô tả" id="productDes">@Model.Descriptions</textarea>
+                            @Html.ValidationMessageFor(model => model.Descriptions)
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Ghi chú</label>
-                            <input type="text" class="form-control" name="productNote" value="@Model.Note" id="" placeholder="">
+                            <input type="text" class="form-control" name="productNote" value="@Model.Note" placeholder="Ghi chú" id="productNote">
+                            @Html.ValidationMessageFor(model => model.Note)
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Giá gốc</label>
-                            <input type="text" class="form-control" name="productPrice" value="@Model.ProductStandardPrice" id="" placeholder="">
+                            <label for="exampleInputEmail1">Giá gốc (ngàn đồng)<span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productPrice" value="@Model.ProductStandardPrice" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
+                            @Html.ValidationMessageFor(model => model.ProductStandardPrice)
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Loại bánh</label>
-                            <input type="text" class="form-control" name="productCategory" value="@Model.Category.CategoryName" id="" placeholder="">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Mã sản phẩm</label>
-                            <input type="text" class="form-control" name="productCode" value="@Model.ProductCode" id="" placeholder="">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputFile">Hình ảnh</label>
-                            <input type="file" value="@Model.ProductImgage" name="productImage" id="exampleInputFile">
+                            <label for="exampleInputEmail1">Loại bánh <span style="color:red">*</span></label>
+                            <select class="form-control" name="dropCate" id="dropCate">
+                                @foreach (var item in cg)
+                                {
+                                    <option value="@item.CategoryId">@item.CategoryName</option>
+                                }
+                            </select>
                         </div>
                     </div><!-- /.box-body -->
-
-                    <div class="box-footer">
-                        <button type="submit" class="btn btn-primary">Thay đổi</button>
-                        <a style="float:right" href="@Url.Action("ProductMaterial", "ManageProduct", new { @ProductId = Model.ProductId})" class="btn btn-danger">Chỉnh sửa nguyên liệu</a>
-                    </div>
-                </form>
+                </div><!-- /.box -->
+            </div><!--/.col (left) -->
+        </form>
+        <form role="form" action="/ManageProduct/EditImage" id="imageForm" method="post" enctype="multipart/form-data">
+            <div class="col-md-6">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Hình ảnh sản phẩm</h3><br />
+                        <label class="box-title" style="color:#ff0000">@TempData["Message"]</label>
+                    </div><!-- /.box-header -->
+                    <!-- form start -->
+                    <div class="box-body">
+                        <div class="form-group" style="margin-left:0px;">
+                            <label for="exampleInputFile">Hình ảnh</label>
+                            <input type="file" value="@Model.ProductImage" name="file" id="file" onchange="show(this)">
+                            <div style="margin-top:10px;">
+                                <img id="user_img"
+                                     height="300"
+                                     width="506"
+                                     style="border:solid" src="@Url.Content("/Content/Images/BakeryImages/" + @Model.ProductImage)"/>
+                            </div>
+                            <script type="text/javascript">
+                                function show(input) {
+                                    if (input.files && input.files[0]) {
+                                        var filerdr = new FileReader();
+                                        filerdr.onload = function (e) {
+                                            $('#user_img').attr('src', e.target.result);
+                                        }
+                                        filerdr.readAsDataURL(input.files[0]);
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
             </div>
+        </form>
+        <div class="col-md-6">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Thêm nguyên liệu cho sản phẩm</h3>
+                </div>
+                <div class="box-body">
+                    <form id="updateCartForm" action="@Url.Action("UpdateProductMaterial", "ManageProduct")" method="post">
+                        <table id="material-table" class="table table-hover table-bordered">
+                            <thead style="font-weight: bold">
+                                <tr>
+                                    <th>Tên nguyên liệu</th>
+                                    <th>Số lượng</th>
+                                    <th>Đơn vị</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in materialList)
+                                {
+                                    <tr>
+                                        <td style="vertical-align: middle;">
+                                            @(item.ProductMaterial.ProductMaterialName)
+                                            <input type="hidden" name="productId" value="@(item.ProductMaterial.ProductMaterialId)" />
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            <input type="number" name="productQuantity" min="1" value="@(item.RecipeQuantity)" />
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            <span id="orderItemAmount">@item.ProductMaterial.ProductMaterialUnit</span>
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle;">
+                                            <a class="btn btn-warning" data-role="remove-row-btn">Hủy</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </form>
+                    <div class="box-footer">
+                        @*<a class="btn btn-primary" onclick="document.getElementById('updateCartForm').submit();"><i class="fa fa-refresh" style="margin-right: 3px"></i>Cập nhật</a>*@
+                        <a class="btn btn-success" onclick="show_ListMaterial()"><i class="fa fa-plus" style="margin-right: 3px"></i>Thêm nguyên liệu</a>
+                        <script type="text/javascript">
+                            function show_ListMaterial() {
+                                $.ajax({
+                                    url: "@(Url.Action("GetListMaterialToAdd", "ManageProduct"))",
+                                    data: {
+                                        productId: "@Model.ProductId"
+                                    },
+                                    method: "POST",
+                                    success: function (data) {
+                                        document.getElementById('standard-popup-title').innerHTML = "Chọn nguyên liệu";
+                                        document.getElementById('standard-popup-body').innerHTML = data;
+                                        $('#myStandardModal').modal('show');
+                                    },
+                                    fail: function (e) {
+                                        alert("Have error" + e.toString());
+                                    }
+                                });
+                            }
+
+                            function fnselect() {
+                                var selectedIds = [];
+                                var selectedName = [];
+                                var selectedUnit = [];
+
+                                $(".multiple-choice-table tr.selected").each(function (index, row) {
+                                    selectedIds.push($(row).find("td:first input").val());
+                                    selectedName.push($(row).find("td:first span").text());
+                                    selectedUnit.push($(row).find("td:nth-child(2) span").text());
+                                });
+
+
+                                $.ajax({
+                                    "url": "@Url.Action("RemoveMaterialInProductList", "ManageProduct")",
+                                    "method": "POST",
+                                    "data": JSON.stringify({ "materialId": selectedIds }),
+                                    "dataType": 'json',
+                                    "contentType": 'application/json',
+                                    "success": function (data) {
+                                        if (data === 1) {
+                                            $('#myStandardModal').modal('hide');
+                                            for (i = 0; i < selectedIds.length; i++) {
+                                                var productRow = $("<tr>", {
+                                                    "html": [
+                                                        $("<td>", {
+                                                            "style": "vertical-align: middle;",
+                                                            "html": [
+                                                                selectedName[i],
+                                                                $("<input>", {
+                                                                    "type": "hidden",
+                                                                    "name": "materialId",
+                                                                    "value": selectedIds[i]
+                                                                })
+                                                            ]
+                                                        }),
+                                                        $("<td>", {
+                                                            "style": "vertical-align: middle;",
+                                                            "html": $("<input>", {
+                                                                "type": "number",
+                                                                "name": "productQuantity",
+                                                                "value": "1",
+                                                                "min": "1"
+                                                            })
+                                                        }),
+                                                        $("<td>", {
+                                                            "style": "vertical-align: middle;",
+                                                            "html": [
+                                                                selectedUnit[i]
+                                                            ]
+                                                        }),
+                                                        $("<td>", {
+                                                            "style": "text-align: center; vertical-align: middle;",
+                                                            "html": $("<a>", {
+                                                                "class": "btn btn-warning",
+                                                                "data-role": "remove-row-btn",
+                                                                "html": "Hủy"
+                                                            })
+                                                        })
+                                                    ]
+                                                });
+                                                $("#material-table tbody").append(productRow);
+                                            }
+                                        } else {
+                                            alert("Không thể thêm nguyên liệu");
+                                        }
+                                    },
+                                    "fail": function (e) {
+                                        alert("Have error" + e.toString());
+                                    }
+                                });
+                            }
+                        </script>
+
+                        <a style="float:right" href="@Url.Action("AddMaterial", "ManageMaterial")" class="btn btn-danger">Tạo mới nguyên liệu</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary" onclick="return checkValidate()" value="EditMaterial">Cập nhật</button>
+            <script type="text/javascript">
+                function getFileName(s) {
+                    var n = s.lastIndexOf("\\");
+                    var result = s.substring(n + 1);
+                    return result;
+                }
+
+                function checkValidate() {
+                    var dataString;
+                    var txtName = $("#productName").val();
+                    var txtUnit = $("#productUnit").val();
+                    var txtWeight = $("#productWeight").val();
+                    var txtDes = $("#productDes").val();
+                    var txtNote = $("#productNote").val();
+                    var txtCate = $("#dropCate").val();
+                    var fileName = getFileName($("#file").val());
+                    var txtPrice = $("#productPrice").val();
+
+                    var lstId = [];
+                    var lstQuantity = [];
+
+                    if (fileName == "") {
+                        fileName = "@Model.ProductImage";
+                    }
+                    $("#material-table tbody tr").each(function (index, element) {
+                        lstId.push($(element).find("td:first input").val());
+                        lstQuantity.push($(element).find("td:nth-child(2) input").val());
+                        materialQuantity = $(element).find("td:nth-child(2) input").val();
+
+                    });
+                    var action = $("#imageForm").attr("action");
+
+                    if ($("#imageForm").attr("enctype") == "multipart/form-data") {
+                        dataString = new FormData($("#imageForm").get(0));
+                        contentType = false;
+                        processData = false;
+                    } else {
+
+                    }
+
+                    if (lstId.length == 0) {
+                        noty({
+                            text: 'Vui lòng thêm nguyên liệu cho sản phẩm.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                        //} else if (lstQuantity.length != 0) {
+                        //    lstQuantity = lstQuantity.toString().split(',');
+                        //    for (i = 0; i < lstQuantity.length ; i++) {
+                        //        if (lstQuantity[i] == 0 || lstQuantity[i] == "") {
+                        //            noty({
+                        //                text: 'Số lượng nguyên liệu phải lớn hơn 0 và không được bỏ trống.',
+                        //                type: 'warning',
+                        //                dismissQueue: false,
+                        //                layout: 'topCenter',
+                        //                theme: 'defaultTheme',
+                        //                timeout: 2000
+                        //            });
+                        //        }
+                        //    }
+                    } else if (txtName.trim() === '') {
+                        noty({
+                            text: 'Tên sản phẩm không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtUnit.trim() === '') {
+                        noty({
+                            text: 'Đơn vị tính không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (!isNaN(txtUnit)) {
+                        noty({
+                            text: 'Đơn vị tính không được là số.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtUnit.length < 2 || txtUnit.length > 20) {
+                        noty({
+                            text: 'Đơn vị tính của sản phẩm phải có độ dài từ 2-20 kí tự',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtWeight.trim() === '') {
+                        noty({
+                            text: 'Trọng lượng sản phẩm không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (isNaN(txtWeight)) {
+                        noty({
+                            text: 'Trọng lượng sản phẩm phải là số.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (parseInt(txtWeight) < 100) {
+                        noty({
+                            text: 'Trọng lượng sản phẩm phải lớn hơn hoặc bằng 100 gam.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (parseInt(txtWeight) > 2000) {
+                        noty({
+                            text: 'Trọng lượng sản phẩm phải nhỏ hơn 2000 gam.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtPrice.trim() === '') {
+                        noty({
+                            text: 'Giá phẩm không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (isNaN(txtPrice)) {
+                        noty({
+                            text: 'Giá sản phẩm phải là số.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (parseInt(txtPrice) < 1000) {
+                        noty({
+                            text: 'Giá phẩm phải lớn hơn hoặc bằng 1000 đồng.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (parseInt(txtPrice) > 100000) {
+                        noty({
+                            text: 'Giá phẩm không được lớn hơn 100000 đồng.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else {
+                        $.ajax({
+                            "url": action,
+                            "method": "POST",
+                            "data": dataString,
+                            "dataType": "json",
+                            "contentType": contentType,
+                            "processData": processData,
+                            "success": function (data) {
+                                if (data === 1) {
+                                    $.ajax({
+                                        "url": "@(Url.Action("Edit", "ManageProduct", new { ProductId = @Model.ProductId}))",
+                                        "method": "POST",
+                                        "data": JSON.stringify({
+                                            "productId": "@(Model.ProductId)",
+                                            "productName": txtName,
+                                            "productUnit": txtUnit,
+                                            "productWeight": txtWeight,
+                                            "productDes": txtDes,
+                                            "productNote": txtNote,
+                                            "productPrice": txtPrice,
+                                            "dropCate": txtCate,
+                                            "fileName": fileName,
+                                            "materialId": lstId,
+                                            "materialQuantity": lstQuantity
+                                        }),
+                                        "dataType": "json",
+                                        "contentType": 'application/json',
+                                        "processData": processData,
+                                        "success": function (data) {
+                                            if (data === 2) {
+                                                noty({
+                                                    text: 'Chỉnh sửa sản phẩm thành công',
+                                                    type: 'success',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("Index", "ManageProduct"))");
+                                                }, 3000);
+                                            } else if (data === -4) {
+                                                noty({
+                                                    text: 'Đã tồn tại sản phẩm cùng tên',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            } else if (data === -5) {
+                                                noty({
+                                                    text: 'Không thế thêm, vui lòng thử lại',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            }
+                                        },
+                                        "fail": function () {
+                                            noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            window.setTimeout(function () {
+                                                window.location.replace("@(Url.Action("Index", "ManageProduct"))");
+                                            }, 3000)
+                                        }
+                                    })
+                                } else if (data === -1) {
+                                    noty({
+                                        text: 'Vui lòng thêm hình ảnh cho sản phẩm',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (data === -2) {
+                                    noty({
+                                        text: 'Kích thước hình ảnh quá lớn',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (data === -3) {
+                                    noty({
+                                        text: 'Xin chọn file hình ảnh',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                }
+                            }
+                        })
+                    }
+                }
+            </script>
         </div>
     </div>
 </section>
+@section AddOrderScript{
+    <script type="text/javascript">
+        $(document).on("click", ".multiple-choice-table tbody tr", function () {
+            if ($(this).attr('class') === 'selected') {
+                $(this).removeClass('selected');
+            } else {
+                $(this).addClass('selected');
+            }
+        });
+        $(document).on("click", "[data-role=remove-row-btn]", function () {
+            var materialId = $(this).parent().parent().find("td:first input").val();
+            $(this).parent().parent().remove();
+            $.ajax({
+                "url": "@(Url.Action("AddMaterialInMaterialList", "ManageProduct"))",
+                "method": "POST",
+                "data": {
+                    "materialId": materialId
+                },
+                "success": function (data) {
+                    if (data === "0") {
+                        noty({
+                            text: 'Không thể hủy nguyên liệu.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                },
+                "fail": function (e) {
+                    alert("Have error" + e.toString());
+                }
+            });
+        });
+    </script>}

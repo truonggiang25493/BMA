@@ -13,6 +13,7 @@ namespace BMA.Controllers
 {
     public class ManageProductController : Controller
     {
+        BMAEntities db = new BMAEntities();
         public ActionResult Index()
         {
             ManageProductBusiness mpb = new ManageProductBusiness();
@@ -23,31 +24,26 @@ namespace BMA.Controllers
         [HttpGet]
         public ActionResult AddProduct()
         {
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             ManageProductBusiness mpb = new ManageProductBusiness();
             var category = mpb.GetCategory();
             ViewBag.category = category;
+            InitiateMaterialList(null);
             return View();
         }
 
         [HttpPost]
-        public ActionResult AddProduct(FormCollection f, HttpPostedFileBase file)
+        public int AddImage(HttpPostedFileBase file)
         {
-            ManageProductBusiness mpb = new ManageProductBusiness();
             var allowedExtensions = new[] {  
-            ".Jpg", ".png", ".jpg", "jpeg"  
+            ".Jpg", ".png", ".jpg", "jpeg", ".JPG", ".PNG", ".JPEG"  
             };
             var maxSize = 1048576;
-            string productName = f["productName"];
-            string productUnit = f["productUnit"];
-            double productWeight = double.Parse(f["productWeight"]);
-            string productDes = f["productDes"];
-            string productNote = f["productNote"];
-            int productPrice = int.Parse(f["productPrice"]);
-            int dropCate = int.Parse(f["dropCate"]);
-            string productCode = f["productCode"];
             var fileName = "";
-
-            //Get Image
             if (file != null)
             {
                 var productSize = file.ContentLength;
@@ -63,43 +59,146 @@ namespace BMA.Controllers
                             var path = Path.Combine(Server.MapPath("~/Content/Images/BakeryImages"), fileName);
                             file.SaveAs(path);
                         }
+                        return 1;
                     }
                     else
                     {
-                        TempData["Message"] = "Kích thước hình ảnh quá lớn";
+                        //TempData["Message"] = "Kích thước hình ảnh quá lớn";
                         string strURL = Request.UrlReferrer.AbsolutePath;
-                        return Redirect(strURL);
+                        return -2;
                     }
                 }
                 else
                 {
-                    TempData["Message"] = "Xin chọn file hình ảnh";
+                    //TempData["Message"] = "Xin chọn file hình ảnh";
                     string strURL = Request.UrlReferrer.AbsolutePath;
-                    return Redirect(strURL);
+                    return -3;
                 }
             }
+            else
+            {
+                return -1;
+            }
+        }
 
+        [HttpPost]
+        public int EditImage(HttpPostedFileBase file)
+        {
+            var allowedExtensions = new[] {  
+            ".Jpg", ".png", ".jpg", "jpeg", ".JPG", ".PNG", ".JPEG"  
+            };
+            var maxSize = 1048576;
+            var fileName = "";
+            if (file != null)
+            {
+                var productSize = file.ContentLength;
+                fileName = Path.GetFileName(file.FileName);
+                var ext = Path.GetExtension(file.FileName);
+                if (allowedExtensions.Contains(ext))
+                {
+                    if (productSize <= maxSize)
+                    {
+                        var comparePath = Server.MapPath(string.Format("{0}{1}", "~/Content/Images/BakeryImages", fileName));
+                        if (!System.IO.File.Exists(comparePath))
+                        {
+                            var path = Path.Combine(Server.MapPath("~/Content/Images/BakeryImages"), fileName);
+                            file.SaveAs(path);
+                        }
+                        return 1;
+                    }
+                    else
+                    {
+                        //TempData["Message"] = "Kích thước hình ảnh quá lớn";
+                        string strURL = Request.UrlReferrer.AbsolutePath;
+                        return -2;
+                    }
+                }
+                else
+                {
+                    //TempData["Message"] = "Xin chọn file hình ảnh";
+                    string strURL = Request.UrlReferrer.AbsolutePath;
+                    return -3;
+                }
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+        public string CreateProductCode(string productName)
+        {
+            var lstProductCode = db.Products.Select(n => n.ProductCode).ToList();
+            string[] productCodeArray = productName.Split(' ');
+            string productWord = "";
+            string productNumber = "001";
+            string productCode = "";
+            string upperLetter = "";
+            for (int i = 0; i < productCodeArray.Length; i++)
+            {
+                upperLetter = productCodeArray[i].Substring(0, 1).ToUpper();
+                productWord += upperLetter;
+            }
+            if (productWord.Length < 4)
+            {
+                for (int j = productWord.Length; j < 4; j++)
+                {
+                    productWord += "X";
+                }
+            }
+            if (productWord.Length > 4)
+            {
+                productWord = productWord.Substring(0, 4);
+            }
+            for (int i = 0; i < lstProductCode.Count; i++)
+            {
+                if (productWord.Equals(lstProductCode[i].Substring(0, 4)))
+                {
+                    int subNumber = Convert.ToInt32(lstProductCode[i].Substring(4, 3));
+                    productNumber = (subNumber + 1).ToString();
+                    if (productNumber.Length < 3)
+                    {
+                        if (productNumber.Length < 2)
+                        {
+                            productNumber = string.Format("{0}{1}{2}", "0", "0", productNumber);
+                        }
+                        else
+                        {
+                            productNumber = string.Format("{0}{1}", "0", productNumber);
+                        }
+                    }
+                }
+            }
+            productCode = string.Format("{0}{1}", productWord, productNumber);
+
+            return productCode;
+        }
+
+        [HttpPost]
+        public int AddProduct(string productName, string productUnit, double productWeight, string productDes, string productNote, int productPrice, int dropCate, string fileName, int[] materialId, int[] materialQuantity)
+        {
+            ManageProductBusiness mpb = new ManageProductBusiness();
+            //Check that product name had existed
             var productList = mpb.GetActiveProduct();
+            string productCode = CreateProductCode(productName);
             for (int i = 0; i < productList.Count; i++)
             {
                 if (productName == productList[i].ProductName)
                 {
-                    string strURL = Request.UrlReferrer.AbsolutePath;
-                    TempData["Error"] = String.Format("{0}{1}", productName, " đã tồn tại");
-                    return Redirect(strURL);
+                    //string strURL = Request.UrlReferrer.AbsolutePath;
+                    //TempData["Error"] = String.Format("{0}{1}", productName, " đã tồn tại");
+                    return -4;
                 }
             }
             try
             {
-                mpb.AddProduct(productName, productUnit, productWeight, productDes, productNote, productPrice, dropCate, productCode, fileName);
-                int productId = mpb.GetProductId();
-                return RedirectToAction("ProductMaterial", new { productId });
+                mpb.AddProduct(productName, productUnit, productWeight, productDes, productNote, productPrice, dropCate, productCode, fileName, materialId, materialQuantity);
+                return 2;
             }
-            catch (DataException)
+            catch (Exception)
             {
-                ModelState.AddModelError("", "Không thể thêm. Xin vui lòng thử lại.");
+                return -5;
             }
-            return View();
         }
         public ActionResult Detail(int productId)
         {
@@ -114,68 +213,24 @@ namespace BMA.Controllers
         {
             ManageProductBusiness mpb = new ManageProductBusiness();
             var product = mpb.GetProductDetail(productId);
+            var materialList = mpb.GetListMaterial(productId);
             var category = mpb.GetCategory();
+            ViewBag.materialList = materialList;
             ViewBag.category = category;
             if (product == null)
             {
                 return HttpNotFound();
             }
+            InitiateMaterialList(productId);
             return View(product);
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditConfirm(int productId, FormCollection f, HttpPostedFileBase file)
+        public int EditConfirm(int productId, string productName, string productUnit, double productWeight, string productDes, string productNote, int productPrice, int dropCate, string fileName, int[] materialId, int[] materialQuantity)
         {
             ManageProductBusiness mpb = new ManageProductBusiness();
-            var allowedExtensions = new[] {  
-            ".Jpg", ".png", ".jpg", "jpeg"  
-            };
-            var maxSize = 1048576;
-            string productName = f["productName"];
-            string productUnit = f["productUnit"];
-            double productWeight = double.Parse(f["productWeight"]);
-            string productDes = f["productDes"];
-            string productNote = f["productNote"];
-            int productPrice = int.Parse(f["productPrice"]);
-            int dropCate = int.Parse(f["dropCate"]);
-            string productCode = f["productCode"];
-            var fileName = "";
-            //Get Image
-            if (file != null)
-            {
-                var productSize = file.ContentLength;
-                fileName = Path.GetFileName(file.FileName);
-                var ext = Path.GetExtension(file.FileName);
-                if (allowedExtensions.Contains(ext))
-                {
-                    if (productSize <= maxSize)
-                    {
-                        var comparePath = Server.MapPath(string.Format("{0}{1}", "~/Content/Images/BakeryImages", fileName));
-                        if (!System.IO.File.Exists(comparePath))
-                        {
-                            var path = Path.Combine(Server.MapPath("~/Content/Images/BakeryImages"), fileName);
-                            file.SaveAs(path);
-                        }
-                    }
-                    else
-                    {
-                        TempData["Message"] = "Kích thước hình ảnh quá lớn";
-                        string strURL = Request.UrlReferrer.AbsolutePath;
-                        string URL = String.Format("{0}{1}{2}", strURL, "?ProductId=", productId);
-                        return Redirect(URL);
-                    }
-                }
-                else
-                {
-                    TempData["Message"] = "Xin chọn file hình ảnh";
-                    string strURL = Request.UrlReferrer.AbsolutePath;
-                    string URL = String.Format("{0}{1}{2}", strURL, "?ProductId=", productId);
-                    return Redirect(URL);
-                }
-            }
-
-
             var productToUpdate = mpb.GetProductDetail(productId);
+            string productCode = CreateProductCode(productName);
             var productList = mpb.GetActiveProduct();
             if (productName != productToUpdate.ProductName)
             {
@@ -183,27 +238,22 @@ namespace BMA.Controllers
                 {
                     if (productName == productList[i].ProductName)
                     {
-                        string strURL = Request.UrlReferrer.AbsolutePath;
-                        string URL = String.Format("{0}{1}{2}", strURL, "?ProductId=", productId);
-                        TempData["Error"] = String.Format("{0}{1}", productName, " đã tồn tại");
-                        return Redirect(URL);
+                        //string strURL = Request.UrlReferrer.AbsolutePath;
+                        //string URL = String.Format("{0}{1}{2}", strURL, "?ProductId=", productId);
+                        //TempData["Error"] = String.Format("{0}{1}", productName, " đã tồn tại");
+                        return -4;
                     }
                 }
             }
             try
             {
-                if (ModelState.IsValid)
-                {
-                    mpb.EditProduct(productId, productName, productUnit, productWeight, productDes, productNote, productPrice, dropCate, productCode, fileName);
-                    return RedirectToAction("Index");
-                }
-                return View();
+                mpb.EditProduct(productId, productName, productUnit, productWeight, productDes, productNote, productPrice, dropCate, productCode, fileName, materialId, materialQuantity);
+                return 2;
             }
             catch (DataException)
             {
-                ModelState.AddModelError("", "Không thể sửa. Xin vui lòng thử lại.");
+                return -5;
             }
-            return View(productToUpdate);
         }
 
         public ActionResult ChangeStatus(int productId, bool status, string strURL)
@@ -255,6 +305,163 @@ namespace BMA.Controllers
             string strURL = String.Format("{0}{1}", "/ManageProduct/ProductMaterial?ProductId=", productId);
             mpb.AddProductMaterial(productId, materialId);
             return Redirect(strURL);
+        }
+
+
+        private void InitiateMaterialList(int? productId)
+        {
+            List<ProductMaterial> materialList = db.ProductMaterials.Where(n => n.IsActive).ToList();
+            if (productId == null)
+            {
+                Session["MaterialListToAdd"] = materialList;
+            }
+            else
+            {
+                List<ProductMaterial> resultList = new List<ProductMaterial>();
+                List<Recipe> recipe = db.Recipes.Where(n => n.ProductId == productId).ToList();
+                if (materialList.Count > 0 && recipe != null)
+                {
+                    foreach (ProductMaterial pm in materialList)
+                    {
+                        bool check = true;
+                        foreach (var item in recipe)
+                        {
+                            if (item.ProductMaterialId == pm.ProductMaterialId)
+                            {
+                                check = false;
+                            }
+                        }
+                        if (check)
+                        {
+                            resultList.Add(pm);
+                        }
+                    }
+                }
+                Session["MaterialList"] = resultList;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult GetListMaterialToAdd(int? productId)
+        {
+            // Check autherization
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                if (productId != null)
+                {
+                    List<ProductMaterial> materialList = Session["MaterialList"] as List<ProductMaterial>;
+                    //materialList = Session["MaterialList"] as List<ProductMaterial>;
+
+                    return PartialView(materialList);
+                }
+                else
+                {
+                    List<ProductMaterial> materialList = new List<ProductMaterial>();
+                    materialList = Session["MaterialListToAdd"] as List<ProductMaterial>;
+
+                    return PartialView(materialList);
+                }
+
+            }
+        }
+
+        public int RemoveMaterialFromListToAdd(int[] materialId)
+        {
+            List<ProductMaterial> lstMaterial = Session["MaterialListToAdd"] as List<ProductMaterial>;
+            if (materialId.Length > 0)
+            {
+                foreach (int index in materialId)
+                {
+                    if (lstMaterial != null && lstMaterial.Count > 0)
+                    {
+                        lstMaterial.Remove(lstMaterial.SingleOrDefault(n => n.ProductMaterialId == index));
+                    }
+                }
+                Session["MaterialListToAdd"] = lstMaterial;
+                return 1;
+            }
+            return 0;
+        }
+
+        public int AddMaterialInMaterialListToAdd(int materialId)
+        {
+            List<ProductMaterial> materialList = Session["MaterialListToAdd"] as List<ProductMaterial>;
+            ProductMaterial productMaterial = db.ProductMaterials.FirstOrDefault(n => n.ProductMaterialId == materialId && n.IsActive);
+            if (productMaterial != null)
+            {
+                if (materialList != null && materialList.Count > 0)
+                {
+                    bool check = true;
+                    foreach (ProductMaterial material in materialList)
+                    {
+                        if (material.ProductMaterialId == materialId)
+                        {
+                            check = false;
+                        }
+                    }
+                    if (check)
+                    {
+                        materialList.Add(productMaterial);
+                    }
+                    return 1;
+                }
+                return 0;
+            }
+            return 0;
+        }
+
+        [HttpPost]
+        public int RemoveMaterialInProductList(int[] materialId)
+        {
+            List<ProductMaterial> materialList = Session["MaterialList"] as List<ProductMaterial>;
+            if (materialId.Length > 0)
+            {
+                foreach (int index in materialId)
+                {
+                    if (materialList != null && materialList.Count > 0)
+                    {
+                        materialList.Remove(materialList.FirstOrDefault(m => m.ProductMaterialId == index));
+                    }
+                }
+                Session["MaterialList"] = materialList;
+                return 1;
+            }
+            return 0;
+        }
+
+        [HttpPost]
+        public int AddMaterialInMaterialList(int materialId)
+        {
+            List<ProductMaterial> materialList = Session["MaterialList"] as List<ProductMaterial>;
+            ProductMaterial productMaterial = db.ProductMaterials.FirstOrDefault(n => n.ProductMaterialId == materialId && n.IsActive);
+            if (productMaterial != null)
+            {
+                if (materialList != null && materialList.Count > 0)
+                {
+                    bool check = true;
+                    foreach (ProductMaterial material in materialList)
+                    {
+                        if (material.ProductMaterialId == materialId)
+                        {
+                            check = false;
+                        }
+                    }
+                    if (check)
+                    {
+                        materialList.Add(productMaterial);
+                    }
+                    return 1;
+                }
+                return 0;
+            }
+
+
+            return 0;
         }
     }
 }

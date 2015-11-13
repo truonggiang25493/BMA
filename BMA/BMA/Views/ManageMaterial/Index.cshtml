@@ -20,11 +20,12 @@
                     <tr>
 
                         <th>Tên nguyên liệu</th>
-                        <th>Đơn vị tính</th>
                         <th>Số lượng hiện tại</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th>Số lượng tối thiểu</th>
+                        <th>Trạng thái</th>
+                        <th class="col-md-1"></th>
+                        <th class="col-md-1"></th>
+                        <th class="col-md-1"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,9 +33,41 @@
                     {
                         <tr>
                             <td>@item.ProductMaterialName</td>
-                            <td>@item.ProductMaterialUnit</td>
-                            <td><p style="float:right">@item.CurrentQuantity</p></td>
-                            @*@{
+                            <td>
+                                @if (item.CurrentQuantity != 0)
+                                {
+                                    if (item.CurrentQuantity < item.StandardQuantity && item.IsActive)
+                                    {
+                                        <p style="float:right;color:red;">@string.Format("{0:0,0} {1}", item.CurrentQuantity, item.ProductMaterialUnit)</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="float:right">@string.Format("{0:0,0} {1}", item.CurrentQuantity, item.ProductMaterialUnit)</p>
+                                    }
+                                }
+                                else
+                                {
+                                    if (item.CurrentQuantity < item.StandardQuantity && item.IsActive)
+                                    {
+                                        <p style="float:right;color:red">@string.Format("{0} {1}", item.CurrentQuantity, item.ProductMaterialUnit)</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="float:right">@string.Format("{0} {1}", item.CurrentQuantity, item.ProductMaterialUnit)</p>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @if (item.StandardQuantity != 0)
+                                {
+                                    <p style="float:right">@string.Format("{0:0,0} {1}", item.StandardQuantity, item.ProductMaterialUnit)</p>
+                                }
+                                else
+                                {
+                                    <p style="float:right">@string.Format("{0} {1}", item.StandardQuantity, item.ProductMaterialUnit)</p>
+                                }
+                            </td>
+                            @{
                         if (item.IsActive)
                         {
                             <td><div class="label label-success">Đang sử dụng</div></td>
@@ -43,22 +76,38 @@
                         {
                             <td><div class="label label-default">Đã hủy</div></td>
                         }
-                            }*@
-                            <td>
-                                @Html.ActionLink("Xem", "Detail"@*, new { ProductId = item.ProductId }*@)
+                            }
+                            <td class="">
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "ManageMaterial", new { materialId = item.ProductMaterialId }))">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                                    Xem
+                                </a>
                             </td>
+                            @if (item.IsActive)
+                            {
+                                <td>
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "ManageMaterial", new { materialId = item.ProductMaterialId }))">
+                                        <i class="fa fa-edit" style="margin-right: 3px"></i>
+                                        Sửa
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
                             <td>
-                                @Html.ActionLink("Sửa", "Edit"@*, new { ProductId = item.ProductId }*@)
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)" id="btn-choose">Đổi trạng thái</a>
+                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductMaterialId, '@item.ProductMaterialName', '@strURL')">
+                                    <i class="fa fa-refresh" style="margin-right: 3px"></i>
+                                    Đổi trạng thái
+                                </a>
                                 <script>
-                                    function open_container(productId, productName, strURL, isActive) {
+                                    function open_container(materialId, materialName, strURL, isActive) {
                                         var content =
-                                            '<form role="form" action="/ManageProduct/ChangeStatus" method="post" id="form-aprrove">' +
+                                            '<form role="form" action="/ManageMaterial/ChangeStatus" method="post" id="form-aprrove">' +
                                                 '<div class="form-group">' +
-                                                '<label>' + productName + '</label>' +
-                                                '<input type="hidden" name="productId" value="' + productId + '"/>' +
+                                                '<label>' + materialName + '</label>' +
+                                                '<input type="hidden" name="materialId" value="' + materialId + '"/>' +
                                                 '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
                                                 '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
                                                 '</div>' +
@@ -85,11 +134,15 @@
                                         document.getElementById('popup-footer').innerHTML = footer;
                                     }
                                 </script>
+
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <div class="box-footer clearfix">
+                <a href="@Url.Action("AddMaterial","ManageMaterial")" class="btn btn-sm btn-info btn-flat pull-left">Thêm nguyên liệu mới</a>
+            </div>
         </div>
     </div>
 </section>

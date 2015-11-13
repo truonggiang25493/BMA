@@ -1,0 +1,117 @@
+﻿@using System.Globalization
+@model BMA.Models.ProductMaterial
+
+@{
+    ViewBag.Title = "Chi tiết nguyên liẹu";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+    IEnumerable<BMA.Models.Recipe> pu = ViewBag.ProductUse;
+    string strURL = Request.Url.ToString();
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>Chi tiết nguyên liệu</h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Profile Image -->
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <h3 class="profile-username text-center">@Model.ProductMaterialName</h3>
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Số lượng hiện tại</b><a class="pull-right">@Model.ProductMaterialUnit</a><a class="pull-right">@string.Format("{0:0,0}", Model.CurrentQuantity)</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Số lượng tối thiểu</b><a class="pull-right">@Model.ProductMaterialUnit</a><a class="pull-right">@string.Format("{0:0,0}", Model.StandardQuantity)</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Trạng thái</b>
+                            @if (Model.IsActive)
+                            {
+                                <a class="pull-right"><div class="label label-success">Đang sử dụng</div></a>
+                            }
+                            else
+                            {
+                                <a class="pull-right"><div class="label label-default">Đã hủy</div></a>
+                            }
+                        </li>
+                    </ul>
+                    <a href="javascript:void(0)" class="btn btn-primary btn-block" onclick="open_container(@Model.ProductMaterialId, '@Model.ProductMaterialName', '@strURL')"><b>Đổi trạng thái</b></a>
+                    <script>
+                        function open_container(materialId, materialtName, strURL, isActive) {
+                            var content =
+                                '<form role="form" action="/ManageMaterial/ChangeStatus" method="post" id="form-aprrove">' +
+                                    '<div class="form-group">' +
+                                    '<label>' + materialtName + '</label>' +
+                                    '<input type="hidden" name="materialId" value="' + materialId + '"/>' +
+                                     '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                    '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
+                                    '</div>' +
+                                     '<div class="form-group">' +
+                                     '<input type="radio" name="status" value="True" checked> Sử dụng' +
+                                    '</div>' +
+                                     '<div class="form-group">' +
+                                     '<input type="radio" name="status" value="False"> Hủy' +
+                                    '</div>' +
+                                    '<div class="form-group" style="padding-bottom: 20px;">' +
+                                    '<button type="submit" class="btn btn-success pull-right">Đồng ý</button>' +
+                                    '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</button>' +
+                                    '</div>' +
+                                    '</form>';
+                            var title = 'Chọn trạng thái';
+                            var footer = '';
+                            setModalBox(title, content, footer);
+                            $('#myModal').modal('show');
+                        }
+
+                        function setModalBox(title, content, footer) {
+                            document.getElementById('popup-body').innerHTML = content;
+                            document.getElementById('popup-title').innerHTML = title;
+                            document.getElementById('popup-footer').innerHTML = footer;
+                        }
+                    </script>
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div>
+        <div class="col-md-9">            
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#activity" data-toggle="tab">Sản phẩm sử dụng</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="active tab-pane" id="activity">
+                        <!-- Post -->
+                        <div class="post">
+                            <div class="user-block">
+                                <span class="username">
+                                    <a href="#" style="margin-left:-50px;">Sản phẩm sử dụng @Model.ProductMaterialName</a>
+                                </span>
+                            </div>
+                            <div class="box-body">
+                                <table id="example2" class="table table-hover table-bordered">
+                                    <thead style="font-weight: bold">
+                                        <tr>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Số lượng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in pu)
+                                        {
+                                            <tr>
+                                                <td>@item.Product.ProductName</td>
+                                                <td>@String.Format("{0} {1}", item.RecipeQuantity, item.ProductMaterial.ProductMaterialUnit)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,361 @@
+﻿@model BMA.Models.StoreInfo
+
+@{
+    ViewBag.Title = "Chỉnh sửa thông tin cửa hàng";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Chỉnh sửa thông tin cửa hàng
+    </h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <form role="form" action="/ManageProduct/AddProduct" id="productInforForm" method="post">
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Thông tin </h3><br />
+                        <label class="box-title" style="color:#ff0000">@TempData["Error"]</label>
+                    </div><!-- /.box-header -->
+                    <!-- form start -->
+                    @Html.AntiForgeryToken()
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Tên cửa hàng <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productName" value="@Model.StoreName" placeholder="Nhập tên cửa hàng" id="storeName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Chủ doanh nghiệp <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productName" value="@Model.OwnerName" placeholder="Nhập tên chủ doanh nghiệp" id="ownerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Địa chỉ <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productUnit" value="@Model.Address" placeholder="Nhập địa chỉ" id="storeAddress" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Số điện thoại <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productWeight" value="@Model.Phonenumber" placeholder="Nhập số điện thoại" id="storePhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Mã số thuế <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productWeight" value="@Model.TaxCode" placeholder="Nhập mã số thuế" id="storeTaxCode" required>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div><!--/.col (left) -->
+        </form>
+        <form role="form" action="/StoreInfor/EditImage" id="imageForm" method="post" enctype="multipart/form-data">
+            <div class="col-md-6">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Logo cửa hàng</h3><br />
+                        <label class="box-title" style="color:#ff0000">@TempData["Message"]</label>
+                    </div><!-- /.box-header -->
+                    <!-- form start -->
+                    <div class="box-body">
+                        <div class="form-group" style="margin-left:0px;">
+                            <label for="exampleInputFile">Hình ảnh</label>
+                            <input type="file" value="@Model.BakeryImage" name="file" id="file" onchange="show(this)">
+                            <div style="margin-top:10px;">
+                                <img id="user_img"
+                                     height="300"
+                                     width="506"
+                                     style="border:solid" src="@Url.Content("~/Content/CustomerLayout/Images/" + @Model.BakeryImage)"  />
+                            </div>
+                            <script type="text/javascript">
+                                function show(input) {
+                                    if (input.files && input.files[0]) {
+                                        var filerdr = new FileReader();
+                                        filerdr.onload = function (e) {
+                                            $('#user_img').attr('src', e.target.result);
+                                        }
+                                        filerdr.readAsDataURL(input.files[0]);
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary" onclick="return checkValidate()" value="AddMaterial">Cập nhật</button>
+            <script type="text/javascript">
+                function getFileName(s) {
+                    var n = s.lastIndexOf("\\");
+                    var result = s.substring(n + 1);
+                    return result;
+                }
+
+                function checkValidate() {
+                    var dataString;
+                    var txtStoreName = $("#storeName").val();
+                    var txtOwnerName = $("#ownerName").val();
+                    var txtAddress = $("#storeAddress").val();
+                    var txtPhone = $("#storePhone").val();
+                    var txtTaxCode = $("#storeTaxCode").val();
+                    var fileName = getFileName($("#file").val());
+                    if (fileName == "") {
+                        fileName = "@Model.BakeryImage";
+                    }
+
+                    var action = $("#imageForm").attr("action");
+
+                    if ($("#imageForm").attr("enctype") == "multipart/form-data") {
+                        dataString = new FormData($("#imageForm").get(0));
+                        contentType = false;
+                        processData = false;
+                    } else {
+
+                    }
+
+                    if (txtStoreName.trim() === '') {
+                        noty({
+                            text: 'Tên cửa hàng không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtStoreName.leng < 3 || txtStoreName.length > 200) {
+                        noty({
+                            text: 'Tên cửa hàng phải từ 3 tới 200 ký tự.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtOwnerName.trim() === '') {
+                        noty({
+                            text: 'Tên chủ sở hữu không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtOwnerName.leng < 3 || txtOwnerName.length > 200) {
+                        noty({
+                            text: 'Tên chủ sở hữu phải từ 3 tới 200 ký tự.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtAddress.trim() === '') {
+                        noty({
+                            text: 'Địa chỉ không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtAddress.leng < 10 || txtAddress.length > 250) {
+                        noty({
+                            text: 'Địa chỉ phải từ 10 tới 250 ký tự.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtPhone.trim() === '') {
+                        noty({
+                            text: 'Số điện thoại không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (isNaN(txtPhone)) {
+                        noty({
+                            text: 'Số điện thoại phải là số.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtPhone.length < 8 || txtPhone.length > 15) {
+                        noty({
+                            text: 'Số điện thoại phải có độ dài từ 8-15 kí tự',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtTaxCode.trim() === '') {
+                        noty({
+                            text: 'Mã số thuế không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (isNaN(txtTaxCode)) {
+                        noty({
+                            text: 'Mã số thuế phải là số.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtTaxCode.length < 10 || txtPhone.length > 13) {
+                        noty({
+                            text: 'Mã số thuế phải có độ dài từ 8-15 kí tự',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else {
+                        $.ajax({
+                            "url": action,
+                            "method": "POST",
+                            "data": dataString,
+                            "dataType": "json",
+                            "contentType": contentType,
+                            "processData": processData,
+                            "success": function (data) {
+                                if (data === 1) {
+                                    $.ajax({
+                                        "url": "@(Url.Action("EditStoreInfo", "StoreInfor"))",
+                                        "method": "POST",
+                                        "data": JSON.stringify({
+                                            "storeName": txtStoreName,
+                                            "ownerName": txtOwnerName,
+                                            "address": txtAddress,
+                                            "phoneNumber": txtPhone,
+                                            "taxCode": txtTaxCode,
+                                            "fileName": fileName
+                                        }),
+                                        "dataType": "json",
+                                        "contentType": 'application/json',
+                                        "processData": processData,
+                                        "success": function (data) {
+                                            if (data === 2) {
+                                                noty({
+                                                    text: 'Chỉnh sửa thông tin thành công',
+                                                    type: 'success',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                                                }, 3000);
+                                            } else if (data === -4) {
+                                                noty({
+                                                    text: 'Không thế chỉnh sửa, vui lòng thử lại',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            }
+                                        },
+                                        "fail": function () {
+                                            noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            window.setTimeout(function () {
+                                                window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                                            }, 3000)
+                                        }
+                                    })
+                                } else if (data === -1) {
+                                    noty({
+                                        text: 'Vui lòng thêm hình ảnh cho sản phẩm',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (data === -2) {
+                                    noty({
+                                        text: 'Kích thước hình ảnh quá lớn',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (data === -3) {
+                                    noty({
+                                        text: 'Xin chọn file hình ảnh',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                }
+                            }
+                        })
+                    }
+                }
+            </script>
+        </div>
+    </div>
+</section>
+@section AddOrderScript{
+    <script type="text/javascript">
+        $(document).on("click", ".multiple-choice-table tbody tr", function () {
+            if ($(this).attr('class') === 'selected') {
+                $(this).removeClass('selected');
+            } else {
+                $(this).addClass('selected');
+            }
+        });
+        $(document).on("click", "[data-role=remove-row-btn]", function () {
+            var materialId = $(this).parent().parent().find("td:first input").val();
+            $(this).parent().parent().remove();
+            $.ajax({
+                "url": "@(Url.Action("AddMaterialInMaterialListToAdd", "ManageProduct"))",
+                "method": "POST",
+                "data": {
+                    "materialId": materialId
+                },
+                "success": function (data) {
+                    if (data === "0") {
+                        noty({
+                            text: 'Không thể hủy nguyên liệu.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                },
+                "fail": function (e) {
+                    alert("Have error" + e.toString());
+                }
+            });
+        });
+    </script>}

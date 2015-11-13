@@ -11,33 +11,147 @@
 </section>
 <section class="content">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6" style="margin-left:300px;">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Thông tin sản phẩm</h3><br/>
+                    <h3 class="box-title">Thông tin nguyên liệu</h3><br />
                     <label class="box-title" style="color:#ff0000">@TempData["Error"]</label>
                 </div><!-- /.box-header -->
                 <!-- form start -->
                 <form role="form" action="/ManageMaterial/AddMaterial" id="myForm" method="post">
                     <div class="box-body">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Tên nguyên liệu (*)</label>
-                            <input type="text" class="form-control" name="txtName" value="" placeholder="Nhập tên nguyên liệu" required>
+                            <label for="exampleInputEmail1">Tên nguyên liệu <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="txtName" value="" placeholder="Nhập tên nguyên liệu" id="materialName">
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Đơn vị tính (*)</label><br />
-                            <input type="text" class="form-control" name="txtUnit" value="" placeholder="Nhập đơn vị" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Số lượng (*)</label>
-                            <input type="text" class="form-control" name="txtQuantity" value="" placeholder="Nhập số lượng" required>
+                            <label for="exampleInputEmail1">Đơn vị tính <span style="color:red">*</span></label><br />
+                            <input type="text" class="form-control" name="txtUnit" value="" placeholder="Nhập đơn vị" id="materialUnit">
+                        </div><div class="form-group">
+                            <label for="exampleInputEmail1">Số lượng tối thiểu <span style="color:red">*</span></label><br />
+                            <input type="text" class="form-control" name="txtSQuantity" value="" placeholder="Nhập đơn vị" id="materialSQuantity">
                         </div>
                     </div><!-- /.box-body -->
-
-                    <div class="box-footer">
-                        <button type="submit" class="btn btn-danger" value="AddMaterial">Thêm mới</button>
-                    </div>
                 </form>
+
+                <div class="box-footer">
+                    <button onclick="return checkValidate()" class="btn btn-danger" value="AddMaterial">Thêm mới</button>
+                    <script type="text/javascript">
+                        function checkValidate() {
+                            var txtName = $("#materialName").val();
+                            var txtUnit = $("#materialUnit").val();
+                            var txtSQuantity = $("#materialSQuantity").val();
+
+                            if (txtName.trim() === '') {
+                                noty({
+                                    text: 'Tên nguyên liệu không được để trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 2000
+                                });
+                            } else if (txtName.length < 2 || txtName.length > 100) {
+                                noty({
+                                    text: 'Tên nguyên liệu phải có độ dài từ 2-100 kí tự.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 2000
+                                });
+                            } else if (txtUnit.trim() === '') {
+                                noty({
+                                    text: 'Đơn vị tính không được để trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 2000
+                                });
+                            } else if (txtUnit.length < 2 || txtUnit.length > 20) {
+                                noty({
+                                    text: 'Đơn vị tính của nguyên liệu phải có độ dài từ 2-20 kí tự.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 2000
+                                });
+                            } else if (txtSQuantity.trim() === '') {
+                                noty({
+                                    text: 'Số lượng tối thiểu không được để trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 2000
+                                });
+                            } else if (isNaN(txtSQuantity)) {
+                                noty({
+                                    text: 'Số lượng tối thiểu phải là số.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 2000
+                                });
+                            } else {
+                                $.ajax({
+                                    "url": "@(Url.Action("AddMaterial", "ManageMaterial"))",
+                                    "method": "POST",
+                                    "data": $("#myForm").serialize(),
+                                    "success": function (data) {
+                                        if (data === "1") {
+                                            noty({
+                                                text: 'Thêm mới nguyên liệu thành công',
+                                                type: 'success',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                            window.setTimeout(function () {
+                                                window.location.replace("@(Url.Action("Index", "ManageMaterial"))");
+                                            }, 3000);
+                                        } else if (data === "-1") {
+                                            noty({
+                                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                        } else if (data === "-2") {
+                                            noty({
+                                                text: 'Đã tồn tại nguyên liệu cùng tên',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                        }
+                                    },
+                                    "fail": function () {
+                                        noty({
+                                            text: 'Đã có lỗi xảy ra',
+                                            type: 'error',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                        window.setTimeout(function () {
+                                            window.location.replace("@(Url.Action("Index", "ManageProduct"))");
+                                        }, 3000)
+                                    }
+                                })
+                            }
+                        }
+                    </script>
+                </div>
             </div>
         </div>
     </div>

@@ -1,0 +1,61 @@
+﻿@using System.Globalization
+@using BMA.Common
+@using BMA.Models
+@model IEnumerable<BMA.Models.Customer>
+@{
+    ViewBag.Title = "Danh sách khách hàng";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+<section class="content-header">
+    <h1>Danh sách khách hàng</h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="box">
+        <!-- box-body -->
+        <div class="box-body">
+            <table id="example2" class="table table-hover table-bordered">
+                <thead style="font-weight: bold">
+                    <tr>
+
+                        <th>Tên khách hàng</th>
+                        <th>Địa chỉ</th>
+                        <th>Số điện thoại</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Customer customer in Model)
+                    {
+                        <tr>
+
+                            <td>@customer.User.Fullname</td>
+                            <td>@customer.CustomerAddress</td>
+                            <td>@customer.CustomerPhoneNumber</td>
+                            @if (customer.IsActive)
+                            {
+                                <td>
+                                    <span class="label label-success">Đang hoạt động</span>
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Xem", "CustomerDetail", new { id = customer.CustomerId })
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <span class="label label-danger">Ngừng hoạt động</span>
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Xem", "CustomerDetail", new { id = customer.CustomerId })
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

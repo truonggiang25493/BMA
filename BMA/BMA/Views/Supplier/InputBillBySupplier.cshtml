@@ -1,0 +1,51 @@
+﻿@using System.Globalization
+@using BMA.Models
+@model List<InputBill>
+
+<div class="box-body">
+    <table id="example" class="table table-bordered table-striped dataTable">
+        <thead style="font-weight: bold">
+            <tr class="row">
+                <th class="col-md-3" style="text-align: center">Mã hóa đơn</th>
+                <th class="col-md-3" style="text-align: center">Ngày nhập</th>
+                <th class="col-md-3" style="text-align: center">Chi phí (Đã bao gồm thuế)</th>
+                <th class="col-md-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (InputBill inputBill in Model)
+            {
+                <tr class="row">
+                    <td class="col-md-3" style="text-align: center">
+                        <span>@(inputBill.InputBillCode)</span>
+                    </td>
+                    <td style="text-align: center" class="col-md-3">
+                        <span>@(@inputBill.ImportDate.ToString("dd/MM/yyyy"))</span>
+                    </td>
+                    <td style="text-align: left" class="col-md-3">
+                       <span>@((inputBill.InputBillAmount + inputBill.InputTaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span>
+                    </td>
+                    <td>
+                        <a class="btn btn-link btn-xs" href="@(Url.Action("InputBillDetail", "InputBill", new {id = inputBill.InputBillId}))">
+                            <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                            Xem
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "iDisplayLength": 5,
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": false,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>

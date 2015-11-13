@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -222,6 +222,18 @@
           <Property Name="StaffAddress" Type="nvarchar" MaxLength="200" />
           <Property Name="StaffPhoneNumber" Type="nvarchar" MaxLength="20" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StoreInfo">
+          <Key>
+            <PropertyRef Name="StoreId" />
+          </Key>
+          <Property Name="StoreId" Type="int" Nullable="false" />
+          <Property Name="StoreName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Phonenumber" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="OwnerName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TaxCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="BakeryImage" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -599,6 +611,7 @@
           <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Staff" EntityType="Self.Staff" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StoreInfo" EntityType="Self.StoreInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TaxRate" EntityType="Self.TaxRate" Schema="dbo" store:Type="Tables" />
@@ -739,6 +752,7 @@
           <EntitySet Name="Recipes" EntityType="BMAModel.Recipe" />
           <EntitySet Name="Roles" EntityType="BMAModel.Role" />
           <EntitySet Name="Staffs" EntityType="BMAModel.Staff" />
+          <EntitySet Name="StoreInfoes" EntityType="BMAModel.StoreInfo" />
           <EntitySet Name="Suppliers" EntityType="BMAModel.Supplier" />
           <EntitySet Name="sysdiagrams" EntityType="BMAModel.sysdiagram" />
           <EntitySet Name="TaxRates" EntityType="BMAModel.TaxRate" />
@@ -804,6 +818,10 @@
             <End Role="OutputBill" EntitySet="OutputBills" />
             <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
+          <AssociationSet Name="FK_Orders_User" Association="BMAModel.FK_Orders_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
           <AssociationSet Name="FK_Orders_User_CustomerOrder" Association="BMAModel.FK_Orders_User_CustomerOrder">
             <End Role="User" EntitySet="Users" />
             <End Role="Order" EntitySet="Orders" />
@@ -836,11 +854,7 @@
             <End Role="TaxType" EntitySet="TaxTypes" />
             <End Role="TaxRate" EntitySet="TaxRates" />
           </AssociationSet>
-          <AssociationSet Name="FK_Orders_User" Association="BMAModel.FK_Orders_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-        </EntityContainer>
+          </EntityContainer>
         <ComplexType Name="sp_GetIncomeMonthly_Result">
           <Property Type="Int32" Name="MonthNo" Nullable="true" />
           <Property Type="Int32" Name="YearNo" Nullable="true" />
@@ -1010,9 +1024,9 @@
           <NavigationProperty Name="Orders1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order" ToRole="Order1" />
           <NavigationProperty Name="Order1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order1" ToRole="Order" />
           <NavigationProperty Name="OutputBill" Relationship="BMAModel.FK_Orders_OutputBill_OutputBillId" FromRole="Order" ToRole="OutputBill" />
-          <NavigationProperty Name="User" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="Order" ToRole="User" />
-          <NavigationProperty Name="User1" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="Order" ToRole="User" />
-          <NavigationProperty Name="User2" Relationship="BMAModel.FK_Orders_User" FromRole="Order" ToRole="User" />
+          <NavigationProperty Name="User" Relationship="BMAModel.FK_Orders_User" FromRole="Order" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="Order" ToRole="User" />
+          <NavigationProperty Name="User2" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="Order" ToRole="User" />
         </EntityType>
         <EntityType Name="OtherExpense">
           <Key>
@@ -1120,6 +1134,18 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="User" Relationship="BMAModel.FK_Staff_User" FromRole="Staff" ToRole="User" />
         </EntityType>
+        <EntityType Name="StoreInfo">
+          <Key>
+            <PropertyRef Name="StoreId" />
+          </Key>
+          <Property Name="StoreId" Type="Int32" Nullable="false" />
+          <Property Name="StoreName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Phonenumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="BakeryImage" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="Supplier">
           <Key>
             <PropertyRef Name="SupplierId" />
@@ -1177,11 +1203,11 @@
           <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Customers" Relationship="BMAModel.FK_Customer_User" FromRole="User" ToRole="Customer" />
-          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="User" ToRole="Order" />
-          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_User" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="Orders2" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="User" ToRole="Order" />
           <NavigationProperty Name="Role" Relationship="BMAModel.FK_User_Role" FromRole="User" ToRole="Role" />
           <NavigationProperty Name="Staffs" Relationship="BMAModel.FK_Staff_User" FromRole="User" ToRole="Staff" />
-          <NavigationProperty Name="Orders2" Relationship="BMAModel.FK_Orders_User" FromRole="User" ToRole="Order" />
         </EntityType>
         <Association Name="FK_Category_Category_CategoryId">
           <End Type="BMAModel.Category" Role="Category" Multiplicity="1" />
@@ -1363,6 +1389,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Orders_User">
+          <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="CancelUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_User_CustomerOrder">
           <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
           <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
@@ -1459,19 +1497,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Orders_User">
-          <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="CancelUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -1746,6 +1772,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="StoreInfoes">
+            <EntityTypeMapping TypeName="BMAModel.StoreInfo">
+              <MappingFragment StoreEntitySet="StoreInfo">
+                <ScalarProperty Name="BakeryImage" ColumnName="BakeryImage" />
+                <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
+                <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />
+                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="StoreName" ColumnName="StoreName" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Suppliers">
             <EntityTypeMapping TypeName="BMAModel.Supplier">
               <MappingFragment StoreEntitySet="Supplier">
@@ -1805,7 +1844,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

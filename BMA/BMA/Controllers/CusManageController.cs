@@ -38,7 +38,7 @@ namespace BMA.Controllers
             return View(user);
         }
         [HttpPost, ActionName("ChangeInformation")]
-        public ActionResult ChangeInformationConfirm(FormCollection f)
+        public int ChangeInformationConfirm(FormCollection f)
         {
             AccountBusiness ab = new AccountBusiness();
             int cusUserId = Convert.ToInt32(Session["UserId"]);
@@ -47,8 +47,13 @@ namespace BMA.Controllers
             string sEmail = f["txtEmail"];
             string sTaxCode = f["txtTaxCode"];
             string sPhone = f["txtPhone"];
+            if (ab.checkEmailExisted(cusUserId, sEmail))
+            {
+                TempData["checkEmailExisted"] = "Email đã tồn tại trong hệ thống, vui lòng thử lại.";
+                return -1;
+            }
             ab.ChangeInformation(cusUserId, sName, sEmail, sAddress, sTaxCode, sPhone);
-            return RedirectToAction("Index");
+            return 1;
         }
 
         [HttpGet]
@@ -63,7 +68,7 @@ namespace BMA.Controllers
             return View(user);
         }
         [HttpPost, ActionName("ChangePassword")]
-        public ActionResult ChangePasswordConfirm(FormCollection f)
+        public int ChangePasswordConfirm(FormCollection f)
         {
             AccountBusiness ab = new AccountBusiness();
             int cusUserId = Convert.ToInt32(Session["UserId"]);
@@ -73,20 +78,20 @@ namespace BMA.Controllers
             if (!ab.checkPass(cusUserId, sOldPass))
             {
                 TempData["checkOldPass"] = "Mật khẩu không đúng! Vui lòng thử lại.";
-                return RedirectToAction("ChangePassword", new { UserId = cusUserId });
+                return -1;
             }
             if (sOldPass == sNewPass)
             {
                 TempData["checkUnchange"] = "Mật khẩu mới và mật khẩu cũ giống nhau! Vui lòng thử lại.";
-                return RedirectToAction("ChangePassword", new { UserId = cusUserId });
+                return -2;
             }
             if (sNewPass != sNewPassConfirm)
             {
                 TempData["checkConfirmPass"] = "Mật khẩu và mật khẩu xác nhận không trùng khớp.";
-                return RedirectToAction("ChangePassword", new { UserId = cusUserId });
+                return -3;
             }
             ab.ChangePassword(cusUserId, sNewPass);
-            return RedirectToAction("Index");
+            return 1;
         }
 
         public ActionResult OrderList(int? page)
@@ -196,26 +201,16 @@ namespace BMA.Controllers
 
         public ActionResult CancelOrderConfirm(int orderId, string strURL)
         {
-            // Check autherization
-            User customerUser = Session["User"] as User;
-            if (customerUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 3)
+            try
             {
-                Session["Cart"] = null;
-                return RedirectToAction("Index", "Home");
+                OrderBusiness ob = new OrderBusiness();
+                int userId = Convert.ToInt32(Session["UserId"]);
+                ob.Cancel(orderId, 0, 0, userId);
             }
-            else
+            catch (DataException)
             {
-                try
-                {
-                    OrderBusiness ob = new OrderBusiness();
-                    ob.Cancel(orderId, 0, 0, customerUser.UserId);
-                }
-                catch (DataException)
-                {
-                    return RedirectToAction("Index");
-                }
+                return RedirectToAction("Index");
             }
-
             return Redirect(strURL);
         }
 
@@ -284,29 +279,19 @@ namespace BMA.Controllers
             }
         }
 
-        public ActionResult CancelBothOrder(int orderId)
+        public int CancelBothOrder(int orderId)
         {
-            // Check autherization
-            User customerUser = Session["User"] as User;
-            if (customerUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 3)
+            try
             {
-                Session["Cart"] = null;
-                return RedirectToAction("Index", "Home");
+                OrderBusiness ob = new OrderBusiness();
+                int userId = Convert.ToInt32(Session["UserId"]);
+                ob.Cancel(orderId, 0, 0, userId);
+                return 1;
             }
-            else
+            catch (DataException)
             {
-                try
-                {
-                    OrderBusiness ob = new OrderBusiness();
-                    ob.Cancel(orderId, 0, 0, customerUser.UserId);
-                    return RedirectToAction("ConfirmList", "CusManage");
-                }
-                catch (DataException)
-                {
-                    return RedirectToAction("Index");
-                }
-            }
-
+                return -1;
+            }    
         }
 
         //public ActionResult CancelBothOrderConfirm(int orderId, int oldOrderId)

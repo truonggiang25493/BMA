@@ -20,9 +20,8 @@
     <!-- Timesliders -->
     <link href="~/Content/timeslider.css" rel="stylesheet" />
     <!--DatetimePicker-->
-
     <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-
+    @RenderSection("InitStyle", false)
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -129,8 +128,17 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="listStaff"><a href=""><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
-                            <li id="addStaff"><a href=""><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
+                            <li id="listStaff"><a href="@Url.Action("StaffIndex", "Staff")"><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
+                            <li id="addStaff"><a href="@Url.Action("AddStaff", "Staff")"><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview" id="customer">
+                        <a href="#">
+                            <i class="fa fa-user"></i> <span>Khách hàng</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li id="listCustomer"><a href="@Url.Action("CustomerIndex","Customer")"><i class="fa fa-users"></i>Danh sách khách hàng</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -140,11 +148,11 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-
+                            <<<<<<< HEAD
                             <li><a href="@Url.Action("AddProduct", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
-
+                            =======
                             <li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
-
+                            >>>>>>> 1d0ab64994e6cf30f3c65e1a389b7111901dee1e
                         </ul>
                     </li>
                     <li class="treeview">
@@ -189,14 +197,14 @@
                             <li><a href=""><i class="fa fa-thumbs-o-up"></i>Chấp nhận đơn hàng</a></li>
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="inputBill">
                         <a href="#">
                             <i class="fa fa-file-text-o"></i> <span>Hóa đơn</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
-                            <li><a href=""><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
+                            <li id="listInputBill"><a href="@Url.Action("InputBillIndex","InputBill")"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
+                            <li id="addInputBill"><a href="@Url.Action("AddInputBill","InputBill")"><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
                         </ul>
                     </li>
                     <li class="treeview" id="report">
@@ -288,6 +296,8 @@
     <script src="/Content/AdminLayout/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
     <!-- SlimScroll 1.3.0 -->
     <script src="/Content/AdminLayout/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- ChartJS 1.0.1 -->
+    <script src="/Content/AdminLayout/plugins/chartjs/Chart.min.js"></script>
     <!-- DataTables -->
     <script src="/Content/AdminLayout/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Content/AdminLayout/plugins/datatables/dataTables.bootstrap.min.js"></script>
@@ -312,7 +322,8 @@
     @RenderSection("AddCustomerToOrderScript", false)
     @RenderSection("EditOrderScript", false)
     @RenderSection("AddOrderScript", false)
-    @RenderSection("ReviewIncomeByTimeScript", false)
+    @RenderSection("CustomerDetailScript", false)
+    @RenderSection("InputBillDetailScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({

@@ -46,6 +46,10 @@
                             <label for="InputLastName">Số điện thoại <sup>*</sup> </label>
                             <input required maxlength="12" type="tel" class="form-control" value="@Model.Customers.ElementAt(0).CustomerPhoneNumber" id="InputPhone" placeholder="Nhập số điện thoại" name="txtPhone">
                         </div>
+                        <div class="form-group required">
+                            <label for="InputLastName" style="margin-top:20px;"></label>
+                            <p style="font-weight:bold;margin-top:10px;color:red">@TempData["checkEmailExisted"]</p>
+                        </div>
                     </div>
 
                 </form>
@@ -53,14 +57,25 @@
                     <button onclick="return validateInput()" class="btn  btn-primary"><i class="fa fa-save"></i> &nbsp; Thay đổi </button>
                 </div>
                 <script type="text/javascript">
+                    function CheckEmail(address) {
+                        address = address.replace(/(^\s*)|(\s*$)/g, "");
+                        var reg = /([\w._-])+@@([\w_-])+(\.([\w_-])+){1,2}/;
+                        var matcharr = reg.exec(address);
+                        if (matcharr != null) {
+                            if (matcharr[0].length == address.length) {
+                                return true;
+                            }
+                            return false;
+                        }
+                        return false;
+                    }
+
                     function validateInput() {
                         var txtName = $("#InputName").val();
                         var txtAddress = $("#InputAddress").val();
                         var txtEmail = $("#InputEmail").val();
                         var txtTaxCode = $("#InputTaxCode").val();
                         var txtPhone = $("#InputPhone").val();
-
-
                         if (txtName.trim() === '') {
                             noty({
                                 text: 'Họ tên không được để trống.',
@@ -79,9 +94,36 @@
                                 theme: 'defaultTheme',
                                 timeout: 2000
                             });
+                        } else if (!CheckEmail(txtEmail)) {
+                            noty({
+                                text: 'Email không đúng định dạng - example@gmail.com',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
                         } else if (txtEmail.trim() === '') {
                             noty({
                                 text: 'Email không được để trống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (txtTaxCode.trim() === '') {
+                            noty({
+                                text: 'Mã số thuế không được để trống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (txtPhone.trim() === '') {
+                            noty({
+                                text: 'Số điện thoại không được để trống.',
                                 type: 'warning',
                                 dismissQueue: false,
                                 layout: 'topCenter',
@@ -95,7 +137,7 @@
                                 dismissQueue: false,
                                 layout: 'topCenter',
                                 theme: 'defaultTheme',
-                                timeout: 2000
+                                timeout: 2000,
                             });
                         } else if (isNaN(txtPhone)) {
                             noty({
@@ -112,6 +154,7 @@
                                 method: "POST",
                                 data: $("#informationForm").serialize(),
                                 success: function (data) {
+                                    if (data === "1") {
                                         noty({
                                             text: 'Thay đổi thông tin thành công',
                                             type: 'success',
@@ -123,6 +166,17 @@
                                         window.setTimeout(function () {
                                             window.location.replace("@(Url.Action("Index", "CusManage"))");
                                         }, 3000);
+                                    } else {
+                                        noty({
+                                            text: 'Email đã tồn tại trong hệ thống, vui lòng thử lại.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    }
+                                        
                                 },
                                 fail: function () {
                                     noty({

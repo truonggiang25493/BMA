@@ -46,6 +46,7 @@ namespace BMA.Models
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Staff> Staffs { get; set; }
+        public virtual DbSet<StoreInfo> StoreInfoes { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TaxRate> TaxRates { get; set; }
