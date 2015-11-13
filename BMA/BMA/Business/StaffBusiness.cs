@@ -123,14 +123,14 @@ namespace BMA.Business
         #endregion
 
         #region Edit supplier
-        public static bool EditStaffInfo(int staffId, String staffName, String staffAddress, String staffPhoneNumber, String staffEmail)
+        public static bool EditStaffInfo(int userId, String staffName, String staffAddress, String staffPhoneNumber, String staffEmail)
         {
-            var staffDetail = db.Staffs.SingleOrDefault(n => n.StaffId == staffId);
+            var staffDetail = db.Staffs.SingleOrDefault(n => n.User.UserId == userId);
             if (staffDetail != null)
             {
                 try
                 {
-                    staffDetail.StaffId = staffId;
+                    staffDetail.User.UserId = userId;
                     staffDetail.User.Fullname = staffName;
                     staffDetail.User.Email = staffEmail;
                     staffDetail.StaffAddress = staffAddress;

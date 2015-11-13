@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using BMA.Models;
+using System.Net;
+using System.Data;
+using BMA.Business;
+using System.IO;
 
 namespace BMA.Business
 {
@@ -11,7 +16,6 @@ namespace BMA.Business
         private static BMAEntities db = new BMAEntities();
 
         #region Get Input Bill List
-
         public static List<InputBill> GetInputBillList()
         {
             List<InputBill> inputBillList = db.InputBills.OrderBy(n => n.ImportDate).ToList();

@@ -16,6 +16,7 @@
 <section class="content">
     <!--Title row-->
     <form id="edit-input-material-form"></form>
+
     <div class="row">
         <!-- Info row -->
         <div class="col-md-4">
@@ -23,6 +24,7 @@
                 <div class="box-body box-profile">
                     <h3 class="profile-username text-center">
                         @Model.ProductMaterial.ProductMaterialName
+
                     </h3>
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
@@ -81,7 +83,7 @@
                                                     '<div class="form-group">' +
                                                     '<label>Số lượng hủy: </label>' +
                                                     '<input type="number" min = "1" oninput="maxLengthCheck(this)" max="@Model.RemainQuantity" class="form-control" id="price" value="' + discardQuantity + '" name="discardQuantity"/>' +
-                                                    '</div>' +
+                                                    '<input type="hidden" name="InputMaterialId" id="InputMaterialId" value="@Model.InputMaterialId" />' + '</div>' +
                                                     '<div class="form-group">' +
                                                     '<label>Ghi chú: </label>' +
                                                     '<textarea maxlength="200" rows="3" class="form-control" id="discardNote" value="' + discardNote + '" name="discardNote">' + '</textarea>' +
@@ -119,9 +121,9 @@
                                             $.ajax({
                                                 "url": "@(Url.Action("DiscardInputMaterial", "DiscardInputMaterial"))",
                                                 "method": "POST",
-                                                "data": {
-                                                    "id": id
-                                                },
+                                                "data":
+                                                    $("#discard-form").serialize(),
+
                                                 "success": function (data) {
                                                     if (data === "1") {
                                                         $('#myModal').modal('hide');

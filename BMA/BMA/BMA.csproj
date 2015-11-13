@@ -324,6 +324,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
+    <Content Include="Content\AdminLayout\dist\img\VipIcon.gif" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\CustomerLayout\ajax.googleapis.com\ajax\libs\jquery\1.10.1\jquery.min.js" />
     <Content Include="Content\CustomerLayout\assets\bootstrap\css\bootstrap.css" />
     <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.svg" />
@@ -427,10 +429,13 @@
     <Content Include="Content\Images\BakeryImages\KTC.jpg" />
     <Content Include="Content\Images\BakeryImages\Pudding.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
+    <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\style.css" />
+    <Content Include="Content\timeslider.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.eot" />
@@ -497,13 +502,19 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.noty.packaged.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\my-own-function.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\timeslider.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Content\AdminLayout\bootstrap\css\bootstrap.css" />
     <Content Include="Content\AdminLayout\bootstrap\css\bootstrap.min.css" />
@@ -1416,9 +1427,11 @@
     <Content Include="Views\Supplier\SupplierDetail.cshtml" />
     <Content Include="Views\Supplier\SupplierIndex.cshtml" />
     <Content Include="Views\Tax\Index.cshtml" />
+    <Content Include="Views\Customer\OrderedByCustomerPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Images\InputBillImages\" />
     <Folder Include="Views\Shared\" />
   </ItemGroup>
   <ItemGroup>

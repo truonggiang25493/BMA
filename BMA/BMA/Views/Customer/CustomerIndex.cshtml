@@ -15,15 +15,15 @@
     <div class="box">
         <!-- box-body -->
         <div class="box-body">
-            <table id="example2" class="table table-hover table-bordered">
+            <table id="example1" class="table table-hover table-bordered">
                 <thead style="font-weight: bold">
                     <tr>
 
-                        <th>Tên khách hàng</th>
-                        <th>Địa chỉ</th>
-                        <th>Số điện thoại</th>
-                        <th>Trạng thái</th>
-                        <th></th>
+                        <th style="width: 20%">Tên khách hàng</th>
+                        <th style="width: 30%">Địa chỉ</th>
+                        <th style="width: 10%">Số điện thoại</th>
+                        <th style="width: 15%">Trạng thái</th>
+                        <th style="width: 25%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,25 +31,153 @@
                     {
                         <tr>
 
-                            <td>@customer.User.Fullname</td>
-                            <td>@customer.CustomerAddress</td>
-                            <td>@customer.CustomerPhoneNumber</td>
+                            <td style="width: 20%">@customer.User.Fullname</td>
+                            <td style="width: 30%">@(customer.CustomerAddress.Length <= 40 ? customer.CustomerAddress : customer.CustomerAddress.Substring(0, 36) + "...")</td>
+                            <td style="width: 10%">@customer.CustomerPhoneNumber</td>
                             @if (customer.IsActive)
                             {
-                                <td>
+                                <td style="width: 15%">
                                     <span class="label label-success">Đang hoạt động</span>
+                                    @if (customer.IsLoyal)
+                                    {
+                                        <img src="~/content/adminlayout/dist/img/vipicon.gif" />
+                                    }
                                 </td>
-                                <td>
-                                    @Html.ActionLink("Xem", "CustomerDetail", new { id = customer.CustomerId })
+                                <td style="width: 10%">
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("CustomerDetail", "Customer", new {id = customer.CustomerId}))">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                    </a>
+                                    <button class="btn btn-link btn-xs" onclick="open_container(@(customer.CustomerId));">
+                                        <i class="fa fa-refresh" style="margin-right: 3px"></i>Thay đổi trạng thái
+                                        <script type="text/javascript">
+                                            function open_container(id) {
+                                                var content = $("<div>", {
+                                                    "html": "Bạn có muốn thay đổi trạng thái của khách hàng từ trạng thái  " + "@Html.Raw(customer.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(customer.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
+                                                });
+
+                                                var title = 'Thay đổi trạng thái nguyên liệu';
+                                                var footer = $("<div>", {
+                                                    "class": "row",
+                                                    "html": [
+                                                        $("<button>", {
+                                                            "class": "btn btn-success pull-right",
+                                                            "style": "margin-right: 30%;",
+                                                            "onclick": "change_customer_status(" + id + ")",
+                                                            "html": "Đồng ý"
+                                                        }),
+                                                        $("<button>", {
+                                                            "class": "btn btn-danger",
+                                                            "style": "margin-right: 10px;",
+                                                            "data-dismiss": "modal",
+                                                            "html": "Hủy"
+                                                        })
+                                                    ]
+                                                });
+                                                setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+                                                $('#myModal').modal('show');
+                                            }
+
+                                            function setModalBox(title, content, footer) {
+                                                document.getElementById('popup-body').innerHTML = content;
+                                                document.getElementById('popup-title').innerHTML = title;
+                                                document.getElementById('popup-footer').innerHTML = footer;
+                                            }
+
+                                            function change_customer_status(id) {
+                                                $.ajax({
+                                                    "url": "@(Url.Action("ChangeCustomerStatus", "Customer"))",
+                                                    "method": "POST",
+                                                    "data": {
+                                                        "id": id
+                                                    },
+                                                    "success": function (data) {
+                                                        if (data === "1") {
+                                                            $('#myModal').modal('hide');
+                                                            window.location.replace("@Url.Action("CustomerIndex", "Customer", customer.CustomerId)");
+                                                        } else {
+                                                            alert("Khong the");
+                                                        }
+                                                    },
+                                                    "fail": function (e) {
+                                                        alert("Have error" + e);
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                    </button>
                                 </td>
                             }
                             else
                             {
-                                <td>
+                                <td style="width: 15%">
                                     <span class="label label-danger">Ngừng hoạt động</span>
+                                    @if (customer.IsLoyal)
+                                    {
+                                        <img src="~/content/adminlayout/dist/img/vip.png" />
+                                    }
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Xem", "CustomerDetail", new { id = customer.CustomerId })
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("CustomerDetail", "Customer", new {id = customer.CustomerId}))">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                    </a>
+                                    <button class="btn btn-link btn-xs" onclick="open_container(@(customer.CustomerId));">
+                                        <i class="fa fa-refresh" style="margin-right: 3px"></i>Thay đổi trạng thái
+                                        <script type="text/javascript">
+                                            function open_container(id) {
+                                                var content = $("<div>", {
+                                                    "html": "Bạn có muốn thay đổi trạng thái của khách hàng từ trạng thái  " + "@Html.Raw(customer.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(customer.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
+                                                });
+
+                                                var title = 'Thay đổi trạng thái nguyên liệu';
+                                                var footer = $("<div>", {
+                                                    "class": "row",
+                                                    "html": [
+                                                        $("<button>", {
+                                                            "class": "btn btn-success pull-right",
+                                                            "style": "margin-right: 30%;",
+                                                            "onclick": "change_customer_status(" + id + ")",
+                                                            "html": "Đồng ý"
+                                                        }),
+                                                        $("<button>", {
+                                                            "class": "btn btn-danger",
+                                                            "style": "margin-right: 10px;",
+                                                            "data-dismiss": "modal",
+                                                            "html": "Hủy"
+                                                        })
+                                                    ]
+                                                });
+                                                setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+                                                $('#myModal').modal('show');
+                                            }
+
+                                            function setModalBox(title, content, footer) {
+                                                document.getElementById('popup-body').innerHTML = content;
+                                                document.getElementById('popup-title').innerHTML = title;
+                                                document.getElementById('popup-footer').innerHTML = footer;
+                                            }
+
+                                            function change_customer_status(id) {
+                                                $.ajax({
+                                                    "url": "@(Url.Action("ChangeCustomerStatus", "Customer"))",
+                                                    "method": "POST",
+                                                    "data": {
+                                                        "id": id
+                                                    },
+                                                    "success": function (data) {
+                                                        if (data === "1") {
+                                                            $('#myModal').modal('hide');
+                                                            window.location.replace("@Url.Action("CustomerIndex", "Customer", customer.CustomerId)");
+                                                        } else {
+                                                            alert("Khong the");
+                                                        }
+                                                    },
+                                                    "fail": function (e) {
+                                                        alert("Have error" + e);
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                    </button>
                                 </td>
                             }
                         </tr>

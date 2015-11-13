@@ -10,8 +10,9 @@ namespace BMA.Business
     {
         private static BMAEntities db = new BMAEntities();
         #region Add discard for input material
-        public static bool DiscardInputMaterial(DiscardedInputMaterial discardedInputMaterial)
+        public static bool DiscardInputMaterial(DiscardedInputMaterial discardedInputMaterial, int inputMaterialId)
         {
+            InputMaterial inputMaterial = db.InputMaterials.FirstOrDefault(m => m.InputMaterialId == inputMaterialId);
             if (discardedInputMaterial == null)
             {
                 return false;
@@ -19,6 +20,7 @@ namespace BMA.Business
             try
             {
                 db.DiscardedInputMaterials.Add(discardedInputMaterial);
+                inputMaterial.RemainQuantity = inputMaterial.RemainQuantity - discardedInputMaterial.DiscardQuantity;
                 db.SaveChanges();
             }
             catch (Exception e)

@@ -32,19 +32,22 @@ namespace BMA.Controllers
 
         [HttpPost]
         #region Add discard for input material
-        public int DiscardInputMaterial(FormCollection f, int inputMaterialId)
+        public int DiscardInputMaterial(FormCollection f)
         {
-            InputMaterial inputMaterial = db.InputMaterials.SingleOrDefault(m => m.InputMaterialId == inputMaterialId);
             String discardQuantityString = f["discardQuantity"];
             String discardNote = f["discardNote"];
+            String inputMaterialIdString = f["InputMaterialId"];
+            int inputMaterialId = Convert.ToInt32(inputMaterialIdString);
+            int discardQuantity = Convert.ToInt32(discardQuantityString);
+
             DiscardedInputMaterial discardedInputMaterial = new DiscardedInputMaterial();
             try
             {
                 discardedInputMaterial.DiscardDate = DateTime.Now;
                 discardedInputMaterial.InputMaterialId = inputMaterialId;
                 discardedInputMaterial.DiscardNote = discardNote;
-                discardedInputMaterial.DiscardQuantity = Convert.ToInt32(discardQuantityString);
-                inputMaterial.RemainQuantity = Convert.ToInt32(inputMaterial.RemainQuantity - Convert.ToInt32(discardQuantityString));
+                discardedInputMaterial.DiscardQuantity = discardQuantity;
+                
             }
             catch (Exception)
             {
@@ -52,7 +55,7 @@ namespace BMA.Controllers
 
             }
 
-            bool result = DiscardInputMaterialBusiness.DiscardInputMaterial(discardedInputMaterial);
+            bool result = DiscardInputMaterialBusiness.DiscardInputMaterial(discardedInputMaterial,inputMaterialId);
             if (result)
             {
                 return 1;

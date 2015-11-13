@@ -21,7 +21,7 @@
     <link href="~/Content/timeslider.css" rel="stylesheet" />
     <!--DatetimePicker-->
     <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-    @RenderSection("InitStyle", false)
+   
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -84,7 +84,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Thông tin cá nhân</a>
+                                        <a href="@Url.Action("StaffEditInfo", "Staff", new { id = (Session["User"] as BMA.Models.User).UserId })" class="btn btn-default btn-flat">Thông tin cá nhân</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="#" class="btn btn-default btn-flat">Đăng xuất</a>
@@ -215,7 +215,7 @@
                         <ul class="treeview-menu">
                             <li><a href=""><i class="fa fa-usd"></i>Thống kê doanh thu</a></li>
                             <li><a href=""><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
-                            <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
+                            <li id="taxReport"><a href="@(Url.Action("ChangeVat","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
                     </li>
                 </ul>

@@ -116,7 +116,7 @@ namespace BMA.Controllers
         public ActionResult StaffEditInfo(int id)
         {
             ViewBag.TreeView = "staff";
-            Staff staff = db.Staffs.SingleOrDefault(m => m.StaffId == id);
+            Staff staff = db.Staffs.SingleOrDefault(m => m.UserId == id);
             return View(staff);
         }
         #endregion
@@ -126,18 +126,18 @@ namespace BMA.Controllers
         public int StaffEditInfo(FormCollection f)
         {
             String staffName = f["txtStaffName"];
-            String staffIdString = f["StaffId"];
+            String userIdString = f["UserId"];
             String staffPhoneNumber = f["txtStaffPhoneNumber"];
             String staffEmail = f["txtStaffEmail"];
             String staffAddress = f["txtStaffAddress"];
             if (
-                !(staffName.IsEmpty() || staffIdString.IsEmpty() ||
+                !(staffName.IsEmpty() || userIdString.IsEmpty() ||
                   staffPhoneNumber.IsEmpty() || staffEmail.IsEmpty() ||
                   staffAddress.IsEmpty()))
             {
-                int staffId = Convert.ToInt32(staffIdString);
+                int userId = Convert.ToInt32(userIdString);
 
-                bool result = StaffBusiness.EditStaffInfo(staffId, staffName, staffAddress, staffPhoneNumber, staffEmail);
+                bool result = StaffBusiness.EditStaffInfo(userId, staffName, staffAddress, staffPhoneNumber, staffEmail);
                 return result ? 1 : 0;
             }
             return 0;

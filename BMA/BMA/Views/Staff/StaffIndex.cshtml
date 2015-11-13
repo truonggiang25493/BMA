@@ -38,7 +38,67 @@
                                     <span class="label label-success">Đang hoạt động</span>
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Xem", "StaffDetail", new { id = staff.StaffId })
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("StaffDetail", "Staff", new {id = staff.StaffId}))">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                    </a>
+                                    <button class="btn btn-link btn-xs" onclick="open_container(@(staff.StaffId));">
+                                        <i class="fa fa-refresh" style="margin-right: 3px"></i>Thay đổi trạng thái
+                                        <script type="text/javascript">
+                                            function open_container(id) {
+                                                var content = $("<div>", {
+                                                    "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(staff.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(staff.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
+                                                });
+
+                                                var title = 'Thay đổi trạng thái nguyên liệu';
+                                                var footer = $("<div>", {
+                                                    "class": "row",
+                                                    "html": [
+                                                        $("<button>", {
+                                                            "class": "btn btn-success pull-right",
+                                                            "style": "margin-right: 30%;",
+                                                            "onclick": "change_staff_status(" + id + ")",
+                                                            "html": "Đồng ý"
+                                                        }),
+                                                        $("<button>", {
+                                                            "class": "btn btn-danger",
+                                                            "style": "margin-right: 10px;",
+                                                            "data-dismiss": "modal",
+                                                            "html": "Hủy"
+                                                        })
+                                                    ]
+                                                });
+                                                setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+                                                $('#myModal').modal('show');
+                                            }
+
+                                            function setModalBox(title, content, footer) {
+                                                document.getElementById('popup-body').innerHTML = content;
+                                                document.getElementById('popup-title').innerHTML = title;
+                                                document.getElementById('popup-footer').innerHTML = footer;
+                                            }
+
+                                            function change_staff_status(id) {
+                                                $.ajax({
+                                                    "url": "@(Url.Action("ChangeStaffStatus", "Staff"))",
+                                                    "method": "POST",
+                                                    "data": {
+                                                        "id": id
+                                                    },
+                                                    "success": function (data) {
+                                                        if (data === "1") {
+                                                            $('#myModal').modal('hide');
+                                                            window.location.replace("@Url.Action("StaffIndex", "Staff", staff.StaffId)");
+                                                        } else {
+                                                            alert("Khong the");
+                                                        }
+                                                    },
+                                                    "fail": function (e) {
+                                                        alert("Have error" + e);
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                    </button>
                                 </td>
                             }
                             else
@@ -47,7 +107,68 @@
                                     <span class="label label-danger">Ngừng hoạt động</span>
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Xem", "StaffDetail", new { id = staff.StaffId })
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("StaffDetail", "Staff", new {id = staff.StaffId}))">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                    </a>
+                                    <button class="btn btn-link btn-xs" onclick="open_container(@(staff.StaffId));">
+                                        <i class="fa fa-refresh" style="margin-right: 3px"></i>Thay đổi trạng thái
+                                        <script type="text/javascript">
+                                            function open_container(id) {
+                                                var content = $("<div>", {
+                                                    "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(staff.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(staff.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
+                                                });
+
+                                                var title = 'Thay đổi trạng thái nguyên liệu';
+                                                var footer = $("<div>", {
+                                                    "class": "row",
+                                                    "html": [
+                                                        $("<button>", {
+                                                            "class": "btn btn-success pull-right",
+                                                            "style": "margin-right: 30%;",
+                                                            "onclick": "change_staff_status(" + id + ")",
+                                                            "html": "Đồng ý"
+                                                        }),
+                                                        $("<button>", {
+                                                            "class": "btn btn-danger",
+                                                            "style": "margin-right: 10px;",
+                                                            "data-dismiss": "modal",
+                                                            "html": "Hủy"
+                                                        })
+                                                    ]
+                                                });
+                                                setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+                                                $('#myModal').modal('show');
+                                            }
+
+                                            function setModalBox(title, content, footer) {
+                                                document.getElementById('popup-body').innerHTML = content;
+                                                document.getElementById('popup-title').innerHTML = title;
+                                                document.getElementById('popup-footer').innerHTML = footer;
+                                            }
+
+                                            function change_staff_status(id) {
+                                                $.ajax({
+                                                    "url": "@(Url.Action("ChangeStaffStatus", "Staff"))",
+                                                    "method": "POST",
+                                                    "data": {
+                                                        "id": id
+                                                    },
+                                                    "success": function (data) {
+                                                        if (data === "1") {
+                                                            $('#myModal').modal('hide');
+                                                            window.location.replace("@Url.Action("StaffIndex", "Staff", staff.StaffId)");
+                                                        } else {
+                                                            alert("Khong the");
+                                                        }
+                                                    },
+                                                    "fail": function (e) {
+                                                        alert("Have error" + e);
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                    </button>
+
                                 </td>
                             }
                         </tr>
