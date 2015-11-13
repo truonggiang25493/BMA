@@ -181,6 +181,7 @@
     <Compile Include="Business\SupplierBusiness.cs" />
     <Compile Include="Business\TaxBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
+    <Compile Include="Common\CommonFunction.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
@@ -1401,8 +1402,13 @@
     <Content Include="Views\Supplier\SupplierDetail.cshtml" />
     <Content Include="Views\Supplier\SupplierIndex.cshtml" />
     <Content Include="Views\Report\ReviewIncomeByTime.cshtml" />
-    <Content Include="Views\Report\ReviewIncomeByTimeDetail.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeWeeklyDetail.cshtml" />
     <Content Include="Views\Report\ReviewRevenueByProduct.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeWeeklyPartialView.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeMonthlyPartialView.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeMonthlyDetail.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeYearlyPartialView.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeYearlyDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
