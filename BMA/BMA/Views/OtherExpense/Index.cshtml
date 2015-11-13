@@ -1,0 +1,158 @@
+﻿@using System.Globalization
+@using BMA.Models
+@model List<BMA.Models.OtherExpense>
+@{
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>@ViewBag.Title</h1>
+</section>
+<!-- Content Body -->
+<section class="content">
+    <div class="box">
+        <div class="box-header">
+            <h2 class="box-title">
+                Danh sách chi phí khác
+            </h2>
+        </div>
+        <div class="box-body">
+            <table class="table table-striped" id="example2">
+                <thead>
+                    <tr>
+                        <th>Khoản chi</th>
+                        <th>Chi phí</th>
+                        <th>Thời gian</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (OtherExpense otherExpense in Model)
+                    {
+                        <tr>
+                            <td>@(otherExpense.OtherExpenseName)</td>
+                            <td>@(otherExpense.OtherExpenseAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                            <td>@(otherExpense.OtherExpenseMonthTime)/@(otherExpense.OtherExpenseYearTime)</td>
+                            <td>
+                                <button class="btn btn-link btn-xs" onclick="openEditPopup(@(otherExpense.OtherExpenseId),'@(otherExpense.OtherExpenseName)',@(otherExpense.OtherExpenseAmount),@(otherExpense.OtherExpenseMonthTime),@(otherExpense.OtherExpenseYearTime))">
+                                    <i class="fa fa-edit" style="margin-right: 3px"></i>
+                                    Sửa
+                                </button>
+                                <button class="btn btn-link btn-xs" href="#">
+                                    <i class="fa fa-close" style="margin-right: 3px"></i>
+                                    Hủy
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="box-footer">
+            <button class="btn btn-success">
+                <i class="fa fa-plus" style="margin-right: 3px"></i>
+                Thêm mới
+            </button>
+        </div>
+    </div>
+
+</section>
+@section OtherExpenseIndexScript{
+    <script type="text/javascript">
+        function openEditPopup(id, name, amount, month, year) {
+            var bodyContent = $("<form>", {
+                "id": "editOtherExpense",
+                "html": [
+                    $("<div>", {
+                        "class": "form-group",
+                        "html": [
+                            "<label for='otherExpenseName'>Khoản chi:  </label>",
+                            $("<input>", {
+                                "type": "hidden",
+                                "name": "otherExpenseId",
+                                "value": id
+                            }),
+                            $("<input>", {
+                                "type": "text",
+                                "class": "form-control",
+                                "name": "otherExpenseName",
+                                "id": "otherExpenseName",
+                                "value": name
+                            })
+                        ]
+                    }),
+                    $("<div>", {
+                        "class": "form-group",
+                        "html": [
+                            "<label>Chi phí: </label>",
+                            $("<input>", {
+                                "type": "number",
+                                "class": "form-control",
+                                "name": "otherExpenseAmount",
+                                "value": amount,
+                                "step": "1000",
+                                "min": "50000"
+                            })
+                        ]
+                    })
+                    ,
+                    $("<div>", {
+                        "class": "form-group",
+                        "html": [
+                            "<label>Tháng: </label>",
+                            $("<input>", {
+                                "class": "form-control",
+                                "type": "number",
+                                "name": "otherExpenseMonth",
+                                "value": month,
+                                "min": "1",
+                                "max": "12"
+                            })
+                        ]
+                    }),
+                    $("<div>", {
+                        "class": "form-group",
+                        "html": [
+                            "<label>Năm: </label>",
+                            $("<input>", {
+                                "class": "form-control",
+                                "type": "number",
+                                "name": "otherExpenseYear",
+                                "value": year,
+                                "min": "2010",
+                                "max": "2100"
+                            })
+                        ]
+                    })
+                ]
+            });
+
+            var buttonContent = $("<div>", {
+                "class": "form-group",
+                "html": [
+                    $("<button>", {
+                        "class": "btn btn-primary",
+                        "data-dismiss": "modal",
+                        "html": [
+                            "Đóng"
+                        ]
+                    }),
+                    $("<button>", {
+                        "class": "btn btn-success pull-right",
+                        "style": "margin-right: 10px;",
+                        "onclick": "editOtherExpense()",
+                        "html": [
+                            "Đồng ý"
+                        ]
+                    })
+                ]
+            });
+
+            document.getElementById('popup-title').innerHTML = "Chỉnh sửa chi phí khác";
+            document.getElementById('popup-body').innerHTML = bodyContent[0].outerHTML;
+            document.getElementById('popup-footer').innerHTML = buttonContent[0].outerHTML;
+
+            $('#myModal').modal('show');
+        }
+    </script>
+}

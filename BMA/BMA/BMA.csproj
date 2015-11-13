@@ -176,6 +176,7 @@
     <Compile Include="Business\ManageMaterialBusiness.cs" />
     <Compile Include="Business\ManageProductBusiness.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
+    <Compile Include="Business\OtherExpenseBusiness.cs" />
     <Compile Include="Business\ProductBusiness.cs" />
     <Compile Include="Business\ReportBusiness.cs" />
     <Compile Include="Business\StaffBusiness.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Controllers\ManageMaterialController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\OtherExpenseController.cs" />
     <Compile Include="Controllers\ProcedureController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
@@ -1418,6 +1420,7 @@
     <Content Include="Views\StoreInfor\EditStoreInfo.cshtml" />
     <Content Include="Views\StoreInfor\Index.cshtml" />
     <Content Include="Views\StoreInfor\LogoPartial.cshtml" />
+    <Content Include="Views\OtherExpense\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
