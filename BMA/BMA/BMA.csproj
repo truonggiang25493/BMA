@@ -171,6 +171,7 @@
     <Compile Include="Business\CustomerBusiness.cs" />
     <Compile Include="Business\CustomerOrderBusiness.cs" />
     <Compile Include="Business\DiscardInputMaterialBusiness.cs" />
+    <Compile Include="Business\InputBillBusiness.cs" />
     <Compile Include="Business\InputMaterialBusiness.cs" />
     <Compile Include="Business\ManageMaterialBusiness.cs" />
     <Compile Include="Business\ManageProductBusiness.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Business\ProductBusiness.cs" />
     <Compile Include="Business\ReportBusiness.cs" />
     <Compile Include="Business\StaffBusiness.cs" />
+    <Compile Include="Business\StoreInforBusiness.cs" />
     <Compile Include="Business\SupplierBusiness.cs" />
     <Compile Include="Business\TaxBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
@@ -200,6 +202,7 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
+    <Compile Include="Controllers\StoreInforController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\TaxController.cs" />
     <Compile Include="Global.asax.cs">
@@ -285,6 +288,9 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Staff.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StoreInfo.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Supplier.cs">
@@ -1409,6 +1415,9 @@
     <Content Include="Views\Report\ReviewIncomeMonthlyDetail.cshtml" />
     <Content Include="Views\Report\ReviewIncomeYearlyPartialView.cshtml" />
     <Content Include="Views\Report\ReviewIncomeYearlyDetail.cshtml" />
+    <Content Include="Views\StoreInfor\EditStoreInfo.cshtml" />
+    <Content Include="Views\StoreInfor\Index.cshtml" />
+    <Content Include="Views\StoreInfor\LogoPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
