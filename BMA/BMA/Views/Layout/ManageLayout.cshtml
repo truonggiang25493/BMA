@@ -21,7 +21,7 @@
     <link href="~/Content/timeslider.css" rel="stylesheet" />
     <!--DatetimePicker-->
     <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-   
+    @RenderSection("InitStyle", false)
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -84,7 +84,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="@Url.Action("StaffEditInfo", "Staff", new { id = (Session["User"] as BMA.Models.User).UserId })" class="btn btn-default btn-flat">Thông tin cá nhân</a>
+                                        <a href="#" class="btn btn-default btn-flat">Thông tin cá nhân</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="#" class="btn btn-default btn-flat">Đăng xuất</a>
@@ -148,11 +148,11 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-                            <<<<<<< HEAD
-                            <li><a href="@Url.Action("AddProduct", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
-                            =======
+
+                            <li><a href="@Url.Action("AddProduct", "ManageProduct" )"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+
                             <li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
-                            >>>>>>> 1d0ab64994e6cf30f3c65e1a389b7111901dee1e
+
                         </ul>
                     </li>
                     <li class="treeview">
@@ -203,9 +203,15 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="listInputBill"><a href="@Url.Action("InputBillIndex","InputBill")"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
-                            <li id="addInputBill"><a href="@Url.Action("AddInputBill","InputBill")"><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
+                            <li id="listInputBill"><a href="@Url.Action("InputBillIndex", "InputBill")"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
+                            <li id="addInputBill"><a href="@Url.Action("AddInputBill", "InputBill")"><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
                         </ul>
+                    </li>
+                    <li class="treeview" id="otherExpense">
+                        <a href="@(Url.Action("Index", "OtherExpense"))">
+                            <i class="fa fa-bar-chart"></i> <span>Chi phí khác</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
                     </li>
                     <li class="treeview" id="report">
                         <a href="#">
@@ -214,8 +220,8 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href=""><i class="fa fa-usd"></i>Thống kê doanh thu</a></li>
-                            <li><a href=""><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
-                            <li id="taxReport"><a href="@(Url.Action("ChangeVat","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
+                            <li id="incomeReport"><a href="@(Url.Action("ReviewIncomeByTime", "Report"))"><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
+                            <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -324,6 +330,8 @@
     @RenderSection("AddOrderScript", false)
     @RenderSection("CustomerDetailScript", false)
     @RenderSection("InputBillDetailScript", false)
+    @RenderSection("ReviewIncomeByTimeScript", false)
+    @RenderSection("OtherExpenseIndexScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({

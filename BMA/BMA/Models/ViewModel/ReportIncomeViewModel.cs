@@ -9,6 +9,8 @@ namespace BMA.Models.ViewModel
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public int Month { get; set; }
+        public int Year { get; set; }
         public int RevenueAmount { get; set; }
         public int CompletedOrderValue { get; set; }
         public List<Order> CompletedOrderList { get; set; }
@@ -16,6 +18,8 @@ namespace BMA.Models.ViewModel
         public List<Order> CanceledOrderList { get; set; }
         public int MaterialExpense { get; set; }
         public List<ReportProductMaterial> ProductMaterialList { get; set; }
+        public int OtherExpense { get; set; }
+        public List<OtherExpense> OtherExpenseList { get; set; }
         public int Income { get; set; }
     }
 
@@ -26,4 +30,6 @@ namespace BMA.Models.ViewModel
         public int ProductMaterialAmount { get; set; }
         public string ProductMaterialUnit { get; set; }
     }
+
+
 }

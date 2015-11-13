@@ -6,26 +6,19 @@ using System.Web;
 
 namespace BMA.Common
 {
-    public class CommonFunction
+    public static class CommonFunction
     {
-        public static string ChangeDateTimeToVietnameseType(DateTime dateTime)
+        public static DateTime FirstDayOfWeek(this DateTime dt)
         {
-            string rs = "";
-            // Get date time string
-            string dateTimeString = dateTime.ToString("dd/MM/yyyy hh:mm tt");
-            // If the 2-letter last is AM, change to Sáng
-            // If the 2-letter last is PM, change to Chiều
-            int length = dateTimeString.Length;
-            string twoLastLetter = dateTimeString.Substring(length - 2);
-            if (twoLastLetter.Equals("AM"))
-            {
-                rs = dateTimeString.Substring(0, length - 2) + "Sáng";
-            }
-            else
-            {
-                rs = dateTimeString.Substring(0, length - 2) + "Chiều";
-            }
-            return rs;
+            var culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+            var diff = dt.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
+            if (diff < 0)
+                diff += 7;
+            return dt.AddDays(-diff).Date;
+        }
+        public static DateTime LastDayOfWeek(this DateTime dt)
+        {
+            return dt.FirstDayOfWeek().AddDays(6);
         }
     }
 }

@@ -1,13 +1,15 @@
 ﻿@using System.Globalization
 @model BMA.Models.ViewModel.ReportIncomeViewModel
 @{
+    ViewBag.Title = "ReviewIncomeMonthlyDetail";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
+
 <div class="row">
     <div class="col-md-12">
         <div class="box">
             <div class="box-header">
-                <h2 class="box-title">Thống kê chi tiết từ @(Model.StartDate.ToString("dd/MM/yyyy")) đến @(Model.EndDate.ToString("dd/MM/yyyy"))</h2>
+                <h2 class="box-title">Thống kê chi tiết tháng @(Model.Month)/@(Model.Year)</h2>
             </div>
             <div class="box-body">
                 <!--Income-->
@@ -60,11 +62,11 @@
                             <table class="table table-responsive">
                                 <thead>
                                     <tr>
-                                        <td>STT</td>
-                                        <td>Mã đơn hàng</td>
-                                        <td>Tiền cọc</td>
-                                        <td>Hoàn trả tiền cọc</td>
-                                        <td>Giá trị</td>
+                                        <th>STT</th>
+                                        <th>Mã đơn hàng</th>
+                                        <th>Tiền cọc</th>
+                                        <th>Hoàn trả tiền cọc</th>
+                                        <th>Giá trị</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -94,10 +96,10 @@
                         <table class="table table-responsive">
                             <thead>
                                 <tr>
-                                    <td>STT</td>
-                                    <td>Nguyên liệu</td>
-                                    <td>Số lượng</td>
-                                    <td>Thành tiền</td>
+                                    <th>STT</th>
+                                    <th>Nguyên liệu</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,8 +117,36 @@
                         </table>
                     </div>
                 </div>
-
+                <!--Other expense-->
+                <div class="box box-danger">
+                    <div class="box-header">
+                        <h3 class="box-title">Chi phí khác: @(Model.OtherExpense.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h3>
+                        <span> gồm</span>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mục</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.OtherExpenseList.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@(i + 1)</td>
+                                        <td>@(Model.OtherExpenseList.ElementAt(i).OtherExpenseName)</td>
+                                        <td style="text-align: right">@(Model.OtherExpenseList.ElementAt(i).OtherExpenseAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
