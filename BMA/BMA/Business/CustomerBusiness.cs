@@ -87,7 +87,7 @@ namespace BMA.Business
         #region Get customer index
         public static List<Customer> GetCustomerIndex()
         {
-            List<Customer> customerList = db.Customers.OrderBy(n => n.IsActive).ToList();
+            List<Customer> customerList = db.Customers.OrderBy(n => !n.IsActive).ToList();
             return customerList;
         }
         #endregion
@@ -114,6 +114,40 @@ namespace BMA.Business
                 else
                 {
                     customerDetail.IsActive = true;
+                }
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception)
+                {
+
+                    return false;
+                }
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
+
+        #region Change customer loyal
+        public static bool ChangeCustomerLoyal(int id)
+        {
+            var customerDetail = db.Customers.SingleOrDefault(n => n.CustomerId == id);
+            if (customerDetail != null)
+            {
+                if (customerDetail.IsLoyal)
+                {
+                    customerDetail.IsLoyal = false;
+
+                }
+                else
+                {
+                    customerDetail.IsLoyal = true;
                 }
                 try
                 {

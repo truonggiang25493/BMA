@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Collections.Specialized
+@using BMA.Models
+<!DOCTYPE html>
 <html>
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -84,7 +86,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Thông tin cá nhân</a>
+                                        <a href="@Url.Action("StaffEditInfo", "Staff", new { id = (Session["User"] as BMA.Models.User).UserId })" class="btn btn-default btn-flat">Thông tin cá nhân</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="#" class="btn btn-default btn-flat">Đăng xuất</a>
@@ -288,7 +290,7 @@
     </div>
     <!--End of large modal-->
     <!-- jQuery 2.1.4 -->
-    <script src="/Content/AdminLayout/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="~/Content/AdminLayout/plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.5 -->
     <script src="/Content/AdminLayout/bootstrap/js/bootstrap.min.js"></script>
     <!-- FastClick -->
@@ -322,7 +324,6 @@
     @RenderSection("InitScript", false)
 
     @RenderSection("AddInputMaterialScript", false)
-
     @RenderSection("OrderDetailScript", false)
     @RenderSection("CheckoutWithCustomerScript", false)
     @RenderSection("AddCustomerToOrderScript", false)
@@ -332,6 +333,7 @@
     @RenderSection("InputBillDetailScript", false)
     @RenderSection("ReviewIncomeByTimeScript", false)
     @RenderSection("OtherExpenseIndexScript", false)
+    @RenderSection("AddInputBill", false)
     <script>
         $(function () {
             $('#example2').DataTable({

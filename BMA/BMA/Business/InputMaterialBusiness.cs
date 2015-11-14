@@ -23,7 +23,7 @@ namespace BMA.Business
         public static List<InputMaterial> GetInputMaterialList()
         {
             
-            List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderBy(n => n.InputMaterialExpiryDate).ToList();
+            List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderBy(n => n.ImportDate).ToList();
             return inputMaterialslList;
         }
         #endregion

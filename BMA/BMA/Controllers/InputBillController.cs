@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -71,13 +72,8 @@ namespace BMA.Controllers
         #endregion
         [HttpPost]
         #region Add New Input Bill
-        public int AddInputBill(FormCollection f)
+        public int AddInputBill(string supplierIdString, string inputBillAmountString, string inputTaxAmountString, string importDate, string fileName)
         {
-
-            String supplierIdString = f["supplierId"];
-            String inputBillAmountString = f["txtInputBillAmount"];
-            String inputTaxAmountString = f["txtInputTaxAmount"];
-            String importDate = f["txtImportDate"];
             InputBill inputBill = new InputBill();
             try
             {
@@ -86,7 +82,9 @@ namespace BMA.Controllers
                 inputBill.InputTaxAmount = Convert.ToInt32(inputTaxAmountString);
                 inputBill.ImportDate = Convert.ToDateTime(importDate);
                 inputBill.InputBillCode = supplierIdString + importDate;
-                inputBill.InputRawImage = "abc";
+
+                inputBill.InputRawImage = fileName;
+
 
             }
             catch (Exception)
@@ -98,7 +96,7 @@ namespace BMA.Controllers
             bool result = InputBillBusiness.AddInputBill(inputBill);
             if (result)
             {
-                return 1;
+                return 2;
             }
             else
             {
@@ -107,5 +105,53 @@ namespace BMA.Controllers
 
         }
         #endregion
+
+        #region Add input bill image
+        [HttpPost]
+        public int AddImage(HttpPostedFileBase inputBillImage)
+        {
+            var allowedExtensions = new[] {  
+            ".Jpg", ".png", ".jpg", "jpeg", ".JPG", ".PNG", ".JPEG"  
+            };
+            var maxSize = 1048576;
+            var fileName = "";
+            if (inputBillImage != null)
+            {
+                var productSize = inputBillImage.ContentLength;
+                fileName = Path.GetFileName(inputBillImage.FileName);
+                var ext = Path.GetExtension(inputBillImage.FileName);
+                if (allowedExtensions.Contains(ext))
+                {
+                    if (productSize <= maxSize)
+                    {
+                        var comparePath = Server.MapPath(string.Format("{0}{1}", "~/Content/Images/InputBillImages", fileName));
+                        if (!System.IO.File.Exists(comparePath))
+                        {
+                            var path = Path.Combine(Server.MapPath("~/Content/Images/InputBillImages"), fileName);
+                            inputBillImage.SaveAs(path);
+                        }
+                        return 1;
+                    }
+                    else
+                    {
+                        //TempData["Message"] = "Kích thước hình ảnh quá lớn";
+                        string strURL = Request.UrlReferrer.AbsolutePath;
+                        return -2;
+                    }
+                }
+                else
+                {
+                    //TempData["Message"] = "Xin chọn file hình ảnh";
+                    string strURL = Request.UrlReferrer.AbsolutePath;
+                    return -3;
+                }
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        #endregion
     }
+
 }
