@@ -429,6 +429,7 @@
     <Content Include="Content\Images\BakeryImages\BXX.jpg" />
     <Content Include="Content\Images\BakeryImages\KTC.jpg" />
     <Content Include="Content\Images\BakeryImages\Pudding.jpg" />
+    <Content Include="Content\Images\InputBillImages\InputBillDemo.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\PagedList.css" />
@@ -1421,6 +1422,16 @@
     <Content Include="Views\StoreInfor\Index.cshtml" />
     <Content Include="Views\StoreInfor\LogoPartial.cshtml" />
     <Content Include="Views\OtherExpense\Index.cshtml" />
+    <Content Include="Views\InputBill\AddInputBill.cshtml" />
+    <Content Include="Views\InputBill\InputBillDetail.cshtml" />
+    <Content Include="Views\InputBill\InputMaterialInBillPartialView.cshtml" />
+    <Content Include="Views\InputBill\SupplierPartialView.cshtml" />
+    <Content Include="Views\Customer\CustomerDetail.cshtml" />
+    <Content Include="Views\Customer\CustomerIndex.cshtml" />
+    <Content Include="Views\Customer\OrderedByCustomerPartialView.cshtml" />
+    <Content Include="Views\Staff\AddStaff.cshtml" />
+    <Content Include="Views\Staff\StaffEditInfo.cshtml" />
+    <Content Include="Views\InputBill\EditInputBill.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -164,8 +164,8 @@ namespace BMA.Controllers
         {
             string staffPhoneNumber = form["txtStaffPhoneNumber"];
             string staffEmail = form["txtStaffEmail"];
-            int staffId = Convert.ToInt32(form["#StaffId"]);
-            return staffBusiness.CheckStaffInfoInEdit(staffPhoneNumber, staffEmail, staffId);
+            int userId = Convert.ToInt32(form["UserId"]);
+            return staffBusiness.CheckStaffInfoInEdit(staffPhoneNumber, staffEmail, userId);
         }
         #endregion
     }

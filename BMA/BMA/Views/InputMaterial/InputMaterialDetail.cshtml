@@ -117,25 +117,62 @@
                                             document.getElementById('popup-footer').innerHTML = footer;
                                         }
 
-                                        function discard_input_material(id) {
-                                            $.ajax({
-                                                "url": "@(Url.Action("DiscardInputMaterial", "DiscardInputMaterial"))",
-                                                "method": "POST",
-                                                "data":
-                                                    $("#discard-form").serialize(),
+                                        function discard_input_material() {
+                                            var checkdiscardQuantity = $("#discardQuantity").val();
+                                            var discardNote = $("#discardNote").val();
 
-                                                "success": function (data) {
-                                                    if (data === "1") {
-                                                        $('#myModal').modal('hide');
-                                                        window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial", Model.InputMaterialId)");
-                                                    } else {
-                                                        alert("Khong the");
+                                            if (!isNaN(checkdiscardQuantity)) {
+                                                noty({
+                                                    text: 'Số lượng nguyên liệu bị hủy phải là con số.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                            
+                                            }
+                                            else
+                                                $.ajax({
+                                                    "url": "@(Url.Action("DiscardInputMaterial", "DiscardInputMaterial"))",
+                                                    "method": "POST",
+                                                    "data":
+                                                        $("#discard-form").serialize(),
+
+                                                    "success": function(data) {
+                                                        if (data === "1") {
+                                                            noty({
+                                                                text: 'Hủy nguyên liệu thành công',
+                                                                type: 'success',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1500
+                                                            });
+                                                            $('#myModal').modal('hide');
+                                                            window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial", Model.InputMaterialId)");
+                                                        } else {
+                                                            noty({
+                                                                text: 'Không thể hủy nguyên liệu đầu vào',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1000
+                                                            });
+                                                        }
+                                                    },
+                                                    "fail": function() {
+                                                        noty({
+                                                            text: 'Đã có lỗi xảy ra',
+                                                            type: 'error',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
                                                     }
-                                                },
-                                                "fail": function (e) {
-                                                    alert("Have error" + e);
-                                                }
-                                            });
+                                                });
                                         }
                                     </script>
                                 </button>

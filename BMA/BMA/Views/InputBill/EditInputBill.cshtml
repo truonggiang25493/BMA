@@ -1,15 +1,15 @@
 ﻿@using System.Globalization
 @using BMA.Common
 @using BMA.Models
-@model List<InputBill>
+@model InputBill
 
 @{
-    ViewBag.Title = "Thêm hóa đơn đầu vào";
+    ViewBag.Title = "Chỉnh sửa hóa đơn đầu vào";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 
 <section class="content-header">
-    <h1 style="margin-top: 1%;text-align: center">Thêm hóa đơn đầu vào</h1>
+    <h1 style="margin-top: 1%;text-align: center">Chỉnh sửa hóa đơn đầu vào</h1>
 </section>
 <section>
     <div style="margin-top: 2%">
@@ -24,40 +24,40 @@
                                     <b>Nhà cung cấp<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-8" id="input-bill-info">
-                                    
-                                        <input type="text" name="supplierName" id="supplierName" readonly style="margin-bottom: 10px; width: 65%" />
-                                        <input type="hidden" name="supplierId" id="supplierId" />
-                                        <a class="btn btn-success btn-xs" id="add-supplier" onclick="open_choose_supplier()">
-                                            Chọn nhà cung cấp
-                                            <script type="text/javascript">
-                                                function open_choose_supplier() {
-                                                    $.ajax({
-                                                        url: "@(Url.Action("GetSupplierList", "InputBill"))",
-                                                        method: "POST",
-                                                        success: function (data) {
-                                                            var chooseButton = $("<button>", {
-                                                                "class": "btn btn-success",
-                                                                "onclick": "choose_supplier()",
-                                                                "html": "Chọn nhà cung cấp"
-                                                            });
-                                                            document.getElementById('standard-popup-body').innerHTML = data;
-                                                            document.getElementById('standard-popup-footer').innerHTML = chooseButton[0].outerHTML;
-                                                            $('#myStandardModal').modal('show');
-                                                        }
-                                                    });
-                                                }
 
-                                                function choose_supplier() {
-                                                    var supplierName = $("[data-role=supplier] tr.selected td:first span").html();
-                                                    var supplierId = $("[data-role=supplier] tr.selected td:first input").val();
+                                    <input type="text" value="@Model.Supplier.SupplierName" name="supplierName" id="supplierName" readonly style="margin-bottom: 10px; width: 65%" />
+                                    <input type="hidden" value="@Model.SupplierId" name="supplierId" id="supplierId" />
+                                    <a class="btn btn-success btn-xs" id="add-supplier" onclick="open_choose_supplier()">
+                                        Chọn nhà cung cấp
+                                        <script type="text/javascript">
+                                            function open_choose_supplier() {
+                                                $.ajax({
+                                                    url: "@(Url.Action("GetSupplierList", "InputBill"))",
+                                                    method: "POST",
+                                                    success: function (data) {
+                                                        var chooseButton = $("<button>", {
+                                                            "class": "btn btn-success",
+                                                            "onclick": "choose_supplier()",
+                                                            "html": "Chọn nhà cung cấp"
+                                                        });
+                                                        document.getElementById('standard-popup-body').innerHTML = data;
+                                                        document.getElementById('standard-popup-footer').innerHTML = chooseButton[0].outerHTML;
+                                                        $('#myStandardModal').modal('show');
+                                                    }
+                                                });
+                                            }
 
-                                                    $("#supplierName").val(supplierName);
-                                                    $("#supplierId").val(supplierId);
-                                                    $('#myStandardModal').modal('hide');
-                                                }
-                                            </script>
-                                        </a>
-                                    
+                                            function choose_supplier() {
+                                                var supplierName = $("[data-role=supplier] tr.selected td:first span").html();
+                                                var supplierId = $("[data-role=supplier] tr.selected td:first input").val();
+
+                                                $("#supplierName").val(supplierName);
+                                                $("#supplierId").val(supplierId);
+                                                $('#myStandardModal').modal('hide');
+                                            }
+                                        </script>
+                                    </a>
+
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -65,7 +65,7 @@
                                     <b>Chi phí (Chưa thuế)<b style="color: #ff0000">*</b>: </b>
                                 </div>
                                 <div class="col-xs-8">
-                                    <input type="number" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" style="width: 65%" placeholder="nhập số tiền từ 1.000 - 999.999.999" />
+                                    <input type="number" value="@Model.InputBillAmount" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" style="width: 65%" placeholder="nhập số tiền từ 1.000 - 999.999.999" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -73,7 +73,7 @@
                                     <b>Thuế VAT<b style="color: #ff0000">*</b>: </b>
                                 </div>
                                 <div class="col-xs-8">
-                                    <input type="number" name="txtInputTaxAmount" id="txtInputTaxAmount" required oninput="maxLengthCheck(this)" maxlength="8" min="1000" max="99999999" style="width: 65%" placeholder="nhập số tiền từ 1.000 - 99.999.999" />
+                                    <input type="number" value="@Model.InputTaxAmount" name="txtInputTaxAmount" id="txtInputTaxAmount" required oninput="maxLengthCheck(this)" maxlength="8" min="1000" max="99999999" style="width: 65%" placeholder="nhập số tiền từ 1.000 - 99.999.999" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -81,7 +81,7 @@
                                     <b>Ngày nhập<b style="color: #ff0000">*</b>: </b>
                                 </div>
                                 <div class="col-xs-8">
-                                    <input type="date" required min="2015-01-01" max="2020-12-31" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="txtImportDate" id="txtImportDate" style="width: 65%" />
+                                    <input type="date" required min="2015-01-01" max="2020-12-31" value="@Model.ImportDate" name="txtImportDate" id="txtImportDate" style="width: 65%" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -109,12 +109,12 @@
                                 <div class="box-body">
                                     <div class="form-group" style="margin-left: 0;">
                                         <label>Hình ảnh</label>
-                                        <input type="file" value="" name="inputBillImage" id="inputBillImage" onchange="show(this)">
+                                        <input type="file" value="@Model.InputRawImage" name="inputBillImage" id="inputBillImage" onchange="show(this)">
                                         <div style="margin-top: 10px;">
                                             <img id="user_img"
                                                  height="300"
                                                  width="500"
-                                                 style="border: solid" />
+                                                 style="border: solid" /> src="@Url.Content("/Content/Images/InputBillImages/" + @Model.InputRawImage)"/>
                                         </div>
                                         <script type="text/javascript">
                                             function show(input) {
@@ -139,7 +139,7 @@
             <div class="col-xs-12">
                 <!-- "Thêm mới" button -->
                 <button class="btn btn-primary pull-right" style="margin-right: 2%; margin-bottom: 2%" onclick="addInputBill()">
-                    <i class="fa fa-edit" style="margin-right: 1%;"></i>Thêm mới
+                    <i class="fa fa-edit" style="margin-right: 1%;"></i>Cập nhật
                     <script type="text/javascript">
                         function getFileName(s) {
                             var n = s.lastIndexOf("\\");

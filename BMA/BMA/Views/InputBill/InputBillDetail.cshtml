@@ -28,13 +28,13 @@
                     <div style="margin-top: 5%"></div>
                     <div class="nav-tabs-custom" style="margin-top: 5%">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#supplierInformation" data-toggle="tab">Thông tin chi tiết</a></li>
+                            <li class="active"><a href="#inputBillInformation" data-toggle="tab">Thông tin chi tiết</a></li>
                             <li><a href="#inputMaterialList" data-toggle="tab">Danh sách hóa đơn đã nhập</a></li>
-
+                            <li><a href="#inputBillImage" data-toggle="tab">Hình ảnh hóa đơn</a></li>
                         </ul>
                         <div class="tab-content">
                             <!-- Input Bill Infomation -->
-                            <div class="active tab-pane" id="supplierInformation">
+                            <div class="active tab-pane" id="inputBillInformation">
                                 <p>
                                     <div class="list-group-item">
                                         <b>Nhà cung cấp: </b>
@@ -59,9 +59,15 @@
                                     </div>
                                 </p>
                             </div>
+                            
                             <!-- Input Material in Input Bill List -->
                             <div class="tab-pane" id="inputMaterialList">
                                 <div class="row" id="inputMaterialTable">
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="inputBillImage">
+                                <div align="center">
+                                    <img src="@Url.Content("~/Content/Images/InputBillImages/" + Model.InputRawImage)" style="max-width: 400px; max-height: 600px" />
                                 </div>
                             </div>
 
