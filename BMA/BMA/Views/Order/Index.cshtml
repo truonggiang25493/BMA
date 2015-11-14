@@ -16,26 +16,36 @@
         <!-- box-body -->
         <div class="box-body">
             <div class="row">
-                <button class="btn btn-info" onclick="open_shortage_material_list()">
-                    <i class="fa fa-list" style="margin-right: 3px"></i>Danh sách nguyên liệu bị thiếu
-                    <script type="text/javascript">
-                        function open_shortage_material_list() {
-                            $.ajax({
-                                url: "@(Url.Action("GetShortageMaterialList","Order"))",
-                                method: "POST",
-                                success: function (data) {
-                                    document.getElementById('large-popup-body').innerHTML = data;
-                                    document.getElementById('large-popup-title').innerHTML = "<h3>Danh sách nguyên liệu thiếu</h3>";
-                                    $('#myLargeModal').modal('show');
-                                },
-                                fail: function (e) {
-                                    alert("Have error: " + e);
-                                }
+                <div class="col-md-12">
+                    <button class="btn btn-warning pull-left" onclick="open_shortage_material_list()">
+                        <i class="fa fa-list" style="margin-right: 3px"></i>Danh sách nguyên liệu bị thiếu
+                        <script type="text/javascript">
+                            function open_shortage_material_list() {
+                                $.ajax({
+                                    url: "@(Url.Action("GetShortageMaterialList", "Order"))",
+                                    method: "POST",
+                                    success: function (data) {
+                                        document.getElementById('large-popup-body').innerHTML = data;
+                                        document.getElementById('large-popup-title').innerHTML = "<h3>Danh sách nguyên liệu thiếu</h3>";
+                                        $('#myLargeModal').modal('show');
+                                    },
+                                    fail: function (e) {
+                                        alert("Have error: " + e);
+                                    }
 
-                            });
-                        }
-                    </script>
-                </button>
+                                });
+                            }
+                        </script>
+                    </button>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-md-12">
+                    <a class="btn btn-info pull-left" href="@(Url.Action("Add", "Order"))">
+                        <i class="fa fa-plus" style="margin-right: 3px"></i>
+                        Thêm đơn hàng mới
+                    </a>
+                </div>
             </div>
             <div class="row" style="margin-right: 10px; margin-left: 10px;">
                 <div class="col-md-12">
@@ -140,24 +150,21 @@
                                     <!--Link-->
                                     <td style="vertical-align: middle">
                                         <!--Xem-->
-                                        <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "Order", new {id = orderViewModel.Order.OrderId}))">
+                                        <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "Order", new {id = orderViewModel.Order.OrderId}))" data-toggle="tooltip" data-placement="top" title="Xem">
                                             <i class="fa fa-navicon" style="margin-right: 3px"></i>
-                                            Xem
                                         </a>
                                         @if (orderViewModel.Order.OrderStatus == 0 && orderViewModel.Order.GuestInfo == null)
                                         {
-                    <!--Sửa-->
-                                            <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "Order", new {id = orderViewModel.Order.OrderId}))">
+                                            <!--Sửa-->
+                                            <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "Order", new {id = orderViewModel.Order.OrderId}))" data-toggle="tooltip" data-placement="top" title="Sửa">
                                                 <i class="fa fa-edit" style="margin-right: 3px"></i>
-                                                Sửa
                                             </a>
                                         }
                                         @if (orderViewModel.Order.OrderStatus != 5 && orderViewModel.Order.OrderStatus != 6)
                                         {
-                    <!--Hủy-->
-                                            <a class="btn btn-link btn-xs" onclick="open_cancel_order(@orderViewModel.Order.OrderId, @(orderViewModel.Order.DepositAmount), @(orderViewModel.Order.OrderStatus))">
+                                            <!--Hủy-->
+                                            <a class="btn btn-link btn-xs" onclick="open_cancel_order(@orderViewModel.Order.OrderId, @(orderViewModel.Order.DepositAmount), @(orderViewModel.Order.OrderStatus))" data-toggle="tooltip" data-placement="top" title="Hủy">
                                                 <i class="fa fa-close" style="margin-right: 3px"></i>
-                                                Hủy
                                                 <script type="text/javascript">
                                                     function open_cancel_order(orderId, deposit, orderStatus) {
                                                         var body2 = $("<form>", {
@@ -324,8 +331,13 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
+        </div>
+        <div class="box-footer clearfix">
+            <a class="btn btn-info pull-left" href="@(Url.Action("Add", "Order"))">
+                <i class="fa fa-plus" style="margin-right: 3px"></i>
+                Thêm đơn hàng mới
+            </a>
         </div>
     </div>
 </section>
