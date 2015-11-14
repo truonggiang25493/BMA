@@ -90,6 +90,45 @@ namespace BMA.Controllers
             }
         }
 
+        public ActionResult ConfigIndex()
+        {
+            List<Product> lstNewProduct = db.Products.OrderBy(n => n.ProductId).Take(4).ToList();
+            ViewBag.lstProduct = lstNewProduct;
+            List<Order> lstOrder = db.Orders.Where(n => n.OrderStatus == 0).ToList();
+            ViewBag.orderWaiting = lstOrder.Count;
+            List<Customer> lstCustomer = db.Customers.ToList();
+            ViewBag.customer = lstCustomer.Count;
+            Policy policy = db.Policies.SingleOrDefault();
+            ViewBag.policy = policy;
+            List<DiscountByQuantity> discountByQuantity = db.DiscountByQuantities.Where(n => n.beUsing).ToList();
+            ViewBag.discountByQuantity = discountByQuantity;
+            var quantityFrom = db.DiscountByQuantities.Select(n => n.QuantityFrom).ToList();
+            var quantityTo = db.DiscountByQuantities.Select(n => n.QuantityTo).ToList();
+            //int[] quantity = new int[]{};
+            //for (int i = 0; i < discountByQuantity.Count; i++)
+            //{
+            //    quantity[i] = Convert.ToInt32(discountByQuantity[i]);
+            //}
+            ViewBag.quantityFrom = quantityFrom;
+            ViewBag.quantityTo = quantityTo;
+            return View();
+        }
+        
+        [HttpPost]
+        public int MinQuantity(int bound)
+        {
+            StoreInforBusiness sib = new StoreInforBusiness();
+            try
+            {
+                sib.MinQuantity(bound);
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
         public ActionResult LogoPartial()
         {
             StoreInfo storeInfo = db.StoreInfoes.SingleOrDefault();

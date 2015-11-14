@@ -117,10 +117,17 @@
                 <div></div>
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu">
-                    <li>
+                    <li class="treeview">
                         <a href="">
-                            <i class="fa fa-home"></i> <span>Thông tin cửa hàng</span>
+                            <i class="fa fa-home"></i> <span>Quản lý cửa hàng</span>
+                            <i class="fa fa-angle-left pull-right"></i>
                         </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", "StoreInfor")"><i class="fa fa-home"></i>Thông tin cửa hàng</a></li>
+                            <li>
+                                <a href="@Url.Action("ConfigIndex", "StoreInfor")"><i class="fa fa-gears"></i>Cấu hình hệ thống</a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="treeview" id="staff">
                         <a href="#">
@@ -148,11 +155,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-                            <<<<<<< HEAD
                             <li><a href="@Url.Action("AddProduct", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
-                            =======
-                            <li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
-                            >>>>>>> 1d0ab64994e6cf30f3c65e1a389b7111901dee1e
                         </ul>
                     </li>
                     <li class="treeview">

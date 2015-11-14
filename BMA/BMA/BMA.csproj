@@ -1366,6 +1366,7 @@
     <Content Include="Views\StoreInfor\Index.cshtml" />
     <Content Include="Views\StoreInfor\EditStoreInfo.cshtml" />
     <Content Include="Views\StoreInfor\LogoPartial.cshtml" />
+    <Content Include="Views\StoreInfor\ConfigIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
