@@ -1421,6 +1421,9 @@
     <Content Include="Views\StoreInfor\EditStoreInfo.cshtml" />
     <Content Include="Views\StoreInfor\Index.cshtml" />
     <Content Include="Views\StoreInfor\LogoPartial.cshtml" />
+<<<<<<< HEAD
+    <Content Include="Views\StoreInfor\ConfigIndex.cshtml" />
+=======
     <Content Include="Views\OtherExpense\Index.cshtml" />
     <Content Include="Views\InputBill\AddInputBill.cshtml" />
     <Content Include="Views\InputBill\InputBillDetail.cshtml" />
@@ -1432,6 +1435,7 @@
     <Content Include="Views\Staff\AddStaff.cshtml" />
     <Content Include="Views\Staff\StaffEditInfo.cshtml" />
     <Content Include="Views\InputBill\EditInputBill.cshtml" />
+>>>>>>> 267752e88404e8fe79232d86d1380f491b7ddb42
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -43,6 +43,8 @@
           <Property Name="QuantityFrom" Type="int" Nullable="false" />
           <Property Name="QuantityTo" Type="int" Nullable="false" />
           <Property Name="DiscountValue" Type="int" Nullable="false" />
+          <Property Name="ReachNumber" Type="int" />
+          <Property Name="beUsing" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ExportFrom">
           <Key>
@@ -920,6 +922,8 @@
           <Property Name="QuantityFrom" Type="Int32" Nullable="false" />
           <Property Name="QuantityTo" Type="Int32" Nullable="false" />
           <Property Name="DiscountValue" Type="Int32" Nullable="false" />
+          <Property Name="ReachNumber" Type="Int32" />
+          <Property Name="beUsing" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="ExportFrom">
           <Key>
@@ -1573,6 +1577,8 @@
           <EntitySetMapping Name="DiscountByQuantities">
             <EntityTypeMapping TypeName="BMAModel.DiscountByQuantity">
               <MappingFragment StoreEntitySet="DiscountByQuantity">
+                <ScalarProperty Name="beUsing" ColumnName="beUsing" />
+                <ScalarProperty Name="ReachNumber" ColumnName="ReachNumber" />
                 <ScalarProperty Name="DiscountValue" ColumnName="DiscountValue" />
                 <ScalarProperty Name="QuantityTo" ColumnName="QuantityTo" />
                 <ScalarProperty Name="QuantityFrom" ColumnName="QuantityFrom" />

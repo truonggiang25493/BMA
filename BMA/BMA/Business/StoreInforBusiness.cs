@@ -27,5 +27,13 @@ namespace BMA.Business
             db.SaveChanges();
             return true;
         }
+
+        public bool MinQuantity(int bound)
+        {
+            Policy policty = db.Policies.SingleOrDefault();
+            policty.PolicyBound = bound;
+            db.SaveChanges();
+            return true;
+        }
     }
 }
