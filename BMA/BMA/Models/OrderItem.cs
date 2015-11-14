@@ -14,7 +14,6 @@ namespace BMA.Models
     
     public partial class OrderItem
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OrderItem()
         {
             this.OutputMaterials = new HashSet<OutputMaterial>();
@@ -29,7 +28,6 @@ namespace BMA.Models
     
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OutputMaterial> OutputMaterials { get; set; }
     }
 }

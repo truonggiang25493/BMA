@@ -9,229 +9,272 @@
 <section class="content-header" style="vertical-align: middle">
     <h1>@(ViewBag.Title)</h1>
     <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-9">
-            <div id="reportrange" class="form-group pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
-                <span></span> <b class="caret"></b>
+        <div class="col-md-4"></div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="time-type">Thống kê theo</label>
+                <select id="time-type" class="form-control">
+                    <option value="1">Tuần</option>
+                    <option value="2">Tháng</option>
+                    <option value="3">Năm</option>
+                </select>
             </div>
-            <div class="dropdown pull-right" style="margin-right: 10px;">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: white">
-                    Thống kê theo
-                    <span class="caret"></span>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="fromDate">Từ</label>
+                <div class='input-group date' id='fromDate'>
+                    <input type='text' readonly="readonly" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="toDate">Đến</label>
+                <div class='input-group date' id='toDate'>
+                    <input type='text' readonly="readonly" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="form-group" style="padding-top: 25px">
+                <button class="btn btn-success" onclick="executeChart()">
+                    <i class="fa fa-bar-chart" style="margin-right: 3px"></i>
+                    Thống kê
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a href="#">Tuần</a></li>
-                    <li><a href="#">Tháng</a></li>
-                    <li><a href="#">Năm</a></li>
-                </ul>
             </div>
+
         </div>
     </div>
 </section>
 <!-- Main content -->
-<section class="content">
-    <!--Chart-->
-    <div class="row">
-        <div class="col-md-12">
-            <!--Line Chart-->
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        Biểu đồ thống kê thu nhập theo thời gian
-                    </h3>
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <div class="chart">
-                        <canvas id="lineChart" style="height: 250px"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--Table-->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box box-primary">
-                <div class="box-body">
-                    <table class="table" id="income-table">
-                        <thead>
-                            <tr>
-                                <th>Từ</th>
-                                <th>Đến</th>
-                                <th>Doanh thu</th>
-                                <th>Chi phí nguyên liệu</th>
-                                <th>Thu nhập</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (sp_GetIncomeWeekly_Result weeklyResult in Model)
-                            {
-                                <tr>
-                                    <td>@(weeklyResult.StartDate.Value.ToString("dd/MM/yyyy"))</td>
-                                    <td>@(weeklyResult.EndDate.Value.ToString("dd/MM/yyyy"))</td>
-                                    <td>@(weeklyResult.Revenue.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                    <td>@(weeklyResult.MaterialExpense.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                    <td>@(weeklyResult.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                    <td>
-                                        <a href="@(Url.Action("ReviewIncomeByTimeDetail", "Report", new { startDate = weeklyResult.StartDate.Value, endDate = weeklyResult.EndDate.Value }))" class="btn btn-info btn-xs">
-                                            <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
+<section class="content" id="review-income-content"></section>
 
 @section ReviewIncomeByTimeScript{
     <script src="~/Scripts/ChartNew.js"></script>
-    @{
-        string labels = "";
-        string revenue = "";
-        string materialExpense = "";
-        string income = "";
-        for (int i = 0; i < Model.Count; i++)
-        {
-            if (i == 0)
-            {
-                labels += ((DateTime)Model.ElementAt(i).StartDate).ToString("dd/MM/yyyy") + " - " + ((DateTime)Model.ElementAt(i).EndDate).ToString("dd/MM/yyyy");
-                revenue += Model.ElementAt(i).Revenue.ToString();
-                materialExpense += Model.ElementAt(i).MaterialExpense.ToString();
-                income += Model.ElementAt(i).Income.ToString();
-            }
-            else
-            {
-                labels += ";" + ((DateTime)Model.ElementAt(i).StartDate).ToString("dd/MM/yyyy") + " - " + ((DateTime)Model.ElementAt(i).EndDate).ToString("dd/MM/yyyy");
-                revenue += ";" + Model.ElementAt(i).Revenue;
-                materialExpense += ";" + Model.ElementAt(i).MaterialExpense;
-                income += ";" + Model.ElementAt(i).Income;
-            }
-        }
-    }
+
     <script type="text/javascript">
-        var linedata = {
-            labels: "@(Html.Raw(labels))".split(";"),
-            datasets: [
-
-                {
-                    fillColor: "rgba(151,187,205,0.5)",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "rgba(151,187,205,1)",
-                    pointStrokeColor: "#fff",
-                    data: "@(Html.Raw(income))".split(";").map(Number),
-                    title: "Thu nhập"
-                }
-            ]
-        }
-
-        var opt1 = {
-            legend: true,
-            graphTitleFontSize: 18,
-            graphMin: 0,
-            responsive: true,
-            xAxisLabel: "Thời gian",
-            yAxisUnit: "đồng",
-            yAxisLabel: "Thu nhập",
-            thousandSeparator: ".",
-            // Specify the number of Y-scales to display
-            scaleOverride: true,
-            // The start value of the scale
-            scaleStartValue: 0,
-            // The number of Y-scales to display
-            scaleSteps: 7,
-            // The width between two Y-scale
-            scaleStepWidth: 500000,
-            // The space between the X Axis (on position 0) can be filled or not
-            datasetFill: false,
-            annotateDisplay: true,
-            annotateFunctionIn: myFctIn
-
-        }
-        window.onload = function () {
-            new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
-        }
-
-
         $(document).ready(function () {
-
-            function cb(start, end) {
-                $('#reportrange span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
-            }
-            cb(moment("@(((DateTime)Model.ElementAt(0).StartDate).ToString("yyyy-MM-dd"))"), moment("@(((DateTime)Model.ElementAt(Model.Count-1).EndDate).ToString("yyyy-MM-dd"))"));
-
-
-            $('#reportrange').daterangepicker({
-                "locale": {
-                    "applyLabel": "Áp dụng",
-                    "cancelLabel": "Hủy",
-                    "fromLabel": "Từ",
-                    "toLabel": "Đến",
-                    "customRangeLabel": "Tùy chỉnh",
-                    "daysOfWeek": [
-                        "CN",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7"
-                    ],
-                    "monthNames": [
-                        "Tháng 1",
-                        "Tháng 2",
-                        "Tháng 3",
-                        "Tháng 4",
-                        "Tháng 5",
-                        "Tháng 6",
-                        "Tháng 7",
-                        "Tháng 8",
-                        "Tháng 9",
-                        "Tháng 10",
-                        "Tháng 11",
-                        "Tháng 12"
-                    ],
-                    "firstDay": 1
-                },
-                "startDate": moment("@(((DateTime)Model.ElementAt(0).StartDate).ToString("yyyy-MM-dd"))"),
-                "endDate": moment("@(((DateTime)Model.ElementAt(Model.Count-1).EndDate).ToString("yyyy-MM-dd"))")
-            }, cb);
-
-            $('#reportrange').on('hide.daterangepicker', function (ev, picker) {
-                //do something, like clearing an input
-                var result = $('#reportrange span').html();
-                reload(result);
+            $('#fromDate').datetimepicker({
+                ignoreReadonly: true,
+                format: 'L',
+                locale: 'vi',
+                maxDate: moment().subtract(7, 'days')
             });
-            // Load Report Detail
+            $('#toDate').datetimepicker({
+                ignoreReadonly: true,
+                format: 'L',
+                locale: 'vi',
+                maxDate: moment(),
+                useCurrent: false
+            });
+            $("#fromDate").on("dp.change", function (e) {
+                $('#toDate').data("DateTimePicker").minDate(e.date.add(1, 'days'));
+            });
+            $("#toDate").on("dp.change", function (e) {
+                $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
+            });
             $.ajax({
-                url: "@(Url.Action("ReviewIncomeByTimeDetail","Report"))",
+                url: "@(Url.Action("ReviewByTimePartialView", "Report"))",
                 method: "GET",
-                data: {
-                    startDate: "@(Model.ElementAt(0).StartDate.Value)",
-                    endDate: "@(Model.ElementAt(0).EndDate.Value)"
-
-                },
                 success: function (data) {
-                    $("#income-report-table").html(data);
+                    $("#review-income-content").html(data);
+                    var label = [];
+                    var income = [];
+                    $("#income-table tbody tr").each(function (index, row) {
+                        label.push($(row).find("td:first").html() + " - " + $(row).find("td:nth-child(2)").html());
+                        var incomeS = $(row).find("td:nth-child(5)").html();
+                        income.push(incomeS.substring(0, incomeS.length - 2).split('.').join(""));
+                    });
+                    var linedata = {
+                        labels: label,
+                        datasets: [
+                            {
+                                fillColor: "rgba(151,187,205,0.5)",
+                                strokeColor: "rgba(151,187,205,1)",
+                                pointColor: "rgba(151,187,205,1)",
+                                pointStrokeColor: "#fff",
+                                data: income,
+                                title: "Thu nhập"
+                            }
+                        ]
+                    }
+
+                    var opt1 = {
+                        legend: true,
+                        graphTitleFontSize: 18,
+                        graphMin: 0,
+                        responsive: true,
+                        xAxisLabel: "Thời gian",
+                        yAxisUnit: "đồng",
+                        yAxisLabel: "Thu nhập",
+                        thousandSeparator: ".",
+                        // Specify the number of Y-scales to display
+                        scaleOverride: true,
+                        // The start value of the scale
+                        scaleStartValue: 0,
+                        // The number of Y-scales to display
+                        scaleSteps: 10,
+                        // The width between two Y-scale
+                        scaleStepWidth: 500000,
+                        // The space between the X Axis (on position 0) can be filled or not
+                        datasetFill: false,
+                        annotateDisplay: true,
+                        annotateFunctionIn: myFctIn
+                    }
+                    new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
                 },
                 fail: function (e) {
 
                 }
             });
         });
+        $("#time-type").on("change", function () {
+            var timeType = $("#time-type").val();
+            if (timeType === "1") {
+                $('#fromDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment().subtract(7, 'days'));
+                $('#toDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment()).date(moment());
+                $("#fromDate").on("dp.change", function (e) {
+                    $('#toDate').data("DateTimePicker").minDate(e.date.add(1, 'days'));
+                });
+                $("#toDate").on("dp.change", function (e) {
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
+                });
+            } else if (timeType === "2") {
+                $('#fromDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").viewDate(moment().startOf('month')).maxDate(moment().endOf('month'));
+                $('#toDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").viewDate(moment().startOf('month')).maxDate(moment().endOf('month'));
+                $("#fromDate").on("dp.change", function (e) {
+                    $('#toDate').data("DateTimePicker").minDate(e.date.startOf('month'));
+                });
+                $("#toDate").on("dp.change", function (e) {
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1,'months').endOf('month'));
+                });
+            } else if (timeType === "3") {
+                $('#fromDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));
+                $('#toDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));
+                $("#fromDate").on("dp.change", function (e) {
+                    $('#toDate').data("DateTimePicker").minDate(e.date.startOf('year'));
+                });
+                $("#toDate").on("dp.change", function (e) {
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1, 'years').endOf('year'));
+                });
+            }
+
+        });
+
         function myFctIn(area, ctx, data, statdata, posi, posj, othervars) {
             $("#income-table tbody tr:nth-child(" + (posj + 1) + ")").addClass('selected').siblings().removeClass('selected');
-        };
+        }
+
+        function executeChart() {
+            var fromDateString = $("#fromDate input").val();
+            var toDateString = $("#toDate input").val();
+            var timeType = $("#time-type").val();
+            $.ajax({
+                url: "@(Url.Action("ReviewByTimePartialView", "Report"))",
+                method: "GET",
+                data: {
+                    "start": fromDateString,
+                    "end": toDateString,
+                    "type": timeType
+                },
+                success: function (data) {
+                    $("#review-income-content").html(data);
+                    var label = [];
+                    var income = [];
+
+                    if (timeType === "1") {
+                        $("#income-table tbody tr").each(function (index, row) {
+                            label.push($(row).find("td:first").html() + " - " + $(row).find("td:nth-child(2)").html());
+                            var incomeS = $(row).find("td:nth-child(5)").html();
+                            income.push(incomeS.substring(0, incomeS.length - 2).split('.').join(""));
+                        });
+                    }
+                    if (timeType === "2" || timeType === "3") {
+                        $("#income-table tbody tr").each(function (index, row) {
+                            label.push($(row).find("td:first").html());
+                            var incomeS = $(row).find("td:nth-child(5)").html();
+                            income.push(incomeS.substring(0, incomeS.length - 2).split('.').join(""));
+                        });
+                    }
+
+                    var linedata = {
+                        labels: label,
+                        datasets: [
+                            {
+                                fillColor: "rgba(151,187,205,0.5)",
+                                strokeColor: "rgba(151,187,205,1)",
+                                pointColor: "rgba(151,187,205,1)",
+                                pointStrokeColor: "#fff",
+                                data: income,
+                                title: "Thu nhập"
+                            }
+                        ]
+                    }
+
+                    var opt1 = {
+                        legend: true,
+                        graphTitleFontSize: 18,
+                        graphMin: 0,
+                        responsive: true,
+                        xAxisLabel: "Thời gian",
+                        yAxisUnit: "đồng",
+                        yAxisLabel: "Thu nhập",
+                        thousandSeparator: ".",
+                        // Specify the number of Y-scales to display
+                        scaleOverride: true,
+                        // The start value of the scale
+                        scaleStartValue: 0,
+                        // The number of Y-scales to display
+                        scaleSteps: 10,
+                        // The width between two Y-scale
+                        scaleStepWidth: 500000,
+                        // The space between the X Axis (on position 0) can be filled or not
+                        datasetFill: false,
+                        annotateDisplay: true,
+                        annotateFunctionIn: myFctIn
+                    }
+
+                    var opt3 = {
+                        legend: true,
+                        graphTitleFontSize: 18,
+                        graphMin: 0,
+                        responsive: true,
+                        xAxisLabel: "Thời gian",
+                        yAxisUnit: "đồng",
+                        yAxisLabel: "Thu nhập",
+                        thousandSeparator: ".",
+                        // Specify the number of Y-scales to display
+                        scaleOverride: true,
+                        // The start value of the scale
+                        scaleStartValue: 0,
+                        // The number of Y-scales to display
+                        scaleSteps: 10,
+                        // The width between two Y-scale
+                        scaleStepWidth: 2000000,
+                        // The space between the X Axis (on position 0) can be filled or not
+                        datasetFill: false,
+                        annotateDisplay: true,
+                        annotateFunctionIn: myFctIn
+                    }
+                    if (timeType === "1" || timeType === "2") {
+                        new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
+                    }
+                    if (timeType === "3") {
+                        new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt3);
+                    }
+                },
+                fail: function (e) {
+
+                }
+            });
+        }
     </script>
 }
 

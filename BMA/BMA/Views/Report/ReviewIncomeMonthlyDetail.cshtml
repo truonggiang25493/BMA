@@ -1,0 +1,151 @@
+﻿@using System.Globalization
+@model BMA.Models.ViewModel.ReportIncomeViewModel
+@{
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header">
+                <h2 class="box-title">@(ViewBag.Title)</h2>
+            </div>
+            <div class="box-body">
+                <!--Income-->
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h3 class="box-title">Thu nhập: @(Model.Income.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h3>
+                    </div>
+                </div>
+                <!--Revenue-->
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Doanh thu: @(Model.RevenueAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h3>
+                        <span> gồm</span>
+                    </div>
+                    <!--CompletedOrderList-->
+                    @if (Model.CompletedOrderList.Count > 0)
+                    {
+                        <div class="box-body">
+                            <h5>@(Model.CompletedOrderList.Count) đơn hàng đã hoàn thành: @(Model.CompletedOrderValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h5>
+                            <table class="table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã đơn hàng</th>
+                                        <th>Thành tiền</th>
+                                        <th>Giảm</th>
+                                        <th>Giá trị</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.CompletedOrderList.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>@(i + 1)</td>
+                                            <td>@(Model.CompletedOrderList.ElementAt(i).OrderCode)</td>
+                                            <td style="text-align: right">@(Model.CompletedOrderList.ElementAt(i).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                            <td style="text-align: right">@(Model.CompletedOrderList.ElementAt(i).DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                            <td style="text-align: right">@((Model.CompletedOrderList.ElementAt(i).Amount - Model.CompletedOrderList.ElementAt(i).DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    <!--CanceledOrderList-->
+                    @if (Model.CanceledOrderList.Count > 0)
+                    {
+                        <div class="box-body">
+                            <h5>@(Model.CanceledOrderList.Count) đơn hàng hủy: @(Model.CanceledOrderValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h5>
+                            <table class="table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã đơn hàng</th>
+                                        <th>Tiền cọc</th>
+                                        <th>Hoàn trả tiền cọc</th>
+                                        <th>Giá trị</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.CanceledOrderList.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>@(i + 1)</td>
+                                            <td>@(Model.CanceledOrderList.ElementAt(i).OrderCode)</td>
+                                            <td style="text-align: right">@(Model.CanceledOrderList.ElementAt(i).DepositAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                            <td style="text-align: right">@(Model.CanceledOrderList.ElementAt(i).ReturnDeposit.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                            <td style="text-align: right">@((Model.CanceledOrderList.ElementAt(i).DepositAmount - Model.CanceledOrderList.ElementAt(i).ReturnDeposit).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+                <!--Material Expense-->
+                <div class="box box-danger">
+                    <div class="box-header">
+                        <h3 class="box-title">Chi phí nguyên liệu: @(Model.MaterialExpense.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h3>
+                        <span> gồm</span>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Nguyên liệu</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.ProductMaterialList.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@(i + 1)</td>
+                                        <td>@(Model.ProductMaterialList.ElementAt(i).ProductMaterialName)</td>
+                                        <td style="text-align: right">@(Model.ProductMaterialList.ElementAt(i).ProductMaterialQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(Model.ProductMaterialList.ElementAt(i).ProductMaterialUnit)</td>
+                                        <td style="text-align: right">@(Model.ProductMaterialList.ElementAt(i).ProductMaterialAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--Other expense-->
+                <div class="box box-danger">
+                    <div class="box-header">
+                        <h3 class="box-title">Chi phí khác: @(Model.OtherExpense.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h3>
+                        <span> gồm</span>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mục</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.OtherExpenseList.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@(i + 1)</td>
+                                        <td>@(Model.OtherExpenseList.ElementAt(i).OtherExpenseName)</td>
+                                        <td style="text-align: right">@(Model.OtherExpenseList.ElementAt(i).OtherExpenseAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

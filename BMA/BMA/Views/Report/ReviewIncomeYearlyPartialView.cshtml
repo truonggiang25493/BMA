@@ -1,0 +1,70 @@
+﻿@using System.Globalization
+@using BMA.Models
+@model List<sp_GetIncomeYearly_Result>
+<!--Chart-->
+<div class="row">
+    <div class="col-md-12">
+        <!--Line Chart-->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Biểu đồ thống kê thu nhập theo thời gian
+                </h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="lineChart" style="height: 250px"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Table-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-body">
+                <table class="table" id="income-table">
+                    <thead>
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Doanh thu</th>
+                            <th>Chi phí nguyên liệu</th>
+                            <th>Chi phí khác</th>
+                            <th>Thu nhập</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (sp_GetIncomeYearly_Result yearlyResult in Model)
+                        {
+                            <tr>
+                                <td>@(yearlyResult.YearNo)</td>
+                                <td>@((yearlyResult.Revenue == null) ? 0.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) : (yearlyResult.Revenue.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))))</td>
+                                <td>@((yearlyResult.MaterialExpense == null) ? 0.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) : (yearlyResult.MaterialExpense.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))))</td>
+                                <td>@((yearlyResult.OtherExpense == null) ? 0.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) : (yearlyResult.OtherExpense.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))))</td>
+                                <td>@((yearlyResult.Income == null) ? 0.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) : (yearlyResult.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))))</td>
+                                <td>
+                                    <button onclick="openDetailInNewTab()" href="@(Url.Action("ReviewIncomeYearlyDetail", "Report", new {year = yearlyResult.YearNo}))" class="btn btn-info btn-xs">
+                                        <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
+                                        <script type="text/javascript">
+                                            function openDetailInNewTab() {
+                                                var win = window.open("@(Html.Raw(Url.Action("ReviewIncomeYearlyDetail", "Report", new {year = yearlyResult.YearNo})))", '_blank');
+                                                win.focus();
+                                            }
+                                        </script>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -7,7 +7,7 @@
     <div class="col-md-12">
         <div class="box">
             <div class="box-header">
-                <h2 class="box-title">Thống kê chi tiết từ @(Model.StartDate.ToString("dd/MM/yyyy")) đến @(Model.EndDate.ToString("dd/MM/yyyy"))</h2>
+                <h2 class="box-title">@(ViewBag.Title)</h2>
             </div>
             <div class="box-body">
                 <!--Income-->
@@ -30,11 +30,11 @@
                             <table class="table table-responsive">
                                 <thead>
                                     <tr>
-                                        <td>STT</td>
-                                        <td>Mã đơn hàng</td>
-                                        <td>Thành tiền</td>
-                                        <td>Giảm</td>
-                                        <td>Giá trị</td>
+                                        <th>STT</th>
+                                        <th>Mã đơn hàng</th>
+                                        <th>Thành tiền</th>
+                                        <th>Giảm</th>
+                                        <th>Giá trị</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -60,11 +60,11 @@
                             <table class="table table-responsive">
                                 <thead>
                                     <tr>
-                                        <td>STT</td>
-                                        <td>Mã đơn hàng</td>
-                                        <td>Tiền cọc</td>
-                                        <td>Hoàn trả tiền cọc</td>
-                                        <td>Giá trị</td>
+                                        <th>STT</th>
+                                        <th>Mã đơn hàng</th>
+                                        <th>Tiền cọc</th>
+                                        <th>Hoàn trả tiền cọc</th>
+                                        <th>Giá trị</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -94,10 +94,10 @@
                         <table class="table table-responsive">
                             <thead>
                                 <tr>
-                                    <td>STT</td>
-                                    <td>Nguyên liệu</td>
-                                    <td>Số lượng</td>
-                                    <td>Thành tiền</td>
+                                    <th>STT</th>
+                                    <th>Nguyên liệu</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,7 +115,6 @@
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

@@ -29,7 +29,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -171,26 +170,43 @@
     <Compile Include="Business\CusManageBusiness.cs" />
     <Compile Include="Business\CustomerBusiness.cs" />
     <Compile Include="Business\CustomerOrderBusiness.cs" />
+    <Compile Include="Business\DiscardInputMaterialBusiness.cs" />
+    <Compile Include="Business\InputBillBusiness.cs" />
+    <Compile Include="Business\InputMaterialBusiness.cs" />
     <Compile Include="Business\ManageMaterialBusiness.cs" />
     <Compile Include="Business\ManageProductBusiness.cs" />
     <Compile Include="Business\OrderBusiness.cs" />
+    <Compile Include="Business\OtherExpenseBusiness.cs" />
     <Compile Include="Business\ProductBusiness.cs" />
+    <Compile Include="Business\ReportBusiness.cs" />
+    <Compile Include="Business\StaffBusiness.cs" />
     <Compile Include="Business\StoreInforBusiness.cs" />
+    <Compile Include="Business\SupplierBusiness.cs" />
+    <Compile Include="Business\TaxBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
+    <Compile Include="Common\CommonFunction.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CusManageController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\DiscardInputMaterialController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InputBillController.cs" />
+    <Compile Include="Controllers\InputMaterialController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManageMaterialController.cs" />
     <Compile Include="Controllers\ManageProductController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\OtherExpenseController.cs" />
     <Compile Include="Controllers\ProcedureController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\StoreInforController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\TaxController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -209,6 +225,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BMA.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Category.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Customer.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DiscardedInputMaterial.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -216,29 +238,6 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ExportFrom.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Metadata\Product.metadata.cs" />
-    <Compile Include="Models\Policy.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_GetIncomeMonthly_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_GetIncomeWeekly_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_GetIncomeYearly_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\StoreInfo.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
-    <Compile Include="Models\Category.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Customer.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GuestInfo.cs">
@@ -250,6 +249,7 @@
     <Compile Include="Models\InputMaterial.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Metadata\Product.metadata.cs" />
     <Compile Include="Models\Order.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -265,6 +265,9 @@
     <Compile Include="Models\OutputMaterial.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Policy.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Product.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -277,7 +280,19 @@
     <Compile Include="Models\Role.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_GetIncomeMonthly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetIncomeWeekly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetIncomeYearly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Staff.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StoreInfo.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Supplier.cs">
@@ -295,18 +310,23 @@
     <Compile Include="Models\User.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
+    <Compile Include="Models\ViewModel\DiscardInputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialInfoForProductListViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
+    <Compile Include="Models\ViewModel\ReportIncomeViewModel.cs" />
     <Compile Include="Models\ViewModel\ShortageMaterialViewModel.cs" />
+    <Compile Include="Models\ViewModel\SupplierViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\CustomerLayout\ajax.googleapis.com\ajax\libs\jquery\1.10.1\jquery.min.js" />
     <Content Include="Content\CustomerLayout\assets\bootstrap\css\bootstrap.css" />
     <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.svg" />
@@ -409,11 +429,15 @@
     <Content Include="Content\Images\BakeryImages\BXX.jpg" />
     <Content Include="Content\Images\BakeryImages\KTC.jpg" />
     <Content Include="Content\Images\BakeryImages\Pudding.jpg" />
+    <Content Include="Content\Images\InputBillImages\InputBillDemo.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
+    <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\style.css" />
+    <Content Include="Content\timeslider.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.eot" />
@@ -447,6 +471,18 @@
     <Content Include="Content\font-awesome-4.3.0\scss\_rotated-flipped.scss" />
     <Content Include="Content\font-awesome-4.3.0\scss\_stacked.scss" />
     <Content Include="Content\font-awesome-4.3.0\scss\_variables.scss" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regulard41d.eot" />
+    <Content Include="Content\CustomerLayout\assets\css\img\Thumbs.db" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfontd41d.eot" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.eot" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.ttf" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.woff" />
+    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.woff2" />
+    <Content Include="Content\CustomerLayout\assets\ico\Thumbs.db" />
     <EntityDeploy Include="Models\BMA.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>BMA.Designer.cs</LastGenOutput>
@@ -464,29 +500,23 @@
       <DependentUpon>BMA.edmx</DependentUpon>
       <LastGenOutput>BMA.cs</LastGenOutput>
     </Content>
-    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regulard41d.eot" />
-    <Content Include="Content\CustomerLayout\assets\css\img\Thumbs.db" />
-    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfontd41d.eot" />
-    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.eot" />
-    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.ttf" />
-    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.woff" />
-    <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.woff2" />
-    <Content Include="Content\CustomerLayout\assets\ico\Thumbs.db" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\ChartNew.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.noty.packaged.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\my-own-function.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\timeslider.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Content\AdminLayout\bootstrap\css\bootstrap.css" />
     <Content Include="Content\AdminLayout\bootstrap\css\bootstrap.min.css" />
@@ -1360,13 +1390,52 @@
     <Content Include="Views\Order\ExportBill.cshtml" />
     <Content Include="Views\Customer\Contact\Index.cshtml" />
     <Content Include="Views\Customer\GetCustomerPartialView.cshtml" />
-    <Content Include="Views\ManageProduct\GetListMaterialToAdd.cshtml" />
-    <Content Include="Views\ManageMaterial\Detail.cshtml" />
-    <Content Include="Views\ManageMaterial\Edit.cshtml" />
-    <Content Include="Views\StoreInfor\Index.cshtml" />
+    <Content Include="Views\CusManageOrder\ConfirmIndex.cshtml" />
+    <Content Include="Views\CusManageOrder\Index.cshtml" />
+    <Content Include="Views\CusManageOrder\OrderDetail.cshtml" />
+    <Content Include="Views\DiscardInputMaterial\DiscardInputMaterialIndex.cshtml" />
+    <Content Include="Views\DiscardInputMaterial\DiscardPartialView.cshtml" />
+    <Content Include="Views\DiscardInputMaterial\DiscardView.cshtml" />
+    <Content Include="Views\InputBill\InputBillIndex.cshtml" />
+    <Content Include="Views\InputMaterial\AddInputMaterial.cshtml" />
+    <Content Include="Views\InputMaterial\EditInputMaterial.cshtml" />
+    <Content Include="Views\InputMaterial\InputListPartialView.cshtml" />
+    <Content Include="Views\InputMaterial\InputMaterialByBillIdPartialView.cshtml" />
+    <Content Include="Views\InputMaterial\InputMaterialDetail.cshtml" />
+    <Content Include="Views\InputMaterial\InputMaterialIndex.cshtml" />
+    <Content Include="Views\InputMaterial\ProductMaterialPartialView.cshtml" />
+    <Content Include="Views\Staff\StaffDetail.cshtml" />
+    <Content Include="Views\Staff\StaffIndex.cshtml" />
+    <Content Include="Views\Supplier\AddSupplier.cshtml" />
+    <Content Include="Views\Supplier\EditSupplier.cshtml" />
+    <Content Include="Views\Supplier\SupplierDetail.cshtml" />
+    <Content Include="Views\Supplier\SupplierIndex.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeByTime.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeWeeklyDetail.cshtml" />
+    <Content Include="Views\Report\ReviewRevenueByProduct.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeWeeklyPartialView.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeMonthlyPartialView.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeMonthlyDetail.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeYearlyPartialView.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeYearlyDetail.cshtml" />
     <Content Include="Views\StoreInfor\EditStoreInfo.cshtml" />
+    <Content Include="Views\StoreInfor\Index.cshtml" />
     <Content Include="Views\StoreInfor\LogoPartial.cshtml" />
+<<<<<<< HEAD
     <Content Include="Views\StoreInfor\ConfigIndex.cshtml" />
+=======
+    <Content Include="Views\OtherExpense\Index.cshtml" />
+    <Content Include="Views\InputBill\AddInputBill.cshtml" />
+    <Content Include="Views\InputBill\InputBillDetail.cshtml" />
+    <Content Include="Views\InputBill\InputMaterialInBillPartialView.cshtml" />
+    <Content Include="Views\InputBill\SupplierPartialView.cshtml" />
+    <Content Include="Views\Customer\CustomerDetail.cshtml" />
+    <Content Include="Views\Customer\CustomerIndex.cshtml" />
+    <Content Include="Views\Customer\OrderedByCustomerPartialView.cshtml" />
+    <Content Include="Views\Staff\AddStaff.cshtml" />
+    <Content Include="Views\Staff\StaffEditInfo.cshtml" />
+    <Content Include="Views\InputBill\EditInputBill.cshtml" />
+>>>>>>> 267752e88404e8fe79232d86d1380f491b7ddb42
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

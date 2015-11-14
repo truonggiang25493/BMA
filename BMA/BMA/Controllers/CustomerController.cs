@@ -99,6 +99,22 @@ namespace BMA.Controllers
         }
         #endregion
 
+        #region Change Customer Loyal
+        [HttpPost]
+        public int ChangeCustomerLoyal(int id)
+        {
+            Boolean result = CustomerBusiness.ChangeCustomerLoyal(id);
+            if (result)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        #endregion
+
         #region Get order by customer
 
         public ActionResult GetOrderByCustomerTable(int id)

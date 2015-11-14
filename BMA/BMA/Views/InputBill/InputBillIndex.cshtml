@@ -48,15 +48,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="box-footer">
-            <button class="btn btn-bitbucket pull-left" onclick="addNewInputMaterial()">
-                <i class="fa fa-edit" style="margin-right: 3px;"></i>Thêm mới
-                <script type="text/javascript">
-                    function addNewInputMaterial() {
-                        window.location.replace("@(Url.Action("AddSupplier", "Supplier"))");
-                    }
-                </script>
-            </button>
+        <div class="box-footer clearfix">
+            <a href="@Url.Action("AddInputBill","InputBill")" class="btn btn-sm btn-info btn-flat pull-left">Thêm hóa đơn đầu vào mới</a>
         </div>
     </div>
 </section>

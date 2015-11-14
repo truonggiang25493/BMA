@@ -1,0 +1,354 @@
+﻿@using System.Globalization
+@using BMA.Common
+@using BMA.Models
+@model InputBill
+
+@{
+    ViewBag.Title = "Chỉnh sửa hóa đơn đầu vào";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+
+<section class="content-header">
+    <h1 style="margin-top: 1%;text-align: center">Chỉnh sửa hóa đơn đầu vào</h1>
+</section>
+<section>
+    <div style="margin-top: 2%">
+        <div class="row">
+            <div class="col-md-6" style="margin-top: 5%">
+                <div class="box box-primary">
+                    <form id="add-input-bill-form">
+                        <div class="box-body box-profile" style="margin-top: 5%">
+                            <!-- Choose supplier -->
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-4">
+                                    <b>Nhà cung cấp<b style="color: #ff0000">*</b>:</b>
+                                </div>
+                                <div class="col-xs-8" id="input-bill-info">
+
+                                    <input type="text" value="@Model.Supplier.SupplierName" name="supplierName" id="supplierName" readonly style="margin-bottom: 10px; width: 65%" />
+                                    <input type="hidden" value="@Model.SupplierId" name="supplierId" id="supplierId" />
+                                    <a class="btn btn-success btn-xs" id="add-supplier" onclick="open_choose_supplier()">
+                                        Chọn nhà cung cấp
+                                        <script type="text/javascript">
+                                            function open_choose_supplier() {
+                                                $.ajax({
+                                                    url: "@(Url.Action("GetSupplierList", "InputBill"))",
+                                                    method: "POST",
+                                                    success: function (data) {
+                                                        var chooseButton = $("<button>", {
+                                                            "class": "btn btn-success",
+                                                            "onclick": "choose_supplier()",
+                                                            "html": "Chọn nhà cung cấp"
+                                                        });
+                                                        document.getElementById('standard-popup-body').innerHTML = data;
+                                                        document.getElementById('standard-popup-footer').innerHTML = chooseButton[0].outerHTML;
+                                                        $('#myStandardModal').modal('show');
+                                                    }
+                                                });
+                                            }
+
+                                            function choose_supplier() {
+                                                var supplierName = $("[data-role=supplier] tr.selected td:first span").html();
+                                                var supplierId = $("[data-role=supplier] tr.selected td:first input").val();
+
+                                                $("#supplierName").val(supplierName);
+                                                $("#supplierId").val(supplierId);
+                                                $('#myStandardModal').modal('hide');
+                                            }
+                                        </script>
+                                    </a>
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-4">
+                                    <b>Chi phí (Chưa thuế)<b style="color: #ff0000">*</b>: </b>
+                                </div>
+                                <div class="col-xs-8">
+                                    <input type="number" value="@Model.InputBillAmount" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" style="width: 65%" placeholder="nhập số tiền từ 1.000 - 999.999.999" />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-4">
+                                    <b>Thuế VAT<b style="color: #ff0000">*</b>: </b>
+                                </div>
+                                <div class="col-xs-8">
+                                    <input type="number" value="@Model.InputTaxAmount" name="txtInputTaxAmount" id="txtInputTaxAmount" required oninput="maxLengthCheck(this)" maxlength="8" min="1000" max="99999999" style="width: 65%" placeholder="nhập số tiền từ 1.000 - 99.999.999" />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-4">
+                                    <b>Ngày nhập<b style="color: #ff0000">*</b>: </b>
+                                </div>
+                                <div class="col-xs-8">
+                                    <input type="date" required min="2015-01-01" max="2020-12-31" value="@Model.ImportDate" name="txtImportDate" id="txtImportDate" style="width: 65%" />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-12">
+                                    <b><b style="color: #ff0000">*</b>: Thông tin bắt buộc</b>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="col-md-6" style="margin-top: 5%">
+                <div class="box box-primary">
+                    <form role="form" action="@Url.Action("AddImage", "InputBill")" id="imageForm" method="post" enctype="multipart/form-data">
+                        <div class="col-md-12">
+                            <!-- Horizontal Form -->
+                            <div>
+                                <div class="box-header">
+                                    <h3 class="box-title">Hình ảnh cho hóa đơn</h3><br />
+                                    <label class="box-title" style="color: #ff0000">@TempData["Message"]</label>
+                                </div><!-- /.box-header -->
+                                <!-- form start -->
+                                <div class="box-body">
+                                    <div class="form-group" style="margin-left: 0;">
+                                        <label>Hình ảnh</label>
+                                        <input type="file" value="@Model.InputRawImage" name="inputBillImage" id="inputBillImage" onchange="show(this)">
+                                        <div style="margin-top: 10px;">
+                                            <img id="user_img"
+                                                 height="300"
+                                                 width="500"
+                                                 style="border: solid" /> src="@Url.Content("/Content/Images/InputBillImages/" + @Model.InputRawImage)"/>
+                                        </div>
+                                        <script type="text/javascript">
+                                            function show(input) {
+                                                if (input.files && input.files[0]) {
+                                                    var filerdr = new FileReader();
+                                                    filerdr.onload = function (e) {
+                                                        $('#user_img').attr('src', e.target.result);
+                                                    }
+                                                    filerdr.readAsDataURL(input.files[0]);
+                                                }
+                                            }
+                                        </script>
+                                    </div>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- "Thêm mới" button -->
+                <button class="btn btn-primary pull-right" style="margin-right: 2%; margin-bottom: 2%" onclick="addInputBill()">
+                    <i class="fa fa-edit" style="margin-right: 1%;"></i>Cập nhật
+                    <script type="text/javascript">
+                        function getFileName(s) {
+                            var n = s.lastIndexOf("\\");
+                            var result = s.substring(n + 1);
+                            return result;
+                        }
+
+                        function addInputBill() {
+                            var dataString;
+                            var supplierName = $("#supplierName").val();
+                            var inputBillAmount = $("#txtInputBillAmount").val();
+                            var inputTaxAmount = $("#txtInputTaxAmount").val();
+                            var importDate = $("#txtImportDate").val();
+                            var fileName = getFileName($("#inputBillImage").val());
+                            var supplierId = $("#supplierId").val();
+
+                            var action = $("#imageForm").attr("action");
+                            var contentType;
+                            var processData;
+                            if ($("#imageForm").attr("enctype") === "multipart/form-data") {
+                                dataString = new FormData($("#imageForm").get(0));
+                                contentType = false;
+                                processData = false;
+                            }
+                            if (supplierName.trim() === '') {
+                                noty({
+                                    text: 'Tên nhà cung cấp không được trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (isNaN(inputBillAmount)) {
+                                noty({
+                                    text: 'Số tiền chưa tính thuế phải là số.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (inputBillAmount.trim() === '') {
+                                noty({
+                                    text: 'Số tiền chưa tính thuế không được trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (isNaN(inputTaxAmount)) {
+                                noty({
+                                    text: 'Tiền thuế VAT phải là số.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (inputTaxAmount.trim() === '') {
+                                noty({
+                                    text: 'Tiền thuế VAT không được trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (importDate.trim() === '') {
+                                noty({
+                                    text: 'Ngày nhập hóa đơn không được trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else {
+                                $.ajax({
+                                    url: "@(Url.Action("AddImage", "InputBill"))",
+                                    method: "POST",
+                                    data: dataString,
+                                    dataType: "json",
+                                    contentType: contentType,
+                                    processData: processData,
+                                    success: function (data) {
+                                        if (data === 1) {
+                                            $.ajax({
+                                                url: "@(Url.Action("AddInputBill", "InputBill"))",
+                                                method: "POST",
+                                                "data": JSON.stringify({
+                                                    "supplierIdString": supplierId,
+                                                    "inputBillAmountString": inputBillAmount,
+                                                    "inputTaxAmountString": inputTaxAmount,
+                                                    "importDate": importDate,
+                                                    "fileName": fileName
+                                                }),
+                                                "dataType": "json",
+                                                "contentType": 'application/json',
+                                                "processData": processData,
+
+                                                success: function (data) {
+                                                    if (data === 2) {
+                                                        noty({
+                                                            text: 'Thêm hóa đơn thành công',
+                                                            type: 'success',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1500
+                                                        });
+                                                        window.setTimeout(function () {
+                                                            window.location.replace("@(Url.Action("InputBillIndex", "InputBill"))");
+                                                        }, 4000);
+                                                    } else {
+                                                        noty({
+                                                            text: 'Không thể thêm hóa đơn đầu vào',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                    }
+                                                },
+                                                fail: function () {
+                                                    noty({
+                                                        text: 'Đã có lỗi xảy ra',
+                                                        type: 'error',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                }
+                                            });
+                                        } else if (data === -2) {
+                                            noty({
+                                                text: 'Kích thước hình ảnh quá lớn',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        } else if (data === -3) {
+                                            noty({
+                                                text: 'Định dạng hình ảnh không đúng',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        } else {
+                                            noty({
+                                                text: 'Không thể thêm hóa đơn đầu vào',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }
+                                    },
+                                    fail: function () {
+                                        noty({
+                                            text: 'Đã có lỗi xảy ra',
+                                            type: 'error',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    </script>
+                </button>
+                <!-- "Hủy" button -->
+                <button class="btn btn-success" style="margin-left: 2%; margin-bottom: 2%;" onclick="cancelAddInputBill()">
+                    <i class="fa fa-arrow-left" style="margin-right: 1%;"></i>Quay lại trang danh sách
+                    <script type="text/javascript">
+                        function cancelAddInputBill() {
+                            window.location.replace("@(Url.Action("InputBillIndex", "InputBill"))");
+                        }
+                    </script>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--max length for number-->
+    <script>
+        function maxLengthCheck(object) {
+            if (object.value.length > object.maxLength)
+                object.value = object.value.slice(0, object.maxLength);
+        }
+    </script>
+</section>
+@*
+    @section AddInputMaterialScript{
+        <script type="text/javascript">
+            $(document).on("keyup", "#txtInputBillAmount", function () {
+                var txtInputBillAmount = new INT($('#txtInputBillAmount').val());
+                var vatAmount = txtInputBillAmount.getValue *0.1;
+                $('#txtInputTaxAmount').val(vatAmount);
+                $('#txtInputTaxAmount').attr('min', vatAmount);
+            })
+        </script>
+    }*@

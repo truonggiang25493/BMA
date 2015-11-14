@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Collections.Specialized
+@using BMA.Models
+<!DOCTYPE html>
 <html>
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -84,7 +86,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Thông tin cá nhân</a>
+                                        <a href="@Url.Action("StaffEditInfo", "Staff", new { id = (Session["User"] as BMA.Models.User).UserId })" class="btn btn-default btn-flat">Thông tin cá nhân</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="#" class="btn btn-default btn-flat">Đăng xuất</a>
@@ -155,7 +157,15 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
+<<<<<<< HEAD
                             <li><a href="@Url.Action("AddProduct", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+=======
+
+                            <li><a href="@Url.Action("AddProduct", "ManageProduct" )"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+
+                            <li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+
+>>>>>>> 267752e88404e8fe79232d86d1380f491b7ddb42
                         </ul>
                     </li>
                     <li class="treeview">
@@ -206,9 +216,15 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="listInputBill"><a href="@Url.Action("InputBillIndex","InputBill")"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
-                            <li id="addInputBill"><a href="@Url.Action("AddInputBill","InputBill")"><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
+                            <li id="listInputBill"><a href="@Url.Action("InputBillIndex", "InputBill")"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
+                            <li id="addInputBill"><a href="@Url.Action("AddInputBill", "InputBill")"><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
                         </ul>
+                    </li>
+                    <li class="treeview" id="otherExpense">
+                        <a href="@(Url.Action("Index", "OtherExpense"))">
+                            <i class="fa fa-bar-chart"></i> <span>Chi phí khác</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
                     </li>
                     <li class="treeview" id="report">
                         <a href="#">
@@ -217,7 +233,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href=""><i class="fa fa-usd"></i>Thống kê doanh thu</a></li>
-                            <li><a href=""><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
+                            <li id="incomeReport"><a href="@(Url.Action("ReviewIncomeByTime", "Report"))"><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
                             <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
                     </li>
@@ -285,7 +301,7 @@
     </div>
     <!--End of large modal-->
     <!-- jQuery 2.1.4 -->
-    <script src="/Content/AdminLayout/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="~/Content/AdminLayout/plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.5 -->
     <script src="/Content/AdminLayout/bootstrap/js/bootstrap.min.js"></script>
     <!-- FastClick -->
@@ -319,7 +335,6 @@
     @RenderSection("InitScript", false)
 
     @RenderSection("AddInputMaterialScript", false)
-
     @RenderSection("OrderDetailScript", false)
     @RenderSection("CheckoutWithCustomerScript", false)
     @RenderSection("AddCustomerToOrderScript", false)
@@ -327,6 +342,9 @@
     @RenderSection("AddOrderScript", false)
     @RenderSection("CustomerDetailScript", false)
     @RenderSection("InputBillDetailScript", false)
+    @RenderSection("ReviewIncomeByTimeScript", false)
+    @RenderSection("OtherExpenseIndexScript", false)
+    @RenderSection("AddInputBill", false)
     <script>
         $(function () {
             $('#example2').DataTable({
