@@ -16,14 +16,38 @@ namespace BMA.Controllers
         // GET: Report
         public ActionResult ReviewIncomeByTime(string start, string end)
         {
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int) Session["UserRole"] != 1)
+            {
+                // Bug Return to the first page of manage 
+                return RedirectToAction("Index", "Home");
+            }
             ViewBag.Title = "Báo cáo thu nhập";
-
+            ViewBag.TreeView = "report";
+            ViewBag.TreeViewMenu = "incomeReport";
             return View();
         }
 
         // 
         public ActionResult ReviewIncomeWeeklyDetail(DateTime startDate, DateTime endDate)
         {
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                // Bug Return to the first page of manage 
+                return RedirectToAction("Index", "Home");
+            }
+            ViewBag.Title = "Thống kê chi tiết từ " + startDate.ToString("dd/MM/yyyy") + " đến " + endDate.ToString("dd/MM/yyyy");
+            ViewBag.TreeView = "report";
+            ViewBag.TreeViewMenu = "incomeReport";
             ReportBusiness reportBusiness = new ReportBusiness();
             ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeWeeklyDetail(startDate, endDate);
             return View(reportIncome);
@@ -83,12 +107,38 @@ namespace BMA.Controllers
 
         public ActionResult ReviewIncomeMonthlyDetail(int month, int year)
         {
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                // Bug Return to the first page of manage 
+                return RedirectToAction("Index", "Home");
+            }
+            ViewBag.Title = "Thống kê chi tiết tháng " + month + "/" + year;
+            ViewBag.TreeView = "report";
+            ViewBag.TreeViewMenu = "incomeReport";
             ReportBusiness reportBusiness = new ReportBusiness();
             ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeMonthlyDetail(month, year);
             return View(reportIncome);
         }
         public ActionResult ReviewIncomeYearlyDetail(int year)
         {
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                // Bug Return to the first page of manage 
+                return RedirectToAction("Index", "Home");
+            }
+            ViewBag.Title = "Thống kê chi tiết năm " + year;
+            ViewBag.TreeView = "report";
+            ViewBag.TreeViewMenu = "incomeReport";
             ReportBusiness reportBusiness = new ReportBusiness();
             ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeYearlyDetail(year);
             return View(reportIncome);

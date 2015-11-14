@@ -533,27 +533,17 @@ namespace BMA.Controllers
         [HttpPost]
         public ActionResult GetListOfProductToAdd(int? orderId)
         {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            List<Product> productList = new List<Product>();
+            if (orderId != null)
             {
-                return RedirectToAction("Index", "Home");
+                productList = Session["ProductList"] as List<Product>;
             }
             else
             {
-                List<Product> productList = new List<Product>();
-                if (orderId != null)
-                {
-                    productList = Session["ProductList"] as List<Product>;
-                }
-                else
-                {
-                    productList = Session["ProductListForAdd"] as List<Product>;
-                }
-
-                return PartialView(productList);
+                productList = Session["ProductListForAdd"] as List<Product>;
             }
 
+            return PartialView(productList);
         }
 
         [HttpPost]
