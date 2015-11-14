@@ -72,14 +72,14 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="user-image" alt="User Image">
-                                <span class="hidden-xs">Haruyuki</span>
+                                <span class="hidden-xs">@(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "")</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
                                     <p>
-                                        Haruyuki - Nhân viên cửa hàng
+                                        @(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "") - @(Session["UserRole"] != null ? (((int)Session["UserRole"]) == 1 ? "Quản lý" : (((int)Session["UserRole"]) == 2 ? "Nhân viên" : "")) : "")
                                         <small></small>
                                     </p>
                                 </li>
@@ -89,7 +89,7 @@
                                         <a href="@Url.Action("StaffEditInfo", "Staff", new { id = (Session["User"] as BMA.Models.User).UserId })" class="btn btn-default btn-flat">Thông tin cá nhân</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Đăng xuất</a>
+                                        <a href="@Url.Action("Logout", "Account")" class="btn btn-default btn-flat">Đăng xuất</a>
                                     </div>
                                 </li>
                             </ul>
@@ -112,24 +112,17 @@
                         <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>Haruyuki</p>
+                        <p>@(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "")</p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
                 <div></div>
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu">
-                    <li class="treeview">
-                        <a href="">
-                            <i class="fa fa-home"></i> <span>Quản lý cửa hàng</span>
-                            <i class="fa fa-angle-left pull-right"></i>
+                    <li>
+                        <a href="@(Url.Action("Index", "StoreInfor"))">
+                            <i class="fa fa-home"></i> <span>Thông tin cửa hàng</span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index", "StoreInfor")"><i class="fa fa-home"></i>Thông tin cửa hàng</a></li>
-                            <li>
-                                <a href="@Url.Action("ConfigIndex", "StoreInfor")"><i class="fa fa-gears"></i>Cấu hình hệ thống</a>
-                            </li>
-                        </ul>
                     </li>
                     <li class="treeview" id="staff">
                         <a href="#">
@@ -157,15 +150,10 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-<<<<<<< HEAD
-                            <li><a href="@Url.Action("AddProduct", "ManageProduct" )">><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
-=======
 
                             <li><a href="@Url.Action("AddProduct", "ManageProduct" )"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
 
-                            <li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
 
->>>>>>> 267752e88404e8fe79232d86d1380f491b7ddb42
                         </ul>
                     </li>
                     <li class="treeview">

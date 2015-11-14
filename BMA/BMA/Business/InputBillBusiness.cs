@@ -18,7 +18,7 @@ namespace BMA.Business
         #region Get Input Bill List
         public static List<InputBill> GetInputBillList()
         {
-            List<InputBill> inputBillList = db.InputBills.OrderBy(n => n.ImportDate).ToList();
+            List<InputBill> inputBillList = db.InputBills.ToList();
             return inputBillList;
         }
         #endregion

@@ -21,10 +21,9 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            if ((int) Session["UserRole"] != 1)
+            if ((int)Session["UserRole"] != 1)
             {
-                // Bug Return to the first page of manage 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "StoreInfor");
             }
             ViewBag.Title = "Báo cáo thu nhập";
             ViewBag.TreeView = "report";
@@ -42,8 +41,7 @@ namespace BMA.Controllers
             }
             if ((int)Session["UserRole"] != 1)
             {
-                // Bug Return to the first page of manage 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "StoreInfor");
             }
             ViewBag.Title = "Thống kê chi tiết từ " + startDate.ToString("dd/MM/yyyy") + " đến " + endDate.ToString("dd/MM/yyyy");
             ViewBag.TreeView = "report";
@@ -114,8 +112,7 @@ namespace BMA.Controllers
             }
             if ((int)Session["UserRole"] != 1)
             {
-                // Bug Return to the first page of manage 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "StoreInfor");
             }
             ViewBag.Title = "Thống kê chi tiết tháng " + month + "/" + year;
             ViewBag.TreeView = "report";
@@ -133,8 +130,7 @@ namespace BMA.Controllers
             }
             if ((int)Session["UserRole"] != 1)
             {
-                // Bug Return to the first page of manage 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "StoreInfor");
             }
             ViewBag.Title = "Thống kê chi tiết năm " + year;
             ViewBag.TreeView = "report";

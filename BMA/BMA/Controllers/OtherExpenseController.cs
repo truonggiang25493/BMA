@@ -21,8 +21,7 @@ namespace BMA.Controllers
             }
             if ((int)Session["UserRole"] != 1)
             {
-                // Bug Return to the first page of manage 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "StoreInfor");
             }
             ViewBag.Title = "Quản lý chi phí khác";
             OtherExpenseBusiness business = new OtherExpenseBusiness();
