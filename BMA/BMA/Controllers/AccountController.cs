@@ -33,7 +33,7 @@ namespace BMA.Controllers
                 {
                     Session["User"] = endUser;
                     Session["UserRole"] = endUser.Role.RoleId;
-                    return RedirectToAction("Index", "ManageProduct");
+                    return RedirectToAction("Index", "StoreInfor");
                 }
             }
             catch
