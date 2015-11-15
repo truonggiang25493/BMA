@@ -1,13 +1,12 @@
-﻿@model List<BMA.Models.sp_GetIncomeWeekly_Result>
-@{
+﻿@{
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
-
 <!-- Content Header (Page header) -->
-<section class="content-header" style="vertical-align: middle">
-    <h1>@(ViewBag.Title)</h1>
+<section class="content-header">
+    <h2>@(ViewBag.Title)</h2>
     <div class="row">
-        <div class="col-md-4"></div>
+        <div class="col-md-4">
+        </div>
         <div class="col-md-2">
             <div class="form-group">
                 <label for="time-type">Thống kê theo</label>
@@ -51,11 +50,10 @@
     </div>
 </section>
 <!-- Main content -->
-<section class="content" id="review-income-content"></section>
-
-@section ReviewIncomeByTimeScript{
-    <script src="~/Scripts/ChartNew.js"></script>
-
+<section class="content" id="review-content"></section>
+@section ReviewRevenuePerCustomerScript{
+    <script src="~/Scripts/chosen.jquery.js"></script>
+    <!--Datetimepicker-->
     <script type="text/javascript">
         $(document).ready(function () {
             $('#fromDate').datetimepicker({
@@ -76,60 +74,6 @@
             });
             $("#toDate").on("dp.change", function (e) {
                 $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
-            });
-            $.ajax({
-                url: "@(Url.Action("ReviewByTimePartialView", "Report"))",
-                method: "GET",
-                success: function (data) {
-                    $("#review-income-content").html(data);
-                    var label = [];
-                    var income = [];
-                    $("#income-table tbody tr").each(function (index, row) {
-                        label.push($(row).find("td:first").html() + " - " + $(row).find("td:nth-child(2)").html());
-                        var incomeS = $(row).find("td:nth-child(5)").html();
-                        income.push(incomeS.substring(0, incomeS.length - 2).split('.').join(""));
-                    });
-                    var linedata = {
-                        labels: label,
-                        datasets: [
-                            {
-                                fillColor: "rgba(151,187,205,0.5)",
-                                strokeColor: "rgba(151,187,205,1)",
-                                pointColor: "rgba(151,187,205,1)",
-                                pointStrokeColor: "#fff",
-                                data: income,
-                                title: "Thu nhập"
-                            }
-                        ]
-                    }
-
-                    var opt1 = {
-                        legend: true,
-                        graphTitleFontSize: 18,
-                        graphMin: 0,
-                        responsive: true,
-                        xAxisLabel: "Thời gian",
-                        yAxisUnit: "đồng",
-                        yAxisLabel: "Thu nhập",
-                        thousandSeparator: ".",
-                        // Specify the number of Y-scales to display
-                        scaleOverride: true,
-                        // The start value of the scale
-                        scaleStartValue: 0,
-                        // The number of Y-scales to display
-                        scaleSteps: 10,
-                        // The width between two Y-scale
-                        scaleStepWidth: 500000,
-                        // The space between the X Axis (on position 0) can be filled or not
-                        datasetFill: false,
-                        annotateDisplay: true,
-                        annotateFunctionIn: myFctIn
-                    }
-                    new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
-                },
-                fail: function (e) {
-
-                }
             });
         });
         $("#time-type").on("change", function () {
@@ -165,16 +109,16 @@
 
         });
 
-        function myFctIn(area, ctx, data, statdata, posi, posj, othervars) {
-            $("#income-table tbody tr:nth-child(" + (posj + 1) + ")").addClass('selected').siblings().removeClass('selected');
-        }
 
+    </script>
+    <!--Draw graph-->
+    <script type="text/javascript">
         function executeChart() {
             var fromDateString = $("#fromDate input").val();
             var toDateString = $("#toDate input").val();
             var timeType = $("#time-type").val();
             $.ajax({
-                url: "@(Url.Action("ReviewByTimePartialView", "Report"))",
+                url: "@(Url.Action("ReviewRevenuePerCustomerPartialView", "Report"))",
                 method: "GET",
                 data: {
                     "start": fromDateString,
@@ -182,38 +126,84 @@
                     "type": timeType
                 },
                 success: function (data) {
-                    $("#review-income-content").html(data);
+                    $("#review-content").html(data);
                     var label = [];
-                    var income = [];
-
-                    if (timeType === "1") {
-                        $("#income-table tbody tr").each(function (index, row) {
-                            label.push($(row).find("td:first").html() + " - " + $(row).find("td:nth-child(2)").html());
-                            var incomeS = $(row).find("td:nth-child(5)").html();
-                            income.push(incomeS.substring(0, incomeS.length - 2).split('.').join(""));
-                        });
-                    }
-                    if (timeType === "2" || timeType === "3") {
-                        $("#income-table tbody tr").each(function (index, row) {
-                            label.push($(row).find("td:first").html());
-                            var incomeS = $(row).find("td:nth-child(5)").html();
-                            income.push(incomeS.substring(0, incomeS.length - 2).split('.').join(""));
-                        });
-                    }
+                    $("#revenue-table thead tr th").each(function (index) {
+                        if (index !== 0)
+                            label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
+                    });
 
                     var linedata = {
                         labels: label,
-                        datasets: [
-                            {
-                                fillColor: "rgba(151,187,205,0.5)",
-                                strokeColor: "rgba(151,187,205,1)",
-                                pointColor: "rgba(151,187,205,1)",
-                                pointStrokeColor: "#fff",
-                                data: income,
-                                title: "Thu nhập"
-                            }
-                        ]
+                        datasets: []
                     }
+
+                    $("#revenue-table tbody tr").each(function (index, row) {
+                        var data = [];
+                        $(row).find("td").each(function (count) {
+                            if (count !== 0) {
+                                var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
+                                data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
+                            }
+                        });
+                        var fillColorString = "";
+                        var colorString = "";
+                        switch (index) {
+                            case 0:
+                                fillColorString = "rgba(237, 212, 219,0.5)";
+                                colorString = "rgba(237, 212, 219,1)";
+                                break;
+                            case 1:
+                                fillColorString = "rgba(41, 41, 41,0.5)";
+                                colorString = "rgba(41, 41, 41,1)";
+                                break;
+                            case 2:
+                                fillColorString = "rgba(39, 38, 89,0.5)";
+                                colorString = "rgba(39, 38, 89,1)";
+                                break;
+                            case 3:
+                                fillColorString = "rgba(72, 82, 85,0.5)";
+                                colorString = "rgba(72, 82, 85,1)";
+                                break;
+                            case 4:
+                                fillColorString = "rgba(139, 48, 122,0.5)";
+                                colorString = "rgba(139, 48, 122,1)";
+                                break;
+                            case 5:
+                                fillColorString = "rgba(149, 130, 7,0.5)";
+                                colorString = "rgba(149, 130, 7,1)";
+                                break;
+                            case 6:
+                                fillColorString = "rgba(32, 47, 66,0.5)";
+                                colorString = "rgba(32, 47, 66,1)";
+                                break;
+                            case 7:
+                                fillColorString = "rgba(255, 217, 11,0.5)";
+                                colorString = "rgba(255, 217, 11,1)";
+                                break;
+                            case 8:
+                                fillColorString = "rgba(108, 94, 117,0.5)";
+                                colorString = "rgba(108, 94, 117,1)";
+                                break;
+                            case 9:
+                                fillColorString = "rgba(255, 0, 99,0.5)";
+                                colorString = "rgba(255, 0, 99,1)";
+                                break;
+
+                            default:
+                        }
+
+                        var dataset = {
+                            fillColor: fillColorString,
+                            strokeColor: colorString,
+                            pointColor: colorString,
+                            pointStrokeColor: "#fff",
+                            data: data,
+                            title: $(row).find("td:first").html()
+                        };
+
+                        linedata.datasets.push(dataset);
+                    });
 
                     var opt1 = {
                         legend: true,
@@ -229,48 +219,23 @@
                         // The start value of the scale
                         scaleStartValue: 0,
                         // The number of Y-scales to display
-                        scaleSteps: 10,
+                        scaleSteps: 7,
                         // The width between two Y-scale
                         scaleStepWidth: 500000,
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
-                        annotateDisplay: true,
-                        annotateFunctionIn: myFctIn
+                        //annotateFunctionIn: myFctIn
+                        scaleShowLabels: true
                     }
-
-                    var opt3 = {
-                        legend: true,
-                        graphTitleFontSize: 18,
-                        graphMin: 0,
-                        responsive: true,
-                        xAxisLabel: "Thời gian",
-                        yAxisUnit: "đồng",
-                        yAxisLabel: "Thu nhập",
-                        thousandSeparator: ".",
-                        // Specify the number of Y-scales to display
-                        scaleOverride: true,
-                        // The start value of the scale
-                        scaleStartValue: 0,
-                        // The number of Y-scales to display
-                        scaleSteps: 10,
-                        // The width between two Y-scale
-                        scaleStepWidth: 2000000,
-                        // The space between the X Axis (on position 0) can be filled or not
-                        datasetFill: false,
-                        annotateDisplay: true,
-                        annotateFunctionIn: myFctIn
-                    }
-                    if (timeType === "1" || timeType === "2") {
-                        new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
-                    }
-                    if (timeType === "3") {
-                        new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt3);
-                    }
+                    new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
                 },
                 fail: function (e) {
 
                 }
             });
+        }
+        function myFctIn(area, ctx, data, statdata, posi, posj, othervars) {
+            $("#income-table tbody tr:nth-child(" + (posj + 1) + ")").addClass('selected').siblings().removeClass('selected');
         }
     </script>
 }
