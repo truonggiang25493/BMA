@@ -75,7 +75,11 @@
             $("#toDate").on("dp.change", function (e) {
                 $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
             });
-
+        });
+    </script>
+    <!--Initiate-->
+    <script type="text/javascript">
+        $(document).ready(function () {
             $.ajax({
                 url: "@(Url.Action("ReviewRevenuePerCustomerPartialView", "Report"))",
                 method: "GET",
@@ -190,6 +194,9 @@
                 }
             });
         });
+    </script>
+    <!--Validate choose time-->
+    <script type="text/javascript">
         $("#time-type").on("change", function () {
             var timeType = $("#time-type").val();
             if (timeType === "1") {
@@ -221,8 +228,6 @@
                 });
             }
         });
-
-
     </script>
     <!--Draw graph-->
     <script type="text/javascript">
@@ -232,7 +237,7 @@
             var timeType = $("#time-type").val();
             $.ajax({
                 url: "@(Url.Action("ReviewRevenuePerCustomerPartialView", "Report"))",
-                method: "GET",
+                method: "POST",
                 data: {
                     "start": fromDateString,
                     "end": toDateString,
@@ -251,7 +256,7 @@
                         labels: label,
                         datasets: []
                     }
-                    
+
                     $("#revenue-table tbody tr").each(function (index, row) {
                         var data = [];
                         var dataNumber = $(row).find("td").length;
@@ -327,7 +332,7 @@
                         responsive: true,
                         xAxisLabel: "Thời gian",
                         yAxisUnit: "đồng",
-                        yAxisLabel: "Thu nhập",
+                        yAxisLabel: "Doanh thu",
                         thousandSeparator: ".",
                         // Specify the number of Y-scales to display
                         scaleOverride: true,

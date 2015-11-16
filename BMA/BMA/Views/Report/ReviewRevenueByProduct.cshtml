@@ -1,64 +1,366 @@
 ﻿@{
-    Layout = null;
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>ReviewRevenueByProduct</title>
-</head>
-<body>
-    <canvas id="canvas" height="600" width="1000"></canvas>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h2 style="color:">@(ViewBag.Title)</h2>
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="time-type">Thống kê theo</label>
+                <select id="time-type" class="form-control">
+                    <option value="1">Tuần</option>
+                    <option value="2">Tháng</option>
+                    <option value="3">Năm</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="fromDate">Từ</label>
+                <div class='input-group date' id='fromDate'>
+                    <input type='text' readonly="readonly" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="toDate">Đến</label>
+                <div class='input-group date' id='toDate'>
+                    <input type='text' readonly="readonly" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="form-group" style="padding-top: 25px">
+                <button class="btn btn-success" onclick="executeChart()">
+                    <i class="fa fa-bar-chart" style="margin-right: 3px"></i>
+                    Thống kê
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content" id="review-content"></section>
+@section ReviewIncomeByProductScript{
     <script src="~/Scripts/ChartNew.js"></script>
+    <!--Datetimepicker-->
     <script type="text/javascript">
-        var linedata = {
-            labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7"],
-            datasets: [
-                {
-                    fillColor: "rgba(220,220,220,0.5)",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    data: [1000000, 1500000, 1700000, 2500000, 1600000, 2570000, 1400000],
-                    title: "Năm 2014"
-                },
-                {
-                    fillColor: "rgba(151,187,205,0.5)",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "rgba(151,187,205,1)",
-                    pointStrokeColor: "#fff",
-                    data: [1300000, 1500000, 1400000, 1900000, 1600000, 1700000, 1000000],
-                    title: "Năm 2015"
-                }
-            ]
-        }
-        var opt1 = {
-            legend: true,
-            graphTitleFontSize: 18,
-            graphMin: 0,
-            responsive: true,
-            xAxisLabel: "Thời gian",
-            yAxisUnit: "đồng",
-            yAxisLabel: "Thu nhập",
-            thousandSeparator: ".",
-            // Specify the number of Y-scales to display
-            scaleOverride: true,
-            // The start value of the scale
-            scaleStartValue: 0,
-            // The number of Y-scales to display
-            scaleSteps: 5,
-            // The width between two Y-scale
-            scaleStepWidth: 500000,
-            // The space between the X Axis (on position 0) can be filled or not
-            datasetFill: false,
-            annotateDisplay: true
+        $(document).ready(function () {
+            $('#fromDate').datetimepicker({
+                ignoreReadonly: true,
+                format: 'L',
+                locale: 'vi',
+                maxDate: moment().subtract(7, 'days')
+            });
+            $('#toDate').datetimepicker({
+                ignoreReadonly: true,
+                format: 'L',
+                locale: 'vi',
+                maxDate: moment(),
+                useCurrent: false
+            });
+            $("#fromDate").on("dp.change", function (e) {
+                $('#toDate').data("DateTimePicker").minDate(e.date.add(1, 'days'));
+            });
+            $("#toDate").on("dp.change", function (e) {
+                $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
+            });
+        });
+    </script>
+    <!--Validate choose time-->
+    <script type="text/javascript">
+        $("#time-type").on("change", function () {
+            var timeType = $("#time-type").val();
+            if (timeType === "1") {
+                $('#fromDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment().subtract(7, 'days'));
+                $('#toDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment()).date(moment());
+                $("#fromDate").on("dp.change", function (e) {
+                    $('#toDate').data("DateTimePicker").minDate(e.date.add(1, 'days'));
+                });
+                $("#toDate").on("dp.change", function (e) {
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
+                });
+            } else if (timeType === "2") {
+                $('#fromDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").viewDate(moment().startOf('month')).maxDate(moment().endOf('month'));
+                $('#toDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").viewDate(moment().startOf('month')).maxDate(moment().endOf('month'));
+                $("#fromDate").on("dp.change", function (e) {
+                    $('#toDate').data("DateTimePicker").minDate(e.date.startOf('month'));
+                });
+                $("#toDate").on("dp.change", function (e) {
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1, 'months').endOf('month'));
+                });
+            } else if (timeType === "3") {
+                $('#fromDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));
+                $('#toDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));
+                $("#fromDate").on("dp.change", function (e) {
+                    $('#toDate').data("DateTimePicker").minDate(e.date.startOf('year'));
+                });
+                $("#toDate").on("dp.change", function (e) {
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1, 'years').endOf('year'));
+                });
+            }
+        });
+    </script>
+    <!--Initiate-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                url: "@Url.Action("ReviewIncomePerProductPartialView", "Report")",
+                method: "GET",
+                success: function (data) {
+                    $("#review-content").html(data);
+                    var label = [];
+                    var labelNumber = $("#revenue-table thead tr th").length;
+                    $("#revenue-table thead tr th").each(function (index) {
+                        if (index !== 0 && index !== 1 && index !== (labelNumber - 1))
+                            label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
+                    });
 
+                    var linedata = {
+                        labels: label,
+                        datasets: []
+                    }
+
+                    $("#revenue-table tbody tr").each(function (index, row) {
+                        var data = [];
+                        var dataNumber = $(row).find("td").length;
+                        $(row).find("td").each(function (count) {
+                            if (count !== 0 && count !== 1 && count !== (dataNumber - 1)) {
+                                var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
+                                data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
+                            }
+                        });
+                        var fillColorString = "";
+                        var colorString = "";
+                        switch (index) {
+                            case 0:
+                                fillColorString = "#f56954";
+                                colorString = "#f56954";
+                                break;
+                            case 1:
+                                fillColorString = "#00a65a)";
+                                colorString = "#00a65a";
+                                break;
+                            case 2:
+                                fillColorString = "#f39c12";
+                                colorString = "#f39c12";
+                                break;
+                            case 3:
+                                fillColorString = "#00c0ef";
+                                colorString = "#00c0ef";
+                                break;
+                            case 4:
+                                fillColorString = "#3c8dbc";
+                                colorString = "#3c8dbc";
+                                break;
+                            case 5:
+                                fillColorString = "#d2d6de";
+                                colorString = "#d2d6de";
+                                break;
+                            case 6:
+                                fillColorString = "cyan";
+                                colorString = "cyan";
+                                break;
+                            case 7:
+                                fillColorString = "darkorange";
+                                colorString = "darkorange";
+                                break;
+                            case 8:
+                                fillColorString = "gold";
+                                colorString = "gold";
+                                break;
+                            case 9:
+                                fillColorString = "deeppink";
+                                colorString = "deeppink";
+                                break;
+
+                            default:
+                        }
+
+                        var dataset = {
+                            fillColor: fillColorString,
+                            strokeColor: colorString,
+                            pointColor: colorString,
+                            pointStrokeColor: "#fff",
+                            data: data,
+                            title: $(row).find("td:first").html()
+                        };
+
+                        linedata.datasets.push(dataset);
+                    });
+
+                    var opt1 = {
+                        legend: true,
+                        graphTitleFontSize: 18,
+                        graphMin: 0,
+                        responsive: true,
+                        xAxisLabel: "Thời gian",
+                        yAxisUnit: "đồng",
+                        yAxisLabel: "Thu nhập",
+                        thousandSeparator: ".",
+                        // Specify the number of Y-scales to display
+                        scaleOverride: true,
+                        // The start value of the scale
+                        scaleStartValue: -200000,
+                        // The number of Y-scales to display
+                        scaleSteps: 25,
+                        // The width between two Y-scale
+                        scaleStepWidth: 100000,
+                        // The space between the X Axis (on position 0) can be filled or not
+                        datasetFill: false,
+                        annotateDisplay: true,
+                        annotateFunctionIn: myFctIn
+                    }
+                    new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
+                },
+                fail: function (e) {
+
+                }
+            });
+        });
+    </script>
+
+    <!--Draw graph-->
+    <script type="text/javascript">
+        function executeChart() {
+            var fromDateString = $("#fromDate input").val();
+            var toDateString = $("#toDate input").val();
+            var timeType = $("#time-type").val();
+
+            $.ajax({
+                url: "@Url.Action("ReviewIncomePerProductPartialView", "Report")",
+                method: "GET",
+                data: {
+                    "start": fromDateString,
+                    "end": toDateString,
+                    "type": timeType
+                },
+                success: function (data) {
+                    $("#review-content").html(data);
+
+                    var label = [];
+                    var labelNumber = $("#revenue-table thead tr th").length;
+                    $("#revenue-table thead tr th").each(function (index) {
+                        if (index !== 0 && index !== 1 && index !== (labelNumber - 1))
+                            label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
+                    });
+
+                    var linedata = {
+                        labels: label,
+                        datasets: []
+                    }
+
+                    $("#revenue-table tbody tr").each(function (index, row) {
+                        var data = [];
+                        var dataNumber = $(row).find("td").length;
+                        $(row).find("td").each(function (count) {
+                            if (count !== 0 && count !== 1 && count !== (dataNumber - 1)) {
+                                var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
+                                data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
+                            }
+                        });
+                        var fillColorString = "";
+                        var colorString = "";
+                        switch (index) {
+                            case 0:
+                                fillColorString = "#f56954";
+                                colorString = "#f56954";
+                                break;
+                            case 1:
+                                fillColorString = "#00a65a)";
+                                colorString = "#00a65a";
+                                break;
+                            case 2:
+                                fillColorString = "#f39c12";
+                                colorString = "#f39c12";
+                                break;
+                            case 3:
+                                fillColorString = "#00c0ef";
+                                colorString = "#00c0ef";
+                                break;
+                            case 4:
+                                fillColorString = "#3c8dbc";
+                                colorString = "#3c8dbc";
+                                break;
+                            case 5:
+                                fillColorString = "#d2d6de";
+                                colorString = "#d2d6de";
+                                break;
+                            case 6:
+                                fillColorString = "cyan";
+                                colorString = "cyan";
+                                break;
+                            case 7:
+                                fillColorString = "darkorange";
+                                colorString = "darkorange";
+                                break;
+                            case 8:
+                                fillColorString = "gold";
+                                colorString = "gold";
+                                break;
+                            case 9:
+                                fillColorString = "deeppink";
+                                colorString = "deeppink";
+                                break;
+
+                            default:
+                        }
+
+                        var dataset = {
+                            fillColor: fillColorString,
+                            strokeColor: colorString,
+                            pointColor: colorString,
+                            pointStrokeColor: "#fff",
+                            data: data,
+                            title: $(row).find("td:first").html()
+                        };
+
+                        linedata.datasets.push(dataset);
+                    });
+
+                    var opt1 = {
+                        legend: true,
+                        graphTitleFontSize: 18,
+                        graphMin: 0,
+                        responsive: true,
+                        xAxisLabel: "Thời gian",
+                        yAxisUnit: "đồng",
+                        yAxisLabel: "Thu nhập",
+                        thousandSeparator: ".",
+                        // Specify the number of Y-scales to display
+                        scaleOverride: true,
+                        // The start value of the scale
+                        scaleStartValue: -200000,
+                        // The number of Y-scales to display
+                        scaleSteps: 25,
+                        // The width between two Y-scale
+                        scaleStepWidth: 100000,
+                        // The space between the X Axis (on position 0) can be filled or not
+                        datasetFill: false,
+                        annotateDisplay: true,
+                        annotateFunctionIn: myFctIn
+                    }
+                    new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
+
+                },
+                fail: function (e) {
+
+                }
+            });
         }
-        window.onload = function () {
-            new Chart(document.getElementById("canvas").getContext("2d")).Line(linedata, opt1);
+
+        function myFctIn(area, ctx, data, statdata, posi, posj, othervars) {
+            $("#revenue-table tbody tr:nth-child(" + (posi + 1) + ")").addClass('selected').siblings().removeClass('selected');
         }
     </script>
-</body>
-</html>
+}

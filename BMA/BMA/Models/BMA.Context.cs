@@ -155,5 +155,61 @@ namespace BMA.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetTopCustomerWithRevenue_Result>("sp_GetTopCustomerWithRevenue", startDateParameter, endDateParameter, typeParameter);
         }
+    
+        public virtual ObjectResult<sp_GetTop10IncomeOfProductMonthly_Result> sp_GetTop10IncomeOfProductMonthly(Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
+        {
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("startDate", startDate) :
+                new ObjectParameter("startDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("endDate", endDate) :
+                new ObjectParameter("endDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetTop10IncomeOfProductMonthly_Result>("sp_GetTop10IncomeOfProductMonthly", startDateParameter, endDateParameter);
+        }
+    
+        public virtual ObjectResult<sp_GetTop10IncomeOfProductPeriod_Result> sp_GetTop10IncomeOfProductPeriod(Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<int> type)
+        {
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("startDate", startDate) :
+                new ObjectParameter("startDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("endDate", endDate) :
+                new ObjectParameter("endDate", typeof(System.DateTime));
+    
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("type", type) :
+                new ObjectParameter("type", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetTop10IncomeOfProductPeriod_Result>("sp_GetTop10IncomeOfProductPeriod", startDateParameter, endDateParameter, typeParameter);
+        }
+    
+        public virtual ObjectResult<sp_GetTop10IncomeOfProductWeekly_Result> sp_GetTop10IncomeOfProductWeekly(Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
+        {
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("startDate", startDate) :
+                new ObjectParameter("startDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("endDate", endDate) :
+                new ObjectParameter("endDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetTop10IncomeOfProductWeekly_Result>("sp_GetTop10IncomeOfProductWeekly", startDateParameter, endDateParameter);
+        }
+    
+        public virtual ObjectResult<sp_GetTop10IncomeOfProductYearly_Result> sp_GetTop10IncomeOfProductYearly(Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
+        {
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("startDate", startDate) :
+                new ObjectParameter("startDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("endDate", endDate) :
+                new ObjectParameter("endDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetTop10IncomeOfProductYearly_Result>("sp_GetTop10IncomeOfProductYearly", startDateParameter, endDateParameter);
+        }
     }
 }

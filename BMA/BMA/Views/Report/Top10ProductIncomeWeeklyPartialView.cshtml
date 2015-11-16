@@ -1,0 +1,132 @@
+﻿@using System.Globalization
+@using BMA.Models
+@model List<sp_GetTop10IncomeOfProductWeekly_Result>
+<!--Chart-->
+<div class="row">
+    <div class="col-md-12">
+        <!--Line Chart-->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Biểu đồ thống kê 10 sản phẩm thu nhập cao nhất
+                </h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    List<string> productCode = new List<string>();
+    List<string> productName = new List<string>();
+    List<String> timeList = new List<string>();
+    foreach (sp_GetTop10IncomeOfProductWeekly_Result result in Model)
+    {
+        if (productCode.Count == 0)
+        {
+            productCode.Add(result.ProductCode);
+            productName.Add(result.ProductName);
+            timeList.Add((result.StartDate.Value.ToString("dd/MM/yyyy") + " - " + result.EndDate.Value.ToString("dd/MM/yyyy")));
+        }
+        else
+        {
+            bool nameCheck = true;
+            foreach (string s in productCode)
+            {
+                if (s.Equals(result.ProductCode))
+                {
+                    nameCheck = false;
+                }
+
+            }
+            if (nameCheck)
+            {
+                productCode.Add(result.ProductCode);
+                productName.Add(result.ProductName);
+            }
+
+            bool timeCheck = true;
+            foreach (string s in timeList)
+            {
+                string temp = (result.StartDate.Value.ToString("dd/MM/yyyy") + " - " + result.EndDate.Value.ToString("dd/MM/yyyy"));
+                if (s.Equals(temp))
+                {
+                    timeCheck = false;
+                }
+            }
+            if (timeCheck)
+            {
+                timeList.Add((result.StartDate.Value.ToString("dd/MM/yyyy") + " - " + result.EndDate.Value.ToString("dd/MM/yyyy")));
+            }
+        }
+    }
+}
+<!--Table-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-body">
+                <table class="table" id="revenue-table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Mã sản phẩm</th>
+                            @foreach (string time in timeList)
+                            {
+                                <th style="text-align: center">@time</th>
+                            }
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < productCode.Count; i++)
+                        {
+                            <tr>
+                                <td>@(productCode.ElementAt(i))</td>
+                                <td>@(productName.ElementAt(i))</td>
+                                @foreach (string time in timeList)
+                                {
+                                    foreach (sp_GetTop10IncomeOfProductWeekly_Result incomeWeekly in Model)
+                                    {
+                                        if (incomeWeekly.ProductCode.Equals(productCode.ElementAt(i)) && incomeWeekly.StartDate.Value.ToString("dd/MM/yyyy").Equals(time.Substring(0, 10)))
+                                        {
+                                            <td style="text-align: right">@incomeWeekly.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        }
+                                    }
+                                }
+                                @{ int id = 0;}
+                                @while (id == 0)
+                                {
+                                    foreach (sp_GetTop10IncomeOfProductWeekly_Result result in Model)
+                                    {
+                                        if (result.ProductCode.Equals(productCode.ElementAt(i)))
+                                        {
+                                            id = result.ProductId.Value;
+                                        }
+                                    }
+                                }
+                                <td>
+                                    <button onclick="openDetailInNewTab()" class="btn btn-info btn-xs">
+                                        <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
+                                        <script type="text/javascript">
+                                            function openDetailInNewTab() {
+                                                alert(@id);
+                                            }
+                                        </script>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

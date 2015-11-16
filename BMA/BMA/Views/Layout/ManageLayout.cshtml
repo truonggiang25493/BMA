@@ -80,7 +80,7 @@
                                 <li class="user-header">
                                     <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
                                     <p>
-                                        @(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "") - @((Session["UserRole"]) == null ? "": (((int)Session["UserRole"]) == 1 ? "Quản lý" : (((int)Session["UserRole"]) == 2 ? "Nhân viên" : "")))
+                                        @(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "") - @((Session["UserRole"]) == null ? "" : (((int)Session["UserRole"]) == 1 ? "Quản lý" : (((int)Session["UserRole"]) == 2 ? "Nhân viên" : "")))
                                         <small></small>
                                     </p>
                                 </li>
@@ -222,6 +222,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li id="customerRevenue"><a href="@(Url.Action("ReviewRevenuePerCustomer", "Report"))"><i class="fa fa-usd"></i>Thống kê doanh thu theo khách hàng</a></li>
+                            <li id="incomeProduct"><a href="@(Url.Action("ReviewRevenueByProduct", "Report"))"><i class="fa fa-usd"></i>Thống kê thu nhập theo sản phẩm</a></li>
                             <li id="incomeReport"><a href="@(Url.Action("ReviewIncomeByTime", "Report"))"><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
                             <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
@@ -335,6 +336,7 @@
     @RenderSection("OtherExpenseIndexScript", false)
     @RenderSection("AddInputBill", false)
     @RenderSection("ReviewRevenuePerCustomerScript", false)
+    @RenderSection("ReviewIncomeByProductScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({

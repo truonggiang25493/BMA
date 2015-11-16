@@ -678,5 +678,20 @@ namespace BMA.Business
         {
             return db.sp_GetTop10CustomerRevenueYearly(start, end).ToList();
         }
+
+        public List<sp_GetTop10IncomeOfProductWeekly_Result> GetTop10ProductIncomeWeekly(DateTime start, DateTime end)
+        {
+            return db.sp_GetTop10IncomeOfProductWeekly(start, end).ToList();
+        }
+
+        public List<sp_GetTop10IncomeOfProductMonthly_Result> GetTop10ProductIncomeMonthly(DateTime start, DateTime end)
+        {
+            return db.sp_GetTop10IncomeOfProductMonthly(start, end).ToList();
+        }
+
+        public List<sp_GetTop10IncomeOfProductYearly_Result> GetTop10ProductIncomeYearly(DateTime start, DateTime end)
+        {
+            return db.sp_GetTop10IncomeOfProductYearly(start, end).ToList();
+        }
     }
 }

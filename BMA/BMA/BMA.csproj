@@ -298,6 +298,18 @@
     <Compile Include="Models\sp_GetTop10CustomerRevenueYearly_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_GetTop10IncomeOfProductMonthly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetTop10IncomeOfProductPeriod_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetTop10IncomeOfProductWeekly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetTop10IncomeOfProductYearly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_GetTopCustomerWithRevenue_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -1455,6 +1467,9 @@
     <Content Include="Views\Report\Top10CustomerRevenueWeeklyPartialView.cshtml" />
     <Content Include="Views\Report\Top10CustomerRevenueMonthlyPartialView.cshtml" />
     <Content Include="Views\Report\Top10CustomerRevenueYearlyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeWeeklyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeMonthlyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeYearlyPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
