@@ -55,5 +55,38 @@ namespace BMA.Business
             return true;
         }
         #endregion
+
+        #region Edit input bill
+        public static bool EditInputBill(int inputBillId, int supplierId, String inputBillCode, int inputBillAmount, int inputTaxAmount, String inputRawImage, String importDate)
+        {
+            var inputBillDetail = db.InputBills.SingleOrDefault(n => n.InputBillId == inputBillId);
+            if (inputBillDetail != null)
+            {
+                try
+                {
+                    inputBillDetail.SupplierId = supplierId;
+                    inputBillDetail.InputBillAmount = inputBillAmount;
+                    inputBillDetail.InputTaxAmount = inputTaxAmount;
+                    inputBillDetail.InputBillCode = inputBillCode;
+                    inputBillDetail.ImportDate = Convert.ToDateTime(importDate);
+                    inputBillDetail.InputRawImage = inputRawImage;
+
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    string s = e.ToString();
+                    return false;
+                }
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
+
     }
 }

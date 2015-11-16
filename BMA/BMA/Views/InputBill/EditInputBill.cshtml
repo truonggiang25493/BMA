@@ -81,7 +81,7 @@
                                     <b>Ngày nhập<b style="color: #ff0000">*</b>: </b>
                                 </div>
                                 <div class="col-xs-8">
-                                    <input type="date" required min="2015-01-01" max="2020-12-31" value="@Model.ImportDate" name="txtImportDate" id="txtImportDate" style="width: 65%" />
+                                    <input type="date" required min="2015-01-01" max="2020-12-31" value="@Model.ImportDate.ToString("yyyy-MM-dd")" name="txtImportDate" id="txtImportDate" style="width: 65%" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -114,7 +114,9 @@
                                             <img id="user_img"
                                                  height="300"
                                                  width="500"
-                                                 style="border: solid" /> src="@Url.Content("/Content/Images/InputBillImages/" + @Model.InputRawImage)"/>
+                                                 style="border: solid"
+                                                 src="@Url.Content("/Content/Images/InputBillImages/" + @Model.InputRawImage)" />
+                                            
                                         </div>
                                         <script type="text/javascript">
                                             function show(input) {

@@ -82,10 +82,7 @@ namespace BMA.Controllers
                 inputBill.InputTaxAmount = Convert.ToInt32(inputTaxAmountString);
                 inputBill.ImportDate = Convert.ToDateTime(importDate);
                 inputBill.InputBillCode = supplierIdString + importDate;
-
                 inputBill.InputRawImage = fileName;
-
-
             }
             catch (Exception)
             {
@@ -149,6 +146,47 @@ namespace BMA.Controllers
             else
             {
                 return -1;
+            }
+        }
+        #endregion
+
+        #region Edit Input Bill View
+        public ActionResult EditInputBill(int id)
+        {
+            ViewBag.TreeView = "inputBill";
+            InputBill inputBill = db.InputBills.SingleOrDefault(m => m.InputBillId == id);
+            return View(inputBill);
+        }
+        #endregion
+
+        #region Edit Input Bill
+        [HttpPost]
+        public int EditInputBill(string supplierIdString, string inputBillAmountString, string inputTaxAmountString, string importDate, string fileName)
+        {
+            InputBill inputBill = new InputBill();
+            try
+            {
+                inputBill.SupplierId = Convert.ToInt32(supplierIdString);
+                inputBill.InputBillAmount = Convert.ToInt32(inputBillAmountString);
+                inputBill.InputTaxAmount = Convert.ToInt32(inputTaxAmountString);
+                inputBill.ImportDate = Convert.ToDateTime(importDate);
+                inputBill.InputBillCode = supplierIdString + importDate;
+                inputBill.InputRawImage = fileName;
+            }
+            catch (Exception)
+            {
+                return 0;
+
+            }
+
+            bool result = InputBillBusiness.AddInputBill(inputBill);
+            if (result)
+            {
+                return 2;
+            }
+            else
+            {
+                return 0;
             }
         }
         #endregion

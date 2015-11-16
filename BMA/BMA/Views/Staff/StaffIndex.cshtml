@@ -11,6 +11,12 @@
 <!-- Main content -->
 <section class="content">
     <div class="box">
+        <div class="box-header clearfix">
+            <a class="btn btn-info pull-left" href="@(Url.Action("AddStaff", "Staff"))">
+                <i class="fa fa-plus" style="margin-right: 3px"></i>
+                Thêm nguyên liệu đầu vào mới
+            </a>
+        </div>
         <!-- box-body -->
         <div class="box-body">
             <table id="example2" class="table table-hover table-bordered">
@@ -38,11 +44,11 @@
                                 <span class="label label-success">Đang hoạt động</span>
                             </td>
                             <td>
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("StaffDetail", "Staff", new {id = staff.StaffId}))">
-                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("StaffDetail", "Staff", new {id = staff.StaffId}))" data-toggle="tooltip" data-placement="top" title="Xem">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                 </a>
-                                <button class="btn btn-link btn-xs" onclick="open_container(@(staff.StaffId));">
-                                    <i class="fa fa-refresh" style="margin-right: 3px"></i>Thay đổi trạng thái
+                                <button class="btn btn-link btn-xs" onclick="open_container(@(staff.StaffId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
+                                    <i class="fa fa-refresh" style="margin-right: 3px"></i>
                                     <script type="text/javascript">
                                         function open_container(id) {
                                             var content = $("<div>", {
@@ -84,7 +90,7 @@
                                                 "data": {
                                                     "id": id
                                                 },
-                                                "success": function(data) {
+                                                "success": function (data) {
                                                     if (data === "1") {
                                                         $('#myModal').modal('hide');
                                                         window.location.replace("@Url.Action("StaffIndex", "Staff", staff.StaffId)");
@@ -92,7 +98,7 @@
                                                         alert("Khong the");
                                                     }
                                                 },
-                                                "fail": function(e) {
+                                                "fail": function (e) {
                                                     alert("Have error" + e);
                                                 }
                                             });
@@ -107,18 +113,18 @@
                                 <span class="label label-danger">Ngừng hoạt động</span>
                             </td>
                             <td>
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("StaffDetail", "Staff", new {id = staff.StaffId}))">
-                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("StaffDetail", "Staff", new {id = staff.StaffId}))" data-toggle="tooltip" data-placement="top" title="Xem">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                 </a>
-                                <button class="btn btn-link btn-xs" onclick="open_container(@(staff.StaffId));">
-                                    <i class="fa fa-refresh" style="margin-right: 3px"></i>Thay đổi trạng thái
+                                <button class="btn btn-link btn-xs" onclick="open_container(@(staff.StaffId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
+                                    <i class="fa fa-refresh" style="margin-right: 3px"></i>
                                     <script type="text/javascript">
                                         function open_container(id) {
                                             var content = $("<div>", {
                                                 "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(staff.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(staff.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
                                             });
 
-                                            var title = 'Thay đổi trạng thái nguyên liệu';
+                                            var title = 'Thay đổi trạng thái nhân viên';
                                             var footer = $("<div>", {
                                                 "class": "row",
                                                 "html": [
@@ -176,7 +182,10 @@
             </table>
         </div>
         <div class="box-footer clearfix">
-            <a href="@Url.Action("AddStaff","Staff")" class="btn btn-sm btn-info btn-flat pull-left">Thêm nhân viên mới</a>
+            <a class="btn btn-info pull-left" href="@(Url.Action("AddStaff", "Staff"))">
+                <i class="fa fa-plus" style="margin-right: 3px"></i>
+                Thêm nguyên liệu đầu vào mới
+            </a>
         </div>
     </div>
 </section>

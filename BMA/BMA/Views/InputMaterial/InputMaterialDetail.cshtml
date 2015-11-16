@@ -1,6 +1,6 @@
 ﻿@using System.Globalization
 @using BMA.Models
-@model BMA.Models.InputMaterial
+@model InputMaterial
 
 
 
@@ -82,7 +82,7 @@
                                                 '<form role="form" action="" method="post" id="discard-form">' +
                                                     '<div class="form-group">' +
                                                     '<label>Số lượng hủy: </label>' +
-                                                    '<input type="number" min = "1" oninput="maxLengthCheck(this)" max="@Model.RemainQuantity" class="form-control" id="price" value="' + discardQuantity + '" name="discardQuantity"/>' +
+                                                    '<input type="number" min = "1" oninput="maxLengthCheck(this)" max=" '+ @Model.RemainQuantity+' " class="form-control" id="price" value="' + discardQuantity + '" name="discardQuantity"/>' +
                                                     '<input type="hidden" name="InputMaterialId" id="InputMaterialId" value="@Model.InputMaterialId" />' + '</div>' +
                                                     '<div class="form-group">' +
                                                     '<label>Ghi chú: </label>' +
@@ -130,9 +130,8 @@
                                                     theme: 'defaultTheme',
                                                     timeout: 1000
                                                 });
-                                            
                                             }
-                                            else
+                                             else
                                                 $.ajax({
                                                     "url": "@(Url.Action("DiscardInputMaterial", "DiscardInputMaterial"))",
                                                     "method": "POST",
@@ -150,7 +149,7 @@
                                                                 timeout: 1500
                                                             });
                                                             $('#myModal').modal('hide');
-                                                            window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial", Model.InputMaterialId)");
+                                                            window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial")");
                                                         } else {
                                                             noty({
                                                                 text: 'Không thể hủy nguyên liệu đầu vào',
@@ -234,7 +233,7 @@
     <!--Button-->
     <div class="row">
         <div class="col-xs-12">
-            @if (Model.RemainQuantity != 0 && (DateTime.Compare(@Model.InputMaterialExpiryDate, DateTime.Today) >= 1))
+            @if (Model.RemainQuantity > 0 && (DateTime.Compare(@Model.InputMaterialExpiryDate, DateTime.Today) >= 1))
             {
                 <!-- Edit button -->
                 <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputMaterial()">
@@ -287,7 +286,7 @@
     <script>
         function maxLengthCheck(object) {
             if (object.value.length > object.maxLength)
-                object.value = object.value.slice(0, object.maxLength)
+                object.value = object.value.slice(0, object.maxLength);
         }
     </script>
 }

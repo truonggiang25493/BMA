@@ -11,261 +11,152 @@
 </section>
 <section>
     <div style="margin-top: 5%">
-        <div class="row">
-            <div class="col-md-3">
+        <div class="container main-container headerOffset">
+            <div class="row">
+                <div class="breadcrumbDiv col-lg-12">
+                    <ul class="breadcrumb">
+                        <li> <a href="@Url.Action("Index", "Home")">Trang chủ</a> </li>
+                        <li><a href="@Url.Action("Index", "CusManage")"> Quản lý</a> </li>
+                        <li class="active"> Thay đổi mật khẩu </li>
+                    </ul>
+                </div>
             </div>
-            <div class="col-md-6">
-                <div class="box box-primary">
-                    <form id="add-staff-form">
-                        <div class="box-body box-profile">
-                            <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-5">
-                                    <b>Tên nhân viên<b style="color: #ff0000">*</b>:</b>
-                                </div>
-                                <div class="col-xs-7">
-                                    <input type="text" name="txtStaffName" id="txtStaffName" style="width: 95%" />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-5">
-                                    <b>Tên tài khoản<b style="color: #ff0000">*</b>:</b>
-                                </div>
-                                <div class="col-xs-7">
-                                    <input name="txtStaffUserAccount" id="txtStaffUserAccount" style="width: 95%">
-                                </div>
-                            </div>
-                            <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-5">
-                                    <b>Số điện thoại<b style="color: #ff0000">*</b>:</b>
-                                </div>
-                                <div class="col-xs-7">
-                                    <input type="text" name="txtStaffPhoneNumber" id="txtStaffPhoneNumber" style="width: 95%" oninput="maxLengthCheck(this)" maxlength="11" min="1000000" max="99999999999" placeholder="nhập số từ 7-11 chữ số" />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-5">
-                                    <b>E-mail<b style="color: #ff0000">*</b>:</b>
-                                </div>
-                                <div class="col-xs-7">
-                                    <input type="email" name="txtStaffEmail" id="txtStaffEmail" style="width: 95%" placeholder="Email có dạng abc@xyz.mn..." />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-5">
-                                    <b>Địa chỉ<b style="color: #ff0000">*</b>:</b>
-                                </div>
-                                <div class="col-xs-7">
-                                    <textarea name="txtStaffAddress" id="txtStaffAddress" maxlength="200" rows="3" style="width: 95%"></textarea>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-12">
-                                    <b><b style="color: #ff0000">*</b>: Thông tin bắt buộc</b>
-                                </div>
-                            </div>
+            <div class="row">
+                <div class="col-lg-9 col-md-9 col-sm-7">
+                    <h1 class="section-title-inner"><span><i class="glyphicon glyphicon-user"></i> Thay đổi mật khẩu </span></h1>
+                    <div class="row userInfo">
+                        <div class="col-lg-12">
                         </div>
-                    </form>
-                    <div class="box box-footer">
+                        <form role="form" action="@Url.Action("ChangePassword", "CusManage")" method="post" id="changePassForm">
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="form-group required">
+                                    <label for="InputPasswordCurrent"> Mật khẩu cũ <sup> * </sup> </label>
+                                    <input type="password" @*pattern=".{6,}" required title="Mật khẩu phải lớn hơn 6 ký tự"*@ maxlength="32" value="" name="txtOldPass" class="form-control" id="InputPasswordCurrent" placeholder="Mật khẩu cũ">
+                                </div>
+                                <div class="form-group required">
+                                    <label for="InputPasswordnew"> Mật khẩu mới <sup> * </sup> </label>
+                                    <input type="password" @*pattern=".{6,}" required title="Mật khẩu phải lớn hơn 6 ký tự"*@ maxlength="32" name="txtNewPass" class="form-control" id="InputPasswordnew" placeholder="Mật khẩu mới">
+                                </div>
+                                <div class="form-group required">
+                                    <label for="InputPasswordnewConfirm"> Xác nhận lại <sup> * </sup> </label>
+                                    <input type="password" @*pattern=".{6,}" required title="Mật khẩu phải lớn hơn 6 ký tự"*@ maxlength="32" name="txtNewPassConfirm" class="form-control" id="InputPasswordnewConfirm" placeholder="Nhập lại mật khẩu mới">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="form-group required">
+                                    <label for="InputName"></label>
+                                    <p style="margin-left:-10px;font-weight:bold;margin-top:10px;color:red">@TempData["checkUnchange"]</p>
+                                    <p style="margin-left:-10px;font-weight:bold;margin-top:20px;color:red">@TempData["checkOldPass"]</p>
+                                </div>
+                                <div class="form-group required">
+                                    <label for="InputLastName"></label>
+                                    <p style="margin-left:-10px;font-weight:bold;margin-top:53px;color:red">@TempData["checkConfirmPass"]</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <a onclick="return changePassword()" class="btn btn-primary"><i class="fa fa-save"></i> &nbsp; Thay đổi </a>
+                            </div>
+                        </form>
+                        <script type="text/javascript">
+                            function changePassword() {
+                                var txtOldPass = $("#InputPasswordCurrent").val();
+                                var txtNewPass = $("#InputPasswordnew").val();
+                                var txtNewPassConfirm = $("#InputPasswordnewConfirm").val();
 
-                        <!-- "Thêm mới" button -->
-                        <button class="btn btn-primary pull-right" style="margin-right: 2%; margin-bottom: 2%" onclick="addStaff()">
-                            <i class="fa fa-edit" style="margin-right: 3px;"></i>Thêm mới
-                            <script type="text/javascript">
-                                function addStaff() {
-                                    var staffName = $("#txtStaffName").val();
-                                    var staffUserAccount = $("#txtStaffUserAccount").val();
-                                    var staffPhoneNumber = $("#txtStaffPhoneNumber").val();
-                                    var staffEmail = $("#txtStaffEmail").val();
-                                    var staffAddress = $("#txtStaffAddress").val();
-
-                                    if (staffName.trim() === '') {
-                                        noty({
-                                            text: 'Tên nhân viên không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                    } else if (staffUserAccount.trim() === '') {
-                                        noty({
-                                            text: 'Tên tài khoản của nhân viên không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                    } else if (staffPhoneNumber.trim() === '') {
-                                        noty({
-                                            text: 'Số điện thoại của không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-
-                                    } else if (isNaN(staffPhoneNumber)) {
-                                        noty({
-                                            text: 'Số điện thoại nhân viên không đúng.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                    } else if (!new RegExp(/^\d{10,11}$/).test(staffPhoneNumber)) {
-                                        noty({
-                                            text: 'Hãy nhập số điện thoại đúng.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                        $("#txtStaffPhoneNumber").focus();
-                                    } else if (staffEmail.trim() === '') {
-                                        noty({
-                                            text: 'Địa chỉ E-mail của nhân viên không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                    } else if (!new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i).test(staffEmail)) {
-                                        noty({
-                                            text: 'Hãy nhập email đúng định dạng.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                        $("#txtStaffEmail").focus();
-
-                                    } else if (staffAddress.trim() === '') {
-                                        noty({
-                                            text: 'Địa chỉ của nhân viên không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                    } else {
-                                        $.ajax({
-                                            url: "@(Url.Action("CheckStaffInfo", "Staff"))",
-                                            method: "POST",
-                                            data: $("#add-staff-form").serialize(),
-                                            success: function (data) {
-                                                if (data === '1') {
-                                                    noty({
-                                                        text: 'Tên tài khoản này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 1000
-                                                    });
-                                                    $("#txtStaffUserAccount").focus();
-                                                } else if (data === '2') {
-                                                    noty({
-                                                        text: 'Số điện thoại này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 1000
-                                                    });
-                                                    $("#txtStaffPhoneNumber").focus();
-                                                } else if (data === '3') {
-                                                    noty({
-                                                        text: 'Địa chỉ E-mail này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 1000
-                                                    });
-                                                    $("#txtStaffEmail").focus();
-                                                } else if (data === '0') {
-                                                    $.ajax({
-                                                        url: "@(Url.Action("AddStaff", "Staff"))",
-                                                        method: "POST",
-                                                        data: $("#add-staff-form").serialize(),
-                                                        success: function (data) {
-                                                            if (data === "1") {
-                                                                noty({
-                                                                    text: 'Thêm nhân viên mới thành công',
-                                                                    type: 'success',
-                                                                    dismissQueue: false,
-                                                                    layout: 'topCenter',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 1000
-                                                                });
-                                                                window.setTimeout(function () {
-                                                                    window.location.replace("@(Url.Action("StaffIndex", "Staff"))");
-                                                                }, 4000);
-                                                            } else {
-                                                                noty({
-                                                                    text: 'Không thể thêm nhân viên mới',
-                                                                    type: 'warning',
-                                                                    dismissQueue: false,
-                                                                    layout: 'topCenter',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 1000
-                                                                });
-                                                            }
-                                                        },
-                                                        fail: function () {
-                                                            noty({
-                                                                text: 'Đã có lỗi xảy ra',
-                                                                type: 'error',
-                                                                dismissQueue: false,
-                                                                layout: 'topCenter',
-                                                                theme: 'defaultTheme',
-                                                                timeout: 1000
-                                                            });
-                                                        }
-                                                    });
-                                                }
-                                            },
-                                            fail: function () {
+                                if (txtOldPass.trim() === '' || txtNewPass.trim() === '' || txtNewPassConfirm.trim() === '') {
+                                    noty({
+                                        text: 'Mật khẩu không được để trống.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (txtOldPass.length < 6 || txtNewPass.length < 6 || txtNewPassConfirm.length < 6) {
+                                    noty({
+                                        text: 'Mật khẩu không được ít hơn 6 ký tự.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else {
+                                    $.ajax({
+                                        url: "@Url.Action("ChangePassword", "CusManage")",
+                                        method: "POST",
+                                        data: $("#changePassForm").serialize(),
+                                        success: function (data) {
+                                            if (data === "1") {
                                                 noty({
-                                                    text: 'Đã có lỗi xảy ra.',
-                                                    type: 'danger',
+                                                    text: 'Thay đổi mật khẩu thành công.',
+                                                    type: 'success',
                                                     dismissQueue: false,
                                                     layout: 'topCenter',
                                                     theme: 'defaultTheme',
-                                                    timeout: 1000
+                                                    timeout: 2000
+                                                });
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("Index", "CusManage"))");
+                                                }, 3000);
+                                            } else if (data === "-1") {
+                                                noty({
+                                                    text: 'Mật khẩu không đúng! Vui lòng thử lại.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            } else if (data === "-2") {
+                                                noty({
+                                                    text: 'Mật khẩu mới và mật khẩu cũ giống nhau! Vui lòng thử lại.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            } else if (data === "-3") {
+                                                noty({
+                                                    text: 'Mật khẩu và mật khẩu xác nhận không trùng khớp.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
                                                 });
                                             }
-                                        });
-                                    }
+                                        },
+                                        fail: function (e) {
+                                            var n = noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'bottomRight',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                        }
+                                    })
                                 }
-
-                            </script>
-                        </button>
-                        <!-- "Hủy" button -->
-                        <button class="btn btn-success" style="margin-left: 2%; margin-bottom: 2%" onclick="cancelAddStaff()">
-                            <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại trang danh sách
-                            <script type="text/javascript">
-                                function cancelAddStaff() {
-                                    window.location.replace("@(Url.Action("StaffIndex", "Staff"))");
-                                    window.location.replace("@(Url.Action("StaffIndex", "Staff"))");
-                                }
-                            </script>
-                        </button>
-
+                            }
+                        </script>
+                        <div class="col-md-12 clearfix">
+                            <ul class="pager">
+                                <li class="previous pull-right"><a href="@Url.Action("Index","Product")"> <i class="fa fa-home"></i> Tới cửa hàng </a></li>
+                                <li class="next pull-left"><a onclick="javascript:history.back(-1);"> &larr; Quay lai trang quản lý</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
 
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-5"> </div>
             </div>
-            <div class="col-md-3">
-            </div>
+
+            <div style="clear:both"></div>
         </div>
+
 
     </div>
     <!--max length for number-->

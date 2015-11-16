@@ -326,6 +326,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
+    <Content Include="Content\AdminLayout\dist\img\VipIcon.gif" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\CustomerLayout\ajax.googleapis.com\ajax\libs\jquery\1.10.1\jquery.min.js" />
     <Content Include="Content\CustomerLayout\assets\bootstrap\css\bootstrap.css" />
@@ -1389,7 +1390,6 @@
     <Content Include="Views\Order\GetShortageMaterialList.cshtml" />
     <Content Include="Views\Order\ExportBill.cshtml" />
     <Content Include="Views\Customer\Contact\Index.cshtml" />
-    <Content Include="Views\Customer\GetCustomerPartialView.cshtml" />
     <Content Include="Views\CusManageOrder\ConfirmIndex.cshtml" />
     <Content Include="Views\CusManageOrder\Index.cshtml" />
     <Content Include="Views\CusManageOrder\OrderDetail.cshtml" />
@@ -1432,6 +1432,7 @@
     <Content Include="Views\Staff\AddStaff.cshtml" />
     <Content Include="Views\Staff\StaffEditInfo.cshtml" />
     <Content Include="Views\InputBill\EditInputBill.cshtml" />
+    <Content Include="Views\Staff\StaffChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
