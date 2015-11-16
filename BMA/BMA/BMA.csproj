@@ -1453,6 +1453,8 @@
     <Content Include="Views\InputBill\EditInputBill.cshtml" />
     <Content Include="Views\Report\ReviewRevenuePerCustomer.cshtml" />
     <Content Include="Views\Report\Top10CustomerRevenueWeeklyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueMonthlyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueYearlyPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

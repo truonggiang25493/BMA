@@ -154,7 +154,7 @@ namespace BMA.Controllers
             return View();
         }
 
-        
+
         public ActionResult ReviewRevenuePerCustomerPartialView(string start, string end, int? type)
         {
             ReportBusiness business = new ReportBusiness();
@@ -169,7 +169,7 @@ namespace BMA.Controllers
                 DateTime endDate;
                 if (start == null || end == null)
                 {
-                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
+                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-14);
                     endDate = DateTime.Now.LastDayOfWeek();
                 }
                 else
@@ -181,6 +181,26 @@ namespace BMA.Controllers
 
                 List<sp_GetTop10CustomerRevenueWeekly_Result> result = business.GetTop10CustomerRevenueWeekly(startDate, endDate);
                 return PartialView("Top10CustomerRevenueWeeklyPartialView", result);
+            }
+            else if (type == 2)
+            {
+                DateTime startDate = DateTime.ParseExact(start, "MM/yyyy", CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact(end, "MM/yyyy", CultureInfo.InvariantCulture);
+
+                List<sp_GetTop10CustomerRevenueMonthly_Result> result =
+                    business.GetTop10CustomerRevenueMonthly(startDate, endDate);
+
+                return PartialView("Top10CustomerRevenueMonthlyPartialView", result);
+            }
+            else if (type == 3)
+            {
+                DateTime startDate = DateTime.ParseExact(start, "yyyy", CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact(end, "yyyy", CultureInfo.InvariantCulture);
+
+                List<sp_GetTop10CustomerRevenueYearly_Result> result =
+                    business.GetTop10CustomerRevenueYearly(startDate, endDate);
+
+                return PartialView("Top10CustomerRevenueYearlyPartialView", result);
             }
 
             return null;
