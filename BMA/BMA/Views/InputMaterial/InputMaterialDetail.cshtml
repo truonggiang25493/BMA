@@ -33,7 +33,7 @@
                         </li>
                         <li class="list-group-item">
                             <b>Giá nhập kho: </b>
-                            <a class="pull-right">@Model.InputMaterialPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</a>
+                            <a class="pull-right">@Model.InputMaterialPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) / @Model.ProductMaterial.ProductMaterialUnit</a>
                         </li>
                         <li class="list-group-item">
                             <b>Số lượng tồn kho: </b>
@@ -78,17 +78,46 @@
                                     <i class="fa fa-close" style="margin-right: 5%;"></i>Hủy nguyên liệu
                                     <script type="text/javascript">
                                         function open_container(inputMaterialId, discardQuantity, discardNote) {
-                                            var content =
-                                                '<form role="form" action="" method="post" id="discard-form">' +
-                                                    '<div class="form-group">' +
-                                                    '<label>Số lượng hủy: </label>' +
-                                                    '<input type="number" min = "1" oninput="maxLengthCheck(this)" max=" '+ @Model.RemainQuantity+' " class="form-control" id="price" value="' + discardQuantity + '" name="discardQuantity"/>' +
-                                                    '<input type="hidden" name="InputMaterialId" id="InputMaterialId" value="@Model.InputMaterialId" />' + '</div>' +
-                                                    '<div class="form-group">' +
-                                                    '<label>Ghi chú: </label>' +
-                                                    '<textarea maxlength="200" rows="3" class="form-control" id="discardNote" value="' + discardNote + '" name="discardNote">' + '</textarea>' +
-                                                    '</div>' +
-                                                    '</form>';
+                                            var bodyContent = $("<form>", {
+                                                "role": "form",
+                                                "id": "discard-form",
+                                                "html": [
+                                                    $("<div>", {
+                                                        "class": "form-group",
+                                                        "html": [
+                                                            "<label>Số lượng hủy: </label>",
+                                                            $("<input>", {
+                                                                "type": "number",
+                                                                "min": "1",
+                                                                "max": "@Model.RemainQuantity",
+                                                                "class": "form-control",
+                                                                "id": "discardQuantity",
+                                                                "value": discardQuantity,
+                                                                "name": "discardQuantity"
+                                                            }),
+                                                            $("<input>", {
+                                                                "type": "hidden",
+                                                                "name": "InputMaterialId",
+                                                                "id": "InputMaterialId",
+                                                                "value": "@Model.InputMaterialId"
+                                                            })
+                                                        ]
+                                                    }),
+                                                                                        $("<div>", {
+                                                                                            "class": "form-group",
+                                                                                            "html": [
+                                                                                                "<label>Ghi chú: </label>",
+                                                                                                $("<textarea>", {
+                                                                                                    "maxlength": "200",
+                                                                                                    "row": "3",
+                                                                                                    "class": "form-control",
+                                                                                                    "value": "discardNote",
+                                                                                                    "name": "discardNote"
+                                                                                                })
+                                                                                            ]
+                                                                                        })
+                                                ]
+                                            });
                                             var title = 'Hủy nguyên liệu';
                                             var footer = $("<div>", {
                                                 "class": "row",
@@ -107,7 +136,7 @@
                                                     })
                                                 ]
                                             });
-                                            setModalBox(title, content, footer[0].outerHTML);
+                                            setModalBox(title, bodyContent[0].outerHTML, footer[0].outerHTML);
                                             $('#myModal').modal('show');
                                         }
 
@@ -121,9 +150,9 @@
                                             var checkdiscardQuantity = $("#discardQuantity").val();
                                             var discardNote = $("#discardNote").val();
 
-                                            if (!isNaN(checkdiscardQuantity)) {
+                                            if (isNaN(checkdiscardQuantity)) {
                                                 noty({
-                                                    text: 'Số lượng nguyên liệu bị hủy phải là con số.',
+                                                    text: 'Số lượng hủy phải là số.',
                                                     type: 'warning',
                                                     dismissQueue: false,
                                                     layout: 'topCenter',
@@ -131,14 +160,34 @@
                                                     timeout: 1000
                                                 });
                                             }
-                                             else
+                                            else if ((checkdiscardQuantity)>(@Model.RemainQuantity)) {
+                                                noty({
+                                                    text: 'Số lượng hủy phải là số.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                            }
+                                            else if (discardNote.trim() === '') {
+                                                noty({
+                                                    text: 'Ghi chú không được trống.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                            }
+                                            else {
                                                 $.ajax({
                                                     "url": "@(Url.Action("DiscardInputMaterial", "DiscardInputMaterial"))",
                                                     "method": "POST",
                                                     "data":
                                                         $("#discard-form").serialize(),
 
-                                                    "success": function(data) {
+                                                    "success": function (data) {
                                                         if (data === "1") {
                                                             noty({
                                                                 text: 'Hủy nguyên liệu thành công',
@@ -161,7 +210,7 @@
                                                             });
                                                         }
                                                     },
-                                                    "fail": function() {
+                                                    "fail": function () {
                                                         noty({
                                                             text: 'Đã có lỗi xảy ra',
                                                             type: 'error',
@@ -172,6 +221,7 @@
                                                         });
                                                     }
                                                 });
+                                            }
                                         }
                                     </script>
                                 </button>

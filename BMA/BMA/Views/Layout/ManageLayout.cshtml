@@ -23,7 +23,8 @@
     <link href="~/Content/timeslider.css" rel="stylesheet" />
     <!--DatetimePicker-->
     <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-    @RenderSection("InitStyle", false)
+    <!--Bootstrap-chosen-->
+    <link href="~/Content/bootstrap-chosen.css" rel="stylesheet" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -72,14 +73,14 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="user-image" alt="User Image">
-                                <span class="hidden-xs">Haruyuki</span>
+                                <span class="hidden-xs">@(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "")</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
                                     <p>
-                                        Haruyuki - Nhân viên cửa hàng
+                                        @(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "") - @((Session["UserRole"]) == null ? "": (((int)Session["UserRole"]) == 1 ? "Quản lý" : (((int)Session["UserRole"]) == 2 ? "Nhân viên" : "")))
                                         <small></small>
                                     </p>
                                 </li>
@@ -89,7 +90,7 @@
                                         <a href="@Url.Action("StaffEditInfo", "Staff", new { id = (Session["User"] as BMA.Models.User).UserId })" class="btn btn-default btn-flat">Thông tin cá nhân</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Đăng xuất</a>
+                                        <a href="@Url.Action("Logout", "Account")" class="btn btn-default btn-flat">Đăng xuất</a>
                                     </div>
                                 </li>
                             </ul>
@@ -112,7 +113,7 @@
                         <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>Haruyuki</p>
+                        <p>@(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "")</p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
@@ -120,7 +121,7 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu">
                     <li>
-                        <a href="">
+                        <a href="@(Url.Action("Index", "StoreInfor"))">
                             <i class="fa fa-home"></i> <span>Thông tin cửa hàng</span>
                         </a>
                     </li>
@@ -153,7 +154,6 @@
 
                             <li><a href="@Url.Action("AddProduct", "ManageProduct" )"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
 
-                            <li><a href="#"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
 
                         </ul>
                     </li>
@@ -221,7 +221,7 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-usd"></i>Thống kê doanh thu</a></li>
+                            <li id="customerRevenue"><a href="@(Url.Action("ReviewRevenuePerCustomer", "Report"))"><i class="fa fa-usd"></i>Thống kê doanh thu theo khách hàng</a></li>
                             <li id="incomeReport"><a href="@(Url.Action("ReviewIncomeByTime", "Report"))"><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
                             <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
@@ -333,7 +333,9 @@
     @RenderSection("InputBillDetailScript", false)
     @RenderSection("ReviewIncomeByTimeScript", false)
     @RenderSection("OtherExpenseIndexScript", false)
-    @RenderSection("AddInputBill", false)
+    @RenderSection("AddInputBillScript", false)
+    @RenderSection("EditInputBillScript", false)
+    @RenderSection("ReviewRevenuePerCustomerScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({

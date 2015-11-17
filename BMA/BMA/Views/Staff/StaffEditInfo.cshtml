@@ -16,56 +16,56 @@
             </div>
             <div class="col-md-6">
                 <div class="box box-primary" style="margin-top: 5%">
-                <form id="edit-staff-form">
-                    <input type="hidden" name="UserId" id="UserId" value="@Model.User.UserId" />
-                    <div class="box-body box-profile">
-                        <div class="row" style="margin-bottom: 17px;">
-                            <div class="col-xs-5">
-                                <b>Tên nhân viên<b style="color: #ff0000">*</b>:</b>
+                    <form id="edit-staff-form">
+                        <input type="hidden" name="UserId" id="UserId" value="@Model.User.UserId" />
+                        <div class="box-body box-profile">
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Tên nhân viên<b style="color: #ff0000">*</b>:</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="text" name="txtStaffName" id="txtStaffName" style="width: 95%" value="@Model.User.Fullname" />
+                                </div>
                             </div>
-                            <div class="col-xs-7">
-                                <input type="text" name="txtStaffName" id="txtStaffName" style="width: 95%" value="@Model.User.Fullname"/>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Tên tài khoản:</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input name="txtStaffUserAccount" readonly="readonly" id="txtStaffUserAccount" style="width: 95%" value="@Model.User.Username">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Số điện thoại<b style="color: #ff0000">*</b>:</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="text" value="@Model.StaffPhoneNumber" name="txtStaffPhoneNumber" id="txtStaffPhoneNumber" style="width: 95%" oninput="maxLengthCheck(this)" maxlength="11" min="1000000" max="99999999999" placeholder="nhập số từ 7-11 chữ số" />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>E-mail<b style="color: #ff0000">*</b>:</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <input type="email" value="@Model.User.Email" name="txtStaffEmail" id="txtStaffEmail" style="width: 95%" placeholder="Email có dạng abc@xyz.mn..." />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <b>Địa chỉ<b style="color: #ff0000">*</b>:</b>
+                                </div>
+                                <div class="col-xs-7">
+                                    <textarea name="txtStaffAddress" id="txtStaffAddress" maxlength="200" rows="3" style="width: 95%">@Model.StaffAddress</textarea>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-12">
+                                    <b><b style="color: #ff0000">*</b>: Thông tin bắt buộc</b>
+                                </div>
                             </div>
                         </div>
-                        <div class="row" style="margin-bottom: 17px;">
-                            <div class="col-xs-5">
-                                <b>Tên tài khoản:</b>
-                            </div>
-                            <div class="col-xs-7">
-                                <input name="txtStaffUserAccount" readonly id="txtStaffUserAccount" style="width: 95%" value="@Model.User.Username">
-                            </div>
-                        </div>
-                        <div class="row" style="margin-bottom: 17px;">
-                            <div class="col-xs-5">
-                                <b>Số điện thoại<b style="color: #ff0000">*</b>:</b>
-                            </div>
-                            <div class="col-xs-7">
-                                <input type="text" value="@Model.StaffPhoneNumber" name="txtStaffPhoneNumber" id="txtStaffPhoneNumber" style="width: 95%" oninput="maxLengthCheck(this)" maxlength="11" min="1000000" max="99999999999" placeholder="nhập số từ 7-11 chữ số"/>
-                            </div>
-                        </div>
-                        <div class="row" style="margin-bottom: 17px;">
-                            <div class="col-xs-5">
-                                <b>E-mail<b style="color: #ff0000">*</b>:</b>
-                            </div>
-                            <div class="col-xs-7">
-                                <input type="email" value="@Model.User.Email" name="txtStaffEmail" id="txtStaffEmail" style="width: 95%" placeholder="Email có dạng abc@xyz.mn..."/>
-                            </div>
-                        </div>
-                        <div class="row" style="margin-bottom: 17px;">
-                            <div class="col-xs-5">
-                                <b>Địa chỉ<b style="color: #ff0000">*</b>:</b>
-                            </div>
-                            <div class="col-xs-7">
-                                <textarea name="txtStaffAddress" id="txtStaffAddress" maxlength="200" rows="3" style="width: 95%">@Model.StaffAddress</textarea>
-                            </div>
-                        </div>
-                        <div class="row" style="margin-bottom: 17px;">
-                            <div class="col-xs-12">
-                                <b><b style="color: #ff0000">*</b>: Thông tin bắt buộc</b>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                    </form>
                     <div class="box box-footer">
 
                         <!-- "Thêm mới" button -->
@@ -150,7 +150,7 @@
                                             method: "POST",
                                             data: $("#edit-staff-form").serialize(),
                                             success: function (data) {
-                                                 if (data === '1') {
+                                                if (data === '1') {
                                                     noty({
                                                         text: 'Số điện thoại này đã có trong hệ thống.',
                                                         type: 'warning',
@@ -186,7 +186,7 @@
                                                                     timeout: 1000
                                                                 });
                                                                 window.setTimeout(function () {
-                                                                    window.location.replace("@(Url.Action("StaffIndex", "Staff"))");
+                                                                    window.location.replace("@(Url.Action("Index", "StoreInfor"))");
                                                                 }, 4000);
                                                             } else {
                                                                 noty({

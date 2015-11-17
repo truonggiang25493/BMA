@@ -289,6 +289,18 @@
     <Compile Include="Models\sp_GetIncomeYearly_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_GetTop10CustomerRevenueMonthly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetTop10CustomerRevenueWeekly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetTop10CustomerRevenueYearly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetTopCustomerWithRevenue_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Staff.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>

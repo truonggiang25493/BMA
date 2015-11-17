@@ -38,9 +38,9 @@
                                     <i class="fa fa-edit" style="margin-right: 3px"></i>
                                     Sửa
                                 </button>
-                                <button class="btn btn-link btn-xs" href="#">
+                                <button class="btn btn-link btn-xs" onclick="openDeletePopup(@(otherExpense.OtherExpenseId))">
                                     <i class="fa fa-close" style="margin-right: 3px"></i>
-                                    Hủy
+                                    Xóa
                                 </button>
                             </td>
                         </tr>
@@ -49,7 +49,7 @@
             </table>
         </div>
         <div class="box-footer">
-            <button class="btn btn-success">
+            <button class="btn btn-success" onclick="openAddPopup()">
                 <i class="fa fa-plus" style="margin-right: 3px"></i>
                 Thêm mới
             </button>
@@ -66,7 +66,7 @@
                     $("<div>", {
                         "class": "form-group",
                         "html": [
-                            "<label for='otherExpenseName'>Khoản chi:  </label>",
+                            "<label for='otherExpenseName'>Khoản chi(*):  </label>",
                             $("<input>", {
                                 "type": "hidden",
                                 "name": "otherExpenseId",
@@ -84,45 +84,47 @@
                     $("<div>", {
                         "class": "form-group",
                         "html": [
-                            "<label>Chi phí: </label>",
+                            "<label for='otherExpenseAmount'>Chi phí(*): </label>",
                             $("<input>", {
                                 "type": "number",
                                 "class": "form-control",
+                                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
                                 "name": "otherExpenseAmount",
+                                "id": "otherExpenseAmount",
                                 "value": amount,
                                 "step": "1000",
                                 "min": "50000"
                             })
                         ]
-                    })
-                    ,
+                    }),
                     $("<div>", {
                         "class": "form-group",
+                        "style": "margin-bottom: 0px;",
                         "html": [
-                            "<label>Tháng: </label>",
-                            $("<input>", {
-                                "class": "form-control",
-                                "type": "number",
-                                "name": "otherExpenseMonth",
-                                "value": month,
-                                "min": "1",
-                                "max": "12"
+                            "<label>Thời gian</label>",
+                            $("<div>", {
+                                "class": "input-group date",
+                                "id": "datetimepicker1",
+                                "html": [
+                                    $("<input>", {
+                                        "type": "text",
+                                        "readonly": "readonly",
+                                        "data-format": "MM/yyyy",
+                                        "class": "form-control",
+                                        "name": "editTime"
+                                    }),
+                                    $("<span>", {
+                                        "class": "input-group-addon",
+                                        "html": "<span class='glyphicon glyphicon-calendar'></span>"
+                                    })
+                                ]
                             })
                         ]
                     }),
                     $("<div>", {
                         "class": "form-group",
-                        "html": [
-                            "<label>Năm: </label>",
-                            $("<input>", {
-                                "class": "form-control",
-                                "type": "number",
-                                "name": "otherExpenseYear",
-                                "value": year,
-                                "min": "2010",
-                                "max": "2100"
-                            })
-                        ]
+                        "html":
+                            "<label>(*): Bắt buộc phải nhập</label>"
                     })
                 ]
             });
@@ -152,7 +154,489 @@
             document.getElementById('popup-body').innerHTML = bodyContent[0].outerHTML;
             document.getElementById('popup-footer').innerHTML = buttonContent[0].outerHTML;
 
+            $('#datetimepicker1').datetimepicker({
+                locale: 'vi',
+                viewMode: 'months',
+                format: 'MM/YYYY',
+                ignoreReadonly: true,
+                defaultDate: month + "/01/" + year
+            });
+
             $('#myModal').modal('show');
+        }
+
+        function editOtherExpense() {
+            var name = $("#otherExpenseName").val();
+            var amount = $("#otherExpenseAmount").val();
+            if (name === '') {
+                noty({
+                    text: 'Khoản phí không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 3000
+                });
+                $("#otherExpenseName").focus();
+            } else if (amount === '') {
+                noty({
+                    text: 'Chi phí không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 3000
+                });
+                $("#otherExpenseAmount").focus();
+            } else if (amount < 50000) {
+                noty({
+                    text: 'Chi phí phải lớn hơn 50.000',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 3000
+                });
+                $("#otherExpenseAmount").focus();
+            } else {
+                $.ajax({
+                    "url": "@(Url.Action("Edit", "OtherExpense"))",
+                    "method": "POST",
+                    "data": $("#editOtherExpense").serialize(),
+                    "success": function (data) {
+                        if (data === "1") {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Chỉnh sửa chi phí khác thành công.',
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 1000
+                            });
+                            window.setTimeout(function () {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Không thể chỉnh sửa chi phí khác.',
+                                type: 'danger',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 1000
+                            });
+                        }
+                    },
+                    fail: function (e) {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Đã có lỗi xảy ra.',
+                            type: 'danger',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+
+                });
+            }
+        }
+
+        function openAddPopup() {
+            var bodyContent = $("<form>", {
+                "id": "addOtherExpense",
+                "html": [
+                    $("<div>", {
+                        "class": "form-group",
+                        "html": [
+                            "<label for='otherExpenseName'>Khoản chi(*):  </label>",
+                            $("<input>", {
+                                "type": "text",
+                                "class": "form-control",
+                                "name": "otherExpenseName",
+                                "id": "otherExpenseName"
+                            })
+                        ]
+                    }),
+                    $("<div>", {
+                        "class": "form-group",
+                        "html": [
+                            "<label for='otherExpenseAmount'>Chi phí(*): </label>",
+                            $("<input>", {
+                                "type": "number",
+                                "class": "form-control",
+                                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                                "name": "otherExpenseAmount",
+                                "id": "otherExpenseAmount",
+                                "step": "1000",
+                                "min": "50000"
+                            })
+                        ]
+                    }),
+                    $("<div>", {
+                        "class": "form-group",
+                        "html": [
+                            "<label>Loại chi phí: </label>",
+                            $("<input>", {
+                                "type": "radio",
+                                "name": "timeType",
+                                "value": "1",
+                                "checked": "checked",
+                                "style": "margin-left: 10px",
+                                "data-role": "timeType"
+                            }),
+                            "Một tháng",
+                            $("<input>", {
+                                "type": "radio",
+                                "name": "timeType",
+                                "value": "0",
+                                "style": "margin-left: 10px",
+                                "data-role": "timeType"
+                            }),
+                            "Chia đều cho nhiều tháng"
+                        ]
+
+                    }),
+                    $("<div>", {
+                        "class": "form-group",
+                        "id": "timePoint",
+                        "html": [
+                            "<label>Thời gian: </label>",
+                            $("<div>", {
+                                "class": "input-group date",
+                                "id": "datetimepicker2",
+                                "html": [
+                                    $("<input>", {
+                                        "type": "text",
+                                        "readonly": "readonly",
+                                        "data-format": "MM/yyyy",
+                                        "class": "form-control",
+                                        "name": "timePoint",
+                                        "id": "timePointString"
+                                    }),
+                                    $("<span>", {
+                                        "class": "input-group-addon",
+                                        "html": "<span class='glyphicon glyphicon-calendar'></span>"
+                                    })
+                                ]
+                            })
+                        ]
+                    }),
+                    $("<div>", {
+                        "class": "form-group",
+                        "id": "fromTime",
+                        "style": "display:none",
+                        "html": [
+                            "<label>Từ(*):</label>",
+                            $("<div>", {
+                                "class": "input-group date",
+                                "id": "datetimepicker3",
+                                "html": [
+                                    $("<input>", {
+                                        "type": "text",
+                                        "readonly": "readonly",
+                                        "class": "form-control",
+                                        "name": "fromTime",
+                                        "id": "fromTimeString"
+                                    }),
+                                    $("<span>", {
+                                        "class": "input-group-addon",
+                                        "html": "<span class='glyphicon glyphicon-calendar'></span>"
+                                    })
+                                ]
+                            })
+                        ]
+                    }),
+                    $("<div>", {
+                        "class": "form-group",
+                        "id": "toTime",
+                        "style": "display:none",
+                        "html": [
+                            "<label>Đến(*):</label>",
+                            $("<div>", {
+                                "class": "input-group date",
+                                "id": "datetimepicker4",
+                                "html": [
+                                    $("<input>", {
+                                        "type": "text",
+                                        "readonly": "readonly",
+                                        "class": "form-control",
+                                        "name": "toTime",
+                                        "id": "toTimeString"
+                                    }),
+                                    $("<span>", {
+                                        "class": "input-group-addon",
+                                        "html": "<span class='glyphicon glyphicon-calendar'></span>"
+                                    })
+                                ]
+                            })
+                        ]
+                    }),
+                    $("<div>", {
+                        "class": "form-group",
+                        "html":
+                            "<label>(*): Bắt buộc phải nhập</label>"
+                    })
+                ]
+            });
+
+            var buttonContent = $("<div>", {
+                "class": "form-group",
+                "html": [
+                    $("<button>", {
+                        "class": "btn btn-primary",
+                        "data-dismiss": "modal",
+                        "html": [
+                            "Đóng"
+                        ]
+                    }),
+                    $("<button>", {
+                        "class": "btn btn-success pull-right",
+                        "style": "margin-right: 10px;",
+                        "onclick": "addOtherExpense()",
+                        "html": [
+                            "Đồng ý"
+                        ]
+                    })
+                ]
+            });
+
+            $(document).on("change", "[data-role=timeType]", function () {
+                if ($(this).val() === "1") {
+                    $('#timePoint').show();
+                    $('#fromTime').hide();
+                    $('#toTime').hide();
+                } else {
+                    $('#fromTime').show();
+                    $('#toTime').show();
+                    $('#timePoint').hide();
+                }
+            });
+
+            document.getElementById('popup-title').innerHTML = "Thêm mới chi phí khác";
+            document.getElementById('popup-body').innerHTML = bodyContent[0].outerHTML;
+            document.getElementById('popup-footer').innerHTML = buttonContent[0].outerHTML;
+
+            $('#datetimepicker2').datetimepicker({
+                locale: 'vi',
+                viewMode: 'months',
+                format: 'MM/YYYY',
+                ignoreReadonly: true
+            });
+            $('#datetimepicker3').datetimepicker({
+                locale: 'vi',
+                viewMode: 'months',
+                format: 'MM/YYYY',
+                ignoreReadonly: true
+            });
+            $('#datetimepicker4').datetimepicker({
+                locale: 'vi',
+                viewMode: 'months',
+                format: 'MM/YYYY',
+                ignoreReadonly: true
+            });
+            $("#datetimepicker3").on("dp.change", function (e) {
+                $('#datetimepicker4').data("DateTimePicker").minDate(e.date.add(1, 'months'));
+            });
+            $("#datetimepicker4").on("dp.change", function (e) {
+                $('#datetimepicker3').data("DateTimePicker").maxDate(e.date.subtract(1, 'months'));
+            });
+            $('#myModal').modal('show');
+        }
+
+
+        function addOtherExpense() {
+            var name = $("#otherExpenseName").val();
+            var amount = $("#otherExpenseAmount").val();
+            var timeType = $("[data-role=timeType]").val();
+            if (name === '') {
+                noty({
+                    text: 'Khoản phí không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 3000
+                });
+                $("#otherExpenseName").focus();
+            } else if (amount === '') {
+                noty({
+                    text: 'Chi phí không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 3000
+                });
+                $("#otherExpenseAmount").focus();
+            } else if (amount < 50000) {
+                noty({
+                    text: 'Chi phí phải lớn hơn 50.000',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 3000
+                });
+                $("#otherExpenseAmount").focus();
+            } else if (timeType === "1" && $("#timePointString").val === '') {
+                noty({
+                    text: 'Thời gian không được rỗng',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 3000
+                });
+                $("#timePointString").focus();
+            } else if (timeType === "2" && $("#fromTimeString").val === '') {
+                if ($("#timePointString").val === '') {
+                    noty({
+                        text: 'Thời gian bắt đầu không được rỗng',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 3000
+                    });
+                    $("#fromTimeString").focus();
+                }
+            } else if (timeType === "2" && $("#toTimeString").val === '') {
+                if ($("#timePointString").val === '') {
+                    noty({
+                        text: 'Thời gian kết thúc không được rỗng',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 3000
+                    });
+                    $("#toTimeString").focus();
+                }
+            } else {
+                $.ajax({
+                    "url": "@(Url.Action("AddOtherExpense","OtherExpense"))",
+                    "method": "POST",
+                    "data": $("#addOtherExpense").serialize(),
+                    "success": function (data) {
+                        if (data === "1") {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Chỉnh sửa chi phí khác thành công.',
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 1000
+                            });
+                            window.setTimeout(function () {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Không thể chỉnh sửa chi phí khác.',
+                                type: 'danger',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 1000
+                            });
+                        }
+                    },
+                    "fail": function (e) {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Đã có lỗi xảy ra.',
+                            type: 'danger',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                });
+            }
+        }
+
+        function openDeletePopup(id) {
+            var bodyContent = "Bạn có muốn xóa chi phí này không ?";
+
+            var buttonContent = $("<div>", {
+                "class": "form-group",
+                "html": [
+                    $("<button>", {
+                        "class": "btn btn-primary",
+                        "data-dismiss": "modal",
+                        "html": [
+                            "Không"
+                        ]
+                    }),
+                    $("<button>", {
+                        "class": "btn btn-success pull-right",
+                        "style": "margin-right: 10px;",
+                        "onclick": "deleteOtherExpense("+id+")",
+                        "html": [
+                            "Có"
+                        ]
+                    })
+                ]
+            });
+
+            document.getElementById('popup-title').innerHTML = "Hủy chi phí khác";
+            document.getElementById('popup-body').innerHTML = bodyContent;
+            document.getElementById('popup-footer').innerHTML = buttonContent[0].outerHTML;
+            $('#myModal').modal('show');
+        }
+
+        function deleteOtherExpense(id) {
+            $.ajax({
+                "url": "@(Url.Action("DeleteOtherExpense","OtherExpense"))",
+                "method": "POST",
+                "data": {
+                    "id":id
+                },
+                "success":function(data) {
+                    if (data === "1") {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Xóa chi phí khác thành công.',
+                            type: 'success',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                        window.setTimeout(function () {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Không thể xóa chi phí khác.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                },
+                "fail": function(e) {
+                    $('#myModal').modal('hide');
+                    noty({
+                        text: 'Đã có lỗi xảy ra.',
+                        type: 'danger',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            });
         }
     </script>
 }

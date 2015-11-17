@@ -21,67 +21,80 @@
                             <!-- Choose supplier -->
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-4">
-                                    <b>Nhà cung cấp<b style="color: #ff0000">*</b>:</b>
+                                    <label>Nhà cung cấp<b style="color: #ff0000">*</b>:</label>
                                 </div>
                                 <div class="col-xs-8" id="input-bill-info">
-                                    
-                                        <input type="text" name="supplierName" id="supplierName" readonly style="margin-bottom: 10px; width: 65%" />
-                                        <input type="hidden" name="supplierId" id="supplierId" />
-                                        <a class="btn btn-success btn-xs" id="add-supplier" onclick="open_choose_supplier()">
-                                            Chọn nhà cung cấp
-                                            <script type="text/javascript">
-                                                function open_choose_supplier() {
-                                                    $.ajax({
-                                                        url: "@(Url.Action("GetSupplierList", "InputBill"))",
-                                                        method: "POST",
-                                                        success: function (data) {
-                                                            var chooseButton = $("<button>", {
-                                                                "class": "btn btn-success",
-                                                                "onclick": "choose_supplier()",
-                                                                "html": "Chọn nhà cung cấp"
-                                                            });
-                                                            document.getElementById('standard-popup-body').innerHTML = data;
-                                                            document.getElementById('standard-popup-footer').innerHTML = chooseButton[0].outerHTML;
-                                                            $('#myStandardModal').modal('show');
-                                                        }
-                                                    });
-                                                }
 
-                                                function choose_supplier() {
-                                                    var supplierName = $("[data-role=supplier] tr.selected td:first span").html();
-                                                    var supplierId = $("[data-role=supplier] tr.selected td:first input").val();
+                                    <input type="text" name="supplierName" id="supplierName" readonly style="margin-bottom: 10px" class="form-control" />
+                                    <input type="hidden" name="supplierId" id="supplierId" />
+                                    <a class="btn btn-success btn-xs" id="add-supplier" onclick="open_choose_supplier()">
+                                        Chọn nhà cung cấp
+                                        <script type="text/javascript">
+                                            function open_choose_supplier() {
+                                                $.ajax({
+                                                    url: "@(Url.Action("GetSupplierList", "InputBill"))",
+                                                    method: "POST",
+                                                    success: function (data) {
+                                                        var chooseButton = $("<button>", {
+                                                            "class": "btn btn-success",
+                                                            "onclick": "choose_supplier()",
+                                                            "html": "Chọn nhà cung cấp"
+                                                        });
+                                                        document.getElementById('standard-popup-body').innerHTML = data;
+                                                        document.getElementById('standard-popup-footer').innerHTML = chooseButton[0].outerHTML;
+                                                        $('#myStandardModal').modal('show');
+                                                    }
+                                                });
+                                            }
 
-                                                    $("#supplierName").val(supplierName);
-                                                    $("#supplierId").val(supplierId);
-                                                    $('#myStandardModal').modal('hide');
-                                                }
-                                            </script>
-                                        </a>
-                                    
+                                            function choose_supplier() {
+                                                var supplierName = $("[data-role=supplier] tr.selected td:first span").html();
+                                                var supplierId = $("[data-role=supplier] tr.selected td:first input").val();
+
+                                                $("#supplierName").val(supplierName);
+                                                $("#supplierId").val(supplierId);
+                                                $('#myStandardModal').modal('hide');
+                                            }
+                                        </script>
+                                    </a>
+
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-4">
-                                    <b>Chi phí (Chưa thuế)<b style="color: #ff0000">*</b>: </b>
+                                    <label>Chi phí (Chưa thuế)<b style="color: #ff0000">*</b>: </label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <input type="number" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" style="width: 65%" placeholder="nhập số tiền từ 1.000 - 999.999.999" />
+                                    <input type="number" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" placeholder="nhập số tiền từ 1.000 - 999.999.999" class="form-control" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-4">
-                                    <b>Thuế VAT<b style="color: #ff0000">*</b>: </b>
+                                    <div class="form-group">
+                                        <label>Thuế VAT<b style="color: #ff0000">*</b>: </label>
+                                    </div>
                                 </div>
                                 <div class="col-xs-8">
-                                    <input type="number" name="txtInputTaxAmount" id="txtInputTaxAmount" required oninput="maxLengthCheck(this)" maxlength="8" min="1000" max="99999999" style="width: 65%" placeholder="nhập số tiền từ 1.000 - 99.999.999" />
+                                    <div class="form-group">
+                                        <input type="number" readonly="readonly" name="txtInputTaxAmount" id="txtInputTaxAmount" class="form-control" />
+                                    </div>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-4">
-                                    <b>Ngày nhập<b style="color: #ff0000">*</b>: </b>
+                                    <div class="form-group">
+                                        <b>Ngày nhập<b style="color: #ff0000">*</b>: </b>
+                                    </div>
                                 </div>
                                 <div class="col-xs-8">
-                                    <input type="date" required min="2015-01-01" max="2020-12-31" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="txtImportDate" id="txtImportDate" style="width: 65%" />
+                                    <div class="form-group">
+                                        <div class='input-group date' id='datetimepicker2'>
+                                            <input type="text" required name="txtImportDate" id="txtImportDate" class="form-control" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -341,14 +354,25 @@
         }
     </script>
 </section>
-@*
-    @section AddInputMaterialScript{
-        <script type="text/javascript">
-            $(document).on("keyup", "#txtInputBillAmount", function () {
-                var txtInputBillAmount = new INT($('#txtInputBillAmount').val());
-                var vatAmount = txtInputBillAmount.getValue *0.1;
-                $('#txtInputTaxAmount').val(vatAmount);
-                $('#txtInputTaxAmount').attr('min', vatAmount);
-            })
-        </script>
-    }*@
+
+@section AddInputBillScript{
+    <script type="text/javascript">
+        $(document).on("keyup", "#txtInputBillAmount", function() {
+            var txtInputBillAmount = $("#txtInputBillAmount").val();
+            var vatAmount = ((txtInputBillAmount * @(ViewBag.TaxRate)) / 100);
+            $('#txtInputTaxAmount').val(vatAmount);
+            $('#txtInputTaxAmount').attr('min', vatAmount);
+        })
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker2').datetimepicker({
+                format: 'L',
+                locale: 'vi',
+                defaultDate: moment().format('MM/DD/YYYY'),
+                ignoreReadonly: true
+            });
+        });
+    </script>
+}

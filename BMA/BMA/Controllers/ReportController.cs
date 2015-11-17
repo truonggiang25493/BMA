@@ -13,27 +13,23 @@ namespace BMA.Controllers
 {
     public class ReportController : Controller
     {
-        // GET: Report
+        #region Report Income by Time
         public ActionResult ReviewIncomeByTime(string start, string end)
         {
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                return RedirectToAction("Index", "StoreInfor");
+            }
             ViewBag.Title = "Báo cáo thu nhập";
-
+            ViewBag.TreeView = "report";
+            ViewBag.TreeViewMenu = "incomeReport";
             return View();
         }
-
-        // 
-        public ActionResult ReviewIncomeWeeklyDetail(DateTime startDate, DateTime endDate)
-        {
-            ReportBusiness reportBusiness = new ReportBusiness();
-            ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeWeeklyDetail(startDate, endDate);
-            return View(reportIncome);
-        }
-
-        public ActionResult ReviewRevenueByProduct()
-        {
-            return View();
-        }
-
         public ActionResult ReviewByTimePartialView(string start, string end, int? type)
         {
             ReportBusiness business = new ReportBusiness();
@@ -81,17 +77,120 @@ namespace BMA.Controllers
             return null;
         }
 
+        public ActionResult ReviewIncomeWeeklyDetail(DateTime startDate, DateTime endDate)
+        {
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                return RedirectToAction("Index", "StoreInfor");
+            }
+            ViewBag.Title = "Thống kê chi tiết từ " + startDate.ToString("dd/MM/yyyy") + " đến " + endDate.ToString("dd/MM/yyyy");
+            ViewBag.TreeView = "report";
+            ViewBag.TreeViewMenu = "incomeReport";
+            ReportBusiness reportBusiness = new ReportBusiness();
+            ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeWeeklyDetail(startDate, endDate);
+            return View(reportIncome);
+        }
+
         public ActionResult ReviewIncomeMonthlyDetail(int month, int year)
         {
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                return RedirectToAction("Index", "StoreInfor");
+            }
+            ViewBag.Title = "Thống kê chi tiết tháng " + month + "/" + year;
+            ViewBag.TreeView = "report";
+            ViewBag.TreeViewMenu = "incomeReport";
             ReportBusiness reportBusiness = new ReportBusiness();
             ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeMonthlyDetail(month, year);
             return View(reportIncome);
         }
         public ActionResult ReviewIncomeYearlyDetail(int year)
         {
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                return RedirectToAction("Index", "StoreInfor");
+            }
+            ViewBag.Title = "Thống kê chi tiết năm " + year;
+            ViewBag.TreeView = "report";
+            ViewBag.TreeViewMenu = "incomeReport";
             ReportBusiness reportBusiness = new ReportBusiness();
             ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeYearlyDetail(year);
             return View(reportIncome);
         }
+        #endregion
+
+        #region Review by type of goods
+
+        public ActionResult ReviewRevenueByProduct()
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region Review Revenue per Customer
+
+        public ActionResult ReviewRevenuePerCustomer()
+        {
+            ViewBag.Title = "Thống kê doanh thu theo khách hàng";
+            ViewBag.TreeView = "report";
+            ViewBag.TreeViewMenu = "customerRevenue";
+
+            return View();
+        }
+
+        
+        public ActionResult ReviewRevenuePerCustomerPartialView(string start, string end, int? type)
+        {
+            ReportBusiness business = new ReportBusiness();
+
+            if (type == null)
+            {
+                type = 1;
+            }
+            if (type == 1)
+            {
+                DateTime startDate;
+                DateTime endDate;
+                if (start == null || end == null)
+                {
+                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
+                    endDate = DateTime.Now.LastDayOfWeek();
+                }
+                else
+                {
+                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                }
+
+
+                List<sp_GetTop10CustomerRevenueWeekly_Result> result = business.GetTop10CustomerRevenueWeekly(startDate, endDate);
+                return PartialView("Top10CustomerRevenueWeeklyPartialView", result);
+            }
+
+            return null;
+        }
+        #endregion
+
+
+
+
+
+
     }
 }

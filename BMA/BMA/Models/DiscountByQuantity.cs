@@ -18,5 +18,6 @@ namespace BMA.Models
         public int QuantityFrom { get; set; }
         public int QuantityTo { get; set; }
         public int DiscountValue { get; set; }
+        public bool beUsing { get; set; }
     }
 }

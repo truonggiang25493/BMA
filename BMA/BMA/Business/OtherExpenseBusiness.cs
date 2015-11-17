@@ -23,5 +23,128 @@ namespace BMA.Business
 
 
         #endregion
+
+        #region Edit other expense
+
+        public bool EditOtherExpense(int id, string name, int amount, int month, int year)
+        {
+            OtherExpense otherExpense = db.OtherExpenses.FirstOrDefault(m => m.OtherExpenseId == id);
+            if (otherExpense == null)
+            {
+                return false;
+            }
+            else
+            {
+                otherExpense.OtherExpenseName = name;
+                otherExpense.OtherExpenseAmount = amount;
+                otherExpense.OtherExpenseMonthTime = month;
+                otherExpense.OtherExpenseYearTime = year;
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                finally
+                {
+                    db.Dispose();
+                }
+            }
+            return true;
+        }
+        #endregion
+
+        #region Add other expense
+
+        public bool AddOtherExpense(string name, int amount, int timeType, int? month, int? year, DateTime? fromTime, DateTime? toTime)
+        {
+            if (timeType == 1)
+            {
+                OtherExpense otherExpense = new OtherExpense
+                {
+                    OtherExpenseName = name,
+                    OtherExpenseAmount = amount,
+                    OtherExpenseMonthTime = month,
+                    OtherExpenseYearTime = year
+                };
+
+                db.OtherExpenses.Add(otherExpense);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                finally
+                {
+                    db.Dispose();
+                }
+            }
+            else
+            {
+                List<OtherExpense> otherExpenseList = new List<OtherExpense>();
+                for (DateTime tempTime = fromTime.Value; tempTime <= toTime.Value; tempTime = tempTime.AddMonths(1))
+                {
+                    OtherExpense otherExpense = new OtherExpense
+                    {
+                        OtherExpenseName = name,
+                        OtherExpenseMonthTime = tempTime.Month,
+                        OtherExpenseYearTime = tempTime.Year
+                    };
+                    otherExpenseList.Add(otherExpense);
+                }
+                int division = otherExpenseList.Count();
+                foreach (OtherExpense otherExpense in otherExpenseList)
+                {
+                    otherExpense.OtherExpenseAmount = amount / division;
+                }
+                db.OtherExpenses.AddRange(otherExpenseList);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                finally
+                {
+                    db.Dispose();
+                }
+            }
+            return true;
+        }
+        #endregion
+
+        #region Delete other expense
+
+        public bool DeleteOtherExpense(int id)
+        {
+            OtherExpense otherExpense = db.OtherExpenses.FirstOrDefault(m => m.OtherExpenseId == id);
+            if (otherExpense == null)
+            {
+                return false;
+            }
+            db.OtherExpenses.Remove(otherExpense);
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                db.Dispose();
+            }
+            return true;
+
+        }
+        #endregion
     }
 }

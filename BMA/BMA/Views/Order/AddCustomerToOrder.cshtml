@@ -121,7 +121,7 @@
                                         <label>Số điện thoại(<span style="color: red">*</span>): </label>
                                     </td>
                                     <td class="col-xs-9">
-                                        <input id="customerPhoneNumber" type="text" class="col-xs-9" name="customerPhoneNumber" required placeholder="Hãy nhập số điện thoại khách hàng dạng 0999999999 hoặc 01676666666." />
+                                        <input id="customerPhoneNumber" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type="text" class="col-xs-9" name="customerPhoneNumber" required placeholder="Hãy nhập số điện thoại khách hàng dạng 0999999999 hoặc 01676666666." />
                                     </td>
                                 </tr>
                                 <tr class="row">
@@ -129,7 +129,7 @@
                                         <label>Mã số thuế(<span style="color: red">*</span>): </label>
                                     </td>
                                     <td class="col-xs-9">
-                                        <input id="customerTaxCode" type="text" class="col-xs-9" name="customerTaxCode" required placeholder="Hãy nhập mã số thuế." />
+                                        <input id="customerTaxCode" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type="text" class="col-xs-9" name="customerTaxCode" required placeholder="Hãy nhập mã số thuế." />
                                     </td>
                                 </tr>
                                 <tr class="row">

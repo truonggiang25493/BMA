@@ -711,6 +711,7 @@
                                                 $("<input>", {
                                                     "type": "text",
                                                     "class": "form-control",
+                                                    "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
                                                     "name": "customerPhoneNumber",
                                                     "id": "customerPhoneNumber",
                                                     "value": "@(Model.OrderPersonPhoneNumber)"
@@ -725,6 +726,7 @@
                                                 $("<input>", {
                                                     "type": "text",
                                                     "class": "form-control",
+                                                    "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
                                                     "name": "customerTaxCode",
                                                     "id": "customerTaxCode"
                                                 })
@@ -758,6 +760,7 @@
                                                     "min": "@(Model.MaterialCost)",
                                                     "class": "form-control",
                                                     "id": "deposit-amount",
+                                                    "step": "1000",
                                                     "name": "deposit",
                                                     "value": "@(Model.MaterialCost)"
                                                 })

@@ -1,0 +1,272 @@
+﻿@{
+    ViewBag.Title = "Cấu hình hệ thống";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+    IEnumerable<BMA.Models.DiscountByQuantity> dbq = ViewBag.discountByQuantity;
+}
+
+@*<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
+<section class="content-header">
+    <h1>
+        Cấu hình hệ thống
+    </h1>
+</section>
+<!-- Main content -->
+<section class="content" style="margin-bottom:-30px;">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>@ViewBag.orderWaiting</h3>
+                    <p>Đơn hàng chờ xử lý</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-ios-cart"></i>
+                </div>
+                <a href="/Order/" class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>53<sup style="font-size: 20px">%</sup></h3>
+                    <p>Doanh thu hàng tháng</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="#" class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>@ViewBag.customer</h3>
+                    <p>Khách hàng</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>65</h3>
+                    <p>Đơn hàng thiếu nguyên liệu</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-android-hand"></i>
+                </div>
+                <a href="#" class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div><!-- ./col -->
+    </div><!-- /.row -->
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-5">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Số lượng sản phẩm tối thiểu trong đơn hàng</h3>
+                </div><!-- /.box-header -->
+                <!-- form start -->
+                <form action="@Url.Action("MinQuantity", "StoreInfor")" class="form-horizontal" method="post" role="form" id="policyForm">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-7 pull-left">@ViewBag.policy.PolicyName</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" value="@ViewBag.policy.PolicyBound" id="productQuantity" placeholder="Nhập số lượng" readonly>
+                            </div>
+                        </div>
+                    </div><!-- /.box-body -->
+                    <div class="box-footer">
+                        <a onclick="changeToReadOnly(@ViewBag.policy.PolicyBound)" class="btn btn-default">Quay lại</a>
+                        <a onclick="changeQuantityConfirm()" class="btn btn-info pull-right" id="changeConfirm">Thay đổi</a>
+                    </div><!-- /.box-footer -->
+                    <script type="text/javascript">
+                        function changeQuantityConfirm() {
+                            $("#changeConfirm").text("Xác nhận");
+                            var txtQuantity = $("#productQuantity").val();
+                            $.fn.hasAttr = function (name) {
+                                return this.attr(name) !== undefined;
+                            };
+
+
+                            if ($("#productQuantity").hasAttr('readonly')) {
+
+                            }
+                            else {
+                                if (txtQuantity.trim() === '') {
+                                    noty({
+                                        text: 'Số lượng không được để trống.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (isNaN(txtQuantity)) {
+                                    noty({
+                                        text: 'Số lượng phải là số.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (txtQuantity <= 0) {
+                                    noty({
+                                        text: 'Số lượng không được nhỏ hơn hoặc bằng 0.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else {
+                                    $.ajax({
+                                        url: "@(Url.Action("MinQuantity", "StoreInfor"))",
+                                        method: "POST",
+                                        data: JSON.stringify({
+                                            "bound": txtQuantity
+                                        }),
+                                        dataType: "json",
+                                        contentType: 'application/json',
+                                        success: function (data) {
+                                            if (data === 1) {
+                                                noty({
+                                                    text: 'Thay đổi thông tin thành công',
+                                                    type: 'success',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("ConfigIndex", "StoreInfor"))");
+                                                }, 3000);
+                                            } else {
+                                                noty({
+                                                    text: 'Đã có lỗi xảy ra, vui lòng thử lại.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            }
+
+                                        },
+                                        fail: function () {
+                                            noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }
+                                    })
+                                }
+                            }
+                            $("#productQuantity").removeAttr("readonly");
+                        }
+
+                        function changeToReadOnly(quantityRollBack) {
+                            $("#productQuantity").val(quantityRollBack);
+                            $("#productQuantity").attr('readonly', 'readonly');
+                            $("#changeConfirm").text("Thay đổi");
+                        }
+                    </script>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <!-- Horizontal Form -->
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Giảm giá theo số lượng</h3>
+                </div><!-- /.box-header -->
+                <!-- form start -->
+                <form action="@Url.Action("MinQuantity", "StoreInfor")" class="form-horizontal" method="post" role="form" id="policyForm">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-5 pull-left" style="margin-right:-13px;">Mốc giảm</label>
+                            <select class="form-control" style="width:138px;" disabled>
+                                @for (int i = 1; i <= 3; i++)
+                                {
+                                    if (i == dbq.ElementAt(0).ReachNumber)
+                                    {
+                                        <option selected>@i</option>
+                                    }
+                                    else
+                                    {
+                                        <option>@i</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <table class="table table-hover table-bordered" style="" id="discountTable">
+                                <thead>
+                                    <tr>
+                                        <th>Từ</th>
+                                        <th>Đến</th>
+                                        <th>Tỉ lệ giảm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in dbq)
+                                    {
+                                        <tr>
+                                            <td><input class="form-control" style="width:138px;" value="@item.QuantityFrom" id="quantityFrom" readonly /></td>
+                                            <td><input class="form-control" style="width:138px;" value="@item.QuantityTo" id="quantityTo" readonly /></td>
+                                            <td>@string.Format("{0}{1}", item.DiscountValue, "%")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.box-body -->
+                    <div class="box-footer">
+                        <a onclick="changeToReadOnlyDiscount()" class="btn btn-default">Quay lại</a>
+                        <a onclick="changeQuantityDiscount()" class="btn btn-info pull-right" id="changeDiscount">Thay đổi</a>
+                    </div><!-- /.box-footer -->
+                    <script type="text/javascript">
+                        function changeQuantityDiscount() {
+                            $("#changeDiscount").text("Xác nhận");
+                            $("#discountTable tbody tr input").removeAttr("readonly");
+                        }
+
+                        function changeToReadOnlyDiscount() {
+                            $("#discountTable tbody tr input").each(function (index, element) {                           
+                                for (var i=0; i < ("@Enumerable.Count(ViewBag.quantityFrom)") ; i++)
+                                {
+                                    $("#discountTable tbody tr td:nth-child(1) input").val("@ViewBag.quantityFrom" + [i]);
+                                    $("#discountTable tbody tr td:nth-child(2) input").val("@ViewBag.quantityTo" + [i]);
+                                }
+                                //lstId.push($(element).find("td:first input").val());
+                                //lstQuantity.push($(element).find("td:nth-child(2) input").val());
+                                //materialQuantity = $(element).find("td:nth-child(2) input").val();
+                            });
+
+                            $("#discountTable tbody tr input").attr('readonly', 'readonly');
+                            $("#changeDiscount").text("Thay đổi");
+                        }
+                    </script>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</section>

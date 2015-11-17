@@ -1,6 +1,4 @@
-﻿@using System.Globalization
-@using BMA.Models
-@model List<BMA.Models.sp_GetIncomeWeekly_Result>
+﻿@model List<BMA.Models.sp_GetIncomeWeekly_Result>
 @{
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
@@ -49,7 +47,6 @@
                     Thống kê
                 </button>
             </div>
-
         </div>
     </div>
 </section>
@@ -138,7 +135,7 @@
         $("#time-type").on("change", function () {
             var timeType = $("#time-type").val();
             if (timeType === "1") {
-                $('#fromDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment().subtract(1, 'days'));
+                $('#fromDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment().subtract(7, 'days'));
                 $('#toDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment()).date(moment());
                 $("#fromDate").on("dp.change", function (e) {
                     $('#toDate').data("DateTimePicker").minDate(e.date.add(1, 'days'));
@@ -147,22 +144,22 @@
                     $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
                 });
             } else if (timeType === "2") {
-                $('#fromDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").maxDate(moment().endOf('month'));
-                $('#toDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").maxDate(moment().endOf('month'));
+                $('#fromDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").viewDate(moment().startOf('month')).maxDate(moment().endOf('month'));
+                $('#toDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").viewDate(moment().startOf('month')).maxDate(moment().endOf('month'));
                 $("#fromDate").on("dp.change", function (e) {
                     $('#toDate').data("DateTimePicker").minDate(e.date.startOf('month'));
                 });
                 $("#toDate").on("dp.change", function (e) {
-                    $('#fromDate').data("DateTimePicker").maxDate(e.date.startOf('month'));
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1, 'months').endOf('month'));
                 });
             } else if (timeType === "3") {
-                $('#fromDate').data("DateTimePicker").viewMode("years").format("YYYY").maxDate(moment().endOf('year'));
-                $('#toDate').data("DateTimePicker").viewMode("years").format("YYYY").maxDate(moment().endOf('year'));
+                $('#fromDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));
+                $('#toDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));
                 $("#fromDate").on("dp.change", function (e) {
                     $('#toDate').data("DateTimePicker").minDate(e.date.startOf('year'));
                 });
                 $("#toDate").on("dp.change", function (e) {
-                    $('#fromDate').data("DateTimePicker").maxDate(e.date.endOf('year'));
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1, 'years').endOf('year'));
                 });
             }
 

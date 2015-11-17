@@ -21,154 +21,217 @@
         <div class="box-body">
             <table id="example1" class="table table-hover table-bordered">
                 <thead style="font-weight: bold">
-                <tr class="row">
-
-                    <th style="width: 15%">Nguyên liệu</th>
-                    <th style="width: 15%">Nhập</th>
-                    <th style="width: 15%">Tồn kho</th>
-                    <th style="width: 15%">Ngày nhập</th>
-                    <th style="width: 15%">Ngày hết hạn</th>
-                    <th style="width: 10%">Trạng thái</th>
-                    <th style="width: 15%"></th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (InputMaterial inputMaterial in Model)
-                {
                     <tr class="row">
 
-                        <td style="text-align: center; width: 15%">@inputMaterial.ProductMaterial.ProductMaterialName</td>
-                        <td style="text-align: right; width: 15%">@inputMaterial.ImportQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @inputMaterial.ProductMaterial.ProductMaterialUnit</td>
-                        <td style="text-align: right; width: 15%">@inputMaterial.RemainQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @inputMaterial.ProductMaterial.ProductMaterialUnit</td>
-                        <td style="text-align: center; width: 15%">@inputMaterial.ImportDate.ToString("dd/MM/yyyy")</td>
-                        <td style="text-align: center; width: 15%">@inputMaterial.InputMaterialExpiryDate.ToString("dd/MM/yyyy")</td>
+                        <th style="width: 15%">Nguyên liệu</th>
+                        <th style="width: 15%">Nhập</th>
+                        <th style="width: 15%">Tồn kho</th>
+                        <th style="width: 15%">Ngày nhập</th>
+                        <th style="width: 15%">Ngày hết hạn</th>
+                        <th style="width: 10%">Trạng thái</th>
+                        <th style="width: 15%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (InputMaterial inputMaterial in Model)
+                    {
+                        <tr class="row">
 
-                        @if (DateTime.Compare(inputMaterial.InputMaterialExpiryDate, DateTime.Today) < 1)
-                        {
-                            <td style="text-align: center; width: 10%">
-                                <span class="label label-danger">Hết hạn sử dụng</span>
-                            </td>
-                            <td style="width: 15%">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Xem">
-                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
-                                </a>
-                            </td>
-                        }
-                        else if (inputMaterial.RemainQuantity <= 0)
-                        {
-                            <td style="text-align: center; width: 10%">
-                                <span class="label label-default">Đã hết</span>
-                            </td>
-                            <td style="width: 15%">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Xem">
-                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
-                                </a>
-                            </td>
-                        }
-                        else
-                        {
-                            <td style="text-align: center; width: 10%">
-                                <span class="label label-success">Có thể sử dụng</span>
-                            </td>
-                            <td style="width: 15%">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Xem">
-                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
-                                </a>
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputMaterial", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Sửa">
-                                    <i class="fa fa-edit" style="margin-right: 3px"></i>
-                                </a>
-                                <button class="btn btn-link btn-xs" onclick="open_container(@(inputMaterial.InputMaterialId));" data-toggle="tooltip" data-placement="top" title="Hủy nguyên liệu">
-                                    <i class="fa fa-times" style="margin-right: 3px"></i>
-                                    <script type="text/javascript">
-                                        function open_container(inputMaterialId, discardQuantity, discardNote) {
-                                            var content =
-                                                '<form role="form" action="" method="post" id="discard-form">' +
-                                                    '<div class="form-group">' +
-                                                    '<label>Số lượng hủy: </label>' +
-                                                    '<input type="number" min = "1" oninput="maxLengthCheck(this)" max="@inputMaterial.RemainQuantity" class="form-control" id="price" value="' + discardQuantity + '" name="discardQuantity"/>' +
-                                                    '</div>' +
-                                                    '<div class="form-group">' +
-                                                    '<label>Ghi chú: </label>' +
-                                                    '<textarea maxlength="200" rows="3" class="form-control" id="discardNote" value="' + discardNote + '" name="discardNote">' + '</textarea>' +
-                                                    '</div>' +
-                                                    '</form>';
-                                            var title = 'Hủy nguyên liệu';
-                                            var footer = $("<div>", {
-                                                "class": "row",
-                                                "html": [
-                                                    $("<button>", {
-                                                        "class": "btn btn-success pull-right",
-                                                        "style": "margin-right: 30%;",
-                                                        "onclick": "discard_input_material(" + inputMaterialId + ")",
-                                                        "html": "Đồng ý"
-                                                    }),
-                                                    $("<button>", {
-                                                        "class": "btn btn-danger",
-                                                        "style": "margin-right: 10px;",
-                                                        "data-dismiss": "modal",
-                                                        "html": "Hủy"
-                                                    })
-                                                ]
-                                            });
-                                            setModalBox(title, content, footer[0].outerHTML);
-                                            $('#myModal').modal('show');
-                                        }
+                            <td style="text-align: center; width: 15%">@inputMaterial.ProductMaterial.ProductMaterialName</td>
+                            <td style="text-align: right; width: 15%">@inputMaterial.ImportQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @inputMaterial.ProductMaterial.ProductMaterialUnit</td>
+                            <td style="text-align: right; width: 15%">@inputMaterial.RemainQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @inputMaterial.ProductMaterial.ProductMaterialUnit</td>
+                            <td style="text-align: center; width: 15%">@inputMaterial.ImportDate.ToString("dd/MM/yyyy")</td>
+                            <td style="text-align: center; width: 15%">@inputMaterial.InputMaterialExpiryDate.ToString("dd/MM/yyyy")</td>
 
-                                        function setModalBox(title, content, footer) {
-                                            document.getElementById('popup-body').innerHTML = content;
-                                            document.getElementById('popup-title').innerHTML = title;
-                                            document.getElementById('popup-footer').innerHTML = footer;
-                                        }
+                            @if (DateTime.Compare(inputMaterial.InputMaterialExpiryDate, DateTime.Today) < 1)
+                            {
+                                <td style="text-align: center; width: 10%">
+                                    <span class="label label-danger">Hết hạn sử dụng</span>
+                                </td>
+                                <td style="width: 15%">
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Xem">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                                    </a>
+                                </td>
+                            }
+                            else if (inputMaterial.RemainQuantity <= 0)
+                            {
+                                <td style="text-align: center; width: 10%">
+                                    <span class="label label-default">Đã hết</span>
+                                </td>
+                                <td style="width: 15%">
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Xem">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="text-align: center; width: 10%">
+                                    <span class="label label-success">Có thể sử dụng</span>
+                                </td>
+                                <td style="width: 15%">
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Xem">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                                    </a>
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputMaterial", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Sửa">
+                                        <i class="fa fa-edit" style="margin-right: 3px"></i>
+                                    </a>
+                                    <button class="btn btn-link btn-xs" onclick="open_container(@(inputMaterial.InputMaterialId));" data-toggle="tooltip" data-placement="top" title="Hủy nguyên liệu">
+                                        <i class="fa fa-times" style="margin-right: 3px"></i>
+                                        <script type="text/javascript">
+                                            function open_container(inputMaterialId, discardQuantity, discardNote) {
+                                                var bodyContent = $("<form>", {
+                                                    "role": "form",
+                                                    "id": "discard-form",
+                                                    "html": [
+                                                        $("<div>", {
+                                                            "class": "form-group",
+                                                            "html": [
+                                                                "<label>Số lượng hủy: </label>",
+                                                                $("<input>", {
+                                                                    "type": "number",
+                                                                    "min": "1",
+                                                                    "max": "@inputMaterial.RemainQuantity",
+                                                                    "class": "form-control",
+                                                                    "id": "discardQuantity",
+                                                                    "value": discardQuantity,
+                                                                    "name": "discardQuantity"
+                                                                }),
+                                                                $("<input>", {
+                                                                    "type": "hidden",
+                                                                    "name": "InputMaterialId",
+                                                                    "id": "InputMaterialId",
+                                                                    "value": "@inputMaterial.InputMaterialId"
+                                                                })
+                                                            ]
+                                                        }),
+                                                        $("<div>", {
+                                                            "class": "form-group",
+                                                            "html": [
+                                                                "<label>Ghi chú: </label>",
+                                                                $("<textarea>", {
+                                                                    "maxlength": "200",
+                                                                    "row": "3",
+                                                                    "class": "form-control",
+                                                                    "value": "discardNote",
+                                                                    "name": "discardNote"
+                                                                })
+                                                            ]
+                                                        })
+                                                    ]
+                                                });
+                                                var title = 'Hủy nguyên liệu';
+                                                var footer = $("<div>", {
+                                                    "class": "row",
+                                                    "html": [
+                                                        $("<button>", {
+                                                            "class": "btn btn-success pull-right",
+                                                            "style": "margin-right: 30%;",
+                                                            "onclick": "discard_input_material(" + inputMaterialId + ")",
+                                                            "html": "Đồng ý"
+                                                        }),
+                                                        $("<button>", {
+                                                            "class": "btn btn-danger",
+                                                            "style": "margin-right: 10px;",
+                                                            "data-dismiss": "modal",
+                                                            "html": "Hủy"
+                                                        })
+                                                    ]
+                                                });
+                                                setModalBox(title, bodyContent[0].outerHTML, footer[0].outerHTML);
+                                                $('#myModal').modal('show');
+                                            }
 
-                                        function discard_input_material() {
+                                            function setModalBox(title, content, footer) {
+                                                document.getElementById('popup-body').innerHTML = content;
+                                                document.getElementById('popup-title').innerHTML = title;
+                                                document.getElementById('popup-footer').innerHTML = footer;
+                                            }
 
-                                            $.ajax({
-                                                "url": "@(Url.Action("DiscardInputMaterial", "DiscardInputMaterial"))",
-                                                "method": "POST",
-                                                "data":
-                                                    $("#discard-form").serialize(),
+                                            function discard_input_material() {
+                                                var checkdiscardQuantity = $("#discardQuantity").val();
+                                                var discardNote = $("#discardNote").val();
 
-                                                "success": function(data) {
-                                                    if (data === "1") {
-                                                        noty({
-                                                            text: 'Hủy nguyên liệu thành công',
-                                                            type: 'success',
-                                                            dismissQueue: false,
-                                                            layout: 'topCenter',
-                                                            theme: 'defaultTheme',
-                                                            timeout: 1500
-                                                        });
-                                                        $('#myModal').modal('hide');
-                                                        window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial")");
-                                                    } else {
-                                                        noty({
-                                                            text: 'Không thể hủy nguyên liệu đầu vào',
-                                                            type: 'warning',
-                                                            dismissQueue: false,
-                                                            layout: 'topCenter',
-                                                            theme: 'defaultTheme',
-                                                            timeout: 1000
-                                                        });
-                                                    }
-                                                },
-                                                "fail": function() {
+                                                if (isNaN(checkdiscardQuantity)) {
                                                     noty({
-                                                        text: 'Đã có lỗi xảy ra',
-                                                        type: 'error',
+                                                        text: 'Số lượng hủy phải là số.',
+                                                        type: 'warning',
                                                         dismissQueue: false,
                                                         layout: 'topCenter',
                                                         theme: 'defaultTheme',
                                                         timeout: 1000
                                                     });
                                                 }
-                                            });
-                                        }
-                                    </script>
-                                </button>
-                            </td>
-                        }
-                    </tr>
-                }
+                                                else if ((checkdiscardQuantity)>(@inputMaterial.RemainQuantity)) {
+                                                    noty({
+                                                        text: 'Số lượng hủy phải là số.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                }
+                                                else if (discardNote.trim() === '') {
+                                                    noty({
+                                                        text: 'Ghi chú không được trống.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                }
+                                                else {
+                                                    $.ajax({
+                                                        "url": "@(Url.Action("DiscardInputMaterial", "DiscardInputMaterial"))",
+                                                        "method": "POST",
+                                                        "data":
+                                                            $("#discard-form").serialize(),
+
+                                                        "success": function (data) {
+                                                            if (data === "1") {
+                                                                noty({
+                                                                    text: 'Hủy nguyên liệu thành công',
+                                                                    type: 'success',
+                                                                    dismissQueue: false,
+                                                                    layout: 'topCenter',
+                                                                    theme: 'defaultTheme',
+                                                                    timeout: 1500
+                                                                });
+                                                                $('#myModal').modal('hide');
+                                                                window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial")");
+                                                            } else {
+                                                                noty({
+                                                                    text: 'Không thể hủy nguyên liệu đầu vào',
+                                                                    type: 'warning',
+                                                                    dismissQueue: false,
+                                                                    layout: 'topCenter',
+                                                                    theme: 'defaultTheme',
+                                                                    timeout: 1000
+                                                                });
+                                                            }
+                                                        },
+                                                        "fail": function () {
+                                                            noty({
+                                                                text: 'Đã có lỗi xảy ra',
+                                                                type: 'error',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1000
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        </script>
+                                    </button>
+                                </td>
+                            }
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

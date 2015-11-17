@@ -1,0 +1,242 @@
+﻿@{
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h2>@(ViewBag.Title)</h2>
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="time-type">Thống kê theo</label>
+                <select id="time-type" class="form-control">
+                    <option value="1">Tuần</option>
+                    <option value="2">Tháng</option>
+                    <option value="3">Năm</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="fromDate">Từ</label>
+                <div class='input-group date' id='fromDate'>
+                    <input type='text' readonly="readonly" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="toDate">Đến</label>
+                <div class='input-group date' id='toDate'>
+                    <input type='text' readonly="readonly" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="form-group" style="padding-top: 25px">
+                <button class="btn btn-success" onclick="executeChart()">
+                    <i class="fa fa-bar-chart" style="margin-right: 3px"></i>
+                    Thống kê
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content" id="review-content"></section>
+@section ReviewRevenuePerCustomerScript{
+    <script src="~/Scripts/chosen.jquery.js"></script>
+    <!--Datetimepicker-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#fromDate').datetimepicker({
+                ignoreReadonly: true,
+                format: 'L',
+                locale: 'vi',
+                maxDate: moment().subtract(7, 'days')
+            });
+            $('#toDate').datetimepicker({
+                ignoreReadonly: true,
+                format: 'L',
+                locale: 'vi',
+                maxDate: moment(),
+                useCurrent: false
+            });
+            $("#fromDate").on("dp.change", function (e) {
+                $('#toDate').data("DateTimePicker").minDate(e.date.add(1, 'days'));
+            });
+            $("#toDate").on("dp.change", function (e) {
+                $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
+            });
+        });
+        $("#time-type").on("change", function () {
+            var timeType = $("#time-type").val();
+            if (timeType === "1") {
+                $('#fromDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment().subtract(7, 'days'));
+                $('#toDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment()).date(moment());
+                $("#fromDate").on("dp.change", function (e) {
+                    $('#toDate').data("DateTimePicker").minDate(e.date.add(1, 'days'));
+                });
+                $("#toDate").on("dp.change", function (e) {
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
+                });
+            } else if (timeType === "2") {
+                $('#fromDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").viewDate(moment().startOf('month')).maxDate(moment().endOf('month'));
+                $('#toDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").viewDate(moment().startOf('month')).maxDate(moment().endOf('month'));
+                $("#fromDate").on("dp.change", function (e) {
+                    $('#toDate').data("DateTimePicker").minDate(e.date.startOf('month'));
+                });
+                $("#toDate").on("dp.change", function (e) {
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1, 'months').endOf('month'));
+                });
+            } else if (timeType === "3") {
+                $('#fromDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));
+                $('#toDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));
+                $("#fromDate").on("dp.change", function (e) {
+                    $('#toDate').data("DateTimePicker").minDate(e.date.startOf('year'));
+                });
+                $("#toDate").on("dp.change", function (e) {
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1, 'years').endOf('year'));
+                });
+            }
+
+        });
+
+
+    </script>
+    <!--Draw graph-->
+    <script type="text/javascript">
+        function executeChart() {
+            var fromDateString = $("#fromDate input").val();
+            var toDateString = $("#toDate input").val();
+            var timeType = $("#time-type").val();
+            $.ajax({
+                url: "@(Url.Action("ReviewRevenuePerCustomerPartialView", "Report"))",
+                method: "GET",
+                data: {
+                    "start": fromDateString,
+                    "end": toDateString,
+                    "type": timeType
+                },
+                success: function (data) {
+                    $("#review-content").html(data);
+                    var label = [];
+                    $("#revenue-table thead tr th").each(function (index) {
+                        if (index !== 0)
+                            label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
+                    });
+
+                    var linedata = {
+                        labels: label,
+                        datasets: []
+                    }
+
+                    $("#revenue-table tbody tr").each(function (index, row) {
+                        var data = [];
+                        $(row).find("td").each(function (count) {
+                            if (count !== 0) {
+                                var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
+                                data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
+                            }
+                        });
+                        var fillColorString = "";
+                        var colorString = "";
+                        switch (index) {
+                            case 0:
+                                fillColorString = "rgba(237, 212, 219,0.5)";
+                                colorString = "rgba(237, 212, 219,1)";
+                                break;
+                            case 1:
+                                fillColorString = "rgba(41, 41, 41,0.5)";
+                                colorString = "rgba(41, 41, 41,1)";
+                                break;
+                            case 2:
+                                fillColorString = "rgba(39, 38, 89,0.5)";
+                                colorString = "rgba(39, 38, 89,1)";
+                                break;
+                            case 3:
+                                fillColorString = "rgba(72, 82, 85,0.5)";
+                                colorString = "rgba(72, 82, 85,1)";
+                                break;
+                            case 4:
+                                fillColorString = "rgba(139, 48, 122,0.5)";
+                                colorString = "rgba(139, 48, 122,1)";
+                                break;
+                            case 5:
+                                fillColorString = "rgba(149, 130, 7,0.5)";
+                                colorString = "rgba(149, 130, 7,1)";
+                                break;
+                            case 6:
+                                fillColorString = "rgba(32, 47, 66,0.5)";
+                                colorString = "rgba(32, 47, 66,1)";
+                                break;
+                            case 7:
+                                fillColorString = "rgba(255, 217, 11,0.5)";
+                                colorString = "rgba(255, 217, 11,1)";
+                                break;
+                            case 8:
+                                fillColorString = "rgba(108, 94, 117,0.5)";
+                                colorString = "rgba(108, 94, 117,1)";
+                                break;
+                            case 9:
+                                fillColorString = "rgba(255, 0, 99,0.5)";
+                                colorString = "rgba(255, 0, 99,1)";
+                                break;
+
+                            default:
+                        }
+
+                        var dataset = {
+                            fillColor: fillColorString,
+                            strokeColor: colorString,
+                            pointColor: colorString,
+                            pointStrokeColor: "#fff",
+                            data: data,
+                            title: $(row).find("td:first").html()
+                        };
+
+                        linedata.datasets.push(dataset);
+                    });
+
+                    var opt1 = {
+                        legend: true,
+                        graphTitleFontSize: 18,
+                        graphMin: 0,
+                        responsive: true,
+                        xAxisLabel: "Thời gian",
+                        yAxisUnit: "đồng",
+                        yAxisLabel: "Thu nhập",
+                        thousandSeparator: ".",
+                        // Specify the number of Y-scales to display
+                        scaleOverride: true,
+                        // The start value of the scale
+                        scaleStartValue: 0,
+                        // The number of Y-scales to display
+                        scaleSteps: 7,
+                        // The width between two Y-scale
+                        scaleStepWidth: 500000,
+                        // The space between the X Axis (on position 0) can be filled or not
+                        datasetFill: false,
+                        //annotateFunctionIn: myFctIn
+                        scaleShowLabels: true
+                    }
+                    new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
+                },
+                fail: function (e) {
+
+                }
+            });
+        }
+        function myFctIn(area, ctx, data, statdata, posi, posj, othervars) {
+            $("#income-table tbody tr:nth-child(" + (posj + 1) + ")").addClass('selected').siblings().removeClass('selected');
+        }
+    </script>
+}
+

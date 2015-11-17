@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using BMA.Models;
 using System.Net;
 using System.Data;
+using System.Globalization;
 using BMA.Business;
 using System.IO;
 
@@ -18,7 +19,8 @@ namespace BMA.Business
         #region Get Input Bill List
         public static List<InputBill> GetInputBillList()
         {
-            List<InputBill> inputBillList = db.InputBills.OrderBy(n => n.ImportDate).ToList();
+            db = new BMAEntities();
+            List<InputBill> inputBillList = db.InputBills.OrderByDescending(n=>n.InputBillId).ToList();
             return inputBillList;
         }
         #endregion
@@ -59,17 +61,18 @@ namespace BMA.Business
         #region Edit input bill
         public static bool EditInputBill(int inputBillId, int supplierId, String inputBillCode, int inputBillAmount, int inputTaxAmount, String inputRawImage, String importDate)
         {
-            var inputBillDetail = db.InputBills.SingleOrDefault(n => n.InputBillId == inputBillId);
-            if (inputBillDetail != null)
+            var inputBill = db.InputBills.SingleOrDefault(n => n.InputBillId == inputBillId);
+            if (inputBill != null)
             {
                 try
                 {
-                    inputBillDetail.SupplierId = supplierId;
-                    inputBillDetail.InputBillAmount = inputBillAmount;
-                    inputBillDetail.InputTaxAmount = inputTaxAmount;
-                    inputBillDetail.InputBillCode = inputBillCode;
-                    inputBillDetail.ImportDate = Convert.ToDateTime(importDate);
-                    inputBillDetail.InputRawImage = inputRawImage;
+                    inputBill.InputBillId = inputBillId;
+                    inputBill.SupplierId = supplierId;
+                    inputBill.InputBillAmount = inputBillAmount;
+                    inputBill.InputTaxAmount = inputTaxAmount;
+                    inputBill.ImportDate = DateTime.ParseExact(importDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    inputBill.InputBillCode = inputBillCode.Replace("-", "");
+                    inputBill.InputRawImage = inputRawImage;
 
                     db.SaveChanges();
                 }
