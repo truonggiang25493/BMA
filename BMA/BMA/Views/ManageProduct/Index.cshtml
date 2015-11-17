@@ -23,9 +23,7 @@
                         <th>Tên sản phẩm</th>
                         <th>Đơn giá</th>
                         <th>Trạng thái</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th class="col-md-2"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,34 +40,21 @@
                         }
                         else
                         {
-                            <td class="col-md-2"><div class="label label-default">Đã hủy</div></td>
+                            <td class="col-md-2"><div class="label label-default">Không còn sử dụng</div></td>
                         }
                             }
                             <td class="">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "ManageProduct", new { ProductId = item.ProductId }))">
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "ManageProduct", new { ProductId = item.ProductId }))" title="Xem">
                                     <i class="fa fa-navicon" style="margin-right: 3px"></i>
-                                    Xem
                                 </a>
-                            </td>
-                            @if (item.IsActive)
-                            {
-                                <td>
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "ManageProduct", new { ProductId = item.ProductId }))">
+                                @if (item.IsActive)
+                                {
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "ManageProduct", new { ProductId = item.ProductId }))" title="Chỉnh sửa">
                                         <i class="fa fa-edit" style="margin-right: 3px"></i>
-                                        Sửa
                                     </a>
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
-
-                                </td>
-                            }
-                            <td>
-                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductId, '@item.ProductName', '@strURL')">
+                                }
+                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductId, '@item.ProductName', '@strURL')" title="Thay đổi trạng thái">
                                     <i class="fa fa-refresh" style="margin-right: 3px"></i>
-                                    Đổi trạng thái
                                 </a>
                                 <script>
                                     function open_container(productId, productName, strURL, isActive) {

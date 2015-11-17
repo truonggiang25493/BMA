@@ -289,30 +289,6 @@
     <Compile Include="Models\sp_GetIncomeYearly_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sp_GetTop10CustomerRevenueMonthly_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_GetTop10CustomerRevenueWeekly_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_GetTop10CustomerRevenueYearly_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_GetTop10IncomeOfProductMonthly_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_GetTop10IncomeOfProductPeriod_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_GetTop10IncomeOfProductWeekly_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_GetTop10IncomeOfProductYearly_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_GetTopCustomerWithRevenue_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Staff.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -350,10 +326,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
-    <Content Include="Content\bootstrap-chosen.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
-    <Content Include="Content\chosen-sprite%402x.png" />
-    <Content Include="Content\chosen-sprite.png" />
     <Content Include="Content\CustomerLayout\ajax.googleapis.com\ajax\libs\jquery\1.10.1\jquery.min.js" />
     <Content Include="Content\CustomerLayout\assets\bootstrap\css\bootstrap.css" />
     <Content Include="Content\CustomerLayout\assets\bootstrap\fonts\glyphicons-halflings-regular.svg" />
@@ -510,8 +483,6 @@
     <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.woff" />
     <Content Include="Content\CustomerLayout\assets\fonts\fontawesome-webfonte0a5.woff2" />
     <Content Include="Content\CustomerLayout\assets\ico\Thumbs.db" />
-    <Content Include="Content\bootstrap-chosen.scss" />
-    <Content Include="Content\bootstrap-chosen.less" />
     <EntityDeploy Include="Models\BMA.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>BMA.Designer.cs</LastGenOutput>
@@ -531,8 +502,6 @@
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ChartNew.js" />
-    <Content Include="Scripts\chosen.jquery.js" />
-    <Content Include="Scripts\chosen.jquery.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -1463,13 +1432,8 @@
     <Content Include="Views\Staff\AddStaff.cshtml" />
     <Content Include="Views\Staff\StaffEditInfo.cshtml" />
     <Content Include="Views\InputBill\EditInputBill.cshtml" />
-    <Content Include="Views\Report\ReviewRevenuePerCustomer.cshtml" />
-    <Content Include="Views\Report\Top10CustomerRevenueWeeklyPartialView.cshtml" />
-    <Content Include="Views\Report\Top10CustomerRevenueMonthlyPartialView.cshtml" />
-    <Content Include="Views\Report\Top10CustomerRevenueYearlyPartialView.cshtml" />
-    <Content Include="Views\Report\Top10ProductIncomeWeeklyPartialView.cshtml" />
-    <Content Include="Views\Report\Top10ProductIncomeMonthlyPartialView.cshtml" />
-    <Content Include="Views\Report\Top10ProductIncomeYearlyPartialView.cshtml" />
+    <Content Include="Views\StoreInfor\ConfigIndex.cshtml" />
+    <Content Include="Views\Account\GetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -53,7 +53,7 @@
                             @Html.ValidationMessageFor(model => model.Note)
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Giá gốc (ngàn đồng)<span style="color:red">*</span></label>
+                            <label for="exampleInputEmail1">Đơn giá (đồng)<span style="color:red">*</span></label>
                             <input type="text" class="form-control" name="productPrice" value="@Model.ProductStandardPrice" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
                             @Html.ValidationMessageFor(model => model.ProductStandardPrice)
                         </div>
@@ -410,9 +410,9 @@
                             theme: 'defaultTheme',
                             timeout: 2000
                         });
-                    } else if (parseInt(txtPrice) > 100000) {
+                    } else if (parseInt(txtPrice) > "@(ViewBag.maxPrice)") {
                         noty({
-                            text: 'Giá phẩm không được lớn hơn 100000 đồng.',
+                            text: 'Giá phẩm không được lớn hơn "@(ViewBag.maxPrice.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")))".',
                             type: 'warning',
                             dismissQueue: false,
                             layout: 'topCenter',
@@ -472,7 +472,7 @@
                                                 });
                                             } else if (data === -5) {
                                                 noty({
-                                                    text: 'Không thế thêm, vui lòng thử lại',
+                                                    text: 'Không thế sửa, vui lòng thử lại',
                                                     type: 'warning',
                                                     dismissQueue: false,
                                                     layout: 'topCenter',
@@ -515,7 +515,7 @@
                                     });
                                 } else if (data === -3) {
                                     noty({
-                                        text: 'Xin chọn file hình ảnh',
+                                        text: 'Xin chọn file hình ảnh (đuôi .png", ".jpg", "jpeg"...)',
                                         type: 'warning',
                                         dismissQueue: false,
                                         layout: 'topCenter',
