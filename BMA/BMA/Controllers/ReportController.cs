@@ -143,7 +143,7 @@ namespace BMA.Controllers
             ViewBag.TreeView = "report";
             return View();
         }
-
+        [HttpPost]
         public ActionResult ReviewIncomePerProductPartialView(string start, string end, int? type)
         {
             ReportBusiness business = new ReportBusiness();
@@ -158,8 +158,8 @@ namespace BMA.Controllers
                 DateTime endDate;
                 if (start == null || end == null)
                 {
-                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-14);
-                    endDate = DateTime.Now.LastDayOfWeek();
+                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
+                    endDate = DateTime.Now;
                 }
                 else
                 {
@@ -222,8 +222,8 @@ namespace BMA.Controllers
                 DateTime endDate;
                 if (start == null || end == null)
                 {
-                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-14);
-                    endDate = DateTime.Now.LastDayOfWeek();
+                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
+                    endDate = DateTime.Now;
                 }
                 else
                 {
