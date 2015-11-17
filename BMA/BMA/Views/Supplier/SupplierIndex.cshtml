@@ -1,7 +1,7 @@
 ﻿@using System.Globalization
 @using BMA.Common
 @using BMA.Models
-@model IEnumerable<BMA.Models.Supplier>
+@model IEnumerable<Supplier>
 @{
     ViewBag.Title = "Danh sách nhà cung cấp";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
@@ -13,171 +13,186 @@
 <!-- Main content -->
 <section class="content">
     <div class="box">
+        <!-- box-header -->
+        <div class="box-header clearfix">
+            <a class="btn btn-info pull-left" href="@(Url.Action("AddSupplier", "Supplier"))">
+                <i class="fa fa-plus" style="margin-right: 3px"></i>
+                Thêm nguyên liệu đầu vào mới
+            </a>
+        </div>
         <!-- box-body -->
         <div class="box-body">
             <table id="example1" class="table table-hover table-bordered">
                 <thead style="font-weight: bold">
-                    <tr>
+                <tr>
 
-                        <th style="width: 25%">Tên nhà cung cấp</th>
-                        <th style="width: 30%">Địa chỉ</th>
-                        <th style="width: 10%">Số điện thoại</th>
-                        <th style="width: 10%">Trạng thái</th>
-                        <th style="width: 25%"></th>
-                    </tr>
+                    <th style="width: 25%">Tên nhà cung cấp</th>
+                    <th style="width: 30%">Địa chỉ</th>
+                    <th style="width: 10%">Số điện thoại</th>
+                    <th style="width: 10%">Trạng thái</th>
+                    <th style="width: 25%"></th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (Supplier supplier in Model)
-                    {
-                        <tr>
+                @foreach (Supplier supplier in Model)
+                {
+                    <tr>
 
-                            <td style="width: 25%">@supplier.SupplierName</td>
-                            <td style="width: 30%">@(supplier.SupplierAddress.Length <= 40 ? supplier.SupplierAddress : supplier.SupplierAddress.Substring(0,36)+"...")</td>
-                            <td style="width: 10%">@supplier.SupplierPhoneNumber</td>
-                            @if (supplier.IsActive)
-                            {
-                                <td style="width: 10%">
-                                    <span class="label label-success">Đang hoạt động</span>
-                                </td>
-                                <td style="width: 25%">
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("SupplierDetail", "Supplier", new {id = supplier.SupplierId}))">
-                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
-                                    </a>
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("EditSupplier", "Supplier", new {id = supplier.SupplierId}))">
-                                        <i class="fa fa-edit" style="margin-right: 3px"></i>Sửa
-                                    </a>
-                                    <button class="btn btn-link btn-xs" onclick="open_container(@(supplier.SupplierId));">
-                                        <i class="fa fa-refresh" style="margin-right: 3px"></i>Thay đổi trạng thái
-                                        <script type="text/javascript">
-                                            function open_container(id) {
-                                                var content = $("<div>", {
-                                                    "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(supplier.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(supplier.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
-                                                });
-                                                var title = 'Thay đổi trạng thái nguyên liệu';
-                                                var footer = $("<div>", {
-                                                    "class": "row",
-                                                    "html": [
-                                                        $("<button>", {
-                                                            "class": "btn btn-success pull-right",
-                                                            "style": "margin-right: 30%;",
-                                                            "onclick": "change_supplier_status(" + id + ")",
-                                                            "html": "Đồng ý"
-                                                        }),
-                                                        $("<button>", {
-                                                            "class": "btn btn-danger",
-                                                            "style": "margin-right: 10px;",
-                                                            "data-dismiss": "modal",
-                                                            "html": "Hủy"
-                                                        })
-                                                    ]
-                                                });
-                                                setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
-                                                $('#myModal').modal('show');
-                                            }
+                        <td style="width: 25%">@supplier.SupplierName</td>
+                        <td style="width: 30%">@(supplier.SupplierAddress.Length <= 40 ? supplier.SupplierAddress : supplier.SupplierAddress.Substring(0, 36) + "...")</td>
+                        <td style="width: 10%">@supplier.SupplierPhoneNumber</td>
+                        @if (supplier.IsActive)
+                        {
+                            <td style="width: 10%">
+                                <span class="label label-success">Đang hoạt động</span>
+                            </td>
+                            <td style="width: 25%">
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("SupplierDetail", "Supplier", new {id = supplier.SupplierId}))" data-toggle="tooltip" data-placement="top" title="Xem">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                                </a>
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("EditSupplier", "Supplier", new {id = supplier.SupplierId}))" data-toggle="tooltip" data-placement="top" title="Sửa">
+                                    <i class="fa fa-edit" style="margin-right: 3px"></i>
+                                </a>
+                                <button class="btn btn-link btn-xs" onclick="open_container(@(supplier.SupplierId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
+                                    <i class="fa fa-refresh" style="margin-right: 3px"></i>
+                                    <script type="text/javascript">
+                                        function open_container(id) {
+                                            var content = $("<div>", {
+                                                "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(supplier.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(supplier.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
+                                            });
+                                            var title = 'Thay đổi trạng thái nguyên liệu';
+                                            var footer = $("<div>", {
+                                                "class": "row",
+                                                "html": [
+                                                    $("<button>", {
+                                                        "class": "btn btn-success pull-right",
+                                                        "style": "margin-right: 30%;",
+                                                        "onclick": "change_supplier_status(" + id + ")",
+                                                        "html": "Đồng ý"
+                                                    }),
+                                                    $("<button>", {
+                                                        "class": "btn btn-danger",
+                                                        "style": "margin-right: 10px;",
+                                                        "data-dismiss": "modal",
+                                                        "html": "Hủy"
+                                                    })
+                                                ]
+                                            });
+                                            setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+                                            $('#myModal').modal('show');
+                                        }
 
-                                            function setModalBox(title, content, footer) {
-                                                document.getElementById('popup-body').innerHTML = content;
-                                                document.getElementById('popup-title').innerHTML = title;
-                                                document.getElementById('popup-footer').innerHTML = footer;
-                                            }
+                                        function setModalBox(title, content, footer) {
+                                            document.getElementById('popup-body').innerHTML = content;
+                                            document.getElementById('popup-title').innerHTML = title;
+                                            document.getElementById('popup-footer').innerHTML = footer;
+                                        }
 
-                                            function change_supplier_status(id) {
-                                                $.ajax({
-                                                    "url": "@(Url.Action("ChangeSupplierStatus", "Supplier"))",
-                                                    "method": "POST",
-                                                    "data": {
-                                                        "id": id
-                                                    },
-                                                    "success": function (data) {
-                                                        if (data === "1") {
-                                                            $('#myModal').modal('hide');
-                                                            window.location.replace("@Url.Action("SupplierIndex", "Supplier", supplier.SupplierId)");
-                                                        } else {
-                                                            alert("Khong the");
-                                                        }
-                                                    },
-                                                    "fail": function (e) {
-                                                        alert("Have error" + e);
+                                        function change_supplier_status(id) {
+                                            $.ajax({
+                                                "url": "@(Url.Action("ChangeSupplierStatus", "Supplier"))",
+                                                "method": "POST",
+                                                "data": {
+                                                    "id": id
+                                                },
+                                                "success": function (data) {
+                                                    if (data === "1") {
+                                                        $('#myModal').modal('hide');
+                                                        window.location.replace("@Url.Action("SupplierIndex", "Supplier", supplier.SupplierId)");
+                                                    } else {
+                                                        alert("Khong the");
                                                     }
-                                                });
-                                            }
-                                        </script>
-                                    </button>
-                                </td>
-                            }
-                            else
-                            {
-                                <td style="width: 10%">
-                                    <span class="label label-danger">Ngừng hoạt động</span>
-                                </td>
-                                <td style="width: 25%">
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("SupplierDetail", "Supplier", new {id = supplier.SupplierId}))">
-                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
-                                    </a>
-                                    <button class="btn btn-link btn-xs" onclick="open_container(@(supplier.SupplierId));">
-                                        <i class="fa fa-refresh" style="margin-right: 3px"></i>Thay đổi trạng thái
-                                        <script type="text/javascript">
-                                            function open_container(id) {
-                                                var content = $("<div>", {
-                                                    "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(supplier.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(supplier.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
-                                                });
+                                                },
+                                                "fail": function (e) {
+                                                    alert("Have error" + e);
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                </button>
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="width: 10%">
+                                <span class="label label-danger">Ngừng hoạt động</span>
+                            </td>
+                            <td style="width: 25%">
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("SupplierDetail", "Supplier", new {id = supplier.SupplierId}))">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                </a>
+                                <button class="btn btn-link btn-xs" onclick="open_container(@(supplier.SupplierId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
+                                    <i class="fa fa-refresh" style="margin-right: 3px"></i>
+                                    <script type="text/javascript">
+                                        function open_container(id) {
+                                            var content = $("<div>", {
+                                                "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(supplier.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(supplier.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
+                                            });
 
-                                                var title = 'Thay đổi trạng thái nguyên liệu';
-                                                var footer = $("<div>", {
-                                                    "class": "row",
-                                                    "html": [
-                                                        $("<button>", {
-                                                            "class": "btn btn-success pull-right",
-                                                            "style": "margin-right: 30%;",
-                                                            "onclick": "change_supplier_status(" + id + ")",
-                                                            "html": "Đồng ý"
-                                                        }),
-                                                        $("<button>", {
-                                                            "class": "btn btn-danger",
-                                                            "style": "margin-right: 10px;",
-                                                            "data-dismiss": "modal",
-                                                            "html": "Hủy"
-                                                        })
-                                                    ]
-                                                });
-                                                setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
-                                                $('#myModal').modal('show');
-                                            }
+                                            var title = 'Thay đổi trạng thái nguyên liệu';
+                                            var footer = $("<div>", {
+                                                "class": "row",
+                                                "html": [
+                                                    $("<button>", {
+                                                        "class": "btn btn-success pull-right",
+                                                        "style": "margin-right: 30%;",
+                                                        "onclick": "change_supplier_status(" + id + ")",
+                                                        "html": "Đồng ý"
+                                                    }),
+                                                    $("<button>", {
+                                                        "class": "btn btn-danger",
+                                                        "style": "margin-right: 10px;",
+                                                        "data-dismiss": "modal",
+                                                        "html": "Hủy"
+                                                    })
+                                                ]
+                                            });
+                                            setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+                                            $('#myModal').modal('show');
+                                        }
 
-                                            function setModalBox(title, content, footer) {
-                                                document.getElementById('popup-body').innerHTML = content;
-                                                document.getElementById('popup-title').innerHTML = title;
-                                                document.getElementById('popup-footer').innerHTML = footer;
-                                            }
+                                        function setModalBox(title, content, footer) {
+                                            document.getElementById('popup-body').innerHTML = content;
+                                            document.getElementById('popup-title').innerHTML = title;
+                                            document.getElementById('popup-footer').innerHTML = footer;
+                                        }
 
-                                            function change_supplier_status(id) {
-                                                $.ajax({
-                                                    "url": "@(Url.Action("ChangeSupplierStatus", "Supplier"))",
-                                                    "method": "POST",
-                                                    "data": {
-                                                        "id": id
-                                                    },
-                                                    "success": function (data) {
-                                                        if (data === "1") {
-                                                            $('#myModal').modal('hide');
-                                                            window.location.replace("@Url.Action("SupplierIndex", "Supplier", supplier.SupplierId)");
-                                                        } else {
-                                                            alert("Khong the");
-                                                        }
-                                                    },
-                                                    "fail": function (e) {
-                                                        alert("Have error" + e);
+                                        function change_supplier_status(id) {
+                                            $.ajax({
+                                                "url": "@(Url.Action("ChangeSupplierStatus", "Supplier"))",
+                                                "method": "POST",
+                                                "data": {
+                                                    "id": id
+                                                },
+                                                "success": function (data) {
+                                                    if (data === "1") {
+                                                        $('#myModal').modal('hide');
+                                                        window.location.replace("@Url.Action("SupplierIndex", "Supplier", supplier.SupplierId)");
+                                                    } else {
+                                                        alert("Khong the");
                                                     }
-                                                });
-                                            }
-                                        </script>
-                                    </button>
-                                </td>
-                            }
-                        </tr>
-                    }
+                                                },
+                                                "fail": function (e) {
+                                                    alert("Have error" + e);
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                </button>
+                            </td>
+                        }
+                    </tr>
+                }
                 </tbody>
             </table>
+        </div>
+
+        <!-- box-footer -->
+        <div class="box-footer clearfix">
+            <a class="btn btn-info pull-left" href="@(Url.Action("AddSupplier", "Supplier"))">
+                <i class="fa fa-plus" style="margin-right: 3px"></i>
+                Thêm nhà cung cấp mới
+            </a>
         </div>
     </div>
 </section>
