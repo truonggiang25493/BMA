@@ -23,9 +23,7 @@
                         <th>Số lượng hiện tại</th>
                         <th>Số lượng tối thiểu</th>
                         <th>Trạng thái</th>
-                        <th class="col-md-1"></th>
-                        <th class="col-md-1"></th>
-                        <th class="col-md-1"></th>
+                        <th class="col-md-2"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,28 +76,17 @@
                         }
                             }
                             <td class="">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "ManageMaterial", new { materialId = item.ProductMaterialId }))">
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "ManageMaterial", new { materialId = item.ProductMaterialId }))" title="Xem">
                                     <i class="fa fa-navicon" style="margin-right: 3px"></i>
-                                    Xem
                                 </a>
-                            </td>
-                            @if (item.IsActive)
-                            {
-                                <td>
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "ManageMaterial", new { materialId = item.ProductMaterialId }))">
+                                @if (item.IsActive)
+                                {
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "ManageMaterial", new { materialId = item.ProductMaterialId }))" title="Chỉnh sửa">
                                         <i class="fa fa-edit" style="margin-right: 3px"></i>
-                                        Sửa
                                     </a>
-                                </td>
-                            }
-                            else
-                            {
-                                <td></td>
-                            }
-                            <td>
-                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductMaterialId, '@item.ProductMaterialName', '@strURL')">
+                                }
+                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductMaterialId, '@item.ProductMaterialName', '@strURL')" title="Thay đổi trạng thái">
                                     <i class="fa fa-refresh" style="margin-right: 3px"></i>
-                                    Đổi trạng thái
                                 </a>
                                 <script>
                                     function open_container(materialId, materialName, strURL, isActive) {
@@ -134,7 +121,6 @@
                                         document.getElementById('popup-footer').innerHTML = footer;
                                     }
                                 </script>
-
                             </td>
                         </tr>
                     }

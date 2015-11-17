@@ -1432,6 +1432,8 @@
     <Content Include="Views\Staff\AddStaff.cshtml" />
     <Content Include="Views\Staff\StaffEditInfo.cshtml" />
     <Content Include="Views\InputBill\EditInputBill.cshtml" />
+    <Content Include="Views\StoreInfor\ConfigIndex.cshtml" />
+    <Content Include="Views\Account\GetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

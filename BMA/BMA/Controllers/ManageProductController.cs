@@ -25,11 +25,17 @@ namespace BMA.Controllers
         public ActionResult AddProduct()
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
+            if ((int)Session["UserRole"] == 1)
+            {
+                return RedirectToAction("Index", "StoreInfor");
+            }
             ManageProductBusiness mpb = new ManageProductBusiness();
+            int? maxPrice = db.StoreInfoes.Select(n => n.ProductMaxPrice).SingleOrDefault();
+            ViewBag.maxPrice = maxPrice;
             var category = mpb.GetCategory();
             ViewBag.category = category;
             InitiateMaterialList(null);
@@ -211,10 +217,21 @@ namespace BMA.Controllers
 
         public ActionResult Edit(int productId)
         {
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] == 1)
+            {
+                return RedirectToAction("Index", "StoreInfor");
+            }
             ManageProductBusiness mpb = new ManageProductBusiness();
             var product = mpb.GetProductDetail(productId);
             var materialList = mpb.GetListMaterial(productId);
             var category = mpb.GetCategory();
+            int? maxPrice = db.StoreInfoes.Select(n => n.ProductMaxPrice).SingleOrDefault();
+            ViewBag.maxPrice = maxPrice;
             ViewBag.materialList = materialList;
             ViewBag.category = category;
             if (product == null)

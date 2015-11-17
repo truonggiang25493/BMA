@@ -9,7 +9,10 @@
     BMA.Models.DiscountByQuantity dbq = TempData["Discount"] as DiscountByQuantity;
     List<CustomerCartViewModel> lstProductCart = ViewBag.lstProductCart;
     int sumTotal = 0;
-    int sumQuantity = 0;
+    int taxAmount = 0;
+    int totalValue = 0;
+    int discount = 0;
+    int cosAfterDiscount = 0;
 }
 
 
@@ -36,7 +39,7 @@
                 <div class="col-xs-12 col-sm-12">
                     <div class="cartContent w100">
                         <form id="updateCartForm" action="@Url.Action("UpdateCart", "Cart")" method="post">
-                            <table class="cartTable table-responsive" style="width:100%">
+                            <table class="cartTable table-responsive" style="width:100%" id="cartTable">
                                 <tbody>
                                     <tr class="CartProduct cartTableHeader">
                                         <td style="width:55%" colspan="2"> Sản phẩm </td>
@@ -55,11 +58,10 @@
                                                 </div>
                                             </td>
                                             <td class="delete"><a href="@Url.Action("DeleteCart", "Cart", new { @ProductId = item.ProductId})" title="Delete"> <i class="glyphicon glyphicon-trash fa-2x"></i></a></td>
-                                            <td><input class="quanitySniper" id="quanitySniper" maxlength="5" type="text" value="@item.Quantity" name="quanitySniper"></td>
+                                            <td><input class="quanitySniper" id="quanitySniper" maxlength="5" type="text" value="@item.Quantity" name="quanitySniper" data-role="totalQuantityCheck"></td>
                                             <td class="price" style="text-align:right">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                         </tr>
                                         sumTotal = sumTotal + @item.Total;
-                                        sumQuantity += @item.Quantity;
                                     }
                                 </tbody>
                             </table>
@@ -67,33 +69,38 @@
                     </div>
 
 
-                    @{
-                        int discount = Convert.ToInt32(Convert.ToInt32(dbq.DiscountValue) * 0.01 * sumTotal);
-                        int cosAfterDiscount = sumTotal - discount;
-                        int taxAmount = Convert.ToInt32(cosAfterDiscount * 0.1);
-                        int totalValue = taxAmount + cosAfterDiscount;
+                    @if (dbq != null)
+                    {
+                        discount = Convert.ToInt32(Convert.ToInt32(dbq.DiscountValue) * 0.01 * sumTotal);
+                        cosAfterDiscount = sumTotal - discount;
+                        taxAmount = Convert.ToInt32(cosAfterDiscount * 0.1);
+                        totalValue = taxAmount + cosAfterDiscount;
                         TempData["Amount"] = sumTotal;
                         TempData["TaxAmount"] = taxAmount;
                         TempData["DiscountAmount"] = discount;
+                    }
+                    else
+                    {
+                        taxAmount = Convert.ToInt32(sumTotal * 0.1);
+                        totalValue = taxAmount + sumTotal;
+                        TempData["Amount"] = sumTotal;
+                        TempData["TaxAmount"] = taxAmount;
                     }
                     <div class="cartFooter w100">
                         <div class="box-footer">
                             <div class="pull-left"> <a href="@Url.Action("Index","Product")" class="btn btn-success"> <i class="fa fa-arrow-left"></i> &nbsp; Tiếp tục mua sắm </a> </div>
                             <div class="pull-right">
-                                <button type="submit" onclick="return validateInput('@sumQuantity')" id="Update" class="btn btn-info"> <i class="fa fa-undo"></i> &nbsp; Cập nhật giỏ hàng </button>
+                                <button type="submit" onclick="return validateInput()" id="Update" class="btn btn-info"> <i class="fa fa-undo"></i> &nbsp; Cập nhật giỏ hàng </button>
                             </div>
                         </div>
                     </div>
                     <script type="text/javascript">
-                        function toNumber(str){
-                            return str*1;
+                        function toNumber(str) {
+                            return str * 1;
                         }
 
-                        function validateInput(sumQuantity) {
+                        function validateInput() {
                             var txtQuantity = $("#quanitySniper").val();
-                            //var numQuantity = toNumber(txtQuantity);
-                            //var numSumQuantity = toNumber(sumQuantity);
-                            //sumQuantity = numQuantity + numSumQuantity;
                             if (txtQuantity.trim() === '') {
                                 noty({
                                     text: 'Số lượng không được để trống.',
@@ -112,15 +119,6 @@
                                     theme: 'defaultTheme',
                                     timeout: 2000
                                 });
-                            } else if (sumQuantity > 10000) {
-                                noty({
-                                    text: 'Số lượng sản phẩm trong đơn hàng không được trên 10000',
-                                    type: 'warning',
-                                    dismissQueue: false,
-                                    layout: 'topCenter',
-                                    theme: 'defaultTheme',
-                                    timeout: 2000
-                                });
                             }
                             else {
                                 $("#updateCartForm").submit();
@@ -130,7 +128,6 @@
 
                 </div>
             </div>
-
         </div>
         <div class="col-lg-4 col-md-4 col-sm-5 rightSidebar">
             <div class="contentBox">
@@ -138,12 +135,44 @@
                     <div class="table-block" id="order-detail-content">
                         @if (Session["BeEdited"] != null)
                         {
-                            <a class="btn btn-primary btn-lg btn-block " title="checkout" onclick="myForm.submit()" style="margin-bottom:20px"> Chỉnh sửa đơn hàng &nbsp; <i class="fa fa-arrow-right"></i> </a>
+                            <a class="btn btn-primary btn-lg btn-block " title="checkout" onclick="checkTotalQuantity()" style="margin-bottom:20px"> Chỉnh sửa đơn hàng &nbsp; <i class="fa fa-arrow-right"></i> </a>
                         }
                         else
                         {
-                            <a class="btn btn-primary btn-lg btn-block " title="checkout" onclick="myForm.submit()" style="margin-bottom:20px"> Đặt hàng &nbsp; <i class="fa fa-arrow-right"></i> </a>
+                            <a class="btn btn-primary btn-lg btn-block " title="checkout" onclick="checkTotalQuantity()" style="margin-bottom:20px"> Đặt hàng &nbsp; <i class="fa fa-arrow-right"></i> </a>
                         }
+                        <script type="text/javascript">
+                            function checkTotalQuantity() {
+                                var totalQuantity = 0;
+
+
+                                $("[data-role='totalQuantityCheck']").each(function (index) {
+                                    totalQuantity += parseInt($("[data-role='totalQuantityCheck']").get(index).value);
+                                });
+
+                                if (totalQuantity > 10000) {
+                                    noty({
+                                        text: 'Số lượng sản phẩm trong đơn hàng không được trên 10000',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (totalQuantity < "@ViewBag.policy.PolicyBound") {
+                                    noty({
+                                        text: 'Số lượng sản phẩm trong đơn hàng không được trên @ViewBag.policy.PolicyBound',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else {
+                                    $("#myForm").submit();
+                                }
+                            }
+                        </script>
                         <div class="w100 cartMiniTable">
                             <table id="cart-summary" class="std table" style="margin-bottom:0px;">
                                 <tbody>
@@ -151,22 +180,21 @@
                                         <td>Tổng cộng</td>
                                         <td class="price">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                     </tr>
-                                    <tr>
-                                        <td>Giảm giá(@string.Format("{0}{1}", dbq.DiscountValue, "%"))</td>
-                                        <td class="price"><span class="success">@(discount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sau giảm giá</td>
-                                        <td class="price"><span class="success">@(cosAfterDiscount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
-                                    </tr>
+                                    @if (dbq != null)
+                                    {
+                                        <tr>
+                                            <td>Giảm giá(@string.Format("{0}{1}", dbq.DiscountValue, "%"))</td>
+                                            <td class="price"><span class="success">@(discount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sau giảm giá</td>
+                                            <td class="price"><span class="success">@(cosAfterDiscount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                        </tr>
+                                    }
                                     <tr>
                                         <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
                                         <td class="price" id="total-tax">@taxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                     </tr>
-                                    @*@{
-                                            int hihi = int.Parse(totalValue.ToString().Reverse().Aggregate("", (s, c) => s + c));
-                                            string haha = hihi.ToString().Substring(0, 1);
-                                        }*@
                                     <tr>
                                         <td>Thành tiền</td>
                                         <td class=" site-color" id="total-price" style="font-size: 20px; color: #4ec67f !important">@totalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>

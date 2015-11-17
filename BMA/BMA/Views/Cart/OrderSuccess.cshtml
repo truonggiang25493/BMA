@@ -24,7 +24,7 @@
             <div class="row userInfo">
                 <div class="thanxContent text-center">
                     <h1> Mã đơn hàng của bạn :<a href="#">@TempData["orderCode"]</a></h1>
-                    <h4 style="font-weight:bold"> Ngày nhận hàng : @((Session["DeliveryDate"]).ToString().AsDateTime().ToString("MM/dd/yyyy HH:mm"))</h4>
+                    <h4 style="font-weight:bold"> Ngày nhận hàng : @((Session["DeliveryDate"]))</h4>
                     @{
                         total = (Model.ElementAt(0).Order.TaxAmount + (Model.ElementAt(0).Order.Amount - Model.ElementAt(0).Order.DiscountAmount));
                     }

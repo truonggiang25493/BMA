@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -229,13 +229,14 @@
           <Key>
             <PropertyRef Name="StoreId" />
           </Key>
-          <Property Name="StoreId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StoreId" Type="int" Nullable="false" />
           <Property Name="StoreName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Address" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Phonenumber" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="OwnerName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="TaxCode" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="BakeryImage" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="ProductMaxPrice" Type="int" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -1149,6 +1150,7 @@
           <Property Name="OwnerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TaxCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="BakeryImage" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ProductMaxPrice" Type="Int32" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -1781,6 +1783,7 @@
           <EntitySetMapping Name="StoreInfoes">
             <EntityTypeMapping TypeName="BMAModel.StoreInfo">
               <MappingFragment StoreEntitySet="StoreInfo">
+                <ScalarProperty Name="ProductMaxPrice" ColumnName="ProductMaxPrice" />
                 <ScalarProperty Name="BakeryImage" ColumnName="BakeryImage" />
                 <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
                 <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />

@@ -10,7 +10,6 @@
     List<CustomerCartViewModel> lstProductCart = ViewBag.lstProductCart;
     int quantity = 0;
     int selectDongia = 0;
-    int sumQuantity = 0;
 }
 
 <section class="category-wrapper">
@@ -56,13 +55,6 @@
                 <div class="catColumnWrapper">
                     <div class="col-lg-12 col-md-12 col-sm-12 categoryColumn">
                         <div class="row  categoryProduct xsResponse clearfix">
-                            @if (lstProductCart != null)
-                            {
-                                for (int i = 0; i < lstProductCart.Count; i++)
-                                {
-                                    sumQuantity += lstProductCart[i].Quantity;
-                                }
-                            }
                             @if (Model.Count == 0)
                             {
                                 <div class="item col-sm-12 col-lg-12 col-md-12 col-xs-12">
@@ -118,7 +110,6 @@
                                                     $('#product-details-modal #productCode').text(code);
                                                     $("#product-details-modal #productName").text(productName);
                                                     $("#product-details-modal .hiddenProductID").attr('value', productId);
-                                                    //$("#product-details-modal .hiddenSumQuantity").attr('value', sumQuantity);
                                                     $("#product-details-modal .hiddenProductImage").attr('value', image);
                                                     $('#product-details-modal .quanitySniper').attr('value', quantity);
                                                     //$('#product-details-modal .quanitySniper').text(quantity);
@@ -195,7 +186,6 @@
                                                     <h3 class="details-description">Mã sản phẩm : <span class="price-sales" id="productCode"></span></h3>
                                                     <input type="hidden" class="hiddenProductID" name="productID" value="" />
                                                     <input type="hidden" class="hiddenProductImage" name="productImage" value="" />
-                                                    @*<input type="hidden" class="hiddenSumQuantity" id="sumQuantityCheck" name="sumQuantity" value="" />*@
                                                     <h3 class="details-description">Đơn giá : <span class="price-sales" id="productPrice"></span></h3>
 
                                                     <div class="productFilter productFilterLook2">
@@ -213,7 +203,7 @@
                                                 </form>
                                                 <div class="cart-actions">
                                                     <div class="addto">
-                                                        <button onclick="return validateInput('@sumQuantity')" class="button btn-cart cart first" title="Add to Cart" style="font-family: 'Patrick Hand SC'">Thêm vào giỏ hàng</button>
+                                                        <button onclick="return validateInput('')" class="button btn-cart cart first" title="Add to Cart" style="font-family: 'Patrick Hand SC'">Thêm vào giỏ hàng</button>
                                                     </div>
                                                 </div>
                                                 <script type="text/javascript">
@@ -221,11 +211,9 @@
                                                         return str * 1;
                                                     }
 
-                                                    function validateInput(sumQuantity) {
+                                                    function validateInput() {
                                                         var txtQuantity = $("#quantityCheck").val();
                                                         var numQuantity = toNumber(txtQuantity);
-                                                        var numSumQuantity = toNumber(sumQuantity);
-                                                        sumQuantity = numQuantity + numSumQuantity;
                                                         if (txtQuantity.trim() === '') {
                                                             noty({
                                                                 text: 'Số lượng không được để trống.',
@@ -238,16 +226,6 @@
                                                         } else if (txtQuantity < 1 || txtQuantity > 5000) {
                                                             noty({
                                                                 text: 'Số lượng phải lớn hơn 1 và nhỏ hơn 5000.',
-                                                                type: 'warning',
-                                                                dismissQueue: false,
-                                                                layout: 'topCenter',
-                                                                theme: 'defaultTheme',
-                                                                timeout: 2000
-                                                            });
-                                                        }
-                                                        else if (sumQuantity > 10000) {
-                                                            noty({
-                                                                text: 'Số lượng sản phẩm trong đơn hàng không được trên 10000',
                                                                 type: 'warning',
                                                                 dismissQueue: false,
                                                                 layout: 'topCenter',

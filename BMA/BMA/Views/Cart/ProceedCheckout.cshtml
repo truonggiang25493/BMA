@@ -8,6 +8,11 @@
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
     BMA.Models.DiscountByQuantity dbq = TempData["Discount"] as DiscountByQuantity;
     int sumTotal = 0;
+    int taxAmount = 0;
+    int totalValue = 0;
+    int sumQuantity = 0;
+    int discount = 0;
+    int cosAfterDiscount = 0;
 }
 
 <div class="container main-container headerOffset">
@@ -61,12 +66,17 @@
                                     </tbody>
                                 </table>
                             </div>
-
-                            @{
-                                int discount = Convert.ToInt32(Convert.ToInt32(dbq.DiscountValue) * 0.01 * sumTotal);
-                                int cosAfterDiscount = sumTotal - discount;
-                                int taxAmount = Convert.ToInt32(cosAfterDiscount * 0.1);
-                                int totalValue = taxAmount + cosAfterDiscount;
+                            @if (dbq != null)
+                            {
+                                discount = Convert.ToInt32(Convert.ToInt32(dbq.DiscountValue) * 0.01 * sumTotal);
+                                cosAfterDiscount = sumTotal - discount;
+                                taxAmount = Convert.ToInt32(cosAfterDiscount * 0.1);
+                                totalValue = taxAmount + cosAfterDiscount;
+                            }
+                            else
+                            {
+                                taxAmount = Convert.ToInt32(sumTotal * 0.1);
+                                totalValue = taxAmount + sumTotal;
                             }
                             <div class="w100 costDetails">
                                 <div class="table-block" id="order-detail-content">
@@ -75,14 +85,17 @@
                                             <td>Tổng cộng</td>
                                             <td class="price">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                         </tr>
-                                        <tr>
-                                            <td>Giảm giá(@string.Format("{0}{1}", dbq.DiscountValue, "%"))</td>
-                                            <td class="price"><span class="success">@(discount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Sau giảm giá</td>
-                                            <td class="price"><span class="success">@(cosAfterDiscount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
-                                        </tr>
+                                        @if (dbq != null)
+                                        {
+                                            <tr>
+                                                <td>Giảm giá(@string.Format("{0}{1}", dbq.DiscountValue, "%"))</td>
+                                                <td class="price"><span class="success">@(discount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sau giảm giá</td>
+                                                <td class="price"><span class="success">@(cosAfterDiscount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                            </tr>
+                                        }
                                         <tr>
                                             <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
                                             <td class="price" id="total-tax">@taxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
@@ -93,14 +106,12 @@
                                         </tr>
                                         <tr>
                                             <td style="font-weight:bold">Ngày nhận hàng</td>
-                                            <td class="price" id="total-tax">@((Session["DeliveryDate"]).ToString().AsDateTime().ToString("MM/dd/yyyy HH:mm"))</td>
+                                            <td class="price" id="total-tax">@((Session["DeliveryDate"]).ToString())</td>
                                         </tr>
                                         <tbody></tbody>
                                     </table>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -174,4 +185,3 @@
 
     <div style="clear:both"></div>
 </div>
-
