@@ -43,7 +43,7 @@
           <Property Name="QuantityFrom" Type="int" Nullable="false" />
           <Property Name="QuantityTo" Type="int" Nullable="false" />
           <Property Name="DiscountValue" Type="int" Nullable="false" />
-          <Property Name="Reach" Type="int" />
+          <Property Name="ReachNumber" Type="int" />
           <Property Name="beUsing" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ExportFrom">
@@ -236,6 +236,7 @@
           <Property Name="OwnerName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="TaxCode" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="BakeryImage" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="ProductMaxPrice" Type="int" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -798,7 +799,7 @@
           <Property Name="QuantityFrom" Type="Int32" Nullable="false" />
           <Property Name="QuantityTo" Type="Int32" Nullable="false" />
           <Property Name="DiscountValue" Type="Int32" Nullable="false" />
-          <Property Name="Reach" Type="Int32" />
+          <Property Name="ReachNumber" Type="Int32" />
           <Property Name="beUsing" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="ExportFrom">
@@ -1025,6 +1026,7 @@
           <Property Name="OwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TaxCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="BakeryImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductMaxPrice" Type="Int32" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -1686,7 +1688,7 @@
                 <ScalarProperty Name="QuantityFrom" ColumnName="QuantityFrom" />
                 <ScalarProperty Name="QuantityTo" ColumnName="QuantityTo" />
                 <ScalarProperty Name="DiscountValue" ColumnName="DiscountValue" />
-                <ScalarProperty Name="Reach" ColumnName="Reach" />
+                <ScalarProperty Name="ReachNumber" ColumnName="ReachNumber" />
                 <ScalarProperty Name="beUsing" ColumnName="beUsing" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1893,6 +1895,7 @@
                 <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />
                 <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
                 <ScalarProperty Name="BakeryImage" ColumnName="BakeryImage" />
+                <ScalarProperty Name="ProductMaxPrice" ColumnName="ProductMaxPrice" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
