@@ -1,6 +1,4 @@
-﻿@using System.Globalization
-@using BMA.Models
-@model List<BMA.Models.sp_GetIncomeWeekly_Result>
+﻿@model List<BMA.Models.sp_GetIncomeWeekly_Result>
 @{
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
@@ -49,7 +47,6 @@
                     Thống kê
                 </button>
             </div>
-
         </div>
     </div>
 </section>
@@ -153,7 +150,7 @@
                     $('#toDate').data("DateTimePicker").minDate(e.date.startOf('month'));
                 });
                 $("#toDate").on("dp.change", function (e) {
-                    $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1,'months').endOf('month'));
+                    $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1, 'months').endOf('month'));
                 });
             } else if (timeType === "3") {
                 $('#fromDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));

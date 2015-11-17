@@ -23,7 +23,8 @@
     <link href="~/Content/timeslider.css" rel="stylesheet" />
     <!--DatetimePicker-->
     <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-    @RenderSection("InitStyle", false)
+    <!--Bootstrap-chosen-->
+    <link href="~/Content/bootstrap-chosen.css" rel="stylesheet" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -79,7 +80,7 @@
                                 <li class="user-header">
                                     <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
                                     <p>
-                                        @(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "") - @(Session["UserRole"] != null ? (((int)Session["UserRole"]) == 1 ? "Quản lý" : (((int)Session["UserRole"]) == 2 ? "Nhân viên" : "")) : "")
+                                        @(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "") - @((Session["UserRole"]) == null ? "" : (((int)Session["UserRole"]) == 1 ? "Quản lý" : (((int)Session["UserRole"]) == 2 ? "Nhân viên" : "")))
                                         <small></small>
                                     </p>
                                 </li>
@@ -227,7 +228,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-usd"></i>Thống kê doanh thu</a></li>
+                            <li id="customerRevenue"><a href="@(Url.Action("ReviewRevenuePerCustomer", "Report"))"><i class="fa fa-usd"></i>Thống kê doanh thu theo khách hàng</a></li>
+                            <li id="incomeProduct"><a href="@(Url.Action("ReviewRevenueByProduct", "Report"))"><i class="fa fa-usd"></i>Thống kê thu nhập theo sản phẩm</a></li>
                             <li id="incomeReport"><a href="@(Url.Action("ReviewIncomeByTime", "Report"))"><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
                             <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
@@ -340,6 +342,8 @@
     @RenderSection("ReviewIncomeByTimeScript", false)
     @RenderSection("OtherExpenseIndexScript", false)
     @RenderSection("AddInputBill", false)
+    @RenderSection("ReviewRevenuePerCustomerScript", false)
+    @RenderSection("ReviewIncomeByProductScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({

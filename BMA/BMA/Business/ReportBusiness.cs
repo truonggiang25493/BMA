@@ -662,5 +662,36 @@ namespace BMA.Business
 
             return result;
         }
+
+        public List<sp_GetTop10CustomerRevenueWeekly_Result> GetTop10CustomerRevenueWeekly(DateTime start, DateTime end)
+        {
+            return db.sp_GetTop10CustomerRevenueWeekly(start, end).ToList();
+        }
+
+        public List<sp_GetTop10CustomerRevenueMonthly_Result> GetTop10CustomerRevenueMonthly(DateTime start,
+            DateTime end)
+        {
+            return db.sp_GetTop10CustomerRevenueMonthly(start, end).ToList();
+        }
+
+        public List<sp_GetTop10CustomerRevenueYearly_Result> GetTop10CustomerRevenueYearly(DateTime start, DateTime end)
+        {
+            return db.sp_GetTop10CustomerRevenueYearly(start, end).ToList();
+        }
+
+        public List<sp_GetTop10IncomeOfProductWeekly_Result> GetTop10ProductIncomeWeekly(DateTime start, DateTime end)
+        {
+            return db.sp_GetTop10IncomeOfProductWeekly(start, end).ToList();
+        }
+
+        public List<sp_GetTop10IncomeOfProductMonthly_Result> GetTop10ProductIncomeMonthly(DateTime start, DateTime end)
+        {
+            return db.sp_GetTop10IncomeOfProductMonthly(start, end).ToList();
+        }
+
+        public List<sp_GetTop10IncomeOfProductYearly_Result> GetTop10ProductIncomeYearly(DateTime start, DateTime end)
+        {
+            return db.sp_GetTop10IncomeOfProductYearly(start, end).ToList();
+        }
     }
 }

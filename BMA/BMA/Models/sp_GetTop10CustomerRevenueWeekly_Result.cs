@@ -10,15 +10,13 @@
 namespace BMA.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class DiscountByQuantity
+    public partial class sp_GetTop10CustomerRevenueWeekly_Result
     {
-        public int Id { get; set; }
-        public int QuantityFrom { get; set; }
-        public int QuantityTo { get; set; }
-        public int DiscountValue { get; set; }
-        public Nullable<int> Reach { get; set; }
-        public bool beUsing { get; set; }
+        public Nullable<int> CustomerUserId { get; set; }
+        public string Username { get; set; }
+        public Nullable<System.DateTime> StartDate { get; set; }
+        public Nullable<System.DateTime> EndDate { get; set; }
+        public Nullable<int> Revenue { get; set; }
     }
 }

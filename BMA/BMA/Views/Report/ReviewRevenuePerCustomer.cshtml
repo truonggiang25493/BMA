@@ -51,7 +51,7 @@
 </section>
 <!-- Main content -->
 <section class="content" id="review-content"></section>
-@section ReviewIncomeByProductScript{
+@section ReviewRevenuePerCustomerScript{
     <script src="~/Scripts/ChartNew.js"></script>
     <!--Datetimepicker-->
     <script type="text/javascript">
@@ -74,6 +74,124 @@
             });
             $("#toDate").on("dp.change", function (e) {
                 $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
+            });
+        });
+    </script>
+    <!--Initiate-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                url: "@(Url.Action("ReviewRevenuePerCustomerPartialView", "Report"))",
+                method: "GET",
+                success: function (data) {
+                    $("#review-content").html(data);
+                    var label = [];
+                    var labelNumber = $("#revenue-table thead tr th").length;
+                    $("#revenue-table thead tr th").each(function (index) {
+                        if (index !== 0 && index !== (labelNumber - 1))
+                            label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
+                    });
+
+                    var linedata = {
+                        labels: label,
+                        datasets: []
+                    }
+
+                    $("#revenue-table tbody tr").each(function (index, row) {
+                        var data = [];
+                        var dataNumber = $(row).find("td").length;
+                        $(row).find("td").each(function (count) {
+                            if (count !== 0 && count !== (dataNumber - 1)) {
+                                var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
+                                data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
+                            }
+                        });
+                        var fillColorString = "";
+                        var colorString = "";
+                        switch (index) {
+                            case 0:
+                                fillColorString = "red";
+                                colorString = "red";
+                                break;
+                            case 1:
+                                fillColorString = "blue)";
+                                colorString = "blue";
+                                break;
+                            case 2:
+                                fillColorString = "green";
+                                colorString = "green";
+                                break;
+                            case 3:
+                                fillColorString = "yellow";
+                                colorString = "yellow";
+                                break;
+                            case 4:
+                                fillColorString = "chartreuse";
+                                colorString = "chartreuse";
+                                break;
+                            case 5:
+                                fillColorString = "blueviolet";
+                                colorString = "blueviolet";
+                                break;
+                            case 6:
+                                fillColorString = "cyan";
+                                colorString = "cyan";
+                                break;
+                            case 7:
+                                fillColorString = "darkorange";
+                                colorString = "darkorange";
+                                break;
+                            case 8:
+                                fillColorString = "gold";
+                                colorString = "gold";
+                                break;
+                            case 9:
+                                fillColorString = "deeppink";
+                                colorString = "deeppink";
+                                break;
+
+                            default:
+                        }
+
+                        var dataset = {
+                            fillColor: fillColorString,
+                            strokeColor: colorString,
+                            pointColor: colorString,
+                            pointStrokeColor: "#fff",
+                            data: data,
+                            title: $(row).find("td:first").html()
+                        };
+
+                        linedata.datasets.push(dataset);
+                    });
+
+                    var opt1 = {
+                        legend: true,
+                        graphTitleFontSize: 18,
+                        graphMin: 0,
+                        responsive: true,
+                        xAxisLabel: "Thời gian",
+                        yAxisUnit: "đồng",
+                        yAxisLabel: "Thu nhập",
+                        thousandSeparator: ".",
+                        // Specify the number of Y-scales to display
+                        scaleOverride: true,
+                        // The start value of the scale
+                        scaleStartValue: 0,
+                        // The number of Y-scales to display
+                        scaleSteps: 10,
+                        // The width between two Y-scale
+                        scaleStepWidth: 500000,
+                        // The space between the X Axis (on position 0) can be filled or not
+                        datasetFill: false,
+                        annotateDisplay: true,
+                        annotateFunctionIn: myFctIn
+                    }
+                    new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
+                },
+                fail: function (e) {
+
+                }
             });
         });
     </script>
@@ -111,135 +229,15 @@
             }
         });
     </script>
-    <!--Initiate-->
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $.ajax({
-                url: "@Url.Action("ReviewIncomePerProductPartialView", "Report")",
-                method: "GET",
-                success: function (data) {
-                    $("#review-content").html(data);
-                    var label = [];
-                    var labelNumber = $("#revenue-table thead tr th").length;
-                    $("#revenue-table thead tr th").each(function (index) {
-                        if (index !== 0 && index !== 1 && index !== (labelNumber - 1))
-                            label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
-                    });
-
-                    var linedata = {
-                        labels: label,
-                        datasets: []
-                    }
-
-                    $("#revenue-table tbody tr").each(function (index, row) {
-                        var data = [];
-                        var dataNumber = $(row).find("td").length;
-                        $(row).find("td").each(function (count) {
-                            if (count !== 0 && count !== 1 && count !== (dataNumber - 1)) {
-                                var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
-                                data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
-                            }
-                        });
-                        var fillColorString = "";
-                        var colorString = "";
-                        switch (index) {
-                            case 0:
-                                fillColorString = "#f56954";
-                                colorString = "#f56954";
-                                break;
-                            case 1:
-                                fillColorString = "#00a65a)";
-                                colorString = "#00a65a";
-                                break;
-                            case 2:
-                                fillColorString = "#f39c12";
-                                colorString = "#f39c12";
-                                break;
-                            case 3:
-                                fillColorString = "#00c0ef";
-                                colorString = "#00c0ef";
-                                break;
-                            case 4:
-                                fillColorString = "#3c8dbc";
-                                colorString = "#3c8dbc";
-                                break;
-                            case 5:
-                                fillColorString = "#d2d6de";
-                                colorString = "#d2d6de";
-                                break;
-                            case 6:
-                                fillColorString = "cyan";
-                                colorString = "cyan";
-                                break;
-                            case 7:
-                                fillColorString = "darkorange";
-                                colorString = "darkorange";
-                                break;
-                            case 8:
-                                fillColorString = "gold";
-                                colorString = "gold";
-                                break;
-                            case 9:
-                                fillColorString = "deeppink";
-                                colorString = "deeppink";
-                                break;
-
-                            default:
-                        }
-
-                        var dataset = {
-                            fillColor: fillColorString,
-                            strokeColor: colorString,
-                            pointColor: colorString,
-                            pointStrokeColor: "#fff",
-                            data: data,
-                            title: $(row).find("td:first").html()
-                        };
-
-                        linedata.datasets.push(dataset);
-                    });
-
-                    var opt1 = {
-                        legend: true,
-                        graphTitleFontSize: 18,
-                        graphMin: 0,
-                        responsive: true,
-                        xAxisLabel: "Thời gian",
-                        yAxisUnit: "đồng",
-                        yAxisLabel: "Thu nhập",
-                        thousandSeparator: ".",
-                        // Specify the number of Y-scales to display
-                        scaleOverride: true,
-                        // The start value of the scale
-                        scaleStartValue: -200000,
-                        // The number of Y-scales to display
-                        scaleSteps: 25,
-                        // The width between two Y-scale
-                        scaleStepWidth: 100000,
-                        // The space between the X Axis (on position 0) can be filled or not
-                        datasetFill: false,
-                        annotateDisplay: true,
-                        annotateFunctionIn: myFctIn
-                    }
-                    new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
-                },
-                fail: function (e) {
-
-                }
-            });
-        });
-    </script>
-
     <!--Draw graph-->
     <script type="text/javascript">
         function executeChart() {
             var fromDateString = $("#fromDate input").val();
             var toDateString = $("#toDate input").val();
             var timeType = $("#time-type").val();
-
             $.ajax({
-                url: "@Url.Action("ReviewIncomePerProductPartialView", "Report")",
-                method: "GET",
+                url: "@(Url.Action("ReviewRevenuePerCustomerPartialView", "Report"))",
+                method: "POST",
                 data: {
                     "start": fromDateString,
                     "end": toDateString,
@@ -247,11 +245,10 @@
                 },
                 success: function (data) {
                     $("#review-content").html(data);
-
                     var label = [];
                     var labelNumber = $("#revenue-table thead tr th").length;
                     $("#revenue-table thead tr th").each(function (index) {
-                        if (index !== 0 && index !== 1 && index !== (labelNumber - 1))
+                        if (index !== 0 && index !== (labelNumber - 1))
                             label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
                     });
 
@@ -264,7 +261,7 @@
                         var data = [];
                         var dataNumber = $(row).find("td").length;
                         $(row).find("td").each(function (count) {
-                            if (count !== 0 && count !== 1 && count !== (dataNumber - 1)) {
+                            if (count !== 0 && count !== (dataNumber - 1)) {
                                 var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
                                 data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
                             }
@@ -273,28 +270,28 @@
                         var colorString = "";
                         switch (index) {
                             case 0:
-                                fillColorString = "#f56954";
-                                colorString = "#f56954";
+                                fillColorString = "red";
+                                colorString = "red";
                                 break;
                             case 1:
-                                fillColorString = "#00a65a)";
-                                colorString = "#00a65a";
+                                fillColorString = "blue)";
+                                colorString = "blue";
                                 break;
                             case 2:
-                                fillColorString = "#f39c12";
-                                colorString = "#f39c12";
+                                fillColorString = "green";
+                                colorString = "green";
                                 break;
                             case 3:
-                                fillColorString = "#00c0ef";
-                                colorString = "#00c0ef";
+                                fillColorString = "yellow";
+                                colorString = "yellow";
                                 break;
                             case 4:
-                                fillColorString = "#3c8dbc";
-                                colorString = "#3c8dbc";
+                                fillColorString = "chartreuse";
+                                colorString = "chartreuse";
                                 break;
                             case 5:
-                                fillColorString = "#d2d6de";
-                                colorString = "#d2d6de";
+                                fillColorString = "blueviolet";
+                                colorString = "blueviolet";
                                 break;
                             case 6:
                                 fillColorString = "cyan";
@@ -335,32 +332,31 @@
                         responsive: true,
                         xAxisLabel: "Thời gian",
                         yAxisUnit: "đồng",
-                        yAxisLabel: "Thu nhập",
+                        yAxisLabel: "Doanh thu",
                         thousandSeparator: ".",
                         // Specify the number of Y-scales to display
                         scaleOverride: true,
                         // The start value of the scale
-                        scaleStartValue: -200000,
+                        scaleStartValue: 0,
                         // The number of Y-scales to display
-                        scaleSteps: 25,
+                        scaleSteps: 10,
                         // The width between two Y-scale
-                        scaleStepWidth: 100000,
+                        scaleStepWidth: 500000,
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
                         annotateDisplay: true,
                         annotateFunctionIn: myFctIn
                     }
                     new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
-
                 },
                 fail: function (e) {
 
                 }
             });
         }
-
         function myFctIn(area, ctx, data, statdata, posi, posj, othervars) {
             $("#revenue-table tbody tr:nth-child(" + (posi + 1) + ")").addClass('selected').siblings().removeClass('selected');
         }
     </script>
 }
+
