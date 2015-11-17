@@ -49,14 +49,9 @@
                                 <td>@((weeklyResult.MaterialExpense == null) ? 0.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) : (weeklyResult.MaterialExpense.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))))</td>
                                 <td>@((weeklyResult.Income == null) ? 0.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) : (weeklyResult.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))))</td>
                                 <td>
-                                    <button onclick="openDetailInNewTab()" class="btn btn-info btn-xs">
+                                    <button onclick="window.open('@(Html.Raw(Url.Action("ReviewIncomeWeeklyDetail", "Report", new { startDate = weeklyResult.StartDate.Value.ToString("MM/dd/yyyy"), endDate = weeklyResult.EndDate.Value.ToString("MM/dd/yyyy") })))', '_blank')" class="btn btn-info btn-xs">
                                         <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
-                                        <script type="text/javascript">
-                                            function openDetailInNewTab() {
-                                                var win = window.open("@(Html.Raw(Url.Action("ReviewIncomeWeeklyDetail", "Report", new { startDate = weeklyResult.StartDate.Value, endDate = weeklyResult.EndDate.Value })))", '_blank');
-                                                win.focus();
-                                            }
-                                        </script>
+
                                     </button>
                                 </td>
                             </tr>
