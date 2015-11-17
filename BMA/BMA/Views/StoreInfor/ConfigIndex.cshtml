@@ -2,6 +2,8 @@
     ViewBag.Title = "Cấu hình hệ thống";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
     IEnumerable<BMA.Models.DiscountByQuantity> dbq = ViewBag.discountByQuantity;
+    IEnumerable<BMA.Models.Category> category = ViewBag.category;
+    int count = 0;
 }
 
 @*<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
@@ -78,7 +80,7 @@
                     <h3 class="box-title">Số lượng sản phẩm tối thiểu trong đơn hàng</h3>
                 </div><!-- /.box-header -->
                 <!-- form start -->
-                <form action="@Url.Action("MinQuantity", "StoreInfor")" class="form-horizontal" method="post" role="form" id="policyForm">
+                <form action="" class="form-horizontal" method="post" role="form" id="policyForm">
                     <div class="box-body">
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-7 pull-left">@ViewBag.policy.PolicyName</label>
@@ -88,7 +90,7 @@
                         </div>
                     </div><!-- /.box-body -->
                     <div class="box-footer">
-                        <a onclick="changeToReadOnly(@ViewBag.policy.PolicyBound)" class="btn btn-default">Quay lại</a>
+                        <a onclick="changeToReadOnly(@ViewBag.policy.PolicyBound)" class="btn btn-default">Hủy thay đổi</a>
                         <a onclick="changeQuantityConfirm()" class="btn btn-info pull-right" id="changeConfirm">Thay đổi</a>
                     </div><!-- /.box-footer -->
                     <script type="text/javascript">
@@ -125,6 +127,15 @@
                                 } else if (txtQuantity <= 0) {
                                     noty({
                                         text: 'Số lượng không được nhỏ hơn hoặc bằng 0.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (txtQuantity > 10000) {
+                                    noty({
+                                        text: 'Số lượng không được lớn hơn hoặc bằng 10000.',
                                         type: 'warning',
                                         dismissQueue: false,
                                         layout: 'topCenter',
@@ -189,6 +200,469 @@
                     </script>
                 </form>
             </div>
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Đơn giá tối đa cho 1 sản phẩm</h3>
+                </div><!-- /.box-header -->
+                <!-- form start -->
+                <form action="" class="form-horizontal" method="post" role="form" id="policyForm">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-7 pull-left">Đơn giá tối đá cho sản phẩm (đồng)</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" value="@ViewBag.maxPrice" id="maxPrice" placeholder="Nhập giá tối đa" onkeyup="return formatPrice()" readonly>
+                            </div>
+                        </div>
+                    </div><!-- /.box-body -->
+                    <div class="box-footer">
+                        <a onclick="changePriceToReadOnly(@ViewBag.maxPrice)" class="btn btn-default">Hủy thay đổi</a>
+                        <a onclick="changePriceConfirm()" class="btn btn-info pull-right" id="changePriceConfirm">Thay đổi</a>
+                    </div><!-- /.box-footer -->
+                    <script type="text/javascript">
+                        function formatPrice() {
+                            var price = $("#maxPrice").val();
+                            price = addPeriod(price);
+                            $("#maxPrice").text = price;
+                        }
+
+                        function addPeriod(nStr) {
+                            nStr += '';
+                            x = nStr.split('.');
+                            x1 = x[0];
+                            x2 = x.length > 1 ? '.' + x[1] : '';
+                            var rgx = /(\d+)(\d{3})/;
+                            while (rgx.test(x1)) {
+                                x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                            }
+                            return x1 + x2;
+                        }
+
+                        function changePriceConfirm() {
+                            $("#changePriceConfirm").text("Xác nhận");
+                            var txtPrice = $("#maxPrice").val();
+                            $.fn.hasAttr = function (name) {
+                                return this.attr(name) !== undefined;
+                            };
+
+
+                            if ($("#maxPrice").hasAttr('readonly')) {
+
+                            }
+                            else {
+                                if (txtPrice.trim() === '') {
+                                    noty({
+                                        text: 'Giá tối đa không được để trống.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (isNaN(txtPrice)) {
+                                    noty({
+                                        text: 'Giá tối đa phải là số.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (txtPrice <= 0) {
+                                    noty({
+                                        text: 'Giá tối đa không được nhỏ hơn hoặc bằng 0.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else {
+                                    $.ajax({
+                                        url: "@(Url.Action("changeMaxPrice", "StoreInfor"))",
+                                        method: "POST",
+                                        data: JSON.stringify({
+                                            "maxPrice": txtPrice
+                                        }),
+                                        dataType: "json",
+                                        contentType: 'application/json',
+                                        success: function (data) {
+                                            if (data === 1) {
+                                                noty({
+                                                    text: 'Thay đổi thông tin thành công',
+                                                    type: 'success',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("ConfigIndex", "StoreInfor"))");
+                                                }, 3000);
+                                            } else if (data === -1) {
+                                                noty({
+                                                    text: 'Tồn tại sản phẩm hiện đang có giá lớn hơn giá tối đa bạn vừa nhập, vui lòng thử lại.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            } else {
+                                                noty({
+                                                    text: 'Đã có lỗi xảy ra, vui lòng thử lại.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            }
+
+                                        },
+                                        fail: function () {
+                                            noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }
+                                    })
+                                }
+                            }
+                            $("#maxPrice").removeAttr("readonly");
+                        }
+
+                        function changePriceToReadOnly(quantityRollBack) {
+                            $("#maxPrice").val(quantityRollBack);
+                            $("#maxPrice").attr('readonly', 'readonly');
+                            $("#changePriceConfirm").text("Thay đổi");
+                        }
+                    </script>
+                </form>
+            </div>
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Loại bánh</h3>
+                </div><!-- /.box-header -->
+                <!-- form start -->
+                <form action="" class="form-horizontal" method="post" role="form" id="policyForm">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <div class="form-group col-md-12" style="margin-left:0px;">
+                                <table class="table table-hover table-bordered" style="" id="categoryTable">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Tên loại bánh</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Enumerable.Count(category); i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <label style="margin-top:10px;margin-left:10px;">@(++count)</label>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" style="width:138px;" value="@category.ElementAt(i).CategoryName" id="categoryName" data-role="categoryName" readonly />
+                                                    <input type="hidden" value="@category.ElementAt(i).CategoryName" id="hiddenCategoryName" data-role="hiddenCategoryName" />
+                                                    <input type="hidden" value="@category.ElementAt(i).CategoryId" id="hiddenCategoryId" data-role="hiddenCategoryId" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-sm btn-flat btn-warning" onclick="return removeCategory(@category.ElementAt(i).CategoryId)">Hủy</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div><!-- /.box-body -->
+                    <div class="box-footer">
+                        <a onclick="changeCateToReadOnly()" class="btn btn-default">Hủy thay đổi</a>
+                        <a onclick="changeCateConfirm()" class="btn btn-info pull-right" id="changeCateConfirm">Thay đổi</a>
+                        <a onclick="openPopup()" class="btn btn-danger pull-right" id="changeCateConfirm" style="margin-right:10px;">Thêm loại bánh</a>
+                    </div><!-- /.box-footer -->
+                    <script type="text/javascript">
+                        function openPopup() {
+                            var content =
+                                            '<form role="form" action="/StoreInfor/AddCategory" method="post" id="form-aprrove">' +
+                                                '<div class="form-group">' +
+                                                '<label style="margin-right:30px;">Loại bánh :</label>' +
+                                                '<input type="text" name="txtCategory" id="categoryToAdd" value="" style="width:162px;"/>' +
+                                                '</div>' +
+                                                 '<div class="form-group">' +
+                                                '<div class="form-group" style="padding-bottom: 20px;">' +
+                                                '<a onclick="addNewCategory()" class="btn btn-success pull-right" style="margin-right: 10px;">Đồng ý</a>' +
+                                                '<a class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</a>' +
+                                                '</div>' +
+                                                '</form>';
+                            var title = 'Thêm loại bánh mới';
+                            var footer = '';
+                            setModalBox(title, content, footer);
+                            $('#myModal').modal('show');
+                        }
+
+                        function setModalBox(title, content, footer) {
+                            document.getElementById('popup-body').innerHTML = content;
+                            document.getElementById('popup-title').innerHTML = title;
+                            document.getElementById('popup-footer').innerHTML = footer;
+                        }
+
+                        function addNewCategory() {
+                            var categoryName = $("#categoryToAdd").val();
+                            if (categoryName.trim() === '') {
+                                noty({
+                                    text: 'Loại bánh không được để trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 2000
+                                });
+                            } else if (categoryName.length < 6 || categoryName.length > 20) {
+                                noty({
+                                    text: 'Tên bánh không nhỏ hơn 6 và vượt quá 20 ký tự.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 2000
+                                });
+                            } else if (!isNaN(categoryName)) {
+                                noty({
+                                    text: 'Loại bánh không được là số.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 2000
+                                });
+                            } else {
+                                $.ajax({
+                                    url: "@(Url.Action("AddCategory", "StoreInfor"))",
+                                    method: "POST",
+                                    data: JSON.stringify({
+                                        "categoryName": categoryName
+                                    }),
+                                    dataType: "json",
+                                    contentType: 'application/json',
+                                    success: function (data) {
+                                        if (data === 1) {
+                                            noty({
+                                                text: 'Thêm mới loại bánh thành công',
+                                                type: 'success',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                            window.setTimeout(function () {
+                                                window.location.replace("@(Url.Action("ConfigIndex", "StoreInfor"))");
+                                            }, 3000);
+                                        } else if (data === -1) {
+                                            noty({
+                                                text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                        } else {
+                                            noty({
+                                                text: 'Đã có lỗi xảy ra, vui lòng thử lại.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                        }
+
+                                    },
+                                    fail: function () {
+                                        noty({
+                                            text: 'Đã có lỗi xảy ra',
+                                            type: 'error',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
+                                })
+                            }
+                        }
+
+                        function changeCateConfirm() {
+                            $("#changeCateConfirm").text("Xác nhận");
+                            var txtCateName = $("[data-role='categoryName']").val();
+                            var lstCateName = [];
+                            var check = 0;
+                            $("#categoryTable tbody tr").each(function (index, element) {
+                                lstCateName.push($(element).find("td:nth-child(2) input[id=categoryName]").val());
+                            });
+                            var cateCount = lstCateName.length;
+                            $.fn.hasAttr = function (name) {
+                                return this.attr(name) !== undefined;
+                            };
+
+
+                            if ($("#categoryName").hasAttr('readonly')) {
+
+                            }
+                            else {
+                                outerloop:
+                                    for (i = 0; i < cateCount; i++) {
+                                        if (lstCateName[i].trim() === '') {
+                                            noty({
+                                                text: 'Loại bánh không được để trống.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                            check = 0;
+                                            break outerloop;
+                                        } else if (lstCateName[i].length < 6 || lstCateName[i].length > 20) {
+                                            noty({
+                                                text: 'Tên bánh không nhỏ hơn 6 và vượt quá 20 ký tự.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                            check = 0;
+                                            break outerloop;
+                                        }
+                                        check = 1;
+                                    }
+
+                                if (check === 1) {
+                                    $.ajax({
+                                        url: "@(Url.Action("ChangeCategory", "StoreInfor"))",
+                                        method: "POST",
+                                        data: JSON.stringify({
+                                            "categoryName": lstCateName
+                                        }),
+                                        dataType: "json",
+                                        contentType: 'application/json',
+                                        success: function (data) {
+                                            if (data === 1) {
+                                                noty({
+                                                    text: 'Thay đổi thông tin thành công',
+                                                    type: 'success',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("ConfigIndex", "StoreInfor"))");
+                                                }, 3000);
+                                            } else if (data === -1) {
+                                                noty({
+                                                    text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            } else {
+                                                noty({
+                                                    text: 'Đã có lỗi xảy ra, vui lòng thử lại.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            }
+
+                                        },
+                                        fail: function () {
+                                            noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }
+                                    })
+                                }
+                            }
+
+                            $("#categoryTable tbody tr input").removeAttr("readonly");
+                        }
+
+                        function removeCategory(categoryId) {
+                            $.ajax({
+                                "url": "@(Url.Action("DeleteCategory", "StoreInfor"))",
+                                "method": "POST",
+                                "data": {
+                                    "categoryId": categoryId
+                                },
+                                "success": function (data) {
+                                    if (data === "1") {
+                                        noty({
+                                            text: 'Hủy loại bánh thành công.',
+                                            type: 'success',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                        window.setTimeout(function () {
+                                            window.location.replace("@(Url.Action("ConfigIndex", "StoreInfor"))");
+                                        }, 2500);
+                                    } else if (data === "-1") {
+                                        noty({
+                                            text: 'Loại bánh này đang được sử dụng, vui lòng thay đổi và thử lại.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1500
+                                        });
+                                    }
+                                    else if (data === "-2") {
+                                        noty({
+                                            text: 'Có lỗi xảy ra, vui lòng thay đổi và thử lại.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
+                                },
+                                "fail": function (e) {
+                                    alert("Have error" + e.toString());
+                                }
+                            });
+                        }
+
+                        function changeCateToReadOnly() {
+                            $("[data-role='hiddenCategoryName']").each(function (index) {
+                                $("[data-role='categoryName']").get(index).value = $("[data-role='hiddenCategoryName']").get(index).value;
+                            });
+
+                            $("#changeCateConfirm").text("Thay đổi");
+                            $("#categoryTable tbody tr input").attr('readonly', 'readonly');
+                        }
+                    </script>
+                </form>
+            </div>
         </div>
         <div class="col-md-7">
             <!-- Horizontal Form -->
@@ -200,73 +674,300 @@
                 <form action="@Url.Action("MinQuantity", "StoreInfor")" class="form-horizontal" method="post" role="form" id="policyForm">
                     <div class="box-body">
                         <div class="form-group">
-                            <label class="col-md-5 pull-left" style="margin-right:-13px;">Mốc giảm</label>
-                            <select class="form-control" style="width:138px;" disabled>
-                                @for (int i = 1; i <= 3; i++)
-                                {
-                                    if (i == dbq.ElementAt(0).ReachNumber)
-                                    {
-                                        <option selected>@i</option>
-                                    }
-                                    else
-                                    {
-                                        <option>@i</option>
-                                    }
-                                }
-                            </select>
-                        </div>
+                            <label class="col-md-5 pull-left" style="margin-right:-13px;">Thực hiện giảm giá theo số lượng ?</label>
+                            @if (dbq.ElementAt(0).beUsing)
+                            {
+                                <select class="form-control" style="width:138px;" id="isDiscount" onchange="checkUsingDiscount(this)" disabled>
+                                    <option value='1' selected>Có</option>
+                                    <option value='0'>Không</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <select class="form-control" style="width:138px;" id="isDiscount" onchange="checkUsingDiscount(this)" disabled>
+                                    <option value='1'>Có</option>
+                                    <option value='0' selected>Không</option>
+                                </select>
+                            }
 
-                        <div class="form-group col-md-12">
-                            <table class="table table-hover table-bordered" style="" id="discountTable">
-                                <thead>
-                                    <tr>
-                                        <th>Từ</th>
-                                        <th>Đến</th>
-                                        <th>Tỉ lệ giảm</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in dbq)
-                                    {
-                                        <tr>
-                                            <td><input class="form-control" style="width:138px;" value="@item.QuantityFrom" id="quantityFrom" readonly /></td>
-                                            <td><input class="form-control" style="width:138px;" value="@item.QuantityTo" id="quantityTo" readonly /></td>
-                                            <td>@string.Format("{0}{1}", item.DiscountValue, "%")</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
                         </div>
+                        <script type="text/javascript">
+                            function checkUsingDiscount(sel) {
+                                var selectedValue = sel.value;
+                                if (selectedValue === "1") {
+                                    $("#discountTable").show();
+                                } else {
+                                    $("#discountTable").hide();
+                                }
+                            }
+                        </script>
+                        @*<div class="form-group">
+                                <label class="col-md-5 pull-left" style="margin-right:-13px;">Mốc giảm</label>
+                                <select class="form-control" style="width:138px;" id="reachNumber" disabled>
+                                    @for (int i = 1; i <= 3; i++)
+                                    {
+                                        if (i == dbq.ElementAt(0).ReachNumber)
+                                        {
+                                            <option onclick="return checkReachNumber('@i')" selected>@i</option>
+                                        }
+                                        else
+                                        {
+                                            <option onclick="return checkReachNumber('@i')">@i</option>
+                                        }
+                                    }
+                                </select>
+                            </div>*@
+                        @if (dbq.ElementAt(0).beUsing)
+                        {
+                            <div class="form-group col-md-12">
+                                <table class="table table-hover table-bordered" style="" id="discountTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Từ</th>
+                                            <th>Đến</th>
+                                            <th>Tỉ lệ giảm (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Enumerable.Count(dbq); i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).QuantityFrom" id="quantityFrom" data-role="quantityFrom" readonly />
+                                                    <input type="hidden" value="@ViewBag.QuantityFrom[i]" id="hiddenQuantityFrom" data-role="hiddenQuantityFrom" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).QuantityTo" id="quantityTo" data-role="quantityTo" readonly />
+                                                    <input type="hidden" value="@ViewBag.QuantityTo[i]" id="hiddenQuantityTo" data-role="hiddenQuantityTo" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).DiscountValue" id="discountValue" data-role="discountValue" readonly />
+                                                    <input type="hidden" value="@ViewBag.DiscountValue[i]" id="hiddenDiscount" data-role="hiddenDiscount" />
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group col-md-12">
+                                <table class="table table-hover table-bordered" style="" id="discountTable" hidden>
+                                    <thead>
+                                        <tr>
+                                            <th>Từ</th>
+                                            <th>Đến</th>
+                                            <th>Tỉ lệ giảm (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Enumerable.Count(dbq); i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).QuantityFrom" id="quantityFrom" data-role="quantityFrom" readonly />
+                                                    <input type="hidden" value="@ViewBag.QuantityFrom[i]" id="hiddenQuantityFrom" data-role="hiddenQuantityFrom" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).QuantityTo" id="quantityTo" data-role="quantityTo" readonly />
+                                                    <input type="hidden" value="@ViewBag.QuantityTo[i]" id="hiddenQuantityTo" data-role="hiddenQuantityTo" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).DiscountValue" id="discountValue" data-role="discountValue" readonly />
+                                                    <input type="hidden" value="@ViewBag.DiscountValue[i]" id="hiddenDiscount" data-role="hiddenDiscount" />
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+
                     </div><!-- /.box-body -->
                     <div class="box-footer">
-                        <a onclick="changeToReadOnlyDiscount()" class="btn btn-default">Quay lại</a>
+                        <a onclick="changeToReadOnlyDiscount()" class="btn btn-default">Hủy thay đổi</a>
                         <a onclick="changeQuantityDiscount()" class="btn btn-info pull-right" id="changeDiscount">Thay đổi</a>
                     </div><!-- /.box-footer -->
                     <script type="text/javascript">
                         function changeQuantityDiscount() {
                             $("#changeDiscount").text("Xác nhận");
+                            $("#isDiscount").removeAttr("disabled");
+                            var txtQuantityFrom = $("#quantityFrom").val();
+                            var txtQuantityTo = $("#quantityTo").val();
+                            var txtDiscount = $("#discountValue").val();
+                            var txtBeUsing = $("#isDiscount").val();
+
+                            var lstQuantityFrom = [];
+                            var lstQuantityTo = [];
+                            var lstDiscount = [];
+                            $("#discountTable tbody tr").each(function (index, element) {
+                                lstQuantityFrom.push($(element).find("td:nth-child(1) input[id=quantityFrom]").val());
+                                lstQuantityTo.push($(element).find("td:nth-child(2) input[id=quantityTo]").val());
+                                lstDiscount.push($(element).find("td:nth-child(3) input[id=discountValue]").val());
+                            });
+
+                            $.fn.hasAttr = function (name) {
+                                return this.attr(name) !== undefined;
+                            };
+
+
+                            if ($("#quantityFrom").hasAttr('readonly')) {
+
+                            } else {
+                                if (txtQuantityFrom.trim() === '' || txtQuantityTo.trim() === '') {
+                                    noty({
+                                        text: 'Số lượng không được để trống.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (txtDiscount.trim() === '') {
+                                    noty({
+                                        text: 'Tỉ lệ giảm không được để trống.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (isNaN(txtQuantityFrom) || isNaN(txtQuantityTo)) {
+                                    noty({
+                                        text: 'Số lượng phải là số.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (isNaN(txtDiscount)) {
+                                    noty({
+                                        text: 'Tỉ lệ giảm phải là số.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (parseInt(lstQuantityFrom[0]) != 0) {
+                                    noty({
+                                        text: 'Số lượng "từ" ở hàng đầu tiên không được khác 0.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (parseInt(lstQuantityFrom[0]) > parseInt(lstQuantityTo[0]) || parseInt(lstQuantityFrom[1]) > parseInt(lstQuantityTo[1]) || parseInt(lstQuantityFrom[2]) > parseInt(lstQuantityTo[2])) {
+                                    noty({
+                                        text: 'Trong một hàng, số lượng "từ" không được lớn hơn số lượng "đến".',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (parseInt(lstQuantityFrom[1]) != (parseInt(lstQuantityTo[0]) + 1) || parseInt(lstQuantityFrom[2]) != (parseInt(lstQuantityTo[1]) + 1)) {
+                                    noty({
+                                        text: 'Số lượng "từ" ở hàng tiếp theo phải lớn hơn số lượng "đến" ở hàng trước 1.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (parseInt(lstDiscount[0]) > parseInt(lstDiscount[1]) || parseInt(lstDiscount[1]) > parseInt(lstDiscount[2])) {
+                                    noty({
+                                        text: 'Tỉ lệ giảm hàng sau không được nhỏ hơn hàng trước.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else {
+                                    $.ajax({
+                                        url: "@(Url.Action("changeDiscountQuantity", "StoreInfor"))",
+                                        method: "POST",
+                                        data: JSON.stringify({
+                                            "quantityFrom": lstQuantityFrom,
+                                            "quantityTo": lstQuantityTo,
+                                            "discountRate": lstDiscount,
+                                            "beUsing": txtBeUsing
+                                        }),
+                                        dataType: "json",
+                                        contentType: 'application/json',
+                                        success: function (data) {
+                                            if (data === 1) {
+                                                noty({
+                                                    text: 'Thay đổi thông tin thành công',
+                                                    type: 'success',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("ConfigIndex", "StoreInfor"))");
+                                                }, 3000);
+                                            } else {
+                                                noty({
+                                                    text: 'Đã có lỗi xảy ra, vui lòng thử lại.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            }
+
+                                        },
+                                        fail: function () {
+                                            noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }
+                                    })
+                                }
+                            }
                             $("#discountTable tbody tr input").removeAttr("readonly");
+                            $("#isDiscount").removeAttr("readonly");
                         }
 
                         function changeToReadOnlyDiscount() {
-                            $("#discountTable tbody tr input").each(function (index, element) {                           
-                                for (var i=0; i < ("@Enumerable.Count(ViewBag.quantityFrom)") ; i++)
-                                {
-                                    $("#discountTable tbody tr td:nth-child(1) input").val("@ViewBag.quantityFrom" + [i]);
-                                    $("#discountTable tbody tr td:nth-child(2) input").val("@ViewBag.quantityTo" + [i]);
-                                }
-                                //lstId.push($(element).find("td:first input").val());
-                                //lstQuantity.push($(element).find("td:nth-child(2) input").val());
-                                //materialQuantity = $(element).find("td:nth-child(2) input").val();
+
+                            $("[data-role='hiddenQuantityFrom']").each(function (index) {
+                                $("[data-role='quantityFrom']").get(index).value = $("[data-role='hiddenQuantityFrom']").get(index).value;
+                            });
+                            $("[data-role='hiddenQuantityFrom']").each(function (index) {
+                                $("[data-role='quantityTo']").get(index).value = $("[data-role='hiddenQuantityTo']").get(index).value;
+                            });
+                            $("[data-role='hiddenQuantityFrom']").each(function (index) {
+                                $("[data-role='discountValue']").get(index).value = $("[data-role='hiddenDiscount']").get(index).value;
                             });
 
                             $("#discountTable tbody tr input").attr('readonly', 'readonly');
+                            $("#isDiscount").attr('readonly', 'readonly');
+                            $("#reachNumber").attr('disabled', 'disabled')
                             $("#changeDiscount").text("Thay đổi");
+                            if ($("#discountTable").is("[hidden]")) {
+                                $("#discountTable").hide();
+                                $("#isDiscount option:nth-child(2)").attr('select', 'select');
+                            } else {
+                                $("#discountTable").show();
+                                $("#isDiscount option:nth-child(1)").attr('select', 'select');
+                            }
                         }
                     </script>
                 </form>
             </div>
         </div>
-
     </div>
 </section>

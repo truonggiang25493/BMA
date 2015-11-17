@@ -1,6 +1,6 @@
 ﻿@using System.Globalization
 @using BMA.Models
-@model List<BMA.Models.sp_GetTop10CustomerRevenueWeekly_Result>
+@model List<BMA.Models.sp_GetTop10CustomerRevenueMonthly_Result>
 <!--Chart-->
 <div class="row">
     <div class="col-md-12">
@@ -27,20 +27,20 @@
     List<string> customerName = new List<string>();
     List<string> fullName = new List<string>();
     List<String> timeList = new List<string>();
-    foreach (sp_GetTop10CustomerRevenueWeekly_Result spGetTop10CustomerRevenueWeeklyResult in Model)
+    foreach (sp_GetTop10CustomerRevenueMonthly_Result result in Model)
     {
         if (customerName.Count == 0)
         {
-            customerName.Add(spGetTop10CustomerRevenueWeeklyResult.Username);
-            fullName.Add(spGetTop10CustomerRevenueWeeklyResult.Fullname);
-            timeList.Add((spGetTop10CustomerRevenueWeeklyResult.StartDate.Value.ToString("dd/MM/yyyy") + " - " + spGetTop10CustomerRevenueWeeklyResult.EndDate.Value.ToString("dd/MM/yyyy")));
+            customerName.Add(result.Username);
+            fullName.Add(result.Fullname);
+            timeList.Add((result.MonthNo + "/" + result.YearNo));
         }
         else
         {
             bool nameCheck = true;
             foreach (string s in customerName)
             {
-                if (s.Equals(spGetTop10CustomerRevenueWeeklyResult.Username))
+                if (s.Equals(result.Username))
                 {
                     nameCheck = false;
                 }
@@ -48,14 +48,14 @@
             }
             if (nameCheck)
             {
-                customerName.Add(spGetTop10CustomerRevenueWeeklyResult.Username);
-                fullName.Add(spGetTop10CustomerRevenueWeeklyResult.Fullname);
+                customerName.Add(result.Username);
+                fullName.Add(result.Fullname);
             }
 
             bool timeCheck = true;
             foreach (string s in timeList)
             {
-                string temp = (spGetTop10CustomerRevenueWeeklyResult.StartDate.Value.ToString("dd/MM/yyyy") + " - " + spGetTop10CustomerRevenueWeeklyResult.EndDate.Value.ToString("dd/MM/yyyy"));
+                string temp = ((result.MonthNo + "/" + result.YearNo));
                 if (s.Equals(temp))
                 {
                     timeCheck = false;
@@ -63,7 +63,7 @@
             }
             if (timeCheck)
             {
-                timeList.Add((spGetTop10CustomerRevenueWeeklyResult.StartDate.Value.ToString("dd/MM/yyyy") + " - " + spGetTop10CustomerRevenueWeeklyResult.EndDate.Value.ToString("dd/MM/yyyy")));
+                timeList.Add((result.MonthNo + "/" + result.YearNo));
             }
         }
     }
@@ -95,18 +95,18 @@
                                 <td>@(fullName.ElementAt(i))</td>
                                 @foreach (string time in timeList)
                                 {
-                                    foreach (sp_GetTop10CustomerRevenueWeekly_Result revenueWeekly in Model)
+                                    foreach (sp_GetTop10CustomerRevenueMonthly_Result result in Model)
                                     {
-                                        if (revenueWeekly.Username.Equals(customerName.ElementAt(i)) && revenueWeekly.StartDate.Value.ToString("dd/MM/yyyy").Equals(time.Substring(0, 10)))
+                                        if (result.Username.Equals(customerName.ElementAt(i)) && (result.MonthNo + "/" + result.YearNo).Equals(time))
                                         {
-                                            <td style="text-align: right">@revenueWeekly.Revenue.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                            <td style="text-align: right">@result.Revenue.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                         }
                                     }
                                 }
                                 @{ int id = 0;}
                                 @while (id == 0)
                                 {
-                                    foreach (sp_GetTop10CustomerRevenueWeekly_Result result in Model)
+                                    foreach (sp_GetTop10CustomerRevenueMonthly_Result result in Model)
                                     {
                                         if (result.Username.Equals(customerName.ElementAt(i)))
                                         {

@@ -14,8 +14,16 @@ namespace BMA.Controllers
         BMAEntities db = new BMAEntities();
         public ActionResult Index()
         {
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] == 3)
+            {
+                return RedirectToAction("Index");
+            }
             StoreInfo storeInfo = db.StoreInfoes.SingleOrDefault();
-            List<Product> lstNewProduct = db.Products.OrderBy(n => n.ProductId).Take(4).ToList();
+            List<Product> lstNewProduct = db.Products.OrderByDescending(n => n.ProductId).Take(4).ToList();
             ViewBag.lstProduct = lstNewProduct;
             List<Order> lstOrder = db.Orders.Where(n => n.OrderStatus == 0).ToList();
             ViewBag.orderWaiting = lstOrder.Count;
@@ -92,6 +100,14 @@ namespace BMA.Controllers
 
         public ActionResult ConfigIndex()
         {
+            if (Session["User"] == null || Session["UserRole"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] == 2)
+            {
+                return RedirectToAction("Index");
+            }
             List<Product> lstNewProduct = db.Products.OrderBy(n => n.ProductId).Take(4).ToList();
             ViewBag.lstProduct = lstNewProduct;
             List<Order> lstOrder = db.Orders.Where(n => n.OrderStatus == 0).ToList();
@@ -100,20 +116,21 @@ namespace BMA.Controllers
             ViewBag.customer = lstCustomer.Count;
             Policy policy = db.Policies.SingleOrDefault();
             ViewBag.policy = policy;
-            List<DiscountByQuantity> discountByQuantity = db.DiscountByQuantities.Where(n => n.beUsing).ToList();
+            int? maxPrice = db.StoreInfoes.Select(n => n.ProductMaxPrice).SingleOrDefault();
+            ViewBag.maxPrice = maxPrice;
+            List<DiscountByQuantity> discountByQuantity = db.DiscountByQuantities.ToList();
             ViewBag.discountByQuantity = discountByQuantity;
             var quantityFrom = db.DiscountByQuantities.Select(n => n.QuantityFrom).ToList();
             var quantityTo = db.DiscountByQuantities.Select(n => n.QuantityTo).ToList();
-            //int[] quantity = new int[]{};
-            //for (int i = 0; i < discountByQuantity.Count; i++)
-            //{
-            //    quantity[i] = Convert.ToInt32(discountByQuantity[i]);
-            //}
-            ViewBag.quantityFrom = quantityFrom;
+            var discountRate = db.DiscountByQuantities.Select(n => n.DiscountValue).ToList();
+            ViewBag.QuantityFrom = quantityFrom;
             ViewBag.quantityTo = quantityTo;
+            ViewBag.DiscountValue = discountRate;
+            List<Category> category = db.Categories.Where(n => n.CategoryName != "Bánh").ToList();
+            ViewBag.category = category;
             return View();
         }
-        
+
         [HttpPost]
         public int MinQuantity(int bound)
         {
@@ -121,6 +138,99 @@ namespace BMA.Controllers
             try
             {
                 sib.MinQuantity(bound);
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+        [HttpPost]
+        public int changeDiscountQuantity(int[] quantityFrom, int[] quantityTo, int[] discountRate, string beUsing)
+        {
+            StoreInforBusiness sib = new StoreInforBusiness();
+            bool boolUsing = false;
+            if (beUsing == "1")
+            {
+                boolUsing = true;
+            }
+            try
+            {
+                sib.changeDiscountQuantity(quantityFrom, quantityTo, discountRate, boolUsing);
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+        [HttpPost]
+        public int changeMaxPrice(int maxPrice)
+        {
+            StoreInforBusiness sib = new StoreInforBusiness();
+            var nowMaxPriceProduct = db.Products.OrderByDescending(i => i.ProductStandardPrice).Select(n => n.ProductStandardPrice).FirstOrDefault();
+            if (maxPrice < nowMaxPriceProduct)
+            {
+                return -1;
+            }
+            try
+            {
+                sib.changeMaxPrice(maxPrice);
+                return 1;
+            }
+            catch
+            {
+                return -2;
+            }
+        }
+
+        [HttpPost]
+        public int ChangeCategory(string[] categoryName)
+        {
+            StoreInforBusiness sib = new StoreInforBusiness();
+            try
+            {
+                sib.changeCategory(categoryName);
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+        [HttpPost]
+        public int DeleteCategory(int categoryId)
+        {
+            StoreInforBusiness sib = new StoreInforBusiness();
+            List<Product> lstProduct = db.Products.ToList();
+            for (int i = 0; i < lstProduct.Count; i++)
+            {
+                if (lstProduct[i].CategoryId == categoryId)
+                {
+                    return -1;
+                }
+            }
+            try
+            {
+                sib.deleteCategory(categoryId);
+                return 1;
+            }
+            catch
+            {
+                return -2;
+            }
+        }
+
+        [HttpPost]
+        public int AddCategory(string categoryName)
+        {
+            StoreInforBusiness sib = new StoreInforBusiness();
+            try
+            {
+                sib.addCategory(categoryName);
                 return 1;
             }
             catch

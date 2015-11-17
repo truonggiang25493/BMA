@@ -14,6 +14,7 @@ namespace BMA.Models
     public partial class sp_GetTopCustomerWithRevenue_Result
     {
         public Nullable<int> CustomerUserId { get; set; }
+        public string Username { get; set; }
         public string Fullname { get; set; }
         public Nullable<int> Revenue { get; set; }
     }

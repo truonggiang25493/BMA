@@ -14,7 +14,7 @@ namespace BMA.Controllers
         private BMAEntities db = new BMAEntities();
         private CustomerBusiness customerBusiness = new CustomerBusiness();
         // GET: Customer
-        /*
+
         public ActionResult GetCustomerPartialView(int? customerId)
         {
             if (customerId != null)
@@ -24,7 +24,7 @@ namespace BMA.Controllers
             List<Customer> customerList = customerBusiness.GetCustomerList();
             return PartialView(customerList);
         }
-        */
+
         [HttpPost]
         public ActionResult Create(FormCollection form, string returnUrl)
         {
@@ -45,7 +45,7 @@ namespace BMA.Controllers
                 !(customerName.IsEmpty() || orderIdString.IsEmpty() || username.IsEmpty() || email.IsEmpty() ||
                   customerAddress.IsEmpty() || customerPhoneNumber.IsEmpty() || customerTaxCode.IsEmpty()))
             {
-                int orderId = Convert.ToInt32(orderIdString);               
+                int orderId = Convert.ToInt32(orderIdString);
                 bool rs = customerBusiness.AddCustomerForOrder(username, email, customerName, customerAddress,
                     customerPhoneNumber, customerTaxCode, orderId);
                 return rs ? 1 : 0;
@@ -119,7 +119,7 @@ namespace BMA.Controllers
 
         public ActionResult GetOrderByCustomerTable(int id)
         {
-            List<Order> orderByCustomerList =db.Orders.Where(n => n.CustomerUserId == id).ToList();
+            List<Order> orderByCustomerList = db.Orders.Where(n => n.CustomerUserId == id).ToList();
             return PartialView("OrderedByCustomerPartialView", orderByCustomerList);
         }
 

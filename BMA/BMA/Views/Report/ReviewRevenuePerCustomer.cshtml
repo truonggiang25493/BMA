@@ -3,7 +3,7 @@
 }
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h2>@(ViewBag.Title)</h2>
+    <h2 style="color:">@(ViewBag.Title)</h2>
     <div class="row">
         <div class="col-md-4">
         </div>
@@ -52,7 +52,7 @@
 <!-- Main content -->
 <section class="content" id="review-content"></section>
 @section ReviewRevenuePerCustomerScript{
-    <script src="~/Scripts/chosen.jquery.js"></script>
+    <script src="~/Scripts/ChartNew.js"></script>
     <!--Datetimepicker-->
     <script type="text/javascript">
         $(document).ready(function () {
@@ -60,12 +60,14 @@
                 ignoreReadonly: true,
                 format: 'L',
                 locale: 'vi',
-                maxDate: moment().subtract(7, 'days')
+                maxDate: moment().startOf('week').subtract(7, 'days').format('MM/DD/YYYY'),
+                defaultDate: moment().startOf('week').subtract(7, 'days').format('MM/DD/YYYY')
             });
             $('#toDate').datetimepicker({
                 ignoreReadonly: true,
                 format: 'L',
                 locale: 'vi',
+                defaultDate: moment().format('MM/DD/YYYY'),
                 maxDate: moment(),
                 useCurrent: false
             });
@@ -76,6 +78,119 @@
                 $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
             });
         });
+    </script>
+    <!--Initiate-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                url: "@(Url.Action("ReviewRevenuePerCustomerPartialView", "Report"))",
+                method: "POST",
+                success: function (data) {
+                    $("#review-content").html(data);
+                    var label = [];
+                    var labelNumber = $("#revenue-table thead tr th").length;
+                    $("#revenue-table thead tr th").each(function (index) {
+                        if (index !== 0 && index !== 1 && index !== (labelNumber - 1))
+                            label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
+                    });
+
+                    var linedata = {
+                        labels: label,
+                        datasets: []
+                    }
+
+                    $("#revenue-table tbody tr").each(function (index, row) {
+                        var data = [];
+                        var dataNumber = $(row).find("td").length;
+                        $(row).find("td").each(function (count) {
+                            if (count !== 0 && count !== 1 && count !== (dataNumber - 1)) {
+                                var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
+                                data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
+                            }
+                        });
+                        var fillColorString = "";
+                        var colorString = "";
+                        switch (index) {
+                            case 0:
+                                fillColorString = "red";
+                                colorString = "red";
+                                break;
+                            case 1:
+                                fillColorString = "blue)";
+                                colorString = "blue";
+                                break;
+                            case 2:
+                                fillColorString = "green";
+                                colorString = "green";
+                                break;
+                            case 3:
+                                fillColorString = "yellow";
+                                colorString = "yellow";
+                                break;
+                            case 4:
+                                fillColorString = "chartreuse";
+                                colorString = "chartreuse";
+                                break;
+                            case 5:
+                                fillColorString = "blueviolet";
+                                colorString = "blueviolet";
+                                break;
+                            case 6:
+                                fillColorString = "cyan";
+                                colorString = "cyan";
+                                break;
+                            case 7:
+                                fillColorString = "darkorange";
+                                colorString = "darkorange";
+                                break;
+                            case 8:
+                                fillColorString = "gold";
+                                colorString = "gold";
+                                break;
+                            case 9:
+                                fillColorString = "deeppink";
+                                colorString = "deeppink";
+                                break;
+
+                            default:
+                        }
+
+                        var dataset = {
+                            fillColor: fillColorString,
+                            strokeColor: colorString,
+                            pointColor: colorString,
+                            pointStrokeColor: "#fff",
+                            data: data,
+                            title: $(row).find("td:first").html()
+                        };
+
+                        linedata.datasets.push(dataset);
+                    });
+
+                    var opt1 = {
+                        legend: true,
+                        graphTitleFontSize: 18,
+                        graphMin: 0,
+                        responsive: true,
+                        xAxisLabel: "Thời gian",
+                        yAxisUnit: "đồng",
+                        yAxisLabel: "Thu nhập",
+                        thousandSeparator: ".",
+                        // The space between the X Axis (on position 0) can be filled or not
+                        datasetFill: false,
+                        annotateDisplay: true,
+                        annotateFunctionIn: myFctIn
+                    }
+                    new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
+                },
+                fail: function (e) {
+
+                }
+            });
+        });
+    </script>
+    <!--Validate choose time-->
+    <script type="text/javascript">
         $("#time-type").on("change", function () {
             var timeType = $("#time-type").val();
             if (timeType === "1") {
@@ -106,10 +221,7 @@
                     $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1, 'years').endOf('year'));
                 });
             }
-
         });
-
-
     </script>
     <!--Draw graph-->
     <script type="text/javascript">
@@ -119,7 +231,7 @@
             var timeType = $("#time-type").val();
             $.ajax({
                 url: "@(Url.Action("ReviewRevenuePerCustomerPartialView", "Report"))",
-                method: "GET",
+                method: "POST",
                 data: {
                     "start": fromDateString,
                     "end": toDateString,
@@ -128,8 +240,9 @@
                 success: function (data) {
                     $("#review-content").html(data);
                     var label = [];
+                    var labelNumber = $("#revenue-table thead tr th").length;
                     $("#revenue-table thead tr th").each(function (index) {
-                        if (index !== 0)
+                        if (index !== 0 & index !== 1 && index !== (labelNumber - 1))
                             label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
                     });
 
@@ -140,8 +253,9 @@
 
                     $("#revenue-table tbody tr").each(function (index, row) {
                         var data = [];
+                        var dataNumber = $(row).find("td").length;
                         $(row).find("td").each(function (count) {
-                            if (count !== 0) {
+                            if (count !== 0 && count !== 1 && count !== (dataNumber - 1)) {
                                 var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
                                 data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
                             }
@@ -150,44 +264,44 @@
                         var colorString = "";
                         switch (index) {
                             case 0:
-                                fillColorString = "rgba(237, 212, 219,0.5)";
-                                colorString = "rgba(237, 212, 219,1)";
+                                fillColorString = "red";
+                                colorString = "red";
                                 break;
                             case 1:
-                                fillColorString = "rgba(41, 41, 41,0.5)";
-                                colorString = "rgba(41, 41, 41,1)";
+                                fillColorString = "blue)";
+                                colorString = "blue";
                                 break;
                             case 2:
-                                fillColorString = "rgba(39, 38, 89,0.5)";
-                                colorString = "rgba(39, 38, 89,1)";
+                                fillColorString = "green";
+                                colorString = "green";
                                 break;
                             case 3:
-                                fillColorString = "rgba(72, 82, 85,0.5)";
-                                colorString = "rgba(72, 82, 85,1)";
+                                fillColorString = "yellow";
+                                colorString = "yellow";
                                 break;
                             case 4:
-                                fillColorString = "rgba(139, 48, 122,0.5)";
-                                colorString = "rgba(139, 48, 122,1)";
+                                fillColorString = "chartreuse";
+                                colorString = "chartreuse";
                                 break;
                             case 5:
-                                fillColorString = "rgba(149, 130, 7,0.5)";
-                                colorString = "rgba(149, 130, 7,1)";
+                                fillColorString = "blueviolet";
+                                colorString = "blueviolet";
                                 break;
                             case 6:
-                                fillColorString = "rgba(32, 47, 66,0.5)";
-                                colorString = "rgba(32, 47, 66,1)";
+                                fillColorString = "cyan";
+                                colorString = "cyan";
                                 break;
                             case 7:
-                                fillColorString = "rgba(255, 217, 11,0.5)";
-                                colorString = "rgba(255, 217, 11,1)";
+                                fillColorString = "darkorange";
+                                colorString = "darkorange";
                                 break;
                             case 8:
-                                fillColorString = "rgba(108, 94, 117,0.5)";
-                                colorString = "rgba(108, 94, 117,1)";
+                                fillColorString = "gold";
+                                colorString = "gold";
                                 break;
                             case 9:
-                                fillColorString = "rgba(255, 0, 99,0.5)";
-                                colorString = "rgba(255, 0, 99,1)";
+                                fillColorString = "deeppink";
+                                colorString = "deeppink";
                                 break;
 
                             default:
@@ -212,20 +326,20 @@
                         responsive: true,
                         xAxisLabel: "Thời gian",
                         yAxisUnit: "đồng",
-                        yAxisLabel: "Thu nhập",
+                        yAxisLabel: "Doanh thu",
                         thousandSeparator: ".",
-                        // Specify the number of Y-scales to display
+                        /*// Specify the number of Y-scales to display
                         scaleOverride: true,
                         // The start value of the scale
                         scaleStartValue: 0,
                         // The number of Y-scales to display
-                        scaleSteps: 7,
+                        scaleSteps: 10,
                         // The width between two Y-scale
-                        scaleStepWidth: 500000,
+                        scaleStepWidth: 500000,*/
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
-                        //annotateFunctionIn: myFctIn
-                        scaleShowLabels: true
+                        annotateDisplay: true,
+                        annotateFunctionIn: myFctIn
                     }
                     new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
                 },
@@ -235,7 +349,7 @@
             });
         }
         function myFctIn(area, ctx, data, statdata, posi, posj, othervars) {
-            $("#income-table tbody tr:nth-child(" + (posj + 1) + ")").addClass('selected').siblings().removeClass('selected');
+            $("#revenue-table tbody tr:nth-child(" + (posi + 1) + ")").addClass('selected').siblings().removeClass('selected');
         }
     </script>
 }

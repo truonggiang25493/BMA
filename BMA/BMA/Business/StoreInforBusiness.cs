@@ -35,5 +35,56 @@ namespace BMA.Business
             db.SaveChanges();
             return true;
         }
+
+        public bool changeDiscountQuantity(int[] quantityFrom, int[] quantityTo, int[] discountRate, bool beUsing)
+        {
+            List<DiscountByQuantity> discountByQuantity = db.DiscountByQuantities.Where(n => n.ReachNumber == 3).ToList();
+            for (int i = 0; i < quantityFrom.Length; i++)
+            {
+                discountByQuantity[i].QuantityFrom = quantityFrom[i];
+                discountByQuantity[i].QuantityTo = quantityTo[i];
+                discountByQuantity[i].DiscountValue = discountRate[i];
+                discountByQuantity[i].beUsing = beUsing;
+                db.SaveChanges();
+            }
+            return true;
+        }
+
+        public bool changeMaxPrice(int maxPrice)
+        {
+            StoreInfo storeInfo = db.StoreInfoes.SingleOrDefault();
+            storeInfo.ProductMaxPrice = maxPrice;
+            db.SaveChanges();
+            return true;
+        }
+
+        public bool changeCategory(string[] categoryName)
+        {
+            List<Category> category = db.Categories.Where(n => n.CategoryName != "Bánh").ToList();
+            for (int i = 0; i < categoryName.Length; i++)
+            {
+                category[i].CategoryName = categoryName[i];
+                db.SaveChanges();
+            }
+            return true;
+        }
+
+        public bool deleteCategory(int categoryId)
+        {
+            Category category = db.Categories.SingleOrDefault(n=>n.CategoryId == categoryId);
+            db.Categories.Remove(category);
+            db.SaveChanges();
+            return true;
+        }
+
+        public bool addCategory(string categoryName)
+        {
+            Category category = new Category();
+            category.CategoryName = categoryName;
+            category.ParentCategoryId = 1;
+            db.Categories.Add(category);
+            db.SaveChanges();
+            return true;
+        }
     }
 }

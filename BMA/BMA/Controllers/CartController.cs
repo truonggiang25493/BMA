@@ -6,11 +6,13 @@ using System.Web.Mvc;
 using BMA.Models;
 using BMA.Models.ViewModel;
 using BMA.Business;
+using System.Globalization;
 
 namespace BMA.Controllers
 {
     public class CartController : Controller
     {
+        BMAEntities db = new BMAEntities();
         #region Cart method
         public List<CustomerCartViewModel> GetCart()
         {
@@ -133,20 +135,22 @@ namespace BMA.Controllers
                 }
                 ViewBag.taxRate = cob.GetTaxRate();
                 List<CustomerCartViewModel> lstCart = GetCart();
+                List<DiscountByQuantity> dbq = db.DiscountByQuantities.ToList();
+                Policy policy = db.Policies.SingleOrDefault();
+                ViewBag.policy = policy;
                 foreach (var item in lstCart)
                 {
                     quantity += item.Quantity;
                 }
-                if (quantity > 10000)
-                {
-                    return RedirectToAction("Index", "Error");
-                }
-                else
+                if (dbq[0].beUsing)
                 {
                     TempData["Discount"] = cob.checkDiscount(quantity);
                     return View(lstCart);
                 }
-                
+                else
+                {
+                    return View(lstCart);
+                }
             }
             catch
             {
@@ -225,7 +229,7 @@ namespace BMA.Controllers
             }
             List<CustomerCartViewModel> cart = GetCart();
             //DateTime planDeliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
-            DateTime planDeliveryDate = DateTime.Now;
+            DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
             int amount = Convert.ToInt32(TempData["Amount"]);
             int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
             int discount = Convert.ToInt32(TempData["DiscountAmount"]);
@@ -260,7 +264,8 @@ namespace BMA.Controllers
             }
             List<CustomerCartViewModel> cart = GetCart();
             string orderTime = DateTime.Now.ToString("yyyyMMdd");
-            DateTime planDeliveryDate = DateTime.Parse(Session["DeliveryDate"].ToString());
+            //DateTime planDeliveryDate = DateTime.Now;
+            DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
             int amount = Convert.ToInt32(TempData["Amount"]);
             int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
             int discount = Convert.ToInt32(TempData["DiscountAmount"]);
@@ -318,7 +323,7 @@ namespace BMA.Controllers
                 return RedirectToAction("OrderInfo");
             }
             int cusUserId = Convert.ToInt32(Session["UserId"]);
-            DateTime planDeliveryDate = Convert.ToDateTime(Session["DeliveryDate"]);
+            DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
             cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
             TempData["orderCode"] = cob.GetOrderCode();
             Session["Cart"] = null;
@@ -339,7 +344,7 @@ namespace BMA.Controllers
             int amount = Convert.ToInt32(TempData["Amount"]);
             int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
             int discount = Convert.ToInt32(TempData["DiscountAmount"]);
-            DateTime planDeliveryDate = Convert.ToDateTime(Session["DeliveryDate"]);
+            DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
             string sName = f.Get("txtName").ToString();
             string sPhone = f.Get("txtPhoneNumber").ToString();
             string sAddress = f.Get("txtAddress").ToString();
@@ -382,11 +387,19 @@ namespace BMA.Controllers
             string planDeliveryDate = f["txtDelivery"].ToString();
             Session["DeliveryDate"] = planDeliveryDate;
             List<CustomerCartViewModel> lstCart = GetCart();
+            List<Boolean> dbq = db.DiscountByQuantities.Select(n => n.beUsing).ToList();
             foreach (var item in lstCart)
             {
                 quantity += item.Quantity;
             }
-            TempData["Discount"] = cob.checkDiscount(quantity);
+            if (dbq[0])
+            {
+                TempData["Discount"] = cob.checkDiscount(quantity);
+            }
+            else
+            {
+
+            }
             return View(lstCart);
         }
         public ActionResult OrderInfo(FormCollection f)

@@ -14,6 +14,7 @@ namespace BMA.Models
     public partial class sp_GetTop10CustomerRevenueWeekly_Result
     {
         public Nullable<int> CustomerUserId { get; set; }
+        public string Username { get; set; }
         public string Fullname { get; set; }
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }

@@ -1,6 +1,6 @@
 ﻿@using System.Globalization
 @using BMA.Models
-@model List<BMA.Models.sp_GetTop10CustomerRevenueWeekly_Result>
+@model List<sp_GetTop10IncomeOfProductMonthly_Result>
 <!--Chart-->
 <div class="row">
     <div class="col-md-12">
@@ -8,7 +8,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Biểu đồ thống kê 10 khách hàng doanh thu cao nhất
+                    Biểu đồ thống kê 10 sản phẩm thu nhập cao nhất
                 </h3>
                 <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -24,23 +24,23 @@
     </div>
 </div>
 @{
-    List<string> customerName = new List<string>();
-    List<string> fullName = new List<string>();
+    List<string> productCode = new List<string>();
+    List<string> productName = new List<string>();
     List<String> timeList = new List<string>();
-    foreach (sp_GetTop10CustomerRevenueWeekly_Result spGetTop10CustomerRevenueWeeklyResult in Model)
+    foreach (sp_GetTop10IncomeOfProductMonthly_Result result in Model)
     {
-        if (customerName.Count == 0)
+        if (productCode.Count == 0)
         {
-            customerName.Add(spGetTop10CustomerRevenueWeeklyResult.Username);
-            fullName.Add(spGetTop10CustomerRevenueWeeklyResult.Fullname);
-            timeList.Add((spGetTop10CustomerRevenueWeeklyResult.StartDate.Value.ToString("dd/MM/yyyy") + " - " + spGetTop10CustomerRevenueWeeklyResult.EndDate.Value.ToString("dd/MM/yyyy")));
+            productCode.Add(result.ProductCode);
+            productName.Add(result.ProductName);
+            timeList.Add((result.MonthNo + "/" + result.YearNo));
         }
         else
         {
             bool nameCheck = true;
-            foreach (string s in customerName)
+            foreach (string s in productCode)
             {
-                if (s.Equals(spGetTop10CustomerRevenueWeeklyResult.Username))
+                if (s.Equals(result.ProductCode))
                 {
                     nameCheck = false;
                 }
@@ -48,14 +48,14 @@
             }
             if (nameCheck)
             {
-                customerName.Add(spGetTop10CustomerRevenueWeeklyResult.Username);
-                fullName.Add(spGetTop10CustomerRevenueWeeklyResult.Fullname);
+                productCode.Add(result.ProductCode);
+                productName.Add(result.ProductName);
             }
 
             bool timeCheck = true;
             foreach (string s in timeList)
             {
-                string temp = (spGetTop10CustomerRevenueWeeklyResult.StartDate.Value.ToString("dd/MM/yyyy") + " - " + spGetTop10CustomerRevenueWeeklyResult.EndDate.Value.ToString("dd/MM/yyyy"));
+                string temp = (result.MonthNo + "/" + result.YearNo);
                 if (s.Equals(temp))
                 {
                     timeCheck = false;
@@ -63,12 +63,10 @@
             }
             if (timeCheck)
             {
-                timeList.Add((spGetTop10CustomerRevenueWeeklyResult.StartDate.Value.ToString("dd/MM/yyyy") + " - " + spGetTop10CustomerRevenueWeeklyResult.EndDate.Value.ToString("dd/MM/yyyy")));
+                timeList.Add((result.MonthNo + "/" + result.YearNo));
             }
         }
     }
-
-
 }
 <!--Table-->
 <div class="row">
@@ -78,8 +76,8 @@
                 <table class="table" id="revenue-table">
                     <thead>
                         <tr>
-                            <th>Tên đăng nhập</th>
-                            <th>Khách hàng</th>
+                            <th>Sản phẩm</th>
+                            <th>Mã sản phẩm</th>
                             @foreach (string time in timeList)
                             {
                                 <th style="text-align: center">@time</th>
@@ -88,29 +86,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 0; i < customerName.Count; i++)
+                        @for (int i = 0; i < productCode.Count; i++)
                         {
                             <tr>
-                                <td>@(customerName.ElementAt(i))</td>
-                                <td>@(fullName.ElementAt(i))</td>
+                                <td>@(productCode.ElementAt(i))</td>
+                                <td>@(productName.ElementAt(i))</td>
                                 @foreach (string time in timeList)
                                 {
-                                    foreach (sp_GetTop10CustomerRevenueWeekly_Result revenueWeekly in Model)
+                                    foreach (sp_GetTop10IncomeOfProductMonthly_Result incomeMonthly in Model)
                                     {
-                                        if (revenueWeekly.Username.Equals(customerName.ElementAt(i)) && revenueWeekly.StartDate.Value.ToString("dd/MM/yyyy").Equals(time.Substring(0, 10)))
+                                        if (incomeMonthly.ProductCode.Equals(productCode.ElementAt(i)) && (incomeMonthly.MonthNo + "/" + incomeMonthly.YearNo).Equals(time))
                                         {
-                                            <td style="text-align: right">@revenueWeekly.Revenue.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                            <td style="text-align: right">@incomeMonthly.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                         }
                                     }
                                 }
                                 @{ int id = 0;}
                                 @while (id == 0)
                                 {
-                                    foreach (sp_GetTop10CustomerRevenueWeekly_Result result in Model)
+                                    foreach (sp_GetTop10IncomeOfProductMonthly_Result result in Model)
                                     {
-                                        if (result.Username.Equals(customerName.ElementAt(i)))
+                                        if (result.ProductCode.Equals(productCode.ElementAt(i)))
                                         {
-                                            id = result.CustomerUserId.Value;
+                                            id = result.ProductId.Value;
                                         }
                                     }
                                 }

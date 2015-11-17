@@ -138,7 +138,60 @@ namespace BMA.Controllers
 
         public ActionResult ReviewRevenueByProduct()
         {
+            ViewBag.Title = "Thống kê thu nhập theo sản phẩm";
+            ViewBag.TreeViewMenu = "incomeProduct";
+            ViewBag.TreeView = "report";
             return View();
+        }
+        [HttpPost]
+        public ActionResult ReviewIncomePerProductPartialView(string start, string end, int? type)
+        {
+            ReportBusiness business = new ReportBusiness();
+
+            if (type == null)
+            {
+                type = 1;
+            }
+            if (type == 1)
+            {
+                DateTime startDate;
+                DateTime endDate;
+                if (start == null || end == null)
+                {
+                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
+                    endDate = DateTime.Now;
+                }
+                else
+                {
+                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                }
+
+
+                List<sp_GetTop10IncomeOfProductWeekly_Result> result = business.GetTop10ProductIncomeWeekly(startDate, endDate);
+                return PartialView("Top10ProductIncomeWeeklyPartialView", result);
+            }
+            else if (type == 2)
+            {
+                DateTime startDate = DateTime.ParseExact(start, "MM/yyyy", CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact(end, "MM/yyyy", CultureInfo.InvariantCulture);
+
+                List<sp_GetTop10IncomeOfProductMonthly_Result> result =
+                    business.GetTop10ProductIncomeMonthly(startDate, endDate);
+
+                return PartialView("Top10ProductIncomeMonthlyPartialView", result);
+            }
+            else if (type == 3)
+            {
+                DateTime startDate = DateTime.ParseExact(start, "yyyy", CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact(end, "yyyy", CultureInfo.InvariantCulture);
+
+                List<sp_GetTop10IncomeOfProductYearly_Result> result =
+                    business.GetTop10ProductIncomeYearly(startDate, endDate);
+
+                return PartialView("Top10ProductIncomeYearlyPartialView", result);
+            }
+            return null;
         }
 
         #endregion
@@ -154,7 +207,7 @@ namespace BMA.Controllers
             return View();
         }
 
-        
+        [HttpPost]
         public ActionResult ReviewRevenuePerCustomerPartialView(string start, string end, int? type)
         {
             ReportBusiness business = new ReportBusiness();
@@ -170,7 +223,7 @@ namespace BMA.Controllers
                 if (start == null || end == null)
                 {
                     startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
-                    endDate = DateTime.Now.LastDayOfWeek();
+                    endDate = DateTime.Now;
                 }
                 else
                 {
@@ -181,6 +234,26 @@ namespace BMA.Controllers
 
                 List<sp_GetTop10CustomerRevenueWeekly_Result> result = business.GetTop10CustomerRevenueWeekly(startDate, endDate);
                 return PartialView("Top10CustomerRevenueWeeklyPartialView", result);
+            }
+            else if (type == 2)
+            {
+                DateTime startDate = DateTime.ParseExact(start, "MM/yyyy", CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact(end, "MM/yyyy", CultureInfo.InvariantCulture);
+
+                List<sp_GetTop10CustomerRevenueMonthly_Result> result =
+                    business.GetTop10CustomerRevenueMonthly(startDate, endDate);
+
+                return PartialView("Top10CustomerRevenueMonthlyPartialView", result);
+            }
+            else if (type == 3)
+            {
+                DateTime startDate = DateTime.ParseExact(start, "yyyy", CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact(end, "yyyy", CultureInfo.InvariantCulture);
+
+                List<sp_GetTop10CustomerRevenueYearly_Result> result =
+                    business.GetTop10CustomerRevenueYearly(startDate, endDate);
+
+                return PartialView("Top10CustomerRevenueYearlyPartialView", result);
             }
 
             return null;

@@ -11,13 +11,15 @@ namespace BMA.Models
 {
     using System;
     
-    public partial class sp_GetTop10CustomerRevenueMonthly_Result
+    public partial class sp_GetTop10IncomeOfProductYearly_Result
     {
-        public Nullable<int> CustomerUserId { get; set; }
-        public string Username { get; set; }
-        public string Fullname { get; set; }
-        public Nullable<int> MonthNo { get; set; }
+        public Nullable<int> ProductId { get; set; }
+        public string ProductCode { get; set; }
+        public string ProductName { get; set; }
         public Nullable<int> YearNo { get; set; }
+        public Nullable<int> Quantity { get; set; }
         public Nullable<int> Revenue { get; set; }
+        public Nullable<int> MaterialExpense { get; set; }
+        public Nullable<int> Income { get; set; }
     }
 }

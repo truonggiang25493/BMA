@@ -101,18 +101,14 @@ namespace BMA.Business
             return productId;
         }
 
-        public bool CheckEditInformation(int productId, int productPrice, int[] materialId, int[] materialQuantity)
+        public int CheckEditInformation(int productId, int[] materialId, int[] materialQuantity)
         {
             Product product = db.Products.SingleOrDefault(n => n.ProductId == productId);
             int checkChangeMaterial = 0;
-            if (product.ProductStandardPrice != productPrice)
-            {
-                return true;
-            }
             List<Recipe> recipe = db.Recipes.Where(n => n.ProductId == productId).ToList();
             if (recipe.Count != materialId.Length)
             {
-                return true;
+                return 1;
             }
             for (int i = 0; i < recipe.Count; i++)
             {
@@ -123,82 +119,98 @@ namespace BMA.Business
                         checkChangeMaterial++;
                         if (recipe[i].RecipeQuantity != materialQuantity[j])
                         {
-                            return true;
+                            return 2;
                         }
                     }
                 }
             }
             if (checkChangeMaterial != recipe.Count)
             {
-                return true;
+                return 3;
             }
-            return false;
+            return -1;
         }
         public bool EditProduct(int productId, string productName, string productUnit, double productWeight, string productDes, string productNote, int productPrice, int dropCate, string productCode, string productImage, int[] materialId, int[] materialQuantity)
         {
             DbContextTransaction contextTransaction = db.Database.BeginTransaction();
-            bool checkEdit = CheckEditInformation(productId, productPrice, materialId, materialQuantity);
-            if (checkEdit)
+            //bool checkEdit = CheckEditInformation(productId, productPrice, materialId, materialQuantity);
+            //if (checkEdit)
+            //{
+            //    Product productOld = db.Products.SingleOrDefault(n => n.ProductId == productId);
+            //    productOld.IsActive = false;
+            //    Product product = new Product();
+            //    product.ProductName = productName;
+            //    product.Unit = productUnit;
+            //    product.ProductWeight = productWeight;
+            //    if (productDes != null)
+            //    {
+            //        product.Descriptions = productDes;
+            //    }
+            //    if (productNote != null)
+            //    {
+            //        product.Note = productNote;
+            //    }
+            //    product.ProductStandardPrice = productPrice;
+            //    product.CategoryId = dropCate;
+            //    product.ProductCode = productCode;
+            //    if (productImage != null)
+            //    {
+            //        product.ProductImage = productImage;
+            //    }
+            //    product.IsActive = true;
+            //    db.Products.Add(product);
+            //    db.SaveChanges();
+            //    int newProductId = GetProductId();
+            //    for (int i = 0; i < materialId.Length; i++)
+            //    {
+            //        Recipe recipe = new Recipe();
+            //        recipe.ProductId = newProductId;
+            //        recipe.ProductMaterialId = materialId[i];
+            //        recipe.RecipeQuantity = materialQuantity[i];
+            //        db.Recipes.Add(recipe);
+            //        db.SaveChanges();
+            //    }
+            //    db.SaveChanges();
+            //}
+            //else
+            //{
+            Product product = db.Products.SingleOrDefault(n => n.ProductId == productId);
+            product.ProductName = productName;
+            product.Unit = productUnit;
+            product.ProductWeight = productWeight;
+            if (productDes != null)
             {
-                Product productOld = db.Products.SingleOrDefault(n => n.ProductId == productId);
-                productOld.IsActive = false;
-                Product product = new Product();
-                product.ProductName = productName;
-                product.Unit = productUnit;
-                product.ProductWeight = productWeight;
-                if (productDes != null)
-                {
-                    product.Descriptions = productDes;
-                }
-                if (productNote != null)
-                {
-                    product.Note = productNote;
-                }
-                product.ProductStandardPrice = productPrice;
-                product.CategoryId = dropCate;
-                product.ProductCode = productCode;
-                if (productImage != null)
-                {
-                    product.ProductImage = productImage;
-                }
-                product.IsActive = true;
-                db.Products.Add(product);
-                db.SaveChanges();
-                int newProductId = GetProductId();
-                for (int i = 0; i < materialId.Length; i++)
-                {
-                    Recipe recipe = new Recipe();
-                    recipe.ProductId = newProductId;
-                    recipe.ProductMaterialId = materialId[i];
-                    recipe.RecipeQuantity = materialQuantity[i];
-                    db.Recipes.Add(recipe);
-                    db.SaveChanges();
-                }
-                db.SaveChanges();
+                product.Descriptions = productDes;
             }
-            else
+            if (productNote != null)
             {
-                Product product = db.Products.SingleOrDefault(n => n.ProductId == productId);
-                product.ProductName = productName;
-                product.Unit = productUnit;
-                product.ProductWeight = productWeight;
-                if (productDes != null)
-                {
-                    product.Descriptions = productDes;
-                }
-                if (productNote != null)
-                {
-                    product.Note = productNote;
-                }
-                product.CategoryId = dropCate;
-                product.ProductCode = productCode;
-                if (productImage != null)
-                {
-                    product.ProductImage = productImage;
-                }
-                product.IsActive = true;
-                db.SaveChanges();
+                product.Note = productNote;
             }
+            product.ProductStandardPrice = productPrice;
+            product.CategoryId = dropCate;
+            product.ProductCode = productCode;
+            if (productImage != null)
+            {
+                product.ProductImage = productImage;
+            }
+            product.IsActive = true;
+            db.SaveChanges();
+            List<Recipe> oldRecipe = db.Recipes.Where(n => n.ProductId == productId).ToList();
+            int numberOfOldRecipe = oldRecipe.Count;
+            for (int i = 0; i < numberOfOldRecipe; i++)
+            {
+                db.Recipes.Remove(oldRecipe[i]);
+            }
+            db.SaveChanges();
+            for (int i = 0; i < materialId.Length; i++)
+            {
+                Recipe recipe = new Recipe();
+                recipe.ProductId = productId;
+                recipe.ProductMaterialId = materialId[i];
+                recipe.RecipeQuantity = materialQuantity[i];
+                db.Recipes.Add(recipe);
+            }
+            db.SaveChanges();
             try
             {
                 contextTransaction.Commit();

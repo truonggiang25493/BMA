@@ -21,5 +21,6 @@ namespace BMA.Models
         public string OwnerName { get; set; }
         public string TaxCode { get; set; }
         public string BakeryImage { get; set; }
+        public Nullable<int> ProductMaxPrice { get; set; }
     }
 }
