@@ -22,7 +22,6 @@ namespace BMA.Business
 
         public static List<InputMaterial> GetInputMaterialList()
         {
-            
             List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderByDescending(n => n.InputMaterialId).ToList();
             return inputMaterialslList;
         }

@@ -23,15 +23,23 @@ namespace BMA.Controllers
 
         public ActionResult InputMaterialIndex()
         {
-            ViewBag.Title = "Danh sách nguyên liệu đầu vào";
-            ViewBag.TreeView = "inputMaterial";
-            ViewBag.TreeViewMenu = "listInputMaterial";
-            var inputMaterialslList = InputMaterialBusiness.GetInputMaterialList();
-            if (inputMaterialslList == null)
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
             {
-                RedirectToAction("InputMaterialIndex", "InputMaterial");
+                return RedirectToAction("Index", "Home");
             }
-            return View(inputMaterialslList);
+            else
+            {
+                ViewBag.Title = "Danh sách nguyên liệu đầu vào";
+                ViewBag.TreeView = "inputMaterial";
+                ViewBag.TreeViewMenu = "listInputMaterial";
+                var inputMaterialslList = InputMaterialBusiness.GetInputMaterialList();
+                if (inputMaterialslList == null)
+                {
+                    RedirectToAction("InputMaterialIndex", "InputMaterial");
+                }
+                return View(inputMaterialslList);
+            }
         }
 
         #endregion
@@ -39,90 +47,123 @@ namespace BMA.Controllers
         #region Get Input Material Detail
         public ActionResult InputMaterialDetail(int id)
         {
-            ViewBag.TreeView = "inputMaterial";
-            InputMaterial inputMaterialDetail = inputMaterialBusiness.GetInputMaterial(id);
-            if (inputMaterialDetail == null)
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
             {
-                RedirectToAction("InputMaterialIndex", "InputMaterial");
-
+                return RedirectToAction("Index", "Home");
             }
-            return View(inputMaterialDetail);
+            else
+            {
+                ViewBag.TreeView = "inputMaterial";
+                InputMaterial inputMaterialDetail = inputMaterialBusiness.GetInputMaterial(id);
+                if (inputMaterialDetail == null)
+                {
+                    RedirectToAction("InputMaterialIndex", "InputMaterial");
 
+                }
+                return View(inputMaterialDetail);
+            }
         }
         #endregion
 
         #region Change Input Material Status
+
         [HttpPost]
         public int ChangeInputMaterialStatus(int id)
         {
-            InputMaterialBusiness inputMaterialBusiness = new InputMaterialBusiness();
-            Boolean result = InputMaterialBusiness.ChangeInputMaterialStage(id);
-            if (result)
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
             {
-                return 1;
+                return -7;
             }
             else
             {
-                return 0;
+                Boolean result = InputMaterialBusiness.ChangeInputMaterialStage(id);
+                if (result)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
+
         #endregion
 
         #region Add New Input Material View
+
         public ActionResult AddInputMaterial()
         {
-            ViewBag.TreeView = "inputMaterial";
-            ViewBag.TreeViewMenu = "addInputMaterial";
-            List<ProductMaterial> productMaterials = db.ProductMaterials.ToList();
-            return View(productMaterials);
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.TreeView = "inputMaterial";
+                ViewBag.TreeViewMenu = "addInputMaterial";
+                List<ProductMaterial> productMaterials = db.ProductMaterials.ToList();
+                return View(productMaterials);
+            }
         }
+
         #endregion
         [HttpPost]
         #region Add New Input Material
         public int AddInputMaterial(FormCollection f)
         {
-            InputMaterial inputMaterial = new InputMaterial();
-            String productMaterialIdString = f["productMaterialId"];
-            String importQuantityString = f["txtImportQuantity"];
-            String inputMaterialTotalPriceString = f["txtInputMaterialPrice"];
-            String importDateString = f["txtImportDate"];
-            String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
-            String inputMaterialNote = f["txtInputMaterialNote"];
-            String inputBillId = f["inputBillId"];
-            
-            try
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
             {
-                int importQuantity = Convert.ToInt32(importQuantityString);
-                int inputMaterialTotalPrice = Convert.ToInt32(inputMaterialTotalPriceString);
-                double inputMaterialPrice = Convert.ToDouble(inputMaterialTotalPrice/importQuantity);
-
-                inputMaterial.ImportQuantity = importQuantity;
-                inputMaterial.InputMaterialPrice = inputMaterialPrice;
-                inputMaterial.ImportDate = DateTime.ParseExact(importDateString,"dd/MM/yyyy",CultureInfo.InvariantCulture);
-                inputMaterial.InputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                inputMaterial.InputMaterialNote = inputMaterialNote;
-                inputMaterial.InputBillId = Convert.ToInt32(inputBillId);
-                int productMaterialId = Convert.ToInt32(productMaterialIdString);
-                inputMaterial.ProductMaterialId = productMaterialId;
-                inputMaterial.RemainQuantity = Convert.ToInt32(importQuantity);
-                inputMaterial.IsActive = true;
-            }
-            catch (Exception)
-            {
-                return 0;
-
-            }
-
-            bool result = InputMaterialBusiness.AddInputMaterial(inputMaterial);
-            if (result)
-            {
-                return 1;
+                return -7;
             }
             else
             {
-                return 0;
-            }
+                InputMaterial inputMaterial = new InputMaterial();
+                String productMaterialIdString = f["productMaterialId"];
+                String importQuantityString = f["txtImportQuantity"];
+                String inputMaterialTotalPriceString = f["txtInputMaterialPrice"];
+                String importDateString = f["txtImportDate"];
+                String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
+                String inputMaterialNote = f["txtInputMaterialNote"];
+                String inputBillId = f["inputBillId"];
 
+                try
+                {
+                    int importQuantity = Convert.ToInt32(importQuantityString);
+                    int inputMaterialTotalPrice = Convert.ToInt32(inputMaterialTotalPriceString);
+                    double inputMaterialPrice = Convert.ToDouble(inputMaterialTotalPrice / importQuantity);
+
+                    inputMaterial.ImportQuantity = importQuantity;
+                    inputMaterial.InputMaterialPrice = inputMaterialPrice;
+                    inputMaterial.ImportDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    inputMaterial.InputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    inputMaterial.InputMaterialNote = inputMaterialNote;
+                    inputMaterial.InputBillId = Convert.ToInt32(inputBillId);
+                    int productMaterialId = Convert.ToInt32(productMaterialIdString);
+                    inputMaterial.ProductMaterialId = productMaterialId;
+                    inputMaterial.RemainQuantity = Convert.ToInt32(importQuantity);
+                    inputMaterial.IsActive = true;
+                }
+                catch (Exception)
+                {
+                    return 0;
+
+                }
+
+                bool result = InputMaterialBusiness.AddInputMaterial(inputMaterial);
+                if (result)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
         }
         #endregion
 
@@ -154,44 +195,64 @@ namespace BMA.Controllers
         #region Edit Input Material View
         public ActionResult EditInputMaterial(int id)
         {
-            InputMaterial inputMaterials = db.InputMaterials.SingleOrDefault(m => m.InputMaterialId == id);
-            var productMaterial = db.ProductMaterials.ToList();
-            ViewBag.productMaterial = productMaterial;
-            return View(inputMaterials);
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                InputMaterial inputMaterials = db.InputMaterials.SingleOrDefault(m => m.InputMaterialId == id);
+                var productMaterial = db.ProductMaterials.ToList();
+                ViewBag.productMaterial = productMaterial;
+                return View(inputMaterials);
+            }
         }
         #endregion
+
         [HttpPost]
         #region Edit Input Material
         public int EditInputMaterial(FormCollection f)
         {
-            String productMaterialIdString = f["productMaterialId"];
-            String importQuantityString = f["txtImportQuantity"];
-            String inputMaterialPriceString = f["txtInputMaterialPrice"];
-            String importDateString = f["txtImportDate"];
-            String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
-            String inputMaterialNote = f["txtInputMaterialNote"];
-            String inputBillIdString = f["inputBillId"];
-            String inputMaterialIdString = f["InputMaterialId"];
-
-            if (
-                !(productMaterialIdString.IsEmpty() || importQuantityString.IsEmpty() ||
-                  inputMaterialPriceString.IsEmpty() || importDateString.IsEmpty() ||
-                  inputMaterialExpiryDateString.IsEmpty() || inputMaterialNote.IsEmpty() || inputBillIdString.IsEmpty() ||
-                  inputMaterialIdString.IsEmpty()))
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
             {
-                int inputMaterialId = Convert.ToInt32(inputMaterialIdString);
-                int importQuantity = Convert.ToInt32(importQuantityString);
-                int productMaterialId = Convert.ToInt32(productMaterialIdString);
-                int inputMaterialPrice = Convert.ToInt32(inputMaterialPriceString);
-                DateTime importDate = Convert.ToDateTime(importDateString);
-                DateTime inputMaterialExpiryDate = Convert.ToDateTime(inputMaterialExpiryDateString);
-                int inputBillId = Convert.ToInt32(inputBillIdString);
-
-                bool result = InputMaterialBusiness.EditInputMaterial(inputMaterialId, importQuantity, productMaterialId, inputMaterialPrice, importDate, inputMaterialExpiryDate, inputBillId, inputMaterialNote);
-                return result ? 1 : 0;
+                return -7;
             }
-            return 0;
+            else
+            {
+                String productMaterialIdString = f["productMaterialId"];
+                String importQuantityString = f["txtImportQuantity"];
+                String inputMaterialPriceString = f["txtInputMaterialPrice"];
+                String importDateString = f["txtImportDate"];
+                String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
+                String inputMaterialNote = f["txtInputMaterialNote"];
+                String inputBillIdString = f["inputBillId"];
+                String inputMaterialIdString = f["InputMaterialId"];
+
+                if (
+                    !(productMaterialIdString.IsEmpty() || importQuantityString.IsEmpty() ||
+                      inputMaterialPriceString.IsEmpty() || importDateString.IsEmpty() ||
+                      inputMaterialExpiryDateString.IsEmpty() || inputMaterialNote.IsEmpty() ||
+                      inputBillIdString.IsEmpty() ||
+                      inputMaterialIdString.IsEmpty()))
+                {
+                    int inputMaterialId = Convert.ToInt32(inputMaterialIdString);
+                    int importQuantity = Convert.ToInt32(importQuantityString);
+                    int productMaterialId = Convert.ToInt32(productMaterialIdString);
+                    int inputMaterialPrice = Convert.ToInt32(inputMaterialPriceString);
+                    DateTime importDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy",CultureInfo.InvariantCulture);
+                    DateTime inputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    int inputBillId = Convert.ToInt32(inputBillIdString);
+                    bool result = InputMaterialBusiness.EditInputMaterial(inputMaterialId, importQuantity,
+                        productMaterialId, inputMaterialPrice, importDate, inputMaterialExpiryDate, inputBillId,
+                        inputMaterialNote);
+                    return result ? 1 : 0;
+                }
+                return 0;
+            }
         }
+
         #endregion
     }
 }

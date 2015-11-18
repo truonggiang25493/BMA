@@ -30,7 +30,6 @@ namespace BMA.Models
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<DiscardedInputMaterial> DiscardedInputMaterials { get; set; }
-        public virtual DbSet<DiscountByQuantity> DiscountByQuantities { get; set; }
         public virtual DbSet<ExportFrom> ExportFroms { get; set; }
         public virtual DbSet<GuestInfo> GuestInfoes { get; set; }
         public virtual DbSet<InputBill> InputBills { get; set; }
@@ -46,12 +45,13 @@ namespace BMA.Models
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Staff> Staffs { get; set; }
-        public virtual DbSet<StoreInfo> StoreInfoes { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TaxRate> TaxRates { get; set; }
         public virtual DbSet<TaxType> TaxTypes { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<DiscountByQuantity> DiscountByQuantities { get; set; }
+        public virtual DbSet<StoreInfo> StoreInfoes { get; set; }
     
         public virtual ObjectResult<sp_GetIncomeMonthly_Result> sp_GetIncomeMonthly(Nullable<int> startMonth, Nullable<int> startYear, Nullable<int> endMonth, Nullable<int> endYear)
         {

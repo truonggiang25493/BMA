@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -43,8 +43,8 @@
           <Property Name="QuantityFrom" Type="int" Nullable="false" />
           <Property Name="QuantityTo" Type="int" Nullable="false" />
           <Property Name="DiscountValue" Type="int" Nullable="false" />
-          <Property Name="ReachNumber" Type="int" />
           <Property Name="beUsing" Type="bit" Nullable="false" />
+          <Property Name="ReachNumber" Type="int" />
         </EntityType>
         <EntityType Name="ExportFrom">
           <Key>
@@ -229,7 +229,7 @@
           <Key>
             <PropertyRef Name="StoreId" />
           </Key>
-          <Property Name="StoreId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StoreId" Type="int" Nullable="false" />
           <Property Name="StoreName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Address" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Phonenumber" Type="nvarchar" MaxLength="20" Nullable="false" />
@@ -751,8 +751,7 @@
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BMAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -790,17 +789,6 @@
           <Property Name="DiscardDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="DiscardNote" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="InputMaterial" Relationship="Self.FK_DiscardedInputMaterial_InputMaterial" FromRole="DiscardedInputMaterial" ToRole="InputMaterial" />
-        </EntityType>
-        <EntityType Name="DiscountByQuantity">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QuantityFrom" Type="Int32" Nullable="false" />
-          <Property Name="QuantityTo" Type="Int32" Nullable="false" />
-          <Property Name="DiscountValue" Type="Int32" Nullable="false" />
-          <Property Name="ReachNumber" Type="Int32" />
-          <Property Name="beUsing" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="ExportFrom">
           <Key>
@@ -1014,19 +1002,6 @@
           <Property Name="StaffPhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="User" Relationship="Self.FK_Staff_User" FromRole="Staff" ToRole="User" />
-        </EntityType>
-        <EntityType Name="StoreInfo">
-          <Key>
-            <PropertyRef Name="StoreId" />
-          </Key>
-          <Property Name="StoreId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StoreName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Phonenumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="OwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TaxCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="BakeryImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ProductMaxPrice" Type="Int32" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -1383,7 +1358,6 @@
           <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="Customers" EntityType="Self.Customer" />
           <EntitySet Name="DiscardedInputMaterials" EntityType="Self.DiscardedInputMaterial" />
-          <EntitySet Name="DiscountByQuantities" EntityType="Self.DiscountByQuantity" />
           <EntitySet Name="ExportFroms" EntityType="Self.ExportFrom" />
           <EntitySet Name="GuestInfoes" EntityType="Self.GuestInfo" />
           <EntitySet Name="InputBills" EntityType="Self.InputBill" />
@@ -1399,7 +1373,6 @@
           <EntitySet Name="Recipes" EntityType="Self.Recipe" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
           <EntitySet Name="Staffs" EntityType="Self.Staff" />
-          <EntitySet Name="StoreInfoes" EntityType="Self.StoreInfo" />
           <EntitySet Name="Suppliers" EntityType="Self.Supplier" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="TaxRates" EntityType="Self.TaxRate" />
@@ -1549,6 +1522,8 @@
             <Parameter Name="endDate" Mode="In" Type="DateTime" />
             <Parameter Name="type" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="DiscountByQuantities" EntityType="BMAModel.DiscountByQuantity" />
+          <EntitySet Name="StoreInfoes" EntityType="BMAModel.StoreInfo" />
         </EntityContainer>
         <ComplexType Name="sp_GetIncomeMonthly_Result">
           <Property Type="Int32" Name="MonthNo" Nullable="true" />
@@ -1642,6 +1617,30 @@
           <Property Type="String" Name="Fullname" Nullable="true" MaxLength="50" />
           <Property Type="Int32" Name="Revenue" Nullable="true" />
         </ComplexType>
+        <EntityType Name="DiscountByQuantity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuantityFrom" Type="Int32" Nullable="false" />
+          <Property Name="QuantityTo" Type="Int32" Nullable="false" />
+          <Property Name="DiscountValue" Type="Int32" Nullable="false" />
+          <Property Name="beUsing" Type="Boolean" Nullable="false" />
+          <Property Name="ReachNumber" Type="Int32" />
+        </EntityType>
+        <EntityType Name="StoreInfo">
+          <Key>
+            <PropertyRef Name="StoreId" />
+          </Key>
+          <Property Name="StoreId" Type="Int32" Nullable="false" />
+          <Property Name="StoreName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Phonenumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="BakeryImage" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ProductMaxPrice" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1678,18 +1677,6 @@
                 <ScalarProperty Name="DiscardQuantity" ColumnName="DiscardQuantity" />
                 <ScalarProperty Name="DiscardDate" ColumnName="DiscardDate" />
                 <ScalarProperty Name="DiscardNote" ColumnName="DiscardNote" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DiscountByQuantities">
-            <EntityTypeMapping TypeName="BMAModel.DiscountByQuantity">
-              <MappingFragment StoreEntitySet="DiscountByQuantity">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="QuantityFrom" ColumnName="QuantityFrom" />
-                <ScalarProperty Name="QuantityTo" ColumnName="QuantityTo" />
-                <ScalarProperty Name="DiscountValue" ColumnName="DiscountValue" />
-                <ScalarProperty Name="ReachNumber" ColumnName="ReachNumber" />
-                <ScalarProperty Name="beUsing" ColumnName="beUsing" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1882,20 +1869,6 @@
                 <ScalarProperty Name="StaffAddress" ColumnName="StaffAddress" />
                 <ScalarProperty Name="StaffPhoneNumber" ColumnName="StaffPhoneNumber" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="StoreInfoes">
-            <EntityTypeMapping TypeName="BMAModel.StoreInfo">
-              <MappingFragment StoreEntitySet="StoreInfo">
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="StoreName" ColumnName="StoreName" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
-                <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />
-                <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
-                <ScalarProperty Name="BakeryImage" ColumnName="BakeryImage" />
-                <ScalarProperty Name="ProductMaxPrice" ColumnName="ProductMaxPrice" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2094,6 +2067,32 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="DiscountByQuantities">
+            <EntityTypeMapping TypeName="BMAModel.DiscountByQuantity">
+              <MappingFragment StoreEntitySet="DiscountByQuantity">
+                <ScalarProperty Name="ReachNumber" ColumnName="ReachNumber" />
+                <ScalarProperty Name="beUsing" ColumnName="beUsing" />
+                <ScalarProperty Name="DiscountValue" ColumnName="DiscountValue" />
+                <ScalarProperty Name="QuantityTo" ColumnName="QuantityTo" />
+                <ScalarProperty Name="QuantityFrom" ColumnName="QuantityFrom" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StoreInfoes">
+            <EntityTypeMapping TypeName="BMAModel.StoreInfo">
+              <MappingFragment StoreEntitySet="StoreInfo">
+                <ScalarProperty Name="ProductMaxPrice" ColumnName="ProductMaxPrice" />
+                <ScalarProperty Name="BakeryImage" ColumnName="BakeryImage" />
+                <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
+                <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />
+                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="StoreName" ColumnName="StoreName" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

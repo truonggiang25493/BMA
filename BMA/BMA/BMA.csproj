@@ -298,6 +298,18 @@
     <Compile Include="Models\sp_GetTop10CustomerRevenueYearly_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_GetTop10IncomeOfProductMonthly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetTop10IncomeOfProductPeriod_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetTop10IncomeOfProductWeekly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetTop10IncomeOfProductYearly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_GetTopCustomerWithRevenue_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -1445,6 +1457,7 @@
     <Content Include="Views\Staff\StaffEditInfo.cshtml" />
     <Content Include="Views\InputBill\EditInputBill.cshtml" />
     <Content Include="Views\Staff\StaffChangePassword.cshtml" />
+    <Content Include="Views\Supplier\InputBillBySupplier.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

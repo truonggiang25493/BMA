@@ -4,11 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5d1ec7ace76f49d49505232901c8d49b" Name="Diagram1">
+      <Diagram DiagramId="5d1ec7ace76f49d49505232901c8d49b" Name="Diagram1" ZoomLevel="74">
         <EntityTypeShape EntityType="BMAModel.Category" Width="1.5" PointX="6" PointY="21.25" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Customer" Width="1.5" PointX="5.25" PointY="5.5" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.DiscardedInputMaterial" Width="1.5" PointX="20.25" PointY="7.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="BMAModel.DiscountByQuantity" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.ExportFrom" Width="1.5" PointX="15" PointY="7.25" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.GuestInfo" Width="1.5" PointX="6" PointY="1.75" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.InputBill" Width="1.5" PointX="12.75" PointY="10.875" IsExpanded="true" />
@@ -24,7 +23,6 @@
         <EntityTypeShape EntityType="BMAModel.Recipe" Width="1.5" PointX="12.75" PointY="14.5" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Role" Width="1.5" PointX="0.75" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Staff" Width="1.5" PointX="5.25" PointY="17" IsExpanded="true" />
-        <EntityTypeShape EntityType="BMAModel.StoreInfo" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.Supplier" Width="1.5" PointX="10.5" PointY="11" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.sysdiagram" Width="1.5" PointX="2.75" PointY="11.75" IsExpanded="true" />
         <EntityTypeShape EntityType="BMAModel.TaxRate" Width="1.5" PointX="15" PointY="0.875" IsExpanded="true" />
@@ -54,6 +52,8 @@
         <AssociationConnector Association="BMAModel.FK_User_Role" ManuallyRouted="false" />
         <AssociationConnector Association="BMAModel.FK_Staff_User" ManuallyRouted="false" />
         <AssociationConnector Association="BMAModel.FK_TaxRate_TaxType_TaxRateId" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BMAModel.DiscountByQuantity" Width="1.5" PointX="5.375" PointY="12.75" />
+        <EntityTypeShape EntityType="BMAModel.StoreInfo" Width="1.5" PointX="7.375" PointY="12.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
