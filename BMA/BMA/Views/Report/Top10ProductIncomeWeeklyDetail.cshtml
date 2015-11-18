@@ -55,18 +55,20 @@
                                                 <table class="table table-responsive">
                                                     <thead>
                                                         <tr>
-                                                            <th>STT</th>
-                                                            <th>Mã đơn hàng</th>
-                                                            <th>Thành tiền</th>
-                                                            <th>Giảm</th>
-                                                            <th>Giá trị</th>
+                                                            <th style="text-align: center">STT</th>
+                                                            <th style="text-align: center">Mã đơn hàng</th>
+                                                            <th style="text-align: right">Số lượng</th>
+                                                            <th style="text-align: right">Thành tiền</th>
+                                                            <th style="text-align: right">Giảm</th>
+                                                            <th style="text-align: right">Giá trị</th>
                                                         </tr>
                                                     </thead>
                                                     @for (int j = 0; j < Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.Count; j++)
                                                     {
                                                         <tr>
-                                                            <td>@(j + 1)</td>
-                                                            <td>@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).OrderCode)</td>
+                                                            <td style="text-align: center">@(j + 1)</td>
+                                                            <td style="text-align: center">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).OrderCode)</td>
+                                                            <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Quantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                                             <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                                             <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                                             <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Revenue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
@@ -92,18 +94,18 @@
                                                 <table class="table table-responsive">
                                                     <thead>
                                                         <tr>
-                                                            <th>STT</th>
-                                                            <th>Nguyên liệu</th>
-                                                            <th>Số lượng</th>
-                                                            <th>Thành tiền</th>
+                                                            <th style="text-align: center">STT</th>
+                                                            <th style="text-align: center">Nguyên liệu</th>
+                                                            <th style="text-align: right">Số lượng</th>
+                                                            <th style="text-align: right">Thành tiền</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @for (int j = 0; j < Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.Count; j++)
                                                         {
                                                             <tr>
-                                                                <td>@(j + 1)</td>
-                                                                <td>@(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialName)</td>
+                                                                <td style="text-align: center">@(j + 1)</td>
+                                                                <td style="text-align: center">@(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialName)</td>
                                                                 <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialUnit)</td>
                                                                 <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                                             </tr>
@@ -155,18 +157,20 @@
                                                 <table class="table table-responsive">
                                                     <thead>
                                                         <tr>
-                                                            <th>STT</th>
-                                                            <th>Mã đơn hàng</th>
-                                                            <th>Thành tiền</th>
-                                                            <th>Giảm</th>
-                                                            <th>Giá trị</th>
+                                                            <th style="text-align: center">STT</th>
+                                                            <th style="text-align: center">Mã đơn hàng</th>
+                                                            <th style="text-align: right">Số lượng</th>
+                                                            <th style="text-align: right">Thành tiền</th>
+                                                            <th style="text-align: right">Giảm</th>
+                                                            <th style="text-align: right">Giá trị</th>
                                                         </tr>
                                                     </thead>
                                                     @for (int j = 0; j < Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.Count; j++)
                                                     {
                                                         <tr>
-                                                            <td>@(j + 1)</td>
-                                                            <td>@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).OrderCode)</td>
+                                                            <td style="text-align: center">@(j + 1)</td>
+                                                            <td style="text-align: center">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).OrderCode)</td>
+                                                            <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Quantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                                             <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                                             <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                                                             <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Revenue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
@@ -192,10 +196,10 @@
                                                 <table class="table table-responsive">
                                                     <thead>
                                                         <tr>
-                                                            <th>STT</th>
-                                                            <th>Nguyên liệu</th>
-                                                            <th>Số lượng</th>
-                                                            <th>Thành tiền</th>
+                                                            <th style="text-align: center">STT</th>
+                                                            <th style="text-align: center">Nguyên liệu</th>
+                                                            <th style="text-align: right">Số lượng</th>
+                                                            <th style="text-align: right">Thành tiền</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
