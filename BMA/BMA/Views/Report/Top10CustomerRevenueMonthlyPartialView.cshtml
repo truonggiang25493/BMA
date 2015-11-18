@@ -25,12 +25,14 @@
 </div>
 @{
     List<string> customerName = new List<string>();
+    List<string> fullName = new List<string>();
     List<String> timeList = new List<string>();
     foreach (sp_GetTop10CustomerRevenueMonthly_Result result in Model)
     {
         if (customerName.Count == 0)
         {
             customerName.Add(result.Username);
+            fullName.Add(result.Fullname);
             timeList.Add((result.MonthNo + "/" + result.YearNo));
         }
         else
@@ -47,6 +49,7 @@
             if (nameCheck)
             {
                 customerName.Add(result.Username);
+                fullName.Add(result.Fullname);
             }
 
             bool timeCheck = true;
@@ -75,6 +78,7 @@
                 <table class="table" id="revenue-table">
                     <thead>
                         <tr>
+                            <th>Tên đăng nhập</th>
                             <th>Khách hàng</th>
                             @foreach (string time in timeList)
                             {
@@ -84,39 +88,39 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (string name in customerName)
+                        @for (int i = 0; i < customerName.Count; i++)
                         {
                             <tr>
-                                <td>@name</td>
+                                <td>@(customerName.ElementAt(i))</td>
+                                <td>@(fullName.ElementAt(i))</td>
                                 @foreach (string time in timeList)
                                 {
                                     foreach (sp_GetTop10CustomerRevenueMonthly_Result result in Model)
                                     {
-                                        if (result.Username.Equals(name) && (result.MonthNo+"/"+result.YearNo).Equals(time))
+                                        if (result.Username.Equals(customerName.ElementAt(i)) && (result.MonthNo + "/" + result.YearNo).Equals(time))
                                         {
                                             <td style="text-align: right">@result.Revenue.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                         }
                                     }
                                 }
-                                @{ int id = 0;}
-                                @while (id == 0)
+                                @{}
+                                @{
+                                int id = 0;
+                                while (id == 0)
                                 {
                                     foreach (sp_GetTop10CustomerRevenueMonthly_Result result in Model)
                                     {
-                                        if (result.Username.Equals(name))
+                                        if (result.Username.Equals(customerName.ElementAt(i)))
                                         {
                                             id = result.CustomerUserId.Value;
                                         }
                                     }
                                 }
+                                string queryString = id + ";" + timeList.First() + " - " + timeList.Last();
+                                }
                                 <td>
-                                    <button onclick="openDetailInNewTab()" class="btn btn-info btn-xs">
+                                    <button onclick="window.open('@(Html.Raw(Url.Action("Top10CustomerRevenueDetail", "Report", new { query = queryString })))', '_blank')" class="btn btn-info btn-xs">
                                         <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
-                                        <script type="text/javascript">
-                                            function openDetailInNewTab() {
-                                                alert(@id);
-                                            }
-                                        </script>
                                     </button>
                                 </td>
                             </tr>

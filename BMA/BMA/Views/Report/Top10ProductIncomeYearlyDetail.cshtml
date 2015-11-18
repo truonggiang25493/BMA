@@ -1,0 +1,239 @@
+﻿@using System.Globalization
+@model BMA.Models.ViewModel.ReportProductIncomeViewModel
+@{
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <!-- Content Header (Page header) -->
+            <div class="box-header">
+                <div class="box-title">
+                    @if (Model.StartMonth == Model.EndMonth && Model.StartYear == Model.EndYear)
+                    {
+                        <h3>Chi tiết thu nhập từ sản phẩm @(Model.ProductName) năm @(Model.StartYear)</h3>
+                    }
+                    else
+                    {
+                        <h3>Chi tiết thu nhập từ sản phẩm @(Model.ProductName) từ @(Model.StartYear) đến @(Model.EndYear)</h3>
+                    }
+
+                </div>
+            </div>
+            <!-- Content Body -->
+            <div class="box-body">
+                <h3>
+                    Tổng thu nhập: <b>@Model.TotalIncome.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</b>
+                </h3>
+                @for (int i = 0; i < Model.ReportProductIncomePeriodList.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        <!-- First Period -->
+                        <div class="box">
+                            <div class="box-header">
+                                <h3 class="box-title">
+                                    Năm @(Model.ReportProductIncomePeriodList.ElementAt(i).Year)
+                                    <br />
+                                    <br />
+                                    Thu nhập: <b>@(Model.ReportProductIncomePeriodList.ElementAt(i).Income.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b> gồm
+                                </h3>
+                                @if (Model.ReportProductIncomePeriodList.ElementAt(i).Income != 0)
+                                {
+                                    <div class="box-tools pull-right">
+                                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                }
+
+                            </div>
+                            <div class="box-body">
+                                @if (Model.ReportProductIncomePeriodList.ElementAt(i).RevenueAmount > 0)
+                                {
+                                    <!-- Revenue -->
+                                    <div class="box box-primary">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Doanh thu: @(Model.ReportProductIncomePeriodList.ElementAt(i).RevenueAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h3>
+                                            <span> gồm</span>
+                                        </div>
+                                        <!--Order List-->
+                                        @if (Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.Count > 0)
+                                        {
+                                            <div class="box-body">
+                                                <h5><b>@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.Count)</b> đơn hàng đã hoàn thành.</h5>
+                                                <table class="table table-responsive">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: center">STT</th>
+                                                            <th style="text-align: center">Mã đơn hàng</th>
+                                                            <th style="text-align: right">Số lượng</th>
+                                                            <th style="text-align: right">Thành tiền</th>
+                                                            <th style="text-align: right">Giảm</th>
+                                                            <th style="text-align: right">Giá trị</th>
+                                                        </tr>
+                                                    </thead>
+                                                    @for (int j = 0; j < Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.Count; j++)
+                                                    {
+                                                        <tr>
+                                                            <td style="text-align: center">@(j + 1)</td>
+                                                            <td style="text-align: center">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).OrderCode)</td>
+                                                            <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Quantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                                            <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                                            <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                                            <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Revenue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                @if (Model.ReportProductIncomePeriodList.ElementAt(i).MaterialExpense > 0)
+                                {
+                                    <!--Material Expense-->
+                                    <div class="box box-danger">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Chi phí nguyên liệu: @(Model.ReportProductIncomePeriodList.ElementAt(i).MaterialExpense.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h3>
+                                            <span> gồm</span>
+                                        </div>
+                                        <!--Material List-->
+                                        @if (Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.Count > 0)
+                                        {
+                                            <div class="box-body">
+                                                <table class="table table-responsive">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: center">STT</th>
+                                                            <th style="text-align: center">Nguyên liệu</th>
+                                                            <th style="text-align: right">Số lượng</th>
+                                                            <th style="text-align: right">Thành tiền</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @for (int j = 0; j < Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.Count; j++)
+                                                        {
+                                                            <tr>
+                                                                <td style="text-align: center">@(j + 1)</td>
+                                                                <td style="text-align: center">@(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialName)</td>
+                                                                <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialUnit)</td>
+                                                                <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                             <!-- Next Period -->
+                        <div class="box  collapsed-box">
+                            <div class="box-header">
+                                <h3 class="box-title">
+                                    Từ @(Model.ReportProductIncomePeriodList.ElementAt(i).StartDate.ToString("dd/MM/yyyy")) đến @(Model.ReportProductIncomePeriodList.ElementAt(i).EndDate.ToString("dd/MM/yyyy"))
+                                    <br />
+                                    <br />
+                                    Thu nhập: <b>@(Model.ReportProductIncomePeriodList.ElementAt(i).Income.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b> gồm
+                                </h3>
+                                @if (Model.ReportProductIncomePeriodList.ElementAt(i).Income != 0)
+                                {
+                                    <div class="box-tools pull-right">
+                                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                }
+
+                            </div>
+                            <div class="box-body">
+                                @if (Model.ReportProductIncomePeriodList.ElementAt(i).RevenueAmount > 0)
+                                {
+                                       <!-- Revenue -->
+                                    <div class="box box-primary">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Doanh thu: @(Model.ReportProductIncomePeriodList.ElementAt(i).RevenueAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h3>
+                                            <span> gồm</span>
+                                        </div>
+                                        <!--Order List-->
+                                        @if (Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.Count > 0)
+                                        {
+                                            <div class="box-body">
+                                                <h5><b>@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.Count)</b> đơn hàng đã hoàn thành.</h5>
+                                                <table class="table table-responsive">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: center">STT</th>
+                                                            <th style="text-align: center">Mã đơn hàng</th>
+                                                            <th style="text-align: right">Số lượng</th>
+                                                            <th style="text-align: right">Thành tiền</th>
+                                                            <th style="text-align: right">Giảm</th>
+                                                            <th style="text-align: right">Giá trị</th>
+                                                        </tr>
+                                                    </thead>
+                                                    @for (int j = 0; j < Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.Count; j++)
+                                                    {
+                                                        <tr>
+                                                            <td style="text-align: center">@(j + 1)</td>
+                                                            <td style="text-align: center">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).OrderCode)</td>
+                                                            <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Quantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                                            <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                                            <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                                            <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).OrderList.ElementAt(j).Revenue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                @if (Model.ReportProductIncomePeriodList.ElementAt(i).MaterialExpense > 0)
+                                {
+                           <!--Material Expense-->
+                                    <div class="box box-danger">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Chi phí nguyên liệu: @(Model.ReportProductIncomePeriodList.ElementAt(i).MaterialExpense.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h3>
+                                            <span> gồm</span>
+                                        </div>
+                                        <!--Material List-->
+                                        @if (Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.Count > 0)
+                                        {
+                                            <div class="box-body">
+                                                <table class="table table-responsive">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: center">STT</th>
+                                                            <th style="text-align: center">Nguyên liệu</th>
+                                                            <th style="text-align: right">Số lượng</th>
+                                                            <th style="text-align: right">Thành tiền</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @for (int j = 0; j < Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.Count; j++)
+                                                        {
+                                                            <tr>
+                                                                <td style="text-align: center">@(j + 1)</td>
+                                                                <td style="text-align: center">@(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialName)</td>
+                                                                <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialUnit)</td>
+                                                                <td style="text-align: right">@(Model.ReportProductIncomePeriodList.ElementAt(i).ProductMaterialList.ElementAt(j).ProductMaterialAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    }
+
+                }
+            </div>
+        </div>
+    </div>
+</div>

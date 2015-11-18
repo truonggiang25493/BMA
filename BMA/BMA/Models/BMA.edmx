@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -229,7 +229,7 @@
           <Key>
             <PropertyRef Name="StoreId" />
           </Key>
-          <Property Name="StoreId" Type="int" Nullable="false" />
+          <Property Name="StoreId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="StoreName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Address" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Phonenumber" Type="nvarchar" MaxLength="20" Nullable="false" />
@@ -751,11 +751,756 @@
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BMAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ParentCategoryId" Type="Int32" />
+          <NavigationProperty Name="Category1" Relationship="Self.FK_Category_Category_CategoryId" FromRole="Category" ToRole="Category1" />
+          <NavigationProperty Name="Category2" Relationship="Self.FK_Category_Category_CategoryId" FromRole="Category1" ToRole="Category" />
+          <NavigationProperty Name="Products" Relationship="Self.FK_Product_Category_CategoryId" FromRole="Category" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="TaxCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CustomerAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerPhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsLoyal" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Customer_User" FromRole="Customer" ToRole="User" />
+        </EntityType>
+        <EntityType Name="DiscardedInputMaterial">
+          <Key>
+            <PropertyRef Name="DiscardId" />
+          </Key>
+          <Property Name="DiscardId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InputMaterialId" Type="Int32" Nullable="false" />
+          <Property Name="DiscardQuantity" Type="Int32" Nullable="false" />
+          <Property Name="DiscardDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DiscardNote" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="InputMaterial" Relationship="Self.FK_DiscardedInputMaterial_InputMaterial" FromRole="DiscardedInputMaterial" ToRole="InputMaterial" />
+        </EntityType>
+        <EntityType Name="DiscountByQuantity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuantityFrom" Type="Int32" Nullable="false" />
+          <Property Name="QuantityTo" Type="Int32" Nullable="false" />
+          <Property Name="DiscountValue" Type="Int32" Nullable="false" />
+          <Property Name="ReachNumber" Type="Int32" />
+          <Property Name="beUsing" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExportFrom">
+          <Key>
+            <PropertyRef Name="OutputMaterialId" />
+            <PropertyRef Name="InputbillId" />
+          </Key>
+          <Property Name="OutputMaterialId" Type="Int32" Nullable="false" />
+          <Property Name="InputbillId" Type="Int32" Nullable="false" />
+          <Property Name="ExportFromQuantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="InputBill" Relationship="Self.FK_ExportFrom_InputBill" FromRole="ExportFrom" ToRole="InputBill" />
+          <NavigationProperty Name="OutputMaterial" Relationship="Self.FK_ExportFrom_OutputMaterial" FromRole="ExportFrom" ToRole="OutputMaterial" />
+        </EntityType>
+        <EntityType Name="GuestInfo">
+          <Key>
+            <PropertyRef Name="GuestInfoId" />
+          </Key>
+          <Property Name="GuestInfoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GuestInfoName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GuestInfoPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GuestInfoAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GuestInfoEmail" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_GuestInfo" FromRole="GuestInfo" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="InputBill">
+          <Key>
+            <PropertyRef Name="InputBillId" />
+          </Key>
+          <Property Name="InputBillId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InputBillCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="InputBillAmount" Type="Double" Nullable="false" />
+          <Property Name="InputRawImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="InputTaxAmount" Type="Double" Nullable="false" />
+          <Property Name="SupplierId" Type="Int32" />
+          <Property Name="ImportDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="ExportFroms" Relationship="Self.FK_ExportFrom_InputBill" FromRole="InputBill" ToRole="ExportFrom" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK_InputBill_Supplier_SupplierId" FromRole="InputBill" ToRole="Supplier" />
+          <NavigationProperty Name="InputMaterials" Relationship="Self.FK_InputMaterial_InputBill_InputBillId" FromRole="InputBill" ToRole="InputMaterial" />
+        </EntityType>
+        <EntityType Name="InputMaterial">
+          <Key>
+            <PropertyRef Name="InputMaterialId" />
+          </Key>
+          <Property Name="InputMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ImportQuantity" Type="Int32" Nullable="false" />
+          <Property Name="RemainQuantity" Type="Int32" Nullable="false" />
+          <Property Name="InputMaterialPrice" Type="Double" Nullable="false" />
+          <Property Name="ImportDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="InputMaterialExpiryDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="InputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="InputBillId" Type="Int32" Nullable="false" />
+          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="DiscardedInputMaterials" Relationship="Self.FK_DiscardedInputMaterial_InputMaterial" FromRole="InputMaterial" ToRole="DiscardedInputMaterial" />
+          <NavigationProperty Name="InputBill" Relationship="Self.FK_InputMaterial_InputBill_InputBillId" FromRole="InputMaterial" ToRole="InputBill" />
+          <NavigationProperty Name="ProductMaterial" Relationship="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="InputMaterial" ToRole="ProductMaterial" />
+        </EntityType>
+        <EntityType Name="OrderItem">
+          <Key>
+            <PropertyRef Name="OrderItemId" />
+          </Key>
+          <Property Name="OrderItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="RealPrice" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_OrderItem_Orders_OrderId" FromRole="OrderItem" ToRole="Orders" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_OrderItem_Product_ProductId" FromRole="OrderItem" ToRole="Product" />
+          <NavigationProperty Name="OutputMaterials" Relationship="Self.FK_OutputMaterial_OrderItem" FromRole="OrderItem" ToRole="OutputMaterial" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderCode" Type="String" MaxLength="13" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PlanDeliveryTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ApproveTime" Type="DateTime" Precision="3" />
+          <Property Name="OrderNote" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DepositAmount" Type="Int32" Nullable="false" />
+          <Property Name="ConfirmTime" Type="DateTime" Precision="3" />
+          <Property Name="CustomerUserId" Type="Int32" />
+          <Property Name="StaffApproveUserId" Type="Int32" />
+          <Property Name="IsStaffEdit" Type="Boolean" Nullable="false" />
+          <Property Name="CustomerEditingFlag" Type="Boolean" Nullable="false" />
+          <Property Name="OutputBillId" Type="Int32" />
+          <Property Name="OrderStatus" Type="Int32" Nullable="false" />
+          <Property Name="PreviousOrderId" Type="Int32" />
+          <Property Name="GuestInfoId" Type="Int32" />
+          <Property Name="ReturnDeposit" Type="Int32" Nullable="false" />
+          <Property Name="CancelUserId" Type="Int32" />
+          <Property Name="CancelTime" Type="DateTime" Precision="3" />
+          <Property Name="FinishTime" Type="DateTime" Precision="3" />
+          <Property Name="DeliveryTime" Type="DateTime" Precision="3" />
+          <Property Name="StartProduceTime" Type="DateTime" Precision="3" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="TaxAmount" Type="Int32" Nullable="false" />
+          <Property Name="DiscountAmount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GuestInfo" Relationship="Self.FK_Orders_GuestInfo" FromRole="Orders" ToRole="GuestInfo" />
+          <NavigationProperty Name="OrderItems" Relationship="Self.FK_OrderItem_Orders_OrderId" FromRole="Orders" ToRole="OrderItem" />
+          <NavigationProperty Name="Orders1" Relationship="Self.FK__Orders_Orders_OrderId" FromRole="Orders" ToRole="Orders1" />
+          <NavigationProperty Name="Order1" Relationship="Self.FK__Orders_Orders_OrderId" FromRole="Orders1" ToRole="Orders" />
+          <NavigationProperty Name="OutputBill" Relationship="Self.FK_Orders_OutputBill_OutputBillId" FromRole="Orders" ToRole="OutputBill" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Orders_User" FromRole="Orders" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_Orders_User_CustomerOrder" FromRole="Orders" ToRole="User" />
+          <NavigationProperty Name="User2" Relationship="Self.FK_Orders_User_StaffApprove" FromRole="Orders" ToRole="User" />
+        </EntityType>
+        <EntityType Name="OtherExpense">
+          <Key>
+            <PropertyRef Name="OtherExpenseId" />
+          </Key>
+          <Property Name="OtherExpenseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OtherExpenseName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OtherExpenseAmount" Type="Int32" Nullable="false" />
+          <Property Name="OtherExpenseMonthTime" Type="Int32" />
+          <Property Name="OtherExpenseYearTime" Type="Int32" />
+        </EntityType>
+        <EntityType Name="OutputBill">
+          <Key>
+            <PropertyRef Name="OutputBillId" />
+          </Key>
+          <Property Name="OutputBillId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OutputBillCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OutputBillAmount" Type="Double" Nullable="false" />
+          <Property Name="OutputBillRawImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="OutputBillTaxAmount" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_OutputBill_OutputBillId" FromRole="OutputBill" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="OutputMaterial">
+          <Key>
+            <PropertyRef Name="OutputMaterialId" />
+          </Key>
+          <Property Name="OutputMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExportQuantity" Type="Int32" Nullable="false" />
+          <Property Name="ExportTime" Type="DateTime" Precision="3" />
+          <Property Name="OutputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
+          <Property Name="OrderItemId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ExportFroms" Relationship="Self.FK_ExportFrom_OutputMaterial" FromRole="OutputMaterial" ToRole="ExportFrom" />
+          <NavigationProperty Name="OrderItem" Relationship="Self.FK_OutputMaterial_OrderItem" FromRole="OutputMaterial" ToRole="OrderItem" />
+          <NavigationProperty Name="ProductMaterial" Relationship="Self.FK_OutputMaterial_ProductMaterial" FromRole="OutputMaterial" ToRole="ProductMaterial" />
+        </EntityType>
+        <EntityType Name="Policy">
+          <Key>
+            <PropertyRef Name="PolicyId" />
+          </Key>
+          <Property Name="PolicyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PolicyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PolicyBound" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductWeight" Type="Double" Nullable="false" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Descriptions" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProductImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ProductStandardPrice" Type="Int32" Nullable="false" />
+          <Property Name="CategoryId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="ProductCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Product_Category_CategoryId" FromRole="Product" ToRole="Category" />
+          <NavigationProperty Name="OrderItems" Relationship="Self.FK_OrderItem_Product_ProductId" FromRole="Product" ToRole="OrderItem" />
+          <NavigationProperty Name="Recipes" Relationship="Self.FK_Recipe_Product_ProductId" FromRole="Product" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="ProductMaterial">
+          <Key>
+            <PropertyRef Name="ProductMaterialId" />
+          </Key>
+          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductMaterialName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductMaterialUnit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CurrentQuantity" Type="Int32" Nullable="false" />
+          <Property Name="StandardQuantity" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="InputMaterials" Relationship="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="InputMaterial" />
+          <NavigationProperty Name="OutputMaterials" Relationship="Self.FK_OutputMaterial_ProductMaterial" FromRole="ProductMaterial" ToRole="OutputMaterial" />
+          <NavigationProperty Name="Recipes" Relationship="Self.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="Recipe">
+          <Key>
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="ProductMaterialId" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
+          <Property Name="RecipeQuantity" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Recipe_Product_ProductId" FromRole="Recipe" ToRole="Product" />
+          <NavigationProperty Name="ProductMaterial" Relationship="Self.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="Recipe" ToRole="ProductMaterial" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_User_Role" FromRole="Role" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="StaffId" />
+          </Key>
+          <Property Name="StaffId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="StaffAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="StaffPhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Staff_User" FromRole="Staff" ToRole="User" />
+        </EntityType>
+        <EntityType Name="StoreInfo">
+          <Key>
+            <PropertyRef Name="StoreId" />
+          </Key>
+          <Property Name="StoreId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StoreName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Phonenumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TaxCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BakeryImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductMaxPrice" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="SupplierId" />
+          </Key>
+          <Property Name="SupplierId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SupplierName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SupplierAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SupplierPhoneNumber" Type="String" MaxLength="12" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="SupplierEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SupplierTaxCode" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="InputBills" Relationship="Self.FK_InputBill_Supplier_SupplierId" FromRole="Supplier" ToRole="InputBill" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TaxRate">
+          <Key>
+            <PropertyRef Name="TaxRateId" />
+          </Key>
+          <Property Name="TaxRateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BeginDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="TaxRateValue" Type="Int32" Nullable="false" />
+          <Property Name="TaxTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TaxType" Relationship="Self.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxRate" ToRole="TaxType" />
+        </EntityType>
+        <EntityType Name="TaxType">
+          <Key>
+            <PropertyRef Name="TaxTypeID" />
+          </Key>
+          <Property Name="TaxTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TaxTypeName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Method" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Abbreviation" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="TaxRates" Relationship="Self.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxType" ToRole="TaxRate" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="Fullname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK_Customer_User" FromRole="User" ToRole="Customer" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_User" FromRole="User" ToRole="Orders" />
+          <NavigationProperty Name="Orders1" Relationship="Self.FK_Orders_User_CustomerOrder" FromRole="User" ToRole="Orders" />
+          <NavigationProperty Name="Orders2" Relationship="Self.FK_Orders_User_StaffApprove" FromRole="User" ToRole="Orders" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_User_Role" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="Staffs" Relationship="Self.FK_Staff_User" FromRole="User" ToRole="Staff" />
+        </EntityType>
+        <Association Name="FK_Category_Category_CategoryId">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Category1" Type="Self.Category" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="Category1">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Category_CategoryId">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiscardedInputMaterial_InputMaterial">
+          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="1" />
+          <End Role="DiscardedInputMaterial" Type="Self.DiscardedInputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InputMaterial">
+              <PropertyRef Name="InputMaterialId" />
+            </Principal>
+            <Dependent Role="DiscardedInputMaterial">
+              <PropertyRef Name="InputMaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExportFrom_InputBill">
+          <End Role="InputBill" Type="Self.InputBill" Multiplicity="1" />
+          <End Role="ExportFrom" Type="Self.ExportFrom" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InputBill">
+              <PropertyRef Name="InputBillId" />
+            </Principal>
+            <Dependent Role="ExportFrom">
+              <PropertyRef Name="InputbillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExportFrom_OutputMaterial">
+          <End Role="OutputMaterial" Type="Self.OutputMaterial" Multiplicity="1" />
+          <End Role="ExportFrom" Type="Self.ExportFrom" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OutputMaterial">
+              <PropertyRef Name="OutputMaterialId" />
+            </Principal>
+            <Dependent Role="ExportFrom">
+              <PropertyRef Name="OutputMaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_GuestInfo">
+          <End Role="GuestInfo" Type="Self.GuestInfo" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GuestInfo">
+              <PropertyRef Name="GuestInfoId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="GuestInfoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InputBill_Supplier_SupplierId">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="0..1" />
+          <End Role="InputBill" Type="Self.InputBill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierId" />
+            </Principal>
+            <Dependent Role="InputBill">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InputMaterial_InputBill_InputBillId">
+          <End Role="InputBill" Type="Self.InputBill" Multiplicity="1" />
+          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InputBill">
+              <PropertyRef Name="InputBillId" />
+            </Principal>
+            <Dependent Role="InputMaterial">
+              <PropertyRef Name="InputBillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InputMaterial_ProductMaterial_ProductMaterialId">
+          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="1" />
+          <End Role="InputMaterial" Type="Self.InputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Principal>
+            <Dependent Role="InputMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderItem_Orders_OrderId">
+          <End Role="Orders" Type="Self.Order" Multiplicity="1" />
+          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderItem">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderItem_Product_ProductId">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="OrderItem">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OutputMaterial_OrderItem">
+          <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="1" />
+          <End Role="OutputMaterial" Type="Self.OutputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItem">
+              <PropertyRef Name="OrderItemId" />
+            </Principal>
+            <Dependent Role="OutputMaterial">
+              <PropertyRef Name="OrderItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders_Orders_OrderId">
+          <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
+          <End Role="Orders1" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="Orders1">
+              <PropertyRef Name="PreviousOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_OutputBill_OutputBillId">
+          <End Role="OutputBill" Type="Self.OutputBill" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OutputBill">
+              <PropertyRef Name="OutputBillId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="OutputBillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="CancelUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_User_CustomerOrder">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="CustomerUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_User_StaffApprove">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="StaffApproveUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OutputMaterial_ProductMaterial">
+          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="1" />
+          <End Role="OutputMaterial" Type="Self.OutputMaterial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Principal>
+            <Dependent Role="OutputMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_Product_ProductId">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_ProductMaterial_ProductMaterialId">
+          <End Role="ProductMaterial" Type="Self.ProductMaterial" Multiplicity="1" />
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductMaterial">
+              <PropertyRef Name="ProductMaterialId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="ProductMaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Staff_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaxRate_TaxType_TaxRateId">
+          <End Role="TaxType" Type="Self.TaxType" Multiplicity="1" />
+          <End Role="TaxRate" Type="Self.TaxRate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaxType">
+              <PropertyRef Name="TaxTypeID" />
+            </Principal>
+            <Dependent Role="TaxRate">
+              <PropertyRef Name="TaxTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="BMAEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="DiscardedInputMaterials" EntityType="Self.DiscardedInputMaterial" />
+          <EntitySet Name="DiscountByQuantities" EntityType="Self.DiscountByQuantity" />
+          <EntitySet Name="ExportFroms" EntityType="Self.ExportFrom" />
+          <EntitySet Name="GuestInfoes" EntityType="Self.GuestInfo" />
+          <EntitySet Name="InputBills" EntityType="Self.InputBill" />
+          <EntitySet Name="InputMaterials" EntityType="Self.InputMaterial" />
+          <EntitySet Name="OrderItems" EntityType="Self.OrderItem" />
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="OtherExpenses" EntityType="Self.OtherExpense" />
+          <EntitySet Name="OutputBills" EntityType="Self.OutputBill" />
+          <EntitySet Name="OutputMaterials" EntityType="Self.OutputMaterial" />
+          <EntitySet Name="Policies" EntityType="Self.Policy" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="ProductMaterials" EntityType="Self.ProductMaterial" />
+          <EntitySet Name="Recipes" EntityType="Self.Recipe" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Staffs" EntityType="Self.Staff" />
+          <EntitySet Name="StoreInfoes" EntityType="Self.StoreInfo" />
+          <EntitySet Name="Suppliers" EntityType="Self.Supplier" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="TaxRates" EntityType="Self.TaxRate" />
+          <EntitySet Name="TaxTypes" EntityType="Self.TaxType" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Category_Category_CategoryId" Association="Self.FK_Category_Category_CategoryId">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Category1" EntitySet="Categories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Category_CategoryId" Association="Self.FK_Product_Category_CategoryId">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_User" Association="Self.FK_Customer_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscardedInputMaterial_InputMaterial" Association="Self.FK_DiscardedInputMaterial_InputMaterial">
+            <End Role="InputMaterial" EntitySet="InputMaterials" />
+            <End Role="DiscardedInputMaterial" EntitySet="DiscardedInputMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExportFrom_InputBill" Association="Self.FK_ExportFrom_InputBill">
+            <End Role="InputBill" EntitySet="InputBills" />
+            <End Role="ExportFrom" EntitySet="ExportFroms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExportFrom_OutputMaterial" Association="Self.FK_ExportFrom_OutputMaterial">
+            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
+            <End Role="ExportFrom" EntitySet="ExportFroms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_GuestInfo" Association="Self.FK_Orders_GuestInfo">
+            <End Role="GuestInfo" EntitySet="GuestInfoes" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InputBill_Supplier_SupplierId" Association="Self.FK_InputBill_Supplier_SupplierId">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="InputBill" EntitySet="InputBills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InputMaterial_InputBill_InputBillId" Association="Self.FK_InputMaterial_InputBill_InputBillId">
+            <End Role="InputBill" EntitySet="InputBills" />
+            <End Role="InputMaterial" EntitySet="InputMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InputMaterial_ProductMaterial_ProductMaterialId" Association="Self.FK_InputMaterial_ProductMaterial_ProductMaterialId">
+            <End Role="ProductMaterial" EntitySet="ProductMaterials" />
+            <End Role="InputMaterial" EntitySet="InputMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderItem_Orders_OrderId" Association="Self.FK_OrderItem_Orders_OrderId">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderItem" EntitySet="OrderItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderItem_Product_ProductId" Association="Self.FK_OrderItem_Product_ProductId">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="OrderItem" EntitySet="OrderItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OutputMaterial_OrderItem" Association="Self.FK_OutputMaterial_OrderItem">
+            <End Role="OrderItem" EntitySet="OrderItems" />
+            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders_Orders_OrderId" Association="Self.FK__Orders_Orders_OrderId">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Orders1" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_OutputBill_OutputBillId" Association="Self.FK_Orders_OutputBill_OutputBillId">
+            <End Role="OutputBill" EntitySet="OutputBills" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_User" Association="Self.FK_Orders_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_User_CustomerOrder" Association="Self.FK_Orders_User_CustomerOrder">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_User_StaffApprove" Association="Self.FK_Orders_User_StaffApprove">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OutputMaterial_ProductMaterial" Association="Self.FK_OutputMaterial_ProductMaterial">
+            <End Role="ProductMaterial" EntitySet="ProductMaterials" />
+            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_Product_ProductId" Association="Self.FK_Recipe_Product_ProductId">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_ProductMaterial_ProductMaterialId" Association="Self.FK_Recipe_ProductMaterial_ProductMaterialId">
+            <End Role="ProductMaterial" EntitySet="ProductMaterials" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Staff_User" Association="Self.FK_Staff_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Staff" EntitySet="Staffs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaxRate_TaxType_TaxRateId" Association="Self.FK_TaxRate_TaxType_TaxRateId">
+            <End Role="TaxType" EntitySet="TaxTypes" />
+            <End Role="TaxRate" EntitySet="TaxRates" />
+          </AssociationSet>
           <FunctionImport Name="sp_GetIncomeMonthly" ReturnType="Collection(BMAModel.sp_GetIncomeMonthly_Result)">
             <Parameter Name="startMonth" Mode="In" Type="Int32" />
             <Parameter Name="startYear" Mode="In" Type="Int32" />
@@ -770,127 +1515,6 @@
             <Parameter Name="startYear" Mode="In" Type="Int32" />
             <Parameter Name="endYear" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="Categories" EntityType="BMAModel.Category" />
-          <EntitySet Name="Customers" EntityType="BMAModel.Customer" />
-          <EntitySet Name="DiscardedInputMaterials" EntityType="BMAModel.DiscardedInputMaterial" />
-          <EntitySet Name="DiscountByQuantities" EntityType="BMAModel.DiscountByQuantity" />
-          <EntitySet Name="ExportFroms" EntityType="BMAModel.ExportFrom" />
-          <EntitySet Name="GuestInfoes" EntityType="BMAModel.GuestInfo" />
-          <EntitySet Name="InputBills" EntityType="BMAModel.InputBill" />
-          <EntitySet Name="InputMaterials" EntityType="BMAModel.InputMaterial" />
-          <EntitySet Name="OrderItems" EntityType="BMAModel.OrderItem" />
-          <EntitySet Name="Orders" EntityType="BMAModel.Order" />
-          <EntitySet Name="OtherExpenses" EntityType="BMAModel.OtherExpense" />
-          <EntitySet Name="OutputBills" EntityType="BMAModel.OutputBill" />
-          <EntitySet Name="OutputMaterials" EntityType="BMAModel.OutputMaterial" />
-          <EntitySet Name="Policies" EntityType="BMAModel.Policy" />
-          <EntitySet Name="Products" EntityType="BMAModel.Product" />
-          <EntitySet Name="ProductMaterials" EntityType="BMAModel.ProductMaterial" />
-          <EntitySet Name="Recipes" EntityType="BMAModel.Recipe" />
-          <EntitySet Name="Roles" EntityType="BMAModel.Role" />
-          <EntitySet Name="Staffs" EntityType="BMAModel.Staff" />
-          <EntitySet Name="StoreInfoes" EntityType="BMAModel.StoreInfo" />
-          <EntitySet Name="Suppliers" EntityType="BMAModel.Supplier" />
-          <EntitySet Name="sysdiagrams" EntityType="BMAModel.sysdiagram" />
-          <EntitySet Name="TaxRates" EntityType="BMAModel.TaxRate" />
-          <EntitySet Name="TaxTypes" EntityType="BMAModel.TaxType" />
-          <EntitySet Name="Users" EntityType="BMAModel.User" />
-          <AssociationSet Name="FK_Category_Category_CategoryId" Association="BMAModel.FK_Category_Category_CategoryId">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Category1" EntitySet="Categories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Product_Category_CategoryId" Association="BMAModel.FK_Product_Category_CategoryId">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Product" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Customer_User" Association="BMAModel.FK_Customer_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Customer" EntitySet="Customers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DiscardedInputMaterial_InputMaterial" Association="BMAModel.FK_DiscardedInputMaterial_InputMaterial">
-            <End Role="InputMaterial" EntitySet="InputMaterials" />
-            <End Role="DiscardedInputMaterial" EntitySet="DiscardedInputMaterials" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ExportFrom_InputBill" Association="BMAModel.FK_ExportFrom_InputBill">
-            <End Role="InputBill" EntitySet="InputBills" />
-            <End Role="ExportFrom" EntitySet="ExportFroms" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ExportFrom_OutputMaterial" Association="BMAModel.FK_ExportFrom_OutputMaterial">
-            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
-            <End Role="ExportFrom" EntitySet="ExportFroms" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_GuestInfo" Association="BMAModel.FK_Orders_GuestInfo">
-            <End Role="GuestInfo" EntitySet="GuestInfoes" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InputBill_Supplier_SupplierId" Association="BMAModel.FK_InputBill_Supplier_SupplierId">
-            <End Role="Supplier" EntitySet="Suppliers" />
-            <End Role="InputBill" EntitySet="InputBills" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InputMaterial_InputBill_InputBillId" Association="BMAModel.FK_InputMaterial_InputBill_InputBillId">
-            <End Role="InputBill" EntitySet="InputBills" />
-            <End Role="InputMaterial" EntitySet="InputMaterials" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InputMaterial_ProductMaterial_ProductMaterialId" Association="BMAModel.FK_InputMaterial_ProductMaterial_ProductMaterialId">
-            <End Role="ProductMaterial" EntitySet="ProductMaterials" />
-            <End Role="InputMaterial" EntitySet="InputMaterials" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OrderItem_Orders_OrderId" Association="BMAModel.FK_OrderItem_Orders_OrderId">
-            <End Role="Order" EntitySet="Orders" />
-            <End Role="OrderItem" EntitySet="OrderItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OrderItem_Product_ProductId" Association="BMAModel.FK_OrderItem_Product_ProductId">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="OrderItem" EntitySet="OrderItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OutputMaterial_OrderItem" Association="BMAModel.FK_OutputMaterial_OrderItem">
-            <End Role="OrderItem" EntitySet="OrderItems" />
-            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Orders_Orders_OrderId" Association="BMAModel.FK__Orders_Orders_OrderId">
-            <End Role="Order" EntitySet="Orders" />
-            <End Role="Order1" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_OutputBill_OutputBillId" Association="BMAModel.FK_Orders_OutputBill_OutputBillId">
-            <End Role="OutputBill" EntitySet="OutputBills" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_User" Association="BMAModel.FK_Orders_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_User_CustomerOrder" Association="BMAModel.FK_Orders_User_CustomerOrder">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_User_StaffApprove" Association="BMAModel.FK_Orders_User_StaffApprove">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OutputMaterial_ProductMaterial" Association="BMAModel.FK_OutputMaterial_ProductMaterial">
-            <End Role="ProductMaterial" EntitySet="ProductMaterials" />
-            <End Role="OutputMaterial" EntitySet="OutputMaterials" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Recipe_Product_ProductId" Association="BMAModel.FK_Recipe_Product_ProductId">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="Recipe" EntitySet="Recipes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Recipe_ProductMaterial_ProductMaterialId" Association="BMAModel.FK_Recipe_ProductMaterial_ProductMaterialId">
-            <End Role="ProductMaterial" EntitySet="ProductMaterials" />
-            <End Role="Recipe" EntitySet="Recipes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_User_Role" Association="BMAModel.FK_User_Role">
-            <End Role="Role" EntitySet="Roles" />
-            <End Role="User" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Staff_User" Association="BMAModel.FK_Staff_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Staff" EntitySet="Staffs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TaxRate_TaxType_TaxRateId" Association="BMAModel.FK_TaxRate_TaxType_TaxRateId">
-            <End Role="TaxType" EntitySet="TaxTypes" />
-            <End Role="TaxRate" EntitySet="TaxRates" />
-          </AssociationSet>
           <FunctionImport Name="sp_GetTop10CustomerRevenueMonthly" ReturnType="Collection(BMAModel.sp_GetTop10CustomerRevenueMonthly_Result)">
             <Parameter Name="startDate" Mode="In" Type="DateTime" />
             <Parameter Name="endDate" Mode="In" Type="DateTime" />
@@ -925,7 +1549,7 @@
             <Parameter Name="endDate" Mode="In" Type="DateTime" />
             <Parameter Name="type" Mode="In" Type="Int32" />
           </FunctionImport>
-          </EntityContainer>
+        </EntityContainer>
         <ComplexType Name="sp_GetIncomeMonthly_Result">
           <Property Type="Int32" Name="MonthNo" Nullable="true" />
           <Property Type="Int32" Name="YearNo" Nullable="true" />
@@ -948,629 +1572,6 @@
           <Property Type="Int32" Name="OtherExpense" Nullable="true" />
           <Property Type="Int32" Name="Income" Nullable="true" />
         </ComplexType>
-        <EntityType Name="Category">
-          <Key>
-            <PropertyRef Name="CategoryId" />
-          </Key>
-          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="ParentCategoryId" Type="Int32" />
-          <NavigationProperty Name="Category1" Relationship="BMAModel.FK_Category_Category_CategoryId" FromRole="Category" ToRole="Category1" />
-          <NavigationProperty Name="Category2" Relationship="BMAModel.FK_Category_Category_CategoryId" FromRole="Category1" ToRole="Category" />
-          <NavigationProperty Name="Products" Relationship="BMAModel.FK_Product_Category_CategoryId" FromRole="Category" ToRole="Product" />
-        </EntityType>
-        <EntityType Name="Customer">
-          <Key>
-            <PropertyRef Name="CustomerId" />
-          </Key>
-          <Property Name="CustomerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="TaxCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="CustomerAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerPhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="IsLoyal" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="BMAModel.FK_Customer_User" FromRole="Customer" ToRole="User" />
-        </EntityType>
-        <EntityType Name="DiscardedInputMaterial">
-          <Key>
-            <PropertyRef Name="DiscardId" />
-          </Key>
-          <Property Name="DiscardId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InputMaterialId" Type="Int32" Nullable="false" />
-          <Property Name="DiscardQuantity" Type="Int32" Nullable="false" />
-          <Property Name="DiscardDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="DiscardNote" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="InputMaterial" Relationship="BMAModel.FK_DiscardedInputMaterial_InputMaterial" FromRole="DiscardedInputMaterial" ToRole="InputMaterial" />
-        </EntityType>
-        <EntityType Name="DiscountByQuantity">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QuantityFrom" Type="Int32" Nullable="false" />
-          <Property Name="QuantityTo" Type="Int32" Nullable="false" />
-          <Property Name="DiscountValue" Type="Int32" Nullable="false" />
-          <Property Name="ReachNumber" Type="Int32" />
-          <Property Name="beUsing" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ExportFrom">
-          <Key>
-            <PropertyRef Name="OutputMaterialId" />
-            <PropertyRef Name="InputbillId" />
-          </Key>
-          <Property Name="OutputMaterialId" Type="Int32" Nullable="false" />
-          <Property Name="InputbillId" Type="Int32" Nullable="false" />
-          <Property Name="ExportFromQuantity" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="InputBill" Relationship="BMAModel.FK_ExportFrom_InputBill" FromRole="ExportFrom" ToRole="InputBill" />
-          <NavigationProperty Name="OutputMaterial" Relationship="BMAModel.FK_ExportFrom_OutputMaterial" FromRole="ExportFrom" ToRole="OutputMaterial" />
-        </EntityType>
-        <EntityType Name="GuestInfo">
-          <Key>
-            <PropertyRef Name="GuestInfoId" />
-          </Key>
-          <Property Name="GuestInfoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="GuestInfoName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="GuestInfoPhone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="GuestInfoAddress" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="GuestInfoEmail" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_GuestInfo" FromRole="GuestInfo" ToRole="Order" />
-        </EntityType>
-        <EntityType Name="InputBill">
-          <Key>
-            <PropertyRef Name="InputBillId" />
-          </Key>
-          <Property Name="InputBillId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InputBillCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="InputBillAmount" Type="Double" Nullable="false" />
-          <Property Name="InputRawImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="InputTaxAmount" Type="Double" Nullable="false" />
-          <Property Name="SupplierId" Type="Int32" />
-          <Property Name="ImportDate" Type="DateTime" Nullable="false" Precision="0" />
-          <NavigationProperty Name="ExportFroms" Relationship="BMAModel.FK_ExportFrom_InputBill" FromRole="InputBill" ToRole="ExportFrom" />
-          <NavigationProperty Name="Supplier" Relationship="BMAModel.FK_InputBill_Supplier_SupplierId" FromRole="InputBill" ToRole="Supplier" />
-          <NavigationProperty Name="InputMaterials" Relationship="BMAModel.FK_InputMaterial_InputBill_InputBillId" FromRole="InputBill" ToRole="InputMaterial" />
-        </EntityType>
-        <EntityType Name="InputMaterial">
-          <Key>
-            <PropertyRef Name="InputMaterialId" />
-          </Key>
-          <Property Name="InputMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ImportQuantity" Type="Int32" Nullable="false" />
-          <Property Name="RemainQuantity" Type="Int32" Nullable="false" />
-          <Property Name="InputMaterialPrice" Type="Double" Nullable="false" />
-          <Property Name="ImportDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="InputMaterialExpiryDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="InputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="InputBillId" Type="Int32" Nullable="false" />
-          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="DiscardedInputMaterials" Relationship="BMAModel.FK_DiscardedInputMaterial_InputMaterial" FromRole="InputMaterial" ToRole="DiscardedInputMaterial" />
-          <NavigationProperty Name="InputBill" Relationship="BMAModel.FK_InputMaterial_InputBill_InputBillId" FromRole="InputMaterial" ToRole="InputBill" />
-          <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="InputMaterial" ToRole="ProductMaterial" />
-        </EntityType>
-        <EntityType Name="OrderItem">
-          <Key>
-            <PropertyRef Name="OrderItemId" />
-          </Key>
-          <Property Name="OrderItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductId" Type="Int32" Nullable="false" />
-          <Property Name="OrderId" Type="Int32" Nullable="false" />
-          <Property Name="Quantity" Type="Int32" Nullable="false" />
-          <Property Name="RealPrice" Type="Int32" Nullable="false" />
-          <Property Name="Amount" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Order" Relationship="BMAModel.FK_OrderItem_Orders_OrderId" FromRole="OrderItem" ToRole="Order" />
-          <NavigationProperty Name="Product" Relationship="BMAModel.FK_OrderItem_Product_ProductId" FromRole="OrderItem" ToRole="Product" />
-          <NavigationProperty Name="OutputMaterials" Relationship="BMAModel.FK_OutputMaterial_OrderItem" FromRole="OrderItem" ToRole="OutputMaterial" />
-        </EntityType>
-        <EntityType Name="Order">
-          <Key>
-            <PropertyRef Name="OrderId" />
-          </Key>
-          <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OrderCode" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="PlanDeliveryTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ApproveTime" Type="DateTime" Precision="3" />
-          <Property Name="OrderNote" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="DepositAmount" Type="Int32" Nullable="false" />
-          <Property Name="ConfirmTime" Type="DateTime" Precision="3" />
-          <Property Name="CustomerUserId" Type="Int32" />
-          <Property Name="StaffApproveUserId" Type="Int32" />
-          <Property Name="IsStaffEdit" Type="Boolean" Nullable="false" />
-          <Property Name="CustomerEditingFlag" Type="Boolean" Nullable="false" />
-          <Property Name="OutputBillId" Type="Int32" />
-          <Property Name="OrderStatus" Type="Int32" Nullable="false" />
-          <Property Name="PreviousOrderId" Type="Int32" />
-          <Property Name="GuestInfoId" Type="Int32" />
-          <Property Name="ReturnDeposit" Type="Int32" Nullable="false" />
-          <Property Name="CancelUserId" Type="Int32" />
-          <Property Name="CancelTime" Type="DateTime" Precision="3" />
-          <Property Name="FinishTime" Type="DateTime" Precision="3" />
-          <Property Name="DeliveryTime" Type="DateTime" Precision="3" />
-          <Property Name="StartProduceTime" Type="DateTime" Precision="3" />
-          <Property Name="Amount" Type="Int32" Nullable="false" />
-          <Property Name="TaxAmount" Type="Int32" Nullable="false" />
-          <Property Name="DiscountAmount" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="GuestInfo" Relationship="BMAModel.FK_Orders_GuestInfo" FromRole="Order" ToRole="GuestInfo" />
-          <NavigationProperty Name="OrderItems" Relationship="BMAModel.FK_OrderItem_Orders_OrderId" FromRole="Order" ToRole="OrderItem" />
-          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order" ToRole="Order1" />
-          <NavigationProperty Name="Order1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order1" ToRole="Order" />
-          <NavigationProperty Name="OutputBill" Relationship="BMAModel.FK_Orders_OutputBill_OutputBillId" FromRole="Order" ToRole="OutputBill" />
-          <NavigationProperty Name="User" Relationship="BMAModel.FK_Orders_User" FromRole="Order" ToRole="User" />
-          <NavigationProperty Name="User1" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="Order" ToRole="User" />
-          <NavigationProperty Name="User2" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="Order" ToRole="User" />
-        </EntityType>
-        <EntityType Name="OtherExpense">
-          <Key>
-            <PropertyRef Name="OtherExpenseId" />
-          </Key>
-          <Property Name="OtherExpenseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OtherExpenseName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="OtherExpenseAmount" Type="Int32" Nullable="false" />
-          <Property Name="OtherExpenseMonthTime" Type="Int32" />
-          <Property Name="OtherExpenseYearTime" Type="Int32" />
-        </EntityType>
-        <EntityType Name="OutputBill">
-          <Key>
-            <PropertyRef Name="OutputBillId" />
-          </Key>
-          <Property Name="OutputBillId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OutputBillCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="OutputBillAmount" Type="Double" Nullable="false" />
-          <Property Name="OutputBillRawImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="OutputBillTaxAmount" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_OutputBill_OutputBillId" FromRole="OutputBill" ToRole="Order" />
-        </EntityType>
-        <EntityType Name="OutputMaterial">
-          <Key>
-            <PropertyRef Name="OutputMaterialId" />
-          </Key>
-          <Property Name="OutputMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ExportQuantity" Type="Int32" Nullable="false" />
-          <Property Name="ExportTime" Type="DateTime" Precision="3" />
-          <Property Name="OutputMaterialNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
-          <Property Name="OrderItemId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="ExportFroms" Relationship="BMAModel.FK_ExportFrom_OutputMaterial" FromRole="OutputMaterial" ToRole="ExportFrom" />
-          <NavigationProperty Name="OrderItem" Relationship="BMAModel.FK_OutputMaterial_OrderItem" FromRole="OutputMaterial" ToRole="OrderItem" />
-          <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_OutputMaterial_ProductMaterial" FromRole="OutputMaterial" ToRole="ProductMaterial" />
-        </EntityType>
-        <EntityType Name="Policy">
-          <Key>
-            <PropertyRef Name="PolicyId" />
-          </Key>
-          <Property Name="PolicyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PolicyName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PolicyBound" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Product">
-          <Key>
-            <PropertyRef Name="ProductId" />
-          </Key>
-          <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="ProductWeight" Type="Double" Nullable="false" />
-          <Property Name="Unit" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Descriptions" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ProductImage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="ProductStandardPrice" Type="Int32" Nullable="false" />
-          <Property Name="CategoryId" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="ProductCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Category" Relationship="BMAModel.FK_Product_Category_CategoryId" FromRole="Product" ToRole="Category" />
-          <NavigationProperty Name="OrderItems" Relationship="BMAModel.FK_OrderItem_Product_ProductId" FromRole="Product" ToRole="OrderItem" />
-          <NavigationProperty Name="Recipes" Relationship="BMAModel.FK_Recipe_Product_ProductId" FromRole="Product" ToRole="Recipe" />
-        </EntityType>
-        <EntityType Name="ProductMaterial">
-          <Key>
-            <PropertyRef Name="ProductMaterialId" />
-          </Key>
-          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductMaterialName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="ProductMaterialUnit" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CurrentQuantity" Type="Int32" Nullable="false" />
-          <Property Name="StandardQuantity" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="InputMaterials" Relationship="BMAModel.FK_InputMaterial_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="InputMaterial" />
-          <NavigationProperty Name="OutputMaterials" Relationship="BMAModel.FK_OutputMaterial_ProductMaterial" FromRole="ProductMaterial" ToRole="OutputMaterial" />
-          <NavigationProperty Name="Recipes" Relationship="BMAModel.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="ProductMaterial" ToRole="Recipe" />
-        </EntityType>
-        <EntityType Name="Recipe">
-          <Key>
-            <PropertyRef Name="ProductId" />
-            <PropertyRef Name="ProductMaterialId" />
-          </Key>
-          <Property Name="ProductId" Type="Int32" Nullable="false" />
-          <Property Name="ProductMaterialId" Type="Int32" Nullable="false" />
-          <Property Name="RecipeQuantity" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Product" Relationship="BMAModel.FK_Recipe_Product_ProductId" FromRole="Recipe" ToRole="Product" />
-          <NavigationProperty Name="ProductMaterial" Relationship="BMAModel.FK_Recipe_ProductMaterial_ProductMaterialId" FromRole="Recipe" ToRole="ProductMaterial" />
-        </EntityType>
-        <EntityType Name="Role">
-          <Key>
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="RoleId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Users" Relationship="BMAModel.FK_User_Role" FromRole="Role" ToRole="User" />
-        </EntityType>
-        <EntityType Name="Staff">
-          <Key>
-            <PropertyRef Name="StaffId" />
-          </Key>
-          <Property Name="StaffId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="StaffAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="StaffPhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="BMAModel.FK_Staff_User" FromRole="Staff" ToRole="User" />
-        </EntityType>
-        <EntityType Name="StoreInfo">
-          <Key>
-            <PropertyRef Name="StoreId" />
-          </Key>
-          <Property Name="StoreId" Type="Int32" Nullable="false" />
-          <Property Name="StoreName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Phonenumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="OwnerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="BakeryImage" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="ProductMaxPrice" Type="Int32" />
-        </EntityType>
-        <EntityType Name="Supplier">
-          <Key>
-            <PropertyRef Name="SupplierId" />
-          </Key>
-          <Property Name="SupplierId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SupplierName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="SupplierAddress" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="SupplierPhoneNumber" Type="String" Nullable="false" MaxLength="12" FixedLength="true" Unicode="false" />
-          <Property Name="SupplierEmail" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="SupplierTaxCode" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="false" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="InputBills" Relationship="BMAModel.FK_InputBill_Supplier_SupplierId" FromRole="Supplier" ToRole="InputBill" />
-        </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="TaxRate">
-          <Key>
-            <PropertyRef Name="TaxRateId" />
-          </Key>
-          <Property Name="TaxRateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BeginDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="EndDate" Type="DateTime" Precision="0" />
-          <Property Name="TaxRateValue" Type="Int32" Nullable="false" />
-          <Property Name="TaxTypeId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="TaxType" Relationship="BMAModel.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxRate" ToRole="TaxType" />
-        </EntityType>
-        <EntityType Name="TaxType">
-          <Key>
-            <PropertyRef Name="TaxTypeID" />
-          </Key>
-          <Property Name="TaxTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TaxTypeName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Method" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Condition" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Abbreviation" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="TaxRates" Relationship="BMAModel.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxType" ToRole="TaxRate" />
-        </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="RoleId" Type="Int32" Nullable="false" />
-          <Property Name="Fullname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Customers" Relationship="BMAModel.FK_Customer_User" FromRole="User" ToRole="Customer" />
-          <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_User" FromRole="User" ToRole="Order" />
-          <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_User_CustomerOrder" FromRole="User" ToRole="Order" />
-          <NavigationProperty Name="Orders2" Relationship="BMAModel.FK_Orders_User_StaffApprove" FromRole="User" ToRole="Order" />
-          <NavigationProperty Name="Role" Relationship="BMAModel.FK_User_Role" FromRole="User" ToRole="Role" />
-          <NavigationProperty Name="Staffs" Relationship="BMAModel.FK_Staff_User" FromRole="User" ToRole="Staff" />
-        </EntityType>
-        <Association Name="FK_Category_Category_CategoryId">
-          <End Type="BMAModel.Category" Role="Category" Multiplicity="1" />
-          <End Type="BMAModel.Category" Role="Category1" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="CategoryId" />
-            </Principal>
-            <Dependent Role="Category1">
-              <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Product_Category_CategoryId">
-          <End Type="BMAModel.Category" Role="Category" Multiplicity="0..1" />
-          <End Type="BMAModel.Product" Role="Product" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="CategoryId" />
-            </Principal>
-            <Dependent Role="Product">
-              <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Customer_User">
-          <End Type="BMAModel.User" Role="User" Multiplicity="1" />
-          <End Type="BMAModel.Customer" Role="Customer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Customer">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DiscardedInputMaterial_InputMaterial">
-          <End Type="BMAModel.InputMaterial" Role="InputMaterial" Multiplicity="1" />
-          <End Type="BMAModel.DiscardedInputMaterial" Role="DiscardedInputMaterial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InputMaterial">
-              <PropertyRef Name="InputMaterialId" />
-            </Principal>
-            <Dependent Role="DiscardedInputMaterial">
-              <PropertyRef Name="InputMaterialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ExportFrom_InputBill">
-          <End Type="BMAModel.InputBill" Role="InputBill" Multiplicity="1" />
-          <End Type="BMAModel.ExportFrom" Role="ExportFrom" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InputBill">
-              <PropertyRef Name="InputBillId" />
-            </Principal>
-            <Dependent Role="ExportFrom">
-              <PropertyRef Name="InputbillId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ExportFrom_OutputMaterial">
-          <End Type="BMAModel.OutputMaterial" Role="OutputMaterial" Multiplicity="1" />
-          <End Type="BMAModel.ExportFrom" Role="ExportFrom" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OutputMaterial">
-              <PropertyRef Name="OutputMaterialId" />
-            </Principal>
-            <Dependent Role="ExportFrom">
-              <PropertyRef Name="OutputMaterialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_GuestInfo">
-          <End Type="BMAModel.GuestInfo" Role="GuestInfo" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GuestInfo">
-              <PropertyRef Name="GuestInfoId" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="GuestInfoId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InputBill_Supplier_SupplierId">
-          <End Type="BMAModel.Supplier" Role="Supplier" Multiplicity="0..1" />
-          <End Type="BMAModel.InputBill" Role="InputBill" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Supplier">
-              <PropertyRef Name="SupplierId" />
-            </Principal>
-            <Dependent Role="InputBill">
-              <PropertyRef Name="SupplierId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InputMaterial_InputBill_InputBillId">
-          <End Type="BMAModel.InputBill" Role="InputBill" Multiplicity="1" />
-          <End Type="BMAModel.InputMaterial" Role="InputMaterial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InputBill">
-              <PropertyRef Name="InputBillId" />
-            </Principal>
-            <Dependent Role="InputMaterial">
-              <PropertyRef Name="InputBillId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InputMaterial_ProductMaterial_ProductMaterialId">
-          <End Type="BMAModel.ProductMaterial" Role="ProductMaterial" Multiplicity="1" />
-          <End Type="BMAModel.InputMaterial" Role="InputMaterial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductMaterial">
-              <PropertyRef Name="ProductMaterialId" />
-            </Principal>
-            <Dependent Role="InputMaterial">
-              <PropertyRef Name="ProductMaterialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderItem_Orders_OrderId">
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="1" />
-          <End Type="BMAModel.OrderItem" Role="OrderItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Order">
-              <PropertyRef Name="OrderId" />
-            </Principal>
-            <Dependent Role="OrderItem">
-              <PropertyRef Name="OrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderItem_Product_ProductId">
-          <End Type="BMAModel.Product" Role="Product" Multiplicity="1" />
-          <End Type="BMAModel.OrderItem" Role="OrderItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ProductId" />
-            </Principal>
-            <Dependent Role="OrderItem">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OutputMaterial_OrderItem">
-          <End Type="BMAModel.OrderItem" Role="OrderItem" Multiplicity="1" />
-          <End Type="BMAModel.OutputMaterial" Role="OutputMaterial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderItem">
-              <PropertyRef Name="OrderItemId" />
-            </Principal>
-            <Dependent Role="OutputMaterial">
-              <PropertyRef Name="OrderItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Orders_Orders_OrderId">
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order1" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Order">
-              <PropertyRef Name="OrderId" />
-            </Principal>
-            <Dependent Role="Order1">
-              <PropertyRef Name="PreviousOrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_OutputBill_OutputBillId">
-          <End Type="BMAModel.OutputBill" Role="OutputBill" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OutputBill">
-              <PropertyRef Name="OutputBillId" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="OutputBillId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_User">
-          <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="CancelUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_User_CustomerOrder">
-          <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="CustomerUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_User_StaffApprove">
-          <End Type="BMAModel.User" Role="User" Multiplicity="0..1" />
-          <End Type="BMAModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="StaffApproveUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OutputMaterial_ProductMaterial">
-          <End Type="BMAModel.ProductMaterial" Role="ProductMaterial" Multiplicity="1" />
-          <End Type="BMAModel.OutputMaterial" Role="OutputMaterial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductMaterial">
-              <PropertyRef Name="ProductMaterialId" />
-            </Principal>
-            <Dependent Role="OutputMaterial">
-              <PropertyRef Name="ProductMaterialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Recipe_Product_ProductId">
-          <End Type="BMAModel.Product" Role="Product" Multiplicity="1" />
-          <End Type="BMAModel.Recipe" Role="Recipe" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ProductId" />
-            </Principal>
-            <Dependent Role="Recipe">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Recipe_ProductMaterial_ProductMaterialId">
-          <End Type="BMAModel.ProductMaterial" Role="ProductMaterial" Multiplicity="1" />
-          <End Type="BMAModel.Recipe" Role="Recipe" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductMaterial">
-              <PropertyRef Name="ProductMaterialId" />
-            </Principal>
-            <Dependent Role="Recipe">
-              <PropertyRef Name="ProductMaterialId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_User_Role">
-          <End Type="BMAModel.Role" Role="Role" Multiplicity="1" />
-          <End Type="BMAModel.User" Role="User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="RoleId" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="RoleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Staff_User">
-          <End Type="BMAModel.User" Role="User" Multiplicity="1" />
-          <End Type="BMAModel.Staff" Role="Staff" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Staff">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TaxRate_TaxType_TaxRateId">
-          <End Type="BMAModel.TaxType" Role="TaxType" Multiplicity="1" />
-          <End Type="BMAModel.TaxRate" Role="TaxRate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TaxType">
-              <PropertyRef Name="TaxTypeID" />
-            </Principal>
-            <Dependent Role="TaxRate">
-              <PropertyRef Name="TaxTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="sp_GetTop10CustomerRevenueMonthly_Result">
           <Property Type="Int32" Name="CustomerUserId" Nullable="true" />
           <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
@@ -1641,12 +1642,322 @@
           <Property Type="String" Name="Fullname" Nullable="true" MaxLength="50" />
           <Property Type="Int32" Name="Revenue" Nullable="true" />
         </ComplexType>
-        </Schema>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BMAModelStoreContainer" CdmEntityContainer="BMAEntities">
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="BMAModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="ParentCategoryId" ColumnName="ParentCategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="BMAModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
+                <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
+                <ScalarProperty Name="CustomerPhoneNumber" ColumnName="CustomerPhoneNumber" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsLoyal" ColumnName="IsLoyal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DiscardedInputMaterials">
+            <EntityTypeMapping TypeName="BMAModel.DiscardedInputMaterial">
+              <MappingFragment StoreEntitySet="DiscardedInputMaterial">
+                <ScalarProperty Name="DiscardId" ColumnName="DiscardId" />
+                <ScalarProperty Name="InputMaterialId" ColumnName="InputMaterialId" />
+                <ScalarProperty Name="DiscardQuantity" ColumnName="DiscardQuantity" />
+                <ScalarProperty Name="DiscardDate" ColumnName="DiscardDate" />
+                <ScalarProperty Name="DiscardNote" ColumnName="DiscardNote" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DiscountByQuantities">
+            <EntityTypeMapping TypeName="BMAModel.DiscountByQuantity">
+              <MappingFragment StoreEntitySet="DiscountByQuantity">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="QuantityFrom" ColumnName="QuantityFrom" />
+                <ScalarProperty Name="QuantityTo" ColumnName="QuantityTo" />
+                <ScalarProperty Name="DiscountValue" ColumnName="DiscountValue" />
+                <ScalarProperty Name="ReachNumber" ColumnName="ReachNumber" />
+                <ScalarProperty Name="beUsing" ColumnName="beUsing" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExportFroms">
+            <EntityTypeMapping TypeName="BMAModel.ExportFrom">
+              <MappingFragment StoreEntitySet="ExportFrom">
+                <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
+                <ScalarProperty Name="InputbillId" ColumnName="InputbillId" />
+                <ScalarProperty Name="ExportFromQuantity" ColumnName="ExportFromQuantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GuestInfoes">
+            <EntityTypeMapping TypeName="BMAModel.GuestInfo">
+              <MappingFragment StoreEntitySet="GuestInfo">
+                <ScalarProperty Name="GuestInfoId" ColumnName="GuestInfoId" />
+                <ScalarProperty Name="GuestInfoName" ColumnName="GuestInfoName" />
+                <ScalarProperty Name="GuestInfoPhone" ColumnName="GuestInfoPhone" />
+                <ScalarProperty Name="GuestInfoAddress" ColumnName="GuestInfoAddress" />
+                <ScalarProperty Name="GuestInfoEmail" ColumnName="GuestInfoEmail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InputBills">
+            <EntityTypeMapping TypeName="BMAModel.InputBill">
+              <MappingFragment StoreEntitySet="InputBill">
+                <ScalarProperty Name="InputBillId" ColumnName="InputBillId" />
+                <ScalarProperty Name="InputBillCode" ColumnName="InputBillCode" />
+                <ScalarProperty Name="InputBillAmount" ColumnName="InputBillAmount" />
+                <ScalarProperty Name="InputRawImage" ColumnName="InputRawImage" />
+                <ScalarProperty Name="InputTaxAmount" ColumnName="InputTaxAmount" />
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+                <ScalarProperty Name="ImportDate" ColumnName="ImportDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InputMaterials">
+            <EntityTypeMapping TypeName="BMAModel.InputMaterial">
+              <MappingFragment StoreEntitySet="InputMaterial">
+                <ScalarProperty Name="InputMaterialId" ColumnName="InputMaterialId" />
+                <ScalarProperty Name="ImportQuantity" ColumnName="ImportQuantity" />
+                <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
+                <ScalarProperty Name="InputMaterialPrice" ColumnName="InputMaterialPrice" />
+                <ScalarProperty Name="ImportDate" ColumnName="ImportDate" />
+                <ScalarProperty Name="InputMaterialExpiryDate" ColumnName="InputMaterialExpiryDate" />
+                <ScalarProperty Name="InputMaterialNote" ColumnName="InputMaterialNote" />
+                <ScalarProperty Name="InputBillId" ColumnName="InputBillId" />
+                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderItems">
+            <EntityTypeMapping TypeName="BMAModel.OrderItem">
+              <MappingFragment StoreEntitySet="OrderItem">
+                <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="RealPrice" ColumnName="RealPrice" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="BMAModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="OrderCode" ColumnName="OrderCode" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="PlanDeliveryTime" ColumnName="PlanDeliveryTime" />
+                <ScalarProperty Name="ApproveTime" ColumnName="ApproveTime" />
+                <ScalarProperty Name="OrderNote" ColumnName="OrderNote" />
+                <ScalarProperty Name="DepositAmount" ColumnName="DepositAmount" />
+                <ScalarProperty Name="ConfirmTime" ColumnName="ConfirmTime" />
+                <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
+                <ScalarProperty Name="StaffApproveUserId" ColumnName="StaffApproveUserId" />
+                <ScalarProperty Name="IsStaffEdit" ColumnName="IsStaffEdit" />
+                <ScalarProperty Name="CustomerEditingFlag" ColumnName="CustomerEditingFlag" />
+                <ScalarProperty Name="OutputBillId" ColumnName="OutputBillId" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="PreviousOrderId" ColumnName="PreviousOrderId" />
+                <ScalarProperty Name="GuestInfoId" ColumnName="GuestInfoId" />
+                <ScalarProperty Name="ReturnDeposit" ColumnName="ReturnDeposit" />
+                <ScalarProperty Name="CancelUserId" ColumnName="CancelUserId" />
+                <ScalarProperty Name="CancelTime" ColumnName="CancelTime" />
+                <ScalarProperty Name="FinishTime" ColumnName="FinishTime" />
+                <ScalarProperty Name="DeliveryTime" ColumnName="DeliveryTime" />
+                <ScalarProperty Name="StartProduceTime" ColumnName="StartProduceTime" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OtherExpenses">
+            <EntityTypeMapping TypeName="BMAModel.OtherExpense">
+              <MappingFragment StoreEntitySet="OtherExpense">
+                <ScalarProperty Name="OtherExpenseId" ColumnName="OtherExpenseId" />
+                <ScalarProperty Name="OtherExpenseName" ColumnName="OtherExpenseName" />
+                <ScalarProperty Name="OtherExpenseAmount" ColumnName="OtherExpenseAmount" />
+                <ScalarProperty Name="OtherExpenseMonthTime" ColumnName="OtherExpenseMonthTime" />
+                <ScalarProperty Name="OtherExpenseYearTime" ColumnName="OtherExpenseYearTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OutputBills">
+            <EntityTypeMapping TypeName="BMAModel.OutputBill">
+              <MappingFragment StoreEntitySet="OutputBill">
+                <ScalarProperty Name="OutputBillId" ColumnName="OutputBillId" />
+                <ScalarProperty Name="OutputBillCode" ColumnName="OutputBillCode" />
+                <ScalarProperty Name="OutputBillAmount" ColumnName="OutputBillAmount" />
+                <ScalarProperty Name="OutputBillRawImage" ColumnName="OutputBillRawImage" />
+                <ScalarProperty Name="OutputBillTaxAmount" ColumnName="OutputBillTaxAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OutputMaterials">
+            <EntityTypeMapping TypeName="BMAModel.OutputMaterial">
+              <MappingFragment StoreEntitySet="OutputMaterial">
+                <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
+                <ScalarProperty Name="ExportQuantity" ColumnName="ExportQuantity" />
+                <ScalarProperty Name="ExportTime" ColumnName="ExportTime" />
+                <ScalarProperty Name="OutputMaterialNote" ColumnName="OutputMaterialNote" />
+                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
+                <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Policies">
+            <EntityTypeMapping TypeName="BMAModel.Policy">
+              <MappingFragment StoreEntitySet="Policy">
+                <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
+                <ScalarProperty Name="PolicyName" ColumnName="PolicyName" />
+                <ScalarProperty Name="PolicyBound" ColumnName="PolicyBound" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="BMAModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductWeight" ColumnName="ProductWeight" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="Descriptions" ColumnName="Descriptions" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="ProductImage" ColumnName="ProductImage" />
+                <ScalarProperty Name="ProductStandardPrice" ColumnName="ProductStandardPrice" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductMaterials">
+            <EntityTypeMapping TypeName="BMAModel.ProductMaterial">
+              <MappingFragment StoreEntitySet="ProductMaterial">
+                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
+                <ScalarProperty Name="ProductMaterialName" ColumnName="ProductMaterialName" />
+                <ScalarProperty Name="ProductMaterialUnit" ColumnName="ProductMaterialUnit" />
+                <ScalarProperty Name="CurrentQuantity" ColumnName="CurrentQuantity" />
+                <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Recipes">
+            <EntityTypeMapping TypeName="BMAModel.Recipe">
+              <MappingFragment StoreEntitySet="Recipe">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
+                <ScalarProperty Name="RecipeQuantity" ColumnName="RecipeQuantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="BMAModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Staffs">
+            <EntityTypeMapping TypeName="BMAModel.Staff">
+              <MappingFragment StoreEntitySet="Staff">
+                <ScalarProperty Name="StaffId" ColumnName="StaffId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="StaffAddress" ColumnName="StaffAddress" />
+                <ScalarProperty Name="StaffPhoneNumber" ColumnName="StaffPhoneNumber" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StoreInfoes">
+            <EntityTypeMapping TypeName="BMAModel.StoreInfo">
+              <MappingFragment StoreEntitySet="StoreInfo">
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="StoreName" ColumnName="StoreName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
+                <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />
+                <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
+                <ScalarProperty Name="BakeryImage" ColumnName="BakeryImage" />
+                <ScalarProperty Name="ProductMaxPrice" ColumnName="ProductMaxPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="BMAModel.Supplier">
+              <MappingFragment StoreEntitySet="Supplier">
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="SupplierAddress" ColumnName="SupplierAddress" />
+                <ScalarProperty Name="SupplierPhoneNumber" ColumnName="SupplierPhoneNumber" />
+                <ScalarProperty Name="SupplierEmail" ColumnName="SupplierEmail" />
+                <ScalarProperty Name="SupplierTaxCode" ColumnName="SupplierTaxCode" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="BMAModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaxRates">
+            <EntityTypeMapping TypeName="BMAModel.TaxRate">
+              <MappingFragment StoreEntitySet="TaxRate">
+                <ScalarProperty Name="TaxRateId" ColumnName="TaxRateId" />
+                <ScalarProperty Name="BeginDate" ColumnName="BeginDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="TaxRateValue" ColumnName="TaxRateValue" />
+                <ScalarProperty Name="TaxTypeId" ColumnName="TaxTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaxTypes">
+            <EntityTypeMapping TypeName="BMAModel.TaxType">
+              <MappingFragment StoreEntitySet="TaxType">
+                <ScalarProperty Name="TaxTypeID" ColumnName="TaxTypeID" />
+                <ScalarProperty Name="TaxTypeName" ColumnName="TaxTypeName" />
+                <ScalarProperty Name="Method" ColumnName="Method" />
+                <ScalarProperty Name="Condition" ColumnName="Condition" />
+                <ScalarProperty Name="Abbreviation" ColumnName="Abbreviation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="BMAModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp_GetIncomeMonthly" FunctionName="BMAModel.Store.sp_GetIncomeMonthly">
             <ResultMapping>
               <ComplexTypeMapping TypeName="BMAModel.sp_GetIncomeMonthly_Result">
@@ -1681,316 +1992,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="Categories">
-            <EntityTypeMapping TypeName="BMAModel.Category">
-              <MappingFragment StoreEntitySet="Category">
-                <ScalarProperty Name="ParentCategoryId" ColumnName="ParentCategoryId" />
-                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Customers">
-            <EntityTypeMapping TypeName="BMAModel.Customer">
-              <MappingFragment StoreEntitySet="Customer">
-                <ScalarProperty Name="IsLoyal" ColumnName="IsLoyal" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="CustomerPhoneNumber" ColumnName="CustomerPhoneNumber" />
-                <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
-                <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DiscardedInputMaterials">
-            <EntityTypeMapping TypeName="BMAModel.DiscardedInputMaterial">
-              <MappingFragment StoreEntitySet="DiscardedInputMaterial">
-                <ScalarProperty Name="DiscardNote" ColumnName="DiscardNote" />
-                <ScalarProperty Name="DiscardDate" ColumnName="DiscardDate" />
-                <ScalarProperty Name="DiscardQuantity" ColumnName="DiscardQuantity" />
-                <ScalarProperty Name="InputMaterialId" ColumnName="InputMaterialId" />
-                <ScalarProperty Name="DiscardId" ColumnName="DiscardId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DiscountByQuantities">
-            <EntityTypeMapping TypeName="BMAModel.DiscountByQuantity">
-              <MappingFragment StoreEntitySet="DiscountByQuantity">
-                <ScalarProperty Name="beUsing" ColumnName="beUsing" />
-                <ScalarProperty Name="ReachNumber" ColumnName="ReachNumber" />
-                <ScalarProperty Name="DiscountValue" ColumnName="DiscountValue" />
-                <ScalarProperty Name="QuantityTo" ColumnName="QuantityTo" />
-                <ScalarProperty Name="QuantityFrom" ColumnName="QuantityFrom" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ExportFroms">
-            <EntityTypeMapping TypeName="BMAModel.ExportFrom">
-              <MappingFragment StoreEntitySet="ExportFrom">
-                <ScalarProperty Name="ExportFromQuantity" ColumnName="ExportFromQuantity" />
-                <ScalarProperty Name="InputbillId" ColumnName="InputbillId" />
-                <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="GuestInfoes">
-            <EntityTypeMapping TypeName="BMAModel.GuestInfo">
-              <MappingFragment StoreEntitySet="GuestInfo">
-                <ScalarProperty Name="GuestInfoEmail" ColumnName="GuestInfoEmail" />
-                <ScalarProperty Name="GuestInfoAddress" ColumnName="GuestInfoAddress" />
-                <ScalarProperty Name="GuestInfoPhone" ColumnName="GuestInfoPhone" />
-                <ScalarProperty Name="GuestInfoName" ColumnName="GuestInfoName" />
-                <ScalarProperty Name="GuestInfoId" ColumnName="GuestInfoId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="InputBills">
-            <EntityTypeMapping TypeName="BMAModel.InputBill">
-              <MappingFragment StoreEntitySet="InputBill">
-                <ScalarProperty Name="ImportDate" ColumnName="ImportDate" />
-                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
-                <ScalarProperty Name="InputTaxAmount" ColumnName="InputTaxAmount" />
-                <ScalarProperty Name="InputRawImage" ColumnName="InputRawImage" />
-                <ScalarProperty Name="InputBillAmount" ColumnName="InputBillAmount" />
-                <ScalarProperty Name="InputBillCode" ColumnName="InputBillCode" />
-                <ScalarProperty Name="InputBillId" ColumnName="InputBillId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="InputMaterials">
-            <EntityTypeMapping TypeName="BMAModel.InputMaterial">
-              <MappingFragment StoreEntitySet="InputMaterial">
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
-                <ScalarProperty Name="InputBillId" ColumnName="InputBillId" />
-                <ScalarProperty Name="InputMaterialNote" ColumnName="InputMaterialNote" />
-                <ScalarProperty Name="InputMaterialExpiryDate" ColumnName="InputMaterialExpiryDate" />
-                <ScalarProperty Name="ImportDate" ColumnName="ImportDate" />
-                <ScalarProperty Name="InputMaterialPrice" ColumnName="InputMaterialPrice" />
-                <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
-                <ScalarProperty Name="ImportQuantity" ColumnName="ImportQuantity" />
-                <ScalarProperty Name="InputMaterialId" ColumnName="InputMaterialId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OrderItems">
-            <EntityTypeMapping TypeName="BMAModel.OrderItem">
-              <MappingFragment StoreEntitySet="OrderItem">
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="RealPrice" ColumnName="RealPrice" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Orders">
-            <EntityTypeMapping TypeName="BMAModel.Order">
-              <MappingFragment StoreEntitySet="Orders">
-                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
-                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="StartProduceTime" ColumnName="StartProduceTime" />
-                <ScalarProperty Name="DeliveryTime" ColumnName="DeliveryTime" />
-                <ScalarProperty Name="FinishTime" ColumnName="FinishTime" />
-                <ScalarProperty Name="CancelTime" ColumnName="CancelTime" />
-                <ScalarProperty Name="CancelUserId" ColumnName="CancelUserId" />
-                <ScalarProperty Name="ReturnDeposit" ColumnName="ReturnDeposit" />
-                <ScalarProperty Name="GuestInfoId" ColumnName="GuestInfoId" />
-                <ScalarProperty Name="PreviousOrderId" ColumnName="PreviousOrderId" />
-                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
-                <ScalarProperty Name="OutputBillId" ColumnName="OutputBillId" />
-                <ScalarProperty Name="CustomerEditingFlag" ColumnName="CustomerEditingFlag" />
-                <ScalarProperty Name="IsStaffEdit" ColumnName="IsStaffEdit" />
-                <ScalarProperty Name="StaffApproveUserId" ColumnName="StaffApproveUserId" />
-                <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
-                <ScalarProperty Name="ConfirmTime" ColumnName="ConfirmTime" />
-                <ScalarProperty Name="DepositAmount" ColumnName="DepositAmount" />
-                <ScalarProperty Name="OrderNote" ColumnName="OrderNote" />
-                <ScalarProperty Name="ApproveTime" ColumnName="ApproveTime" />
-                <ScalarProperty Name="PlanDeliveryTime" ColumnName="PlanDeliveryTime" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="OrderCode" ColumnName="OrderCode" />
-                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OtherExpenses">
-            <EntityTypeMapping TypeName="BMAModel.OtherExpense">
-              <MappingFragment StoreEntitySet="OtherExpense">
-                <ScalarProperty Name="OtherExpenseYearTime" ColumnName="OtherExpenseYearTime" />
-                <ScalarProperty Name="OtherExpenseMonthTime" ColumnName="OtherExpenseMonthTime" />
-                <ScalarProperty Name="OtherExpenseAmount" ColumnName="OtherExpenseAmount" />
-                <ScalarProperty Name="OtherExpenseName" ColumnName="OtherExpenseName" />
-                <ScalarProperty Name="OtherExpenseId" ColumnName="OtherExpenseId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OutputBills">
-            <EntityTypeMapping TypeName="BMAModel.OutputBill">
-              <MappingFragment StoreEntitySet="OutputBill">
-                <ScalarProperty Name="OutputBillTaxAmount" ColumnName="OutputBillTaxAmount" />
-                <ScalarProperty Name="OutputBillRawImage" ColumnName="OutputBillRawImage" />
-                <ScalarProperty Name="OutputBillAmount" ColumnName="OutputBillAmount" />
-                <ScalarProperty Name="OutputBillCode" ColumnName="OutputBillCode" />
-                <ScalarProperty Name="OutputBillId" ColumnName="OutputBillId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OutputMaterials">
-            <EntityTypeMapping TypeName="BMAModel.OutputMaterial">
-              <MappingFragment StoreEntitySet="OutputMaterial">
-                <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
-                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
-                <ScalarProperty Name="OutputMaterialNote" ColumnName="OutputMaterialNote" />
-                <ScalarProperty Name="ExportTime" ColumnName="ExportTime" />
-                <ScalarProperty Name="ExportQuantity" ColumnName="ExportQuantity" />
-                <ScalarProperty Name="OutputMaterialId" ColumnName="OutputMaterialId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Policies">
-            <EntityTypeMapping TypeName="BMAModel.Policy">
-              <MappingFragment StoreEntitySet="Policy">
-                <ScalarProperty Name="PolicyBound" ColumnName="PolicyBound" />
-                <ScalarProperty Name="PolicyName" ColumnName="PolicyName" />
-                <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="BMAModel.Product">
-              <MappingFragment StoreEntitySet="Product">
-                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="ProductStandardPrice" ColumnName="ProductStandardPrice" />
-                <ScalarProperty Name="ProductImage" ColumnName="ProductImage" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="Descriptions" ColumnName="Descriptions" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="ProductWeight" ColumnName="ProductWeight" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProductMaterials">
-            <EntityTypeMapping TypeName="BMAModel.ProductMaterial">
-              <MappingFragment StoreEntitySet="ProductMaterial">
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
-                <ScalarProperty Name="CurrentQuantity" ColumnName="CurrentQuantity" />
-                <ScalarProperty Name="ProductMaterialUnit" ColumnName="ProductMaterialUnit" />
-                <ScalarProperty Name="ProductMaterialName" ColumnName="ProductMaterialName" />
-                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Recipes">
-            <EntityTypeMapping TypeName="BMAModel.Recipe">
-              <MappingFragment StoreEntitySet="Recipe">
-                <ScalarProperty Name="RecipeQuantity" ColumnName="RecipeQuantity" />
-                <ScalarProperty Name="ProductMaterialId" ColumnName="ProductMaterialId" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="BMAModel.Role">
-              <MappingFragment StoreEntitySet="Role">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Staffs">
-            <EntityTypeMapping TypeName="BMAModel.Staff">
-              <MappingFragment StoreEntitySet="Staff">
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="StaffPhoneNumber" ColumnName="StaffPhoneNumber" />
-                <ScalarProperty Name="StaffAddress" ColumnName="StaffAddress" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="StaffId" ColumnName="StaffId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="StoreInfoes">
-            <EntityTypeMapping TypeName="BMAModel.StoreInfo">
-              <MappingFragment StoreEntitySet="StoreInfo">
-                <ScalarProperty Name="ProductMaxPrice" ColumnName="ProductMaxPrice" />
-                <ScalarProperty Name="BakeryImage" ColumnName="BakeryImage" />
-                <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
-                <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />
-                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="StoreName" ColumnName="StoreName" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Suppliers">
-            <EntityTypeMapping TypeName="BMAModel.Supplier">
-              <MappingFragment StoreEntitySet="Supplier">
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="SupplierTaxCode" ColumnName="SupplierTaxCode" />
-                <ScalarProperty Name="SupplierEmail" ColumnName="SupplierEmail" />
-                <ScalarProperty Name="SupplierPhoneNumber" ColumnName="SupplierPhoneNumber" />
-                <ScalarProperty Name="SupplierAddress" ColumnName="SupplierAddress" />
-                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
-                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="BMAModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="definition" ColumnName="definition" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="name" ColumnName="name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TaxRates">
-            <EntityTypeMapping TypeName="BMAModel.TaxRate">
-              <MappingFragment StoreEntitySet="TaxRate">
-                <ScalarProperty Name="TaxTypeId" ColumnName="TaxTypeId" />
-                <ScalarProperty Name="TaxRateValue" ColumnName="TaxRateValue" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="BeginDate" ColumnName="BeginDate" />
-                <ScalarProperty Name="TaxRateId" ColumnName="TaxRateId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TaxTypes">
-            <EntityTypeMapping TypeName="BMAModel.TaxType">
-              <MappingFragment StoreEntitySet="TaxType">
-                <ScalarProperty Name="Abbreviation" ColumnName="Abbreviation" />
-                <ScalarProperty Name="Condition" ColumnName="Condition" />
-                <ScalarProperty Name="Method" ColumnName="Method" />
-                <ScalarProperty Name="TaxTypeName" ColumnName="TaxTypeName" />
-                <ScalarProperty Name="TaxTypeID" ColumnName="TaxTypeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="BMAModel.User">
-              <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp_GetTop10CustomerRevenueMonthly" FunctionName="BMAModel.Store.sp_GetTop10CustomerRevenueMonthly">
             <ResultMapping>
               <ComplexTypeMapping TypeName="BMAModel.sp_GetTop10CustomerRevenueMonthly_Result">
@@ -2093,7 +2094,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          </EntityContainerMapping>
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
