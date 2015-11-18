@@ -336,6 +336,7 @@
     </Compile>
     <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
+    <Compile Include="Models\ViewModel\CustomerRevenueReport.cs" />
     <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
     <Compile Include="Models\ViewModel\DiscardInputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
@@ -343,6 +344,7 @@
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
     <Compile Include="Models\ViewModel\ReportIncomeViewModel.cs" />
+    <Compile Include="Models\ViewModel\ReportProductIncomeViewModel.cs" />
     <Compile Include="Models\ViewModel\ShortageMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\SupplierViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1459,6 +1461,18 @@
     <Content Include="Views\StoreInfor\ConfigIndex.cshtml" />
     <Content Include="Views\Account\GetPassword.cshtml" />
     <Content Include="Views\Account\CreateNewPassword.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueMonthlyDetail.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueMonthlyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueWeeklyDetail.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueWeeklyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueYearlyDetail.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueYearlyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeMonthlyDetail.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeMonthlyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeWeeklyDetail.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeWeeklyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeYearlyDetail.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeYearlyPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
