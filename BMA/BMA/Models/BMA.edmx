@@ -594,6 +594,40 @@
           <Parameter Name="startYear" Type="int" Mode="In" />
           <Parameter Name="endYear" Type="int" Mode="In" />
         </Function>
+        <Function Name="sp_GetTop10CustomerRevenueMonthly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetTop10CustomerRevenueWeekly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetTop10CustomerRevenueYearly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetTop10IncomeOfProductMonthly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetTop10IncomeOfProductPeriod" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+          <Parameter Name="type" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_GetTop10IncomeOfProductWeekly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetTop10IncomeOfProductYearly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetTopCustomerWithRevenue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+          <Parameter Name="type" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="BMAModelStoreContainer">
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
@@ -857,6 +891,40 @@
             <End Role="TaxType" EntitySet="TaxTypes" />
             <End Role="TaxRate" EntitySet="TaxRates" />
           </AssociationSet>
+          <FunctionImport Name="sp_GetTop10CustomerRevenueMonthly" ReturnType="Collection(BMAModel.sp_GetTop10CustomerRevenueMonthly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetTop10CustomerRevenueWeekly" ReturnType="Collection(BMAModel.sp_GetTop10CustomerRevenueWeekly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetTop10CustomerRevenueYearly" ReturnType="Collection(BMAModel.sp_GetTop10CustomerRevenueYearly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetTop10IncomeOfProductMonthly" ReturnType="Collection(BMAModel.sp_GetTop10IncomeOfProductMonthly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetTop10IncomeOfProductPeriod" ReturnType="Collection(BMAModel.sp_GetTop10IncomeOfProductPeriod_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+            <Parameter Name="type" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetTop10IncomeOfProductWeekly" ReturnType="Collection(BMAModel.sp_GetTop10IncomeOfProductWeekly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetTop10IncomeOfProductYearly" ReturnType="Collection(BMAModel.sp_GetTop10IncomeOfProductYearly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetTopCustomerWithRevenue" ReturnType="Collection(BMAModel.sp_GetTopCustomerWithRevenue_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+            <Parameter Name="type" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="sp_GetIncomeMonthly_Result">
           <Property Type="Int32" Name="MonthNo" Nullable="true" />
@@ -1503,6 +1571,76 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="sp_GetTop10CustomerRevenueMonthly_Result">
+          <Property Type="Int32" Name="CustomerUserId" Nullable="true" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Fullname" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="MonthNo" Nullable="true" />
+          <Property Type="Int32" Name="YearNo" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetTop10CustomerRevenueWeekly_Result">
+          <Property Type="Int32" Name="CustomerUserId" Nullable="true" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Fullname" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="StartDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetTop10CustomerRevenueYearly_Result">
+          <Property Type="Int32" Name="CustomerUserId" Nullable="true" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Fullname" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="YearNo" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetTop10IncomeOfProductMonthly_Result">
+          <Property Type="Int32" Name="ProductId" Nullable="true" />
+          <Property Type="String" Name="ProductCode" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="MonthNo" Nullable="true" />
+          <Property Type="Int32" Name="YearNo" Nullable="true" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
+          <Property Type="Int32" Name="Income" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetTop10IncomeOfProductPeriod_Result">
+          <Property Type="Int32" Name="ProductId" Nullable="false" />
+          <Property Type="String" Name="ProductCode" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="200" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+          <Property Type="Double" Name="MaterialExpense" Nullable="true" />
+          <Property Type="Double" Name="Income" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetTop10IncomeOfProductWeekly_Result">
+          <Property Type="Int32" Name="ProductId" Nullable="true" />
+          <Property Type="String" Name="ProductCode" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="StartDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
+          <Property Type="Int32" Name="Income" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetTop10IncomeOfProductYearly_Result">
+          <Property Type="Int32" Name="ProductId" Nullable="true" />
+          <Property Type="String" Name="ProductCode" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="YearNo" Nullable="true" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
+          <Property Type="Int32" Name="Income" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetTopCustomerWithRevenue_Result">
+          <Property Type="Int32" Name="CustomerUserId" Nullable="true" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Fullname" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1853,6 +1991,108 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetTop10CustomerRevenueMonthly" FunctionName="BMAModel.Store.sp_GetTop10CustomerRevenueMonthly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetTop10CustomerRevenueMonthly_Result">
+                <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="MonthNo" ColumnName="MonthNo" />
+                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetTop10CustomerRevenueWeekly" FunctionName="BMAModel.Store.sp_GetTop10CustomerRevenueWeekly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetTop10CustomerRevenueWeekly_Result">
+                <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetTop10CustomerRevenueYearly" FunctionName="BMAModel.Store.sp_GetTop10CustomerRevenueYearly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetTop10CustomerRevenueYearly_Result">
+                <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetTop10IncomeOfProductMonthly" FunctionName="BMAModel.Store.sp_GetTop10IncomeOfProductMonthly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetTop10IncomeOfProductMonthly_Result">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="MonthNo" ColumnName="MonthNo" />
+                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
+                <ScalarProperty Name="Income" ColumnName="Income" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetTop10IncomeOfProductPeriod" FunctionName="BMAModel.Store.sp_GetTop10IncomeOfProductPeriod">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetTop10IncomeOfProductPeriod_Result">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
+                <ScalarProperty Name="Income" ColumnName="Income" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetTop10IncomeOfProductWeekly" FunctionName="BMAModel.Store.sp_GetTop10IncomeOfProductWeekly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetTop10IncomeOfProductWeekly_Result">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
+                <ScalarProperty Name="Income" ColumnName="Income" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetTop10IncomeOfProductYearly" FunctionName="BMAModel.Store.sp_GetTop10IncomeOfProductYearly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetTop10IncomeOfProductYearly_Result">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
+                <ScalarProperty Name="Income" ColumnName="Income" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetTopCustomerWithRevenue" FunctionName="BMAModel.Store.sp_GetTopCustomerWithRevenue">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetTopCustomerWithRevenue_Result">
+                <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

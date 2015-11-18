@@ -21,7 +21,7 @@
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-
+    <a href="concu.html"></a>
     <script>
         paceOptions = {
             elements: true
@@ -114,20 +114,58 @@
                     <div class="modal-body">
                         <div class="form-group login-username">
                             <div>
-                                <input name="txtAccount" id="login-user" class="form-control input" size="20" placeholder="Nhập tài khoản" type="text" required>
+                                <input name="txtAccount" id="login-user" class="form-control input" maxlength="32" size="20" placeholder="Nhập tài khoản" type="text" required>
                             </div>
                         </div>
                         <div class="form-group login-password">
                             <div>
-                                <input name="txtPassword" id="login-password" class="form-control input" size="20" placeholder="Nhập mật khẩu" type="password" required>
+                                <input name="txtPassword" id="login-password" class="form-control input" pattern=".{6,}" required title="Mật khẩu phải lớn hơn 6 ký tự" maxlength="32" size="20" placeholder="Nhập mật khẩu" type="password" required>
                             </div>
                         </div>
                         <div>
                             <div>
-                                <input name="submit" class="btn  btn-block btn-lg btn-primary" value="ĐĂNG NHẬP" type="submit">
+                                <a onclick="checkLogin()" class="btn  btn-block btn-lg btn-primary">ĐĂNG NHẬP</a>
                             </div>
                         </div>
-
+                        <script type="text/javascript">
+                            function checkLogin() {
+                                $.ajax({
+                                    url: "@Url.Action("Login", "Account")",
+                                    method: "POST",
+                                    data: $("#loginForm").serialize(),
+                                    success: function (data) {
+                                        if (data === "1") {
+                                            window.setTimeout(function () {
+                                                window.location.replace("@(Url.Action("Index", "Product"))");
+                                            }, 500);
+                                        } else if (data === "2") {
+                                            window.setTimeout(function () {
+                                                window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                                            }, 500);
+                                        } else if (data === "-1") {
+                                            noty({
+                                                text: 'Tài khoản hoặc mật khẩu không đúng.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                        }
+                                    },
+                                    fail: function (e) {
+                                        var n = noty({
+                                            text: 'Đã có lỗi xảy ra',
+                                            type: 'error',
+                                            dismissQueue: false,
+                                            layout: 'bottomRight',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    }
+                                })
+                            }
+                        </script>
                     </div>
                     <div class="modal-footer">
                         <p class="text-center">
@@ -223,7 +261,7 @@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only"> Toggle navigation </span> <span class="icon-bar"> </span> <span class="icon-bar"> </span> <span class="icon-bar"> </span> </button>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-cart"> <i class="fa fa-shopping-cart colorWhite"> </i> <span class="cartRespons colorWhite"> Cart ($210.00) </span> </button>
-                <a class="navbar-brand">@Html.Action("LogoPartial","StoreInfor")  </a>
+                <a class="navbar-brand">@Html.Action("LogoPartial", "StoreInfor")  </a>
 
                 <div class="search-box pull-right hidden-lg hidden-md hidden-sm">
                     <div class="input-group">

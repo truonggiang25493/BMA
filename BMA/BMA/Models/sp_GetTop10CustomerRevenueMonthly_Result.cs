@@ -15,6 +15,7 @@ namespace BMA.Models
     {
         public Nullable<int> CustomerUserId { get; set; }
         public string Username { get; set; }
+        public string Fullname { get; set; }
         public Nullable<int> MonthNo { get; set; }
         public Nullable<int> YearNo { get; set; }
         public Nullable<int> Revenue { get; set; }
