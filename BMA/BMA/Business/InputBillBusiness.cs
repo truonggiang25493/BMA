@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using BMA.Models;
 using System.Net;
 using System.Data;
-using System.Globalization;
 using BMA.Business;
 using System.IO;
 
@@ -19,8 +18,7 @@ namespace BMA.Business
         #region Get Input Bill List
         public static List<InputBill> GetInputBillList()
         {
-            db = new BMAEntities();
-            List<InputBill> inputBillList = db.InputBills.OrderByDescending(n=>n.InputBillId).ToList();
+            List<InputBill> inputBillList = db.InputBills.ToList();
             return inputBillList;
         }
         #endregion
@@ -57,39 +55,5 @@ namespace BMA.Business
             return true;
         }
         #endregion
-
-        #region Edit input bill
-        public static bool EditInputBill(int inputBillId, int supplierId, String inputBillCode, int inputBillAmount, int inputTaxAmount, String inputRawImage, String importDate)
-        {
-            var inputBill = db.InputBills.SingleOrDefault(n => n.InputBillId == inputBillId);
-            if (inputBill != null)
-            {
-                try
-                {
-                    inputBill.InputBillId = inputBillId;
-                    inputBill.SupplierId = supplierId;
-                    inputBill.InputBillAmount = inputBillAmount;
-                    inputBill.InputTaxAmount = inputTaxAmount;
-                    inputBill.ImportDate = DateTime.ParseExact(importDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    inputBill.InputBillCode = inputBillCode.Replace("-", "");
-                    inputBill.InputRawImage = inputRawImage;
-
-                    db.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    string s = e.ToString();
-                    return false;
-                }
-                return true;
-            }
-
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
     }
 }

@@ -60,15 +60,13 @@
                 ignoreReadonly: true,
                 format: 'L',
                 locale: 'vi',
-                maxDate: moment().startOf('week').subtract(7, 'days').format('MM/DD/YYYY'),
-                defaultDate: moment().startOf('week').subtract(7, 'days').format('MM/DD/YYYY')
+                maxDate: moment().subtract(7, 'days')
             });
             $('#toDate').datetimepicker({
                 ignoreReadonly: true,
                 format: 'L',
                 locale: 'vi',
                 maxDate: moment(),
-                defaultDate: moment().format('MM/DD/YYYY'),
                 useCurrent: false
             });
             $("#fromDate").on("dp.change", function (e) {
@@ -118,7 +116,7 @@
         $(document).ready(function () {
             $.ajax({
                 url: "@Url.Action("ReviewIncomePerProductPartialView", "Report")",
-                method: "POST",
+                method: "GET",
                 success: function (data) {
                     $("#review-content").html(data);
                     var label = [];
@@ -210,6 +208,14 @@
                         yAxisUnit: "đồng",
                         yAxisLabel: "Thu nhập",
                         thousandSeparator: ".",
+                        // Specify the number of Y-scales to display
+                        scaleOverride: true,
+                        // The start value of the scale
+                        scaleStartValue: -200000,
+                        // The number of Y-scales to display
+                        scaleSteps: 25,
+                        // The width between two Y-scale
+                        scaleStepWidth: 100000,
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
                         annotateDisplay: true,
@@ -233,7 +239,7 @@
 
             $.ajax({
                 url: "@Url.Action("ReviewIncomePerProductPartialView", "Report")",
-                method: "POST",
+                method: "GET",
                 data: {
                     "start": fromDateString,
                     "end": toDateString,
@@ -331,6 +337,14 @@
                         yAxisUnit: "đồng",
                         yAxisLabel: "Thu nhập",
                         thousandSeparator: ".",
+                        // Specify the number of Y-scales to display
+                        scaleOverride: true,
+                        // The start value of the scale
+                        scaleStartValue: -200000,
+                        // The number of Y-scales to display
+                        scaleSteps: 25,
+                        // The width between two Y-scale
+                        scaleStepWidth: 100000,
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
                         annotateDisplay: true,

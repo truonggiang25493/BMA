@@ -1,7 +1,7 @@
 ﻿@using System.Globalization
 @using BMA.Models
 @using Microsoft.Ajax.Utilities
-@model List<InputMaterial>
+@model List<BMA.Models.InputMaterial>
 
 <h4 style="margin-left: 10%">Danh sách nguyên liệu trong cùng hóa đơn</h4>
 
@@ -37,20 +37,20 @@
                             <span class="label label-danger">Hết hạn sử dụng</span>
                         </td>
                         <td class="col-md-3">
-                            <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))" data-toggle="tooltip" data-placement="top" title="Xem">
-                                <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                            <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
+                                <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
                             </a>
                         </td>
                     }
                     else
-                        if (inputMaterial.RemainQuantity <= 0)
+                        if (inputMaterial.RemainQuantity == 0)
                         {
                             <td class="col-md-2">
                                 <span class="label label-default">Đã hết</span>
                             </td>
                             <td class="col-md-3">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))" data-toggle="tooltip" data-placement="top" title="Xem">
-                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
                                 </a>
                             </td>
                         }
@@ -60,11 +60,11 @@
                                 <span class="label label-success">Có thể sử dụng</span>
                             </td>
                             <td class="col-md-3">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Xem">
-                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
                                 </a>
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputMaterial", "InputMaterial", new { id = inputMaterial.InputMaterialId }))" data-toggle="tooltip" data-placement="top" title="Sửa">
-                                    <i class="fa fa-edit" style="margin-right: 3px"></i>
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputMaterial", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
+                                    <i class="fa fa-edit" style="margin-right: 3px"></i>Sửa
                                 </a>
                             </td>
                         }
