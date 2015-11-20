@@ -174,61 +174,8 @@
                     </div>
                 </form>
             </div>
-
         </div>
-
     </div>
-
-
-    @*<div class="modal signUpContent fade" id="ModalSignup" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> &times; </button>
-                        <h3 class="modal-title-site text-center"> ĐĂNG KÝ </h3>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group reg-username">
-                            <div>
-                                <input name="txtUsername" class="form-control input" size="20" placeholder="Nhập tên tài khoản" type="text">
-                            </div>
-                        </div>
-                        <div class="form-group reg-password">
-                            <div>
-                                <input name="txtPassword" class="form-control input" size="20" placeholder="Nhập mật khẩu" type="password">
-                            </div>
-                        </div>
-                        <div class="form-group reg-password">
-                            <div>
-                                <input name="txtPasswordConfirm" class="form-control input" size="20" placeholder="Nhập lại mật khẩu" type="password">
-                            </div>
-                        </div>
-                        <div class="form-group reg-email">
-                            <div>
-                                <input name="txtEmail" class="form-control input" size="20" placeholder="Nhập Email" type="text">
-                            </div>
-                        </div>
-                        <div class="form-group reg-email">
-                            <div>
-                                <input name="txtPhonenumber" class="form-control input" size="20" placeholder="Nhập số điện thoại" type="text">
-                            </div>
-                        </div>
-                        <div>
-                            <div>
-                                <input name="submit" class="btn  btn-block btn-lg btn-primary" value="ĐĂNG KÝ" type="submit">
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <p class="text-center"> Là thành viên? <a data-toggle="modal" data-dismiss="modal" href="#ModalLogin"> Đăng nhập </a> </p>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>*@
-
 
     <div class="navbar navbar-tshop navbar-fixed-top megamenu" role="navigation">
         <div class="navbar-top">
@@ -241,7 +188,14 @@
                             @if (Session["User"] != null)
                             {
                                 <ul class="userMenu">
-                                    <li> <a href="@Url.Action("Index", "CusManage")"><span class="hidden-xs"><i class="fa fa-street-view"></i> Quản lý</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                    @if (Session["UserRole"] != null)
+                                    {
+                                       
+                                    }
+                                    else
+                                    {
+                                        <li> <a href="@Url.Action("Index", "CusManage")"><span class="hidden-xs"><i class="fa fa-street-view"></i> Quản lý</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                    }
                                     <li> <a href="@Url.Action("Logout", "Account")"><span class="hidden-xs"><i class="fa fa-sign-out"></i> Đăng xuất </span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
                                 </ul>
                             }

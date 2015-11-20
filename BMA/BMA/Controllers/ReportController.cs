@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.WebPages;
 using BMA.Business;
 using BMA.Common;
 using BMA.Models;
@@ -144,7 +143,7 @@ namespace BMA.Controllers
             ViewBag.TreeView = "report";
             return View();
         }
-        [HttpPost]
+
         public ActionResult ReviewIncomePerProductPartialView(string start, string end, int? type)
         {
             ReportBusiness business = new ReportBusiness();
@@ -159,8 +158,8 @@ namespace BMA.Controllers
                 DateTime endDate;
                 if (start == null || end == null)
                 {
-                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
-                    endDate = DateTime.Now;
+                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-14);
+                    endDate = DateTime.Now.LastDayOfWeek();
                 }
                 else
                 {
@@ -195,61 +194,6 @@ namespace BMA.Controllers
             return null;
         }
 
-        public ActionResult Top10ProductIncomeDetail(string query)
-        {
-            if (!query.IsEmpty())
-            {
-                ViewBag.Title = "Chi tiết thu nhập từ sản phẩm";
-                string[] tempStrings = query.Split(';');
-
-                int id = Convert.ToInt32(tempStrings[0].Trim());
-
-                if (tempStrings[1].Length == 23)
-                {
-                    DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 10), "dd/MM/yyyy",
-                        CultureInfo.InvariantCulture);
-                    DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(13, 10), "dd/MM/yyyy",
-                        CultureInfo.InvariantCulture);
-
-                    ReportBusiness business = new ReportBusiness();
-
-                    ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, startDate, endDate, null, null,
-                        null, null);
-
-                    return View("Top10ProductIncomeWeeklyDetail", result);
-                }
-                else if (tempStrings[1].Length == 17)
-                {
-                    DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 7), "MM/yyyy",
-                        CultureInfo.InvariantCulture);
-                    DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(10, 7), "MM/yyyy",
-                        CultureInfo.InvariantCulture);
-
-                    ReportBusiness business = new ReportBusiness();
-
-                    ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, null, null, startDate.Month,
-                        startDate.Year, endDate.Month, endDate.Year);
-
-                    return View("Top10ProductIncomeMonthlyDetail", result);
-
-                }
-                else if (tempStrings[1].Length == 11)
-                {
-                    int startYear = Convert.ToInt32(tempStrings[1].Substring(0, 4));
-                    int endYear = Convert.ToInt32(tempStrings[1].Substring(7, 4));
-
-                    ReportBusiness business = new ReportBusiness();
-
-                    ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, null, null, null, startYear,
-                        null, endYear);
-
-                    return View("Top10ProductIncomeYearlyDetail", result);
-
-                }
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
         #endregion
 
         #region Review Revenue per Customer
@@ -278,8 +222,8 @@ namespace BMA.Controllers
                 DateTime endDate;
                 if (start == null || end == null)
                 {
-                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
-                    endDate = DateTime.Now;
+                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-14);
+                    endDate = DateTime.Now.LastDayOfWeek();
                 }
                 else
                 {
@@ -314,61 +258,6 @@ namespace BMA.Controllers
 
             return null;
         }
-
-        public ActionResult Top10CustomerRevenueDetail(string query)
-        {
-            if (!query.IsEmpty())
-            {
-                ViewBag.Title = "Chi tiết doanh thu từ khách hàng";
-                string[] tempStrings = query.Split(';');
-
-                int id = Convert.ToInt32(tempStrings[0].Trim());
-                if (tempStrings[1].Length == 23)
-                {
-                    DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 10), "dd/MM/yyyy",
-                        CultureInfo.InvariantCulture);
-                    DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(13, 10), "dd/MM/yyyy",
-                        CultureInfo.InvariantCulture);
-
-                    ReportBusiness business = new ReportBusiness();
-
-                    CustomerRevenueReport result = business.GetCustomerRevenueReport(id, startDate, endDate, null, null,
-                        null, null);
-
-                    return View("Top10CustomerRevenueWeeklyDetail", result);
-                }
-                else if (tempStrings[1].Length == 17)
-                {
-                    DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 7), "MM/yyyy",
-                        CultureInfo.InvariantCulture);
-                    DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(10, 7), "MM/yyyy",
-                        CultureInfo.InvariantCulture);
-
-                    ReportBusiness business = new ReportBusiness();
-
-                    CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, startDate.Month,
-                        startDate.Year, endDate.Month, endDate.Year);
-
-                    return View("Top10CustomerRevenueMonthlyDetail", result);
-
-                }
-                else if (tempStrings[1].Length == 11)
-                {
-                    int startYear = Convert.ToInt32(tempStrings[1].Substring(0, 4));
-                    int endYear = Convert.ToInt32(tempStrings[1].Substring(7, 4));
-
-                    ReportBusiness business = new ReportBusiness();
-
-                    CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, null, startYear,
-                        null, endYear);
-
-                    return View("Top10CustomerRevenueYearlyDetail", result);
-
-                }
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
         #endregion
 
 

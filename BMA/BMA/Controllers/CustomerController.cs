@@ -14,7 +14,7 @@ namespace BMA.Controllers
         private BMAEntities db = new BMAEntities();
         private CustomerBusiness customerBusiness = new CustomerBusiness();
         // GET: Customer
-
+        /*
         public ActionResult GetCustomerPartialView(int? customerId)
         {
             if (customerId != null)
@@ -24,7 +24,7 @@ namespace BMA.Controllers
             List<Customer> customerList = customerBusiness.GetCustomerList();
             return PartialView(customerList);
         }
-
+        */
         [HttpPost]
         public ActionResult Create(FormCollection form, string returnUrl)
         {
@@ -45,7 +45,7 @@ namespace BMA.Controllers
                 !(customerName.IsEmpty() || orderIdString.IsEmpty() || username.IsEmpty() || email.IsEmpty() ||
                   customerAddress.IsEmpty() || customerPhoneNumber.IsEmpty() || customerTaxCode.IsEmpty()))
             {
-                int orderId = Convert.ToInt32(orderIdString);
+                int orderId = Convert.ToInt32(orderIdString);               
                 bool rs = customerBusiness.AddCustomerForOrder(username, email, customerName, customerAddress,
                     customerPhoneNumber, customerTaxCode, orderId);
                 return rs ? 1 : 0;
@@ -54,31 +54,48 @@ namespace BMA.Controllers
         }
 
         #region Get Customer Index
+
         public ActionResult CustomerIndex()
         {
-            ViewBag.TreeView = "customerIndex";
-
-            var stafflList = CustomerBusiness.GetCustomerIndex();
-            if (stafflList == null)
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] == 3)
             {
-                RedirectToAction("CustomerIndex", "Customer");
+                return RedirectToAction("Index", "Home");
             }
-            return View(stafflList);
+            else
+            {
+                ViewBag.TreeView = "customerIndex";
+
+                var stafflList = CustomerBusiness.GetCustomerIndex();
+                if (stafflList == null)
+                {
+                    RedirectToAction("CustomerIndex", "Customer");
+                }
+                return View(stafflList);
+            }
         }
+
         #endregion
 
         #region Get customer detail
         public ActionResult CustomerDetail(int id)
         {
-            ViewBag.TreeView = "customerIndex";
-            Customer customerDetail = customerBusiness.GetCustomerDetail(id);
-            if (customerDetail == null)
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] ==3)
             {
-                RedirectToAction("StaffIndex", "Staff");
-
+                return RedirectToAction("Index", "Home");
             }
-            return View(customerDetail);
+            else
+            {
+                ViewBag.TreeView = "customerIndex";
+                Customer customerDetail = customerBusiness.GetCustomerDetail(id);
+                if (customerDetail == null)
+                {
+                    RedirectToAction("StaffIndex", "Staff");
 
+                }
+                return View(customerDetail);
+            }
         }
 
         #endregion
@@ -87,39 +104,57 @@ namespace BMA.Controllers
         [HttpPost]
         public int ChangeCustomerStatus(int id)
         {
-            Boolean result = CustomerBusiness.ChangeCustomerStatus(id);
-            if (result)
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 1)
             {
-                return 1;
+                return -7;
             }
             else
             {
-                return 0;
+                Boolean result = CustomerBusiness.ChangeCustomerStatus(id);
+                if (result)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
         #endregion
 
         #region Change Customer Loyal
+
         [HttpPost]
         public int ChangeCustomerLoyal(int id)
         {
-            Boolean result = CustomerBusiness.ChangeCustomerLoyal(id);
-            if (result)
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 1)
             {
-                return 1;
+                return -7;
             }
             else
             {
-                return 0;
+                Boolean result = CustomerBusiness.ChangeCustomerLoyal(id);
+                if (result)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
+
         #endregion
 
         #region Get order by customer
 
         public ActionResult GetOrderByCustomerTable(int id)
         {
-            List<Order> orderByCustomerList = db.Orders.Where(n => n.CustomerUserId == id).ToList();
+            List<Order> orderByCustomerList =db.Orders.Where(n => n.CustomerUserId == id).ToList();
             return PartialView("OrderedByCustomerPartialView", orderByCustomerList);
         }
 
