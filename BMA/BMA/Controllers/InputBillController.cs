@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -12,15 +11,13 @@ using BMA.Models;
 namespace BMA.Controllers
 {
     public class InputBillController : Controller
-   {
-
+    {
         private BMAEntities db = new BMAEntities();
         private InputBillBusiness inputBillBusiness = new InputBillBusiness();
 
         #region Get input bill list
         public ActionResult InputBillIndex()
         {
-            db = new BMAEntities();
             ViewBag.TreeView = "inputBill";
             ViewBag.TreeViewMenu = "listInputBill";
             var inputBillList = InputBillBusiness.GetInputBillList();
@@ -69,10 +66,6 @@ namespace BMA.Controllers
         {
             ViewBag.TreeView = "inputBill";
             ViewBag.TreeViewMenu = "addInputBill";
-
-            OrderBusiness business = new OrderBusiness();
-            ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
-
             List<InputBill> inputBills = db.InputBills.ToList();
             return View(inputBills);
         }
@@ -87,10 +80,12 @@ namespace BMA.Controllers
                 inputBill.SupplierId = Convert.ToInt32(supplierIdString);
                 inputBill.InputBillAmount = Convert.ToInt32(inputBillAmountString);
                 inputBill.InputTaxAmount = Convert.ToInt32(inputTaxAmountString);
-                inputBill.ImportDate = DateTime.ParseExact(importDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                String inputBillCode = supplierIdString + importDate;
-                inputBill.InputBillCode = inputBillCode.Replace("-", "");
+                inputBill.ImportDate = Convert.ToDateTime(importDate);
+                inputBill.InputBillCode = supplierIdString + importDate;
+
                 inputBill.InputRawImage = fileName;
+
+
             }
             catch (Exception)
             {
@@ -154,88 +149,6 @@ namespace BMA.Controllers
             else
             {
                 return -1;
-            }
-        }
-        #endregion
-
-        #region Edit Input Bill View
-        public ActionResult EditInputBill(int id)
-        {
-            ViewBag.TreeView = "inputBill";
-
-            OrderBusiness business = new OrderBusiness();
-            ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
-
-            InputBill inputBill = db.InputBills.SingleOrDefault(m => m.InputBillId == id);
-            return View(inputBill);
-        }
-        #endregion
-        
-        #region Edit Input Bill Image
-        [HttpPost]
-        public int EditImage(HttpPostedFileBase file)
-        {
-            var allowedExtensions = new[] {  
-            ".Jpg", ".png", ".jpg", "jpeg", ".JPG", ".PNG", ".JPEG"  
-            };
-            var maxSize = 1048576;
-            var fileName = "";
-            if (file != null)
-            {
-                var productSize = file.ContentLength;
-                fileName = Path.GetFileName(file.FileName);
-                var ext = Path.GetExtension(file.FileName);
-                if (allowedExtensions.Contains(ext))
-                {
-                    if (productSize <= maxSize)
-                    {
-                        var comparePath = Server.MapPath(string.Format("{0}{1}", "~/Content/Images/InputBillImages", fileName));
-                        if (!System.IO.File.Exists(comparePath))
-                        {
-                            var path = Path.Combine(Server.MapPath("~/Content/Images/InputBillImages"), fileName);
-                            file.SaveAs(path);
-                        }
-                        return 1;
-                    }
-                    else
-                    {
-                        //TempData["Message"] = "Kích thước hình ảnh quá lớn";
-                        string strURL = Request.UrlReferrer.AbsolutePath;
-                        return -2;
-                    }
-                }
-                else
-                {
-                    //TempData["Message"] = "Xin chọn file hình ảnh";
-                    string strURL = Request.UrlReferrer.AbsolutePath;
-                    return -3;
-                }
-            }
-            else
-            {
-                return 1;
-            }
-        }
-        #endregion
-
-        #region Edit Input Bill
-        [HttpPost]
-        public int EditInputBill(int inputBillId, string supplierIdString, string inputBillAmountString, string inputTaxAmountString, string importDate, string fileName)
-        {
-
-            int supplierId = Convert.ToInt32(supplierIdString);
-            int inputBillAmount = Convert.ToInt32(inputBillAmountString);
-            int inputBillTaxAmount = Convert.ToInt32(inputTaxAmountString);
-            String inputBillCode = supplierIdString + importDate;
-
-            bool result = InputBillBusiness.EditInputBill(inputBillId, supplierId, inputBillCode, inputBillAmount, inputBillTaxAmount, fileName, importDate);
-            if (result)
-            {
-                return 2;
-            }
-            else
-            {
-                return 0;
             }
         }
         #endregion

@@ -64,18 +64,43 @@ namespace BMA.Controllers
             }
             return -1;
         }
-        public ActionResult ChangeStatus(int materialId, bool status, string strURL)
+        public int ChangeStatus(int materialId, bool status, string strURL)
         {
             try
             {
                 ManageMaterialBusiness mmb = new ManageMaterialBusiness();
                 var radioButton = Convert.ToBoolean(Request.Form["status"]);
-                mmb.ChangeStatus(materialId, radioButton);
-                return Redirect(strURL);
+                List<Recipe> lstReciple = db.Recipes.Where(r => r.ProductMaterialId == materialId && r.Product.IsActive).ToList();
+                ProductMaterial productMaterial = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == materialId);
+                if (productMaterial.IsActive == radioButton && productMaterial.IsActive)
+                {
+                    return -3;
+                }
+                if (productMaterial.IsActive == radioButton && !productMaterial.IsActive)
+                {
+                    return -4;
+                }
+                if (radioButton)
+                {
+                    mmb.ChangeStatus(materialId, radioButton);
+                    return 1;
+                }
+                else
+                {
+                    if (lstReciple.Count != 0)
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        mmb.ChangeStatus(materialId, radioButton);
+                        return 1;
+                    }                   
+                }               
             }
             catch
             {
-                return RedirectToAction("Index", "Error");
+                return -2;
             }
         }
 

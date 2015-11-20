@@ -26,7 +26,7 @@
                     @if (Model.CompletedOrderList.Count > 0)
                     {
                         <div class="box-body">
-                            <h5><b>@(Model.CompletedOrderList.Count)</b> đơn hàng đã hoàn thành: <b>@(Model.CompletedOrderValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b></h5>
+                            <h5>@(Model.CompletedOrderList.Count) đơn hàng đã hoàn thành: @(Model.CompletedOrderValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h5>
                             <table class="table table-responsive">
                                 <thead>
                                     <tr>
@@ -40,13 +40,13 @@
                                 <tbody>
                                     @for (int i = 0; i < Model.CompletedOrderList.Count; i++)
                                     {
-                                    <tr>
-                                        <td>@(i + 1)</td>
-                                        <td>@(Model.CompletedOrderList.ElementAt(i).OrderCode)</td>
-                                        <td style="text-align: right">@(Model.CompletedOrderList.ElementAt(i).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                        <td style="text-align: right">@(Model.CompletedOrderList.ElementAt(i).DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                        <td style="text-align: right">@((Model.CompletedOrderList.ElementAt(i).Amount - Model.CompletedOrderList.ElementAt(i).DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                    </tr>
+                                        <tr>
+                                            <td>@(i + 1)</td>
+                                            <td>@(Model.CompletedOrderList.ElementAt(i).OrderCode)</td>
+                                            <td style="text-align: right">@(Model.CompletedOrderList.ElementAt(i).Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                            <td style="text-align: right">@(Model.CompletedOrderList.ElementAt(i).DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                            <td style="text-align: right">@((Model.CompletedOrderList.ElementAt(i).Amount - Model.CompletedOrderList.ElementAt(i).DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
@@ -56,7 +56,7 @@
                     @if (Model.CanceledOrderList.Count > 0)
                     {
                         <div class="box-body">
-                            <h5><b>@(Model.CanceledOrderList.Count)</b> đơn hàng hủy: <b>@(Model.CanceledOrderValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b></h5>
+                            <h5>@(Model.CanceledOrderList.Count) đơn hàng hủy: @(Model.CanceledOrderValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</h5>
                             <table class="table table-responsive">
                                 <thead>
                                     <tr>

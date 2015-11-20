@@ -101,9 +101,8 @@
                                         }
                                     }
                                 }
-                                @{
-                                int id = 0;
-                                while (id == 0)
+                                @{ int id = 0;}
+                                @while (id == 0)
                                 {
                                     foreach (sp_GetTop10IncomeOfProductWeekly_Result result in Model)
                                     {
@@ -113,12 +112,14 @@
                                         }
                                     }
                                 }
-                                string queryString = id + ";" + timeList.First().Substring(0, 10) + " - " + timeList.Last().Substring(13, 10);
-                                }
-
                                 <td>
-                                    <button onclick="window.open('@(Html.Raw(Url.Action("Top10ProductIncomeDetail", "Report", new { query = queryString })))', '_blank')" c class="btn btn-info btn-xs">
+                                    <button onclick="openDetailInNewTab()" class="btn btn-info btn-xs">
                                         <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
+                                        <script type="text/javascript">
+                                            function openDetailInNewTab() {
+                                                alert(@id);
+                                            }
+                                        </script>
                                     </button>
                                 </td>
                             </tr>

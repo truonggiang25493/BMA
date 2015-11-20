@@ -14,6 +14,7 @@ namespace BMA.Models
     
     public partial class OutputBill
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OutputBill()
         {
             this.Orders = new HashSet<Order>();
@@ -25,6 +26,7 @@ namespace BMA.Models
         public string OutputBillRawImage { get; set; }
         public double OutputBillTaxAmount { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

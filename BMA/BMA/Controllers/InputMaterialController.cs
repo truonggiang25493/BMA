@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
@@ -81,30 +80,26 @@ namespace BMA.Controllers
         #region Add New Input Material
         public int AddInputMaterial(FormCollection f)
         {
-            InputMaterial inputMaterial = new InputMaterial();
+
             String productMaterialIdString = f["productMaterialId"];
-            String importQuantityString = f["txtImportQuantity"];
-            String inputMaterialTotalPriceString = f["txtInputMaterialPrice"];
-            String importDateString = f["txtImportDate"];
-            String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
+            String importQuantity = f["txtImportQuantity"];
+            String inputMaterialPrice = f["txtInputMaterialPrice"];
+            String importDate = f["txtImportDate"];
+            String inputMaterialExpiryDate = f["txtInputMaterialExpiryDate"];
             String inputMaterialNote = f["txtInputMaterialNote"];
             String inputBillId = f["inputBillId"];
-            
+            InputMaterial inputMaterial = new InputMaterial();
             try
             {
-                int importQuantity = Convert.ToInt32(importQuantityString);
-                int inputMaterialTotalPrice = Convert.ToInt32(inputMaterialTotalPriceString);
-                double inputMaterialPrice = Convert.ToDouble(inputMaterialTotalPrice/importQuantity);
-
-                inputMaterial.ImportQuantity = importQuantity;
-                inputMaterial.InputMaterialPrice = inputMaterialPrice;
-                inputMaterial.ImportDate = DateTime.ParseExact(importDateString,"dd/MM/yyyy",CultureInfo.InvariantCulture);
-                inputMaterial.InputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                inputMaterial.ImportQuantity = int.Parse(importQuantity);
+                inputMaterial.InputMaterialPrice = int.Parse(inputMaterialPrice);
+                inputMaterial.ImportDate = Convert.ToDateTime(importDate);
+                inputMaterial.InputMaterialExpiryDate = Convert.ToDateTime(inputMaterialExpiryDate);
                 inputMaterial.InputMaterialNote = inputMaterialNote;
-                inputMaterial.InputBillId = Convert.ToInt32(inputBillId);
-                int productMaterialId = Convert.ToInt32(productMaterialIdString);
+                inputMaterial.InputBillId = int.Parse(inputBillId);
+                int productMaterialId = int.Parse(productMaterialIdString);
                 inputMaterial.ProductMaterialId = productMaterialId;
-                inputMaterial.RemainQuantity = Convert.ToInt32(importQuantity);
+                inputMaterial.RemainQuantity = int.Parse(importQuantity);
                 inputMaterial.IsActive = true;
             }
             catch (Exception)

@@ -113,15 +113,15 @@
                                     <span class="label label-danger">Ngừng hoạt động</span>
                                     @if (customer.IsLoyal)
                                     {
-                                        <img src="~/content/adminlayout/dist/img/vipicon.gif" />
+                                        <img src="~/content/adminlayout/dist/img/vip.png" />
                                     }
                                 </td>
                                 <td>
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("CustomerDetail", "Customer", new {id = customer.CustomerId}))" data-toggle="tooltip" data-placement="top" title="Xem">
-                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("CustomerDetail", "Customer", new {id = customer.CustomerId}))">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
                                     </a>
-                                    <button class="btn btn-link btn-xs" onclick="open_container(@(customer.CustomerId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
-                                        <i class="fa fa-refresh" style="margin-right: 3px"></i>
+                                    <button class="btn btn-link btn-xs" onclick="open_container(@(customer.CustomerId));">
+                                        <i class="fa fa-refresh" style="margin-right: 3px"></i>Thay đổi trạng thái
                                         <script type="text/javascript">
                                             function open_container(id) {
                                                 var content = $("<div>", {

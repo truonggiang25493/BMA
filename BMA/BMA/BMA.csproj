@@ -39,7 +39,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -133,15 +153,6 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.2.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security">
-      <HintPath>..\packages\Microsoft.Owin.Security.2.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin.Security.Facebook">
       <HintPath>..\packages\Microsoft.Owin.Security.Facebook.2.0.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
     </Reference>
@@ -207,9 +218,15 @@
     <Compile Include="Controllers\StoreInforController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\TaxController.cs" />
+    <Compile Include="DBChangeNotifer\ChangeEventArgs.cs" />
+    <Compile Include="DBChangeNotifer\ChangeInfo.cs" />
+    <Compile Include="DBChangeNotifer\ChangeNotifier.cs" />
+    <Compile Include="DBChangeNotifer\ChangeSource.cs" />
+    <Compile Include="DBChangeNotifer\ChangeType.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\RealtimeNotifierHub.cs" />
     <Compile Include="Models\BMA.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -249,7 +266,6 @@
     <Compile Include="Models\InputMaterial.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Metadata\Product.metadata.cs" />
     <Compile Include="Models\Order.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -280,6 +296,7 @@
     <Compile Include="Models\Role.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Security\BMARoleProvider.cs" />
     <Compile Include="Models\sp_GetIncomeMonthly_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -336,7 +353,6 @@
     </Compile>
     <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
-    <Compile Include="Models\ViewModel\CustomerRevenueReport.cs" />
     <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
     <Compile Include="Models\ViewModel\DiscardInputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
@@ -344,7 +360,6 @@
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
     <Compile Include="Models\ViewModel\ReportIncomeViewModel.cs" />
-    <Compile Include="Models\ViewModel\ReportProductIncomeViewModel.cs" />
     <Compile Include="Models\ViewModel\ShortageMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\SupplierViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -532,6 +547,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.noty.packaged.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -1461,18 +1478,6 @@
     <Content Include="Views\StoreInfor\ConfigIndex.cshtml" />
     <Content Include="Views\Account\GetPassword.cshtml" />
     <Content Include="Views\Account\CreateNewPassword.cshtml" />
-    <Content Include="Views\Report\Top10CustomerRevenueMonthlyDetail.cshtml" />
-    <Content Include="Views\Report\Top10CustomerRevenueMonthlyPartialView.cshtml" />
-    <Content Include="Views\Report\Top10CustomerRevenueWeeklyDetail.cshtml" />
-    <Content Include="Views\Report\Top10CustomerRevenueWeeklyPartialView.cshtml" />
-    <Content Include="Views\Report\Top10CustomerRevenueYearlyDetail.cshtml" />
-    <Content Include="Views\Report\Top10CustomerRevenueYearlyPartialView.cshtml" />
-    <Content Include="Views\Report\Top10ProductIncomeMonthlyDetail.cshtml" />
-    <Content Include="Views\Report\Top10ProductIncomeMonthlyPartialView.cshtml" />
-    <Content Include="Views\Report\Top10ProductIncomeWeeklyDetail.cshtml" />
-    <Content Include="Views\Report\Top10ProductIncomeWeeklyPartialView.cshtml" />
-    <Content Include="Views\Report\Top10ProductIncomeYearlyDetail.cshtml" />
-    <Content Include="Views\Report\Top10ProductIncomeYearlyPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

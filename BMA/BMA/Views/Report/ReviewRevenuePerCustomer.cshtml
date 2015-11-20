@@ -3,7 +3,7 @@
 }
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h2>@(ViewBag.Title)</h2>
+    <h2 style="color:">@(ViewBag.Title)</h2>
     <div class="row">
         <div class="col-md-4">
         </div>
@@ -60,14 +60,12 @@
                 ignoreReadonly: true,
                 format: 'L',
                 locale: 'vi',
-                maxDate: moment().startOf('week').subtract(7, 'days').format('MM/DD/YYYY'),
-                defaultDate: moment().startOf('week').subtract(7, 'days').format('MM/DD/YYYY')
+                maxDate: moment().subtract(7, 'days')
             });
             $('#toDate').datetimepicker({
                 ignoreReadonly: true,
                 format: 'L',
                 locale: 'vi',
-                defaultDate: moment().format('MM/DD/YYYY'),
                 maxDate: moment(),
                 useCurrent: false
             });
@@ -84,13 +82,13 @@
         $(document).ready(function () {
             $.ajax({
                 url: "@(Url.Action("ReviewRevenuePerCustomerPartialView", "Report"))",
-                method: "POST",
+                method: "GET",
                 success: function (data) {
                     $("#review-content").html(data);
                     var label = [];
                     var labelNumber = $("#revenue-table thead tr th").length;
                     $("#revenue-table thead tr th").each(function (index) {
-                        if (index !== 0 && index !== 1 && index !== (labelNumber - 1))
+                        if (index !== 0 && index !== (labelNumber - 1))
                             label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
                     });
 
@@ -103,7 +101,7 @@
                         var data = [];
                         var dataNumber = $(row).find("td").length;
                         $(row).find("td").each(function (count) {
-                            if (count !== 0 && count !== 1 && count !== (dataNumber - 1)) {
+                            if (count !== 0 && count !== (dataNumber - 1)) {
                                 var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
                                 data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
                             }
@@ -176,6 +174,14 @@
                         yAxisUnit: "đồng",
                         yAxisLabel: "Thu nhập",
                         thousandSeparator: ".",
+                        // Specify the number of Y-scales to display
+                        scaleOverride: true,
+                        // The start value of the scale
+                        scaleStartValue: 0,
+                        // The number of Y-scales to display
+                        scaleSteps: 10,
+                        // The width between two Y-scale
+                        scaleStepWidth: 500000,
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
                         annotateDisplay: true,
@@ -242,7 +248,7 @@
                     var label = [];
                     var labelNumber = $("#revenue-table thead tr th").length;
                     $("#revenue-table thead tr th").each(function (index) {
-                        if (index !== 0 & index !== 1 && index !== (labelNumber - 1))
+                        if (index !== 0 && index !== (labelNumber - 1))
                             label.push($("#revenue-table thead tr th:nth-child(" + (index + 1) + ")").html());
                     });
 
@@ -255,7 +261,7 @@
                         var data = [];
                         var dataNumber = $(row).find("td").length;
                         $(row).find("td").each(function (count) {
-                            if (count !== 0 && count !== 1 && count !== (dataNumber - 1)) {
+                            if (count !== 0 && count !== (dataNumber - 1)) {
                                 var revenue = $(row).find("td:nth-child(" + (count + 1) + ")").html();
                                 data.push(revenue.substring(0, revenue.length - 2).split('.').join(""));
                             }
@@ -328,14 +334,14 @@
                         yAxisUnit: "đồng",
                         yAxisLabel: "Doanh thu",
                         thousandSeparator: ".",
-                        /*// Specify the number of Y-scales to display
+                        // Specify the number of Y-scales to display
                         scaleOverride: true,
                         // The start value of the scale
                         scaleStartValue: 0,
                         // The number of Y-scales to display
                         scaleSteps: 10,
                         // The width between two Y-scale
-                        scaleStepWidth: 500000,*/
+                        scaleStepWidth: 500000,
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
                         annotateDisplay: true,

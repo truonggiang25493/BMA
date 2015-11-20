@@ -56,16 +56,16 @@
                                                 @if (Model.IsActive)
                                                 {
                                                     <span class="label label-success">Đang hoạt động</span>
-    <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
-        <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>
-    </button>
+                                                    <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));">
+                                                        <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>Thay đổi trạng thái
+                                                    </button>
                                                 }
                                                 else
                                                 {
                                                     <span class="label label-danger">Ngừng hoạt động</span>
-    <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
-        <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>
-    </button>
+                                                    <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));">
+                                                        <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>Thay đổi trạng thái
+                                                    </button>
                                                 }
                                             </div>
 

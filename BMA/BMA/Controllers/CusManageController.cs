@@ -17,9 +17,10 @@ namespace BMA.Controllers
     {
         BMAEntities db = new BMAEntities();
 
+        //[Authorize(Roles = "Customer")]
         public ActionResult Index()
         {
-            if (Session["User"] == null)
+            if (Session["User"] == null || Session["UserRole"] != null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -291,7 +292,7 @@ namespace BMA.Controllers
             catch (DataException)
             {
                 return -1;
-            }    
+            }
         }
 
         //public ActionResult CancelBothOrderConfirm(int orderId, int oldOrderId)

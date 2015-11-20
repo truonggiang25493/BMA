@@ -25,8 +25,32 @@
     <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <!--Bootstrap-chosen-->
     <link href="~/Content/bootstrap-chosen.css" rel="stylesheet" />
+    <!-- jQuery 2.1.4 -->
+    <script src="~/Content/AdminLayout/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+    <script type="text/javascript">
+        function onChange(info, source, type) {
+            if (info == 1) {
+                noty({
+                    text: 'Có một đơn hàng vừa được thêm mới.',
+                    type: 'success',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: false
+                });
+            }           
+        }
+
+        window.addEventListener('load', function () {
+            var notifier = $.connection.realtimeNotifierHub;
+            notifier.client.onChange = onChange;
+            $.connection.hub.start();
+        });
+    </script>
     <div class="wrapper">
         <header class="main-header">
             <a href="" class="logo">
@@ -224,14 +248,14 @@
                     </li>
                     <li class="treeview" id="report">
                         <a href="#">
-                            <i class="fa fa-bar-chart"></i> <span>Thống kê</span>
+                            <i class="fa fa-bar-chart"></i> <span>Báo cáo</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="customerRevenue"><a href="@(Url.Action("ReviewRevenuePerCustomer", "Report"))"><i class="fa fa-usd"></i>Doanh thu theo khách hàng</a></li>
-                            <li id="incomeProduct"><a href="@(Url.Action("ReviewRevenueByProduct", "Report"))"><i class="fa fa-usd"></i>Thu nhập theo sản phẩm</a></li>
-                            <li id="incomeReport"><a href="@(Url.Action("ReviewIncomeByTime", "Report"))"><i class="fa fa-usd"></i>Thu nhập theo thời gian</a></li>
-                            <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Thuế</a></li>
+                            <li id="customerRevenue"><a href="@(Url.Action("ReviewRevenuePerCustomer", "Report"))"><i class="fa fa-usd"></i>Thống kê doanh thu theo khách hàng</a></li>
+                            <li id="incomeProduct"><a href="@(Url.Action("ReviewRevenueByProduct", "Report"))"><i class="fa fa-usd"></i>Thống kê thu nhập theo sản phẩm</a></li>
+                            <li id="incomeReport"><a href="@(Url.Action("ReviewIncomeByTime", "Report"))"><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
+                            <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -298,7 +322,6 @@
     </div>
     <!--End of large modal-->
     <!-- jQuery 2.1.4 -->
-    <script src="~/Content/AdminLayout/plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.5 -->
     <script src="/Content/AdminLayout/bootstrap/js/bootstrap.min.js"></script>
     <!-- FastClick -->
@@ -341,8 +364,7 @@
     @RenderSection("InputBillDetailScript", false)
     @RenderSection("ReviewIncomeByTimeScript", false)
     @RenderSection("OtherExpenseIndexScript", false)
-    @RenderSection("AddInputBillScript", false)
-    @RenderSection("EditInputBillScript", false)
+    @RenderSection("AddInputBill", false)
     @RenderSection("ReviewRevenuePerCustomerScript", false)
     @RenderSection("ReviewIncomeByProductScript", false)
     <script>
