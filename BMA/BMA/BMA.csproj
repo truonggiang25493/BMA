@@ -338,6 +338,7 @@
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerRevenueReport.cs" />
     <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
+    <Compile Include="Models\ViewModel\DeclarationVatForm.cs" />
     <Compile Include="Models\ViewModel\DiscardInputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialInfoForProductListViewModel.cs" />
@@ -1473,6 +1474,11 @@
     <Content Include="Views\Report\Top10ProductIncomeWeeklyPartialView.cshtml" />
     <Content Include="Views\Report\Top10ProductIncomeYearlyDetail.cshtml" />
     <Content Include="Views\Report\Top10ProductIncomeYearlyPartialView.cshtml" />
+    <Content Include="Views\Report\ReviewRevenuePerCustomer.cshtml" />
+    <Content Include="Views\Tax\Index.cshtml" />
+    <Content Include="Views\Tax\OutputVatList.cshtml" />
+    <Content Include="Views\Tax\InputVatListExport.cshtml" />
+    <Content Include="Views\Tax\InputVatList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

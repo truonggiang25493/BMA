@@ -1,0 +1,748 @@
+﻿@using System.Globalization
+@using BMA.Models.ViewModel
+@model BMA.Models.ViewModel.DeclarationVatForm
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>Bảng kê đầu vào 01-2-GTGT</title>
+    <style>
+        @@page {
+            size: auto;
+            margin: 0;
+        }
+
+        table#content, #content th, #content td {
+            border: 1px solid black;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+    </style>
+
+</head>
+<body onload="window.print();">
+    <div class="content">
+        <div class="details">
+            <div>
+                &nbsp;
+            </div>
+            <div>
+                <p align="center" style="font-size: 14pt; font-weight: bold">
+                    PHỤ LỤC
+                </p>
+                <p style="font-size: 14pt; font-weight: bold; text-align: center; margin-bottom: 0">
+                    BẢNG KÊ HÓA ĐƠN, CHỨNG TỪ CỦA HÀNG HOÁ, DỊCH VỤ MUA VÀO
+                </p>
+                <p align="center" style="font-size: 12pt; font-style: italic; margin: 0">
+                    (Kèm theo tờ khai thuế GTGT mẫu số 01/GTGT)
+                </p>
+                <p align="center" style="font-size: 13pt;margin: 0">
+                    <strong>[01]</strong>&nbsp;Kỳ tính thuế: tháng @(Model.Month) năm @(Model.Year)
+                </p>
+                <p style="font-size: 13pt; margin-left: 140px; margin-bottom: 0">
+                    <strong>[02] Tên người nộp thuế</strong>:@(Model.StoreOwnerName ?? "........................................................................................")
+                </p>
+                <table style="height: 29px; padding: 0;margin-left: 140px">
+                    <tbody>
+                        <tr>
+                            <td style="width: 160px; height: 29px; margin: 0; padding: 0">
+                                <p style="font-size: 13pt; margin: 0">
+                                    <strong>[03]</strong>&nbsp;Mã số thuế:
+                                </p>
+                            </td>
+                            @if (Model.StoreTaxCode != null && !Model.StoreTaxCode.IsEmpty() && Model.StoreTaxCode.Length == 13)
+                            {
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(0))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(1))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(2))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(3))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(4))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(5))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(6))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(7))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(8))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(9))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(10))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(11))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(12))</td>
+                            }
+                            else if (Model.StoreTaxCode != null && !Model.StoreTaxCode.IsEmpty() && Model.StoreTaxCode.Length == 10)
+                            {
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(0))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(1))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(2))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(3))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(4))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(5))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(6))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(7))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(8))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(9))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            }
+                            else
+                            {
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            }
+
+
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 13pt; margin-left: 140px; margin-top: 0; margin-bottom: 0">
+                    <strong>[04] Tên đại lý thuế (nếu có)</strong>:@(Model.VatAgentOwnerName ?? "........................................................................................")
+                </p>
+                <table style="height: 29px; padding: 0; border-collapse: collapse;margin-left: 140px">
+                    <tbody>
+                        <tr>
+                            <td style="width: 160px; height: 29px; margin: 0; padding: 0">
+                                <p style="font-size: 13pt;margin: 0">
+                                    <strong>[05]</strong>&nbsp;Mã số thuế:
+                                </p>
+                            </td>
+                            @if (Model.VatAgentTaxCode != null && !Model.VatAgentTaxCode.IsEmpty() && Model.VatAgentTaxCode.Length == 13)
+                            {
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(0))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(1))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(2))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(3))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(4))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(5))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(6))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(7))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(8))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(9))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(10))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(11))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(12))</td>
+                            }
+                            else if (Model.StoreTaxCode != null && !Model.StoreTaxCode.IsEmpty() && Model.StoreTaxCode.Length == 10)
+                            {
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(0))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(1))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(2))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(3))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(4))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(5))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(6))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(7))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(8))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.VatAgentTaxCode.ElementAt(9))</td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            }
+                            else
+                            {
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            }
+
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 13pt; font-style: italic; margin-left: 510px;margin-bottom: 0">
+                    Đơn vị tiền: đồng Việt Nam
+                </p>
+                <table align="center" id="content" style="margin-left: 20px; border-collapse: collapse;">
+                    <tbody>
+                        <tr style="font-size: 12pt; font-weight: bold">
+                            <td rowspan="2" style="width: 1.4cm;">
+                                <p style="text-align: center;">
+                                    STT
+                                </p>
+                            </td>
+                            <td colspan="4" style="width: 5.74cm;">
+                                <p style="text-align: center;">
+                                    Hoá đơn, chứng từ, biên lai nộp thuế
+                                </p>
+                            </td>
+                            <td rowspan="2" style="width: 1.66cm;">
+                                <p style="text-align: center;">
+                                    Tên người bán
+                                </p>
+                            </td>
+                            <td rowspan="2" style="width: 1.59cm;">
+                                <p style="text-align: center;">
+                                    Mã số thuế người bán
+                                </p>
+                            </td>
+                            <td rowspan="2" style="width: 1.45cm;">
+                                <p style="text-align: center;">
+                                    <strong>Mặt hàng</strong>
+                                </p>
+                            </td>
+                            <td rowspan="2" style="width: 1.61cm;">
+                                <p style="text-align: center;">
+                                    Giá trị HHDV mua vào chưa có thuế
+                                </p>
+                            </td>
+                            <td rowspan="2" style="width: 1.61cm;">
+                                <p style="text-align: center;">
+                                    <strong>Thuế suất(%)</strong>
+                                </p>
+                            </td>
+                            <td rowspan="2" style="width: 1.61cm;">
+                                <p style="text-align: center;">
+                                    <strong>Thuế GTGT</strong>
+                                </p>
+                            </td>
+                            <td rowspan="2" style="width: 1.42cm;">
+                                <p style="text-align: center;">
+                                    <strong>Ghi chú hoặc thời hạn thanh toán trả chậm</strong>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr style="font-size: 12pt">
+                            <td style="width: 1.29cm;">
+                                <p style="text-align: center;">
+                                    <strong>Ký hiệu mẫu hoá đơn</strong>
+                                </p>
+                            </td>
+                            <td style="width: 1.27cm;">
+                                <p style="text-align: center;">
+                                    <strong>Ký hiệu hóa đơn</strong>
+                                </p>
+                            </td>
+                            <td style="width: 1.27cm;">
+                                <p style="text-align: center;">
+                                    <strong>Số hoá đơn</strong>
+                                </p>
+                            </td>
+                            <td style="width: 1.91cm;">
+                                <p style="text-align: center;">
+                                    <strong>Ngày, tháng, năm phát hành</strong>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (1)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (2)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (3)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (4)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (5)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (6)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (7)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (8)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (9)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (10)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (11)
+                                </p>
+                            </td>
+                            <td>
+                                <p align="center" style="margin: 0">
+                                    (12)
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="12" style="font-size: 13pt; font-style: italic; height: 0.53cm; width: 722px">
+                                <p style="margin: 0">
+                                    1. Hàng hoá, dịch vụ dùng riêng cho SXKD chịu thuế GTGT và sử dụng cho các hoạt động cung cấp hàng hoá, dịch vụ không kê khai, nộp thuế GTGT đủ điều kiện khấu trừ thuế:
+                                </p>
+                            </td>
+                        </tr>
+                        @if (Model.Categories1 == null)
+                        {
+                            <tr style="height: 0.74cm">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr style="height: 0.74cm; font-size: 13pt">
+                                <td colspan="8">
+                                    <p style="margin: 0">
+                                        Tổng
+                                    </p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Model.Categories1.Count; i++)
+                            {
+                                <tr style="height: 0.74cm">
+                                    <td style="width: 1.4cm; text-align: center">@(i + 1)</td>
+                                    <td style="width: 1.29cm">@(Model.Categories1.ElementAt(i).Column2)</td>
+                                    <td style="width: 1.27cm">@(Model.Categories1.ElementAt(i).Column3)</td>
+                                    <td style="width: 1.27cm">@(Model.Categories1.ElementAt(i).Column4)</td>
+                                    <td style="text-align: center; width: 1.91cm">@(Model.Categories1.ElementAt(i).Column5)</td>
+                                    <td style="width: 1.66cm">@(Model.Categories1.ElementAt(i).Column6)</td>
+                                    <td style="text-align: center; width: 1.59cm">@(Model.Categories1.ElementAt(i).Column7)</td>
+                                    <td style="width: 1.45cm">@(Model.Categories1.ElementAt(i).Column8)</td>
+                                    <td style="text-align: right; width: 1.61cm">@(Model.Categories1.ElementAt(i).Column9)</td>
+                                    <td style="width: 1.61cm; text-align: right">@(Model.Categories1.ElementAt(i).Column10)</td>
+                                    <td style="text-align: right; width: 1.61cm">@(Model.Categories1.ElementAt(i).Column11)</td>
+                                    <td style="width: 1.42cm">@(Model.Categories1.ElementAt(i).Column12)</td>
+                                </tr>
+                            }
+
+                            <tr style="height: 0.74cm; font-size: 13pt">
+                                <td colspan="8">
+                                    <p style="margin: 0">
+                                        Tổng
+                                    </p>
+                                </td>
+                                <td>@(Model.Categories1TotalAmount)</td>
+                                <td></td>
+                                <td>@(Model.Categories1TotalTaxAmount)</td>
+                                <td></td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td colspan="12" style="font-size: 13pt; font-style: italic; height: 0.53cm">
+                                <p style="margin: 0">
+                                    2. Hàng hoá, dịch vụ không đủ điều kiện khấu trừ:
+                                </p>
+                            </td>
+                        </tr>
+                        @if (Model.Categories2 == null)
+                        {
+                            <tr style="height: 0.74cm">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr style="height: 0.74cm; font-size: 13pt">
+                                <td colspan="8">
+                                    <p style="margin: 0">
+                                        Tổng
+                                    </p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Model.Categories2.Count; i++)
+                            {
+                                <tr style="height: 0.74cm">
+                                    <td style="width: 1.4cm; text-align: center">@(i + 1)</td>
+                                    <td style="width: 1.29cm">@(Model.Categories2.ElementAt(i).Column2)</td>
+                                    <td style="width: 1.27cm">@(Model.Categories2.ElementAt(i).Column3)</td>
+                                    <td style="width: 1.27cm">@(Model.Categories2.ElementAt(i).Column4)</td>
+                                    <td style="text-align: center; width: 1.91cm">@(Model.Categories2.ElementAt(i).Column5)</td>
+                                    <td style="width: 1.66cm">@(Model.Categories2.ElementAt(i).Column6)</td>
+                                    <td style="text-align: center; width: 1.59cm">@(Model.Categories2.ElementAt(i).Column7)</td>
+                                    <td style="width: 1.45cm">@(Model.Categories2.ElementAt(i).Column8)</td>
+                                    <td style="text-align: right; width: 1.61cm">@(Model.Categories2.ElementAt(i).Column9)</td>
+                                    <td style="width: 1.61cm; text-align: right">@(Model.Categories2.ElementAt(i).Column10)</td>
+                                    <td style="text-align: right; width: 1.61cm">@(Model.Categories2.ElementAt(i).Column11)</td>
+                                    <td style="width: 1.42cm">@(Model.Categories2.ElementAt(i).Column12)</td>
+                                </tr>
+                            }
+
+                            <tr style="height: 0.74cm; font-size: 13pt">
+                                <td colspan="8">
+                                    <p style="margin: 0">
+                                        Tổng
+                                    </p>
+                                </td>
+                                <td>@(Model.Categories2TotalAmount)</td>
+                                <td></td>
+                                <td>@(Model.Categories2TotalTaxAmount)</td>
+                                <td></td>
+                            </tr>
+                        }
+
+                        <tr style="height: 0.53cm">
+                            <td colspan="12" style="font-size: 13pt; font-style: italic">
+                                3. Hàng hoá, dịch vụ dùng chung cho SXKD chịu thuế và không chịu thuế đủ điều kiện khấu trừ thuế:
+                            </td>
+                        </tr>
+                        @if (Model.Categories3 == null)
+                        {
+                            <tr style="height: 0.74cm">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr style="height: 0.74cm; font-size: 13pt">
+                                <td colspan="8">
+                                    <p style="margin: 0">
+                                        Tổng
+                                    </p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Model.Categories3.Count; i++)
+                            {
+                                <tr style="height: 0.74cm">
+                                    <td style="width: 1.4cm; text-align: center">@(i + 1)</td>
+                                    <td style="width: 1.29cm">@(Model.Categories3.ElementAt(i).Column2)</td>
+                                    <td style="width: 1.27cm">@(Model.Categories3.ElementAt(i).Column3)</td>
+                                    <td style="width: 1.27cm">@(Model.Categories3.ElementAt(i).Column4)</td>
+                                    <td style="text-align: center; width: 1.91cm">@(Model.Categories3.ElementAt(i).Column5)</td>
+                                    <td style="width: 1.66cm">@(Model.Categories3.ElementAt(i).Column6)</td>
+                                    <td style="text-align: center; width: 1.59cm">@(Model.Categories3.ElementAt(i).Column7)</td>
+                                    <td style="width: 1.45cm">@(Model.Categories3.ElementAt(i).Column8)</td>
+                                    <td style="text-align: right; width: 1.61cm">@(Model.Categories3.ElementAt(i).Column9)</td>
+                                    <td style="width: 1.61cm; text-align: right">@(Model.Categories3.ElementAt(i).Column10)</td>
+                                    <td style="text-align: right; width: 1.61cm">@(Model.Categories3.ElementAt(i).Column11)</td>
+                                    <td style="width: 1.42cm">@(Model.Categories3.ElementAt(i).Column12)</td>
+                                </tr>
+                            }
+
+                            <tr style="height: 0.74cm; font-size: 13pt">
+                                <td colspan="8">
+                                    <p style="margin: 0">
+                                        Tổng
+                                    </p>
+                                </td>
+                                <td>@(Model.Categories3TotalAmount)</td>
+                                <td></td>
+                                <td>@(Model.Categories3TotalTaxAmount)</td>
+                                <td></td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td colspan="12" style="font-size: 13pt; font-style: italic; height: 0.53cm">
+                                4. Hàng hóa, dịch vụ dùng cho dự án đầu tư đủ điều kiện được khấu trừ thuế (*):
+                            </td>
+                        </tr>
+                        @if (Model.Categories4 == null)
+                        {
+                            <tr style="height: 0.74cm">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr style="height: 0.74cm; font-size: 13pt">
+                                <td colspan="8">
+                                    <p style="margin: 0">
+                                        Tổng
+                                    </p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+
+                            </tr>
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Model.Categories4.Count; i++)
+                            {
+                                <tr style="height: 0.74cm">
+                                    <td style="width: 1.4cm; text-align: center">@(i + 1)</td>
+                                    <td style="width: 1.29cm">@(Model.Categories4.ElementAt(i).Column2)</td>
+                                    <td style="width: 1.27cm">@(Model.Categories4.ElementAt(i).Column3)</td>
+                                    <td style="width: 1.27cm">@(Model.Categories4.ElementAt(i).Column4)</td>
+                                    <td style="text-align: center; width: 1.91cm">@(Model.Categories4.ElementAt(i).Column5)</td>
+                                    <td style="width: 1.66cm">@(Model.Categories4.ElementAt(i).Column6)</td>
+                                    <td style="text-align: center; width: 1.59cm">@(Model.Categories4.ElementAt(i).Column7)</td>
+                                    <td style="width: 1.45cm">@(Model.Categories4.ElementAt(i).Column8)</td>
+                                    <td style="text-align: right; width: 1.61cm">@(Model.Categories4.ElementAt(i).Column9)</td>
+                                    <td style="width: 1.61cm; text-align: right">@(Model.Categories4.ElementAt(i).Column10)</td>
+                                    <td style="text-align: right; width: 1.61cm">@(Model.Categories4.ElementAt(i).Column11)</td>
+                                    <td style="width: 1.42cm">@(Model.Categories4.ElementAt(i).Column12)</td>
+                                </tr>
+                            }
+
+                            <tr style="height: 0.74cm; font-size: 13pt">
+                                <td colspan="8">
+                                    <p style="margin: 0">
+                                        Tổng
+                                    </p>
+                                </td>
+                                <td>@(Model.Categories4TotalAmount)</td>
+                                <td></td>
+                                <td>@(Model.Categories4TotalTaxAmount)</td>
+                                <td></td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td colspan="12" style="font-size: 13pt; font-style: italic; height: 0.53cm">
+                                5. Hàng hóa, dịch vụ không phải tổng hợp trên tờ khai 01/GTGT:
+                            </td>
+                        </tr>
+                        @if (Model.Categories5 == null)
+                        {
+                            <tr style="height: 0.74cm">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr style="height: 0.74cm; font-size: 13pt">
+                                <td colspan="8">
+                                    <p style="margin: 0">
+                                        Tổng
+                                    </p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Model.Categories5.Count; i++)
+                            {
+                                <tr style="height: 0.74cm">
+                                    <td style="width: 1.4cm; text-align: center">@(i + 1)</td>
+                                    <td style="width: 1.29cm">@(Model.Categories5.ElementAt(i).Column2)</td>
+                                    <td style="width: 1.27cm">@(Model.Categories5.ElementAt(i).Column3)</td>
+                                    <td style="width: 1.27cm">@(Model.Categories5.ElementAt(i).Column4)</td>
+                                    <td style="text-align: center; width: 1.91cm">@(Model.Categories5.ElementAt(i).Column5)</td>
+                                    <td style="width: 1.66cm">@(Model.Categories5.ElementAt(i).Column6)</td>
+                                    <td style="text-align: center; width: 1.59cm">@(Model.Categories5.ElementAt(i).Column7)</td>
+                                    <td style="width: 1.45cm">@(Model.Categories5.ElementAt(i).Column8)</td>
+                                    <td style="text-align: right; width: 1.61cm">@(Model.Categories5.ElementAt(i).Column9)</td>
+                                    <td style="width: 1.61cm; text-align: right">@(Model.Categories5.ElementAt(i).Column10)</td>
+                                    <td style="text-align: right; width: 1.61cm">@(Model.Categories5.ElementAt(i).Column11)</td>
+                                    <td style="width: 1.42cm">@(Model.Categories5.ElementAt(i).Column12)</td>
+                                </tr>
+                            }
+
+                            <tr style="height: 0.74cm; font-size: 13pt">
+                                <td colspan="8">
+                                    <p style="margin: 0">
+                                        Tổng
+                                    </p>
+                                </td>
+                                <td>@(Model.Categories5TotalAmount)</td>
+                                <td></td>
+                                <td>@(Model.Categories5TotalTaxAmount)</td>
+                                <td></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+                <table style="font-size: 13pt; margin-left: 140px; margin-bottom: 0">
+                    <tr>
+                        <td style="width: 500px">Tổng giá trị hàng hoá, dịch vụ mua vào(**):</td>
+                        <td style="text-align: right">@(Model.TotalAmount)</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 500px">Tổng số thuế GTGT của hàng hoá, dịch vụ mua vào(***):</td>
+                        <td style="text-align: right">@(Model.TotalTaxAmount)</td>
+                    </tr>
+                </table>
+                <p style="font-size: 13pt; margin-left: 140px; margin-top: 0; margin-bottom: 0">
+                    Tôi cam đoan số liệu khai trên là đúng và chịu trách nhiệm trước pháp luật về những số
+                </p>
+                <p style="font-size: 13pt; margin-left: 60px; margin-bottom: 0; margin-top: 0">
+                    liệu đã khai./.
+                </p>
+                <table style="margin-left: 140px; width: 648px;border: 0">
+                    <tbody>
+                        <tr>
+                            <td style="width: 222px; height: 89px;font-size: 12pt;">
+                                <p align="center" style="text-align: center; font-weight: bold; margin-bottom: 0; margin-top: -50px">
+                                    NHÂN VIÊN ĐẠI LÝ THUẾ
+                                </p>
+                                <p style="margin: 0">
+                                    Họ và tên:@(Model.VatAgentName)
+                                </p>
+                                <p style="margin: 0">
+                                    Chứng chỉ hành nghề số:@(Model.VatAgentNo)
+                                </p>
+                            </td>
+                            <td style="width: 426px; height: 89px;">
+                                <table border="0" cellpadding="0" cellspacing="0" style="width: 411px;" width="411">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 411px; height: 17px; font-size: 13pt; font-style: italic; ">
+                                                <p align="center" style="margin-bottom: 5px">
+                                                    @(Model.CreateLocation)&nbsp; , ngày @(Model.CreateDay) tháng @(Model.Month) năm @(Model.Year)
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 411px; height: 42px; font-size: 12pt; font-weight: bold">
+                                                <p align="center" style="margin: 0">
+                                                    <strong>NGƯỜI NỘP THUẾ hoặc</strong>
+                                                </p>
+                                                <p align="center" style="margin-top: 0; margin-bottom: 5px">
+                                                    <strong>ĐẠI DIỆN HỢP PHÁP CỦA NGƯỜI NỘP THUẾ</strong>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 411px; height: 28px; font-size: 12pt; font-style: italic">
+                                                <p align="center" style="margin: 0">
+                                                    (Ký, ghi rõ họ tên; chức vụ và đóng dấu (nếu có))
+                                                </p>
+
+                                                <p align="center" style="margin-top: 70px; margin-bottom: 0">
+                                                    @(Model.SignName)
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 12pt; margin-left: 140px;margin-top: 0">
+                    __________________________
+                </p>
+                <p style="font-size: 11pt; font-weight: bold; font-style: italic; text-decoration: underline; margin-left: 140px;margin-top: 0; margin-bottom: 0">
+                    Ghi chú:
+                </p>
+                <p style="font-size: 11pt; font-style: italic; margin-left: 140px; margin-top: 0; margin-bottom: 0">
+                    (*) Tổng hợp theo từng dự án đầu tư thuộc trường hợp được hoàn thuế GTGT.
+                </p>
+                <p style="font-size: 11pt; font-style: italic; margin-left: 140px; margin-top: 0; margin-bottom: 0">
+                    (**) Tổng doanh thu hàng hóa, dịch vụ mua vào  là tổng cộng số liệu tại cột 9 của dòng tổng của các chỉ tiêu 1, 2, 3, 4
+                </p>
+                <p style="font-size: 11pt; font-style: italic; margin-left: 140px; margin-top: 0; margin-bottom: 0">
+                    (***) Tổng số thuế GTGT của hàng hóa, dịch vụ  mua vào là tổng cộng số liệu tại cột 11 của dòng tổng của các chỉ tiêu 1, 2, 3, 4
+                </p>
+                <p style="font-size: 11pt; font-style: italic; margin-left: 140px; margin-top: 0; margin-bottom: 0">
+                    <span style="margin-left: 25px">-</span><span style="margin-left: 15px">GTGT: giá trị gia tăng</span>
+                </p><p style="font-size: 11pt; font-style: italic; margin-left: 140px; margin-top: 0; margin-bottom: 0">
+                    <span style="margin-left: 25px">-</span><span style="margin-left: 15px">SXKD: sản xuất kinh doanh.</span>
+                </p><p style="font-size: 11pt; font-style: italic; margin-left: 140px; margin-top: 0; margin-bottom: 0">
+                    <span style="margin-left: 25px">-</span><span style="margin-left: 15px">HHDV: hàng hóa dịch vụ.</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
