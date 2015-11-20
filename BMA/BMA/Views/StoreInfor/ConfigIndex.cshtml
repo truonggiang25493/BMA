@@ -959,9 +959,11 @@
                             $("#changeDiscount").text("Thay đổi");
                             if ($("#discountTable").is("[hidden]")) {
                                 $("#discountTable").hide();
-                                $("#isDiscount option:nth-child(2)").attr('select', 'select');
+                                $("#isDiscount option:nth-child(1)").removeAttr("selected");
+                                $("#isDiscount option:nth-child(2)").attr('selected', 'selected');
                             } else {
                                 $("#discountTable").show();
+                                $("#isDiscount option:nth-child(2)").removeAttr("selected");
                                 $("#isDiscount option:nth-child(1)").attr('select', 'select');
                             }
                         }

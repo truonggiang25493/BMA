@@ -14,7 +14,7 @@
         <div class="box-header clearfix">
             <a class="btn btn-info pull-left" href="@(Url.Action("AddStaff", "Staff"))">
                 <i class="fa fa-plus" style="margin-right: 3px"></i>
-                Thêm nguyên liệu đầu vào mới
+                Thêm nhân viên mới
             </a>
         </div>
         <!-- box-body -->
@@ -84,24 +84,35 @@
                                         }
 
                                         function change_staff_status(id) {
-                                            $.ajax({
-                                                "url": "@(Url.Action("ChangeStaffStatus", "Staff"))",
-                                                "method": "POST",
-                                                "data": {
-                                                    "id": id
-                                                },
-                                                "success": function (data) {
-                                                    if (data === "1") {
-                                                        $('#myModal').modal('hide');
-                                                        window.location.replace("@Url.Action("StaffIndex", "Staff", staff.StaffId)");
-                                                    } else {
-                                                        alert("Khong the");
+                                            if (data === '-7') {
+                                                noty({
+                                                    text: 'Bạn không có quyền thực hiện chức năng này.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                            } else {
+                                                $.ajax({
+                                                    "url": "@(Url.Action("ChangeStaffStatus", "Staff"))",
+                                                    "method": "POST",
+                                                    "data": {
+                                                        "id": id
+                                                    },
+                                                    "success": function(data) {
+                                                        if (data === "1") {
+                                                            $('#myModal').modal('hide');
+                                                            window.location.replace("@Url.Action("StaffIndex", "Staff", staff.StaffId)");
+                                                        } else {
+                                                            alert("Khong the");
+                                                        }
+                                                    },
+                                                    "fail": function(e) {
+                                                        alert("Have error" + e);
                                                     }
-                                                },
-                                                "fail": function (e) {
-                                                    alert("Have error" + e);
-                                                }
-                                            });
+                                                });
+                                            }
                                         }
                                     </script>
                                 </button>
@@ -184,7 +195,7 @@
         <div class="box-footer clearfix">
             <a class="btn btn-info pull-left" href="@(Url.Action("AddStaff", "Staff"))">
                 <i class="fa fa-plus" style="margin-right: 3px"></i>
-                Thêm nguyên liệu đầu vào mới
+                Thêm nhân viên mới
             </a>
         </div>
     </div>

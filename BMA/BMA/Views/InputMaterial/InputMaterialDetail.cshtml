@@ -160,7 +160,17 @@
                                                     timeout: 1000
                                                 });
                                             }
-                                            else if ((checkdiscardQuantity)>(@Model.RemainQuantity)) {
+                                            else if ((checkdiscardQuantity) <=0) {
+                                                noty({
+                                                    text: 'Số lượng hủy không được nhỏ hơn 0.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                            }
+                                            else if ((checkdiscardQuantity)>("@Model.RemainQuantity")) {
                                                 noty({
                                                     text: 'Số lượng hủy phải là số.',
                                                     type: 'warning',

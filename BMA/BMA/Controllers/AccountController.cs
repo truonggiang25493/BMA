@@ -7,6 +7,7 @@ using BMA.Models;
 using BMA.Business;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 
 namespace BMA.Controllers
 {
@@ -16,7 +17,7 @@ namespace BMA.Controllers
         //
         // GET: /Account/
         [HttpPost]
-        public ActionResult Login(FormCollection f, string strURL)
+        public int Login(FormCollection f, string strURL)
         {
             AccountBusiness ab = new AccountBusiness();
             try
@@ -30,18 +31,18 @@ namespace BMA.Controllers
                     Session["UserId"] = endUser.UserId;
                     Session["CusUserId"] = endUser.Customers.ElementAt(0).CustomerId;
                     Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber;
-                    return RedirectToAction("Index", "Product");
+                    return 1;
                 }
                 else
                 {
                     Session["User"] = endUser;
                     Session["UserRole"] = endUser.Role.RoleId;
-                    return RedirectToAction("Index", "StoreInfor");
+                    return 2;
                 }
             }
             catch
             {
-                return RedirectToAction("Index", "Error");
+                return -1;
             }
         }
 
@@ -62,58 +63,87 @@ namespace BMA.Controllers
         [HttpPost]
         public int GetPassword(FormCollection f)
         {
-            string email = f["txtEmail"].ToString();
+            AccountBusiness ab = new AccountBusiness();
+            string username = f["txtUsername"].ToString();
             List<User> lstUser = db.Users.ToList();
             for (int i = 0; i < lstUser.Count; i++)
             {
-                if (lstUser[i].Email == email)
+                if (lstUser[i].Username == username)
                 {
-                    string password = "Tiembanhdautay";
-                    string from = "tiembanh.dautaybma@gmail.com";
-                    string to = "gaumapxipo@gmail.com";
-                    MailMessage mail = new MailMessage();
-                    mail.To.Add(to);
-                    mail.From = new MailAddress(from);
-                    mail.Subject = "This is test mail";
-                    mail.Body = "Recovering the password";
+                    try
+                    {
+                        string password = "Tiembanhdautay";
+                        string from = "tiembanh.dautaybma@gmail.com";
+                        string to = lstUser[i].Email;
 
-                    mail.Priority = MailPriority.High;
-                    SmtpClient smtp = new SmtpClient();
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new System.Net.NetworkCredential(from, password);
-                    smtp.Port = 587;
-                    smtp.Host = "smtp.gmail.com";
-                    smtp.EnableSsl = true;
-                    smtp.Send(mail);
-                    return 1;
+                        MailMessage mail = new MailMessage();
+                        mail.IsBodyHtml = true;
+                        mail.To.Add(to);
+                        mail.From = new MailAddress(from);
+                        mail.Subject = string.Format("{0}{1}", "Tạo mật khẩu mới cho khách hàng ", lstUser[i].Fullname);
+                        mail.Body += "<html lang='vi'>";
+                        mail.Body += "<head>";
+                        mail.Body += "<meta charset='utf-8'>";
+                        mail.Body += "</head>";
+                        mail.Body += "<body>";
+                        mail.Body += "<div> Quý khách vừa gởi yêu cầu tạo mật khẩu mới bằng Email này ?</div>";
+                        mail.Body += "<div> Nếu phải, vui lòng bấm vào 'Tạo mới mật khẩu' bên dưới, đường dẫn chỉ có hiệu lực trong vòng 24 tiếng kể từ khi quý khách nhận được email này</div>";
+                        //string link = Url.Encode(string.Format("{0}{1}", Request.Url.Authority, Url.Action("CreateNewPassword", "Account", new { userId = lstUser[i].UserId, timeSend = DateTime.Now })));
+                        //mail.Body += string.Format("<a href='{0}{1}'>Tạo mới mật khẩu</a>", "http://", link);
+                        mail.Body += string.Format("<a href='{0}{1}{2}'>Tạo mới mật khẩu</a>", "http://", Request.Url.Authority, Url.Action("CreateNewPassword", "Account", new { userId = lstUser[i].UserId, timeSend = DateTime.Now }));
+                        mail.Body += "</body>";
+                        mail.Body += "</html>";
+                        var mailBody = mail.Body;
+                        var htmlBody = AlternateView.CreateAlternateViewFromString(mailBody, null, "text/html");
+                        mail.AlternateViews.Add(htmlBody);
+
+                        mail.Priority = MailPriority.High;
+                        SmtpClient smtp = new SmtpClient();
+                        smtp.UseDefaultCredentials = false;
+                        smtp.Credentials = new System.Net.NetworkCredential(from, password);
+                        smtp.Port = 587;
+                        smtp.Host = "smtp.gmail.com";
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                        return 1;
+                    }
+                    catch
+                    {
+                        return -2;
+                    }
                 }
             }
             return -1;
-            //MailMessage mail = new MailMessage();
-            //SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-            //mail.From = new MailAddress("tiembanh.dautaybma@gmail.com");
-            //mail.To.Add("gaumapxipo@gmail.com");
-            //mail.Subject = "Password Recovery ";
-            //mail.Body += " <html>";
-            //mail.Body += "<body>";
-            //mail.Body += "<table>";
-            //mail.Body += "<tr>";
-            //mail.Body += "<td>User Name : </td><td> HAi </td>";
-            //mail.Body += "</tr>";
+        }
 
-            //mail.Body += "<tr>";
-            //mail.Body += "<td>Password : </td><td>aaaaaaaaaa</td>";
-            //mail.Body += "</tr>";
-            //mail.Body += "</table>";
-            //mail.Body += "</body>";
-            //mail.Body += "</html>";
-            //mail.IsBodyHtml = true;
-            //SmtpServer.Port = 587;
-            //SmtpServer.Credentials = new System.Net.NetworkCredential("tiembanh.dautaybma@gmail.com", "Tiembanhdautay");
-            //SmtpServer.EnableSsl = true;
-            //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
-            //SmtpServer.Send(mail);
-            //return 1;
+        [HttpGet]
+        public ActionResult CreateNewPassword(int userId, DateTime timeSend)
+        {
+            DateTime activeTimeCheck = DateTime.Now;
+            double check = (activeTimeCheck - timeSend).TotalMinutes;
+            if (check > 1440)
+            {
+                ViewBag.outOfTime = "";
+            }
+            ViewBag.userId = userId;
+            return View();
+        }
+
+        [HttpPost]
+        public int CreateNewPassword(FormCollection f)
+        {
+            AccountBusiness ab = new AccountBusiness();
+            int userId = Convert.ToInt32(f["userId"]);
+            string newPassword = f["txtPass"];
+            try
+            {
+                ab.ChangePassword(userId, newPassword);
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
     }
 }

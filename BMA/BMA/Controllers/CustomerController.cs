@@ -58,8 +58,7 @@ namespace BMA.Controllers
         public ActionResult CustomerIndex()
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 1 ||
-                (int) Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -82,8 +81,7 @@ namespace BMA.Controllers
         public ActionResult CustomerDetail(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 1 ||
-                (int) Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] ==3)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -107,8 +105,7 @@ namespace BMA.Controllers
         public int ChangeCustomerStatus(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 1 ||
-                (int) Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 1)
             {
                 return -7;
             }

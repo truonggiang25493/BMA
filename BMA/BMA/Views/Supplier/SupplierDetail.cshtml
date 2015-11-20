@@ -145,16 +145,7 @@
     }
 
     function change_supplier_status(id) {
-        if (data === '-7') {
-            noty({
-                text: 'Bạn không có quyền thực hiện chức năng này.',
-                type: 'warning',
-                dismissQueue: false,
-                layout: 'topCenter',
-                theme: 'defaultTheme',
-                timeout: 1000
-            });
-        } else {
+        
             $.ajax({
                 "url": "@(Url.Action("ChangeSupplierStatus", "Supplier"))",
                 "method": "POST",
@@ -174,7 +165,7 @@
                 }
             });
         }
-    }
+    
 </script>
 <!-- Get input bill by supplier -->
 @section CustomerDetailScript{
