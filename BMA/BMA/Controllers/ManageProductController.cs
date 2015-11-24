@@ -273,18 +273,28 @@ namespace BMA.Controllers
             }
         }
 
-        public ActionResult ChangeStatus(int productId, bool status, string strURL)
+        public int ChangeStatus(int productId, bool status, string strURL)
         {
             try
             {
                 ManageProductBusiness mpb = new ManageProductBusiness();
+                Product product = db.Products.SingleOrDefault(n => n.ProductId == productId);
                 var radioButton = Convert.ToBoolean(Request.Form["status"]);
+                if (product.IsActive == radioButton && product.IsActive)
+                {
+                    return -2;
+                }
+                if (product.IsActive == radioButton && !product.IsActive)
+                {
+                    return -3;
+                }
+
                 mpb.ChangeStatus(productId, radioButton);
-                return Redirect(strURL);
+                return 1;
             }
             catch
             {
-                return RedirectToAction("Index", "Error");
+                return -1;
             }
         }
 

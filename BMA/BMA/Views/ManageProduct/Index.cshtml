@@ -59,7 +59,7 @@
                                 <script>
                                     function open_container(productId, productName, strURL, isActive) {
                                         var content =
-                                            '<form role="form" action="/ManageProduct/ChangeStatus" method="post" id="form-aprrove">' +
+                                            '<form role="form" action="s" method="post" id="form-aprrove">' +
                                                 '<div class="form-group">' +
                                                 '<label>' + productName + '</label>' +
                                                 '<input type="hidden" name="productId" value="' + productId + '"/>' +
@@ -73,12 +73,11 @@
                                                  '<input type="radio" name="status" value="False"> Hủy' +
                                                 '</div>' +
                                                 '<div class="form-group" style="padding-bottom: 20px;">' +
-                                                '<button type="submit" class="btn btn-success pull-right">Đồng ý</button>' +
-                                                '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</button>' +
                                                 '</div>' +
                                                 '</form>';
                                         var title = 'Chọn trạng thái';
-                                        var footer = '';
+                                        var footer = '<button onclick="checkValidate()" class="btn btn-success pull-right">Đồng ý</button>' +
+                                                '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</button>';
                                         setModalBox(title, content, footer);
                                         $('#myModal').modal('show');
                                     }
@@ -87,6 +86,67 @@
                                         document.getElementById('popup-body').innerHTML = content;
                                         document.getElementById('popup-title').innerHTML = title;
                                         document.getElementById('popup-footer').innerHTML = footer;
+                                    }
+
+                                    function checkValidate(){
+                                        $.ajax({
+                                            url: "@(Url.Action("ChangeStatus", "ManageProduct"))",
+                                            method: "POST",
+                                        data: $("#form-aprrove").serialize(),
+                                        success: function (data) {
+                                            if (data === "1") {
+                                                noty({
+                                                    text: 'Thay đổi trạng thái thành công.',
+                                                    type: 'success',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                                var redirectURL = window.location.href;
+                                                window.setTimeout(function () {
+                                                    window.location.replace(redirectURL);
+                                                }, 3000);
+                                            } else if (data === "-1") {
+                                                noty({
+                                                    text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            } else if (data === "-2") {
+                                                noty({
+                                                    text: 'Sản phẩm đã có trạng thái Đang sử dụng',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            } else if (data === "-3") {
+                                                noty({
+                                                    text: 'Sản phẩm hiện đã có trạng thái Không còn sử dụng.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            } 
+                                        },
+                                        fail: function () {
+                                            noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }
+                                    })
                                     }
                                 </script>
                             </td>

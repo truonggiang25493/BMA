@@ -39,13 +39,13 @@
                     </ul>
                     <a href="javascript:void(0)" class="btn btn-primary btn-block" onclick="open_container(@Model.ProductMaterialId, '@Model.ProductMaterialName', '@strURL')"><b>Đổi trạng thái</b></a>
                     <script>
-                        function open_container(materialId, materialtName, strURL, isActive) {
+                        function open_container(materialId, materialName, strURL, isActive) {
                             var content =
-                                '<form role="form" action="/ManageMaterial/ChangeStatus" method="post" id="form-aprrove">' +
+                                '<form role="form" action="" method="post" id="form-aprrove">' +
                                     '<div class="form-group">' +
-                                    '<label>' + materialtName + '</label>' +
+                                    '<label>' + materialName + '</label>' +
                                     '<input type="hidden" name="materialId" value="' + materialId + '"/>' +
-                                     '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                    '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
                                     '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
                                     '</div>' +
                                      '<div class="form-group">' +
@@ -55,12 +55,11 @@
                                      '<input type="radio" name="status" value="False"> Hủy' +
                                     '</div>' +
                                     '<div class="form-group" style="padding-bottom: 20px;">' +
-                                    '<button type="submit" class="btn btn-success pull-right">Đồng ý</button>' +
-                                    '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</button>' +
                                     '</div>' +
                                     '</form>';
                             var title = 'Chọn trạng thái';
-                            var footer = '';
+                            var footer = '<button onclick="checkExistedInProduct()" class="btn btn-success pull-right">Đồng ý</button>' +
+                                    '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</button>';
                             setModalBox(title, content, footer);
                             $('#myModal').modal('show');
                         }
@@ -70,12 +69,82 @@
                             document.getElementById('popup-title').innerHTML = title;
                             document.getElementById('popup-footer').innerHTML = footer;
                         }
+
+                        function checkExistedInProduct() {
+                            $.ajax({
+                                url: "@(Url.Action("ChangeStatus", "ManageMaterial"))",
+                                method: "POST",
+                                data: $("#form-aprrove").serialize(),
+                                success: function (data) {
+                                    if (data === "1") {
+                                        noty({
+                                            text: 'Thay đổi trạng thái thành công.',
+                                            type: 'success',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                        var redirectURL = window.location.href;
+                                        window.setTimeout(function () {
+                                            window.location.replace(redirectURL);
+                                        }, 3000);
+                                    } else if (data === "-1") {
+                                        noty({
+                                            text: 'Nguyên liệu đang được sử dụng bởi sản phẩm trong hệ thống.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    } else if (data === "-2") {
+                                        noty({
+                                            text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    } else if (data === "-3") {
+                                        noty({
+                                            text: 'Nguyên liệu hiện đã có trạng thái Đang sử dụng.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    } else if (data === "-4") {
+                                        noty({
+                                            text: 'Nguyên liệu hiện đã có trạng thái Đã hủy.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    }
+                                },
+                                fail: function () {
+                                    noty({
+                                        text: 'Đã có lỗi xảy ra',
+                                        type: 'error',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 1000
+                                    });
+                                }
+                            })
+                        }
                     </script>
 
                 </div><!-- /.box-body -->
             </div><!-- /.box -->
         </div>
-        <div class="col-md-9">            
+        <div class="col-md-9">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#activity" data-toggle="tab">Sản phẩm sử dụng</a></li>

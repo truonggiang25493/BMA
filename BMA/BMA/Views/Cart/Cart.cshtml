@@ -169,7 +169,15 @@
                                         timeout: 2000
                                     });
                                 } else {
-                                    $("#myForm").submit();
+                                    $.ajax({
+                                        url: "@(Url.Action("UpdateCart", "Cart"))",
+                                        method: "POST",
+                                        data: $("#updateCartForm").serialize(),
+                                        success: function (data) {
+                                            $("#myForm").submit();
+                                        }
+                                    })
+
                                 }
                             }
                         </script>

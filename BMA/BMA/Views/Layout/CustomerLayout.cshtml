@@ -7,6 +7,8 @@
 
     <title>@ViewBag.title</title>
     <script type="text/javascript" src="/Content/CustomerLayout/assets/js/jquery/jquery-1.10.1.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
 
     <link href="/Content/CustomerLayout/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
 
@@ -21,7 +23,6 @@
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-    <a href="concu.html"></a>
     <script>
         paceOptions = {
             elements: true
@@ -103,6 +104,28 @@
     </style>
 </head>
 <body>
+    <script>
+        var count = 0;
+        function onChangeStatus(info, source, type) {
+            count++;
+            if (count > 6) {
+                noty({
+                    text: 'Có một đơn hàng vừa được thay đổi trạng thái' + info + source + type,
+                    type: 'success',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: false
+                });
+                count = 0;
+            }
+        }
+        window.addEventListener('load', function () {
+            var notifier = $.connection.realtimeNotifierHub;
+            notifier.client.onChange3 = onChangeStatus
+            $.connection.hub.start();
+        });
+    </script>
     <div class="modal signUpContent fade" id="ModalLogin" tabindex="-1" role="dialog" style="margin-top:50px;">
         <div class="modal-dialog ">
             <div class="modal-content" style="width:400px;margin-left:40px;">
@@ -190,7 +213,7 @@
                                 <ul class="userMenu">
                                     @if (Session["UserRole"] != null)
                                     {
-                                       
+
                                     }
                                     else
                                     {
