@@ -19,31 +19,48 @@ namespace BMA.Controllers
         private SupplierBusiness supplierBusiness = new SupplierBusiness();
 
         #region Get supplier list
+
         public ActionResult SupplierIndex()
         {
-            ViewBag.TreeView = "supplier";
-            ViewBag.TreeViewMenu = "listSupplier";
-            var supplierslList = SupplierBusiness.GetSupplierList();
-            if (supplierslList == null)
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
             {
-                RedirectToAction("SupplierIndex", "Supplier");
+                return RedirectToAction("Index", "Home");
             }
-            return View(supplierslList);
+            else
+            {
+                ViewBag.TreeView = "supplier";
+                ViewBag.TreeViewMenu = "listSupplier";
+                var supplierslList = SupplierBusiness.GetSupplierList();
+                if (supplierslList == null)
+                {
+                    RedirectToAction("SupplierIndex", "Supplier");
+                }
+                return View(supplierslList);
+            }
         }
+
         #endregion
 
         #region Get Supplier Detail
         public ActionResult SupplierDetail(int id)
         {
-            ViewBag.TreeView = "supplier";
-            Supplier supplierDetail = supplierBusiness.GetSupplier(id);
-            if (supplierDetail == null)
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
             {
-                RedirectToAction("SupplierIndex", "Supplier");
-
+                return RedirectToAction("Index", "Home");
             }
-            return View(supplierDetail);
+            else
+            {
+                ViewBag.TreeView = "supplier";
+                Supplier supplierDetail = supplierBusiness.GetSupplier(id);
+                if (supplierDetail == null)
+                {
+                    RedirectToAction("SupplierIndex", "Supplier");
 
+                }
+                return View(supplierDetail);
+            }
         }
 
         #endregion
@@ -52,14 +69,22 @@ namespace BMA.Controllers
         [HttpPost]
         public int ChangeSupplierStatus(int id)
         {
-            Boolean result = SupplierBusiness.ChangeSupplierStatus(id);
-            if (result)
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
             {
-                return 1;
+                return -7;
             }
             else
             {
-                return 0;
+                Boolean result = SupplierBusiness.ChangeSupplierStatus(id);
+                if (result)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
         #endregion
@@ -68,25 +93,39 @@ namespace BMA.Controllers
 
         public ActionResult GetInputBillBySupplierTable(int id)
         {
+
             List<InputBill> inputBillBySupplierList = db.InputBills.Where(n => n.SupplierId == id).ToList();
             return PartialView("InputBillBySupplier", inputBillBySupplierList);
         }
 
+
         #endregion
 
         #region Edit Supplier View
+
         public ActionResult EditSupplier(int id)
         {
-            ViewBag.TreeView = "supplier";
-            Supplier supplier = db.Suppliers.SingleOrDefault(m => m.SupplierId == id);
-            return View(supplier);
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.TreeView = "supplier";
+                Supplier supplier = db.Suppliers.SingleOrDefault(m => m.SupplierId == id);
+                return View(supplier);
+            }
         }
-        #endregion    
-        
+
+        #endregion
+
         #region Edit Supplier
+
         [HttpPost]
         public int EditSupplier(FormCollection f)
         {
+
             String supplierName = f["txtSupplierName"];
             String supplierAddress = f["txtSupplierAddress"];
             String supplierPhoneNumber = f["txtSupplierPhoneNumber"];
@@ -96,29 +135,42 @@ namespace BMA.Controllers
             if (
                 !(supplierName.IsEmpty() || supplierAddress.IsEmpty() ||
                   supplierPhoneNumber.IsEmpty() || supplierEmail.IsEmpty() ||
-                  supplierTaxCode.IsEmpty()||supplierIdString.IsEmpty()))
+                  supplierTaxCode.IsEmpty() || supplierIdString.IsEmpty()))
             {
                 int supplierId = Convert.ToInt32(supplierIdString);
 
-                bool result = SupplierBusiness.EditSupplier(supplierId,supplierName,supplierAddress,supplierPhoneNumber,supplierEmail,supplierTaxCode);
+                bool result = SupplierBusiness.EditSupplier(supplierId, supplierName, supplierAddress,
+                    supplierPhoneNumber, supplierEmail, supplierTaxCode);
                 return result ? 1 : 0;
             }
             return 0;
+
         }
+
         #endregion
 
         #region Add New Supplier View
+
         public ActionResult AddSupplier()
         {
-            ViewBag.TreeView = "supplier";
-            ViewBag.TreeViewMenu = "addSupplier";
-            return View("AddSupplier");
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.TreeView = "supplier";
+                ViewBag.TreeViewMenu = "addSupplier";
+                return View("AddSupplier");
+            }
         }
+
         #endregion
 
         #region Add New Supplier
         [HttpPost]
-    public int AddSupplier(FormCollection f)
+        public int AddSupplier(FormCollection f)
         {
 
             String supplierName = f["txtSupplierName"];
@@ -160,14 +212,24 @@ namespace BMA.Controllers
         [HttpPost]
         public int CheckSupplierInfo(FormCollection form)
         {
-            string supplierName = form["txtSupplierName"];
-            string supplierAddress = form["txtSupplierAddress"];
-            string supplierPhoneNumber = form["txtSupplierPhoneNumber"];
-            string supplierEmail = form["txtSupplierEmail"];
-            string supplierTaxCode = form["txtSupplierTaxCode"];
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
+            {
+                return -7;
+            }
+            else
+            {
+                string supplierName = form["txtSupplierName"];
+                string supplierAddress = form["txtSupplierAddress"];
+                string supplierPhoneNumber = form["txtSupplierPhoneNumber"];
+                string supplierEmail = form["txtSupplierEmail"];
+                string supplierTaxCode = form["txtSupplierTaxCode"];
 
-            return supplierBusiness.CheckSupplierInfo(supplierName, supplierAddress, supplierPhoneNumber, supplierEmail, supplierTaxCode);
+                return supplierBusiness.CheckSupplierInfo(supplierName, supplierAddress, supplierPhoneNumber,
+                    supplierEmail, supplierTaxCode);
+            }
         }
+
         #endregion
 
         #region Check supplier information is exsited in database when edit
@@ -175,16 +237,26 @@ namespace BMA.Controllers
         [HttpPost]
         public int CheckSupplierInfoInEdit(FormCollection form)
         {
-            SupplierBusiness supplierBusiness = new SupplierBusiness();
-            string supplierName = form["txtSupplierName"];
-            string supplierAddress = form["txtSupplierAddress"];
-            string supplierPhoneNumber = form["txtSupplierPhoneNumber"];
-            string supplierEmail = form["txtSupplierEmail"];
-            string supplierTaxCode = form["txtSupplierTaxCode"];
-            int supplierId = Convert.ToInt32(form["SupplierId"]);
+            User staffUser = Session["User"] as User;
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
+            {
+                return -7;
+            }
+            else
+            {
+                SupplierBusiness supplierBusiness = new SupplierBusiness();
+                string supplierName = form["txtSupplierName"];
+                string supplierAddress = form["txtSupplierAddress"];
+                string supplierPhoneNumber = form["txtSupplierPhoneNumber"];
+                string supplierEmail = form["txtSupplierEmail"];
+                string supplierTaxCode = form["txtSupplierTaxCode"];
+                int supplierId = Convert.ToInt32(form["SupplierId"]);
 
-            return supplierBusiness.CheckSupplierInfoInEdit(supplierName, supplierAddress, supplierPhoneNumber, supplierEmail, supplierTaxCode, supplierId);
+                return supplierBusiness.CheckSupplierInfoInEdit(supplierName, supplierAddress, supplierPhoneNumber,
+                    supplierEmail, supplierTaxCode, supplierId);
+            }
         }
+
         #endregion
 
 

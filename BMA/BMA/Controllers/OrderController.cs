@@ -106,7 +106,7 @@ namespace BMA.Controllers
                 }
                 if (orderViewModel != null)
                 {
-                    if (orderViewModel.Order.OrderStatus == 0 && !orderViewModel.Order.IsStaffEdit)
+                    if (orderViewModel.Order.OrderStatus == 0 && !orderViewModel.Order.CustomerEditingFlag)
                     {
                         if (!orderViewModel.IsEnoughMaterial)
                         {

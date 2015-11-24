@@ -22,8 +22,7 @@ namespace BMA.Business
 
         public static List<InputMaterial> GetInputMaterialList()
         {
-            
-            List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderBy(n => n.ImportDate).ToList();
+            List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderByDescending(n => n.InputMaterialId).ToList();
             return inputMaterialslList;
         }
         #endregion
@@ -77,6 +76,8 @@ namespace BMA.Business
             DateTime inputMaterialExpiryDate, int inputBillId, String inputMaterialNote)
         {
             var inputMaterialDetail = db.InputMaterials.SingleOrDefault(n => n.InputMaterialId == inputMaterialId);
+            var productMaterial = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == productMaterialId);
+
             if (inputMaterialDetail != null)
             {
                 try
@@ -88,6 +89,8 @@ namespace BMA.Business
                     inputMaterialDetail.InputMaterialExpiryDate = inputMaterialExpiryDate;
                     inputMaterialDetail.InputBillId = inputBillId;
                     inputMaterialDetail.InputMaterialNote = inputMaterialNote;
+                    int changeInputMaterialQuantity =importQuantity - inputMaterialDetail.RemainQuantity;
+                    productMaterial.CurrentQuantity = productMaterial.CurrentQuantity + changeInputMaterialQuantity;
                     db.SaveChanges();
                 }
                 catch (Exception e)

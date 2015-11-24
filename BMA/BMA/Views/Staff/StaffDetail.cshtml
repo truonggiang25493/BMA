@@ -15,83 +15,83 @@
 </section>
 <section class="content">
     <!--Title row-->
-    
-        <div class="row">
-            <!-- Info row -->
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <div class="box box-primary">
-                    <div class="box-body box-profile">
-                        <h3 class="profile-username text-center">
-                            @Model.User.Fullname
-                        </h3>
-                        <div class="nav-tabs-custom" style="margin-top: 5%">
-                            <ul class="nav nav-tabs">
-                                <li class="active">
-                                    <a data-togged="tag" aria-expanded="true"> Thông tin chi tiết</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="activity">
-                                    <div class="post">
-                                        <p>
-                                            <div class="list-group-item">
-                                                <b>Tên tài khoản: </b>
-                                                <a class="col-lg-pull-2">@Model.User.Username</a>
-                                            </div>
-                                            <div class="list-group-item">
-                                                <b>Địa chỉ: </b>
-                                                <a class="col-lg-pull-2">@Model.StaffAddress</a>
-                                            </div>
-                                            <div class="list-group-item">
-                                                <b>Số điện thoại: </b>
-                                                <a class="col-lg-pull-2">@Model.StaffPhoneNumber</a>
-                                            </div>
-                                            <div class="list-group-item">
-                                                <b>E-mail: </b>
-                                                <a class="col-lg-pull-2">@Model.User.Email</a>
-                                            </div>
-                                            <div class="list-group-item">
-                                                <b>Trạng thái: </b>
-                                                @if (Model.IsActive)
-                                                {
-                                                    <span class="label label-success">Đang hoạt động</span>
-                                                    <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));">
-                                                        <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>Thay đổi trạng thái
-                                                    </button>
-                                                }
-                                                else
-                                                {
-                                                    <span class="label label-danger">Ngừng hoạt động</span>
-                                                    <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));">
-                                                        <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>Thay đổi trạng thái
-                                                    </button>
-                                                }
-                                            </div>
 
-                                        </p>
-                                    </div>
+    <div class="row">
+        <!-- Info row -->
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <h3 class="profile-username text-center">
+                        @Model.User.Fullname
+                    </h3>
+                    <div class="nav-tabs-custom" style="margin-top: 5%">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a data-togged="tag" aria-expanded="true"> Thông tin chi tiết</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="activity">
+                                <div class="post">
+                                    <p>
+                                        <div class="list-group-item">
+                                            <b>Tên tài khoản: </b>
+                                            <a class="col-lg-pull-2">@Model.User.Username</a>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <b>Địa chỉ: </b>
+                                            <a class="col-lg-pull-2">@Model.StaffAddress</a>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <b>Số điện thoại: </b>
+                                            <a class="col-lg-pull-2">@Model.StaffPhoneNumber</a>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <b>E-mail: </b>
+                                            <a class="col-lg-pull-2">@Model.User.Email</a>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <b>Trạng thái: </b>
+                                            @if (Model.IsActive)
+                                            {
+                                                <span class="label label-success">Đang hoạt động</span>
+                                                <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
+                                                    <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-danger">Ngừng hoạt động</span>
+                                                <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
+                                                    <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>
+                                                </button>
+                                            }
+                                        </div>
+
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <!-- Comeback button -->
-                            <button class="btn btn-danger pull-left" style="margin-left: 25px;" onclick="comebackToIndex()">
-                                <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
-                                <script type="text/javascript">
-                                    function comebackToIndex() {
-                                        window.location.replace("@(Url.Action("StaffIndex", "Staff"))");
-                                    }
-                                </script>
-                            </button>
-                        </div>
                     </div>
-
+                    <div class="row">
+                        <!-- Comeback button -->
+                        <button class="btn btn-danger pull-left" style="margin-left: 25px;" onclick="comebackToIndex()">
+                            <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
+                            <script type="text/javascript">
+                                function comebackToIndex() {
+                                    window.location.replace("@(Url.Action("StaffIndex", "Staff"))");
+                                }
+                            </script>
+                        </button>
+                    </div>
                 </div>
+
             </div>
         </div>
-        <div class="col-md-2"></div>
-    
+    </div>
+    <div class="col-md-2"></div>
+
 </section>
 <script type="text/javascript">
     function open_container(id) {
@@ -128,23 +128,27 @@
     }
 
     function change_staff_status(id) {
+
         $.ajax({
             "url": "@(Url.Action("ChangeStaffStatus", "Staff"))",
             "method": "POST",
             "data": {
                 "id": id
             },
-            "success": function (data) {
+            "success": function(data) {
                 if (data === "1") {
                     $('#myModal').modal('hide');
                     window.location.replace("@Url.Action("StaffIndex", "Staff", Model.StaffId)");
-                } else {
+                } 
+                else 
+                {
                     alert("Khong the");
                 }
             },
-            "fail": function (e) {
+            "fail": function(e) {
                 alert("Have error" + e);
             }
         });
     }
+
 </script>

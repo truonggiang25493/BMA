@@ -101,25 +101,27 @@
                                     }
 
                                     function change_customer_status(id) {
-                                        $.ajax({
-                                            "url": "@(Url.Action("ChangeCustomerStatus", "Customer"))",
-                                            "method": "POST",
-                                            "data": {
-                                                "id": id
-                                            },
-                                            "success": function (data) {
-                                                if (data === "1") {
-                                                    $('#myModal').modal('hide');
-                                                    window.location.replace("@Url.Action("CustomerIndex", "Customer", Model.CustomerId)");
-                                                } else {
-                                                    alert("Khong the");
+                                        
+                                            $.ajax({
+                                                "url": "@(Url.Action("ChangeCustomerStatus", "Customer"))",
+                                                "method": "POST",
+                                                "data": {
+                                                    "id": id
+                                                },
+                                                "success": function (data) {
+                                                    if (data === "1") {
+                                                        $('#myModal').modal('hide');
+                                                        window.location.replace("@Url.Action("CustomerIndex", "Customer", @Model.CustomerId)");
+                                                    } else {
+                                                        alert("Khong the");
+                                                    }
+                                                },
+                                                "fail": function (e) {
+                                                    alert("Have error" + e);
                                                 }
-                                            },
-                                            "fail": function (e) {
-                                                alert("Have error" + e);
-                                            }
-                                        });
-                                    }
+                                            });
+                                        }
+                                    
                                 </script>
                             </button>
                             <button class="btn btn-bitbucket" id="btn-change-loyal" onclick="open_container(@(Model.CustomerId));">
@@ -159,25 +161,27 @@
                                     }
 
                                     function change_customer_loyal(id) {
-                                        $.ajax({
-                                            "url": "@(Url.Action("ChangeCustomerLoyal", "Customer"))",
-                                            "method": "POST",
-                                            "data": {
-                                                "id": id
-                                            },
-                                            "success": function (data) {
-                                                if (data === "1") {
-                                                    $('#myModal').modal('hide');
-                                                    window.location.replace("@Url.Action("CustomerIndex", "Customer", Model.CustomerId)");
-                                                } else {
-                                                    alert("Khong the");
+                                        
+                                            $.ajax({
+                                                "url": "@(Url.Action("ChangeCustomerLoyal", "Customer"))",
+                                                "method": "POST",
+                                                "data": {
+                                                    "id": id
+                                                },
+                                                "success": function (data) {
+                                                    if (data === "1") {
+                                                        $('#myModal').modal('hide');
+                                                        window.location.replace("@Url.Action("CustomerIndex", "Customer", Model.CustomerId)");
+                                                    } else {
+                                                        alert("Khong the");
+                                                    }
+                                                },
+                                                "fail": function (e) {
+                                                    alert("Have error" + e);
                                                 }
-                                            },
-                                            "fail": function (e) {
-                                                alert("Have error" + e);
-                                            }
-                                        });
-                                    }
+                                            });
+                                        }
+                                    
                                 </script>
                             </button>
                         </div>

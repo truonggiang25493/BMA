@@ -145,25 +145,27 @@
     }
 
     function change_supplier_status(id) {
-        $.ajax({
-            "url": "@(Url.Action("ChangeSupplierStatus", "Supplier"))",
-            "method": "POST",
-            "data": {
-                "id": id
-            },
-            "success": function (data) {
-                if (data === "1") {
-                    $('#myModal').modal('hide');
-                    window.location.replace("@Url.Action("SupplierIndex", "Supplier", Model.SupplierId)");
-                } else {
-                    alert("Khong the");
+        
+            $.ajax({
+                "url": "@(Url.Action("ChangeSupplierStatus", "Supplier"))",
+                "method": "POST",
+                "data": {
+                    "id": id
+                },
+                "success": function(data) {
+                    if (data === "1") {
+                        $('#myModal').modal('hide');
+                        window.location.replace("@Url.Action("SupplierIndex", "Supplier", Model.SupplierId)");
+                    } else {
+                        alert("Khong the");
+                    }
+                },
+                "fail": function(e) {
+                    alert("Have error" + e);
                 }
-            },
-            "fail": function (e) {
-                alert("Have error" + e);
-            }
-        });
-    }
+            });
+        }
+    
 </script>
 <!-- Get input bill by supplier -->
 @section CustomerDetailScript{

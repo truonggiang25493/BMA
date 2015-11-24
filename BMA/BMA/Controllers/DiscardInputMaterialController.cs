@@ -37,10 +37,14 @@ namespace BMA.Controllers
             String discardQuantityString = f["discardQuantity"];
             String discardNote = f["discardNote"];
             String inputMaterialIdString = f["InputMaterialId"];
+            String productMaterialIdString = f["ProductMaterialId"];
+
             int inputMaterialId = Convert.ToInt32(inputMaterialIdString);
             int discardQuantity = Convert.ToInt32(discardQuantityString);
+            int productMaterialId = Convert.ToInt32(productMaterialIdString);
 
             DiscardedInputMaterial discardedInputMaterial = new DiscardedInputMaterial();
+            
             try
             {
                 discardedInputMaterial.DiscardDate = DateTime.Now;
@@ -55,7 +59,7 @@ namespace BMA.Controllers
 
             }
 
-            bool result = DiscardInputMaterialBusiness.DiscardInputMaterial(discardedInputMaterial,inputMaterialId);
+            bool result = DiscardInputMaterialBusiness.DiscardInputMaterial(discardedInputMaterial,inputMaterialId, productMaterialId);
             if (result)
             {
                 return 1;
