@@ -37,8 +37,8 @@
                             <span class="label label-danger">Hết hạn sử dụng</span>
                         </td>
                         <td class="col-md-3">
-                            <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
-                                <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                            <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))" data-toggle="tooltip" data-placement="top" title="Xem">
+                                <i class="fa fa-navicon" style="margin-right: 3px"></i>
                             </a>
                         </td>
                     }
@@ -49,8 +49,8 @@
                                 <span class="label label-default">Đã hết</span>
                             </td>
                             <td class="col-md-3">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
-                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new { id = inputMaterial.InputMaterialId }))" data-toggle="tooltip" data-placement="top" title="Xem">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                 </a>
                             </td>
                         }
@@ -60,11 +60,11 @@
                                 <span class="label label-success">Có thể sử dụng</span>
                             </td>
                             <td class="col-md-3">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))">
-                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Xem">
+                                    <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                 </a>
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputMaterial", "InputMaterial", new { id = inputMaterial.InputMaterialId }))">
-                                    <i class="fa fa-edit" style="margin-right: 3px"></i>Sửa
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputMaterial", "InputMaterial", new { id = inputMaterial.InputMaterialId }))" data-toggle="tooltip" data-placement="top" title="Sửa">
+                                    <i class="fa fa-edit" style="margin-right: 3px"></i>
                                 </a>
                             </td>
                         }

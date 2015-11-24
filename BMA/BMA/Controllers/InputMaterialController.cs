@@ -123,6 +123,7 @@ namespace BMA.Controllers
             else
             {
                 InputMaterial inputMaterial = new InputMaterial();
+                ProductMaterial productMaterial=new ProductMaterial();
                 String productMaterialIdString = f["productMaterialId"];
                 String importQuantityString = f["txtImportQuantity"];
                 String inputMaterialTotalPriceString = f["txtInputMaterialPrice"];
@@ -147,6 +148,8 @@ namespace BMA.Controllers
                     inputMaterial.ProductMaterialId = productMaterialId;
                     inputMaterial.RemainQuantity = Convert.ToInt32(importQuantity);
                     inputMaterial.IsActive = true;
+
+                    productMaterial.CurrentQuantity = productMaterial.CurrentQuantity + importQuantity;
                 }
                 catch (Exception)
                 {
