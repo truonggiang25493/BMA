@@ -81,7 +81,7 @@ namespace BMA.Business
             if (inputMaterialDetail != null)
             {
                 try
-                {
+                {                   
                     inputMaterialDetail.ProductMaterial.ProductMaterialId = productMaterialId;
                     inputMaterialDetail.ImportQuantity = importQuantity;
                     inputMaterialDetail.InputMaterialPrice = inputMaterialPrice;
@@ -89,7 +89,8 @@ namespace BMA.Business
                     inputMaterialDetail.InputMaterialExpiryDate = inputMaterialExpiryDate;
                     inputMaterialDetail.InputBillId = inputBillId;
                     inputMaterialDetail.InputMaterialNote = inputMaterialNote;
-                    int changeInputMaterialQuantity =importQuantity - inputMaterialDetail.RemainQuantity;
+                    int changeInputMaterialQuantity = importQuantity - inputMaterialDetail.RemainQuantity;
+                    inputMaterialDetail.RemainQuantity = importQuantity;
                     productMaterial.CurrentQuantity = productMaterial.CurrentQuantity + changeInputMaterialQuantity;
                     db.SaveChanges();
                 }
@@ -109,7 +110,7 @@ namespace BMA.Business
         #endregion
 
         #region Add new input material
-        public static bool AddInputMaterial(InputMaterial inputMaterial)
+        public static bool AddInputMaterial(int productMaterialId, InputMaterial inputMaterial, int importQuantity)
         {
             if (inputMaterial == null)
             {
@@ -117,6 +118,8 @@ namespace BMA.Business
             }
             try
             {
+                ProductMaterial productMaterial = db.ProductMaterials.FirstOrDefault(m => m.ProductMaterialId == productMaterialId);
+                productMaterial.CurrentQuantity = productMaterial.CurrentQuantity + importQuantity;
                 db.InputMaterials.Add(inputMaterial);
                 db.SaveChanges();
             }
