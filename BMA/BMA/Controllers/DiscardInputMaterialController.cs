@@ -34,6 +34,7 @@ namespace BMA.Controllers
         #region Add discard for input material
         public int DiscardInputMaterial(FormCollection f)
         {
+            db = new BMAEntities();
             String discardQuantityString = f["discardQuantity"];
             String discardNote = f["discardNote"];
             String inputMaterialIdString = f["InputMaterialId"];
@@ -43,32 +44,42 @@ namespace BMA.Controllers
             int discardQuantity = Convert.ToInt32(discardQuantityString);
             int productMaterialId = Convert.ToInt32(productMaterialIdString);
 
+            InputMaterial inputMaterial = db.InputMaterials.FirstOrDefault(m => m.InputMaterialId == inputMaterialId);
+            int checkQuantity = discardQuantity - inputMaterial.RemainQuantity;
+             
             DiscardedInputMaterial discardedInputMaterial = new DiscardedInputMaterial();
-            
-            try
+            if (checkQuantity > 0)
             {
-                discardedInputMaterial.DiscardDate = DateTime.Now;
-                discardedInputMaterial.InputMaterialId = inputMaterialId;
-                discardedInputMaterial.DiscardNote = discardNote;
-                discardedInputMaterial.DiscardQuantity = discardQuantity;
-                
-            }
-            catch (Exception)
-            {
-                return 0;
-
-            }
-
-            bool result = DiscardInputMaterialBusiness.DiscardInputMaterial(discardedInputMaterial,inputMaterialId, productMaterialId);
-            if (result)
-            {
-                return 1;
+                return -1;
             }
             else
             {
-                return 0;
-            }
+                try
+                {
+                    discardedInputMaterial.DiscardDate = DateTime.Now;
+                    discardedInputMaterial.InputMaterialId = inputMaterialId;
+                    discardedInputMaterial.DiscardNote = discardNote;
+                    discardedInputMaterial.DiscardQuantity = discardQuantity;
 
+                }
+                catch (Exception)
+                {
+                    return 0;
+
+                }
+               
+                bool result = DiscardInputMaterialBusiness.DiscardInputMaterial(discardedInputMaterial, inputMaterialId,
+                    productMaterialId);
+                if (result)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+                
+            }
         }
         #endregion
 

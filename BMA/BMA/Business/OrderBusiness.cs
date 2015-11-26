@@ -1314,7 +1314,7 @@ namespace BMA.Business
                     output.OutputBillTaxAmount = order.TaxAmount;
                     output.OutputBillCode = "B" + order.OrderCode.Substring(1);
 
-                    order.OutputBill = output;
+                   // order.OutputBill = output;
                 }
                 try
                 {

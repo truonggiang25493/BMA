@@ -22,5 +22,9 @@ namespace BMA.Models
         public string TaxCode { get; set; }
         public string BakeryImage { get; set; }
         public Nullable<int> ProductMaxPrice { get; set; }
+        public string District { get; set; }
+        public string Province { get; set; }
+        public string Fax { get; set; }
+        public string Email { get; set; }
     }
 }

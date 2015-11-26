@@ -14,19 +14,16 @@ namespace BMA.Models
     
     public partial class OutputBill
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public OutputBill()
-        {
-            this.Orders = new HashSet<Order>();
-        }
-    
         public int OutputBillId { get; set; }
         public string OutputBillCode { get; set; }
         public double OutputBillAmount { get; set; }
         public string OutputBillRawImage { get; set; }
         public double OutputBillTaxAmount { get; set; }
+        public System.DateTime ExportDate { get; set; }
+        public string FormNo { get; set; }
+        public string Serial { get; set; }
+        public int OrderId { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual Order Order { get; set; }
     }
 }

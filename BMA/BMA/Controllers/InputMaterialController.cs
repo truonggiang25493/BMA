@@ -30,6 +30,7 @@ namespace BMA.Controllers
             }
             else
             {
+                inputMaterialBusiness = new InputMaterialBusiness();
                 ViewBag.Title = "Danh sách nguyên liệu đầu vào";
                 ViewBag.TreeView = "inputMaterial";
                 ViewBag.TreeViewMenu = "listInputMaterial";

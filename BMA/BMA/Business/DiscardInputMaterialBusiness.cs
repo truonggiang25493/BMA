@@ -12,6 +12,7 @@ namespace BMA.Business
         #region Add discard for input material
         public static bool DiscardInputMaterial(DiscardedInputMaterial discardedInputMaterial, int inputMaterialId, int productMaterialId)
         {
+            db = new BMAEntities();
             InputMaterial inputMaterial = db.InputMaterials.FirstOrDefault(m => m.InputMaterialId == inputMaterialId);
             ProductMaterial productMaterial = db.ProductMaterials.FirstOrDefault(m => m.ProductMaterialId == productMaterialId);
             if (discardedInputMaterial == null)
@@ -29,6 +30,10 @@ namespace BMA.Business
             {
                 string s = e.ToString();
                 return false;
+            }
+            finally
+            {
+                db.Dispose();
             }
             return true;
         }

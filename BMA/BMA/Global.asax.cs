@@ -31,4 +31,5 @@ namespace BMA
             context.Clients.All.OnChange(e.Info, e.Source, e.Type);
         }
     }
+    
 }

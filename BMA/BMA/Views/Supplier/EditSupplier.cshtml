@@ -44,7 +44,7 @@
                                     <b>Số điện thoại<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="text" required value="@Model.SupplierPhoneNumber.Trim()" name="txtSupplierPhoneNumber" id="txtSupplierPhoneNumber" style="width: 95%" />
+                                    <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required value="@Model.SupplierPhoneNumber.Trim()" name="txtSupplierPhoneNumber" id="txtSupplierPhoneNumber" style="width: 95%" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -60,7 +60,7 @@
                                     <b>Mã số thuế<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="text" required value="@Model.SupplierTaxCode.Trim()" name="txtSupplierTaxCode" id="txtSupplierTaxCode" style="width: 95%" />
+                                    <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required value="@Model.SupplierTaxCode.Trim()" name="txtSupplierTaxCode" id="txtSupplierTaxCode" style="width: 95%" />
                                 </div>
                             </div>
                         </div>
@@ -241,7 +241,7 @@
                                                         theme: 'defaultTheme',
                                                         timeout: 1500
                                                     });
-                                                    
+
                                                 }
                                                 else {
                                                     $.ajax({

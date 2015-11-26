@@ -68,7 +68,7 @@
                                         <b>Số lượng<b style="color: #ff0000">*</b>: </b>
                                     </div>
                                     <div class="col-xs-7">
-                                        <input type="number" name="txtImportQuantity" id="txtImportQuantity" oninput="maxLengthCheck(this)" maxlength="6" min="1" max="999999" placeholder="nhập số từ 1-6 chữ số" class="form-control" />
+                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57"  name="txtImportQuantity" id="txtImportQuantity" oninput="maxLengthCheck(this)" maxlength="7" min="1" max="9999999" placeholder="nhập số từ 1-7 chữ số" class="form-control" />
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                                         <b>Tổng giá<b style="color: #ff0000">*</b>: </b>
                                     </div>
                                     <div class="col-xs-7">
-                                        <input type="number" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="7" min="1" max="9999999" placeholder="nhập số từ 1-7 chữ số" class="form-control" />
+                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="8" min="1" max="99999999" placeholder="nhập số từ 1-8 chữ số" class="form-control" />
                                     </div>
                                 </div>
                             </div>

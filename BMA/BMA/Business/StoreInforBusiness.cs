@@ -81,7 +81,7 @@ namespace BMA.Business
         {
             Category category = new Category();
             category.CategoryName = categoryName;
-            category.ParentCategoryId = 1;
+            //category.ParentCategoryId = 1;
             db.Categories.Add(category);
             db.SaveChanges();
             return true;

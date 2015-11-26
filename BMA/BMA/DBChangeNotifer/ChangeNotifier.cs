@@ -5,6 +5,7 @@ using System.Security.Permissions;
 
 namespace BMA.DBChangesNotifer
 {
+    
     public sealed class ChangeNotifier : IDisposable
     {
         private SqlConnection con;
@@ -12,7 +13,7 @@ namespace BMA.DBChangesNotifer
         private SqlDependency dependency;
         private String connectionString;
         private String dependencyCheckSql;
-
+        
         ~ChangeNotifier()
         {
             this.Dispose();
@@ -98,5 +99,6 @@ namespace BMA.DBChangesNotifer
         {
             this.Stop();
         }
+         
     }
 }
