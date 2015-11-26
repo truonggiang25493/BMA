@@ -22,7 +22,6 @@ namespace BMA.Models
     
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
-        public Nullable<int> ParentCategoryId { get; set; }
     
         public virtual Category Category1 { get; set; }
         public virtual Category Category2 { get; set; }

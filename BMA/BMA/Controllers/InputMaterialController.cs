@@ -11,6 +11,9 @@ using System.Web.WebPages;
 using BMA.Business;
 using BMA.Models;
 using BMA.Models.ViewModel;
+using BMA.DBChangesNotifer;
+using Microsoft.AspNet.SignalR;
+using BMA.Hubs;
 
 namespace BMA.Controllers
 {
@@ -156,8 +159,13 @@ namespace BMA.Controllers
                     return 0;
 
                 }
-
+                //Close connection with hub
+                MvcApplication.lowQuantityNotifer.Dispose();
                 bool result = InputMaterialBusiness.AddInputMaterial(inputMaterial);
+
+                //Connection with hub
+                MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
                 if (result)
                 {
                     return 1;
@@ -247,15 +255,28 @@ namespace BMA.Controllers
                     DateTime importDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy",CultureInfo.InvariantCulture);
                     DateTime inputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     int inputBillId = Convert.ToInt32(inputBillIdString);
+                    //Close connection with hub
+                    MvcApplication.lowQuantityNotifer.Dispose();
                     bool result = InputMaterialBusiness.EditInputMaterial(inputMaterialId, importQuantity,
                         productMaterialId, inputMaterialPrice, importDate, inputMaterialExpiryDate, inputBillId,
                         inputMaterialNote);
+                    //Connection with hub
+                    MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                    MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
                     return result ? 1 : 0;
                 }
                 return 0;
             }
         }
 
+        #endregion
+
+        #region Add Onchange when material low
+        private void OnChange2(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange2(e.Info, e.Source, e.Type);
+        }
         #endregion
     }
 }

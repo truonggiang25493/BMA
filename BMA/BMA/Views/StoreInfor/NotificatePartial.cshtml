@@ -1,35 +1,37 @@
 ﻿<script type="text/javascript">
     function quantityLowThanStandard(info, source, type) {
-        noty({
-            text: 'Có nguyên liệu số lượng quá thấp, vui lòng kiểm tra',
-            type: 'success',
-            dismissQueue: false,
-            layout: 'topCenter',
-            theme: 'defaultTheme',
-            timeout: false
-        });
+        if (info == 2) {
+            noty({
+                text: 'Có nguyên liệu số lượng quá thấp, vui lòng kiểm tra',
+                type: 'success',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: false
+            });
 
-        var numberOfNoti = $("#hiddenNumberOfNoti").val();
-        var numberOfLowQuantity = $("#hiddenMaterialCount").val();
-        if (numberOfNoti == "") {
-            $("#hiddenNumberOfNoti").attr('value', 1);
-            $("#hiddenMaterialCount").attr('value', 1);
-            $("#numberOfLowMaterial").text(1);
-            $("[data-role='numberOfLowMaterial']").text(1);
-        }
-        else {
-            numberOfNoti = parseInt(numberOfNoti) + 1;
-            $("#hiddenNumberOfNoti").attr('value', numberOfNoti);
-            if (numberOfLowQuantity == "") {
+            var numberOfNoti = $("#hiddenNumberOfNoti").val();
+            var numberOfLowQuantity = $("#hiddenMaterialCount").val();
+            if (numberOfNoti == "") {
+                $("#hiddenNumberOfNoti").attr('value', 1);
                 $("#hiddenMaterialCount").attr('value', 1);
-            } else {
-                numberOfLowQuantity = parseInt(numberOfLowQuantity) + 1;
-                $("#hiddenMaterialCount").attr('value', numberOfLowQuantity);
+                $("#numberOfLowMaterial").text(1);
+                $("[data-role='numberOfLowMaterial']").text(1);
             }
-            $("#numberOfNoti").text(numberOfNoti);
+            else {
+                numberOfNoti = parseInt(numberOfNoti) + 1;
+                $("#hiddenNumberOfNoti").attr('value', numberOfNoti);
+                if (numberOfLowQuantity == "") {
+                    $("#hiddenMaterialCount").attr('value', 1);
+                } else {
+                    numberOfLowQuantity = parseInt(numberOfLowQuantity) + 1;
+                    $("#hiddenMaterialCount").attr('value', numberOfLowQuantity);
+                }
+                $("#numberOfNoti").text(numberOfNoti);
 
-            $("[data-role='numberOfLowMaterial']").text(numberOfLowQuantity);
-        }
+                $("[data-role='numberOfLowMaterial']").text(numberOfLowQuantity);
+            }
+        } 
     }
 
     function onChange(info, source, type) {

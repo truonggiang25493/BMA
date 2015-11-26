@@ -38,6 +38,11 @@
             }
         });
 
+        $(document).keypress(function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+            }
+        });
 
         function NotificatePartialLink(strURL) {
             var txtHiddenNoti = $("#hiddenNumberOfNoti").val();
@@ -301,7 +306,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageMaterial/Index')" style="cursor:pointer"><i class="fa fa-cubes"></i>Danh sách nguyên liệu</a></li>
-                            <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageMaterial/AddMaterial')" style="cursor:pointer"><i class=" fa fa-plus"></i>Tạo mới nguyên liệu</a></li>
+                            <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageMaterial/AddMaterial?strURL=%2FManageMaterial%2FIndex')" style="cursor:pointer"><i class=" fa fa-plus"></i>Tạo mới nguyên liệu</a></li>
                             <li><a href=""><i class="fa fa-home"></i>Quản lí kho</a></li>
                         </ul>
                     </li>

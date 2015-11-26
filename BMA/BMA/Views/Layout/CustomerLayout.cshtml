@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using BMA.Models
+<!DOCTYPE html>
 <html lang="en">
 <!-- Mirrored from templatecycle.com/tshop/v-1.4/white/index5.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 27 Oct 2015 07:07:03 GMT -->
 <head>
@@ -105,21 +106,21 @@
 </head>
 <body>
     <script>
-        var count = 0;
         function onChangeStatus(info, source, type) {
-            count++;
-            if (count > 6) {
-                noty({
-                    text: 'Có một đơn hàng vừa được thay đổi trạng thái' + info + source + type,
-                    type: 'success',
-                    dismissQueue: false,
-                    layout: 'topCenter',
-                    theme: 'defaultTheme',
-                    timeout: false
-                });
-                count = 0;
-            }
+            setTimeout(function () {
+                if (info == 2) {
+                    noty({
+                        text: 'Có một đơn hàng vừa được thay đổi trạng thái',
+                        type: 'success',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: false
+                    });
+                }
+            }, 600);
         }
+
         window.addEventListener('load', function () {
             var notifier = $.connection.realtimeNotifierHub;
             notifier.client.onChange3 = onChangeStatus
@@ -174,6 +175,15 @@
                                                 theme: 'defaultTheme',
                                                 timeout: 2000
                                             });
+                                        } else if (data === "-2") {
+                                            noty({
+                                                text: 'Tài khoản đã bị khóa, vui lòng liên hệ quản lý để biết thêm chi tiết.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
                                         }
                                     },
                                     fail: function (e) {
@@ -213,11 +223,11 @@
                                 <ul class="userMenu">
                                     @if (Session["UserRole"] != null)
                                     {
-
+                                        <li> <a href="#" style="cursor:default"><span class="hidden-xs"><i class="fa fa-street-view"></i> @((Session["User"] as User).Username)</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
                                     }
                                     else
                                     {
-                                        <li> <a href="@Url.Action("Index", "CusManage")"><span class="hidden-xs"><i class="fa fa-street-view"></i> Quản lý</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                        <li> <a href="@Url.Action("Index", "CusManage")"><span class="hidden-xs"><i class="fa fa-street-view"></i><span style="text-transform:none;">@((Session["User"] as User).Username)</span> - Quản lý</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
                                     }
                                     <li> <a href="@Url.Action("Logout", "Account")"><span class="hidden-xs"><i class="fa fa-sign-out"></i> Đăng xuất </span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
                                 </ul>
@@ -253,22 +263,7 @@
                     <li id="home"> <a href="@Url.Action("Index", "Home")"> Trang chủ </a> </li>
                     <li class="dropdown megamenu-fullwidth" id="product">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#"> Sản phẩm <b class="caret"> </b> </a>
-                        <ul class="dropdown-menu">
-                            <li class="megamenu-content ">
-                                <ul class="col-lg-3  col-sm-3 col-md-3  col-xs-4">
-                                    <li> <a class="newProductMenuBlock" href="@Url.Action("Index","Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/BB2T.jpg" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Tất cả sản phẩm </span> </a> </li>
-                                </ul>
-                                <ul class="col-lg-3  col-sm-3 col-md-3 col-xs-4">
-                                    <li> <a class="newProductMenuBlock" href="@Url.Action("Saltine", "Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/BMTN.JPG" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Bánh mặn </span> </a> </li>
-                                </ul>
-                                <ul class="col-lg-3  col-sm-3 col-md-3 col-xs-4">
-                                    <li> <a class="newProductMenuBlock" href="@Url.Action("Cookie","Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/Pudding.jpg" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Bánh ngọt </span> </a> </li>
-                                </ul>
-                                <ul class="col-lg-3  col-sm-3 col-md-3 col-xs-4">
-                                    <li> <a class="newProductMenuBlock" href="@Url.Action("Index","Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/BBLN.jpg" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Đang khuyến mãi </span> </a> </li>
-                                </ul>
-                            </li>
-                        </ul>
+                        @Html.Action("CategoryPartial", "Product")
                     </li>
                     <li class="" id="procedure"> <a href="@Url.Action("Index", "Procedure")"> Quy trình đặt hàng </a> </li>
                 </ul>

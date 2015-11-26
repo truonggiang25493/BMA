@@ -8,6 +8,9 @@ using BMA.Business;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using BMA.DBChangesNotifer;
+using Microsoft.AspNet.SignalR;
+using BMA.Hubs;
 
 namespace BMA.Controllers
 {
@@ -25,13 +28,19 @@ namespace BMA.Controllers
                 string sAccount = f.Get("txtAccount");
                 string sPassword = f.Get("txtPassword");
                 User endUser = ab.checkLogin(sAccount, sPassword);
+                if (!endUser.IsConfirmed)
+                {
+                    return -2;
+                }
                 if (endUser.RoleId == 3)
                 {
                     Session["User"] = endUser;
                     Session["UserId"] = endUser.UserId;
-                    System.Web.HttpContext.Current.Application["UserId"] = endUser.UserId;
                     Session["CusUserId"] = endUser.Customers.ElementAt(0).CustomerId;
                     Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber;
+                    string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId=", endUser.UserId);
+                    MvcApplication.changeStatusNotifer.Start("BMAChangeDB", dependencyCheckSql);
+                    MvcApplication.changeStatusNotifer.Change += this.OnChange3;
                     return 1;
                 }
                 else
@@ -47,8 +56,17 @@ namespace BMA.Controllers
             }
         }
 
+        private void OnChange3(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange3(e.Info, e.Source, e.Type);
+        }
         public ActionResult Logout()
         {
+            if (Session["UserId"] != null)
+            {
+                MvcApplication.changeStatusNotifer.Dispose();
+            }
             Session["User"] = null;
             Session["BeEdited"] = null;
             Session.Clear();

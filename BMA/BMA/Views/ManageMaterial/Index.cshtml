@@ -76,16 +76,16 @@
                         }
                             }
                             <td class="">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "ManageMaterial", new { materialId = item.ProductMaterialId }))" title="Xem">
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "ManageMaterial", new { materialId = item.ProductMaterialId }))" data-toggle="tooltip" data-placement="top" title="Xem">
                                     <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                 </a>
                                 @if (item.IsActive)
                                 {
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "ManageMaterial", new { materialId = item.ProductMaterialId }))" title="Chỉnh sửa">
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "ManageMaterial", new { materialId = item.ProductMaterialId }))" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa">
                                         <i class="fa fa-edit" style="margin-right: 3px"></i>
                                     </a>
                                 }
-                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductMaterialId, '@item.ProductMaterialName', '@strURL')" title="Thay đổi trạng thái">
+                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductMaterialId, '@item.ProductMaterialName', '@strURL')" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
                                     <i class="fa fa-refresh" style="margin-right: 3px"></i>
                                 </a>
                                 <script>
@@ -196,7 +196,7 @@
                 </tbody>
             </table>
             <div class="box-footer clearfix">
-                <a href="@Url.Action("AddMaterial","ManageMaterial")" class="btn btn-sm btn-info btn-flat pull-left">Thêm nguyên liệu mới</a>
+                <a href="@Url.Action("AddMaterial", "ManageMaterial", new { strURL = Request.Url.AbsolutePath})" class="btn btn-sm btn-info btn-flat pull-left">Thêm nguyên liệu mới</a>
             </div>
         </div>
     </div>

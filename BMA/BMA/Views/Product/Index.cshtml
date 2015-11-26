@@ -5,7 +5,7 @@
 @using BMA.Models.ViewModel
 
 @{
-    ViewBag.Title = "Tất cả sản phẩm";
+    ViewBag.Title = ViewBag.ProductTitle;
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
     List<CustomerCartViewModel> lstProductCart = ViewBag.lstProductCart;
     int quantity = 0;

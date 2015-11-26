@@ -78,19 +78,22 @@
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title">Số lượng sản phẩm tối thiểu trong đơn hàng</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn bg-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
                 </div><!-- /.box-header -->
                 <!-- form start -->
                 <form action="" class="form-horizontal" method="post" role="form" id="policyForm">
                     <div class="box-body">
                         <div class="form-group">
-                            <label for="inputPassword3" class="col-sm-7 pull-left">@ViewBag.policy.PolicyName</label>
+                            <label for="inputPassword3" class="col-sm-7 pull-left">@ViewBag.minQuantity.PolicyName</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" value="@ViewBag.policy.PolicyBound" id="productQuantity" placeholder="Nhập số lượng" readonly>
+                                <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@ViewBag.minQuantity.PolicyBound" id="productQuantity" placeholder="Nhập số lượng" readonly>
                             </div>
                         </div>
                     </div><!-- /.box-body -->
                     <div class="box-footer">
-                        <a onclick="changeToReadOnly(@ViewBag.policy.PolicyBound)" class="btn btn-default">Hủy thay đổi</a>
+                        <a onclick="changeToReadOnly(@ViewBag.minQuantity.PolicyBound)" class="btn btn-default">Hủy thay đổi</a>
                         <a onclick="changeQuantityConfirm()" class="btn btn-info pull-right" id="changeConfirm">Thay đổi</a>
                     </div><!-- /.box-footer -->
                     <script type="text/javascript">
@@ -133,9 +136,9 @@
                                         theme: 'defaultTheme',
                                         timeout: 2000
                                     });
-                                } else if (txtQuantity > 10000) {
+                                } else if (txtQuantity > 5000) {
                                     noty({
-                                        text: 'Số lượng không được lớn hơn hoặc bằng 10000.',
+                                        text: 'Số lượng không được lớn hơn hoặc bằng 5000.',
                                         type: 'warning',
                                         dismissQueue: false,
                                         layout: 'topCenter',
@@ -203,6 +206,9 @@
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title">Đơn giá tối đa cho 1 sản phẩm</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn bg-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
                 </div><!-- /.box-header -->
                 <!-- form start -->
                 <form action="" class="form-horizontal" method="post" role="form" id="policyForm">
@@ -210,7 +216,7 @@
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-7 pull-left">Đơn giá tối đá cho sản phẩm (đồng)</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" value="@ViewBag.maxPrice" id="maxPrice" placeholder="Nhập giá tối đa" onkeyup="return formatPrice()" readonly>
+                                <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@ViewBag.maxPrice.PolicyBound" id="maxPrice" placeholder="Nhập giá tối đa" onkeyup="return formatPrice()" readonly>
                             </div>
                         </div>
                     </div><!-- /.box-body -->
@@ -305,7 +311,7 @@
                                                     dismissQueue: false,
                                                     layout: 'topCenter',
                                                     theme: 'defaultTheme',
-                                                    timeout: 2000
+                                                    timeout: 3000
                                                 });
                                             } else {
                                                 noty({
@@ -343,9 +349,12 @@
                     </script>
                 </form>
             </div>
-            <div class="box box-info">
+            <div class="box box-info collapsed-box">
                 <div class="box-header with-border">
                     <h3 class="box-title">Loại bánh</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn bg-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
                 </div><!-- /.box-header -->
                 <!-- form start -->
                 <form action="" class="form-horizontal" method="post" role="form" id="policyForm">
@@ -368,7 +377,7 @@
                                                     <label style="margin-top:10px;margin-left:10px;">@(++count)</label>
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control" style="width:138px;" value="@category.ElementAt(i).CategoryName" id="categoryName" data-role="categoryName" readonly />
+                                                    <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="form-control" style="width:138px;" value="@category.ElementAt(i).CategoryName" id="categoryName" data-role="categoryName" readonly />
                                                     <input type="hidden" value="@category.ElementAt(i).CategoryName" id="hiddenCategoryName" data-role="hiddenCategoryName" />
                                                     <input type="hidden" value="@category.ElementAt(i).CategoryId" id="hiddenCategoryId" data-role="hiddenCategoryId" />
                                                 </td>
@@ -467,6 +476,15 @@
                                         } else if (data === -1) {
                                             noty({
                                                 text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                        } else if (data === -2) {
+                                            noty({
+                                                text: 'Đã tồn tại loại bánh cùng tên, vui lòng thử lại.',
                                                 type: 'warning',
                                                 dismissQueue: false,
                                                 layout: 'topCenter',
@@ -576,6 +594,15 @@
                                                     theme: 'defaultTheme',
                                                     timeout: 2000
                                                 });
+                                            } else if (data === -2) {
+                                                noty({
+                                                    text: 'Có loại bánh trùng tên nhau, vui lòng thử lại.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
                                             } else {
                                                 noty({
                                                     text: 'Đã có lỗi xảy ra, vui lòng thử lại.',
@@ -669,6 +696,9 @@
             <div class="box box-danger">
                 <div class="box-header with-border">
                     <h3 class="box-title">Giảm giá theo số lượng</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn bg-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
                 </div><!-- /.box-header -->
                 <!-- form start -->
                 <form action="@Url.Action("MinQuantity", "StoreInfor")" class="form-horizontal" method="post" role="form" id="policyForm">
@@ -733,15 +763,15 @@
                                         {
                                             <tr>
                                                 <td>
-                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).QuantityFrom" id="quantityFrom" data-role="quantityFrom" readonly />
+                                                    <input type="text" class="form-control" style="width:138px;" maxlength="5" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@dbq.ElementAt(i).QuantityFrom" id="quantityFrom" data-role="quantityFrom" readonly />
                                                     <input type="hidden" value="@ViewBag.QuantityFrom[i]" id="hiddenQuantityFrom" data-role="hiddenQuantityFrom" />
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).QuantityTo" id="quantityTo" data-role="quantityTo" readonly />
+                                                    <input type="text" class="form-control" style="width:138px;" maxlength="5" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@dbq.ElementAt(i).QuantityTo" id="quantityTo" data-role="quantityTo" readonly />
                                                     <input type="hidden" value="@ViewBag.QuantityTo[i]" id="hiddenQuantityTo" data-role="hiddenQuantityTo" />
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).DiscountValue" id="discountValue" data-role="discountValue" readonly />
+                                                    <input type="text" class="form-control" style="width:138px;" maxlength="3" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@dbq.ElementAt(i).DiscountValue" id="discountValue" data-role="discountValue" readonly />
                                                     <input type="hidden" value="@ViewBag.DiscountValue[i]" id="hiddenDiscount" data-role="hiddenDiscount" />
                                                 </td>
                                             </tr>
@@ -766,15 +796,15 @@
                                         {
                                             <tr>
                                                 <td>
-                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).QuantityFrom" id="quantityFrom" data-role="quantityFrom" readonly />
+                                                    <input type="text" class="form-control" style="width:138px;" maxlength="5" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@dbq.ElementAt(i).QuantityFrom" id="quantityFrom" data-role="quantityFrom" readonly />
                                                     <input type="hidden" value="@ViewBag.QuantityFrom[i]" id="hiddenQuantityFrom" data-role="hiddenQuantityFrom" />
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).QuantityTo" id="quantityTo" data-role="quantityTo" readonly />
+                                                    <input type="text" class="form-control" style="width:138px;" maxlength="5" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@dbq.ElementAt(i).QuantityTo" id="quantityTo" data-role="quantityTo" readonly />
                                                     <input type="hidden" value="@ViewBag.QuantityTo[i]" id="hiddenQuantityTo" data-role="hiddenQuantityTo" />
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control" style="width:138px;" value="@dbq.ElementAt(i).DiscountValue" id="discountValue" data-role="discountValue" readonly />
+                                                    <input type="text" class="form-control" style="width:138px;" maxlength="3" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@dbq.ElementAt(i).DiscountValue" id="discountValue" data-role="discountValue" readonly />
                                                     <input type="hidden" value="@ViewBag.DiscountValue[i]" id="hiddenDiscount" data-role="hiddenDiscount" />
                                                 </td>
                                             </tr>
@@ -815,7 +845,7 @@
                             if ($("#quantityFrom").hasAttr('readonly')) {
 
                             } else {
-                                if (txtQuantityFrom.trim() === '' || txtQuantityTo.trim() === '') {
+                                if (lstQuantityFrom[0].trim() === '' || lstQuantityFrom[1].trim() === '' || lstQuantityFrom[2].trim() === '' || lstQuantityTo[0].trim() === '' || lstQuantityTo[1].trim() === '' || lstQuantityTo[2].trim() === '') {
                                     noty({
                                         text: 'Số lượng không được để trống.',
                                         type: 'warning',
@@ -824,7 +854,7 @@
                                         theme: 'defaultTheme',
                                         timeout: 2000
                                     });
-                                } else if (txtDiscount.trim() === '') {
+                                } else if (lstDiscount[0].trim() === '' || lstDiscount[1].trim() === '' || lstDiscount[2].trim() === '') {
                                     noty({
                                         text: 'Tỉ lệ giảm không được để trống.',
                                         type: 'warning',
@@ -833,7 +863,16 @@
                                         theme: 'defaultTheme',
                                         timeout: 2000
                                     });
-                                } else if (isNaN(txtQuantityFrom) || isNaN(txtQuantityTo)) {
+                                } else if (lstDiscount[2] > 100) {
+                                    noty({
+                                        text: 'Tỉ lệ giảm tối đa là 100%.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (isNaN(lstQuantityFrom[0]) || isNaN(lstQuantityFrom[1]) || isNaN(lstQuantityFrom[2]) || isNaN(lstQuantityFrom[0]) || isNaN(lstQuantityFrom[1]) || isNaN(lstQuantityFrom[2])) {
                                     noty({
                                         text: 'Số lượng phải là số.',
                                         type: 'warning',
@@ -842,7 +881,7 @@
                                         theme: 'defaultTheme',
                                         timeout: 2000
                                     });
-                                } else if (isNaN(txtDiscount)) {
+                                } else if (isNaN(lstDiscount[0]) || isNaN(lstDiscount[1]) || isNaN(lstDiscount[2])) {
                                     noty({
                                         text: 'Tỉ lệ giảm phải là số.',
                                         type: 'warning',

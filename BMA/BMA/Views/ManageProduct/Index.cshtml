@@ -44,16 +44,16 @@
                         }
                             }
                             <td class="">
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "ManageProduct", new { ProductId = item.ProductId }))" title="Xem">
+                                <a class="btn btn-link btn-xs" href="@(Url.Action("Detail", "ManageProduct", new { ProductId = item.ProductId }))" data-toggle="tooltip" data-placement="top" title="Xem">
                                     <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                 </a>
                                 @if (item.IsActive)
                                 {
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "ManageProduct", new { ProductId = item.ProductId }))" title="Chỉnh sửa">
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "ManageProduct", new { ProductId = item.ProductId }))" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa">
                                         <i class="fa fa-edit" style="margin-right: 3px"></i>
                                     </a>
                                 }
-                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductId, '@item.ProductName', '@strURL')" title="Thay đổi trạng thái">
+                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductId, '@item.ProductName', '@strURL')" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
                                     <i class="fa fa-refresh" style="margin-right: 3px"></i>
                                 </a>
                                 <script>
@@ -88,65 +88,65 @@
                                         document.getElementById('popup-footer').innerHTML = footer;
                                     }
 
-                                    function checkValidate(){
+                                    function checkValidate() {
                                         $.ajax({
                                             url: "@(Url.Action("ChangeStatus", "ManageProduct"))",
                                             method: "POST",
-                                        data: $("#form-aprrove").serialize(),
-                                        success: function (data) {
-                                            if (data === "1") {
+                                            data: $("#form-aprrove").serialize(),
+                                            success: function (data) {
+                                                if (data === "1") {
+                                                    noty({
+                                                        text: 'Thay đổi trạng thái thành công.',
+                                                        type: 'success',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 2000
+                                                    });
+                                                    var redirectURL = window.location.href;
+                                                    window.setTimeout(function () {
+                                                        window.location.replace(redirectURL);
+                                                    }, 3000);
+                                                } else if (data === "-1") {
+                                                    noty({
+                                                        text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 2000
+                                                    });
+                                                } else if (data === "-2") {
+                                                    noty({
+                                                        text: 'Sản phẩm đã có trạng thái Đang sử dụng',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 2000
+                                                    });
+                                                } else if (data === "-3") {
+                                                    noty({
+                                                        text: 'Sản phẩm hiện đã có trạng thái Không còn sử dụng.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 2000
+                                                    });
+                                                }
+                                            },
+                                            fail: function () {
                                                 noty({
-                                                    text: 'Thay đổi trạng thái thành công.',
-                                                    type: 'success',
+                                                    text: 'Đã có lỗi xảy ra',
+                                                    type: 'error',
                                                     dismissQueue: false,
                                                     layout: 'topCenter',
                                                     theme: 'defaultTheme',
-                                                    timeout: 2000
+                                                    timeout: 1000
                                                 });
-                                                var redirectURL = window.location.href;
-                                                window.setTimeout(function () {
-                                                    window.location.replace(redirectURL);
-                                                }, 3000);
-                                            } else if (data === "-1") {
-                                                noty({
-                                                    text: 'Có lỗi xảy ra, vui lòng thử lại.',
-                                                    type: 'warning',
-                                                    dismissQueue: false,
-                                                    layout: 'topCenter',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 2000
-                                                });
-                                            } else if (data === "-2") {
-                                                noty({
-                                                    text: 'Sản phẩm đã có trạng thái Đang sử dụng',
-                                                    type: 'warning',
-                                                    dismissQueue: false,
-                                                    layout: 'topCenter',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 2000
-                                                });
-                                            } else if (data === "-3") {
-                                                noty({
-                                                    text: 'Sản phẩm hiện đã có trạng thái Không còn sử dụng.',
-                                                    type: 'warning',
-                                                    dismissQueue: false,
-                                                    layout: 'topCenter',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 2000
-                                                });
-                                            } 
-                                        },
-                                        fail: function () {
-                                            noty({
-                                                text: 'Đã có lỗi xảy ra',
-                                                type: 'error',
-                                                dismissQueue: false,
-                                                layout: 'topCenter',
-                                                theme: 'defaultTheme',
-                                                timeout: 1000
-                                            });
-                                        }
-                                    })
+                                            }
+                                        })
                                     }
                                 </script>
                             </td>

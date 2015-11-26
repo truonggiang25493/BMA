@@ -144,43 +144,11 @@
                                 }
                             }
                         </div>
+                        <div class="pull-right" style="margin-right:10px;"> <a href="@Url.Action("DeleteAll", "Cart")" class="btn btn-danger"> <i class="fa fa-times"></i> &nbsp; Hủy đơn hàng </a> </div>
                     </div>
                 </div>
-
             </div>
         </div>
-        @*<div class="col-lg-4 col-md-4 col-sm-5 rightSidebar">
-                <div class="contentBox">
-                    <div class="w100 costDetails">
-                        <div class="table-block" id="order-detail-content">
-                            <div class="w100 cartMiniTable">
-                                <table id="cart-summary" class="std table">
-                                    <tbody>
-                                        <tr>
-                                            <td>Tổng cộng</td>
-                                            <td class="price">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                        </tr>
-                                        <tr style="">
-                                            <td>Giảm giá</td>
-                                            <td class="price"><span class="success">10.000</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
-                                            <td class="price" id="total-tax">@taxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Thành tiền</td>
-                                            <td class=" site-color" id="total-price" style="font-size: 20px; color: #4ec67f !important">@totalValue.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                        </tr>
-                                    </tbody>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>*@
-
     </div>
 
     <div style="clear:both"></div>

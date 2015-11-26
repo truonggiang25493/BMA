@@ -38,6 +38,19 @@ namespace BMA.Business
             db.SaveChanges();
             return true;
         }
+
+        public bool IsActiveProduct(int productId)
+        {
+            var product = db.Products.SingleOrDefault(n => n.ProductId == productId);
+            if (product.IsActive)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public List<CustomerCartViewModel> GetOrderToCart(int orderId)
         {
             List<CustomerCartViewModel> lstCart = new List<CustomerCartViewModel>();

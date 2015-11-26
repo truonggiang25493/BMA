@@ -52,8 +52,8 @@ namespace BMA.Business
 
         public bool changeMaxPrice(int maxPrice)
         {
-            StoreInfo storeInfo = db.StoreInfoes.SingleOrDefault();
-            storeInfo.ProductMaxPrice = maxPrice;
+            Policy policy = db.Policies.SingleOrDefault(n => n.PolicyId == 2);
+            policy.PolicyBound = maxPrice;
             db.SaveChanges();
             return true;
         }
@@ -81,7 +81,6 @@ namespace BMA.Business
         {
             Category category = new Category();
             category.CategoryName = categoryName;
-            category.ParentCategoryId = 1;
             db.Categories.Add(category);
             db.SaveChanges();
             return true;
