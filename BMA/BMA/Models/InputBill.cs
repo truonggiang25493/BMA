@@ -26,8 +26,10 @@ namespace BMA.Models
         public double InputBillAmount { get; set; }
         public string InputRawImage { get; set; }
         public double InputTaxAmount { get; set; }
-        public Nullable<int> SupplierId { get; set; }
+        public int SupplierId { get; set; }
         public System.DateTime ImportDate { get; set; }
+        public string FormNo { get; set; }
+        public string Serial { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ExportFrom> ExportFroms { get; set; }

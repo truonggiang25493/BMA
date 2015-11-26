@@ -22,10 +22,7 @@ namespace BMA.Models
     
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
-        public Nullable<int> ParentCategoryId { get; set; }
     
-        public virtual Category Category1 { get; set; }
-        public virtual Category Category2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Product> Products { get; set; }
     }

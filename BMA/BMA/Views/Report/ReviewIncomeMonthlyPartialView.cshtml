@@ -49,14 +49,8 @@
                                 <td>@((monthlyResult.OtherExpense == null) ? 0.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) : (monthlyResult.OtherExpense.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))))</td>
                                 <td>@((monthlyResult.Income == null) ? 0.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) : (monthlyResult.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))))</td>
                                 <td>
-                                    <button onclick="openDetailInNewTab()" class="btn btn-info btn-xs">
+                                    <button onclick="window.open('@(Html.Raw(Url.Action("ReviewIncomeMonthlyDetail", "Report", new { month = monthlyResult.MonthNo, year = monthlyResult.YearNo })))', '_blank')" class="btn btn-info btn-xs">
                                         <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
-                                        <script type="text/javascript">
-                                            function openDetailInNewTab() {
-                                                var win = window.open("@(Html.Raw(Url.Action("ReviewIncomeMonthlyDetail", "Report", new {month = monthlyResult.MonthNo, year = monthlyResult.YearNo})))", '_blank');
-                                                win.focus();
-                                            }
-                                        </script>
                                     </button>
                                 </td>
                             </tr>

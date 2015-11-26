@@ -1,0 +1,692 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>TaxDeclaration</title>
+    <style>
+        table#content, #content th, #content td {
+            border: 1px solid black;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table {
+            counter-reset: section;
+        }
+
+        .details {
+            font-family: "Times New Roman", Times, serif;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+    </style>
+    <!-- CSS -->
+    <link href="~/Content/AdminLayout/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="row">
+        <div class="details">
+            <div>
+                <p style="font-size: 11pt; text-align: center; font-weight: bold;margin-bottom: 0">
+                    CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                </p>
+                <p style="font-size: 13pt; text-align: center; font-weight: bold; margin-bottom: 0; margin-top: 0">
+                    Độc lập - Tự do - Hạnh phúc
+                </p>
+                <p style="font-size: 12pt; text-align: center; margin-top: -20px">
+                    _____________________
+                </p>
+                <p style="text-align: center;font-size: 13.5pt;font-weight: bold;margin-top: 0;margin-bottom: 0">
+                    TỜ KHAI THUẾ GIÁ TRỊ GIA TĂNG
+                </p>
+                <p style="font-size: 10pt; text-align: center; font-style: italic;margin-bottom: 0; margin-top: 0">
+                    (Dành cho người nộp thuế khai thuế giá trị gia tăng theo phương pháp khấu trừ)
+                </p>
+                <p style="font-size: 10pt; text-align: center; font-weight: bold;margin-bottom: 0; margin-top: 0;">
+                    [01] Kỳ tính thuế: Quý 3 năm 2015
+                </p>
+                <p style="font-size: 10pt; text-align: center; font-weight: bold;margin-bottom: 0; margin-top: 0;">
+                    [02] Lần đầu [&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[03] Bổ sung lần thứ [&nbsp;&nbsp;&nbsp;]
+                </p>
+
+                <!-- Owner Info -->
+                <table style="font-size: 9pt; margin-left: 340px; margin-bottom: 0; margin-top: 10px">
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: bold; width: 200px">
+                                [04] Tên người nộp thuế:
+                            </td>
+                            <td>
+                                Nguyễn Tấn Trường Giang
+                                <input type="hidden" name="storeOwnerName" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="height: 25px;margin: 0; padding: 0; margin-left: 340px; font-size: 9pt">
+                    <tbody>
+                        <tr>
+                            <td style="width: 200px; height: 25px; margin: 0; padding: 0">
+                                <strong>[05]</strong>&nbsp;Mã số thuế:
+                                <input type="hidden" name="storeOwnerTaxCode" />
+                            </td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="font-size: 9pt; margin-left: 340px; margin-top: 0; margin-bottom: 0">
+                    <tbody>
+                        <tr>
+                            <td style="width: 200px; height: 25px; margin: 0; padding: 0">
+                                <strong>[06]</strong>&nbsp;Địa chỉ:
+                            </td>
+                            <td>
+                                1050 Quang Trung
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="font-size: 9pt; margin-left: 340px; margin-top: 0; margin-bottom: 0">
+                    <tbody>
+                        <tr>
+                            <td style="width: 150px; height: 25px; margin: 0; padding: 0">
+                                <strong>[07]</strong>&nbsp;Quận/huyện:
+                            </td>
+                            <td style="width: 150px">
+                                Gò Vấp
+                            </td>
+                            <td style="width: 120px; height: 25px; margin: 0; padding: 0">
+                                <strong>[08]</strong>&nbsp;Tỉnh/Thành phố:
+                            </td>
+                            <td>
+                                Hồ Chí Minh
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="font-size: 9pt; margin-left: 340px; margin-top: 0; margin-bottom: 0">
+                    <tbody>
+                        <tr>
+                            <td style="width: 150px; height: 25px; margin: 0; padding: 0">
+                                <strong>[09]</strong>&nbsp;Điện thoại:
+                            </td>
+                            <td style="width: 150px">
+                                (08)832569714
+                            </td>
+                            <td style="width: 120px; height: 25px; margin: 0; padding: 0">
+                                <strong>[10]</strong>&nbsp;Fax:
+                            </td>
+                            <td style="width: 150px">
+                                (08)832569714
+                            </td>
+                            <td style="width: 120px; height: 25px; margin: 0; padding: 0">
+                                <strong>[11]</strong>&nbsp;Email:
+                            </td>
+                            <td>
+                                tiembanhdautay.bma@gmail.com
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Tax Agent Info -->
+                <table style="font-size: 9pt; margin-left: 340px; margin-bottom: 0; margin-top: 0">
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: bold; width: 200px">
+                                [12] Tên đại lý thuế (nếu có):
+                            </td>
+                            <td>
+                                Thuế Mạnh
+                                <input type="hidden" name="AgentOwnerName" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="height: 25px;margin: 0; padding: 0; margin-left: 340px; font-size: 9pt">
+                    <tbody>
+                        <tr>
+                            <td style="width: 200px; height: 25px; margin: 0; padding: 0">
+                                <strong>[13]</strong>&nbsp;Mã số thuế:
+                                <input type="hidden" name="AgentTaxCode" />
+                            </td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="font-size: 9pt; margin-left: 340px; margin-top: 0; margin-bottom: 0">
+                    <tbody>
+                        <tr>
+                            <td style="width: 200px; height: 25px; margin: 0; padding: 0">
+                                <strong>[14]</strong>&nbsp;Địa chỉ:
+                            </td>
+                            <td>
+                                36 Bùi Thị Xuân
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="font-size: 9pt; margin-left: 340px; margin-top: 0; margin-bottom: 0">
+                    <tbody>
+                        <tr>
+                            <td style="width: 150px; height: 25px; margin: 0; padding: 0">
+                                <strong>[15]</strong>&nbsp;Quận/huyện:
+                            </td>
+                            <td style="width: 150px">
+                                Quận 1
+                            </td>
+                            <td style="width: 120px; height: 25px; margin: 0; padding: 0">
+                                <strong>[16]</strong>&nbsp;Tỉnh/Thành phố:
+                            </td>
+                            <td>
+                                Hồ Chí Minh
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="font-size: 9pt; margin-left: 340px; margin-top: 0; margin-bottom: 0">
+                    <tbody>
+                        <tr>
+                            <td style="width: 150px; height: 25px; margin: 0; padding: 0">
+                                <strong>[17]</strong>&nbsp;Điện thoại:
+                            </td>
+                            <td style="width: 150px">
+                                (08)838383838
+                            </td>
+                            <td style="width: 120px; height: 25px; margin: 0; padding: 0">
+                                <strong>[18]</strong>&nbsp;Fax:
+                            </td>
+                            <td style="width: 150px">
+                                (08)838383838
+                            </td>
+                            <td style="width: 120px; height: 25px; margin: 0; padding: 0">
+                                <strong>[11]</strong>&nbsp;Email:
+                            </td>
+                            <td>
+                                gaumapxipo@gmail.com
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="font-size: 9pt; margin-left: 340px; margin-top: 0; margin-bottom: 0">
+                    <tbody>
+                        <tr>
+                            <td style="width: 150px; height: 25px; margin: 0; padding: 0">
+                                <strong>[15]</strong>&nbsp;Hợp đồng đại lý thuế:&nbsp;Số
+                            </td>
+                            <td style="width: 150px">
+                                154545565895656
+                            </td>
+                            <td style="width: 120px; height: 25px; margin: 0; padding: 0">
+                                Ngày:
+                            </td>
+                            <td>
+                                15/09/2013"
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="font-size: 8pt; font-style: italic; margin-left: 880px; margin-bottom: 0">
+                    Đơn vị tiền: đồng Việt Nam
+                </p>
+                <!-- Content -->
+                <table id="content" style="font-size: 9pt; width: 680px;margin-left: 320px">
+                    <tbody>
+                        <tr style=" font-weight: bold; font-size: 8.5pt; text-align: center">
+                            <td style="height: 35px; width: 30px;">
+                                STT
+                            </td>
+                            <td colspan="3" style="width: 473px;">
+                                Chỉ tiêu
+                            </td>
+                            <td colspan="2" style="width: 152px;">
+                                Giá trị HHDV<br />(chưa có thuế GTGT)
+
+                            </td>
+                            <td colspan="2" style="width: 143px;">
+                                Thuế GTGT
+                            </td>
+                        </tr>
+                        <tr style="font-size: 9pt">
+                            <td style="text-align: center; font-weight: bold">
+                                A
+                            </td>
+                            <td style="font-weight: bold; width: 420px">
+                                Không phát sinh hoạt động mua, bán trong kỳ (đánh dấu "X")
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [21]
+                            </td>
+                            <td></td>
+                            <td colspan="2"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr height="16">
+                            <td style="text-align: center; font-weight: bold">
+                                B
+                            </td>
+                            <td colspan="5" style="font-weight: bold;">
+                                Thuế GTGT còn được khấu trừ kỳ trước chuyển sang
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [22]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="16">
+                            <td style="text-align: center; font-weight: bold">
+                                C
+                            </td>
+                            <td colspan="7" style="font-weight: bold">
+                                Kê khai thuế GTGT phải nộp Ngân sách nhà nước
+                            </td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                I
+                            </td>
+                            <td colspan="7" style="font-weight: bold">
+                                Hàng hoá, dịch vụ (HHDV) mua vào trong kỳ
+                            </td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                1
+                            </td>
+                            <td colspan="3">
+                                Giá trị và thuế GTGT của hàng hoá, dịch vụ mua vào
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [23]
+                            </td>
+                            <td></td>
+                            <td style="font-weight: bold;text-align: center">
+                                [24]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                2
+                            </td>
+                            <td colspan="5">
+                                Tổng số thuế GTGT được khấu trừ kỳ này
+                            </td>
+                            <td style="font-weight: bold; text-align: center">
+                                [25]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                II
+                            </td>
+                            <td colspan="7" style="font-weight: bold">
+                                Hàng hoá, dịch vụ bán ra trong kỳ
+                            </td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                1
+                            </td>
+                            <td colspan="3">
+                                Hàng hóa, dịch vụ bán ra không chịu thuế GTGT
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [26]
+                            </td>
+                            <td></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                2
+                            </td>
+                            <td colspan="3">
+                                Hàng hóa, dịch vụ bán ra chịu thuế GTGT ([27]=[29]+[30]+[32]; [28]=[31]+[33])
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [27]
+                            </td>
+                            <td></td>
+                            <td style="font-weight: bold;text-align: center">
+                                [28]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center;">
+                                a
+                            </td>
+                            <td colspan="3">
+                                Hàng hoá, dịch vụ bán ra chịu thuế suất 0%
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [29]
+                            </td>
+                            <td></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center;">
+                                b
+                            </td>
+                            <td colspan="3">
+                                Hàng hoá, dịch vụ bán ra chịu thuế suất 5%
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [30]
+                            </td>
+                            <td></td>
+                            <td style="font-weight: bold;text-align: center">
+                                [31]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center;">
+                                c
+                            </td>
+                            <td colspan="3">
+                                Hàng hoá, dịch vụ bán ra chịu thuế suất 10%
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [32]
+                            </td>
+                            <td></td>
+                            <td style="font-weight: bold;text-align: center">
+                                [33]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                3
+                            </td>
+                            <td colspan="3">
+                                Tổng doanh thu và thuế GTGT của HHDV bán ra ([34]=[26]+[27]; [35]=[28])
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [34]
+                            </td>
+                            <td></td>
+                            <td style="font-weight: bold;text-align: center">
+                                [35]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                III
+                            </td>
+                            <td colspan="5" style="font-weight: bold">
+                                Thuế GTGT phát sinh trong kỳ ([36]=[35]-[25])
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [36]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                IV
+                            </td>
+                            <td colspan="7" style="font-weight: bold">
+                                Điều chỉnh tăng, giảm thuế GTGT còn được khấu trừ của các kỳ trước
+                            </td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                1
+                            </td>
+                            <td colspan="5">
+                                Điều chỉnh giảm
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [37]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                2
+                            </td>
+                            <td colspan="5">
+                                Điều chỉnh tăng
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [38]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                V
+                            </td>
+                            <td colspan="5" style="font-weight: bold">
+                                Thuế GTGT đã nộp ở địa phương khác của hoạt động kinh doanh xây dựng, lắp đặt, bán hàng, bất động sản ngoại tỉnh
+                            </td>
+                            <td style="font-weight: bold;text-align: center">
+                                [39]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17">
+                            <td style="text-align: center; font-weight: bold">
+                                VI
+                            </td>
+                            <td colspan="7" style="font-weight: bold">
+                                Xác định nghĩa vụ thuế GTGT phải nộp trong kỳ:
+                            </td>
+                        </tr>
+                        <tr height="17" style="font-weight: bold">
+                            <td style="text-align: center">
+                                1
+                            </td>
+                            <td colspan="5">
+                                Thuế GTGT phải nộp của hoạt động sản xuất kinh doanh trong kỳ ([40a]=[36]-[22]+[37]-[38] - [39]≥ 0)
+                            </td>
+                            <td style="text-align: center">
+                                [40a]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="32" style="font-weight: bold">
+                            <td style="text-align: center">
+                                2
+                            </td>
+                            <td colspan="5">
+                                Thuế GTGT mua vào của dự án đầu tư (cùng tỉnh, thành phố trực thuộc trung ương) được bù trừ với thuế GTGT còn phải nộp của hoạt động sản xuất kinh doanh cùng kỳ tính thuế
+                            </td>
+                            <td style="text-align: center">
+                                [40b]
+                            </td>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr height="17" style="font-weight: bold">
+                            <td style="text-align: center">
+                                3
+                            </td>
+                            <td colspan="5">
+                                Thuế GTGT còn phải nộp trong kỳ ([40]=[40a]-[40b])
+                            </td>
+                            <td style="text-align: center">
+                                [40]
+                            </td>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr height="17" style="font-weight: bold">
+                            <td style="text-align: center">
+                                4
+                            </td>
+                            <td colspan="5">
+                                Thuế GTGT chưa khấu trừ hết kỳ này (nếu [41]=[36]-[22]+[37]-[38]-[39]&lt; 0)
+                            </td>
+                            <td style="text-align: center">
+                                [41]
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr height="17" style="font-weight: bold">
+                            <td style="text-align: center">
+                                4.1
+                            </td>
+                            <td>
+                                Tổng số thuế GTGT đề nghị hoàn
+                            </td>
+                            <td style="width: 27px;"></td>
+                            <td style="width: 57px;"></td>
+                            <td style="width: 33px;"></td>
+                            <td style="width: 119px;"></td>
+                            <td style="text-align: center">
+                                [42]
+                            </td>
+                            <td style="width: 108px;"></td>
+                        </tr>
+                        <tr height="18" style="font-weight: bold">
+                            <td style="text-align: center">
+                                4.2
+                            </td>
+                            <td colspan="5">
+                                Thuế GTGT còn được khấu trừ chuyển kỳ sau ([43]=[41]-[42])
+                            </td>
+                            <td style="text-align: center">
+                                [43]
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 10pt; margin-left: 340px; margin-top: 0; margin-bottom: 0; font-weight: bold">
+                    Tôi cam đoan số liệu khai trên là đúng và chịu trách nhiệm trước pháp luật về những số liệu đã khai./.
+                </p>
+                <table style="margin-left: 320px; border: 0">
+                    <tbody>
+                        <tr>
+                            <td style="height: 89px; font-size: 10pt;">
+
+                                <table style="margin-top: -25px;">
+                                    <tr>
+                                        <td colspan="2" style="text-align: center; font-weight: bold; margin-bottom: 0; margin-top: -50px">
+                                            NHÂN VIÊN ĐẠI LÝ THUẾ
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Họ và tên</td>
+                                        <td>
+                                            Ông Tấn Mạnh
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Chứng chỉ hành nghề số:</td>
+                                        <td>
+                                            1234567890
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width: 426px; height: 89px;">
+                                <table border="0" cellpadding="0" cellspacing="0" style="width: 411px;" width="411">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 411px; height: 17px; font-size: 10pt; font-style: italic;">
+
+                                                <table style="margin-bottom: 5px; margin-left: 90px">
+                                                    <tr>
+                                                        <td>
+                                                            Hồ Chí Minh
+                                                        </td>
+                                                        <td>&#44;&nbsp;ngày&nbsp;</td>
+                                                        <td>
+                                                            12
+                                                        </td>
+                                                        <td>&nbsp;tháng&nbsp; 9</td>
+                                                        <td>&nbsp;năm&nbsp;2015</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 411px; height: 42px; font-size: 10pt; font-weight: bold">
+                                                <p align="center" style="margin: 0">
+                                                    <strong>NGƯỜI NỘP THUẾ hoặc</strong>
+                                                </p>
+                                                <p align="center" style="margin-top: 0; margin-bottom: 5px">
+                                                    <strong>ĐẠI DIỆN HỢP PHÁP CỦA NGƯỜI NỘP THUẾ</strong>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 411px; height: 28px; font-size: 10pt; font-style: italic">
+                                                <p align="center" style="margin: 0">
+                                                    (Ký, ghi rõ họ tên; chức vụ và đóng dấu (nếu có))
+                                                </p>
+
+                                                <p align="center" style="margin-top: 70px; margin-bottom: 0">
+                                                    Nguyễn Tấn Trường Giang
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 11pt; font-weight: bold; font-style: italic; text-decoration: underline; margin-left: 340px; margin-top: 0; margin-bottom: 0">
+                    Ghi chú:
+                </p>
+                <p style="font-size: 10pt; font-style: italic; margin-left: 400px; margin-top: 0; margin-bottom: 0">
+                    - GTGT: Giá trị Gia tăng
+                </p>
+                <p style="font-size: 10pt; font-style: italic; margin-left: 400px; margin-top: 0; margin-bottom: 0">
+                    - HHDV: Hàng hoá dịch vụ
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Javascript -->
+    <script src="~/Content/AdminLayout/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="~/Content/AdminLayout/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

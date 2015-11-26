@@ -172,42 +172,44 @@
                         <div class="box">
                             <div class="box-header">
                                 <h3 class="box-title">
-                                    Báo cáo thuế GTGT
+                                    Kê khai thuế GTGT
                                 </h3>
                             </div>
                             <div class="box-body">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="datetimepicker">Tháng</label>
+                                            <label for="quarter">Quý</label>
+                                            <select class="form-control" id="quarter" name="quarter">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="datetimepicker">Năm</label>
                                             <div class="input-group date" id='datetimepicker'>
-                                                <input type="text" readonly="readonly" class="form-control" id="vatTime" />
+                                                <input type="text" readonly="readonly" class="form-control" id="year" />
                                                 <span class="input-group-addon">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-8"></div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-3">
-                                        <button class="btn btn-primary" onclick="window.open('@(Url.Action("OutputVatList", "Tax"))', '_blank')">
-                                            Bảng kê đầu ra 01-1-GTGT
-                                        </button>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button class="btn btn-primary" onclick="getInputVatList()">Bảng kê đầu vào 01-2-GTGT</button>
+                                        <button class="btn btn-primary" onclick="getTaxDeclaration()">Kê khai</button>
                                         <script type="text/javascript">
-                                            function getInputVatList() {
-                                                var time = $("#vatTime").val();
-                                                window.open('@(Url.Action("InputVatList", "Tax"))' + "?inputVatTime=" + time, '_blank');
+                                            function getTaxDeclaration() {
+                                                var year = $("#year").val();
+                                                var quarter = $("#quarter").val();
+                                                window.open('@(Url.Action("TaxDeclaration", "Tax"))' + "?year=" + year + "&quarter=" + quarter, '_blank');
                                             }
                                         </script>
                                     </div>
-                                    <div class="col-md-3">
-                                        <button class="btn btn-primary">Tờ khai thuế GTGT 01-GTGT</button>
-                                    </div>
+                                    <div class="col-md-5"></div>
                                 </div>
                             </div>
                         </div>
@@ -317,18 +319,25 @@
                         <div class="box">
                             <div class="box-header">
                                 <div class="box-title">
-                                    Báo cáo thuế TNDN
+                                    Hỗ trợ kê khai thuế TNDN
                                 </div>
                             </div>
                             <div class="box-body">
                                 <!--Option-->
                                 <div class="row">
                                     <div class="col-md-12" style="vertical-align: middle; ">
-                                        <span style="margin-right: 10px;">Xem báo cáo thuế VAT năm</span>
-                                        <input type="number" id="year" min="1990" max="@(DateTime.Now.Year)" value="@(DateTime.Now.Year - 1)" />
-                                        <button class="btn btn-primary btn-xs" style="margin-left: 10px">
+                                        <span style="margin-right: 10px;">Kê khai TỜ KHAI QUYẾT TOÁN THUẾ THU NHẬP DOANH NGHIỆP năm</span>
+                                        <input type="number" id="tndnYear" min="1990" max="@(DateTime.Now.Year)" value="@(DateTime.Now.Year - 1)" />
+                                        <button class="btn btn-primary btn-xs" style="margin-left: 10px" onclick="getTndnTaxDeclaration()">
                                             <i class="fa fa-bar-chart" style="margin-right: 3px"></i>
-                                            Thống kê
+                                            Kê khai
+                                            <script type="text/javascript">
+                                                function getTndnTaxDeclaration() {
+                                                    var year = $("#tndnYear").val();
+                                                    window.open('@(Url.Action("TndnTaxDeclaration", "Tax"))' + "?year=" + year, '_blank');
+                                                }
+                                            </script>
+
                                         </button>
                                     </div>
                                 </div>
@@ -346,11 +355,12 @@
         $(document).ready(function () {
             $('#datetimepicker').datetimepicker({
                 ignoreReadonly: true,
-                format: 'MM/YYYY',
-                viewMode: 'months',
+                format: 'YYYY',
+                viewMode: 'years',
                 locale: 'vi',
-                maxDate: moment().startOf('month').format('MM/DD/YYYY'),
-                defaultDate: moment().startOf('month').format('MM/DD/YYYY')
+                maxDate: moment().startOf('year').format('MM/DD/YYYY'),
+                minDate: moment("1990", "YYYY").startOf('year').format('MM/DD/YYYY'),
+                defaultDate: moment().startOf('year').format('MM/DD/YYYY')
             });
         });
     </script>

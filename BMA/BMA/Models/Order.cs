@@ -19,6 +19,7 @@ namespace BMA.Models
         {
             this.OrderItems = new HashSet<OrderItem>();
             this.Orders1 = new HashSet<Order>();
+            this.OutputBills = new HashSet<OutputBill>();
         }
     
         public int OrderId { get; set; }
@@ -33,7 +34,6 @@ namespace BMA.Models
         public Nullable<int> StaffApproveUserId { get; set; }
         public bool IsStaffEdit { get; set; }
         public bool CustomerEditingFlag { get; set; }
-        public Nullable<int> OutputBillId { get; set; }
         public int OrderStatus { get; set; }
         public Nullable<int> PreviousOrderId { get; set; }
         public Nullable<int> GuestInfoId { get; set; }
@@ -53,9 +53,10 @@ namespace BMA.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders1 { get; set; }
         public virtual Order Order1 { get; set; }
-        public virtual OutputBill OutputBill { get; set; }
         public virtual User User { get; set; }
         public virtual User User1 { get; set; }
         public virtual User User2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OutputBill> OutputBills { get; set; }
     }
 }
