@@ -39,7 +39,7 @@
                                     <b>Số điện thoại<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="text" name="txtStaffPhoneNumber" id="txtStaffPhoneNumber" style="width: 95%" oninput="maxLengthCheck(this)" maxlength="11" min="1000000" max="99999999999" placeholder="nhập số từ 7-11 chữ số" />
+                                    <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtStaffPhoneNumber" id="txtStaffPhoneNumber" style="width: 95%" oninput="maxLengthCheck(this)" maxlength="11" min="1000000" max="99999999999" placeholder="nhập số từ 7-11 chữ số" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">

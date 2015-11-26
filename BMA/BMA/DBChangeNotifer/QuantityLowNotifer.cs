@@ -3,18 +3,18 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Security.Permissions;
 
+
 namespace BMA.DBChangesNotifer
 {
-    
-    public sealed class ChangeNotifier : IDisposable
+    public class QuantityLowNotifer
     {
         private SqlConnection con;
         private SqlCommand cmd;
         private SqlDependency dependency;
         private String connectionString;
         private String dependencyCheckSql;
-        
-        ~ChangeNotifier()
+
+        ~QuantityLowNotifer()
         {
             this.Dispose();
         }
@@ -23,7 +23,6 @@ namespace BMA.DBChangesNotifer
 
         public Boolean Start(String connectionStringName, String dependencyCheckSql)
         {
-            
             new SqlClientPermission(PermissionState.Unrestricted).Demand();
 
             this.connectionString = ConfigurationManager.ConnectionStrings["BMAChangeDB"].ConnectionString;
@@ -95,11 +94,9 @@ namespace BMA.DBChangesNotifer
                 handler(sender, new ChangeEventArgs((ChangeInfo)(Int32)e.Info, (ChangeSource)(Int32)e.Source, (ChangeType)(Int32)e.Type));
             }
         }
-
         public void Dispose()
         {
             this.Stop();
         }
-         
     }
 }

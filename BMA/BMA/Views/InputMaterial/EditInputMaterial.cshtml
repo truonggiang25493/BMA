@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-xs-7">
-                                        <input type="number" value="@Model.ImportQuantity" name="txtImportQuantity" id="txtImportQuantity" required oninput="maxLengthCheck(this)" maxlength="6" min="1" max="999999" class="form-control" placeholder="nhập số từ 1-6 chữ số" />
+                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@Model.ImportQuantity" name="txtImportQuantity" id="txtImportQuantity" required oninput="maxLengthCheck(this)" maxlength="6" min="1" max="999999" class="form-control" placeholder="nhập số từ 1-6 chữ số" />
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-xs-7">
-                                        <input type="number" value="@(Model.InputMaterialPrice*Model.ImportQuantity)" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="7" min="1" max="9999999" class="form-control" placeholder="nhập số từ 1-7 chữ số" />
+                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.InputMaterialPrice*Model.ImportQuantity)" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="7" min="1" max="9999999" class="form-control" placeholder="nhập số từ 1-7 chữ số" />
                                     </div>
                                 </div>
                             </div>

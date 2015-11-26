@@ -120,7 +120,7 @@ namespace BMA.Controllers
         public ActionResult DeleteAll()
         {
             Session["Cart"] = null;
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Product");
         }
 
         public ActionResult Cart()
@@ -135,8 +135,12 @@ namespace BMA.Controllers
                 }
                 ViewBag.taxRate = cob.GetTaxRate();
                 List<CustomerCartViewModel> lstCart = GetCart();
+                if (lstCart.Count == 0)
+                {
+                    return RedirectToAction("Index", "Product");
+                }
                 List<DiscountByQuantity> dbq = db.DiscountByQuantities.ToList();
-                Policy policy = db.Policies.SingleOrDefault();
+                Policy policy = db.Policies.SingleOrDefault(n => n.PolicyId == 1);
                 ViewBag.policy = policy;
                 foreach (var item in lstCart)
                 {
@@ -377,30 +381,41 @@ namespace BMA.Controllers
 
         public ActionResult ProceedCheckout(FormCollection f)
         {
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            int quantity = 0;
-            if (Session["Cart"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
-            ViewBag.taxRate = cob.GetTaxRate();
-            string planDeliveryDate = f["txtDelivery"].ToString();
-            Session["DeliveryDate"] = planDeliveryDate;
-            List<CustomerCartViewModel> lstCart = GetCart();
-            List<Boolean> dbq = db.DiscountByQuantities.Select(n => n.beUsing).ToList();
-            foreach (var item in lstCart)
-            {
-                quantity += item.Quantity;
-            }
-            if (dbq[0])
-            {
-                TempData["Discount"] = cob.checkDiscount(quantity);
-            }
-            else
-            {
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                int quantity = 0;
+                if (Session["Cart"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                ViewBag.taxRate = cob.GetTaxRate();
+                string planDeliveryDate = f["txtDelivery"].ToString();
+                Session["DeliveryDate"] = planDeliveryDate;
+                List<CustomerCartViewModel> lstCart = GetCart();
+                if (lstCart.Count == 0)
+                {
+                    return RedirectToAction("Index", "Product");
+                }
+                List<Boolean> dbq = db.DiscountByQuantities.Select(n => n.beUsing).ToList();
+                foreach (var item in lstCart)
+                {
+                    quantity += item.Quantity;
+                }
+                if (dbq[0])
+                {
+                    TempData["Discount"] = cob.checkDiscount(quantity);
+                }
+                else
+                {
 
+                }
+                return View(lstCart);
             }
-            return View(lstCart);
+            catch
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
         public ActionResult OrderInfo(FormCollection f)
         {

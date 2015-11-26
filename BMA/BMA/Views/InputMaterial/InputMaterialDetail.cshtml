@@ -74,10 +74,10 @@
                         <div class="row">
                             <!-- Discard input material button -->
                             <div class="col-xs-12" style="text-align: center">
-                                <button class="btn btn-danger" id="btn-approved" onclick="open_container(@(Model.InputMaterialId));">
+                                <button class="btn btn-danger" id="btn-approved" onclick="open_container(@(Model.InputMaterialId), @(Model.ProductMaterialId), @(Model.RemainQuantity));">
                                     <i class="fa fa-close" style="margin-right: 5%;"></i>Hủy nguyên liệu
                                     <script type="text/javascript">
-                                        function open_container(inputMaterialId, discardQuantity, discardNote) {
+                                        function open_container(inputMaterialId, productMaterialId, quantity) {
                                             var bodyContent = $("<form>", {
                                                 "role": "form",
                                                 "id": "discard-form",
@@ -89,33 +89,40 @@
                                                             $("<input>", {
                                                                 "type": "number",
                                                                 "min": "1",
-                                                                "max": "@Model.RemainQuantity",
+                                                                "max": quantity,
                                                                 "class": "form-control",
+                                                                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
                                                                 "id": "discardQuantity",
-                                                                "value": discardQuantity,
                                                                 "name": "discardQuantity"
                                                             }),
                                                             $("<input>", {
                                                                 "type": "hidden",
                                                                 "name": "InputMaterialId",
                                                                 "id": "InputMaterialId",
-                                                                "value": "@Model.InputMaterialId"
+                                                                "value": inputMaterialId
+                                                            }),
+                                                            $("<input>", {
+                                                                "type": "hidden",
+                                                                "name": "ProductMaterialId",
+                                                                "id": "ProductMaterialId",
+                                                                "value": productMaterialId
                                                             })
                                                         ]
                                                     }),
-                                                                                        $("<div>", {
-                                                                                            "class": "form-group",
-                                                                                            "html": [
-                                                                                                "<label>Ghi chú: </label>",
-                                                                                                $("<textarea>", {
-                                                                                                    "maxlength": "200",
-                                                                                                    "row": "3",
-                                                                                                    "class": "form-control",
-                                                                                                    "value": "discardNote",
-                                                                                                    "name": "discardNote"
-                                                                                                })
-                                                                                            ]
-                                                                                        })
+                                                    $("<div>", {
+                                                        "class": "form-group",
+                                                        "html": [
+                                                            "<label>Ghi chú: </label>",
+                                                            $("<textarea>", {
+                                                                "maxlength": "200",
+                                                                "row": "3",
+                                                                "class": "form-control",
+                                                                "value": "discardNote",
+                                                                "name": "discardNote",
+                                                                "id": "discardNote"
+                                                            })
+                                                        ]
+                                                    })
                                                 ]
                                             });
                                             var title = 'Hủy nguyên liệu';
@@ -125,7 +132,7 @@
                                                     $("<button>", {
                                                         "class": "btn btn-success pull-right",
                                                         "style": "margin-right: 30%;",
-                                                        "onclick": "discard_input_material(" + inputMaterialId + ")",
+                                                        "onclick": "discard_input_material()",
                                                         "html": "Đồng ý"
                                                     }),
                                                     $("<button>", {
@@ -159,8 +166,7 @@
                                                     theme: 'defaultTheme',
                                                     timeout: 1000
                                                 });
-                                            }
-                                            else if ((checkdiscardQuantity) <=0) {
+                                            } else if ((checkdiscardQuantity) <= 0) {
                                                 noty({
                                                     text: 'Số lượng hủy không được nhỏ hơn 0.',
                                                     type: 'warning',
@@ -169,18 +175,7 @@
                                                     theme: 'defaultTheme',
                                                     timeout: 1000
                                                 });
-                                            }
-                                            else if ((checkdiscardQuantity)>("@Model.RemainQuantity")) {
-                                                noty({
-                                                    text: 'Số lượng hủy phải là số.',
-                                                    type: 'warning',
-                                                    dismissQueue: false,
-                                                    layout: 'topCenter',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 1000
-                                                });
-                                            }
-                                            else if (discardNote.trim() === '') {
+                                            } else if (discardNote.trim() === '') {
                                                 noty({
                                                     text: 'Ghi chú không được trống.',
                                                     type: 'warning',
@@ -189,8 +184,7 @@
                                                     theme: 'defaultTheme',
                                                     timeout: 1000
                                                 });
-                                            }
-                                            else {
+                                            } else {
                                                 $.ajax({
                                                     "url": "@(Url.Action("DiscardInputMaterial", "DiscardInputMaterial"))",
                                                     "method": "POST",
@@ -198,7 +192,17 @@
                                                         $("#discard-form").serialize(),
 
                                                     "success": function (data) {
-                                                        if (data === "1") {
+                                                        if (data === "-1") {
+                                                            noty({
+                                                                text: 'Số lượng hủy không được lớn hơn số lượng tồn kho',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1500
+                                                            });
+                                                        }
+                                                        else if (data === "1") {
                                                             noty({
                                                                 text: 'Hủy nguyên liệu thành công',
                                                                 type: 'success',
@@ -293,7 +297,7 @@
     <!--Button-->
     <div class="row">
         <div class="col-xs-12">
-            @if (Model.RemainQuantity > 0 && (DateTime.Compare(@Model.InputMaterialExpiryDate, DateTime.Today) >= 1))
+            @if (Model.RemainQuantity > 0 && (DateTime.Compare(@Model.InputMaterialExpiryDate, DateTime.Today) >= 1) && (Model.RemainQuantity == Model.ImportQuantity))
             {
                 <!-- Edit button -->
                 <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputMaterial()">

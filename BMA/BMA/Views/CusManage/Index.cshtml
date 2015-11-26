@@ -24,9 +24,24 @@
                         <li class="col-lg-2 col-md-2 col-sm-3 col-xs-4  text-center ">
                             <div class="thumbnail equalheight"> <a title="Orders" href="@Url.Action("OrderList", "CusManage")"><i class="fa fa-calendar"></i> Lịch sử đơn hàng </a> </div>
                         </li>
-                        <li class="col-lg-2 col-md-2 col-sm-3 col-xs-4  text-center ">
-                            <div class="thumbnail equalheight"> <a title="Orders" href="@Url.Action("ConfirmList", "CusManage")"><i class="fa fa-check"></i> Đơn hàng cần xác nhận </a> </div>
-                        </li>
+                        @if (ViewBag.lstOrderConfirm != null)
+                        {
+                            int count = 0;
+                            foreach (var item in ViewBag.lstOrderConfirm)
+                            {
+                                count++;
+                            }
+                            <li class="col-lg-2 col-md-2 col-sm-3 col-xs-4  text-center ">
+                                <div class="thumbnail equalheight"> <a title="Orders" href="@Url.Action("ConfirmList", "CusManage")"><i class="fa fa-check" style="color:red"></i> Có @count đơn hàng cần xác nhận </a> </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="col-lg-2 col-md-2 col-sm-3 col-xs-4  text-center ">
+                                <div class="thumbnail equalheight"> <a title="Orders" href="@Url.Action("ConfirmList", "CusManage")"><i class="fa fa-check"></i> Đơn hàng cần xác nhận </a> </div>
+                            </li>
+                        }
+
                         <li class="col-lg-2 col-md-2 col-sm-3 col-xs-4  text-center ">
                             <div class="thumbnail equalheight"> <a title="Personal information" href="@Url.Action("ChangeInformation", "CusManage", new { @UserId = cusId })"><i class="fa fa-cog"></i> Thay đổi thông tin cá nhân</a> </div>
                         </li>

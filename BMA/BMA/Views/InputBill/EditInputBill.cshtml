@@ -9,23 +9,24 @@
 }
 
 <section class="content-header">
-    <h1 style="margin-top: 1%;text-align: center">Chỉnh sửa hóa đơn đầu vào</h1>
+    <h1 style="margin-top: 10px;text-align: center">Chỉnh sửa hóa đơn đầu vào</h1>
 </section>
 <section>
-    <div style="margin-top: 2%">
+    <div style="margin-top: 1%">
         <div class="row">
-            <div class="col-md-6" style="margin-top: 5%">
+            <div class="col-md-5" style="margin-top: 2%">
                 <div class="box box-primary">
                     <form id="add-input-bill-form">
+                        <input type="hidden" name="InputBillId" id="InputBillId" value="@Model.InputBillId" />
                         <div class="box-body box-profile" style="margin-top: 5%">
                             <!-- Choose supplier -->
                             <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-4">
+                                <div class="col-xs-5">
                                     <b>Nhà cung cấp<b style="color: #ff0000">*</b>:</b>
                                 </div>
-                                <div class="col-xs-8" id="input-bill-info">
+                                <div class="col-xs-7" id="input-bill-info">
 
-                                    <input type="text" value="@Model.Supplier.SupplierName" name="supplierName" id="supplierName" readonly style="margin-bottom: 10px; width: 65%" />
+                                    <input type="text" value="@Model.Supplier.SupplierName" name="supplierName" id="supplierName" readonly style="margin-bottom: 10px" class="form-control" />
                                     <input type="hidden" value="@Model.SupplierId" name="supplierId" id="supplierId" />
                                     <a class="btn btn-success btn-xs" id="add-supplier" onclick="open_choose_supplier()">
                                         Chọn nhà cung cấp
@@ -34,7 +35,7 @@
                                                 $.ajax({
                                                     url: "@(Url.Action("GetSupplierList", "InputBill"))",
                                                     method: "POST",
-                                                    success: function (data) {
+                                                    success: function(data) {
                                                         var chooseButton = $("<button>", {
                                                             "class": "btn btn-success",
                                                             "onclick": "choose_supplier()",
@@ -61,27 +62,40 @@
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-4">
-                                    <b>Chi phí (Chưa thuế)<b style="color: #ff0000">*</b>: </b>
+                                <div class="col-xs-5">
+                                    <label>Chi phí (Chưa thuế)<b style="color: #ff0000">*</b>: </label>
                                 </div>
-                                <div class="col-xs-8">
-                                    <input type="number" value="@Model.InputBillAmount" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" style="width: 65%" placeholder="nhập số tiền từ 1.000 - 999.999.999" />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-4">
-                                    <b>Thuế VAT<b style="color: #ff0000">*</b>: </b>
-                                </div>
-                                <div class="col-xs-8">
-                                    <input type="number" value="@Model.InputTaxAmount" name="txtInputTaxAmount" id="txtInputTaxAmount" required oninput="maxLengthCheck(this)" maxlength="8" min="1000" max="99999999" style="width: 65%" placeholder="nhập số tiền từ 1.000 - 99.999.999" />
+                                <div class="col-xs-7">
+                                    <input type="number" value="@Model.InputBillAmount" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" placeholder="nhập số tiền từ 1.000 - 999.999.999" class="form-control" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-4">
-                                    <b>Ngày nhập<b style="color: #ff0000">*</b>: </b>
+                                <div class="col-xs-5">
+                                    <div class="form-group">
+                                        <label>Thuế VAT<b style="color: #ff0000">*</b>: </label>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    <input type="date" required min="2015-01-01" max="2020-12-31" value="@Model.ImportDate" name="txtImportDate" id="txtImportDate" style="width: 65%" />
+                                <div class="col-xs-7">
+                                    <div class="form-group">
+                                        <input type="number" value="@Model.InputTaxAmount" readonly="readonly" name="txtInputTaxAmount" id="txtInputTaxAmount" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-5">
+                                    <div class="form-group">
+                                        <b>Ngày nhập<b style="color: #ff0000">*</b>: </b>
+                                    </div>
+                                </div>
+                                <div class="col-xs-7">
+                                    <div class="form-group">
+                                        <div class='input-group date' id='datetimepicker2'>
+                                            <input type="text" required name="txtImportDate" id="txtImportDate" class="form-control" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -95,41 +109,45 @@
                 </div>
             </div>
 
-            <div class="col-md-6" style="margin-top: 5%">
+            <div class="col-md-7" style="margin-top: 2%">
                 <div class="box box-primary">
-                    <form role="form" action="@Url.Action("AddImage", "InputBill")" id="imageForm" method="post" enctype="multipart/form-data">
-                        <div class="col-md-12">
-                            <!-- Horizontal Form -->
-                            <div>
-                                <div class="box-header">
-                                    <h3 class="box-title">Hình ảnh cho hóa đơn</h3><br />
-                                    <label class="box-title" style="color: #ff0000">@TempData["Message"]</label>
-                                </div><!-- /.box-header -->
-                                <!-- form start -->
-                                <div class="box-body">
-                                    <div class="form-group" style="margin-left: 0;">
-                                        <label>Hình ảnh</label>
-                                        <input type="file" value="@Model.InputRawImage" name="inputBillImage" id="inputBillImage" onchange="show(this)">
-                                        <div style="margin-top: 10px;">
-                                            <img id="user_img"
-                                                 height="300"
-                                                 width="500"
-                                                 style="border: solid" /> src="@Url.Content("/Content/Images/InputBillImages/" + @Model.InputRawImage)"/>
-                                        </div>
-                                        <script type="text/javascript">
-                                            function show(input) {
-                                                if (input.files && input.files[0]) {
-                                                    var filerdr = new FileReader();
-                                                    filerdr.onload = function (e) {
-                                                        $('#user_img').attr('src', e.target.result);
+                    <form role="form" action="@Url.Action("EditImage", "InputBill")" id="imageForm" method="post" enctype="multipart/form-data">
+                        <div class="box-profile">
+                            <div class="col-md-12">
+                                <!-- Horizontal Form -->
+                                <div>
+                                    <div class="box-header">
+                                        <h3 class="box-title">Hình ảnh cho hóa đơn</h3><br />
+                                        <label class="box-title" style="color: #ff0000">@TempData["Message"]</label>
+                                    </div><!-- /.box-header -->
+                                    <!-- form start -->
+                                    <div class="box-body">
+                                        <div class="form-group" style="margin-left: 0;">
+                                            <label>Hình ảnh</label>
+                                            <input type="file" value="@Model.InputRawImage" name="file" id="file" onchange="show(this)">
+                                            <div style="margin-top: 10px;">
+                                                <img id="user_img"
+                                                     height="300"
+                                                     width="500"
+                                                     style="border: solid"
+                                                     src="@Url.Content("/Content/Images/InputBillImages/" + @Model.InputRawImage)" />
+
+                                            </div>
+                                            <script type="text/javascript">
+                                                function show(input) {
+                                                    if (input.files && input.files[0]) {
+                                                        var filerdr = new FileReader();
+                                                        filerdr.onload = function(e) {
+                                                            $('#user_img').attr('src', e.target.result);
+                                                        }
+                                                        filerdr.readAsDataURL(input.files[0]);
                                                     }
-                                                    filerdr.readAsDataURL(input.files[0]);
                                                 }
-                                            }
-                                        </script>
-                                    </div>
-                                </div><!-- /.box-body -->
-                            </div><!-- /.box -->
+                                            </script>
+                                        </div>
+                                    </div><!-- /.box-body -->
+                                </div><!-- /.box -->
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -137,8 +155,8 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <!-- "Thêm mới" button -->
-                <button class="btn btn-primary pull-right" style="margin-right: 2%; margin-bottom: 2%" onclick="addInputBill()">
+                <!-- "Chỉnh sửa" button -->
+                <button class="btn btn-primary pull-right" style="margin-right: 2%; margin-bottom: 2%" onclick="editInputBill()">
                     <i class="fa fa-edit" style="margin-right: 1%;"></i>Cập nhật
                     <script type="text/javascript">
                         function getFileName(s) {
@@ -147,13 +165,14 @@
                             return result;
                         }
 
-                        function addInputBill() {
+                        function editInputBill() {
                             var dataString;
+                            var inputBillId = $("#InputBillId").val();
                             var supplierName = $("#supplierName").val();
                             var inputBillAmount = $("#txtInputBillAmount").val();
                             var inputTaxAmount = $("#txtInputTaxAmount").val();
                             var importDate = $("#txtImportDate").val();
-                            var fileName = getFileName($("#inputBillImage").val());
+                            var fileName = getFileName($("#file").val());
                             var supplierId = $("#supplierId").val();
 
                             var action = $("#imageForm").attr("action");
@@ -220,7 +239,7 @@
                                 });
                             } else {
                                 $.ajax({
-                                    url: "@(Url.Action("AddImage", "InputBill"))",
+                                    url: "@(Url.Action("EditImage", "InputBill"))",
                                     method: "POST",
                                     data: dataString,
                                     dataType: "json",
@@ -229,9 +248,10 @@
                                     success: function (data) {
                                         if (data === 1) {
                                             $.ajax({
-                                                url: "@(Url.Action("AddInputBill", "InputBill"))",
+                                                url: "@(Url.Action("EditInputBill", "InputBill"))",
                                                 method: "POST",
                                                 "data": JSON.stringify({
+                                                    "inputBillId": inputBillId,
                                                     "supplierIdString": supplierId,
                                                     "inputBillAmountString": inputBillAmount,
                                                     "inputTaxAmountString": inputTaxAmount,
@@ -245,7 +265,7 @@
                                                 success: function (data) {
                                                     if (data === 2) {
                                                         noty({
-                                                            text: 'Thêm hóa đơn thành công',
+                                                            text: 'Chỉnh sửa hóa đơn thành công',
                                                             type: 'success',
                                                             dismissQueue: false,
                                                             layout: 'topCenter',
@@ -257,7 +277,7 @@
                                                         }, 4000);
                                                     } else {
                                                         noty({
-                                                            text: 'Không thể thêm hóa đơn đầu vào',
+                                                            text: 'Đã có lỗi, vui lòng thử lại.',
                                                             type: 'warning',
                                                             dismissQueue: false,
                                                             layout: 'topCenter',
@@ -297,7 +317,7 @@
                                             });
                                         } else {
                                             noty({
-                                                text: 'Không thể thêm hóa đơn đầu vào',
+                                                text: 'Không thể chỉnh sửa hóa đơn đầu vào',
                                                 type: 'warning',
                                                 dismissQueue: false,
                                                 layout: 'topCenter',
@@ -341,14 +361,24 @@
         }
     </script>
 </section>
-@*
-    @section AddInputMaterialScript{
-        <script type="text/javascript">
-            $(document).on("keyup", "#txtInputBillAmount", function () {
-                var txtInputBillAmount = new INT($('#txtInputBillAmount').val());
-                var vatAmount = txtInputBillAmount.getValue *0.1;
-                $('#txtInputTaxAmount').val(vatAmount);
-                $('#txtInputTaxAmount').attr('min', vatAmount);
-            })
-        </script>
-    }*@
+@section EditInputBillScript{
+    <script type="text/javascript">
+        $(document).on("keyup", "#txtInputBillAmount", function() {
+            var txtInputBillAmount = $("#txtInputBillAmount").val();
+            var vatAmount = ((txtInputBillAmount * @(ViewBag.TaxRate)) / 100);
+            $('#txtInputTaxAmount').val(vatAmount);
+            $('#txtInputTaxAmount').attr('min', vatAmount);
+        })
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker2').datetimepicker({
+                format: 'L',
+                locale: 'vi',
+                defaultDate: '@(Model.ImportDate.ToString("MM/dd/yyyy"))',
+                ignoreReadonly: true
+            });
+        });
+    </script>
+}

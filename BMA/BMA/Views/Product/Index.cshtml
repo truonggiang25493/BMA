@@ -5,7 +5,7 @@
 @using BMA.Models.ViewModel
 
 @{
-    ViewBag.Title = "Tất cả sản phẩm";
+    ViewBag.Title = ViewBag.ProductTitle;
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
     List<CustomerCartViewModel> lstProductCart = ViewBag.lstProductCart;
     int quantity = 0;
@@ -261,11 +261,6 @@
 
     </section>
 </section>
-
-
-
-<script src="/Content/CustomerLayout/ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
-</script>
 
 <script src="/Content/CustomerLayout/assets/js/hideMaxListItem-min.js"></script>
 <script>

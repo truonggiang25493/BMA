@@ -5,32 +5,32 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="5d1ec7ace76f49d49505232901c8d49b" Name="Diagram1" ZoomLevel="74">
-        <EntityTypeShape EntityType="BMAModel.Category" Width="1.5" PointX="6" PointY="3" />
+        <EntityTypeShape EntityType="BMAModel.Category" Width="1.5" PointX="9" PointY="3" />
         <EntityTypeShape EntityType="BMAModel.Customer" Width="1.5" PointX="5.25" PointY="17.75" />
-        <EntityTypeShape EntityType="BMAModel.DiscardedInputMaterial" Width="1.5" PointX="20.25" PointY="8.625" />
-        <EntityTypeShape EntityType="BMAModel.DiscountByQuantity" Width="1.5" PointX="0.75" PointY="12.125" />
-        <EntityTypeShape EntityType="BMAModel.ExportFrom" Width="1.5" PointX="15" PointY="8.625" />
-        <EntityTypeShape EntityType="BMAModel.GuestInfo" Width="1.5" PointX="3" PointY="4.5" />
-        <EntityTypeShape EntityType="BMAModel.InputBill" Width="1.5" PointX="12.75" PointY="12" />
-        <EntityTypeShape EntityType="BMAModel.InputMaterial" Width="1.5" PointX="18" PointY="8" />
-        <EntityTypeShape EntityType="BMAModel.OrderItem" Width="1.5" PointX="10.5" PointY="8.25" />
-        <EntityTypeShape EntityType="BMAModel.Order" Width="1.5" PointX="5.25" PointY="6" />
-        <EntityTypeShape EntityType="BMAModel.OtherExpense" Width="1.5" PointX="7.75" PointY="12.125" />
-        <EntityTypeShape EntityType="BMAModel.OutputBill" Width="1.5" PointX="7.5" PointY="8.125" />
-        <EntityTypeShape EntityType="BMAModel.OutputMaterial" Width="1.5" PointX="12.75" PointY="8.25" />
-        <EntityTypeShape EntityType="BMAModel.Policy" Width="1.5" PointX="0.75" PointY="2.125" />
-        <EntityTypeShape EntityType="BMAModel.Product" Width="1.5" PointX="8.25" PointY="0.75" />
-        <EntityTypeShape EntityType="BMAModel.ProductMaterial" Width="1.5" PointX="10.5" PointY="4.25" />
-        <EntityTypeShape EntityType="BMAModel.Recipe" Width="1.5" PointX="12.75" PointY="2.875" />
+        <EntityTypeShape EntityType="BMAModel.DiscardedInputMaterial" Width="1.5" PointX="23.25" PointY="8.625" />
+        <EntityTypeShape EntityType="BMAModel.DiscountByQuantity" Width="1.5" PointX="5.75" PointY="2.125" />
+        <EntityTypeShape EntityType="BMAModel.ExportFrom" Width="1.5" PointX="18" PointY="8.625" />
+        <EntityTypeShape EntityType="BMAModel.GuestInfo" Width="1.5" PointX="6" PointY="10.5" />
+        <EntityTypeShape EntityType="BMAModel.InputBill" Width="1.5" PointX="15.75" PointY="12" />
+        <EntityTypeShape EntityType="BMAModel.InputMaterial" Width="1.5" PointX="21" PointY="8" />
+        <EntityTypeShape EntityType="BMAModel.OrderItem" Width="1.5" PointX="13.5" PointY="8.25" />
+        <EntityTypeShape EntityType="BMAModel.Order" Width="1.5" PointX="8.25" PointY="6" />
+        <EntityTypeShape EntityType="BMAModel.OtherExpense" Width="1.5" PointX="0.75" PointY="12.125" />
+        <EntityTypeShape EntityType="BMAModel.OutputBill" Width="1.5" PointX="10.5" PointY="8.125" />
+        <EntityTypeShape EntityType="BMAModel.OutputMaterial" Width="1.5" PointX="15.75" PointY="8.25" />
+        <EntityTypeShape EntityType="BMAModel.Policy" Width="1.5" PointX="2.75" PointY="12.125" />
+        <EntityTypeShape EntityType="BMAModel.Product" Width="1.5" PointX="11.25" PointY="0.75" />
+        <EntityTypeShape EntityType="BMAModel.ProductMaterial" Width="1.5" PointX="13.5" PointY="4.25" />
+        <EntityTypeShape EntityType="BMAModel.Recipe" Width="1.5" PointX="15.75" PointY="2.875" />
         <EntityTypeShape EntityType="BMAModel.Role" Width="1.5" PointX="0.75" PointY="8.75" />
-        <EntityTypeShape EntityType="BMAModel.Staff" Width="1.5" PointX="5.25" PointY="14.75" />
-        <EntityTypeShape EntityType="BMAModel.StoreInfo" Width="1.5" PointX="0.75" PointY="15.125" />
-        <EntityTypeShape EntityType="BMAModel.Supplier" Width="1.5" PointX="10.5" PointY="12.375" />
-        <EntityTypeShape EntityType="BMAModel.sysdiagram" Width="1.5" PointX="7.75" PointY="15.125" />
-        <EntityTypeShape EntityType="BMAModel.TaxRate" Width="1.5" PointX="17" PointY="2.375" />
-        <EntityTypeShape EntityType="BMAModel.TaxType" Width="1.5" PointX="14.75" PointY="2.375" />
+        <EntityTypeShape EntityType="BMAModel.Staff" Width="1.5" PointX="5.25" PointY="6.875" />
+        <EntityTypeShape EntityType="BMAModel.StoreInfo" Width="1.5" PointX="10.75" PointY="12.125" />
+        <EntityTypeShape EntityType="BMAModel.Supplier" Width="1.5" PointX="13.5" PointY="12.375" />
+        <EntityTypeShape EntityType="BMAModel.sysdiagram" Width="1.5" PointX="4.75" PointY="14.125" />
+        <EntityTypeShape EntityType="BMAModel.TaxRate" Width="1.5" PointX="3" PointY="2.375" />
+        <EntityTypeShape EntityType="BMAModel.TaxType" Width="1.5" PointX="0.75" PointY="2.375" />
         <EntityTypeShape EntityType="BMAModel.User" Width="1.5" PointX="3" PointY="7.875" />
-        <EntityTypeShape EntityType="BMAModel.VatTaxDeclaration" Width="1.5" PointX="9.75" PointY="16.125" />
+        <EntityTypeShape EntityType="BMAModel.VatTaxDeclaration" Width="1.5" PointX="7.75" PointY="14.125" />
         <AssociationConnector Association="BMAModel.FK_Product_Category_CategoryId" />
         <AssociationConnector Association="BMAModel.FK_Customer_User" />
         <AssociationConnector Association="BMAModel.FK_DiscardedInputMaterial_InputMaterial" />

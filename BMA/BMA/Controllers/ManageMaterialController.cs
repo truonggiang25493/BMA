@@ -105,8 +105,9 @@ namespace BMA.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddMaterial()
+        public ActionResult AddMaterial(string strURL)
         {
+            ViewBag.previousURL = strURL;
             return View();
         }
 

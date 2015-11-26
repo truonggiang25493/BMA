@@ -8,6 +8,9 @@ using BMA.Business;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using BMA.DBChangesNotifer;
+using Microsoft.AspNet.SignalR;
+using BMA.Hubs;
 
 namespace BMA.Controllers
 {
@@ -25,12 +28,19 @@ namespace BMA.Controllers
                 string sAccount = f.Get("txtAccount");
                 string sPassword = f.Get("txtPassword");
                 User endUser = ab.checkLogin(sAccount, sPassword);
+                if (!endUser.IsConfirmed)
+                {
+                    return -2;
+                }
                 if (endUser.RoleId == 3)
                 {
                     Session["User"] = endUser;
                     Session["UserId"] = endUser.UserId;
                     Session["CusUserId"] = endUser.Customers.ElementAt(0).CustomerId;
                     Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber;
+                    string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId=", endUser.UserId);
+                    MvcApplication.changeStatusNotifer.Start("BMAChangeDB", dependencyCheckSql);
+                    MvcApplication.changeStatusNotifer.Change += this.OnChange3;
                     return 1;
                 }
                 else
@@ -46,8 +56,17 @@ namespace BMA.Controllers
             }
         }
 
+        private void OnChange3(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange3(e.Info, e.Source, e.Type);
+        }
         public ActionResult Logout()
         {
+            if (Session["UserId"] != null)
+            {
+                MvcApplication.changeStatusNotifer.Dispose();
+            }
             Session["User"] = null;
             Session["BeEdited"] = null;
             Session.Clear();
@@ -90,7 +109,7 @@ namespace BMA.Controllers
                         mail.Body += "<div> Nếu phải, vui lòng bấm vào 'Tạo mới mật khẩu' bên dưới, đường dẫn chỉ có hiệu lực trong vòng 24 tiếng kể từ khi quý khách nhận được email này</div>";
                         //string link = Url.Encode(string.Format("{0}{1}", Request.Url.Authority, Url.Action("CreateNewPassword", "Account", new { userId = lstUser[i].UserId, timeSend = DateTime.Now })));
                         //mail.Body += string.Format("<a href='{0}{1}'>Tạo mới mật khẩu</a>", "http://", link);
-                        mail.Body += string.Format("<a href='{0}{1}{2}'>Tạo mới mật khẩu</a>", "http://", Request.Url.Authority, Url.Action("CreateNewPassword", "Account", new { userId = lstUser[i].UserId, timeSend = DateTime.Now }));
+                        mail.Body += string.Format("<a href='{0}{1}{2}'>Tạo mới mật khẩu</a>", "http://", Request.Url.Authority, Url.Action("CreateNewPassword", "Account", new { strUserId = ab.EncodeUserId(lstUser[i].UserId), timeSend = DateTime.Now }));
                         mail.Body += "</body>";
                         mail.Body += "</html>";
                         var mailBody = mail.Body;
@@ -117,16 +136,35 @@ namespace BMA.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateNewPassword(int userId, DateTime timeSend)
+        public ActionResult CreateNewPassword(string strUserId, DateTime timeSend)
         {
             DateTime activeTimeCheck = DateTime.Now;
+            AccountBusiness ab = new AccountBusiness();
+            int userId = 0;
+            string salt = strUserId.Substring(strUserId.Length - 88);
+            List<User> lstUser = db.Users.ToList();
+            foreach (var item in lstUser)
+            {
+                if (ab.CreateIdHash(item.UserId,salt) == strUserId)
+                {
+                    userId = item.UserId;
+                }
+            }
             double check = (activeTimeCheck - timeSend).TotalMinutes;
             if (check > 1440)
             {
                 ViewBag.outOfTime = "";
             }
-            ViewBag.userId = userId;
-            return View();
+
+            if (userId != 0)
+            {
+                ViewBag.userId = userId;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
 
         [HttpPost]

@@ -29,7 +29,7 @@
                             <input type="text" class="form-control" name="txtUnit" value="" placeholder="Nhập đơn vị" id="materialUnit">
                         </div><div class="form-group">
                             <label for="exampleInputEmail1">Số lượng tối thiểu <span style="color:red">*</span></label><br />
-                            <input type="text" class="form-control" name="txtSQuantity" value="" placeholder="Nhập đơn vị" id="materialSQuantity">
+                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtSQuantity" value="" placeholder="Nhập đơn vị" id="materialSQuantity">
                         </div>
                     </div><!-- /.box-body -->
                 </form>
@@ -112,7 +112,7 @@
                                                 timeout: 2000
                                             });
                                             window.setTimeout(function () {
-                                                window.location.replace("@(Url.Action("Index", "ManageMaterial"))");
+                                                window.location.replace("@ViewBag.previousURL");
                                             }, 3000);
                                         } else if (data === "-1") {
                                             noty({

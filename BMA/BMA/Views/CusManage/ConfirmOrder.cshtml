@@ -496,8 +496,8 @@
         <script type="text/javascript">
             function deleteBoth(orderId) {
                 $.ajax({
-                    url: "/CusManage/CancelBothOrder?orderId=" + orderId,
-                    data: "/CusManage/CancelBothOrder?orderId=" + orderId,
+                    url: "/CusManage/CancelOrderConfirm?orderId=" + orderId,
+                    data: "/CusManage/CancelOrderConfirm?orderId=" + orderId,
                     success: function (data) {
                         if (data === "1") {
                             window.setTimeout(function () {
@@ -505,6 +505,15 @@
                             }, 1500);
                             noty({
                                 text: 'Hủy đơn hàng thành công',
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }else if (data === "-1") {
+                            noty({
+                                text: 'Có lỗi xảy ra, vui lòng thử lại',
                                 type: 'success',
                                 dismissQueue: false,
                                 layout: 'topCenter',
@@ -543,6 +552,15 @@
                                 theme: 'defaultTheme',
                                 timeout: 2000
                             });
+                        } else if (data === "-1") {
+                            noty({
+                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
                         }
                     },
                     fail: function () {
@@ -564,9 +582,6 @@
                     data: "/CusManage/AcceptEditedOrder?orderId=" + orderId,
                     success: function (data) {
                         if (data === "1") {
-                            window.setTimeout(function () {
-                                window.location.replace("@(Url.Action("ConfirmList", "CusManage"))");
-                            }, 1500);
                             noty({
                                 text: 'Chấp nhận đơn hàng thành công. Đơn hàng sẽ được tiến hành, cám ơn quý khách.',
                                 type: 'success',
@@ -574,7 +589,19 @@
                                 layout: 'topCenter',
                                 theme: 'defaultTheme',
                                 timeout: 2000
-                            });                         
+                            });
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("ConfirmList", "CusManage"))");
+                            }, 1500);
+                        } else if (data === "-1") {
+                            noty({
+                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
                         }
                     },
                     fail: function () {

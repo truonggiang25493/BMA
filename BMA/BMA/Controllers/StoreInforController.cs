@@ -114,10 +114,10 @@ namespace BMA.Controllers
             ViewBag.orderWaiting = lstOrder.Count;
             List<Customer> lstCustomer = db.Customers.ToList();
             ViewBag.customer = lstCustomer.Count;
-            Policy policy = db.Policies.SingleOrDefault();
-            ViewBag.policy = policy;
-            int? maxPrice = db.StoreInfoes.Select(n => n.ProductMaxPrice).SingleOrDefault();
-            ViewBag.maxPrice = maxPrice;
+            Policy policy = db.Policies.SingleOrDefault(n => n.PolicyId == 1);
+            ViewBag.minQuantity = policy;
+            Policy policy2 = db.Policies.SingleOrDefault(n => n.PolicyId == 2);
+            ViewBag.maxPrice = policy2;
             List<DiscountByQuantity> discountByQuantity = db.DiscountByQuantities.ToList();
             ViewBag.discountByQuantity = discountByQuantity;
             var quantityFrom = db.DiscountByQuantities.Select(n => n.QuantityFrom).ToList();
@@ -190,6 +190,24 @@ namespace BMA.Controllers
         public int ChangeCategory(string[] categoryName)
         {
             StoreInforBusiness sib = new StoreInforBusiness();
+            for (int i = 0; i < categoryName.Length; i++)
+            {
+                if ((i + 1) != categoryName.Length)
+                {
+                    if (StringComparer.CurrentCultureIgnoreCase.Equals(categoryName[i], categoryName[i + 1]))
+                    {
+                        return -2;
+                    }
+                }
+
+                if (i > 0)
+                {
+                    if (StringComparer.CurrentCultureIgnoreCase.Equals(categoryName[i], categoryName[i - 1]))
+                    {
+                        return -2;
+                    }
+                }
+            }
             try
             {
                 sib.changeCategory(categoryName);
@@ -228,6 +246,14 @@ namespace BMA.Controllers
         public int AddCategory(string categoryName)
         {
             StoreInforBusiness sib = new StoreInforBusiness();
+            var categoryList = db.Categories.ToList();
+            for (int i = 0; i < categoryList.Count; i++)
+            {
+                if (StringComparer.CurrentCultureIgnoreCase.Equals(categoryName, categoryList[i].CategoryName))
+                {
+                    return -2;
+                }
+            }
             try
             {
                 sib.addCategory(categoryName);
@@ -244,6 +270,67 @@ namespace BMA.Controllers
             StoreInfo storeInfo = db.StoreInfoes.SingleOrDefault();
             ViewBag.storeInfo = storeInfo;
             return PartialView();
+        }
+
+        public ActionResult NotificatePartial()
+        {
+            if (Session["NotificateCount"] == null)
+            {
+                int count = 0;
+                ViewBag.notificatePartialCount = count;
+                Session["NotificateCount"] = count;
+                int newOrderCount = 0;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["NewOrderCountPartial"] = newOrderCount;
+                int lowMaterialCount = 0;
+                ViewBag.lowMaterialCountPartial = lowMaterialCount;
+                Session["LowMaterialCountPartial"] = lowMaterialCount;
+            }
+            else
+            {
+                int count = Convert.ToInt32(Session["NotificateCount"]);
+                ViewBag.notificatePartialCount = count;
+                int newOrderCount = Convert.ToInt32(Session["NewOrderCountPartial"]);
+                ViewBag.newOrderCountPartial = newOrderCount;
+                int lowMaterialCount = Convert.ToInt32(Session["LowMaterialCountPartial"]);
+                ViewBag.lowMaterialCountPartial = lowMaterialCount;
+            }
+            return PartialView();
+        }
+
+        public int NotificatePartialLink(int count, int newOrderCount, int lowMaterialCount)
+        {
+            ViewBag.notificatePartialCount = count;
+            Session["NotificateCount"] = count;
+            ViewBag.newOrderCountPartial = newOrderCount;
+            Session["NewOrderCountPartial"] = newOrderCount;
+            ViewBag.lowMaterialCountPartial = lowMaterialCount;
+            Session["LowMaterialCountPartial"] = lowMaterialCount;
+            return 1;
+        }
+
+        public int RemoveOrderNoty(int lowMaterialCount)
+        {
+            ViewBag.notificatePartialCount = lowMaterialCount;
+            Session["NotificateCount"] = lowMaterialCount;
+            int newOrderCount = 0;
+            ViewBag.newOrderCountPartial = newOrderCount;
+            Session["NewOrderCountPartial"] = newOrderCount;
+            ViewBag.lowMaterialCountPartial = lowMaterialCount;
+            Session["LowMaterialCountPartial"] = lowMaterialCount;
+            return 1;
+        }
+
+        public int RemoveMaterialNoty(int newOrderCount)
+        {
+            ViewBag.notificatePartialCount = newOrderCount;
+            Session["NotificateCount"] = newOrderCount;
+            int lowMaterialCount = 0;
+            ViewBag.newOrderCountPartial = newOrderCount;
+            Session["NewOrderCountPartial"] = newOrderCount;
+            ViewBag.lowMaterialCountPartial = lowMaterialCount;
+            Session["LowMaterialCountPartial"] = lowMaterialCount;
+            return 1;
         }
     }
 }

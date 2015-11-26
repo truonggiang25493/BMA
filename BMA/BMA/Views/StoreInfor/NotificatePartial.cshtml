@@ -1,0 +1,135 @@
+﻿<script type="text/javascript">
+    function quantityLowThanStandard(info, source, type) {
+        if (info == 2) {
+            noty({
+                text: 'Có nguyên liệu số lượng quá thấp, vui lòng kiểm tra',
+                type: 'success',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: false
+            });
+
+            var numberOfNoti = $("#hiddenNumberOfNoti").val();
+            var numberOfLowQuantity = $("#hiddenMaterialCount").val();
+            if (numberOfNoti == "") {
+                $("#hiddenNumberOfNoti").attr('value', 1);
+                $("#hiddenMaterialCount").attr('value', 1);
+                $("#numberOfLowMaterial").text(1);
+                $("[data-role='numberOfLowMaterial']").text(1);
+            }
+            else {
+                numberOfNoti = parseInt(numberOfNoti) + 1;
+                $("#hiddenNumberOfNoti").attr('value', numberOfNoti);
+                if (numberOfLowQuantity == "") {
+                    $("#hiddenMaterialCount").attr('value', 1);
+                } else {
+                    numberOfLowQuantity = parseInt(numberOfLowQuantity) + 1;
+                    $("#hiddenMaterialCount").attr('value', numberOfLowQuantity);
+                }
+                $("#numberOfNoti").text(numberOfNoti);
+
+                $("[data-role='numberOfLowMaterial']").text(numberOfLowQuantity);
+            }
+        } 
+    }
+
+    function onChange(info, source, type) {
+        if (info == 1) {
+            noty({
+                text: 'Có một đơn hàng vừa được thêm mới.' + info + "-" + source + "-" + type,
+                type: 'success',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: false
+            });
+            var numberOfNoti = $("#hiddenNumberOfNoti").val();
+            var numberOfNewOrder = $("#hiddenOrderCount").val();
+            if (numberOfNoti == "") {
+                $("#hiddenNumberOfNoti").attr('value', 1);
+                $("#hiddenOrderCount").attr('value', 1)
+                $("#numberOfNoti").text(1);
+                $("[data-role='numberOfNewOrder']").text(1);
+            }
+            else {
+                numberOfNoti = parseInt(numberOfNoti) + 1;
+                $("#hiddenNumberOfNoti").attr('value', numberOfNoti);
+                if (numberOfNewOrder == "") {
+                    $("#hiddenOrderCount").attr('value', 1)
+                }
+                else {
+                    numberOfNewOrder = parseInt(numberOfNewOrder) + 1;
+                    $("#hiddenOrderCount").attr('value', numberOfNewOrder)
+                }
+                $("#numberOfNoti").text(numberOfNoti);
+                $("[data-role='numberOfNewOrder']").text(numberOfNewOrder);
+            }
+        }
+    }
+
+    window.addEventListener('load', function () {
+        var notifier = $.connection.realtimeNotifierHub;
+        notifier.client.onChange2 = quantityLowThanStandard;
+        notifier.client.onChange = onChange;
+        $.connection.hub.start();
+    });
+</script>
+
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick="resetNumberOfNoti()">
+    <i class="fa fa-bell-o"></i>
+    @if (ViewBag.notificatePartialCount == 0)
+    {
+        <span class="label label-warning" id="numberOfNoti"></span>
+    }
+    else
+    {
+        <span class="label label-warning" id="numberOfNoti">@ViewBag.notificatePartialCount</span>
+    }
+</a>
+<script type="text/javascript">
+    function resetNumberOfNoti() {
+        $("#hiddenNumberOfNoti").attr('value', 0);
+        $("#numberOfNoti").text('');
+    }
+</script>
+<form action="/StoreInfor/NotificatePartialLink" method="post" role="form" id="notificateForm">
+    <input type="hidden" value="@ViewBag.notificatePartialCount" id="hiddenNumberOfNoti" name="hiddenNumberOfNoti" />
+    <input type="hidden" value="@ViewBag.newOrderCountPartial" id="hiddenOrderCount" name="hiddenOrderCount" />
+    <input type="hidden" value="@ViewBag.lowMaterialCountPartial" id="hiddenMaterialCount" name="hiddenMaterialCount" />
+</form>
+
+<ul class="dropdown-menu">
+    <li>
+        <ul class="menu">
+            <li>
+                <a onclick="RemoveOrderNoty('http://localhost:2072/Order/Index')" style="cursor:pointer">
+                    <i class="fa fa-shopping-cart text-green"></i> Có
+                    @if (ViewBag.newOrderCountPartial == 0)
+                    {
+                        <span id="numberOfNewOrder" data-role="numberOfNewOrder">0</span>
+                    }
+                    else
+                    {
+                        <span id="numberOfNewOrder" data-role="numberOfNewOrder">@ViewBag.newOrderCountPartial</span>
+                    }
+                    đơn hàng mới
+                </a>
+            </li>
+            <li>
+                <a onclick="RemoveMaterialNoty('http://localhost:2072/ManageMaterial/Index')" style="cursor:pointer">
+                    <i class="fa fa-warning text-yellow"></i> Có
+                    @if (ViewBag.lowMaterialCountPartial == 0)
+                    {
+                        <span id="numberOfLowMaterial" data-role="numberOfLowMaterial">0</span>
+                    }
+                    else
+                    {
+                        <span id="numberOfLowMaterial" data-role="numberOfLowMaterial">@ViewBag.lowMaterialCountPartial</span>
+                    }
+                    Nguyên liệu trong kho sắp hết
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>

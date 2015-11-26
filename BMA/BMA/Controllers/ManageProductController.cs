@@ -34,7 +34,8 @@ namespace BMA.Controllers
                 return RedirectToAction("Index", "StoreInfor");
             }
             ManageProductBusiness mpb = new ManageProductBusiness();
-            int? maxPrice = db.StoreInfoes.Select(n => n.ProductMaxPrice).SingleOrDefault();
+            Policy maxPricePolicy = db.Policies.SingleOrDefault(n => n.PolicyId == 2);
+            int maxPrice = maxPricePolicy.PolicyBound;
             ViewBag.maxPrice = maxPrice;
             var category = mpb.GetCategory();
             ViewBag.category = category;
@@ -189,7 +190,7 @@ namespace BMA.Controllers
             string productCode = CreateProductCode(productName);
             for (int i = 0; i < productList.Count; i++)
             {
-                if (productName == productList[i].ProductName)
+                if (StringComparer.CurrentCultureIgnoreCase.Equals(productName, productList[i].ProductName))
                 {
                     //string strURL = Request.UrlReferrer.AbsolutePath;
                     //TempData["Error"] = String.Format("{0}{1}", productName, " đã tồn tại");
@@ -230,7 +231,8 @@ namespace BMA.Controllers
             var product = mpb.GetProductDetail(productId);
             var materialList = mpb.GetListMaterial(productId);
             var category = mpb.GetCategory();
-            int? maxPrice = db.StoreInfoes.Select(n => n.ProductMaxPrice).SingleOrDefault();
+            Policy maxPricePolicy = db.Policies.SingleOrDefault(n => n.PolicyId == 2);
+            int maxPrice = maxPricePolicy.PolicyBound;
             ViewBag.maxPrice = maxPrice;
             ViewBag.materialList = materialList;
             ViewBag.category = category;
@@ -249,11 +251,11 @@ namespace BMA.Controllers
             var productToUpdate = mpb.GetProductDetail(productId);
             string productCode = CreateProductCode(productName);
             var productList = mpb.GetActiveProduct();
-            if (productName != productToUpdate.ProductName)
+            if (!StringComparer.CurrentCultureIgnoreCase.Equals(productName, productToUpdate.ProductName))
             {
                 for (int i = 0; i < productList.Count; i++)
                 {
-                    if (productName == productList[i].ProductName)
+                    if (StringComparer.CurrentCultureIgnoreCase.Equals(productName, productList[i].ProductName))
                     {
                         //string strURL = Request.UrlReferrer.AbsolutePath;
                         //string URL = String.Format("{0}{1}{2}", strURL, "?ProductId=", productId);
@@ -273,18 +275,28 @@ namespace BMA.Controllers
             }
         }
 
-        public ActionResult ChangeStatus(int productId, bool status, string strURL)
+        public int ChangeStatus(int productId, bool status, string strURL)
         {
             try
             {
                 ManageProductBusiness mpb = new ManageProductBusiness();
+                Product product = db.Products.SingleOrDefault(n => n.ProductId == productId);
                 var radioButton = Convert.ToBoolean(Request.Form["status"]);
+                if (product.IsActive == radioButton && product.IsActive)
+                {
+                    return -2;
+                }
+                if (product.IsActive == radioButton && !product.IsActive)
+                {
+                    return -3;
+                }
+
                 mpb.ChangeStatus(productId, radioButton);
-                return Redirect(strURL);
+                return 1;
             }
             catch
             {
-                return RedirectToAction("Index", "Error");
+                return -1;
             }
         }
 

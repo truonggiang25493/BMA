@@ -76,10 +76,12 @@ namespace BMA.Business
             DateTime inputMaterialExpiryDate, int inputBillId, String inputMaterialNote)
         {
             var inputMaterialDetail = db.InputMaterials.SingleOrDefault(n => n.InputMaterialId == inputMaterialId);
+            var productMaterial = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == productMaterialId);
+
             if (inputMaterialDetail != null)
             {
                 try
-                {
+                {                   
                     inputMaterialDetail.ProductMaterial.ProductMaterialId = productMaterialId;
                     inputMaterialDetail.ImportQuantity = importQuantity;
                     inputMaterialDetail.InputMaterialPrice = inputMaterialPrice;
@@ -87,6 +89,9 @@ namespace BMA.Business
                     inputMaterialDetail.InputMaterialExpiryDate = inputMaterialExpiryDate;
                     inputMaterialDetail.InputBillId = inputBillId;
                     inputMaterialDetail.InputMaterialNote = inputMaterialNote;
+                    int changeInputMaterialQuantity = importQuantity - inputMaterialDetail.RemainQuantity;
+                    inputMaterialDetail.RemainQuantity = importQuantity;
+                    productMaterial.CurrentQuantity = productMaterial.CurrentQuantity + changeInputMaterialQuantity;
                     db.SaveChanges();
                 }
                 catch (Exception e)
@@ -105,7 +110,7 @@ namespace BMA.Business
         #endregion
 
         #region Add new input material
-        public static bool AddInputMaterial(InputMaterial inputMaterial)
+        public static bool AddInputMaterial(int productMaterialId, InputMaterial inputMaterial, int importQuantity)
         {
             if (inputMaterial == null)
             {
@@ -113,6 +118,8 @@ namespace BMA.Business
             }
             try
             {
+                ProductMaterial productMaterial = db.ProductMaterials.FirstOrDefault(m => m.ProductMaterialId == productMaterialId);
+                productMaterial.CurrentQuantity = productMaterial.CurrentQuantity + importQuantity;
                 db.InputMaterials.Add(inputMaterial);
                 db.SaveChanges();
             }
