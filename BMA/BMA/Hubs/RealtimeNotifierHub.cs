@@ -6,34 +6,31 @@ using Microsoft.AspNet.SignalR;
 using System.Threading;
 using BMA.Business;
 using System.Configuration;
+using BMA.Models;
+
 
 namespace BMA.Hubs
 {
     public class RealtimeNotifierHub : Hub
     {
-        public int recordsToBeProcessed = 100000;
-
-        public void DoLongOperation()
-        {
-            for (int record = 0; record <= recordsToBeProcessed; record++)
-            {
-                if (ShouldNotifyClient(record))
-                {
-                    Clients.Caller.sendMessage(string.Format
-                    ("Processing item {0} of {1}", record, recordsToBeProcessed));
-                    Thread.Sleep(10);
-                }
-            }
-        }
-
-        private static bool ShouldNotifyClient(int record)
-        {
-            return record % 10 == 0;
-        }
-
+        BMAEntities db = new BMAEntities();
         public void OnChange(Int32 info, Int32 source, Int32 type)
         {
             this.Clients.All.onChange(info, source, type);
+        }
+
+        public void OnChange2(Int32 info, Int32 source, Int32 type)
+        {
+            List<ProductMaterial> lstProductMaterial = db.ProductMaterials.Where(n => n.CurrentQuantity >= n.StandardQuantity && n.IsActive).ToList();
+            if (lstProductMaterial != null)
+            {
+                this.Clients.All.onChange2(info, source, type);
+            }
+        }
+
+        public void OnChange3(Int32 info, Int32 source, Int32 type)
+        {
+            this.Clients.All.onChange3(info, source, type);
         }
     }
 }

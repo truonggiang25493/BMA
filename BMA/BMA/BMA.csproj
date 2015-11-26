@@ -222,7 +222,9 @@
     <Compile Include="DBChangeNotifer\ChangeInfo.cs" />
     <Compile Include="DBChangeNotifer\ChangeNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeSource.cs" />
+    <Compile Include="DBChangeNotifer\ChangeStatusNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeType.cs" />
+    <Compile Include="DBChangeNotifer\QuantityLowNotifer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -369,6 +371,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\AdminLayout\dist\css\ionicons.min.css" />
     <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\CustomerLayout\ajax.googleapis.com\ajax\libs\jquery\1.10.1\jquery.min.js" />
@@ -1481,6 +1484,9 @@
     <Content Include="Views\StoreInfor\ConfigIndex.cshtml" />
     <Content Include="Views\Account\GetPassword.cshtml" />
     <Content Include="Views\Account\CreateNewPassword.cshtml" />
+    <Content Include="Views\ManageMaterial\Detail.cshtml" />
+    <Content Include="Views\ManageMaterial\Edit.cshtml" />
+    <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

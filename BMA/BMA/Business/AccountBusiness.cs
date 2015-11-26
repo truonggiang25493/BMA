@@ -111,7 +111,7 @@ namespace BMA.Business
             return CreatePasswordHash(rawPassword, CreateSalt());
         }
 
-        private static string CreateIdHash(int userId, string salt)
+        public string CreateIdHash(int userId, string salt)
         {
             string passwordSalt = String.Concat(userId, salt);
             string hashedPwd = FormsAuthentication.HashPasswordForStoringInConfigFile(passwordSalt, "sha1");

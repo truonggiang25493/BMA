@@ -148,7 +148,7 @@ namespace BMA.Controllers
                     inputBill.InputTaxAmount = Convert.ToInt32(inputTaxAmountString);
                     inputBill.ImportDate = DateTime.ParseExact(importDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     String inputBillCode = supplierIdString + importDate;
-                    inputBill.InputBillCode = inputBillCode.Replace("-", "");
+                    inputBill.InputBillCode = inputBillCode.Replace("/", "");
                     inputBill.InputRawImage = fileName;
                 }
                 catch (Exception)

@@ -32,24 +32,151 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <script type="text/javascript">
-        function onChange(info, source, type) {
-            if (info == 1) {
-                noty({
-                    text: 'Có một đơn hàng vừa được thêm mới.',
-                    type: 'success',
-                    dismissQueue: false,
-                    layout: 'topCenter',
-                    theme: 'defaultTheme',
-                    timeout: false
-                });
-            }           
+        $(document).keydown(function (e) {
+            if (e.keyCode == 116 && e.ctrlKey || e.keyCode == 116) {
+                NotificatePartialLink(window.location.href);
+            }
+        });
+
+
+        function NotificatePartialLink(strURL) {
+            var txtHiddenNoti = $("#hiddenNumberOfNoti").val();
+            var txtHiddenOrder = $("#hiddenOrderCount").val();
+            var txtHiddenMaterial = $("#hiddenMaterialCount").val();
+            $.ajax({
+                "url": "@(Url.Action("NotificatePartialLink", "StoreInfor"))",
+                "method": "POST",
+                "data": JSON.stringify({
+                    "count": txtHiddenNoti,
+                    "newOrderCount": txtHiddenOrder,
+                    "lowMaterialCount": txtHiddenMaterial
+                }),
+                "dataType": "json",
+                "contentType": 'application/json',
+                "success": function (data) {
+                    if (data === 1) {
+                        window.setTimeout(function () {
+                            window.location.replace(strURL);
+                        });
+                    } else {
+                        noty({
+                            text: 'Có lỗi xảy ra, vui lòng thử lại',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    }
+                },
+                "fail": function () {
+                    noty({
+                        text: 'Đã có lỗi xảy ra',
+                        type: 'error',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                    window.setTimeout(function () {
+                        window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                    }, 3000)
+                }
+            })
         }
 
-        window.addEventListener('load', function () {
-            var notifier = $.connection.realtimeNotifierHub;
-            notifier.client.onChange = onChange;
-            $.connection.hub.start();
-        });
+        function RemoveOrderNoty(strURL) {
+            if ($("[data-role='numberOfNewOrder']").text() == 0) {
+
+            } else {
+                var txtHiddenMaterial = $("#hiddenMaterialCount").val();
+                $.ajax({
+                    "url": "@(Url.Action("RemoveOrderNoty", "StoreInfor"))",
+                    "method": "POST",
+                    "data": JSON.stringify({
+                        "lowMaterialCount": txtHiddenMaterial
+                    }),
+                    "dataType": "json",
+                    "contentType": 'application/json',
+                    "success": function (data) {
+                        if (data === 1) {
+                            window.setTimeout(function () {
+                                window.location.replace(strURL);
+                            });
+                        } else {
+                            noty({
+                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    "fail": function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                        }, 3000)
+                    }
+                })
+            }
+
+        }
+
+        function RemoveMaterialNoty(strURL) {
+            if ($("[data-role='numberOfLowMaterial']").text() == 0) {
+
+            } else {
+                var txtHiddenOrder = $("#hiddenOrderCount").val();
+                $.ajax({
+                    "url": "@(Url.Action("RemoveMaterialNoty", "StoreInfor"))",
+                    "method": "POST",
+                    "data": JSON.stringify({
+                        "newOrderCount": txtHiddenOrder
+                    }),
+                    "dataType": "json",
+                    "contentType": 'application/json',
+                    "success": function (data) {
+                        if (data === 1) {
+                            window.setTimeout(function () {
+                                window.location.replace(strURL);
+                            });
+                        } else {
+                            noty({
+                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    "fail": function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                        }, 3000)
+                    }
+                })
+            }
+        }
     </script>
     <div class="wrapper">
         <header class="main-header">
@@ -70,28 +197,7 @@
                     <ul class="nav navbar-nav">
                         <!-- Notifications: style can be found in dropdown.less -->
                         <li class="dropdown notifications-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bell-o"></i>
-                                <span class="label label-warning">2</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="header"></li>
-                                <li>
-                                    <!-- inner menu: contains the actual data -->
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-file-o"></i> Có 5 đơn hàng mới
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-cube"></i> Có nguyên liệu trong kho sắp hết
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
+                            @Html.Action("NotificatePartial", "StoreInfor")
                         </li>
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
@@ -150,9 +256,9 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index", "StoreInfor")"><i class="fa fa-home"></i>Thông tin cửa hàng</a></li>
+                            <li><a onclick="NotificatePartialLink('http://localhost:2072/StoreInfor/Index')" style="cursor:pointer"><i class="fa fa-home"></i>Thông tin cửa hàng</a></li>
                             <li>
-                                <a href="@Url.Action("ConfigIndex", "StoreInfor")"><i class="fa fa-gears"></i>Cấu hình hệ thống</a>
+                                <a onclick="NotificatePartialLink('http://localhost:2072/StoreInfor/ConfigIndex')" style="cursor:pointer"><i class="fa fa-gears"></i>Cấu hình hệ thống</a>
                             </li>
                         </ul>
                     </li>
@@ -162,8 +268,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="listStaff"><a href="@Url.Action("StaffIndex", "Staff")"><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
-                            <li id="addStaff"><a href="@Url.Action("AddStaff", "Staff")"><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
+                            <li id="listStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/StaffIndex')" style="cursor:pointer"><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
+                            <li id="addStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/AddStaff')" style="cursor:pointer"<i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
                         </ul>
                     </li>
                     <li class="treeview" id="customer">
@@ -172,7 +278,7 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="listCustomer"><a href="@Url.Action("CustomerIndex","Customer")"><i class="fa fa-users"></i>Danh sách khách hàng</a></li>
+                            <li id="listCustomer"><a onclick="NotificatePartialLink('http://localhost:2072/Customer/CustomerIndex')" style="cursor:pointer"><i class="fa fa-users"></i>Danh sách khách hàng</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -181,9 +287,9 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index", "ManageProduct")"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
+                            <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageProduct/Index')" style="cursor:pointer"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
 
-                            <li><a href="@Url.Action("AddProduct", "ManageProduct")"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+                            <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageProduct/AddProduct')" style="cursor:pointer"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
 
 
                         </ul>
@@ -194,8 +300,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index","ManageMaterial")"><i class="fa fa-cubes"></i>Danh sách nguyên liệu</a></li>
-                            <li><a href="@Url.Action("AddMaterial","ManageMaterial")"><i class=" fa fa-plus"></i>Tạo mới nguyên liệu</a></li>
+                            <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageMaterial/Index')" style="cursor:pointer"><i class="fa fa-cubes"></i>Danh sách nguyên liệu</a></li>
+                            <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageMaterial/AddMaterial')" style="cursor:pointer"><i class=" fa fa-plus"></i>Tạo mới nguyên liệu</a></li>
                             <li><a href=""><i class="fa fa-home"></i>Quản lí kho</a></li>
                         </ul>
                     </li>
@@ -205,8 +311,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="listInputMaterial"><a href="@Url.Action("InputMaterialIndex","InputMaterial")"><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
-                            <li id="addInputMaterial"><a href="@Url.Action("AddInputMaterial","InputMaterial")"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
+                            <li id="listInputMaterial"><a onclick="NotificatePartialLink('http://localhost:2072/InputMaterial/InputMaterialIndex')" style="cursor:pointer"><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
+                            <li id="addInputMaterial"><a onclick="NotificatePartialLink('http://localhost:2072/InputMaterial/AddInputMaterial')" style="cursor:pointer"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
                         </ul>
                     </li>
                     <li class="treeview" id="supplier">
@@ -215,8 +321,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="listSupplier"><a href="@Url.Action("SupplierIndex","Supplier")"><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
-                            <li id="addSupplier"><a href="@Url.Action("AddSupplier","Supplier")"><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
+                            <li id="listSupplier"><a onclick="NotificatePartialLink('http://localhost:2072/Supplier/SupplierIndex')" style="cursor:pointer"><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
+                            <li id="addSupplier"><a onclick="NotificatePartialLink('http://localhost:2072/Supplier/AddSupplier')" style="cursor:pointer"><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
                         </ul>
                     </li>
                     <li class="treeview" id="order">
@@ -225,8 +331,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="orderList"><a href="@Url.Action("Index","Order")"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
-                            <li id="addOrder"><a href="@Url.Action("Add", "Order" )"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
+                            <li id="orderList"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Index')" style="cursor:pointer"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
+                            <li id="addOrder"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Add')" style="cursor:pointer"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
                             <li><a href=""><i class="fa fa-thumbs-o-up"></i>Chấp nhận đơn hàng</a></li>
                         </ul>
                     </li>
@@ -236,8 +342,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="listInputBill"><a href="@Url.Action("InputBillIndex", "InputBill")"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
-                            <li id="addInputBill"><a href="@Url.Action("AddInputBill", "InputBill")"><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
+                            <li id="listInputBill"><a onclick="NotificatePartialLink('http://localhost:2072/InputBill/InputBillIndex')" style="cursor:pointer"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
+                            <li id="addInputBill"><a onclick="NotificatePartialLink('http://localhost:2072/InputBill/AddInputBill')" style="cursor:pointer"><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
                         </ul>
                     </li>
                     <li class="treeview" id="otherExpense">
@@ -252,10 +358,10 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="customerRevenue"><a href="@(Url.Action("ReviewRevenuePerCustomer", "Report"))"><i class="fa fa-usd"></i>Thống kê doanh thu theo khách hàng</a></li>
-                            <li id="incomeProduct"><a href="@(Url.Action("ReviewRevenueByProduct", "Report"))"><i class="fa fa-usd"></i>Thống kê thu nhập theo sản phẩm</a></li>
-                            <li id="incomeReport"><a href="@(Url.Action("ReviewIncomeByTime", "Report"))"><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
-                            <li id="taxReport"><a href="@(Url.Action("Index","Tax"))"><i class="fa fa-file-text-o"></i>Báo cáo thuế</a></li>
+                            <li id="customerRevenue"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenuePerCustomer')" style="cursor:pointer"><i class="fa fa-usd"></i>Thống kê doanh thu theo khách hàng</a></li>
+                            <li id="incomeProduct"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenueByProduct')" style="cursor:pointer"><i class="fa fa-usd"></i>Thống kê thu nhập theo sản phẩm</a></li>
+                            <li id="incomeReport"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewIncomeByTime')" style="cursor:pointer"><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
+                            <li id="taxReport"><a onclick="NotificatePartialLink('http://localhost:2072/Tax/Index')" style="cursor:pointer"><i class=" fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -370,6 +476,7 @@
     @RenderSection("AddInputBill", false)
     @RenderSection("ReviewRevenuePerCustomerScript", false)
     @RenderSection("ReviewIncomeByProductScript", false)
+    @RenderSection("EditInputBillScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({

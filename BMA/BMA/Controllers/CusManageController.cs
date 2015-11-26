@@ -24,6 +24,13 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+            int userId = Convert.ToInt32(Session["UserId"]);
+            List<Order> lstOrder = db.Orders.Where(n => n.CustomerUserId == userId && n.OrderStatus == 1).ToList();
+            if (lstOrder.Count > 0)
+            {
+                ViewBag.lstOrderConfirm = lstOrder;
+            }
+
             return View();
         }
 
@@ -252,31 +259,31 @@ namespace BMA.Controllers
 
         }
 
-        public ActionResult AcceptEditedOrder(int orderId)
+        public int AcceptEditedOrder(int orderId)
         {
             try
             {
                 CusManageBusiness cmb = new CusManageBusiness();
                 cmb.AcceptEditedOrder(orderId);
-                return RedirectToAction("Index");
+                return 1;
             }
             catch (Exception)
             {
-                return RedirectToAction("Index", "Error");
+                return -1;
             }
         }
 
-        public ActionResult CancelEditedOrder(int orderId)
+        public int CancelEditedOrder(int orderId)
         {
             try
             {
                 CusManageBusiness cmb = new CusManageBusiness();
                 cmb.CancelEditedOrder(orderId);
-                return RedirectToAction("Index");
+                return 1;
             }
             catch (Exception)
             {
-                return RedirectToAction("Index", "Error");
+                return -1;
             }
         }
 

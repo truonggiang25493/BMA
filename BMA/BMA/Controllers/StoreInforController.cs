@@ -245,5 +245,66 @@ namespace BMA.Controllers
             ViewBag.storeInfo = storeInfo;
             return PartialView();
         }
+
+        public ActionResult NotificatePartial()
+        {
+            if (Session["NotificateCount"] == null)
+            {
+                int count = 0;
+                ViewBag.notificatePartialCount = count;
+                Session["NotificateCount"] = count;
+                int newOrderCount = 0;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["NewOrderCountPartial"] = newOrderCount;
+                int lowMaterialCount = 0;
+                ViewBag.lowMaterialCountPartial = lowMaterialCount;
+                Session["LowMaterialCountPartial"] = lowMaterialCount;
+            }
+            else
+            {
+                int count = Convert.ToInt32(Session["NotificateCount"]);
+                ViewBag.notificatePartialCount = count;
+                int newOrderCount = Convert.ToInt32(Session["NewOrderCountPartial"]);
+                ViewBag.newOrderCountPartial = newOrderCount;
+                int lowMaterialCount = Convert.ToInt32(Session["LowMaterialCountPartial"]);
+                ViewBag.lowMaterialCountPartial = lowMaterialCount;
+            }
+            return PartialView();          
+        }
+
+        public int NotificatePartialLink(int count, int newOrderCount, int lowMaterialCount)
+        {
+            ViewBag.notificatePartialCount = count;
+            Session["NotificateCount"] = count;
+            ViewBag.newOrderCountPartial = newOrderCount;
+            Session["NewOrderCountPartial"] = newOrderCount;
+            ViewBag.lowMaterialCountPartial = lowMaterialCount;
+            Session["LowMaterialCountPartial"] = lowMaterialCount;
+            return 1;
+        }
+
+        public int RemoveOrderNoty(int lowMaterialCount)
+        {
+            ViewBag.notificatePartialCount = lowMaterialCount;
+            Session["NotificateCount"] = lowMaterialCount;
+            int newOrderCount = 0;
+            ViewBag.newOrderCountPartial = newOrderCount;
+            Session["NewOrderCountPartial"] = newOrderCount;
+            ViewBag.lowMaterialCountPartial = lowMaterialCount;
+            Session["LowMaterialCountPartial"] = lowMaterialCount;
+            return 1;
+        }
+
+        public int RemoveMaterialNoty(int newOrderCount)
+        {
+            ViewBag.notificatePartialCount = newOrderCount;
+            Session["NotificateCount"] = newOrderCount;
+            int lowMaterialCount = 0;
+            ViewBag.newOrderCountPartial = newOrderCount;
+            Session["NewOrderCountPartial"] = newOrderCount;
+            ViewBag.lowMaterialCountPartial = lowMaterialCount;
+            Session["LowMaterialCountPartial"] = lowMaterialCount;
+            return 1;
+        }
     }
 }

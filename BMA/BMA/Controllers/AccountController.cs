@@ -29,6 +29,7 @@ namespace BMA.Controllers
                 {
                     Session["User"] = endUser;
                     Session["UserId"] = endUser.UserId;
+                    System.Web.HttpContext.Current.Application["UserId"] = endUser.UserId;
                     Session["CusUserId"] = endUser.Customers.ElementAt(0).CustomerId;
                     Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber;
                     return 1;
@@ -90,7 +91,7 @@ namespace BMA.Controllers
                         mail.Body += "<div> Nếu phải, vui lòng bấm vào 'Tạo mới mật khẩu' bên dưới, đường dẫn chỉ có hiệu lực trong vòng 24 tiếng kể từ khi quý khách nhận được email này</div>";
                         //string link = Url.Encode(string.Format("{0}{1}", Request.Url.Authority, Url.Action("CreateNewPassword", "Account", new { userId = lstUser[i].UserId, timeSend = DateTime.Now })));
                         //mail.Body += string.Format("<a href='{0}{1}'>Tạo mới mật khẩu</a>", "http://", link);
-                        mail.Body += string.Format("<a href='{0}{1}{2}'>Tạo mới mật khẩu</a>", "http://", Request.Url.Authority, Url.Action("CreateNewPassword", "Account", new { userId = lstUser[i].UserId, timeSend = DateTime.Now }));
+                        mail.Body += string.Format("<a href='{0}{1}{2}'>Tạo mới mật khẩu</a>", "http://", Request.Url.Authority, Url.Action("CreateNewPassword", "Account", new { strUserId = ab.EncodeUserId(lstUser[i].UserId), timeSend = DateTime.Now }));
                         mail.Body += "</body>";
                         mail.Body += "</html>";
                         var mailBody = mail.Body;
@@ -117,16 +118,35 @@ namespace BMA.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateNewPassword(int userId, DateTime timeSend)
+        public ActionResult CreateNewPassword(string strUserId, DateTime timeSend)
         {
             DateTime activeTimeCheck = DateTime.Now;
+            AccountBusiness ab = new AccountBusiness();
+            int userId = 0;
+            string salt = strUserId.Substring(strUserId.Length - 88);
+            List<User> lstUser = db.Users.ToList();
+            foreach (var item in lstUser)
+            {
+                if (ab.CreateIdHash(item.UserId,salt) == strUserId)
+                {
+                    userId = item.UserId;
+                }
+            }
             double check = (activeTimeCheck - timeSend).TotalMinutes;
             if (check > 1440)
             {
                 ViewBag.outOfTime = "";
             }
-            ViewBag.userId = userId;
-            return View();
+
+            if (userId != 0)
+            {
+                ViewBag.userId = userId;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
 
         [HttpPost]
