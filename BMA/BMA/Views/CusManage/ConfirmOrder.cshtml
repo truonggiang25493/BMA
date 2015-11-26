@@ -496,8 +496,8 @@
         <script type="text/javascript">
             function deleteBoth(orderId) {
                 $.ajax({
-                    url: "/CusManage/CancelBothOrder?orderId=" + orderId,
-                    data: "/CusManage/CancelBothOrder?orderId=" + orderId,
+                    url: "/CusManage/CancelOrderConfirm?orderId=" + orderId,
+                    data: "/CusManage/CancelOrderConfirm?orderId=" + orderId,
                     success: function (data) {
                         if (data === "1") {
                             window.setTimeout(function () {

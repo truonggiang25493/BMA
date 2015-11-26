@@ -457,6 +457,7 @@
     <Content Include="Content\CustomerLayout\site\promo\BB2T.jpg" />
     <Content Include="Content\CustomerLayout\site\promo\BBLN.jpg" />
     <Content Include="Content\CustomerLayout\site\promo\BMTN.jpg" />
+    <Content Include="Content\Images\BakeryImages\No-image-found.jpg" />
     <Content Include="Content\CustomerLayout\site\promo\Pudding.jpg" />
     <Content Include="Content\font-awesome-4.3.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.3.0\css\font-awesome.min.css" />
@@ -475,6 +476,7 @@
     <Content Include="Content\Images\BakeryImages\BQ.jpg" />
     <Content Include="Content\Images\BakeryImages\BXX.jpg" />
     <Content Include="Content\Images\BakeryImages\KTC.jpg" />
+    <Content Include="Content\Images\BakeryImages\No-image.jpg" />
     <Content Include="Content\Images\BakeryImages\Pudding.jpg" />
     <Content Include="Content\Images\InputBillImages\InputBillDemo.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
@@ -1487,6 +1489,7 @@
     <Content Include="Views\ManageMaterial\Detail.cshtml" />
     <Content Include="Views\ManageMaterial\Edit.cshtml" />
     <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
+    <Content Include="Views\Product\CategoryPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

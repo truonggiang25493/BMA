@@ -21,14 +21,7 @@
             <ul class="breadcrumb">
                 <li> <a href="@Url.Action("Index","Home")">TRANG CHỦ</a> </li>
                 <li> <a href="@Url.Action("Index","Product")">TẤT CẢ SẢN PHẨM</a> </li>
-                @if (Model.CategoryId == 2)
-                {
-                    <li> <a href="@Url.Action("Cookie", "Product")">BÁNH NGỌT</a> </li>
-                }
-                else
-                {
-                    <li> <a href="@Url.Action("Saltine", "Product")">BÁNH MẶN</a> </li>
-                }
+                <li> <a href="@Url.Action("Index", "Product", new { categoryId = ViewBag.category.CategoryId })" style="text-transform:uppercase">@ViewBag.category.CategoryName</a> </li>
                 <li class="active">@Model.ProductName</li>
             </ul>
         </div>

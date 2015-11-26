@@ -28,7 +28,7 @@ namespace BMA.Business
         public List<Product> SearchMaterial(string searchString)
         {
             var material = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialName.Contains(searchString));
-            var lstProductIds = db.Recipes.Where(n=>n.ProductMaterialId == material.ProductMaterialId).Select(n => n.ProductId).ToList();
+            var lstProductIds = db.Recipes.Where(n => n.ProductMaterialId == material.ProductMaterialId).Select(n => n.ProductId).ToList();
             Product product;
             List<Product> lstProducts = new List<Product>();
             foreach (var item in lstProductIds)
@@ -43,16 +43,11 @@ namespace BMA.Business
             List<Product> lstProducts = db.Products.Where(n => n.IsActive && n.ProductId != productId).ToList();
             return lstProducts;
         }
-        public List<Product> GetCookie()
-        {
-            var lstCookies = db.Products.Where(n => n.CategoryId == 2 && n.IsActive).ToList();
-            return lstCookies;
-        }
 
-        public List<Product> GetSaltine()
+        public List<Product> GetProductByCategory(int? categoryId)
         {
-            var lstSaltine = db.Products.Where(n => n.CategoryId == 3 && n.IsActive).ToList();
-            return lstSaltine;
+            var lstProducts = db.Products.Where(n => n.CategoryId == categoryId && n.IsActive).ToList();
+            return lstProducts;
         }
 
         public Product GetProductDetail(int ProductId)

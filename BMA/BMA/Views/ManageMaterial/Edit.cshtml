@@ -30,7 +30,7 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Số lượng tối thiểu <span style="color:red">*</span></label><br />
-                            <input type="text" class="form-control" name="txtSQuantity" value="@Model.StandardQuantity" placeholder="Nhập đơn vị" id="materialSQuantity">
+                            <input type="text" class="form-control" name="txtSQuantity" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@Model.StandardQuantity" placeholder="Nhập đơn vị" id="materialSQuantity">
                         </div>
                     </div>
                 </form>

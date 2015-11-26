@@ -38,7 +38,7 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Trọng lượng (gam)<span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="productWeight" value="" min="100" max="2000" placeholder="Nhập trọng lượng bánh" id="productWeight" required>
+                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productWeight" value="" min="100" max="2000" placeholder="Nhập trọng lượng bánh" id="productWeight" required>
                             @Html.ValidationMessageFor(model => model.ProductWeight)
                         </div>
                         <div class="form-group">
@@ -53,7 +53,7 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Đơn giá (đồng)<span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="productPrice" value="" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
+                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" value="" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
                             @Html.ValidationMessageFor(model => model.ProductStandardPrice)
                         </div>
                         <div class="form-group">
@@ -215,7 +215,7 @@
                             }
                         </script>
 
-                        <a style="float:right" href="@Url.Action("AddMaterial", "ManageMaterial")" class="btn btn-danger">Tạo mới nguyên liệu</a>
+                        <a style="float:right" href="@Url.Action("AddMaterial", "ManageMaterial", new { strURL = Request.Url.AbsolutePath})" class="btn btn-danger">Tạo mới nguyên liệu</a>
                     </div>
                 </div>
             </div>

@@ -1,10 +1,12 @@
 ﻿@using BMA.Models
+@using PagedList.Mvc;
 @using BMA.Common
 @using System.Globalization;
+
 @model PagedList.PagedList<Order>
 
 @{
-    ViewBag.Title = "Danh sách đơn hàng";
+    ViewBag.Title = "Danh sách đơn hàng xác nhận";
     Layout = "~/Views/Layout/CustomerLayout.cshtml";
     IEnumerable<BMA.Models.OrderItem> oi = ViewBag.orderItemList;
 }
@@ -115,6 +117,11 @@
 
         </div>
         <div class="col-lg-3 col-md-3 col-sm-5"> </div>
+        <div class="w100 categoryFooter">
+            <div class="pagination pull-left no-margin-top" style="margin-left:390px;margin-top:-70px;">
+                @Html.PagedListPager(Model, page => Url.Action("OrderList", new { page = page }))
+            </div>
+        </div>
     </div>
 
     <div style="clear:both"></div>

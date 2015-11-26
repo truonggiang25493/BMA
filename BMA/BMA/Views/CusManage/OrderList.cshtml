@@ -137,6 +137,7 @@
                         <div class="panel-footer panel-footer-address" style="padding-left:270px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="deleteRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
                     </div>
                 </div>
+
                 <div class="col-md-12 clearfix">
                     <ul class="pager">
                         <li class="previous pull-right"><a href="@Url.Action("Index","Product")"> <i class="fa fa-home"></i> Tới cửa hàng </a></li>
@@ -144,9 +145,13 @@
                     </ul>
                 </div>
             </div>
-
         </div>
         <div class="col-lg-3 col-md-3 col-sm-5"> </div>
+        <div class="w100 categoryFooter">
+            <div class="pagination pull-left no-margin-top" style="margin-left:390px;margin-top:-70px;">
+                @Html.PagedListPager(Model, page => Url.Action("OrderList", new { page = page }))
+            </div>
+        </div>
     </div>
 
     <div style="clear:both"></div>
