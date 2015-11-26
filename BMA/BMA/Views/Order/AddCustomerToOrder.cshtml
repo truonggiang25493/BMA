@@ -53,7 +53,7 @@
                                     text: 'Vui lòng chọn khách hàng !',
                                     type: 'warning',
                                     dismissQueue: false,
-                                    layout: 'bottomLeft',
+                                    layout: 'topCenter',
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
@@ -153,13 +153,23 @@
                                         var address = $("#customerAddress").val();
                                         var phoneNumber = $("#customerPhoneNumber").val();
                                         var taxCode = $("#customerTaxCode").val();
+                                        if (customerName.indexOf("<") > 0 || customerName.indexOf(">") > 0 || username.indexOf("<") > 0 || username.indexOf(">") > 0 || email.indexOf("<") > 0 || email.indexOf(">") > 0 || address.indexOf("<") > 0 || address.indexOf(">") > 0 || phoneNumber.indexOf("<") > 0 || phoneNumber.indexOf(">") > 0 || taxCode.indexOf("<") > 0 || taxCode.indexOf(">") > 0) {
+                                            var n = noty({
+                                                text: 'Nhập sai cú pháp',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }else
                                         // Validate Customer Name
                                         if (customerName.trim() === '') {
                                             var n = noty({
                                                 text: 'Tên khách hàng không được trống.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -169,7 +179,7 @@
                                                 text: 'Tên khách hàng không được quá 50 kí tự.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -181,7 +191,7 @@
                                                 text: 'Tên đăng nhập không được trống.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -191,7 +201,7 @@
                                                 text: 'Tên đăng nhập không được quá 50 kí tự.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -203,7 +213,7 @@
                                                 text: 'Email không được trống.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -213,7 +223,7 @@
                                                 text: 'Email không được quá 50 kí tự.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -223,7 +233,7 @@
                                                 text: 'Hãy nhập email đúng định dạng.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -235,7 +245,7 @@
                                                 text: 'Địa chỉ không được trống.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -245,7 +255,7 @@
                                                 text: 'Địa chỉ không được quá 250 kí tự.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -257,7 +267,7 @@
                                                 text: 'Số điện thoại không được trống.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -267,7 +277,7 @@
                                                 text: 'Hãy nhập số điện thoại đúng.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -277,7 +287,7 @@
                                                 text: 'Mã số thuế không được trống.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -287,7 +297,7 @@
                                                 text: 'Hãy nhập mã số thuế đúng.',
                                                 type: 'warning',
                                                 dismissQueue: false,
-                                                layout: 'bottomLeft',
+                                                layout: 'topCenter',
                                                 theme: 'defaultTheme',
                                                 timeout: 1000
                                             });
@@ -303,7 +313,7 @@
                                                             text: 'Email này đã có trong hệ thống.',
                                                             type: 'warning',
                                                             dismissQueue: false,
-                                                            layout: 'bottomLeft',
+                                                            layout: 'topCenter',
                                                             theme: 'defaultTheme',
                                                             timeout: 1000
                                                         });
@@ -313,7 +323,7 @@
                                                             text: 'Tên đăng nhập này đã có trong hệ thống.',
                                                             type: 'warning',
                                                             dismissQueue: false,
-                                                            layout: 'bottomLeft',
+                                                            layout: 'topCenter',
                                                             theme: 'defaultTheme',
                                                             timeout: 1000
                                                         });
@@ -323,7 +333,7 @@
                                                             text: 'Địa chỉ này đã có trong hệ thống.',
                                                             type: 'warning',
                                                             dismissQueue: false,
-                                                            layout: 'bottomLeft',
+                                                            layout: 'topCenter',
                                                             theme: 'defaultTheme',
                                                             timeout: 1000
                                                         });
@@ -333,7 +343,7 @@
                                                             text: 'Số điện thoại này đã có trong hệ thống.',
                                                             type: 'warning',
                                                             dismissQueue: false,
-                                                            layout: 'bottomLeft',
+                                                            layout: 'topCenter',
                                                             theme: 'defaultTheme',
                                                             timeout: 1000
                                                         });
@@ -343,7 +353,7 @@
                                                             text: 'Mã số thuế này đã có trong hệ thống.',
                                                             type: 'warning',
                                                             dismissQueue: false,
-                                                            layout: 'bottomLeft',
+                                                            layout: 'topCenter',
                                                             theme: 'defaultTheme',
                                                             timeout: 1000
                                                         });
@@ -357,7 +367,7 @@
                                                         text: 'Đã có lỗi xảy ra.',
                                                         type: 'danger',
                                                         dismissQueue: false,
-                                                        layout: 'bottomLeft',
+                                                        layout: 'topCenter',
                                                         theme: 'defaultTheme',
                                                         timeout: 1000
                                                     });
