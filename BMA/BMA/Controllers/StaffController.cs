@@ -40,20 +40,28 @@ namespace BMA.Controllers
         public ActionResult StaffDetail(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                ViewBag.TreeView = "staff";
-                Staff staffDetail = staffBusiness.GetStaffDetail(id);
-                if (staffDetail == null)
+                try
                 {
-                    RedirectToAction("StaffIndex", "Staff");
+                    ViewBag.TreeView = "staff";
+                    Staff staffDetail = staffBusiness.GetStaffDetail(id);
+                    if (staffDetail == null)
+                    {
+                        return RedirectToAction("StaffIndex", "Staff");
 
+                    }
+                    return View(staffDetail);
                 }
-                return View(staffDetail);
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Manage");
+                }
+
             }
         }
 
@@ -160,15 +168,27 @@ namespace BMA.Controllers
         public ActionResult StaffEditInfo(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2 || (int)Session["UserId"] != id)
+            var UId = staffUser.UserId;                        
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2 || UId != id)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Manage");
             }
             else
             {
                 ViewBag.TreeView = "staff";
-                Staff staff = db.Staffs.SingleOrDefault(m => m.UserId == id);
-                return View(staff);
+                try
+                {
+                    Staff staff = db.Staffs.SingleOrDefault(m => m.UserId == id);
+                    if (staff==null)
+                    {
+                        return RedirectToAction("Index", "Manage");
+                    }
+                    return View(staff);
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Manage");
+                }
             }
         }
 

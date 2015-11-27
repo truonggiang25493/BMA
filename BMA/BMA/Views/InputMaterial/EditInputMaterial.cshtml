@@ -14,23 +14,23 @@
 <section class="content">
     <div style="margin-top: 2%">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-3">
             </div>
-            <div class="col-md-8">
-                <div class="box box-primary">
+            <div class="col-md-6">
+                <div class="box box-primary" style="margin-top: 10px">
                     <!-- Update form -->
-                    <form id="edit-input-material-form" style="margin-top: 2%">
+                    <form id="edit-input-material-form">
                         <input type="hidden" name="InputMaterialId" id="InputMaterialId" value="@Model.InputMaterialId" />
                         <div class="box-body box-profile">
-                            <div class="row" style="margin-bottom: 17px;">
+                            <div class="row" style="margin-top: 10px;">
                                 <div class="form-group">
                                     <div class="col-xs-5">
-                                        <b>Tên nguyên liệu<b style="color: #ff0000">*</b>:</b>
+                                        <b>Nguyên liệu<b style="color: #ff0000">*</b>:</b>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-xs-7" id="product-material-info">
-                                        <input type="text" name="productMaterialName" id="productMaterialName" readonly style="margin-right: 2%" class="form-control" value="@Model.ProductMaterial.ProductMaterialName" />
+                                        <input type="text" name="productMaterialName" id="productMaterialName" readonly style="margin-bottom: 10px" class="form-control" value="@Model.ProductMaterial.ProductMaterialName" />
                                         <input type="hidden" name="productMaterialId" id="productMaterialId" value="@Model.ProductMaterial.ProductMaterialId" />
                                         <a class="btn btn-success btn-xs" id="add-product-material" onclick="open_choose_product_material()">
                                             Chọn nguyên liệu
@@ -65,7 +65,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" style="margin-bottom: 17px;">
+                            <div class="row" style="margin-bottom: 17px">
                                 <div class="form-group">
                                     <div class="col-xs-5">
                                         <b>Số lượng nhập<b style="color: #ff0000">*</b>: </b>
@@ -316,7 +316,7 @@
                 </div>
 
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
             </div>
         </div>
 

@@ -47,20 +47,27 @@ namespace BMA.Controllers
         public ActionResult InputBillDetail(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 2)
             {
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                ViewBag.TreeView = "inputBill";
-                InputBill inputBillDetail = inputBillBusiness.GetInputBill(id);
-                if (inputBillDetail == null)
+                try
                 {
-                    RedirectToAction("InputBillIndex", "InputBill");
+                    ViewBag.TreeView = "inputBill";
+                    InputBill inputBillDetail = inputBillBusiness.GetInputBill(id);
+                    if (inputBillDetail == null)
+                    {
+                        return RedirectToAction("InputBillIndex", "InputBill");
 
+                    }
+                    return View(inputBillDetail);
                 }
-                return View(inputBillDetail);
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Manage");
+                }
             }
         }
 
@@ -235,11 +242,22 @@ namespace BMA.Controllers
             }
             else
             {
-                ViewBag.TreeView = "inputBill";
-                OrderBusiness business = new OrderBusiness();
-                ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
-                InputBill inputBill = db.InputBills.SingleOrDefault(m => m.InputBillId == id);
-                return View(inputBill);
+                try
+                {
+                    ViewBag.TreeView = "inputBill";
+                    OrderBusiness business = new OrderBusiness();
+                    ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
+                    InputBill inputBill = db.InputBills.SingleOrDefault(m => m.InputBillId == id);
+                    if (inputBill==null)
+                    {
+                        return RedirectToAction("InputBillIndex", "InputBill");
+                    }
+                    else return View(inputBill);
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Manage");
+                }
             }
         }
 

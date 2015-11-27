@@ -59,15 +59,24 @@ namespace BMA.Controllers
             }
             else
             {
-                db = new BMAEntities();
-                ViewBag.TreeView = "inputMaterial";
-                InputMaterial inputMaterialDetail = inputMaterialBusiness.GetInputMaterial(id);
-                if (inputMaterialDetail == null)
+                try
                 {
-                    RedirectToAction("InputMaterialIndex", "InputMaterial");
+                    db = new BMAEntities();
+                    ViewBag.TreeView = "inputMaterial";
+                    InputMaterial inputMaterialDetail = inputMaterialBusiness.GetInputMaterial(id);
+                    if (inputMaterialDetail == null)
+                    {
+                        return RedirectToAction("InputMaterialIndex", "InputMaterial");
+
+                    }
+
+                    return View(inputMaterialDetail);
 
                 }
-                return View(inputMaterialDetail);
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Manage"); ;
+                }
             }
         }
         #endregion
@@ -131,14 +140,14 @@ namespace BMA.Controllers
             {
                 InputMaterial inputMaterial = new InputMaterial();
                 String productMaterialIdString = f["productMaterialId"];
-                int productMaterialId = Convert.ToInt32(productMaterialIdString);      
+                int productMaterialId = Convert.ToInt32(productMaterialIdString);
                 String importQuantityString = f["txtImportQuantity"];
                 int importQuantity = Convert.ToInt32(importQuantityString);
                 String inputMaterialTotalPriceString = f["txtInputMaterialPrice"];
                 String importDateString = f["txtImportDate"];
                 String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
                 String inputMaterialNote = f["txtInputMaterialNote"];
-                String inputBillId = f["inputBillId"];         
+                String inputBillId = f["inputBillId"];
                 try
                 {
                     int inputMaterialTotalPrice = Convert.ToInt32(inputMaterialTotalPriceString);
@@ -162,7 +171,7 @@ namespace BMA.Controllers
                 }
                 //Close connection with hub
                 MvcApplication.lowQuantityNotifer.Dispose();
-                bool result = InputMaterialBusiness.AddInputMaterial(productMaterialId, inputMaterial, importQuantity);    
+                bool result = InputMaterialBusiness.AddInputMaterial(productMaterialId, inputMaterial, importQuantity);
 
                 //Connection with hub
                 MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
@@ -208,17 +217,32 @@ namespace BMA.Controllers
         public ActionResult EditInputMaterial(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 2)
             {
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                InputMaterial inputMaterials = db.InputMaterials.SingleOrDefault(m => m.InputMaterialId == id);
-                var productMaterial = db.ProductMaterials.ToList();
-                ViewBag.productMaterial = productMaterial;
-                return View(inputMaterials);
+                try
+                {
+                    InputMaterial inputMaterials = db.InputMaterials.SingleOrDefault(m => m.InputMaterialId == id);
+                    if (inputMaterials == null)
+                    {
+                        return RedirectToAction("InputMaterialIndex", "InputMaterial");
+                    }
+                    else{
+                        var productMaterial = db.ProductMaterials.ToList();
+                        ViewBag.productMaterial = productMaterial;
+                        return View(inputMaterials);
+                    }
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Manage");
+                    ;
+                }
             }
+            
         }
         #endregion
 
