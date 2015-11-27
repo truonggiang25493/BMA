@@ -87,7 +87,7 @@ namespace BMA.Business
         #region Get customer index
         public static List<Customer> GetCustomerIndex()
         {
-            List<Customer> customerList = db.Customers.OrderBy(n => !n.IsActive).ToList();
+            List<Customer> customerList = db.Customers.OrderByDescending(n => n.IsActive).ThenBy(n=>n.CustomerId).ToList();
             return customerList;
         }
         #endregion

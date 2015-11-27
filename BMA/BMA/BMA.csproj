@@ -223,7 +223,9 @@
     <Compile Include="DBChangeNotifer\ChangeInfo.cs" />
     <Compile Include="DBChangeNotifer\ChangeNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeSource.cs" />
+    <Compile Include="DBChangeNotifer\ChangeStatusNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeType.cs" />
+    <Compile Include="DBChangeNotifer\QuantityLowNotifer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

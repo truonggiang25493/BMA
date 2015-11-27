@@ -13,7 +13,7 @@ namespace BMA.Business
 
         public static List<Supplier> GetSupplierList()
         {
-            List<Supplier> supplierList = db.Suppliers.OrderBy(n => n.IsActive).ToList();
+            List<Supplier> supplierList = db.Suppliers.OrderBy(n => n.IsActive).ThenByDescending(n=>n.SupplierId).ToList();
             return supplierList;
         }
         #endregion
