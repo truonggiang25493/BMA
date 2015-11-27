@@ -212,11 +212,11 @@
                                     }
                                 </td>
                                 <td>
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("CustomerDetail", "Customer", new {id = customer.CustomerId}))">
-                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>Xem
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("CustomerDetail", "Customer", new {id = customer.CustomerId}))" data-toggle="tooltip" data-placement="top" title="Xem">
+                                        <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                     </a>
-                                    <button class="btn btn-link btn-xs" onclick="open_container(@(customer.CustomerId));">
-                                        <i class="fa fa-refresh" style="margin-right: 3px"></i>Thay đổi trạng thái
+                                    <button class="btn btn-link btn-xs" onclick="open_container(@(customer.CustomerId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
+                                        <i class="fa fa-refresh" style="margin-right: 3px"></i>
                                         <script type="text/javascript">
                                             function open_container(id) {
                                                 var content = $("<div>", {
@@ -252,29 +252,37 @@
                                             }
 
                                             function change_customer_status(id) {
-                                               
-                                                    $.ajax({
-                                                        "url": "@(Url.Action("ChangeCustomerStatus", "Customer"))",
-                                                        "method": "POST",
-                                                        "data": {
-                                                            "id": id
-                                                        },
-                                                        "success": function (data) {
-                                                            if (data === "1") {
-                                                                $('#myModal').modal('hide');
-                                                                window.location.replace("@Url.Action("CustomerIndex", "Customer", customer.CustomerId)");
-                                                            } else {
-                                                                alert("Khong the");
-                                                            }
-                                                        },
-                                                        "fail": function (e) {
-                                                            alert("Have error" + e);
+
+                                                $.ajax({
+                                                    "url": "@(Url.Action("ChangeCustomerStatus", "Customer"))",
+                                                    "method": "POST",
+                                                    "data": {
+                                                        "id": id
+                                                    },
+                                                    "success": function (data) {
+                                                        if (data === "1") {
+                                                            $('#myModal').modal('hide');
+                                                            window.location.replace("@Url.Action("CustomerIndex", "Customer", customer.CustomerId)");
+                                                        } else {
+                                                            noty({
+                                                                text: 'Bạn không có quyền thực hiện chức năng này.',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1000
+                                                            });
                                                         }
-                                                    });
-                                                }
-                                            
+                                                    },
+                                                    "fail": function (e) {
+                                                        alert("Have error" + e);
+                                                    }
+                                                });
+                                            }
+
                                         </script>
                                     </button>
+
                                     <button class="btn btn-bitbucket btn-xs" id="btn-change-loyal" onclick="open_container(@(customer.CustomerId));" data-toggle="tooltip" data-placement="top" title="Khách hàng thân thiết">
                                         <i class="fa fa-refresh" style="margin-right: 5%;"></i>VIP
                                         <script type="text/javascript">
@@ -324,7 +332,14 @@
                                                                 $('#myModal').modal('hide');
                                                                 window.location.replace("@Url.Action("CustomerIndex", "Customer", customer.CustomerId)");
                                                             } else {
-                                                                alert("Khong the");
+                                                                noty({
+                                                                    text: 'Bạn không có quyền thực hiện chức năng này.',
+                                                                    type: 'warning',
+                                                                    dismissQueue: false,
+                                                                    layout: 'topCenter',
+                                                                    theme: 'defaultTheme',
+                                                                    timeout: 1000
+                                                                });
                                                             }
                                                         },
                                                         "fail": function (e) {

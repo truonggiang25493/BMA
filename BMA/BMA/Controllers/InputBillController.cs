@@ -131,7 +131,7 @@ namespace BMA.Controllers
         #region Add New Input Bill
 
         public int AddInputBill(string supplierIdString, string inputBillAmountString, string inputTaxAmountString,
-            string importDate, string fileName)
+            string importDate, string fileName, string formNo, string serial)
         {
             User staffUser = Session["User"] as User;
             if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
@@ -150,6 +150,8 @@ namespace BMA.Controllers
                     String inputBillCode = supplierIdString + importDate;
                     inputBill.InputBillCode = inputBillCode.Replace("/", "");
                     inputBill.InputRawImage = fileName;
+                    inputBill.FormNo = formNo;
+                    inputBill.Serial = serial;
                 }
                 catch (Exception)
                 {
@@ -296,7 +298,7 @@ namespace BMA.Controllers
 
         [HttpPost]
         public int EditInputBill(int inputBillId, string supplierIdString, string inputBillAmountString,
-            string inputTaxAmountString, string importDate, string fileName)
+            string inputTaxAmountString, string importDate, string fileName, string formNo, string serial)
         {
             User staffUser = Session["User"] as User;
             if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
@@ -311,7 +313,7 @@ namespace BMA.Controllers
                 String inputBillCode = supplierIdString + importDate;
 
                 bool result = InputBillBusiness.EditInputBill(inputBillId, supplierId, inputBillCode, inputBillAmount,
-                    inputBillTaxAmount, fileName, importDate);
+                    inputBillTaxAmount, fileName, importDate, formNo, serial);
                 if (result)
                 {
                     return 2;

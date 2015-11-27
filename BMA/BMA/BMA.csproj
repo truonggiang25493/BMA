@@ -196,6 +196,7 @@
     <Compile Include="Business\TaxBusiness.cs" />
     <Compile Include="Common\CommonData.cs" />
     <Compile Include="Common\CommonFunction.cs" />
+    <Compile Include="Common\XmlResult.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
@@ -358,20 +359,23 @@
     </Compile>
     <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
+    <Compile Include="Models\ViewModel\CustomerRevenueReport.cs" />
     <Compile Include="Models\ViewModel\CustomerViewModel.cs" />
+    <Compile Include="Models\ViewModel\DeclarationVatForm.cs" />
     <Compile Include="Models\ViewModel\DiscardInputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialInfoForProductListViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
     <Compile Include="Models\ViewModel\ReportIncomeViewModel.cs" />
+    <Compile Include="Models\ViewModel\ReportProductIncomeViewModel.cs" />
     <Compile Include="Models\ViewModel\ShortageMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\SupplierViewModel.cs" />
+    <Compile Include="Models\ViewModel\TndnTaxDeclarationViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\AdminLayout\dist\css\ionicons.min.css" />
     <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\CustomerLayout\ajax.googleapis.com\ajax\libs\jquery\1.10.1\jquery.min.js" />
@@ -457,7 +461,6 @@
     <Content Include="Content\CustomerLayout\site\promo\BB2T.jpg" />
     <Content Include="Content\CustomerLayout\site\promo\BBLN.jpg" />
     <Content Include="Content\CustomerLayout\site\promo\BMTN.jpg" />
-    <Content Include="Content\Images\BakeryImages\No-image-found.jpg" />
     <Content Include="Content\CustomerLayout\site\promo\Pudding.jpg" />
     <Content Include="Content\font-awesome-4.3.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.3.0\css\font-awesome.min.css" />
@@ -476,7 +479,6 @@
     <Content Include="Content\Images\BakeryImages\BQ.jpg" />
     <Content Include="Content\Images\BakeryImages\BXX.jpg" />
     <Content Include="Content\Images\BakeryImages\KTC.jpg" />
-    <Content Include="Content\Images\BakeryImages\No-image.jpg" />
     <Content Include="Content\Images\BakeryImages\Pudding.jpg" />
     <Content Include="Content\Images\InputBillImages\InputBillDemo.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
@@ -565,6 +567,7 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\my-own-function.js" />
+    <Content Include="Scripts\numeral.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\timeslider.js" />
@@ -1461,14 +1464,6 @@
     <Content Include="Views\Supplier\EditSupplier.cshtml" />
     <Content Include="Views\Supplier\SupplierDetail.cshtml" />
     <Content Include="Views\Supplier\SupplierIndex.cshtml" />
-    <Content Include="Views\Report\ReviewIncomeByTime.cshtml" />
-    <Content Include="Views\Report\ReviewIncomeWeeklyDetail.cshtml" />
-    <Content Include="Views\Report\ReviewRevenueByProduct.cshtml" />
-    <Content Include="Views\Report\ReviewIncomeWeeklyPartialView.cshtml" />
-    <Content Include="Views\Report\ReviewIncomeMonthlyPartialView.cshtml" />
-    <Content Include="Views\Report\ReviewIncomeMonthlyDetail.cshtml" />
-    <Content Include="Views\Report\ReviewIncomeYearlyPartialView.cshtml" />
-    <Content Include="Views\Report\ReviewIncomeYearlyDetail.cshtml" />
     <Content Include="Views\StoreInfor\EditStoreInfo.cshtml" />
     <Content Include="Views\StoreInfor\Index.cshtml" />
     <Content Include="Views\StoreInfor\LogoPartial.cshtml" />
@@ -1486,10 +1481,33 @@
     <Content Include="Views\StoreInfor\ConfigIndex.cshtml" />
     <Content Include="Views\Account\GetPassword.cshtml" />
     <Content Include="Views\Account\CreateNewPassword.cshtml" />
-    <Content Include="Views\ManageMaterial\Detail.cshtml" />
-    <Content Include="Views\ManageMaterial\Edit.cshtml" />
-    <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
-    <Content Include="Views\Product\CategoryPartial.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeByTime.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeMonthlyDetail.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeMonthlyPartialView.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeWeeklyDetail.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeWeeklyPartialView.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeYearlyDetail.cshtml" />
+    <Content Include="Views\Report\ReviewIncomeYearlyPartialView.cshtml" />
+    <Content Include="Views\Report\ReviewRevenueByProduct.cshtml" />
+    <Content Include="Views\Report\ReviewRevenuePerCustomer.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueMonthlyDetail.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueMonthlyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueWeeklyDetail.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueWeeklyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueYearlyDetail.cshtml" />
+    <Content Include="Views\Report\Top10CustomerRevenueYearlyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeMonthlyDetail.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeMonthlyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeWeeklyDetail.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeWeeklyPartialView.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeYearlyDetail.cshtml" />
+    <Content Include="Views\Report\Top10ProductIncomeYearlyPartialView.cshtml" />
+    <Content Include="Views\Tax\Index.cshtml" />
+    <Content Include="Views\Tax\TaxDeclaration.cshtml" />
+    <Content Include="Views\Tax\InputVatListExport.cshtml" />
+    <Content Include="Views\Tax\OutputVatList.cshtml" />
+    <Content Include="Views\Tax\TaxDeclarationExport.cshtml" />
+    <Content Include="Views\Tax\TndnTaxDeclaration.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

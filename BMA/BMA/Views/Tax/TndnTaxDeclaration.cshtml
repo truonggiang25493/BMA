@@ -1,0 +1,1689 @@
+﻿@using System.Globalization
+@model BMA.Models.ViewModel.TndnTaxDeclarationViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>TndnTaxDeclaration</title>
+    <!-- CSS -->
+    <link href="~/Content/AdminLayout/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .content {
+            font-family: "Times New Roman", Times, serif;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!--Body-->
+        <div class="content">
+            <form id="tndnTaxDeclaration" method="POST" action="@(Url.Action("ExportXmlTndnTaxDeclaration","Tax"))">
+                <!--Header-->
+                <div class="row" style="text-align: center;">
+                    <h4 style="font-weight: bold; margin-bottom: 0">
+                        CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                    </h4>
+                    <h4 style="font-weight: bold; margin: 0">
+                        Độc lập - Tự do - Hạnh phúc
+                    </h4>
+                    <p>_____________________</p>
+                </div>
+                <!--Title-->
+                <div class="row" style="text-align: center;">
+                    <h3 style="font-weight: bold; margin-bottom: 0">
+                        TỜ KHAI QUYẾT TOÁN THUẾ THU NHẬP DOANH NGHIỆP
+                    </h3>
+                    <h4 style="font-weight: bold; margin: 0">
+                        [01]&nbsp;Kỳ tính thuế @(Model.Year) từ @(new DateTime(Model.Year, 1, 1).ToString("dd/MM/yyyy")) đến @(new DateTime(Model.Year, 1, 1).AddYears(1).AddDays(-1).ToString("dd/MM/yyyy"))
+                    </h4>
+                    <input type="hidden" name="taxYear" value="@(Model.Year)" />
+                </div>
+                <!--Subtitle-->
+                <div class="row" style="text-align: center; margin-top: 10px">
+                    <p style="font-size: 18px; margin: 0">[02] Lần đầu&nbsp;&nbsp;[X]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[03] Bổ sung lần thứ:</p>
+                    <p style="font-size: 18px; margin: 0">
+                        <input type="checkbox" @((Model.CompanyType1 != null && Model.CompanyType1) ? "checked='checked'" : "") name="companyType1" />&nbsp;&nbsp;Doanh nghiệp có quy mô vừa và nhỏ
+                    </p>
+                    <p style="font-size: 18px; margin: 0">
+                        <input type="checkbox" @((Model.CompanyType2 != null && Model.CompanyType2) ? "checked='checked'" : "") name="companyType2" />&nbsp;&nbsp;Doanh nghiệp có cơ sở sản xuất hạch toán phụ thuộc
+                    </p>
+                    <p style="font-size: 18px; margin: 0">
+                        <input type="checkbox" @((Model.CompanyType3 != null && Model.CompanyType3) ? "checked='checked'" : "") name="companyType3" />&nbsp;&nbsp;Doanh nghiệp thuộc đối tượng kê khai thông tin giao dịch liên kết
+                    </p>
+                    <p style="font-size: 18px; margin: 0">
+                        [04]&nbsp;Ngành nghề có tỷ lệ doanh thu cao nhất:&nbsp;
+                        <span id="maxRevenueArea"></span>&nbsp;,
+                        <input type="hidden" name="maxRevenueAreaName" />
+                        <input type="hidden" name="maxRevenueAreaNo" />
+                    </p>
+                    <p style="font-size: 18px; margin: 0">
+                        [05] Tỷ lệ (%):&nbsp;&nbsp;
+                        <input type="text" name="value5" value="@(Model.TndnTaxRate)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                        &nbsp;&nbsp;%
+                    </p>
+                </div>
+                <!--Store Owner Info-->
+                <div class="row" style="margin-top: 15px">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3">
+                        <h4 style="font-weight: bold">[06] Tên người nộp thuế :</h4>
+                    </div>
+                    <div class="col-md-5" style="padding-top: 6px">
+                        <p style="font-weight: bold; font-size: 18px">@(Model.StoreOwnerName)</p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row" style="margin-top: 0">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3" style="vertical-align: middle">
+                        <p style="font-size: 18px; margin: 0;">[07] Mã số thuế :</p>
+                    </div>
+                    <div class="col-md-5">
+                        <table style="margin: 0">
+                            <tbody>
+                                <tr>
+                                    @if (Model.StoreTaxCode != null && !Model.StoreTaxCode.IsEmpty() && Model.StoreTaxCode.Length == 13)
+                                    {
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(0))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(1))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(2))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(3))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(4))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(5))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(6))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(7))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(8))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(9))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(10))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(11))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(12))</td>
+                                    }
+                                    else if (Model.StoreTaxCode != null && !Model.StoreTaxCode.IsEmpty() && Model.StoreTaxCode.Length == 10)
+                                    {
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(0))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(1))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(2))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(3))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(4))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(5))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(6))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(7))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(8))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.ElementAt(9))</td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                    }
+                                    else
+                                    {
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3" style="padding-left: 14px">
+                        <h4 style="font-weight: bold">[08] Địa chỉ: </h4>
+                    </div>
+                    <div class="col-md-5" style="padding-top: 6px">
+                        <p style="font-size: 18px">@(Model.StoreAddress)</p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px;">
+                            [09] Quận/huyện:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px">@(Model.StoreDistrict)</p>
+                    </div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px">
+                            [10] Tỉnh/Thành phố:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px">@(Model.StoreProvince)</p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px;">
+                            [11] Điện thoại:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px">@(Model.StorePhone)</p>
+                    </div>
+                    <div class="col-md-1">
+                        <p style="font-size: 18px;">
+                            [12] Fax:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px">@(Model.StoreFax)</p>
+                    </div>
+                    <div class="col-md-1" style="padding-right: 0">
+                        <p style="font-size: 18px;">
+                            [13] Email:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px">@(Model.StoreEmail)</p>
+                    </div>
+                </div>
+
+                <!--Vat Agent Info-->
+                <div class="row" style="margin-top: 0">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3">
+                        <h4 style="font-weight: bold">[14] Tên đại lý thuế (nếu có):</h4>
+                    </div>
+                    <div class="col-md-5" style="padding-top: 6px">
+                        <input type="text" name="vatAgentOwnerName" value="@(Model.VatAgentOwnerName)" />
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row" style="margin-top: 0">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3" style="vertical-align: middle">
+                        <p style="font-size: 18px; margin: 0;">[15] Mã số thuế :</p>
+                    </div>
+                    <div class="col-md-5">
+                        <table style="margin: 0">
+                            <tbody>
+                                <tr>
+                                    @if (Model.VatAgentTaxCode != null && !Model.VatAgentTaxCode.IsEmpty() && Model.VatAgentTaxCode.Length == 13)
+                                    {
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(0))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(1))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(2))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(3))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(4))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(5))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(6))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(7))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(8))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(9))" />
+                                        </td>
+
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(10))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(11))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(12))" />
+                                        </td>
+                                    }
+                                    else if (Model.VatAgentTaxCode != null && !Model.VatAgentTaxCode.IsEmpty() && Model.VatAgentTaxCode.Length == 10)
+                                    {
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(0))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(1))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(2))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(3))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(4))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(5))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(6))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(7))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(8))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.VatAgentTaxCode.ElementAt(9))" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                    }
+                                    else
+                                    {
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                        <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                            <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3" style="padding-left: 14px">
+                        <h4 style="font-weight: bold">[16] Địa chỉ: </h4>
+                    </div>
+                    <div class="col-md-5" style="padding-top: 6px">
+                        <input type="text" name="vatAgentAddress" value="@(Model.VatAgentAddress)" />
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px;">
+                            [17] Quận/huyện:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="vatAgentDistrict" style="width: 100%" value="@(Model.VatAgentDistrict)">
+                    </div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px">
+                            [18] Tỉnh/Thành phố:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="vatAgentProvince" style="width: 100%" value="@(Model.VatAgentProvince)" />
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <p style="font-size: 18px;">
+                            [11] Điện thoại:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="vatAgentPhone" style="width: 100%" value="@(Model.VatAgentPhone)" />
+                    </div>
+                    <div class="col-md-1">
+                        <p style="font-size: 18px;">
+                            [12] Fax:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="vatAgentFax" style="width: 100%" value="@(Model.VatAgentFax)" />
+                    </div>
+                    <div class="col-md-1" style="padding-right: 0">
+                        <p style="font-size: 18px;">
+                            [13] Email:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="vatAgentEmail" style="width: 100%" value="@(Model.VatAgentEmail)" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3">
+                        <p style="font-size: 18px;">
+                            [22] Hợp đồng đại lý thuế: số:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="value22No" style="width: 100%" value="@(Model.Value22No == null ? "" : Model.Value22No.ToString())" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                    </div>
+                    <div class="col-md-1">
+                        <p style="font-size: 18px;">
+                            ngày:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="date" name="value22Date" style="width: 100%" value="@((Model.Value22Date == null) ? "2013-01-01" : Model.Value22Date.ToString("yyyy-MM-dd"))" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <p class="pull-right" style="font-size: 18px; font-style: italic">
+                            Đơn vị tiền: đồng Việt Nam
+                        </p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <!--Table-->
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <table class="table table-bordered" style="font-size: 16px">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-1" style="text-align: center; vertical-align: middle">STT</th>
+                                        <th class="col-md-8" style="text-align: center; vertical-align: middle">Chỉ tiêu</th>
+                                        <th class="col-md-1" style="text-align: center; vertical-align: middle">Mã chỉ tiêu</th>
+                                        <th class="col-md-2" style="text-align: center; vertical-align: middle">Số tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="font-size: 14px;">
+                                        <td class="col-md-1" style="text-align: center; height: 15px; padding: 0">(1)</td>
+                                        <td class="col-md-8" style="text-align: center; height: 15px; padding: 0">(2)</td>
+                                        <td class="col-md-1" style="text-align: center; height: 15px; padding: 0">(3)</td>
+                                        <td class="col-md-2" style="text-align: center; height: 15px; padding: 0">(4)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center"><b>A</b></td>
+                                        <td class="col-md-8">
+                                            <b>Kết quả kinh doanh ghi nhận theo báo cáo tài chính</b>
+                                        </td>
+                                        <td class="col-md-1" style="text-align: center">
+                                            <b>A</b>
+                                        </td>
+                                        <td class="col-md-2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center">
+                                            1
+                                        </td>
+                                        <td class="col-md-8">
+                                            Tổng lợi nhuận kế toán trước thuế thu nhập doanh nghiệp
+                                        </td>
+                                        <td class="col-md-1" style="text-align: center">
+                                            A1
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" name="valueA1" data-role="number" value="@(Model.ValueA1.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center"><b>B</b></td>
+                                        <td class="col-md-8">
+                                            <b>Xác định thu nhập chịu thuế theo Luật thuế thu nhập doanh nghiệp</b>
+                                        </td>
+                                        <td class="col-md-1" style="text-align: center">
+                                            <b>B</b>
+                                        </td>
+                                        <td class="col-md-2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle"><b>1</b></td>
+                                        <td class="col-md-8">
+                                            Điều chỉnh tăng tổng lợi nhuận trước thuế thu nhập doanh nghiệp
+                                            (B1= B2+B3+B4+B5+B6 +B7)
+                                        </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">
+                                            B1
+                                        </td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB1" readonly="readonly" data-role="number" value="@(Model.ValueB1.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">1.1</td>
+                                        <td class="col-md-8">Các khoản điều chỉnh tăng doanh thu</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B2</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB2.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">1.2</td>
+                                        <td class="col-md-8">Chi phí của phần doanh thu điều chỉnh giảm </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B3</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB3" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB3.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">1.3</td>
+                                        <td class="col-md-8">Các khoản chi không được trừ khi xác định thu nhập chịu thuế</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B4</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB4" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB4.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">1.4</td>
+                                        <td class="col-md-8">Thuế thu nhập đã nộp cho phần thu nhập nhận được ở nước ngoài</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B5</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB5" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB5.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">1.5</td>
+                                        <td class="col-md-8">Điều chỉnh tăng lợi nhuận do xác định giá thị trường đối với giao dịch liên kết</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B6</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB6" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB6.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">1.6</td>
+                                        <td class="col-md-8">Các khoản điều chỉnh làm tăng lợi nhuận trước thuế khác</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B7</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB7" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB7.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">2</td>
+                                        <td class="col-md-8">Điều chỉnh giảm tổng lợi nhuận trước thuế thu nhập doanh nghiệp (B8=B9+B10+B11)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B8</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB8" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB8.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">2.1</td>
+                                        <td class="col-md-8">Giảm trừ các khoản doanh thu đã tính thuế năm trước </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B9</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB9" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB9.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">2.2</td>
+                                        <td class="col-md-8">Chi phí của phần doanh thu điều chỉnh tăng </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B10</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB10.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">2.3</td>
+                                        <td class="col-md-8">Các khoản điều chỉnh làm giảm lợi nhuận trước thuế khác</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B11</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB11" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB11.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">3</td>
+                                        <td class="col-md-8">Tổng thu nhập chịu thuế (B12=A1+B1-B8)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B12</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB12" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB12.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">3.1</td>
+                                        <td class="col-md-8">Thu nhập chịu thuế từ hoạt động sản xuất kinh doanh</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B13</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB13" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB13.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">3.2</td>
+                                        <td class="col-md-8">Thu nhập chịu thuế từ hoạt động chuyển nhượng bất động sản (B14=B12-B13)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">B14</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueB14" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueB14.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center"><b>C</b></td>
+                                        <td class="col-md-8">
+                                            <b>Xác định thuế thu nhập doanh nghiệp ( TNDN) phải nộp từ hoạt động sản xuất kinh doanh</b>
+                                        </td>
+                                        <td class="col-md-1" style="text-align: center">
+                                            <b>C</b>
+                                        </td>
+                                        <td class="col-md-2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">1</td>
+                                        <td class="col-md-8">Thu nhập chịu thuế (C1 = B13)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C1</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC1" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC1.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle"><b>2</b></td>
+                                        <td class="col-md-8">Thu nhập miễn thuế</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C2</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC2.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">3</td>
+                                        <td class="col-md-8">Chuyển lỗ và bù trừ lãi, lỗ</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C3</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC3" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC3.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">3.1</td>
+                                        <td class="col-md-8">Lỗ từ hoạt động SXKD được chuyển trong kỳ </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C3a</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC3a" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC3a.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">3.2</td>
+                                        <td class="col-md-8">Lỗ từ chuyển nhượng BĐS được bù trừ với lãi của hoạt động SXKD</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C3b</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC3b" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC3b.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">4</td>
+                                        <td class="col-md-8">Thu nhập tính thuế (TNTT) (C4=C1-C2-C3a-C3b)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C4</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC4" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC4.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">5</td>
+                                        <td class="col-md-8">Trích lập quỹ khoa học công nghệ (nếu có)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C5</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC5" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC5.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">6</td>
+                                        <td class="col-md-8">TNTT sau khi đã trích lập quỹ khoa học công nghệ (C6=C4-C5=C7+C8+C9)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C6</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC6" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC6.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">6.1</td>
+                                        <td class="col-md-8">Trong đó: + Thu nhập tính thuế tính theo thuế suất 22% (bao gồm cả thu nhập được áp dụng thuế suất ưu đãi)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C7</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC7" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC7.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">6.2</td>
+                                        <td class="col-md-8"> + Thu nhập tính thuế tính theo thuế suất 20% (bao gồm cả thu nhập được áp dụng thuế suất ưu đãi)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C8</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC8" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC8.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle" rowspan="2">6.3</td>
+                                        <td class="col-md-8"> + Thu nhập tính thuế tính theo thuế suất không ưu đãi khác</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C9</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC9" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC9.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-8"> + Thuế suất không ưu đãi khác (%)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C9a</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC9a" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC9a.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">7</td>
+                                        <td class="col-md-8">Thuế TNDN từ hoạt động SXKD tính theo thuế suất không ưu đãi (C10 =(C7 x 22%) + (C8 x 20%) + (C9 x C9a))</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C10</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC10" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC10.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">8</td>
+                                        <td class="col-md-8">Thuế TNDN chênh lệch do áp dụng mức thuế suất ưu đãi</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C11</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC11" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC11.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">9</td>
+                                        <td class="col-md-8">Thuế TNDN được miễn, giảm trong kỳ</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C12</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC12" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC12.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">9.1</td>
+                                        <td class="col-md-8">Trong đó: + Số thuế TNDN được miễn, giảm theo Hiệp định</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C13</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC13" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC13.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">9.2</td>
+                                        <td class="col-md-8">+ Số thuế TNDN được miễn, giảm không theo Luật Thuế TNDN </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C14</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC14" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC14.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">11</td>
+                                        <td class="col-md-8">Số thuế thu nhập đã nộp ở nước ngoài được trừ trong kỳ tính thuế</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C15</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC15" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC15.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">12</td>
+                                        <td class="col-md-8">Thuế TNDN của hoạt động sản xuất kinh doanh (C16=C10-C11-C12-C15)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">C16</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueC16" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueC16.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr style="font-weight: bold">
+                                        <td class="col-md-1" style="text-align: center"><b>D</b></td>
+                                        <td class="col-md-8">
+                                            <b>Tổng số thuế TNDN phải nộp (D=D1+D2+D3)</b>
+                                        </td>
+                                        <td class="col-md-1" style="text-align: center">
+                                            <b>D</b>
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" name="valueD" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueD.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">1</td>
+                                        <td class="col-md-8">Thuế TNDN của hoạt động sản xuất kinh doanh (D1=C16)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">D1</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueD1" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueD1.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">2</td>
+                                        <td class="col-md-8">Thuế TNDN từ hoạt động chuyển nhượng bất động sản </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">D2</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueD2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueD2.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">3</td>
+                                        <td class="col-md-8">Thuế TNDN phải nộp khác (nếu có) </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">D3</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueD3" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueD3.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr style="font-weight: bold">
+                                        <td class="col-md-1" style="text-align: center"><b>E</b></td>
+                                        <td class="col-md-8">
+                                            <b>Số thuế TNDN đã tạm nộp trong năm (E = E1+E2+E3)</b>
+                                        </td>
+                                        <td class="col-md-1" style="text-align: center">
+                                            <b>E</b>
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" name="valueE" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueE.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">1</td>
+                                        <td class="col-md-8">Thuế TNDN của hoạt động sản xuất kinh doanh </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">E1</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueE1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueE1.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">2</td>
+                                        <td class="col-md-8">Thuế TNDN từ hoạt động chuyển nhượng bất động sản </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">E2</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueE2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueE2.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">3</td>
+                                        <td class="col-md-8">Thuế TNDN phải nộp khác (nếu có) </td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">E3</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueE3" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueE3.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr style="font-weight: bold">
+                                        <td class="col-md-1" style="text-align: center"><b>G</b></td>
+                                        <td class="col-md-8">
+                                            <b>Tổng số thuế TNDN còn phải nộp (G = G1+G2+G3)</b>
+                                        </td>
+                                        <td class="col-md-1" style="text-align: center">
+                                            <b>G</b>
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" name="valueG" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueG.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">1</td>
+                                        <td class="col-md-8">Thuế TNDN của hoạt động sản xuất kinh doanh (G1 = D1-E1)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">G1</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueG1" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueG1.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">2</td>
+                                        <td class="col-md-8">Thuế TNDN từ hoạt động chuyển nhượng bất động sản (G2 = D2-E2)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">G2</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueG2" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueG2.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">3</td>
+                                        <td class="col-md-8">Thuế TNDN phải nộp khác (nếu có) (G3 = D3-E3)</td>
+                                        <td class="col-md-1" style="text-align: center; vertical-align: middle">G3</td>
+                                        <td class="col-md-2" style="vertical-align: middle">
+                                            <input type="text" name="valueG3" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueG3.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr style="font-weight: bold">
+                                        <td class="col-md-1" style="text-align: center"><b>H</b></td>
+                                        <td class="col-md-8">
+                                            <b>20% số thuế TNDN phải nộp (H = D*20%)</b>
+                                        </td>
+                                        <td class="col-md-1" style="text-align: center">
+                                            <b>H</b>
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" name="valueH" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueH.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                    <tr style="font-weight: bold">
+                                        <td class="col-md-1" style="text-align: center"><b>I</b></td>
+                                        <td class="col-md-8">
+                                            <b>Chênh lệch giữa số thuế TNDN còn phải nộp với 20% số thuế TNDN phải nộp (I = G-H)</b>
+                                        </td>
+                                        <td class="col-md-1" style="text-align: center">
+                                            <b>I</b>
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" name="valueI" readonly="readonly" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="width: 100%; text-align: right" data-role="number" value="@(Model.ValueI.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <!--Extend submit Tax-->
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <p style="font-weight: bold; font-size: 18px">
+                            L. Gia hạn nộp thuế (nếu có)
+                        </p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-7">
+                        <p style="font-size: 18px">
+                            [L1] Đối tượng được gia hạn <input type="checkbox" name="valueL1" />
+                        </p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-7">
+                        <p style="font-size: 18px">
+                            [L2] Trường hợp được gia hạn nộp thuế TNDN theo :
+                            <input type="hidden" name="valueL2Name" />
+                            <input type="hidden" name="valueL2Code" />
+                        </p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-4">
+                        <p style="font-size: 18px">
+                            [L3] Thời hạn được gia hạn:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="date" name="valueL3" style="width: 100%" />
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-4">
+                        <p style="font-size: 18px">
+                            [L4] Số thuế TNDN được gia hạn :
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="valueL4" data-role="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0" style="width: 100%; text-align: right" />
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-4">
+                        <p style="font-size: 18px">
+                            [L5] Số thuế TNDN không được gia hạn :
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="valueL5" data-role="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0" style="width: 100%; text-align: right" />
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <p style="font-weight: bold; font-size: 18px;">
+                            M.Tiền chậm nộp của khoản chênh lệch từ 20% trở lên đến ngày hết hạn nộp hồ sơ quyết toán thuế TNDN (trường hợp kê khai quyết toán và nộp thuế theo quyết toán trước thời hạn thì tính đến ngày nộp thuế)
+                        </p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3">
+                        <p style="font-size: 18px">
+                            [M1] Số ngày chậm nộp:
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p style="font-size: 18px">
+                            <input type="text" readonly="readonly" name="valueM1DayQuantity" style="width: 50px" />
+                            ngày, từ ngày
+                            <input type="date" name="valueM1FromDate" style="width: 150px" />
+                            đến ngày
+                            <input type="date" name="valueM1ToDate" style="width: 150px" />
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3">
+                        <p style="font-size: 18px">
+                            [M2] Số tiền chậm nộp:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="valueM2" data-role="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0" style="width: 100%; text-align: right" />
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+                @*<div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <p style="font-weight: bold; font-size: 18px;">
+                        I. Ngoài các Phụ lục của  tờ khai này, chúng tôi gửi kèm theo các tài liệu sau:
+                    </p>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="row" style="font-size: 18px">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-1" style="text-align: center">STT</th>
+                                    <th class="col-md-10" style="text-align: center">Tên tài liệu</th>
+                                    <th class="col-md-1"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="col-md-1" style="text-align: center; font-weight: bold">1</td>
+                                    <td class="col-md-10"></td>
+                                    <td class="col-md-1"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>*@
+                <div class="row" style="font-size: 18px">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-7">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tôi cam đoan là các số liệu, tài liệu kê khai này là đúng và tự chịu trách nhiệm trước pháp luật về số liệu, tài liệu đã kê khai./.
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <p style="font-size: 18px; font-style: italic; text-align: center">
+                            Ngày
+                            <input type="number" min="1" max="31" name="createDay" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0" style="width: 50px; text-align: right" />
+                            &nbsp;tháng&nbsp;
+                            <input type="number" min="1" max="12s" name="createMonth" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0" style="width: 50px; text-align: right" />
+                            &nbsp;năm 2015
+                        </p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                        <p style="font-size: 18px; font-weight: bold; text-align: center">NHÂN VIÊN ĐẠI LÝ THUẾ</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p style="font-size: 18px; font-weight: bold; text-align: center">NGƯỜI NỘP THUẾ hoặc</p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-1" style="padding-left: 0">
+                        <p style="font-size: 18px;">
+                            Họ và tên:
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="agentName" style="width: 100%; font-size: 18px" />
+                    </div>
+                    <div class="col-md-4">
+                        <p style="font-size: 18px; font-weight: bold; text-align: center"> ĐẠI DIỆN HỢP PHÁP CỦA NGƯỜI NỘP THUẾ</p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2" style="padding-left: 0">
+                        <p style="font-size: 18px;">
+                            Chứng chỉ hành nghề số:
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="agentNo" style="width: 100%; font-size: 18px" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2" style="height: 50px"></div>
+                    <div class="col-md-4" style="height: 50px">
+                    </div>
+                    <div class="col-md-4" style="height: 50px">
+                        <input type="text" name="signName"style="font-size: 18px; text-align: center;" value="@(Model.SignName)"/>
+                    </div>
+                    <div class="col-md-2" style="height: 50px"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4">
+                        <p style="font-size: 18px; font-style: italic; text-align: center">(Ký, ghi rõ họ tên; chức vụ và đóng dấu (nếu có))</p>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <p style="font-size: 18px; font-weight: bold; font-style: italic">Ghi chú</p><span style="font-size: 18px; font-style: italic">- TNDN: Thu nhập doanh nghiệp</span>
+                    </div>
+                    <div class="col-md-2"></div>
+
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer" style="margin-bottom: 20px;">
+            <button class="btn btn-primary btn-sm pull-right" onclick="saveTndnTaxDeclaration()" style="margin-left: 10px;">
+                <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> Lưu
+            </button>
+            <button class="btn btn-info  btn-sm pull-right" onclick="exportXmlTndnTaxDeclaration()">
+                <span class="glyphicon glyphicon-export" aria-hidden="true"></span> Xuất XML
+            </button>
+            <button class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Hủy
+            </button>
+        </div>
+    </div>
+    <!-- Javascript -->
+    <script src="~/Content/AdminLayout/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="~/Content/AdminLayout/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/numeral.js"></script>
+    <script type="text/javascript">
+        $("[data-role='number'").on('input', function () {
+            var data = $(this).val();
+            data = data.split(".").join("");
+            data = numeral(data).format('0,0').split(",").join(".");
+            $(this).val(data);
+        });
+
+        $("[name='valueB2']").on('input', function () {
+            var dataB2 = parseInt($(this).val().split(".").join(""));
+            var dataB3 = parseInt($("[name='valueB3']").val().split(".").join(""));
+            var dataB4 = parseInt($("[name='valueB4']").val().split(".").join(""));
+            var dataB5 = parseInt($("[name='valueB5']").val().split(".").join(""));
+            var dataB6 = parseInt($("[name='valueB6']").val().split(".").join(""));
+            var dataB7 = parseInt($("[name='valueB7']").val().split(".").join(""));
+
+            var data = dataB2 + dataB3 + dataB4 + dataB5 + dataB6 + dataB7;
+            $("[name='valueB1']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB1']").trigger('change');
+        });
+
+        $("[name='valueB3']").on('input', function () {
+            var dataB2 = parseInt($(this).val().split(".").join(""));
+            var dataB3 = parseInt($("[name='valueB2']").val().split(".").join(""));
+            var dataB4 = parseInt($("[name='valueB4']").val().split(".").join(""));
+            var dataB5 = parseInt($("[name='valueB5']").val().split(".").join(""));
+            var dataB6 = parseInt($("[name='valueB6']").val().split(".").join(""));
+            var dataB7 = parseInt($("[name='valueB7']").val().split(".").join(""));
+
+            var data = dataB2 + dataB3 + dataB4 + dataB5 + dataB6 + dataB7;
+            $("[name='valueB1']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB1']").trigger('change');
+        });
+
+        $("[name='valueB4']").on('input', function () {
+            var dataB2 = parseInt($(this).val().split(".").join(""));
+            var dataB3 = parseInt($("[name='valueB2']").val().split(".").join(""));
+            var dataB4 = parseInt($("[name='valueB3']").val().split(".").join(""));
+            var dataB5 = parseInt($("[name='valueB5']").val().split(".").join(""));
+            var dataB6 = parseInt($("[name='valueB6']").val().split(".").join(""));
+            var dataB7 = parseInt($("[name='valueB7']").val().split(".").join(""));
+
+            var data = dataB2 + dataB3 + dataB4 + dataB5 + dataB6 + dataB7;
+            $("[name='valueB1']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB1']").trigger('change');
+        });
+
+        $("[name='valueB5']").on('input', function () {
+            var dataB2 = parseInt($(this).val().split(".").join(""));
+            var dataB3 = parseInt($("[name='valueB2']").val().split(".").join(""));
+            var dataB4 = parseInt($("[name='valueB3']").val().split(".").join(""));
+            var dataB5 = parseInt($("[name='valueB4']").val().split(".").join(""));
+            var dataB6 = parseInt($("[name='valueB6']").val().split(".").join(""));
+            var dataB7 = parseInt($("[name='valueB7']").val().split(".").join(""));
+
+            var data = dataB2 + dataB3 + dataB4 + dataB5 + dataB6 + dataB7;
+            $("[name='valueB1']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB1']").trigger('change');
+        });
+
+        $("[name='valueB6']").on('input', function () {
+            var dataB2 = parseInt($(this).val().split(".").join(""));
+            var dataB3 = parseInt($("[name='valueB2']").val().split(".").join(""));
+            var dataB4 = parseInt($("[name='valueB3']").val().split(".").join(""));
+            var dataB5 = parseInt($("[name='valueB5']").val().split(".").join(""));
+            var dataB6 = parseInt($("[name='valueB4']").val().split(".").join(""));
+            var dataB7 = parseInt($("[name='valueB7']").val().split(".").join(""));
+
+            var data = dataB2 + dataB3 + dataB4 + dataB5 + dataB6 + dataB7;
+            $("[name='valueB1']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB1']").trigger('change');
+        });
+
+        $("[name='valueB7']").on('input', function () {
+            var dataB2 = parseInt($(this).val().split(".").join(""));
+            var dataB3 = parseInt($("[name='valueB2']").val().split(".").join(""));
+            var dataB4 = parseInt($("[name='valueB3']").val().split(".").join(""));
+            var dataB5 = parseInt($("[name='valueB5']").val().split(".").join(""));
+            var dataB6 = parseInt($("[name='valueB6']").val().split(".").join(""));
+            var dataB7 = parseInt($("[name='valueB4']").val().split(".").join(""));
+
+            var data = dataB2 + dataB3 + dataB4 + dataB5 + dataB6 + dataB7;
+            $("[name='valueB1']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB1']").trigger('change');
+        });
+
+        $("[name='valueB9']").on('input', function () {
+            var dataB2 = parseInt($(this).val().split(".").join(""));
+            var dataB3 = parseInt($("[name='valueB10']").val().split(".").join(""));
+            var dataB4 = parseInt($("[name='valueB11']").val().split(".").join(""));
+
+            var data = dataB2 + dataB3 + dataB4;
+            $("[name='valueB8']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB8']").trigger('change');
+        });
+
+        $("[name='valueB10']").on('input', function () {
+            var dataB2 = parseInt($(this).val().split(".").join(""));
+            var dataB3 = parseInt($("[name='valueB9']").val().split(".").join(""));
+            var dataB4 = parseInt($("[name='valueB11']").val().split(".").join(""));
+
+            var data = dataB2 + dataB3 + dataB4;
+            $("[name='valueB8']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB8']").trigger('change');
+        });
+
+        $("[name='valueB11']").on('input', function () {
+            var dataB2 = parseInt($(this).val().split(".").join(""));
+            var dataB3 = parseInt($("[name='valueB10']").val().split(".").join(""));
+            var dataB4 = parseInt($("[name='valueB9']").val().split(".").join(""));
+
+            var data = dataB2 + dataB3 + dataB4;
+            $("[name='valueB8']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB8']").trigger('change');
+        });
+
+        $("[name='valueA1']").on('input', function () {
+            var dataA1 = parseInt($(this).val().split(".").join(""));
+            var dataB1 = parseInt($("[name='valueB1']").val().split(".").join(""));
+            var dataB8 = parseInt($("[name='valueB8']").val().split(".").join(""));
+
+            var data = dataA1 + dataB1 - dataB8;
+            $("[name='valueB12']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB12']").trigger('change');
+        });
+
+        $("[name='valueB1']").on('change', function () {
+            var dataB1 = parseInt($(this).val().split(".").join(""));
+            var dataA1 = parseInt($("[name='valueA1']").val().split(".").join(""));
+            var dataB8 = parseInt($("[name='valueB8']").val().split(".").join(""));
+
+            var data = dataA1 + dataB1 - dataB8;
+            $("[name='valueB12']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB12']").trigger('change');
+        });
+
+        $("[name='valueB8']").on('change', function () {
+            var dataB8 = parseInt($(this).val().split(".").join(""));
+            var dataA1 = parseInt($("[name='valueA1']").val().split(".").join(""));
+            var dataB1 = parseInt($("[name='valueB1']").val().split(".").join(""));
+
+            var data = dataA1 + dataB1 - dataB8;
+            $("[name='valueB12']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB12']").trigger('change');
+        });
+
+        $("[name='valueB14']").on('change', function () {
+            var dataB14 = parseInt($(this).val().split(".").join(""));
+            var dataB12 = parseInt($("[name='valueB12']").val().split(".").join(""));
+
+            var data = dataB12 - dataB14;
+            $("[name='valueB13']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB13']").trigger('change');
+
+            $("[name='valueC1']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC1']").trigger('change');
+        });
+
+        $("[name='valueB12']").on('change', function () {
+            var dataB12 = parseInt($(this).val().split(".").join(""));
+            var dataB14 = parseInt($("[name='valueB14']").val().split(".").join(""));
+
+            var data = dataB12 - dataB14;
+            $("[name='valueB13']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueB13']").trigger('change');
+
+            $("[name='valueC1']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC1']").trigger('change');
+        });
+
+        $("[name='valueC1']").on('change', function () {
+            var dataC1 = parseInt($(this).val().split(".").join(""));
+            var dataC2 = parseInt($("[name='valueC2']").val().split(".").join(""));
+            var dataC3a = parseInt($("[name='valueC3a']").val().split(".").join(""));
+            var dataC3b = parseInt($("[name='valueC3b']").val().split(".").join(""));
+
+            var data = dataC1 - dataC2 - dataC3a - dataC3b;
+            $("[name='valueC4']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC4']").trigger('change');
+        });
+
+        $("[name='valueC2']").on('change', function () {
+            var dataC2 = parseInt($(this).val().split(".").join(""));
+            var dataC1 = parseInt($("[name='valueC1']").val().split(".").join(""));
+            var dataC3a = parseInt($("[name='valueC3a']").val().split(".").join(""));
+            var dataC3b = parseInt($("[name='valueC3b']").val().split(".").join(""));
+
+            var data = dataC1 - dataC2 - dataC3a - dataC3b;
+            $("[name='valueC4']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC4']").trigger('change');
+        });
+
+        $("[name='valueC3a']").on('change', function () {
+            var dataC3a = parseInt($(this).val().split(".").join(""));
+            var dataC2 = parseInt($("[name='valueC2']").val().split(".").join(""));
+            var dataC1 = parseInt($("[name='valueC1']").val().split(".").join(""));
+            var dataC3b = parseInt($("[name='valueC3b']").val().split(".").join(""));
+
+            var data = dataC1 - dataC2 - dataC3a - dataC3b;
+            $("[name='valueC4']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC4']").trigger('change');
+
+            var data1 = dataC3a + dataC3b;
+            $("[name='valueC3']").val(numeral(data1).format('0,0').split(",").join("."));
+            $("[name='valueC3']").trigger('change');
+        });
+
+        $("[name='valueC3b']").on('change', function () {
+            var dataC3b = parseInt($(this).val().split(".").join(""));
+            var dataC2 = parseInt($("[name='valueC2']").val().split(".").join(""));
+            var dataC3a = parseInt($("[name='valueC3a']").val().split(".").join(""));
+            var dataC1 = parseInt($("[name='valueC1']").val().split(".").join(""));
+
+            var data = dataC1 - dataC2 - dataC3a - dataC3b;
+
+            $("[name='valueC4']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC4']").trigger('change');
+
+            var data1 = dataC3a + dataC3b;
+            $("[name='valueC3']").val(numeral(data1).format('0,0').split(",").join("."));
+            $("[name='valueC3']").trigger('change');
+        });
+
+        $("[name='valueC4']").on('change', function () {
+            var dataC4 = parseInt($(this).val().split(".").join(""));
+            var dataC5 = parseInt($("[name='valueC5']").val().split(".").join(""));
+
+            var data = dataC4 - dataC5;
+
+            $("[name='valueC6']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC6']").trigger('change');
+        });
+
+        $("[name='valueC5']").on('change', function () {
+            var dataC5 = parseInt($(this).val().split(".").join(""));
+            var dataC4 = parseInt($("[name='valueC4']").val().split(".").join(""));
+
+            var data = dataC4 - dataC5;
+
+            $("[name='valueC6']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC6']").trigger('change');
+        });
+
+        $("[name='valueC7']").on('change', function () {
+            var dataC7 = parseInt($(this).val().split(".").join(""));
+            var dataC8 = parseInt($("[name='valueC8']").val().split(".").join(""));
+            var dataC9 = parseInt($("[name='valueC9']").val().split(".").join(""));
+            var dataC9a = parseInt($("[name='valueC9a']").val().split(".").join(""));
+
+            var data = dataC7 * 0.22 + dataC8 * 0.2 + dataC9 * dataC9a / 100;
+
+            $("[name='valueC10']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC10']").trigger('change');
+        });
+
+        $("[name='valueC8']").on('change', function () {
+            var dataC8 = parseInt($(this).val().split(".").join(""));
+            var dataC7 = parseInt($("[name='valueC7']").val().split(".").join(""));
+            var dataC9 = parseInt($("[name='valueC9']").val().split(".").join(""));
+            var dataC9a = parseInt($("[name='valueC9a']").val().split(".").join(""));
+
+            var data = dataC7 * 0.22 + dataC8 * 0.2 + dataC9 * dataC9a / 100;
+
+            $("[name='valueC10']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC10']").trigger('change');
+        });
+
+        $("[name='valueC9']").on('change', function () {
+            var dataC9 = parseInt($(this).val().split(".").join(""));
+            var dataC8 = parseInt($("[name='valueC8']").val().split(".").join(""));
+            var dataC7 = parseInt($("[name='valueC7']").val().split(".").join(""));
+            var dataC9a = parseInt($("[name='valueC9a']").val().split(".").join(""));
+
+            var data = dataC7 * 0.22 + dataC8 * 0.2 + dataC9 * dataC9a / 100;
+
+            $("[name='valueC10']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC10']").trigger('change');
+
+            var data2 = dataC7 + dataC8 + dataC9;
+            var dataC6 = parseInt($("[name='valueC6']").val().split(".").join(""));
+
+            if (data2 !== dataC6) {
+                alert("C6 != C7 + C8 + C9");
+            }
+        });
+
+        $("[name='valueC9a']").on('change', function () {
+            var dataC9a = parseInt($(this).val().split(".").join(""));
+            var dataC8 = parseInt($("[name='valueC8']").val().split(".").join(""));
+            var dataC9 = parseInt($("[name='valueC9']").val().split(".").join(""));
+            var dataC7 = parseInt($("[name='valueC7']").val().split(".").join(""));
+
+            var data = dataC7 * 0.22 + dataC8 * 0.2 + dataC9 * dataC9a / 100;
+
+            $("[name='valueC10']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC10']").trigger('change');
+        });
+
+        $("[name='valueC10']").on('change', function () {
+            var dataC10 = parseInt($(this).val().split(".").join(""));
+            var dataC11 = parseInt($("[name='valueC11']").val().split(".").join(""));
+            var dataC12 = parseInt($("[name='valueC12']").val().split(".").join(""));
+            var dataC15 = parseInt($("[name='valueC15']").val().split(".").join(""));
+
+            var data = dataC10 - dataC11 - dataC12 - dataC15;
+
+            $("[name='valueC16']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC16']").trigger('change');
+        });
+
+        $("[name='valueC11']").on('change', function () {
+            var dataC11 = parseInt($(this).val().split(".").join(""));
+            var dataC10 = parseInt($("[name='valueC10']").val().split(".").join(""));
+            var dataC12 = parseInt($("[name='valueC12']").val().split(".").join(""));
+            var dataC15 = parseInt($("[name='valueC15']").val().split(".").join(""));
+
+            var data = dataC10 - dataC11 - dataC12 - dataC15;
+
+            $("[name='valueC16']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC16']").trigger('change');
+        });
+
+        $("[name='valueC12']").on('change', function () {
+            var dataC12 = parseInt($(this).val().split(".").join(""));
+            var dataC10 = parseInt($("[name='valueC10']").val().split(".").join(""));
+            var dataC11 = parseInt($("[name='valueC11']").val().split(".").join(""));
+            var dataC15 = parseInt($("[name='valueC15']").val().split(".").join(""));
+
+            var data = dataC10 - dataC11 - dataC12 - dataC15;
+
+            $("[name='valueC16']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC16']").trigger('change');
+        });
+
+        $("[name='valueC15']").on('change', function () {
+            var dataC15 = parseInt($(this).val().split(".").join(""));
+            var dataC10 = parseInt($("[name='valueC10']").val().split(".").join(""));
+            var dataC12 = parseInt($("[name='valueC12']").val().split(".").join(""));
+            var dataC11 = parseInt($("[name='valueC11']").val().split(".").join(""));
+
+            var data = dataC10 - dataC11 - dataC12 - dataC15;
+
+            $("[name='valueC16']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueC16']").trigger('change');
+        });
+
+        $("[name='valueC16']").on('change', function () {
+            var dataC16 = parseInt($(this).val().split(".").join(""));
+
+            $("[name='valueD1']").val(numeral(dataC16).format('0,0').split(",").join("."));
+            $("[name='valueD1']").trigger('change');
+        });
+
+        $("[name='valueD1']").on('change', function () {
+            var dataD1 = parseInt($(this).val().split(".").join(""));
+            var dataD2 = parseInt($("[name='valueD2']").val().split(".").join(""));
+            var dataD3 = parseInt($("[name='valueD3']").val().split(".").join(""));
+
+            var data = dataD1 + dataD2 + dataD3;
+
+            $("[name='valueD']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueD']").trigger('change');
+
+            var dataE1 = parseInt($("[name='valueE1']").val().split(".").join(""));
+
+            var data1 = dataD1 - dataE1;
+
+            $("[name='valueG1']").val(numeral(data1).format('0,0').split(",").join("."));
+            $("[name='valueG1']").trigger('change');
+        });
+
+        $("[name='valueD2']").on('change', function () {
+            var dataD2 = parseInt($(this).val().split(".").join(""));
+            var dataD1 = parseInt($("[name='valueD1']").val().split(".").join(""));
+            var dataD3 = parseInt($("[name='valueD3']").val().split(".").join(""));
+
+            var data = dataD1 + dataD2 + dataD3;
+
+            $("[name='valueD']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueD']").trigger('change');
+
+            var dataE2 = parseInt($("[name='valueE2']").val().split(".").join(""));
+
+            var data1 = dataD2 - dataE2;
+
+            $("[name='valueG2']").val(numeral(data1).format('0,0').split(",").join("."));
+            $("[name='valueG2']").trigger('change');
+        });
+
+        $("[name='valueD3']").on('change', function () {
+            var dataD3 = parseInt($(this).val().split(".").join(""));
+            var dataD2 = parseInt($("[name='valueD2']").val().split(".").join(""));
+            var dataD1 = parseInt($("[name='valueD1']").val().split(".").join(""));
+
+            var data = dataD1 + dataD2 + dataD3;
+
+            $("[name='valueD']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueD']").trigger('change');
+
+            var dataE3 = parseInt($("[name='valueE3']").val().split(".").join(""));
+
+            var data1 = dataD3 - dataE3;
+
+            $("[name='valueG3']").val(numeral(data1).format('0,0').split(",").join("."));
+            $("[name='valueG3']").trigger('change');
+        });
+
+
+        $("[name='valueE1']").on('change', function () {
+            var dataE1 = parseInt($(this).val().split(".").join(""));
+            var dataE2 = parseInt($("[name='valueE2']").val().split(".").join(""));
+            var dataE3 = parseInt($("[name='valueE3']").val().split(".").join(""));
+
+            var data = dataE1 + dataE2 + dataE3;
+
+            $("[name='valueE']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueE']").trigger('change');
+
+            var dataD1 = parseInt($("[name='valueD1']").val().split(".").join(""));
+
+            var data1 = dataD1 - dataE1;
+
+            $("[name='valueG1']").val(numeral(data1).format('0,0').split(",").join("."));
+            $("[name='valueG1']").trigger('change');
+        });
+
+        $("[name='valueE2']").on('change', function () {
+            var dataE2 = parseInt($(this).val().split(".").join(""));
+            var dataE1 = parseInt($("[name='valueE1']").val().split(".").join(""));
+            var dataE3 = parseInt($("[name='valueE3']").val().split(".").join(""));
+
+            var data = dataE1 + dataE2 + dataE3;
+
+            $("[name='valueE']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueE']").trigger('change');
+
+            var dataD2 = parseInt($("[name='valueD2']").val().split(".").join(""));
+
+            var data1 = dataD2 - dataE2;
+
+            $("[name='valueG2']").val(numeral(data1).format('0,0').split(",").join("."));
+            $("[name='valueG2']").trigger('change');
+        });
+
+        $("[name='valueE3']").on('change', function () {
+            var dataE3 = parseInt($(this).val().split(".").join(""));
+            var dataE2 = parseInt($("[name='valueE2']").val().split(".").join(""));
+            var dataE1 = parseInt($("[name='valueE1']").val().split(".").join(""));
+
+            var data = dataE1 + dataE2 + dataE3;
+
+            $("[name='valueE']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueE']").trigger('change');
+
+            var dataD3 = parseInt($("[name='valueD3']").val().split(".").join(""));
+
+            var data1 = dataD3 - dataE3;
+
+            $("[name='valueG3']").val(numeral(data1).format('0,0').split(",").join("."));
+            $("[name='valueG3']").trigger('change');
+        });
+
+        $("[name='valueG1']").on('change', function () {
+            var dataG1 = parseInt($(this).val().split(".").join(""));
+            var dataG2 = parseInt($("[name='valueG2']").val().split(".").join(""));
+            var dataG3 = parseInt($("[name='valueG3']").val().split(".").join(""));
+
+            var data = dataG1 + dataG2 + dataG3;
+
+            $("[name='valueG']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueG']").trigger('change');
+        });
+
+        $("[name='valueG2']").on('change', function () {
+            var dataG2 = parseInt($(this).val().split(".").join(""));
+            var dataG1 = parseInt($("[name='valueG1']").val().split(".").join(""));
+            var dataG3 = parseInt($("[name='valueG3']").val().split(".").join(""));
+
+            var data = dataG1 + dataG2 + dataG3;
+
+            $("[name='valueG']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueG']").trigger('change');
+        });
+
+        $("[name='valueG3']").on('change', function () {
+            var dataG3 = parseInt($(this).val().split(".").join(""));
+            var dataG1 = parseInt($("[name='valueG1']").val().split(".").join(""));
+            var dataG2 = parseInt($("[name='valueG2']").val().split(".").join(""));
+
+            var data = dataG1 + dataG2 + dataG3;
+
+            $("[name='valueG']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueG']").trigger('change');
+        });
+
+        $("[name='valueD']").on('change', function () {
+            var dataD = parseInt($(this).val().split(".").join(""));
+
+            var data = dataD / 5;
+
+            $("[name='valueH']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueH']").trigger('change');
+        });
+
+        $("[name='valueG']").on('change', function () {
+            var dataG = parseInt($(this).val().split(".").join(""));
+            var dataH = parseInt($("[name='valueH']").val().split(".").join(""));
+
+            var data = dataG - dataH;
+
+            $("[name='valueI']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueI']").trigger('change');
+        });
+
+        $("[name='valueH']").on('change', function () {
+            var dataH = parseInt($(this).val().split(".").join(""));
+            var dataG = parseInt($("[name='valueG']").val().split(".").join(""));
+
+            var data = dataG - dataH;
+
+            $("[name='valueI']").val(numeral(data).format('0,0').split(",").join("."));
+            $("[name='valueI']").trigger('change');
+        });
+
+        function exportXmlTndnTaxDeclaration() {
+            $("#tndnTaxDeclaration").submit();
+        }
+    </script>
+</body>
+</html>

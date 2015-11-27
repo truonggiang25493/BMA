@@ -160,7 +160,7 @@ namespace BMA.Controllers
         public ActionResult StaffEditInfo(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2 || (int)Session["UserId"] != id)
             {
                 return RedirectToAction("Index", "Home");
             }

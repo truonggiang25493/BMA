@@ -68,17 +68,27 @@
                                         <b>Số lượng<b style="color: #ff0000">*</b>: </b>
                                     </div>
                                     <div class="col-xs-7">
-                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57"  name="txtImportQuantity" id="txtImportQuantity" oninput="maxLengthCheck(this)" maxlength="7" min="1" max="9999999" placeholder="nhập số từ 1-7 chữ số" class="form-control" />
+                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57"  name="txtImportQuantity" id="txtImportQuantity" oninput="maxLengthCheck(this)" maxlength="8" min="1" max="99999999" placeholder="nhập số từ 1-8 chữ số" class="form-control" value="1"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="form-group">
                                     <div class="col-xs-5">
-                                        <b>Tổng giá<b style="color: #ff0000">*</b>: </b>
+                                        <b>Tổng giá (VNĐ)<b style="color: #ff0000">*</b>: </b>
                                     </div>
                                     <div class="col-xs-7">
-                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="8" min="1" max="99999999" placeholder="nhập số từ 1-8 chữ số" class="form-control" />
+                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" placeholder="nhập số từ 1-9 chữ số" class="form-control" value="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="form-group">
+                                    <div class="col-xs-5">
+                                        <b>Đơn giá (VNĐ)<b style="color: #ff0000">*</b>: </b>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <input type="number" readonly="readonly" name="txtUnitPrice" id="txtUnitPrice" class="form-control" />
                                     </div>
                                 </div>
                             </div>
@@ -217,6 +227,15 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
+                            } else if (txtImportQuantity>99999999) {
+                                noty({
+                                    text: 'Số lượng nguyên liệu đầu vào không được lớn hơn 99,999,999 đơn vị.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
                             } else if (isNaN(txtInputMaterialPrice)) {
                                 noty({
                                     text: 'Tổng giá nguyên liệu đầu vào phải là số.',
@@ -229,6 +248,24 @@
                             } else if (txtInputMaterialPrice.trim() === '') {
                                 noty({
                                     text: 'Tổng giá nguyên liệu đầu vào không được trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (txtInputMaterialPrice < 1000) {
+                                noty({
+                                    text: 'Tổng giá nguyên liệu đầu vào không được nhỏ hơn 1,000 VNĐ.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (txtInputMaterialPrice > 999999999) {
+                                noty({
+                                    text: 'Tổng giá nguyên liệu đầu vào không được lớn hơn 999,999,999 VNĐ.',
                                     type: 'warning',
                                     dismissQueue: false,
                                     layout: 'topCenter',
@@ -351,13 +388,33 @@
     </script>
 
     <script type="text/javascript">
-        $(function () {
-            $("#datetimepicker6").on("dp.change", function (e) {
+        $(function() {
+            $("#datetimepicker6").on("dp.change", function(e) {
                 $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
             });
-            $("#datetimepicker7").on("dp.change", function (e) {
+            $("#datetimepicker7").on("dp.change", function(e) {
                 $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
             });
         });
     </script>
+
+    <script type="text/javascript">
+        $(document).on("keyup", "#txtInputMaterialPrice", function () {
+            var importQuantity = $("#txtImportQuantity").val();
+            var inputMaterialPrice = $("#txtInputMaterialPrice").val();
+            var unitPrice = inputMaterialPrice / importQuantity;
+            $('#txtUnitPrice').val(unitPrice);
+            $('#txtUnitPrice').attr('min', unitPrice);
+        })
+    </script>
+
+<script type="text/javascript">
+    $(document).on("keyup", "#txtImportQuantity", function () {
+        var importQuantity = $("#txtImportQuantity").val();
+        var inputMaterialPrice = $("#txtInputMaterialPrice").val();
+        var unitPrice = inputMaterialPrice / importQuantity;
+        $('#txtUnitPrice').val(unitPrice);
+        $('#txtUnitPrice').attr('min', unitPrice);
+    })
+</script>
 }
