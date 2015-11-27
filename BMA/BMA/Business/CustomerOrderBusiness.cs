@@ -77,7 +77,7 @@ namespace BMA.Business
             return lstCart;
         }
 
-        public bool EditOrder(int orderId, DateTime planDeliveryDate, int Amount, int taxAmount, int discount,int cusUserId, List<CustomerCartViewModel> cart)
+        public bool EditOrder(int orderId, DateTime planDeliveryDate, int Amount, int taxAmount, int discount, int cusUserId, List<CustomerCartViewModel> cart)
         {
             Order order = db.Orders.Find(orderId);
             order.PlanDeliveryTime = planDeliveryDate;
@@ -104,7 +104,7 @@ namespace BMA.Business
             db.SaveChanges();
             return true;
         }
-        public bool OrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount,int discount, int cusUserId, List<CustomerCartViewModel> cart)
+        public bool OrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount, int discount, int cusUserId, List<CustomerCartViewModel> cart)
         {
             Order order = new Order();
             order.OrderCode = orderTime;
@@ -138,7 +138,7 @@ namespace BMA.Business
         }
 
 
-        public bool GuestOrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount,int discount, List<CustomerCartViewModel> cart, string sName, string sPhone, string sAddress, string sEmail)
+        public bool GuestOrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount, int discount, List<CustomerCartViewModel> cart, string sName, string sPhone, string sAddress, string sEmail)
         {
             Order order = new Order();
             order.OrderCode = orderTime;
@@ -240,13 +240,33 @@ namespace BMA.Business
             return lstOrderItem;
         }
 
-        public bool checkUserDuplicate(string Email, string phoneNumber)
+        public bool checkStaffDuplicate(string Email, string phoneNumber)
         {
             var checkUser = db.Users.SingleOrDefault(n => n.Email == Email);
-            var checkCustomer = db.Customers.SingleOrDefault(n => n.UserId == checkUser.UserId);
-            if (checkUser == null && checkCustomer.CustomerPhoneNumber == phoneNumber)
+            if (checkUser != null)
             {
-                return true;
+                if (checkUser.RoleId == 1)
+                {
+                    return true;
+                }
+                else if (checkUser.RoleId == 2)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool checkCustomerDuplicate(string Email, string phoneNumber)
+        {
+            var checkUser = db.Users.SingleOrDefault(n => n.Email == Email);
+            if (checkUser != null)
+            {
+                var checkCustomer = db.Customers.SingleOrDefault(n => n.UserId == checkUser.UserId);
+                if (checkCustomer.CustomerPhoneNumber == phoneNumber)
+                {
+                    return true;
+                }
             }
             return false;
         }

@@ -4,111 +4,111 @@
 }
 @*<script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 
-<section class="border-top">
-    <div class="container">
-        <div class="page-title mrgb5x mrgt6x clearfix" id="filterOptions">
-            <h4 class="page-name">Bạn là : </h4>
-            <div style="margin-top: 40px;margin-left:-76px; float:left;" class="send-msg"><button class="submit-button" type="submit" onclick="return showLogin();">THÀNH VIÊN</button></div>
-            <div style="margin:40px 0px 60px 15px;float:left;" class="send-msg"><button class="submit-button" type="submit" onclick="return showEnterInfor();">KHÁCH HÀNG MỚI</button></div>
-        </div>
-    </div>
-</section>
-<script>
-    $(document).ready(function() {
-        $("#CusInfor").show();
-        $("#GuestInfor").hide();
-    })
-
-    function showLogin() {
-        $("#CusInfor").show();
-        $("#GuestInfor").hide();
-        return 1;
-    }
-
-    function showEnterInfor() {
-        $("#GuestInfor").show();
-        $("#CusInfor").hide();
-        return 1;
-    }
-</script>
-
-<section style="margin-top:-25px;margin-bottom:25px;" class="border-top"></section>
-<section style="margin-left:450px;" id="CusInfor">
-    <section>
+    <section class="border-top">
         <div class="container">
             <div class="page-title mrgb5x mrgt6x clearfix" id="filterOptions">
-                <h4 class="page-name">Vui lòng đăng nhập để hoàn tất đặt hàng : </h4>
+                <h4 class="page-name">Bạn là : </h4>
+                <div style="margin-top: 40px;margin-left:-76px; float:left;" class="send-msg"><button class="submit-button" type="submit" onclick="return showLogin();">THÀNH VIÊN</button></div>
+                <div style="margin:40px 0px 60px 15px;float:left;" class="send-msg"><button class="submit-button" type="submit" onclick="return showEnterInfor();">KHÁCH HÀNG MỚI</button></div>
             </div>
         </div>
     </section>
-    <div style="" class="container">
-        <div class="row">
-            <div class="col-md-9">
-                <div class="contact-us animated out" data-delay="0" data-animation="fadeInUp">
-                    <div class="post-form row">
-                        <form id="customerLogin" action="@Url.Action("LoginOrderProduct", "Cart")" method="post" name="postreview">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>TÊN TÀI KHOẢN</label>
-                                    <input name="txtAccount" class="form-control" placeholder="Nhập tên tài khoản">
+    <script>
+        $(document).ready(function() {
+            $("#CusInfor").show();
+            $("#GuestInfor").hide();
+        })
+
+        function showLogin() {
+            $("#CusInfor").show();
+            $("#GuestInfor").hide();
+            return 1;
+        }
+
+        function showEnterInfor() {
+            $("#GuestInfor").show();
+            $("#CusInfor").hide();
+            return 1;
+        }
+    </script>
+
+    <section style="margin-top:-25px;margin-bottom:25px;" class="border-top"></section>
+    <section style="margin-left:450px;" id="CusInfor">
+        <section>
+            <div class="container">
+                <div class="page-title mrgb5x mrgt6x clearfix" id="filterOptions">
+                    <h4 class="page-name">Vui lòng đăng nhập để hoàn tất đặt hàng : </h4>
+                </div>
+            </div>
+        </section>
+        <div style="" class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="contact-us animated out" data-delay="0" data-animation="fadeInUp">
+                        <div class="post-form row">
+                            <form id="customerLogin" action="@Url.Action("LoginOrderProduct", "Cart")" method="post" name="postreview">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>TÊN TÀI KHOẢN</label>
+                                        <input name="txtAccount" class="form-control" placeholder="Nhập tên tài khoản">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>MẬT KHẨU</label>
+                                        <input name="txtPassword" type="password" class="form-control" placeholder="Nhập mật khẩu">
+                                    </div>
+                                    <div style="color:#ff0000">@ViewBag.Notify</div>
+                                    <div style="margin: 40px 0px 40px 0px;" class="send-msg"><button class="submit-button" type="submit">ĐĂNG NHẬP</button></div>
+                                    <div style="margin: 40px 30px 40px 0px;" class="send-msg"><button class="submit-button" type="reset">NHẬP LẠI</button></div>
                                 </div>
-                                <div class="form-group">
-                                    <label>MẬT KHẨU</label>
-                                    <input name="txtPassword" type="password" class="form-control" placeholder="Nhập mật khẩu">
-                                </div>
-                                <div style="color:#ff0000">@ViewBag.Notify</div>
-                                <div style="margin: 40px 0px 40px 0px;" class="send-msg"><button class="submit-button" type="submit">ĐĂNG NHẬP</button></div>
-                                <div style="margin: 40px 30px 40px 0px;" class="send-msg"><button class="submit-button" type="reset">NHẬP LẠI</button></div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<section style="margin-left:450px;" id="GuestInfor">
-    <section>
-        <div class="container">
-            <div class="page-title mrgb5x mrgt6x clearfix" id="filterOptions">
-                <h4 class="page-name">Vui lòng nhập thông tin để hoàn tất đặt hàng : </h4>
-            </div>
-        </div>
     </section>
-    <div style="" class="container">
-        <div class="row">
-            <div class="col-md-9">
-                <div class="contact-us animated out" data-delay="0" data-animation="fadeInUp">
-                    <div class="post-form row">
-                        <form id="guestInfor" action="@Url.Action("GuestOrderProduct", "Cart")" method="post" name="postreview">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Họ và tên</label>
-                                    <input name="txtName" class="form-control" placeholder="Nhập tên tài khoản" required>
+
+    <section style="margin-left:450px;" id="GuestInfor">
+        <section>
+            <div class="container">
+                <div class="page-title mrgb5x mrgt6x clearfix" id="filterOptions">
+                    <h4 class="page-name">Vui lòng nhập thông tin để hoàn tất đặt hàng : </h4>
+                </div>
+            </div>
+        </section>
+        <div style="" class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="contact-us animated out" data-delay="0" data-animation="fadeInUp">
+                        <div class="post-form row">
+                            <form id="guestInfor" action="@Url.Action("GuestOrderProduct", "Cart")" method="post" name="postreview">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Họ và tên</label>
+                                        <input name="txtName" class="form-control" placeholder="Nhập tên tài khoản" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Số điện thoại</label>
+                                        <input name="txtPhoneNumber" class="form-control" placeholder="Chỉ nhập số" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Địa chỉ</label>
+                                        <input name="txtAddress" class="form-control" placeholder="Nhập địa chỉ" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input name="txtEmail" class="form-control" placeholder="Nhập email" required>
+                                    </div>
+                                    <div style="margin: 40px 0px 40px 0px;" class="send-msg"><button class="submit-button" type="submit">XÁC NHẬN</button></div>
+                                    <div style="margin: 40px 30px 40px 0px;" class="send-msg"><button class="submit-button" type="reset">NHẬP LẠI</button></div>
                                 </div>
-                                <div class="form-group">
-                                    <label>Số điện thoại</label>
-                                    <input name="txtPhoneNumber" class="form-control" placeholder="Chỉ nhập số" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Địa chỉ</label>
-                                    <input name="txtAddress" class="form-control" placeholder="Nhập địa chỉ" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input name="txtEmail" class="form-control" placeholder="Nhập email" required>
-                                </div>
-                                <div style="margin: 40px 0px 40px 0px;" class="send-msg"><button class="submit-button" type="submit">XÁC NHẬN</button></div>
-                                <div style="margin: 40px 30px 40px 0px;" class="send-msg"><button class="submit-button" type="reset">NHẬP LẠI</button></div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>*@
+    </section>*@
 
 <div class="container main-container headerOffset">
     <div class="row">
@@ -127,46 +127,273 @@
             <div class="row userInfo">
                 <div class="col-xs-12 col-sm-4">
                     <h2 class="block-title-2"><span>Là thành viên?</span></h2>
-                    <form role="form" action="@Url.Action("LoginOrderProduct", "Cart")" method="post" name="postreview">
+                    <form role="form" action="@Url.Action("LoginOrderProduct", "Cart")" method="post" name="postreview" id="customerForm">
                         <div class="form-group">
                             <label for="InputEmail2">Tên đăng nhập <sup>*</sup></label>
-                            <input type="text" class="form-control" id="InputEmail2" placeholder="Nhập tài khoản" name="txtAccount" required>
+                            <input type="text" class="form-control" id="username" maxlength="32" placeholder="Nhập tài khoản" name="txtAccount" required>
                         </div>
                         <div class="form-group">
                             <label for="InputPassword2">Mật khẩu <sup>*</sup></label>
-                            <input type="password" class="form-control" id="InputPassword2" placeholder="Nhập mật khẩu" name="txtPassword" required>
+                            <input type="password" class="form-control" id="password" maxlength="32" placeholder="Nhập mật khẩu" name="txtPassword" required>
                         </div>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i> Đăng nhập</button>
                     </form>
+                    <button onclick="validateLogin()" class="btn btn-primary"><i class="fa fa-sign-in"></i> Đăng nhập</button>
                     <div style="color:red;margin-top:5px;">@TempData["Notify"]</div>
                 </div>
                 <div class="col-xs-12 col-sm-4">
                     <h2 class="block-title-2"> Khách hàng mới</h2>
-                    <form action="@Url.Action("GuestOrderProduct", "Cart")" method="post" name="postreview" role="form">
+                    <form action="@Url.Action("GuestOrderProduct", "Cart")" method="post" name="postreview" role="form" id="guestForm">
                         <div class="form-group">
                             <label for="exampleInputName">Họ và tên <sup>*</sup></label>
-                            <input type="text" class="form-control" id="exampleInputName" placeholder="Nhập họ tên" name="txtName" required>
+                            <input type="text" class="form-control" id="InputName" placeholder="Nhập họ tên" name="txtName" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputName">Số điện thoại <sup>*</sup></label>
-                            <input type="tel" class="form-control" id="exampleInputName" placeholder="Nhập số điện thoại" name="txtPhoneNumber" required>
+                            <input type="tel" class="form-control" id="InputPhone" maxlength="32" placeholder="Nhập số điện thoại" name="txtPhoneNumber" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputName">Địa chỉ <sup>*</sup></label>
-                            <input type="text" class="form-control" id="exampleInputName" placeholder="Nhập địa chỉ" name="txtAddress" required>
+                            <input type="text" class="form-control" id="InputAddress" placeholder="Nhập địa chỉ" name="txtAddress" required>
                         </div>
                         <div class="form-group">
                             <label for="InputEmail1">Email <sup>*</sup></label>
-                            <input type="email" class="form-control" id="InputEmail1" placeholder="Nhập email - example@gmail.com" name="txtEmail" required>
+                            <input type="email" class="form-control" id="InputEmail" placeholder="Nhập email - example@gmail.com" name="txtEmail" required>
                         </div>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i> Hoàn tất</button>
                     </form>
+                    <button onclick="validateGuestInfo()" class="btn btn-primary"><i class="fa fa-sign-in"></i> Hoàn tất</button>
                     <div style="color:red;margin-top:5px;">@TempData["guestError"]</div>
-                </div>              
+                </div>
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        function CheckEmail(address) {
+            address = address.replace(/(^\s*)|(\s*$)/g, "");
+            var reg = /([\w._-])+@@([\w_-])+(\.([\w_-])+){1,2}/;
+            var matcharr = reg.exec(address);
+            if (matcharr != null) {
+                if (matcharr[0].length == address.length) {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
 
+        function validateLogin() {
+            var txtUsername = $("#username").val();
+            var txtPassword = $("#password").val();
+
+            if (txtUsername.trim() === '') {
+                noty({
+                    text: 'Tên đăng nhập không được để trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else if (txtUsername.trim() === '') {
+                noty({
+                    text: 'Mật khẩu không được để trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else if (txtPassword.length < 6) {
+                noty({
+                    text: 'Mật khẩu không được ít hơn 6 kí tự.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else if (txtUsername.trim() === '') {
+                noty({
+                    text: 'Mật khẩu không được để trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else {
+                $.ajax({
+                    url: "@(Url.Action("LoginOrderProduct", "Cart"))",
+                    method: "POST",
+                    data: $("#customerForm").serialize(),
+                    success: function (data) {
+                        if (data === "1") {
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("OrderSuccess", "Cart"))");
+                            }, 100);
+                        } else if (data === "-2") {
+                            noty({
+                                text: 'Tài khoản không hợp lệ.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (data === "-3") {
+                            noty({
+                                text: 'Sai tài khoản hoặc mật khẩu.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (data === "-4") {
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("Index", "Product"))");
+                            }, 3000);
+                        }
+                    },
+                    fail: function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                })
+            }
+        }
+
+        function validateGuestInfo() {
+            var txtName = $("#InputName").val();
+            var txtPhone = $("#InputPhone").val();
+            var txtAddress = $("#InputAddress").val();
+            var txtEmail = $("#InputEmail").val();
+
+            if (txtName.trim() === '') {
+                noty({
+                    text: 'Họ tên không được để trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else if (txtPhone.trim() === '') {
+                noty({
+                    text: 'Số điện thoại không được để trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else if (isNaN(txtPhone)) {
+                noty({
+                    text: 'Số điện thoại phải là số.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else if (txtPhone.length < 8 || txtPhone.lastIndexOf > 12) {
+                noty({
+                    text: 'Số điện thoại có độ dài từ 8 tới 12 kí tự.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else if (txtAddress.trim() === '') {
+                noty({
+                    text: 'Địa chỉ không được để trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else if (!CheckEmail(txtEmail)) {
+                noty({
+                    text: 'Email không đúng định dạng - example@gmail.com',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else if (txtEmail.trim() === '') {
+                noty({
+                    text: 'Email không được để trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            } else {
+                $.ajax({
+                    url: "@(Url.Action("GuestOrderProduct", "Cart"))",
+                    method: "POST",
+                    data: $("#guestForm").serialize(),
+                    success: function (data) {
+                        if (data === "1") {
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("OrderSuccess", "Cart"))");
+                            }, 100);
+                        } else if (data === "-1") {
+                            noty({
+                                text: 'Email đã tồn tại trong hệ thống, vui lòng thử lại.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (data === "-2") {
+                            noty({
+                                text: 'Email đã tồn tại, nếu đã có tài khoản xin vui lòng đăng nhập.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (data === "-3") {
+                            noty({
+                                text: 'Email và số điện thoại đã tồn tại, nếu đã có tài khoản xin vui lòng đăng nhập.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (data === "-4") {
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("Index", "Product"))");
+                            }, 3000);
+                        }
+                    },
+                    fail: function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                })
+            }
+        }
+    </script>
     <div class="cartFooter w100" style="margin-bottom:50px;">
         <div class="box-footer">
             <div class="pull-left"> <a onclick="javascript:history.back(-1);" class="btn btn-success"> <i class="fa fa-arrow-left"></i> &nbsp; Quay lại giỏ hàng </a> </div>

@@ -75,16 +75,16 @@
                         cosAfterDiscount = sumTotal - discount;
                         taxAmount = Convert.ToInt32(cosAfterDiscount * 0.1);
                         totalValue = taxAmount + cosAfterDiscount;
-                        TempData["Amount"] = sumTotal;
-                        TempData["TaxAmount"] = taxAmount;
-                        TempData["DiscountAmount"] = discount;
+                        Session["Amount"] = sumTotal;
+                        Session["TaxAmount"] = taxAmount;
+                        Session["DiscountAmount"] = discount;
                     }
                     else
                     {
                         taxAmount = Convert.ToInt32(sumTotal * 0.1);
                         totalValue = taxAmount + sumTotal;
-                        TempData["Amount"] = sumTotal;
-                        TempData["TaxAmount"] = taxAmount;
+                        Session["Amount"] = sumTotal;
+                        Session["TaxAmount"] = taxAmount;
                     }
                     <div class="cartFooter w100">
                         <div class="box-footer">

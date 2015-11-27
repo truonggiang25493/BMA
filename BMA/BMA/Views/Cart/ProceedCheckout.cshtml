@@ -10,9 +10,9 @@
     int sumTotal = 0;
     int taxAmount = 0;
     int totalValue = 0;
-    int sumQuantity = 0;
     int discount = 0;
     int cosAfterDiscount = 0;
+    string productName = ViewBag.productName;
 }
 
 <div class="container main-container headerOffset">
@@ -84,6 +84,7 @@
                                         <tr>
                                             <td>Tổng cộng</td>
                                             <td class="price">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                            <td><input type="hidden" value="@productName" id="productName" /></td>
                                         </tr>
                                         @if (dbq != null)
                                         {
@@ -124,13 +125,13 @@
                                 {
                                     if (Session["BeEdited"] != null)
                                     {
-                                        <a href="@Url.Action("EditOrder", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"]) })" c class="btn btn-primary btn-small ">
+                                        <a onclick="EditOrder()" class="btn btn-primary btn-small ">
                                             Xác nhận &nbsp; <i class="fa fa-check"></i>
                                         </a>
                                     }
                                     else
                                     {
-                                        <a href="@Url.Action("OrderProduct","Cart")" class="btn btn-primary btn-small ">
+                                        <a onclick="OrderProduct()" class="btn btn-primary btn-small ">
                                             Xác nhận &nbsp; <i class="fa fa-check"></i>
                                         </a>
                                     }
@@ -138,7 +139,7 @@
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("OrderInfo", "Cart")" class="btn btn-primary btn-small ">
+                                    <a onclick="OrderInfo()" class="btn btn-primary btn-small ">
                                         Xác nhận &nbsp; <i class="fa fa-check"></i>
                                     </a>
                                 }
@@ -150,6 +151,117 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        function EditOrder() {
+            var productName = $("#productName").val();
+            $.ajax({
+                url: "@(Url.Action("EditOrder", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"])}))",
+                data: "@(Url.Action("EditOrder", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"])}))",
+                success: function (data) {
+                    if (data === "1") {
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("EditOrderSuccess", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"])}))");
+                        }, 500);
+                    } if (data === "-1") {
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "Product"))");
+                        }, 500);
+                    } if (data === "-2") {
+                        noty({
+                            text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 3000
+                        });
+                    }
+                },
+                fail: function () {
+                    noty({
+                        text: 'Đã có lỗi xảy ra',
+                        type: 'error',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            })
+        }
 
+        function OrderProduct() {
+            var productName = $("#productName").val();
+            $.ajax({
+                url: "@(Url.Action("OrderProduct", "Cart"))",
+                data: "@(Url.Action("OrderProduct", "Cart"))",
+                success: function (data) {
+                    if (data === "1") {
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("OrderSuccess", "Cart"))");
+                        }, 500);
+                    } if (data === "-1") {
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "Product"))");
+                        }, 500);
+                    } if (data === "-2") {
+                        noty({
+                            text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 3000
+                        });
+                    }
+                },
+                fail: function () {
+                    noty({
+                        text: 'Đã có lỗi xảy ra',
+                        type: 'error',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            })
+        }
+
+        function OrderInfo() {
+            var productName = $("#productName").val();
+            $.ajax({
+                url: "@(Url.Action("CheckProductActive", "Cart"))",
+                data: "@(Url.Action("CheckProductActive", "Cart"))",
+                success: function (data) {
+                    if (data === "1") {
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("OrderInfo", "Cart"))");
+                        }, 500);
+                    }
+                    if (data === "-1") {
+                        noty({
+                            text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 3000
+                        });
+                    }
+                },
+                fail: function () {
+                    noty({
+                        text: 'Đã có lỗi xảy ra',
+                        type: 'error',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            })
+        }
+    </script>
     <div style="clear:both"></div>
 </div>
