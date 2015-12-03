@@ -214,6 +214,24 @@
                                             theme: 'defaultTheme',
                                             timeout: 1000
                                         });
+                                    } else if (txtImportQuantity <= 0) {
+                                        noty({
+                                            text: 'Số lượng nguyên liệu đầu vào phải lớn hơn 0.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (txtImportQuantity > 99999999) {
+                                        noty({
+                                            text: 'Số lượng nguyên liệu đầu vào không được lớn hơn 99,999,999 đơn vị.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
                                     } else if (isNaN(txtInputMaterialPrice)) {
                                         noty({
                                             text: 'Tổng giá nguyên liệu đầu vào phải là số.',
@@ -232,6 +250,33 @@
                                             theme: 'defaultTheme',
                                             timeout: 1000
                                         });
+                                    } else if (txtInputMaterialPrice < 1000) {
+                                        noty({
+                                            text: 'Tổng giá nguyên liệu đầu vào không được nhỏ hơn 1,000 VNĐ.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (txtInputMaterialPrice > 999999999) {
+                                        noty({
+                                            text: 'Tổng giá nguyên liệu đầu vào không được lớn hơn 999,999,999 VNĐ.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    } else if (txtImportQuantity > txtInputMaterialPrice) {
+                                        noty({
+                                            text: 'Số lượng nguyên liệu nhập vào không được lớn hơn tổng giá nguyên liệu.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
                                     } else if (txtImportDate.trim() === '') {
                                         noty({
                                             text: 'Ngày nhập nguyên liệu không được trống.',
@@ -241,6 +286,7 @@
                                             theme: 'defaultTheme',
                                             timeout: 1000
                                         });
+
                                     } else if (txtInputMaterialExpiryDate.trim() === '') {
                                         noty({
                                             text: 'Ngày hết hạn nguyên liệu không được trống.',

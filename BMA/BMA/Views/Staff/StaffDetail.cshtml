@@ -56,15 +56,15 @@
                                             @if (Model.IsActive)
                                             {
                                                 <span class="label label-success">Đang hoạt động</span>
-                                                <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
-                                                    <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>
+                                                <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));">
+                                                    <i class="fa fa-check-square-o" style="margin-right: 5%;">Thay đổi trạng thái</i>
                                                 </button>
                                             }
                                             else
                                             {
                                                 <span class="label label-danger">Ngừng hoạt động</span>
-                                                <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
-                                                    <i class="fa fa-check-square-o" style="margin-right: 5%;"></i>
+                                                <button class="btn btn-bitbucket btn-xs" id="btn-approved" onclick="open_container(@(Model.StaffId));">
+                                                    <i class="fa fa-check-square-o" style="margin-right: 5%;">Thay đổi trạng thái</i>
                                                 </button>
                                             }
                                         </div>
@@ -93,62 +93,69 @@
     <div class="col-md-2"></div>
 
 </section>
-<script type="text/javascript">
-    function open_container(id) {
-        var content = $("<div>", {
-            "html": "Bạn có muốn thay đổi trạng thái của nhà cung cấp từ trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
-        });
+@section StaffDetailScript{
+    <script type="text/javascript">
+        function open_container(id) {
+            var content = $("<div>", {
+                "html": "Bạn có muốn thay đổi trạng thái của nhân viên từ trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
+            });
 
-        var title = 'Thay đổi trạng thái nguyên liệu';
-        var footer = $("<div>", {
-            "class": "row",
-            "html": [
-                $("<button>", {
-                    "class": "btn btn-success pull-right",
-                    "style": "margin-right: 30%;",
-                    "onclick": "change_staff_status(" + id + ")",
-                    "html": "Đồng ý"
-                }),
-                $("<button>", {
-                    "class": "btn btn-danger",
-                    "style": "margin-right: 10px;",
-                    "data-dismiss": "modal",
-                    "html": "Hủy"
-                })
-            ]
-        });
-        setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
-        $('#myModal').modal('show');
-    }
+            var title = 'Thay đổi trạng thái nhân viên';
+            var footer = $("<div>", {
+                "class": "row",
+                "html": [
+                    $("<button>", {
+                        "class": "btn btn-success pull-right",
+                        "style": "margin-right: 30%;",
+                        "onclick": "change_staff_status(" + id + ")",
+                        "html": "Đồng ý"
+                    }),
+                    $("<button>", {
+                        "class": "btn btn-danger",
+                        "style": "margin-right: 10px;",
+                        "data-dismiss": "modal",
+                        "html": "Hủy"
+                    })
+                ]
+            });
+            setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+            $('#myModal').modal('show');
+        }
 
-    function setModalBox(title, content, footer) {
-        document.getElementById('popup-body').innerHTML = content;
-        document.getElementById('popup-title').innerHTML = title;
-        document.getElementById('popup-footer').innerHTML = footer;
-    }
+        function setModalBox(title, content, footer) {
+            document.getElementById('popup-body').innerHTML = content;
+            document.getElementById('popup-title').innerHTML = title;
+            document.getElementById('popup-footer').innerHTML = footer;
+        }
 
-    function change_staff_status(id) {
+        function change_staff_status(id) {
 
-        $.ajax({
-            "url": "@(Url.Action("ChangeStaffStatus", "Staff"))",
-            "method": "POST",
-            "data": {
-                "id": id
-            },
-            "success": function(data) {
-                if (data === "1") {
-                    $('#myModal').modal('hide');
-                    window.location.replace("@Url.Action("StaffIndex", "Staff", Model.StaffId)");
-                } 
-                else 
-                {
-                    alert("Khong the");
+            $.ajax({
+                "url": "@(Url.Action("ChangeStaffStatus", "Staff"))",
+                "method": "POST",
+                "data": {
+                    "id": id
+                },
+                "success": function(data) {
+                    if (data === "1") {
+                        $('#myModal').modal('hide');
+                        window.location.replace("@Url.Action("StaffIndex", "Staff", Model.StaffId)");
+                    } else {
+                        noty({
+                            text: 'Đã có lỗi xảy ra, vui lòng thử lại.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                },
+                "fail": function(e) {
+                    alert("Have error" + e);
                 }
-            },
-            "fail": function(e) {
-                alert("Have error" + e);
-            }
-        });
-    }
+            });
+        }
 
-</script>
+    </script>
+}

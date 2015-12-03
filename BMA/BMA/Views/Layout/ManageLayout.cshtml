@@ -91,7 +91,7 @@
         }
 
         function RemoveOrderNoty(strURL) {
-            if ($("[data-role='numberOfNewOrder']").text() == 0) {
+            if ($("[data-role='numberOfNewOrder']").text() === 0) {
 
             } else {
                 var txtHiddenMaterial = $("#hiddenMaterialCount").val();
@@ -138,7 +138,7 @@
         }
 
         function RemoveMaterialNoty(strURL) {
-            if ($("[data-role='numberOfLowMaterial']").text() == 0) {
+            if ($("[data-role='numberOfLowMaterial']").text() === 0) {
 
             } else {
                 var txtHiddenOrder = $("#hiddenOrderCount").val();
@@ -230,10 +230,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <!-- Control Sidebar Toggle Button -->
-                        <li>
-                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                        </li>
+
                     </ul>
                 </div>
             </nav>
@@ -274,7 +271,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li id="listStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/StaffIndex')" style="cursor:pointer"><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
-                            <li id="addStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/AddStaff')" style="cursor:pointer"<i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
+                            <li id="addStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/AddStaff')" style="cursor: pointer"><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
                         </ul>
                     </li>
                     <li class="treeview" id="customer">
@@ -377,17 +374,7 @@
         <div class="content-wrapper">
             @RenderBody()
         </div>
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Create the tabs -->
-            <ul class="nav nav-tabs nav-justified control-sidebar-tabs"></ul>
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <!-- Home tab content -->
-                <div class="tab-pane" id="control-sidebar-home-tab">
-                </div><!-- /.tab-pane -->
-            </div>
-        </aside>
+
         <div class="control-sidebar-bg"></div>
     </div><!-- ./wrapper -->
     <!--Small Modal -->
@@ -451,8 +438,7 @@
     <!-- DataTables -->
     <script src="/Content/AdminLayout/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Content/AdminLayout/plugins/datatables/dataTables.bootstrap.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="/Content/AdminLayout/dist/js/demo.js"></script>
+
     <!--Own js function-->
     <script src="~/Scripts/my-own-function.js"></script>
     <!--Noty js-->
@@ -482,6 +468,11 @@
     @RenderSection("ReviewRevenuePerCustomerScript", false)
     @RenderSection("ReviewIncomeByProductScript", false)
     @RenderSection("EditInputBillScript", false)
+    @RenderSection("StaffDetailScript", false)
+    @RenderSection("StaffIndexScript", false)
+    @RenderSection("SupplierIndexScript", false)
+    @RenderSection("CustomerIndexScript", false)
+    
     <script>
         $(function () {
             $('#example2').DataTable({

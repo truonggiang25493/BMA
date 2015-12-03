@@ -229,6 +229,15 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
+                            } else if (txtImportQuantity <= 0) {
+                                noty({
+                                    text: 'Số lượng nguyên liệu đầu vào phải lớn hơn 0.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
                             } else if (txtImportQuantity > 99999999) {
                                 noty({
                                     text: 'Số lượng nguyên liệu đầu vào không được lớn hơn 99,999,999 đơn vị.',

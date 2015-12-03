@@ -26,9 +26,8 @@
                        <span>@((inputBill.InputBillAmount + inputBill.InputTaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span>
                     </td>
                     <td>
-                        <a class="btn btn-link btn-xs" href="@(Url.Action("InputBillDetail", "InputBill", new {id = inputBill.InputBillId}))">
+                        <a class="btn btn-link btn-xs" href="@(Url.Action("InputBillDetail", "InputBill", new {id = inputBill.InputBillId}))" data-toggle="tooltip" data-placement="top" title="Xem">
                             <i class="fa fa-navicon" style="margin-right: 3px"></i>
-                            Xem
                         </a>
                     </td>
                 </tr>

@@ -25,7 +25,7 @@
                                     <b>Nhà cung cấp<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input type="text" name="txtSupplierName" id="txtSupplierName" style="width: 95%" />
+                                    <input type="text" name="txtSupplierName" id="txtSupplierName" maxlength="50" style="width: 95%" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -54,7 +54,7 @@
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-5">
-                                    <b>Mã số thuế:</b>
+                                    <b>Mã số thuế<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
                                     <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtSupplierTaxCode" id="txtSupplierTaxCode" style="width: 95%" oninput="maxLengthCheck(this)" maxlength="13" min="1000000000" max="9999999999999" placeholder="nhập số từ 10-13 chữ số" />
@@ -136,9 +136,9 @@
                                             timeout: 1000
                                         });
                                         $("#txtSupplierEmail").focus();
-                                    } else if (supplierTaxCode.trim() === '') {
+                                    } else if (supplierEmail.trim() === '') {
                                         noty({
-                                            text: 'Mã số thuế nhà cung cấp không được trống.',
+                                            text: 'Email nhà cung cấp không được trống.',
                                             type: 'warning',
                                             dismissQueue: false,
                                             layout: 'topCenter',
