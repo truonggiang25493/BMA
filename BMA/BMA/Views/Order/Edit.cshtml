@@ -105,10 +105,10 @@
                                                         <input type="hidden" name="productId" value="@(orderItem.ProductId)" />
                                                     </td>
                                                     <td style="vertical-align: middle;">
-                                                        <input type="number" name="productPrice" min="1000" value="@(orderItem.RealPrice)" />
+                                                        <input type="number" name="productPrice" min="1000" value="@(orderItem.RealPrice)" step="100" style="text-align: right;" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                     </td>
                                                     <td style="vertical-align: middle;">
-                                                        <input type="number" name="productQuantity" min="1" value="@(orderItem.Quantity)" />
+                                                        <input type="number" name="productQuantity" min="1" value="@(orderItem.Quantity)" style="text-align: right;" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                     </td>
                                                     <td style="text-align: right; vertical-align: middle;">
                                                         <span id="orderItemAmount">@(orderItem.Amount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span>
@@ -146,42 +146,52 @@
                                 function update_material_list() {
                                     var totalAmount = 0;
                                     var totalQuantity = 0;
-                                    $("#product-table tbody tr").each(function(index,element) {
-                                        var productPrice = $(element).find("td:nth-child(2) input").val();
-                                        var productQuantity = $(element).find("td:nth-child(3) input").val();
-                                        totalQuantity += parseInt(productQuantity);
-                                        var amount = productPrice * productQuantity;
-                                        totalAmount += amount;
-                                        $(element).find("td:nth-child(4) span").text(formatCurrency(amount));
-                                    });
+                                    if ($("#product-table tbody tr").length === 0) {
+                                        noty({
+                                            text: 'Cần phải có ít nhất một sản phẩm trong giỏ hàng.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme'
+                                        });
+                                    } else {
+                                        $("#product-table tbody tr").each(function(index,element) {
+                                            var productPrice = $(element).find("td:nth-child(2) input").val();
+                                            var productQuantity = $(element).find("td:nth-child(3) input").val();
+                                            totalQuantity += parseInt(productQuantity);
+                                            var amount = productPrice * productQuantity;
+                                            totalAmount += amount;
+                                            $(element).find("td:nth-child(4) span").text(formatCurrency(amount));
+                                        });
 
-                                    $("#total-table tr:first td").text(formatCurrency(totalAmount));
-                                    var discount = 0;
-                                    if (totalQuantity >= 501 && totalQuantity <= 1000) {
-                                        discount = (totalAmount * 5/100);
-                                    }else if (totalQuantity >= 1001 && totalQuantity <= 10000) {
-                                        discount = (totalAmount * 10/100);
-                                    }
-                                    $("#total-table tr:nth-child(2) td").text(formatCurrency(discount));
-                                    var totalTax = (totalAmount-discount) * @(Model.TaxRate) / 100;
-                                    $("#total-table tr:nth-child(3) td").text(formatCurrency(totalTax));
-
-                                    var totalValue = totalAmount + totalTax-discount;
-                                    $("#total-table tr:nth-child(4) td").text(formatCurrency(totalValue));
-
-                                    $.ajax({
-                                        url: "@Url.Action("UpdateMaterialList","Order")",
-                                        method: "POST",
-                                        data: $("#update-product-list").serialize(),
-                                        success: function(data) {
-                                            $('#material-info').html(data);
-                                            $("#material-info").show();
-                                            $("#updateInfo").hide();
-                                        },
-                                        fail: function(e) {
-                                            alert("Have error " + e.toString());
+                                        $("#total-table tr:first td").text(formatCurrency(totalAmount));
+                                        var discount = 0;
+                                        if (totalQuantity >= 501 && totalQuantity <= 1000) {
+                                            discount = (totalAmount * 5/100);
+                                        }else if (totalQuantity >= 1001 && totalQuantity <= 10000) {
+                                            discount = (totalAmount * 10/100);
                                         }
-                                    });
+                                        $("#total-table tr:nth-child(2) td").text(formatCurrency(discount));
+                                        var totalTax = (totalAmount-discount) * @(Model.TaxRate) / 100;
+                                        $("#total-table tr:nth-child(3) td").text(formatCurrency(totalTax));
+
+                                        var totalValue = totalAmount + totalTax-discount;
+                                        $("#total-table tr:nth-child(4) td").text(formatCurrency(totalValue));
+
+                                        $.ajax({
+                                            url: "@Url.Action("UpdateMaterialList","Order")",
+                                            method: "POST",
+                                            data: $("#update-product-list").serialize(),
+                                            success: function(data) {
+                                                $('#material-info').html(data);
+                                                $("#material-info").show();
+                                                $("#updateInfo").hide();
+                                            },
+                                            fail: function(e) {
+                                                alert("Have error " + e.toString());
+                                            }
+                                        });
+                                    }
                                 }
                             </script>
                         </button>
@@ -246,7 +256,10 @@
                                                                 "html": $("<input>", {
                                                                     "type": "number",
                                                                     "name": "productPrice",
-                                                                    "value": selectedPrice[i]
+                                                                    "style":"text-align: right;",
+                                                                    "step":"100",
+                                                                    "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                                                                    "value": selectedPrice[i].split(".").join("")
                                                                 })
                                                             }),
                                                             $("<td>", {
@@ -254,6 +267,8 @@
                                                                 "html": $("<input>", {
                                                                     "type": "number",
                                                                     "name": "productQuantity",
+                                                                    "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                                                                    "style":"text-align: right;",
                                                                     "value": "1",
                                                                     "min": "1"
                                                                 })
@@ -549,8 +564,14 @@
                         {
                             <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container(@Model.MaterialCost)">
                                 <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Cập nhật
-
                             </button>
+                        }
+                        else
+                        {
+                            <a href="@(Url.Action("AddInputBill", "InputBill"))" class="btn btn-info pull-right">
+                                <i class="fa fa-plus" style="margin-right: 3px"></i>
+                                Nhập nguyên liệu đầu vào
+                            </a>
                         }
                     </div>
                 </div>
@@ -838,12 +859,12 @@
             }
         });
 
-        $(document).on("keyup click", "input[name='productQuantity']", function() {
+        $(document).on("change", "input[name='productQuantity']", function() {
             $("#updateInfo").show();
             $("#material-info").hide();
         });
 
-        $(document).on("keyup click", "input[name='productPrice']", function() {
+        $(document).on("change", "input[name='productPrice']", function() {
             $("#updateInfo").show();
             $("#material-info").hide();
         });

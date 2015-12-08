@@ -26,29 +26,35 @@ namespace BMA.Business
             {
                 //Get Basic Info
                 result.Order = order;
-                //Get Material info
-                List<MaterialViewModel> materialViewModelList = GetMaterialListForOrder(orderId);
+
                 // Check the order is enough material or not
                 result.IsEnoughMaterial = true;
-                if (result.Order.OrderStatus == 0)
+                //Get Material info
+                if (order.OrderStatus == 0)
                 {
-                    foreach (MaterialViewModel materialViewModel in materialViewModelList)
+                    List<MaterialViewModel> materialViewModelList = GetMaterialListForOrder(orderId);
+                    if (result.Order.OrderStatus == 0)
                     {
-                        if (!materialViewModel.IsEnough)
+                        foreach (MaterialViewModel materialViewModel in materialViewModelList)
                         {
-                            result.IsEnoughMaterial = false;
+                            if (!materialViewModel.IsEnough)
+                            {
+                                result.IsEnoughMaterial = false;
+                            }
                         }
+                    }
+
+                    result.MaterialList = materialViewModelList;
+
+                    List<InputMaterialViewModel> inputMaterialViewModelListTemp = GetInputMaterialList(result.MaterialList);
+                    // Get Material Cost
+                    if (inputMaterialViewModelListTemp.Count != 0)
+                    {
+                        result.MaterialCost = GetMaterialCost(inputMaterialViewModelListTemp);
                     }
                 }
 
 
-                result.MaterialList = materialViewModelList;
-                List<InputMaterialViewModel> inputMaterialViewModelListTemp = GetInputMaterialList(result.MaterialList);
-                // Get Material Cost
-                if (inputMaterialViewModelListTemp.Count != 0)
-                {
-                    result.MaterialCost = GetMaterialCost(inputMaterialViewModelListTemp);
-                }
                 // Get Customer or Guest info
                 if (order.CustomerUserId != null)
                 {
@@ -272,9 +278,9 @@ namespace BMA.Business
                     outputMaterial.ProductMaterialId = materialViewModel.ProductMaterialId;
                     outputMaterial.ExportTime = now;
                     outputMaterial.OrderItemId = orderItem.OrderItemId;
-                    //Get list of InputMaterial available order by importTime descending
+                    //Get list of InputMaterial available order by ExpireDate descending
                     List<InputMaterial> tempList = db.InputMaterials.Where(
-                        m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderBy(m => m.ImportDate).ToList();
+                        m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderByDescending(m => m.InputMaterialExpiryDate).ToList();
                     //Compare each input material with material ViewModel and merge each material of orderItem to input material
                     foreach (InputMaterial inputMaterial in tempList)
                     {
@@ -664,9 +670,9 @@ namespace BMA.Business
                     OutputMaterial outputMaterial = new OutputMaterial();
                     outputMaterial.ExportQuantity = materialViewModel.NeedQuantity;
                     outputMaterial.ProductMaterialId = materialViewModel.ProductMaterialId;
-                    //Get list of InputMaterial available order by importTime descending
+                    //Get list of InputMaterial available order by expire date descending
                     List<InputMaterial> tempList = db.InputMaterials.Where(
-                        m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderBy(m => m.ImportDate).ToList();
+                        m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderByDescending(m => m.InputMaterialExpiryDate).ToList();
                     //Compare each input material with material ViewModel and merge each material of orderItem to input material
                     foreach (InputMaterial inputMaterial in tempList)
                     {
@@ -1023,9 +1029,9 @@ namespace BMA.Business
                     OutputMaterial outputMaterial = new OutputMaterial();
                     outputMaterial.ExportQuantity = materialViewModel.NeedQuantity;
                     outputMaterial.ProductMaterialId = materialViewModel.ProductMaterialId;
-                    //Get list of InputMaterial available order by importTime descending
+                    //Get list of InputMaterial available order by expire date descending
                     List<InputMaterial> tempList = db.InputMaterials.Where(
-                        m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderBy(m => m.ImportDate).ToList();
+                        m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderByDescending(m => m.InputMaterialExpiryDate).ToList();
                     //Compare each input material with material ViewModel and merge each material of orderItem to input material
                     foreach (InputMaterial inputMaterial in tempList)
                     {
@@ -1313,9 +1319,7 @@ namespace BMA.Business
                     output.OutputBillAmount = order.Amount;
                     output.OutputBillTaxAmount = order.TaxAmount;
                     output.OutputBillCode = "B" + order.OrderCode.Substring(1);
-                    output.Serial = "BM/15P";
-                    output.FormNo = "02GTKT3/001";
-
+                    
                     output.OrderId = orderId;
                     db.OutputBills.Add(output);
                 }
@@ -1447,8 +1451,15 @@ namespace BMA.Business
             }
 
             // Check Phone Number
-            Customer checkPhone = db.Customers.FirstOrDefault(m => m.CustomerPhoneNumber.Equals(customerPhoneNumber.Trim()));
-            if (checkPhone != null)
+            Customer checkPhoneCustomer = db.Customers.FirstOrDefault(m => m.CustomerPhoneNumber.Equals(customerPhoneNumber.Trim()));
+            if (checkPhoneCustomer != null)
+            {
+                return 4;
+            }
+
+            Staff checkPhoneStaff =
+                db.Staffs.FirstOrDefault(m => m.StaffPhoneNumber.Equals(customerPhoneNumber.Trim()) && m.IsActive);
+            if (checkPhoneStaff != null)
             {
                 return 4;
             }
@@ -1468,6 +1479,78 @@ namespace BMA.Business
         {
             return db.DiscountByQuantities.ToList();
         }
+
+        public bool ExportMaterial(int productMaterialId, int outputMaterialId, int exportQuantity)
+        {
+            OutputMaterial outputMaterial =
+                db.OutputMaterials.FirstOrDefault(m => m.OutputMaterialId == outputMaterialId);
+
+            ProductMaterial productMaterial =
+                db.ProductMaterials.FirstOrDefault(m => m.ProductMaterialId == productMaterialId);
+
+            if (outputMaterial == null || productMaterial == null || productMaterial.CurrentQuantity < exportQuantity)
+            {
+                return false;
+            }
+
+            outputMaterial.ExportQuantity += exportQuantity;
+            
+            productMaterial.CurrentQuantity -= exportQuantity;
+
+            //Get list of InputMaterial available order by expire date descending
+            List<InputMaterial> tempList = db.InputMaterials.Where(m => m.ProductMaterialId == productMaterialId && m.IsActive && m.RemainQuantity > 0).OrderByDescending(m => m.InputMaterialExpiryDate).ToList();
+
+            //Compare each input material with material ViewModel and merge each material of orderItem to input material
+            foreach (InputMaterial inputMaterial in tempList)
+            {
+                if (exportQuantity > 0)
+                {
+                    ExportFrom exportFrom = new ExportFrom();
+                    if (inputMaterial.RemainQuantity >= exportQuantity)
+                    {
+                        exportFrom.ExportFromQuantity = exportQuantity;
+                        inputMaterial.RemainQuantity -= exportQuantity;
+                        exportQuantity = 0;
+
+                    }
+                    else
+                    {
+                        exportQuantity -= inputMaterial.RemainQuantity;
+                        exportFrom.ExportFromQuantity = inputMaterial.RemainQuantity;
+                        inputMaterial.RemainQuantity = 0;
+                    }
+
+                    ExportFrom exportFromCheck =
+                        db.ExportFroms.FirstOrDefault(
+                            m => m.InputbillId == inputMaterial.InputBillId && m.OutputMaterialId == outputMaterialId);
+                    if (exportFromCheck != null)
+                    {
+                        exportFromCheck.ExportFromQuantity += exportFrom.ExportFromQuantity;
+                    }
+                    else
+                    {
+                        // Get info for ExportFrom
+                        exportFrom.InputbillId = inputMaterial.InputBillId;
+                        // Add output material to input bill
+                        exportFrom.OutputMaterialId = outputMaterialId;
+                        db.ExportFroms.Add(exportFrom);
+                    }
+                }
+            }
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+
+            return true;
+        }
+
     }
 
 }
