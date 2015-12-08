@@ -157,8 +157,6 @@ namespace BMA.Controllers
                     String inputBillCode = supplierIdString + importDate;
                     inputBill.InputBillCode = inputBillCode.Replace("/", "");
                     inputBill.InputRawImage = fileName;
-                    inputBill.FormNo = formNo;
-                    inputBill.Serial = serial;
                 }
                 catch (Exception)
                 {
