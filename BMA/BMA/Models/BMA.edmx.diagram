@@ -29,7 +29,6 @@
         <EntityTypeShape EntityType="BMAModel.sysdiagram" Width="1.5" PointX="14.75" PointY="7.125" />
         <EntityTypeShape EntityType="BMAModel.TaxRate" Width="1.5" PointX="14" PointY="3.375" />
         <EntityTypeShape EntityType="BMAModel.TaxType" Width="1.5" PointX="11.75" PointY="3.5" />
-        <EntityTypeShape EntityType="BMAModel.TndnTaxDeclaration" Width="1.5" PointX="11.75" PointY="17.125" />
         <EntityTypeShape EntityType="BMAModel.User" Width="1.5" PointX="3" PointY="8.875" />
         <EntityTypeShape EntityType="BMAModel.VatTaxDeclaration" Width="1.5" PointX="14.75" PointY="16.125" />
         <AssociationConnector Association="BMAModel.FK_Product_Category_CategoryId" />

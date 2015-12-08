@@ -351,9 +351,6 @@
     <Compile Include="Models\TaxType.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\TndnTaxDeclaration.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\User.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
