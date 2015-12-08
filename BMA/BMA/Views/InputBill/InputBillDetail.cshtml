@@ -57,18 +57,9 @@
                                         <a></a>
                                         <a class="col-lg-pull-2">@((Model.InputBillAmount + Model.InputTaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</a>
                                     </div>
-                                    <div class="list-group-item">
-                                        <b>Mẫu hóa đơn: </b>
-                                        <a class="col-lg-pull-2">@Model.FormNo</a>
-                                    </div>
-                                    <div class="list-group-item">
-                                        <b>Mã số: </b>
-                                        <a class="col-lg-pull-2">@Model.Serial</a>
-                                    </div>
-
                                 </p>
                             </div>
-                            
+
                             <!-- Input Material in Input Bill List -->
                             <div class="tab-pane" id="inputMaterialList">
                                 <div class="row" id="inputMaterialTable">
@@ -116,14 +107,14 @@
 <!-- Get Input Material Table by Input Bill -->
 @section InputBillDetailScript{
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $.ajax({
                 url: "@(Url.Action("GetInputMaterialInBill", "InputBill", new {id = Model.InputBillId}))",
                 method: "GET",
-                success: function(data) {
+                success: function (data) {
                     $("#inputMaterialTable").html(data);
                 },
-                fail: function(e) {
+                fail: function (e) {
                     alert(e.toString());
                 }
             });

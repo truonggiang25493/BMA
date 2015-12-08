@@ -16,12 +16,10 @@ namespace BMA.Models
     {
         public int OutputBillId { get; set; }
         public string OutputBillCode { get; set; }
-        public double OutputBillAmount { get; set; }
+        public int OutputBillAmount { get; set; }
         public string OutputBillRawImage { get; set; }
-        public double OutputBillTaxAmount { get; set; }
+        public int OutputBillTaxAmount { get; set; }
         public System.DateTime ExportDate { get; set; }
-        public string FormNo { get; set; }
-        public string Serial { get; set; }
         public int OrderId { get; set; }
     
         public virtual Order Order { get; set; }

@@ -41,7 +41,7 @@ namespace BMA.Controllers
                 var inputMaterialslList = InputMaterialBusiness.GetInputMaterialList();
                 if (inputMaterialslList == null)
                 {
-                    RedirectToAction("InputMaterialIndex", "InputMaterial");
+                    return RedirectToAction("Index", "StoreInfor");
                 }
                 return View(inputMaterialslList);
             }
@@ -75,7 +75,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "Manage"); ;
+                    return RedirectToAction("Index", "StoreInfor"); ;
                 }
             }
         }
@@ -148,26 +148,38 @@ namespace BMA.Controllers
                 String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
                 String inputMaterialNote = f["txtInputMaterialNote"];
                 String inputBillId = f["inputBillId"];
-                try
+
+                var importDate =DateTime.ParseExact(importDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var expireDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                if (DateTime.Compare(expireDate,importDate)>=1)
                 {
-                    int inputMaterialTotalPrice = Convert.ToInt32(inputMaterialTotalPriceString);
-                    double inputMaterialPrice = Convert.ToDouble(inputMaterialTotalPrice / importQuantity);
+                    try
+                    {
+                        int inputMaterialTotalPrice = Convert.ToInt32(inputMaterialTotalPriceString);
+                        double inputMaterialPrice = Convert.ToDouble(inputMaterialTotalPrice/importQuantity);
 
-                    inputMaterial.ImportQuantity = importQuantity;
-                    inputMaterial.InputMaterialPrice = inputMaterialPrice;
-                    inputMaterial.ImportDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    inputMaterial.InputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    inputMaterial.InputMaterialNote = inputMaterialNote;
-                    inputMaterial.InputBillId = Convert.ToInt32(inputBillId);
+                        inputMaterial.ImportQuantity = importQuantity;
+                        inputMaterial.InputMaterialPrice = inputMaterialPrice;
+                        inputMaterial.ImportDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy",
+                            CultureInfo.InvariantCulture);
+                        inputMaterial.InputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString,
+                            "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        inputMaterial.InputMaterialNote = inputMaterialNote;
+                        inputMaterial.InputBillId = Convert.ToInt32(inputBillId);
+                        //Change product material quantity
+                        inputMaterial.ProductMaterialId = productMaterialId;
+                        inputMaterial.RemainQuantity = Convert.ToInt32(importQuantity);
+                        inputMaterial.IsActive = true;
+                    }
+                    catch (Exception)
+                    {
+                        return 0;
 
-                    inputMaterial.ProductMaterialId = productMaterialId;
-                    inputMaterial.RemainQuantity = Convert.ToInt32(importQuantity);
-                    inputMaterial.IsActive = true;
+                    }
                 }
-                catch (Exception)
+                else
                 {
-                    return 0;
-
+                    return -1;
                 }
                 //Close connection with hub
                 MvcApplication.lowQuantityNotifer.Dispose();

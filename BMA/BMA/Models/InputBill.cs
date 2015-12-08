@@ -23,13 +23,11 @@ namespace BMA.Models
     
         public int InputBillId { get; set; }
         public string InputBillCode { get; set; }
-        public double InputBillAmount { get; set; }
+        public int InputBillAmount { get; set; }
         public string InputRawImage { get; set; }
-        public double InputTaxAmount { get; set; }
+        public int InputTaxAmount { get; set; }
         public int SupplierId { get; set; }
         public System.DateTime ImportDate { get; set; }
-        public string FormNo { get; set; }
-        public string Serial { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ExportFrom> ExportFroms { get; set; }

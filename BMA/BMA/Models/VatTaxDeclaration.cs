@@ -14,16 +14,14 @@ namespace BMA.Models
     
     public partial class VatTaxDeclaration
     {
-        public int TaxDeclarationId { get; set; }
+        public int VatTaxDeclarationId { get; set; }
         public int Quarter { get; set; }
         public int Year { get; set; }
         public int Type { get; set; }
-        public string OwnerName { get; set; }
-        public string OwnerTaxCode { get; set; }
-        public string AgentOwnerName { get; set; }
-        public string AgentTaxCode { get; set; }
-        public string AgentName { get; set; }
-        public string AgentNo { get; set; }
+        public string TaxAgentOwnerName { get; set; }
+        public string TaxAgentTaxCode { get; set; }
+        public string TaxAgentName { get; set; }
+        public string TaxAgentNo { get; set; }
         public string InputCategory1 { get; set; }
         public Nullable<int> InputCategory1TotalAmount { get; set; }
         public Nullable<int> InputCategory1TotalTaxAmount { get; set; }
@@ -74,19 +72,21 @@ namespace BMA.Models
         public Nullable<int> Value40b { get; set; }
         public Nullable<int> Value41 { get; set; }
         public Nullable<int> Value43 { get; set; }
-        public string OwnerAddress { get; set; }
-        public string OwnerDistrict { get; set; }
-        public string OwnerProvince { get; set; }
-        public string OwnerPhone { get; set; }
-        public string OwnerFax { get; set; }
-        public string OwnerEmail { get; set; }
-        public string AgentAddress { get; set; }
-        public string AgentDistrict { get; set; }
-        public string AgentProvince { get; set; }
-        public string AgentPhone { get; set; }
-        public string AgentFax { get; set; }
-        public string AgentEmail { get; set; }
+        public string TaxAgentAddress { get; set; }
+        public string TaxAgentDistrict { get; set; }
+        public string TaxAgentProvince { get; set; }
+        public string TaxAgentPhone { get; set; }
+        public string TaxAgentFax { get; set; }
+        public string TaxAgentEmail { get; set; }
         public Nullable<int> Value40 { get; set; }
         public Nullable<int> Value42 { get; set; }
+        public string StoreOwnerName { get; set; }
+        public string StoreTaxCode { get; set; }
+        public string StoreAddress { get; set; }
+        public string StoreDistrict { get; set; }
+        public string StoreProvince { get; set; }
+        public string StorePhone { get; set; }
+        public string StoreFax { get; set; }
+        public string StoreEmail { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace BMA.Controllers
         public ActionResult InputBillIndex()
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -47,7 +47,7 @@ namespace BMA.Controllers
         public ActionResult InputBillDetail(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -66,7 +66,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "Manage");
+                    return RedirectToAction("Index", "StoreInfor");
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace BMA.Controllers
         public ActionResult GetInputMaterialInBill(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -120,14 +120,21 @@ namespace BMA.Controllers
             }
             else
             {
-                ViewBag.TreeView = "inputBill";
-                ViewBag.TreeViewMenu = "addInputBill";
+                try
+                {
+                    ViewBag.TreeView = "inputBill";
+                    ViewBag.TreeViewMenu = "addInputBill";
 
-                OrderBusiness business = new OrderBusiness();
-                ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
+                    OrderBusiness business = new OrderBusiness();
+                    ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
 
-                List<InputBill> inputBills = db.InputBills.ToList();
-                return View(inputBills);
+                    List<InputBill> inputBills = db.InputBills.ToList();
+                    return View(inputBills);
+                }
+                catch (Exception e)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
             }
         }
 
@@ -157,8 +164,7 @@ namespace BMA.Controllers
                     String inputBillCode = supplierIdString + importDate;
                     inputBill.InputBillCode = inputBillCode.Replace("/", "");
                     inputBill.InputRawImage = fileName;
-                    inputBill.FormNo = formNo;
-                    inputBill.Serial = serial;
+
                 }
                 catch (Exception)
                 {
@@ -248,7 +254,7 @@ namespace BMA.Controllers
                     OrderBusiness business = new OrderBusiness();
                     ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
                     InputBill inputBill = db.InputBills.SingleOrDefault(m => m.InputBillId == id);
-                    if (inputBill==null)
+                    if (inputBill == null)
                     {
                         return RedirectToAction("InputBillIndex", "InputBill");
                     }
@@ -256,7 +262,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "Manage");
+                    return RedirectToAction("Index", "StoreInfor");
                 }
             }
         }

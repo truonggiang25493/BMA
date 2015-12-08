@@ -1313,8 +1313,8 @@ namespace BMA.Business
                     output.OutputBillAmount = order.Amount;
                     output.OutputBillTaxAmount = order.TaxAmount;
                     output.OutputBillCode = "B" + order.OrderCode.Substring(1);
-                    output.Serial = "BM/15P";
-                    output.FormNo = "02GTKT3/001";
+                    //output.Serial = "BM/15P";
+                    //output.FormNo = "02GTKT3/001";
 
                     output.OrderId = orderId;
                     db.OutputBills.Add(output);

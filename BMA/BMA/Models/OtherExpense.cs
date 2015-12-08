@@ -19,5 +19,6 @@ namespace BMA.Models
         public int OtherExpenseAmount { get; set; }
         public Nullable<int> OtherExpenseMonthTime { get; set; }
         public Nullable<int> OtherExpenseYearTime { get; set; }
+        public int Type { get; set; }
     }
 }

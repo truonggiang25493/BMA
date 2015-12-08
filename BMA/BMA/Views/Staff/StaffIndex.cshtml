@@ -23,11 +23,11 @@
                 <thead style="font-weight: bold">
                     <tr>
 
-                        <th>Tên nhân viên</th>
-                        <th>Tên tài khoản</th>
-                        <th>Số điện thoại</th>
-                        <th>Trạng thái</th>
-                        <th></th>
+                        <th style="width: 30%">Tên nhân viên</th>
+                        <th style="width: 20%">Tên tài khoản</th>
+                        <th style="width: 20%">Số điện thoại</th>
+                        <th style="width: 20%">Trạng thái</th>
+                        <th style="width: 10%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,15 +35,15 @@
                     {
                         <tr>
 
-                            <td>@staff.User.Fullname</td>
-                            <td>@staff.User.Username</td>
-                            <td>@staff.StaffPhoneNumber</td>
-                            @if (staff.IsActive == true)
+                            <td style="width: 30%">@(staff.User.Fullname.Length <= 30 ? staff.User.Fullname : staff.User.Fullname.Substring(0, 26) + "...")</td>
+                            <td style="width: 20%">@(staff.User.Username.Length <= 30 ? staff.User.Username : staff.User.Username.Substring(0, 26) + "...")</td>
+                            <td style="width: 20%">@staff.StaffPhoneNumber</td>
+                            @if (staff.IsActive)
                             {
-                                <td>
+                                <td style="width: 20%">
                                     <span class="label label-success">Đang hoạt động</span>
                                 </td>
-                                <td>
+                                <td style="width: 10%">
                                     <a class="btn btn-link btn-xs" href="@(Url.Action("StaffDetail", "Staff", new {id = staff.StaffId}))" data-toggle="tooltip" data-placement="top" title="Xem">
                                         <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                     </a>
@@ -55,10 +55,10 @@
                             }
                             else if (staff.IsActive == false)
                             {
-                                <td>
+                                <td style="width: 20%">
                                     <span class="label label-danger">Ngừng hoạt động</span>
                                 </td>
-                                <td>
+                                <td style="width: 10%">
                                     <a class="btn btn-link btn-xs" href="@(Url.Action("StaffDetail", "Staff", new {id = staff.StaffId}))" data-toggle="tooltip" data-placement="top" title="Xem">
                                         <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                     </a>
@@ -82,10 +82,10 @@
     </div>
 </section>
 @section StaffIndexScript{
-   <script type="text/javascript">
-        function open_container(id,check) {
+    <script type="text/javascript">
+        function open_container(id, check) {
             var content = $("<div>", {
-                "html": "Bạn có muốn thay đổi trạng thái của nhân viên từ trạng thái  " + (check===1? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>") + "  sang trạng thái  " + (check===1? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>") + "  không?"
+                "html": "Bạn có muốn thay đổi trạng thái của nhân viên từ trạng thái  " + (check === 1 ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>") + "  sang trạng thái  " + (check === 1 ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>") + "  không?"
             });
 
             var title = 'Thay đổi trạng thái nhân viên';
@@ -124,7 +124,7 @@
                 "data": {
                     "id": id
                 },
-                "success": function(data) {
+                "success": function (data) {
                     if (data === "1") {
                         $('#myModal').modal('hide');
                         window.location.replace("@Url.Action("StaffIndex", "Staff")");
@@ -139,11 +139,11 @@
                         });
                     }
                 },
-                "fail": function(e) {
+                "fail": function (e) {
                     alert("Have error" + e);
                 }
             });
         }
 
-</script>
+    </script>
 }

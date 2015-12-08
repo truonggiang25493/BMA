@@ -37,7 +37,7 @@
                     {
                         <tr class="row">
 
-                            <td style="text-align: center; width: 15%">@inputMaterial.ProductMaterial.ProductMaterialName</td>
+                            <td style="text-align: center; width: 15%">@(inputMaterial.ProductMaterial.ProductMaterialName.Length <= 30 ? inputMaterial.ProductMaterial.ProductMaterialName : inputMaterial.ProductMaterial.ProductMaterialName.Substring(0, 26) + "...")</td>
                             <td style="text-align: right; width: 15%">@inputMaterial.ImportQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @inputMaterial.ProductMaterial.ProductMaterialUnit</td>
                             <td style="text-align: right; width: 15%">@inputMaterial.RemainQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @inputMaterial.ProductMaterial.ProductMaterialUnit</td>
                             <td style="text-align: center; width: 15%">@inputMaterial.ImportDate.ToString("dd/MM/yyyy")</td>
@@ -201,7 +201,7 @@
                     theme: 'defaultTheme',
                     timeout: 1000
                 });
-            } else if (checkdiscardQuantity.trim()==='') {
+            } else if (checkdiscardQuantity.trim() === '') {
                 noty({
                     text: 'Số lượng hủy không được trống.',
                     type: 'warning',
@@ -210,7 +210,7 @@
                     theme: 'defaultTheme',
                     timeout: 1000
                 });
-            } else if ((checkdiscardQuantity) <=0) {
+            } else if ((checkdiscardQuantity) <= 0) {
                 noty({
                     text: 'Số lượng hủy không được nhỏ hơn 0.',
                     type: 'warning',
