@@ -7,14 +7,7 @@ namespace BMA.Models.ViewModel
 {
     public class TndnTaxDeclarationViewModel
     {
-        public bool CompanyType1 { get; set; }
-        public bool CompanyType2 { get; set; }
-        public bool CompanyType3 { get; set; }
-
-        public string MaxRevenueAreaName { get; set; }
-        public int MaxRevenueAreaNo { get; set; }
-
-        public int TndnTaxRate { get; set; }
+        public int MaxRevenueRatio { get; set; }
 
         public int Year { get; set; }
         public string StoreOwnerName { get; set; }
@@ -25,6 +18,7 @@ namespace BMA.Models.ViewModel
         public string StorePhone { get; set; }
         public string StoreFax { get; set; }
         public string StoreEmail { get; set; }
+
         public string VatAgentOwnerName { get; set; }
         public string VatAgentName { get; set; }
         public string VatAgentNo { get; set; }
@@ -63,7 +57,7 @@ namespace BMA.Models.ViewModel
         public int ValueC2 { get; set; }
         public int ValueC3 { get; set; }
         public int ValueC3a { get; set; }
-        public int ValueC3b { get; set; }
+        public int ValueC3b { get; set; }   
         public int ValueC4 { get; set; }
         public int ValueC5 { get; set; }
         public int ValueC6 { get; set; }
@@ -72,7 +66,7 @@ namespace BMA.Models.ViewModel
         public int ValueC9 { get; set; }
         public int ValueC9a { get; set; }
         public int ValueC10 { get; set; }
-        public int ValueC11{ get; set; }
+        public int ValueC11 { get; set; }
         public int ValueC12 { get; set; }
         public int ValueC13 { get; set; }
         public int ValueC14 { get; set; }
@@ -94,12 +88,35 @@ namespace BMA.Models.ViewModel
         public int ValueI { get; set; }
 
         public bool ValueL1 { get; set; }
-        public bool ValueL2Name { get; set; }
-        public bool ValueL2No { get; set; }
+        public int ValueL2No { get; set; }
         public DateTime ValueL3 { get; set; }
         public int ValueL4 { get; set; }
-        public int ValueL5 { get; set; } 
+        public int ValueL5 { get; set; }
         public int ValueM1 { get; set; }
         public int ValueM2 { get; set; }
+
+        #region PL 03-1A
+
+        public int Value1 { get; set; }
+        public int Value2 { get; set; }
+        public int Value3 { get; set; }
+        public int Value4 { get; set; }
+        public int Value5 { get; set; }
+        public int Value6 { get; set; }
+        public int Value7 { get; set; }
+        public int Value8 { get; set; }
+        public int Value9 { get; set; }
+        public int Value10 { get; set; }
+        public int Value11 { get; set; }
+        public int Value12 { get; set; }
+        public int Value13 { get; set; }
+        public int Value14 { get; set; }
+        public int Value15 { get; set; }
+        public int Value16 { get; set; }
+        public int Value17 { get; set; }
+        public int Value18 { get; set; }
+        public int Value19 { get; set; }
+
+        #endregion
     }
 }

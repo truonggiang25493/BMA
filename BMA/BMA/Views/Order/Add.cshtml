@@ -94,102 +94,7 @@
                 <button class="btn btn-success" style="margin-left: 15px;" onclick="show_list_product()">
                     <i class="fa fa-plus" style="margin-right: 3px"></i>Thêm sản phẩm
                     <script type="text/javascript">
-                        function show_list_product() {
-                            $.ajax({
-                                url: "@(Url.Action("GetListOfProductToAdd", "Order"))",
-                                method: "POST",
-                                success: function (data) {
-                                    document.getElementById('standard-popup-title').innerHTML = "Chọn sản phẩm";
-                                    document.getElementById('standard-popup-body').innerHTML = data;
-                                    $('#myStandardModal').modal('show');
-                                },
-                                fail: function (e) {
-                                    alert("Have error" + e.toString());
-                                }
-                            });
-                        }
 
-                        function fnselect() {
-                            var selectedIds = [];
-                            var selectedName = [];
-                            var selectedPrice = [];
-
-                            $(".multiple-choice-table tr.selected").each(function (index, row) {
-                                selectedIds.push($(row).find("td:first input").val());
-                                selectedName.push($(row).find("td:first span").text());
-                                selectedPrice.push($(row).find("td:nth-child(2) span").text());
-                            });
-
-
-                            $.ajax({
-                                "url": "@Url.Action("RemoveProductInProductListForAdd", "Order")",
-                                "method": "POST",
-                                "data": JSON.stringify({ "productId": selectedIds }),
-                                "dataType": 'json',
-                                "contentType": 'application/json',
-                                "success": function (data) {
-                                    if (data === 1) {
-                                        $('#myStandardModal').modal('hide');
-                                        for (i = 0; i < selectedIds.length; i++) {
-                                            var productRow = $("<tr>", {
-                                                "html": [
-                                                    $("<td>", {
-                                                        "style": "vertical-align: middle;",
-                                                        "html": [
-                                                            selectedName[i],
-                                                            $("<input>", {
-                                                                "type": "hidden",
-                                                                "name": "productId",
-                                                                "value": selectedIds[i]
-                                                            })
-                                                        ]
-                                                    }),
-                                                    $("<td>", {
-                                                        "style": "vertical-align: middle;",
-                                                        "html": $("<input>", {
-                                                            "type": "number",
-                                                            "name": "productPrice",
-                                                            "value": selectedPrice[i]
-                                                        })
-                                                    }),
-                                                    $("<td>", {
-                                                        "style": "vertical-align: middle;",
-                                                        "html": $("<input>", {
-                                                            "type": "number",
-                                                            "name": "productQuantity",
-                                                            "value": "1",
-                                                            "min": "1"
-                                                        })
-                                                    }),
-                                                    $("<td>", {
-                                                        "style": "text-align: right; vertical-align: middle;",
-                                                        "html": $("<span>", {
-                                                            id: "orderItemAmount",
-                                                            "html": formatCurrency(selectedPrice[i])
-                                                        })
-                                                    }),
-                                                    $("<td>", {
-                                                        "style": "text-align: center; vertical-align: middle;",
-                                                        "html": $("<a>", {
-                                                            "class": "btn btn-warning",
-                                                            "data-role": "remove-row-btn",
-                                                            "html": "Hủy"
-                                                        })
-                                                    })
-                                                ]
-                                            });
-                                            $("#product-table tbody").append(productRow);
-                                        }
-                                        $("#product-info").show();
-                                    } else {
-                                        alert("Không thể thêm sản phẩm");
-                                    }
-                                },
-                                "fail": function (e) {
-                                    alert("Have error" + e.toString());
-                                }
-                            });
-                        }
                     </script>
                 </button>
             </div>
@@ -231,7 +136,7 @@
                                     timeout: 1000
                             });
                         } else {
-                                    var listId = [];
+                                var listId = [];
                         var listQuantity = [];
                         var listPrice = [];
                         $("#product-table tbody tr").each(function(index, element) {
@@ -297,25 +202,58 @@
 
 </section>
 @section AddOrderScript{
+    <script src="~/Scripts/numeral.js"></script>
     <script>
+        var selectIds = [];
+        var selectNames = [];
+        var selectPrices = [];
         $(document).on("click", ".multiple-choice-table tbody tr", function () {
-            if ($(this).attr('class') === 'selected') {
+            if ($(this).attr('class').indexOf('selected')>-1) {
                 $(this).removeClass('selected');
+                // Remove id
+                var idTemp = $(this).find("td:first input").val();
+                var idIndex = selectIds.indexOf(idTemp);
+                if (idIndex > -1) {
+                    selectIds.splice(idIndex, 1);
+                }
+                // Remove name
+                var nameTemp = $(this).find("td:first span").text();
+                var nameIndex = selectNames.indexOf(nameTemp);
+                if (nameIndex > -1) {
+                    selectNames.splice(nameIndex, 1);
+                }
+                // Remove price
+                var priceTemp = $(this).find("td:nth-child(2) span").text();
+                var priceIndex = selectPrices.indexOf(priceTemp);
+                if (priceIndex > -1) {
+                    selectPrices.splice(priceIndex, 1);
+                }
             } else {
                 $(this).addClass('selected');
+                // Add id, name, price
+                selectIds.push($(this).find("td:first input").val());
+                selectNames.push($(this).find("td:first span").text());
+                selectPrices.push($(this).find("td:nth-child(2) span").text());
             }
         });
 
-        $(document).on("keyup click", "input[type='number']", function () {
+        $(document).on("change", "[data-role='quantity']", function () {
             var quantity = $(this).val();
-            var price = $(this).parent().parent().find("td:nth-child(2) input").val();
+            var price = $(this).parent().parent().find("[data-role='price']").val();
+            var amount = quantity * price;
+            $(this).parent().parent().find("td:nth-child(4) span").html(formatCurrency(amount));
+        });
+
+        $(document).on("change", "[data-role='price']", function () {
+            var price = $(this).val();
+            var quantity = $(this).parent().parent().find("[data-role='quantity']").val();
             var amount = quantity * price;
             $(this).parent().parent().find("td:nth-child(4) span").html(formatCurrency(amount));
         });
 
         $(document).on("click", "[data-role=remove-row-btn]", function () {
             var productId = $(this).parent().parent().find("td:first input").val();
-            $(this).parent().parent().remove();
+            var removeRow = $(this).parent().parent();
             $.ajax({
                 "url": "@(Url.Action("AddProductInProductListForAdd", "Order"))",
                 "method": "POST",
@@ -323,7 +261,7 @@
                     "productId": productId
                 },
                 "success": function (data) {
-                    if (data === "0") {
+                    if (data === '0') {
                         noty({
                             text: 'Không hủy sản phẩm khỏi đơn hàng',
                             type: 'warning',
@@ -332,15 +270,123 @@
                             theme: 'defaultTheme',
                             timeout: 1000
                         });
-                    } else {
-                        $("#material-info").hide();
                     }
-
+                    if (data === '1') {
+                        removeRow.remove();
+                    }
                 },
                 "fail": function (e) {
                     alert("Have error" + e.toString());
                 }
             });
         });
+        function show_list_product() {
+            $.ajax({
+                url: "@(Url.Action("GetListOfProductToAdd", "Order"))",
+                method: "POST",
+                success: function (data) {
+                    document.getElementById('standard-popup-title').innerHTML = "Chọn sản phẩm";
+                    document.getElementById('standard-popup-body').innerHTML = data;
+                    $('#example2').DataTable({
+                        "paging": true,
+                        "lengthChange": false,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": false
+                    });
+                    $('#myStandardModal').modal('show');
+                },
+                fail: function (e) {
+                    alert("Have error" + e.toString());
+                }
+            });
+        }
+
+        function fnselect() {
+
+            $.ajax({
+                "url": "@Url.Action("RemoveProductInProductListForAdd", "Order")",
+                "method": "POST",
+                "data": JSON.stringify({ "productId": selectIds }),
+                "dataType": 'json',
+                "contentType": 'application/json',
+                "success": function (data) {
+                    if (data === 1) {
+                        $('#myStandardModal').modal('hide');
+                        for (i = 0; i < selectIds.length; i++) {
+                            var price = selectPrices[i].split(".").join("");
+                            var productRow = $("<tr>", {
+                                "html": [
+                                    $("<td>", {
+                                        "style": "vertical-align: middle;",
+                                        "html": [
+                                            selectNames[i],
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "productId",
+                                                "value": selectIds[i]
+                                            })
+                                        ]
+                                    }),
+                                    $("<td>", {
+                                        "style": "vertical-align: middle;",
+                                        "html": $("<input>", {
+                                            "type": "number",
+                                            "name": "productPrice",
+                                            "data-role":"price",
+                                            "step":"100",
+                                            "value": price,
+                                            "min":0,
+                                            "style":"text-align: right;",
+                                            "onkeypress":"return event.charCode >= 48 && event.charCode <= 57"
+
+                                        })
+                                    }),
+                                    $("<td>", {
+                                        "style": "vertical-align: middle;",
+                                        "html": $("<input>", {
+                                            "type": "number",
+                                            "name": "productQuantity",
+                                            "data-role":"quantity",
+                                            "value": "1",
+                                            "min": "1",
+                                            style:"text-align: right;",
+                                            onkeypress:"return event.charCode >= 48 && event.charCode <= 57"
+                                        })
+                                    }),
+                                    $("<td>", {
+                                        "style": "text-align: right; vertical-align: middle;",
+                                        "html": $("<span>", {
+                                            id: "orderItemAmount",
+                                            "html": formatCurrency(selectPrices[i])
+                                        })
+                                    }),
+                                    $("<td>", {
+                                        "style": "text-align: center; vertical-align: middle;",
+                                        "html": $("<a>", {
+                                            "class": "btn btn-warning",
+                                            "data-role": "remove-row-btn",
+                                            "html": "Hủy"
+                                        })
+                                    })
+                                ]
+                            });
+                            $("#product-table tbody").append(productRow);
+                        }
+                        $("#product-info").show();
+                        // Clear array
+                        selectIds = [];
+                        selectNames = [];
+                        selectPrices = [];
+                    } else {
+                        alert("Không thể thêm sản phẩm");
+                    }
+                },
+                "fail": function (e) {
+                    alert("Have error" + e.toString());
+                }
+            });
+        }
     </script>
 }

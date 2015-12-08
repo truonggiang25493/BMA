@@ -86,12 +86,7 @@ namespace BMA.Controllers
             {
                 ViewBag.Title = "Chỉnh sửa đơn hàng";
                 ViewBag.TreeView = "order";
-                Order order = db.Orders.FirstOrDefault(m => m.OrderId == id);
-                if (order != null)
-                {
-                    order.IsStaffEdit = true;
-                    db.SaveChanges();
-                }
+
                 OrderBusiness orderBusiness = new OrderBusiness();
                 int minQuantity = orderBusiness.GetMinQuantity();
                 ViewBag.MinQuantity = minQuantity;
@@ -203,7 +198,7 @@ namespace BMA.Controllers
                 {
 
                     int orderId = Convert.ToInt32(form["orderId"]);
-                    int deposit = Convert.ToInt32(form["deposit"]);
+                    int deposit = Convert.ToInt32(form["deposit"].Replace(".", ""));
                     string deliveryDateString = form["deliveryDate"];
                     DateTime deliveryDate = DateTime.ParseExact(deliveryDateString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
 
@@ -355,8 +350,12 @@ namespace BMA.Controllers
         }
 
         [HttpPost]
-        public int AddOrderForCustomer(int deposit, string deliveryDate, int customerId)
+        public int AddOrderForCustomer(FormCollection form)
         {
+            int deposit = Convert.ToInt32(form["deposit"].Replace(".", ""));
+            string deliveryDate = form["deliveryDate"];
+            int customerId = Convert.ToInt32(form["customerId"]);
+
             //Check autherization
             User staffUser = Session["User"] as User;
             if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
@@ -591,7 +590,7 @@ namespace BMA.Controllers
             Product product = db.Products.FirstOrDefault(m => m.ProductId == productId && m.IsActive);
             if (product != null)
             {
-                if (productList != null && productList.Count > 0)
+                if (productList != null)
                 {
                     bool check = true;
                     foreach (Product product1 in productList)
@@ -637,10 +636,13 @@ namespace BMA.Controllers
                     }
                     return 1;
                 }
+                else if (productList != null && productList.Count == 0)
+                {
+                    productList.Add(product);
+                    return 1;
+                }
                 return 0;
             }
-
-
             return 0;
         }
 
@@ -746,7 +748,32 @@ namespace BMA.Controllers
 
         #endregion
 
+        [HttpPost]
+        public int ExportMaterial(FormCollection form)
+        {
+            string productMaterialIdString = form["productMaterialId"];
+            string outputMaterialIdString = form["outputMaterialId"];
+            string exportQuantityString = form["exportQuantity"];
 
+
+
+            try
+            {
+                int productMaterialId = Convert.ToInt32(productMaterialIdString);
+                int outputMaterialId = Convert.ToInt32(outputMaterialIdString);
+                int exportQuantity = Convert.ToInt32(exportQuantityString);
+
+                OrderBusiness business = new OrderBusiness();
+
+                return business.ExportMaterial(productMaterialId, outputMaterialId, exportQuantity) ? 1 : 0;
+            }
+            catch (Exception)
+            {
+                return 0;
+
+            }
+
+        }
 
     }
 }

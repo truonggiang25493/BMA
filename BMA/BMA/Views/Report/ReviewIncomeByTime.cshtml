@@ -268,7 +268,14 @@
                     }
                 },
                 fail: function (e) {
-
+                    noty({
+                        text: 'Đã có lỗi xảy ra trong quá trình thực hiện, vui lòng thử lại sau !',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 2000
+                    });
                 }
             });
         }

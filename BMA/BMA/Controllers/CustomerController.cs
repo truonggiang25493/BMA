@@ -14,7 +14,7 @@ namespace BMA.Controllers
         private BMAEntities db = new BMAEntities();
         private CustomerBusiness customerBusiness = new CustomerBusiness();
         // GET: Customer
-        /*
+        
         public ActionResult GetCustomerPartialView(int? customerId)
         {
             if (customerId != null)
@@ -24,7 +24,7 @@ namespace BMA.Controllers
             List<Customer> customerList = customerBusiness.GetCustomerList();
             return PartialView(customerList);
         }
-        */
+        
         [HttpPost]
         public ActionResult Create(FormCollection form, string returnUrl)
         {

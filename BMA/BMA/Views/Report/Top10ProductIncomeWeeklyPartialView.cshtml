@@ -75,33 +75,33 @@
             <div class="box-body">
                 <table class="table" id="revenue-table">
                     <thead>
-                        <tr>
-                            <th>Sản phẩm</th>
-                            <th>Mã sản phẩm</th>
-                            @foreach (string time in timeList)
-                            {
-                                <th style="text-align: center">@time</th>
-                            }
-                            <th></th>
-                        </tr>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Mã sản phẩm</th>
+                        @foreach (string time in timeList)
+                        {
+                            <th style="text-align: center">@time</th>
+                        }
+                        <th></th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 0; i < productCode.Count; i++)
-                        {
-                            <tr>
-                                <td>@(productCode.ElementAt(i))</td>
-                                <td>@(productName.ElementAt(i))</td>
-                                @foreach (string time in timeList)
+                    @for (int i = 0; i < productCode.Count; i++)
+                    {
+                        <tr>
+                            <td>@(productCode.ElementAt(i))</td>
+                            <td>@(productName.ElementAt(i))</td>
+                            @foreach (string time in timeList)
+                            {
+                                foreach (sp_GetTop10IncomeOfProductWeekly_Result incomeWeekly in Model)
                                 {
-                                    foreach (sp_GetTop10IncomeOfProductWeekly_Result incomeWeekly in Model)
+                                    if (incomeWeekly.ProductCode.Equals(productCode.ElementAt(i)) && incomeWeekly.StartDate.Value.ToString("dd/MM/yyyy").Equals(time.Substring(0, 10)))
                                     {
-                                        if (incomeWeekly.ProductCode.Equals(productCode.ElementAt(i)) && incomeWeekly.StartDate.Value.ToString("dd/MM/yyyy").Equals(time.Substring(0, 10)))
-                                        {
-                                            <td style="text-align: right">@incomeWeekly.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                        }
+                                        <td style="text-align: right">@incomeWeekly.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                     }
                                 }
-                                @{
+                            }
+                            @{
                                 int id = 0;
                                 while (id == 0)
                                 {
@@ -114,18 +114,23 @@
                                     }
                                 }
                                 string queryString = id + ";" + timeList.First().Substring(0, 10) + " - " + timeList.Last().Substring(13, 10);
-                                }
+                            }
 
-                                <td>
-                                    <button onclick="window.open('@(Html.Raw(Url.Action("Top10ProductIncomeDetail", "Report", new { query = queryString })))', '_blank')" c class="btn btn-info btn-xs">
-                                        <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
-                                    </button>
-                                </td>
-                            </tr>
-                        }
+                            <td>
+                                <button onclick="window.open('@(Html.Raw(Url.Action("Top10ProductIncomeDetail", "Report", new {query = queryString})))', '_blank')" c class="btn btn-info btn-xs">
+                                    <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
+                                </button>
+                            </td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+</div>
+<div class="row">
+    <button class="btn btn-danger pull-right">
+        <i class="fa fa-list" style="margin-right: 3px"></i>Xem toàn bộ
+    </button>
 </div>
