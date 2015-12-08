@@ -14,7 +14,7 @@
         <div class="box-header clearfix">
             <a class="btn btn-info pull-left" href="@(Url.Action("AddInputMaterial", "InputMaterial"))">
                 <i class="fa fa-plus" style="margin-right: 3px"></i>
-                Thêm nguyên liệu đầu vào mới
+                Thêm nguyên liệu đầu vào
             </a>
         </div>
         <!-- box-body -->
@@ -105,7 +105,7 @@
         <div class="box-footer clearfix">
             <a class="btn btn-info pull-left" href="@(Url.Action("AddInputMaterial", "InputMaterial"))">
                 <i class="fa fa-plus" style="margin-right: 3px"></i>
-                Thêm nguyên liệu đầu vào mới
+                Thêm nguyên liệu đầu vào
             </a>
         </div>
     </div>
@@ -201,7 +201,16 @@
                     theme: 'defaultTheme',
                     timeout: 1000
                 });
-            } else if ((checkdiscardQuantity) <= 0) {
+            } else if (checkdiscardQuantity.trim()==='') {
+                noty({
+                    text: 'Số lượng hủy không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else if ((checkdiscardQuantity) <=0) {
                 noty({
                     text: 'Số lượng hủy không được nhỏ hơn 0.',
                     type: 'warning',

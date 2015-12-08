@@ -58,131 +58,15 @@
                                 }
                             }
                         </li>
-
-
                     </ul>
                     <div class="row">
                         <!-- Change stage button -->
                         <div class="col-xs-12" style="text-align: center">
-                            <button class="btn btn-bitbucket" id="btn-approved" onclick="open_container(@(Model.CustomerId));">
+                            <button class="btn btn-bitbucket" id="btn-approved" onclick="open_container1(@(Model.CustomerId),@(Model.IsActive?1:0));">
                                 <i class="fa fa-refresh" style="margin-right: 5%;"></i>Thay đổi trạng thái
-                                <script type="text/javascript">
-                                    function open_container(id) {
-                                        var content = $("<div>", {
-                                            "html": "Bạn có muốn thay đổi trạng thái của khách hàng từ trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>")" + "  sang trạng thái  " + "@Html.Raw(Model.IsActive ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>")" + "  không?"
-                                        });
-
-                                        var title = 'Thay đổi trạng thái khách hàng';
-                                        var footer = $("<div>", {
-                                            "class": "row",
-                                            "html": [
-                                                $("<button>", {
-                                                    "class": "btn btn-success pull-right",
-                                                    "style": "margin-right: 30%;",
-                                                    "onclick": "change_customer_status(" + id + ")",
-                                                    "html": "Đồng ý"
-                                                }),
-                                                $("<button>", {
-                                                    "class": "btn btn-danger",
-                                                    "style": "margin-right: 10px;",
-                                                    "data-dismiss": "modal",
-                                                    "html": "Hủy"
-                                                })
-                                            ]
-                                        });
-                                        setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
-                                        $('#myModal').modal('show');
-                                    }
-
-                                    function setModalBox(title, content, footer) {
-                                        document.getElementById('popup-body').innerHTML = content;
-                                        document.getElementById('popup-title').innerHTML = title;
-                                        document.getElementById('popup-footer').innerHTML = footer;
-                                    }
-
-                                    function change_customer_status(id) {
-                                        
-                                            $.ajax({
-                                                "url": "@(Url.Action("ChangeCustomerStatus", "Customer"))",
-                                                "method": "POST",
-                                                "data": {
-                                                    "id": id
-                                                },
-                                                "success": function (data) {
-                                                    if (data === "1") {
-                                                        $('#myModal').modal('hide');
-                                                        window.location.replace("@Url.Action("CustomerIndex", "Customer", @Model.CustomerId)");
-                                                    } else {
-                                                        alert("Khong the");
-                                                    }
-                                                },
-                                                "fail": function (e) {
-                                                    alert("Have error" + e);
-                                                }
-                                            });
-                                        }
-                                    
-                                </script>
                             </button>
-                            <button class="btn btn-bitbucket" id="btn-change-loyal" onclick="open_container(@(Model.CustomerId));">
+                            <button class="btn btn-bitbucket" id="btn-change-loyal" onclick="open_container2(@(Model.CustomerId),@(Model.IsLoyal?1:0));">
                                 <i class="fa fa-refresh" style="margin-right: 5%;"></i>Khách hàng thân thiết
-                                <script type="text/javascript">
-                                    function open_container(id) {
-                                        var content = $("<div>", {
-                                            "html": "Bạn có muốn thay đổi trạng thái của khách hàng từ trạng thái  " + "@Html.Raw(Model.IsLoyal ? "<span class='label label-success'>Khách hàng VIP</span>" : "<span class='label label-danger'>Khách hàng bình thường</span>")" + "  sang trạng thái  " + "@Html.Raw(Model.IsLoyal ? "<span class='label label-danger'>Khách hàng bình thường</span>" : "<span class='label label-success'>Khách hàng VIP</span>")" + "  không?"
-                                        });
-
-                                        var title = 'Thay đổi khách hàng thân thiết';
-                                        var footer = $("<div>", {
-                                            "class": "row",
-                                            "html": [
-                                                $("<button>", {
-                                                    "class": "btn btn-success pull-right",
-                                                    "style": "margin-right: 30%;",
-                                                    "onclick": "change_customer_loyal(" + id + ")",
-                                                    "html": "Đồng ý"
-                                                }),
-                                                $("<button>", {
-                                                    "class": "btn btn-danger",
-                                                    "style": "margin-right: 10px;",
-                                                    "data-dismiss": "modal",
-                                                    "html": "Hủy"
-                                                })
-                                            ]
-                                        });
-                                        setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
-                                        $('#myModal').modal('show');
-                                    }
-
-                                    function setModalBox(title, content, footer) {
-                                        document.getElementById('popup-body').innerHTML = content;
-                                        document.getElementById('popup-title').innerHTML = title;
-                                        document.getElementById('popup-footer').innerHTML = footer;
-                                    }
-
-                                    function change_customer_loyal(id) {
-                                        
-                                            $.ajax({
-                                                "url": "@(Url.Action("ChangeCustomerLoyal", "Customer"))",
-                                                "method": "POST",
-                                                "data": {
-                                                    "id": id
-                                                },
-                                                "success": function (data) {
-                                                    if (data === "1") {
-                                                        $('#myModal').modal('hide');
-                                                        window.location.replace("@Url.Action("CustomerIndex", "Customer", Model.CustomerId)");
-                                                    } else {
-                                                        alert("Khong the");
-                                                    }
-                                                },
-                                                "fail": function (e) {
-                                                    alert("Have error" + e);
-                                                }
-                                            });
-                                        }
-                                    
-                                </script>
                             </button>
                         </div>
                     </div>
@@ -213,7 +97,6 @@
             </div>
         </div>
     </div>
-
     <!--Button-->
     <div class="row">
         <div class="col-xs-12">
@@ -245,5 +128,133 @@
                 }
             });
         });
+    </script>
+
+    <script type="text/javascript">
+        function open_container1(id, check) {
+            var content = $("<div>", {
+                "html": "Bạn có muốn thay đổi trạng thái của khách hàng từ trạng thái  " + (check === 1 ? "<span class='label label-success'>Đang hoạt động</span>" : "<span class='label label-danger'>Ngừng hoạt động</span>") + "  sang trạng thái  " + (check === 1 ? "<span class='label label-danger'>Ngừng hoạt động</span>" : "<span class='label label-success'>Đang hoạt động</span>") + "  không?"
+            });
+
+            var title = 'Thay đổi trạng thái khách hàng';
+            var footer = $("<div>", {
+                "class": "row",
+                "html": [
+                    $("<button>", {
+                        "class": "btn btn-success pull-right",
+                        "style": "margin-right: 30%;",
+                        "onclick": "change_customer_status(" + id + ")",
+                        "html": "Đồng ý"
+                    }),
+                    $("<button>", {
+                        "class": "btn btn-danger",
+                        "style": "margin-right: 10px;",
+                        "data-dismiss": "modal",
+                        "html": "Hủy"
+                    })
+                ]
+            });
+            setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+            $('#myModal').modal('show');
+        }
+
+        function setModalBox(title, content, footer) {
+            document.getElementById('popup-body').innerHTML = content;
+            document.getElementById('popup-title').innerHTML = title;
+            document.getElementById('popup-footer').innerHTML = footer;
+        }
+
+        function change_customer_status(id) {
+
+            $.ajax({
+                "url": "@(Url.Action("ChangeCustomerStatus", "Customer"))",
+                "method": "POST",
+                "data": {
+                    "id": id
+                },
+                "success": function (data) {
+                    if (data === "1") {
+                        $('#myModal').modal('hide');
+                        window.location.replace("@Url.Action("CustomerIndex", "Customer")");
+                    } else {
+                        noty({
+                            text: 'Đã có lỗi xảy ra, vui lòng thử lại.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                },
+                "fail": function (e) {
+                    alert("Have error" + e);
+                }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        function open_container2(id, check) {
+            var content = $("<div>", {
+                "html": "Bạn có muốn thay đổi trạng thái của khách hàng từ trạng thái  " + (check === 1 ? "<span class='label label-success'>Khách hàng thân thiết</span>" : "<span class='label label-danger'>Khách hàng thường</span>") + "  sang trạng thái  " + (check === 1 ? "<span class='label label-danger'>Khách hàng thường</span>" : "<span class='label label-success'>Khách hàng thân thiết</span>") + "  không?"
+            });
+
+            var title = 'Khách hàng thân thiết';
+            var footer = $("<div>", {
+                "class": "row",
+                "html": [
+                    $("<button>", {
+                        "class": "btn btn-success pull-right",
+                        "style": "margin-right: 30%;",
+                        "onclick": "change_customer_loyal(" + id + ")",
+                        "html": "Đồng ý"
+                    }),
+                    $("<button>", {
+                        "class": "btn btn-danger",
+                        "style": "margin-right: 10px;",
+                        "data-dismiss": "modal",
+                        "html": "Hủy"
+                    })
+                ]
+            });
+            setModalBox(title, content[0].outerHTML, footer[0].outerHTML);
+            $('#myModal').modal('show');
+        }
+
+        function setModalBox(title, content, footer) {
+            document.getElementById('popup-body').innerHTML = content;
+            document.getElementById('popup-title').innerHTML = title;
+            document.getElementById('popup-footer').innerHTML = footer;
+        }
+
+        function change_customer_loyal(id) {
+
+            $.ajax({
+                "url": "@(Url.Action("ChangeCustomerLoyal", "Customer"))",
+                "method": "POST",
+                "data": {
+                    "id": id
+                },
+                "success": function (data) {
+                    if (data === "1") {
+                        $('#myModal').modal('hide');
+                        window.location.replace("@Url.Action("CustomerIndex", "Customer")");
+                    } else {
+                        noty({
+                            text: 'Đã có lỗi xảy ra, vui lòng thử lại.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                },
+                "fail": function (e) {
+                    alert("Have error" + e);
+                }
+            });
+        }
     </script>
 }

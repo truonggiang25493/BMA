@@ -16,15 +16,18 @@
         <tbody>
             @foreach (ProductMaterial productMaterial in Model)
             {
-                <tr>
-                    <td>
-                        <span>@(productMaterial.ProductMaterialName)</span>
-                        <input type="hidden" name="txtProductMaterialId" value="@productMaterial.ProductMaterialId" />
-                    </td>
-                    <td>
-                        @(productMaterial.ProductMaterialUnit)
-                    </td>
-                </tr>
+                if (productMaterial.IsActive)
+                {
+                    <tr>
+                        <td>
+                            <span>@(productMaterial.ProductMaterialName)</span>
+                            <input type="hidden" name="txtProductMaterialId" value="@productMaterial.ProductMaterialId"/>
+                        </td>
+                        <td>
+                            @(productMaterial.ProductMaterialUnit)
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>

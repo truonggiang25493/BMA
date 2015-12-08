@@ -57,6 +57,15 @@
                                         <a></a>
                                         <a class="col-lg-pull-2">@((Model.InputBillAmount + Model.InputTaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</a>
                                     </div>
+                                    <div class="list-group-item">
+                                        <b>Mẫu hóa đơn: </b>
+                                        <a class="col-lg-pull-2">@Model.FormNo</a>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <b>Mã số: </b>
+                                        <a class="col-lg-pull-2">@Model.Serial</a>
+                                    </div>
+
                                 </p>
                             </div>
                             

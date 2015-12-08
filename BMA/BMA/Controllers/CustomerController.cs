@@ -81,20 +81,27 @@ namespace BMA.Controllers
         public ActionResult CustomerDetail(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] ==3)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                ViewBag.TreeView = "customerIndex";
-                Customer customerDetail = customerBusiness.GetCustomerDetail(id);
-                if (customerDetail == null)
+                try
                 {
-                    RedirectToAction("StaffIndex", "Staff");
+                    ViewBag.TreeView = "customerIndex";
+                    Customer customerDetail = customerBusiness.GetCustomerDetail(id);
+                    if (customerDetail == null)
+                    {
+                        return RedirectToAction("CustomerIndex", "Customer");
 
+                    }
+                    return View(customerDetail);
                 }
-                return View(customerDetail);
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Manage");
+                }
             }
         }
 

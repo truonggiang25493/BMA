@@ -13,7 +13,7 @@ namespace BMA.Business
         #region Get staff list
         public List<Staff> GetStaffList()
         {
-            List<Staff> staffList = db.Staffs.OrderBy(n => n.IsActive).ToList();
+            List<Staff> staffList = db.Staffs.OrderBy(n => n.IsActive).ThenByDescending(n=>n.StaffId).ToList();
             return staffList;
         }
         #endregion

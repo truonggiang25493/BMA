@@ -47,20 +47,27 @@ namespace BMA.Controllers
         public ActionResult InputBillDetail(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 2)
             {
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                ViewBag.TreeView = "inputBill";
-                InputBill inputBillDetail = inputBillBusiness.GetInputBill(id);
-                if (inputBillDetail == null)
+                try
                 {
-                    RedirectToAction("InputBillIndex", "InputBill");
+                    ViewBag.TreeView = "inputBill";
+                    InputBill inputBillDetail = inputBillBusiness.GetInputBill(id);
+                    if (inputBillDetail == null)
+                    {
+                        return RedirectToAction("InputBillIndex", "InputBill");
 
+                    }
+                    return View(inputBillDetail);
                 }
-                return View(inputBillDetail);
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Manage");
+                }
             }
         }
 
@@ -131,7 +138,7 @@ namespace BMA.Controllers
         #region Add New Input Bill
 
         public int AddInputBill(string supplierIdString, string inputBillAmountString, string inputTaxAmountString,
-            string importDate, string fileName)
+            string importDate, string fileName, string formNo, string serial)
         {
             User staffUser = Session["User"] as User;
             if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
@@ -150,6 +157,8 @@ namespace BMA.Controllers
                     String inputBillCode = supplierIdString + importDate;
                     inputBill.InputBillCode = inputBillCode.Replace("/", "");
                     inputBill.InputRawImage = fileName;
+                    inputBill.FormNo = formNo;
+                    inputBill.Serial = serial;
                 }
                 catch (Exception)
                 {
@@ -233,11 +242,22 @@ namespace BMA.Controllers
             }
             else
             {
-                ViewBag.TreeView = "inputBill";
-                OrderBusiness business = new OrderBusiness();
-                ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
-                InputBill inputBill = db.InputBills.SingleOrDefault(m => m.InputBillId == id);
-                return View(inputBill);
+                try
+                {
+                    ViewBag.TreeView = "inputBill";
+                    OrderBusiness business = new OrderBusiness();
+                    ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
+                    InputBill inputBill = db.InputBills.SingleOrDefault(m => m.InputBillId == id);
+                    if (inputBill==null)
+                    {
+                        return RedirectToAction("InputBillIndex", "InputBill");
+                    }
+                    else return View(inputBill);
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Manage");
+                }
             }
         }
 
@@ -296,7 +316,7 @@ namespace BMA.Controllers
 
         [HttpPost]
         public int EditInputBill(int inputBillId, string supplierIdString, string inputBillAmountString,
-            string inputTaxAmountString, string importDate, string fileName)
+            string inputTaxAmountString, string importDate, string fileName, string formNo, string serial)
         {
             User staffUser = Session["User"] as User;
             if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
@@ -311,7 +331,7 @@ namespace BMA.Controllers
                 String inputBillCode = supplierIdString + importDate;
 
                 bool result = InputBillBusiness.EditInputBill(inputBillId, supplierId, inputBillCode, inputBillAmount,
-                    inputBillTaxAmount, fileName, importDate);
+                    inputBillTaxAmount, fileName, importDate, formNo, serial);
                 if (result)
                 {
                     return 2;

@@ -65,7 +65,7 @@
                                     <label>Chi phí (Chưa thuế)<b style="color: #ff0000">*</b>: </label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <input type="number" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" placeholder="nhập số tiền từ 1.000 - 999.999.999" class="form-control" />
+                                    <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" placeholder="nhập số tiền từ 1.000 - 999.999.999" class="form-control" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -89,11 +89,35 @@
                                 <div class="col-xs-8">
                                     <div class="form-group">
                                         <div class='input-group date' id='datetimepicker2'>
-                                            <input type="text" required name="txtImportDate" id="txtImportDate" class="form-control" />
+                                            <input type="text" readonly="readonly" required name="txtImportDate" id="txtImportDate" class="form-control" />
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-4">
+                                    <div class="form-group">
+                                        <label>Mẫu hóa đơn số:<b style="color: #ff0000">*</b>: </label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-8">
+                                    <div class="form-group">
+                                        <input type="text" name="txtFormNo" id="txtFormNo" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-4">
+                                    <div class="form-group">
+                                        <label>Mã số<b style="color: #ff0000">*</b>: </label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-8">
+                                    <div class="form-group">
+                                        <input type="text" name="txtSerial" id="txtSerial" class="form-control" />
                                     </div>
                                 </div>
                             </div>
@@ -168,6 +192,8 @@
                             var importDate = $("#txtImportDate").val();
                             var fileName = getFileName($("#inputBillImage").val());
                             var supplierId = $("#supplierId").val();
+                            var formNo = $("#txtFormNo").val();
+                            var serial = $("#txtSerial").val();
 
                             var action = $("#imageForm").attr("action");
                             var contentType;
@@ -188,7 +214,7 @@
                                 });
                             } else if (isNaN(inputBillAmount)) {
                                 noty({
-                                    text: 'Số tiền chưa tính thuế phải là số.',
+                                    text: 'Chi phí (Chưa thuế) phải là số.',
                                     type: 'warning',
                                     dismissQueue: false,
                                     layout: 'topCenter',
@@ -197,7 +223,25 @@
                                 });
                             } else if (inputBillAmount.trim() === '') {
                                 noty({
-                                    text: 'Số tiền chưa tính thuế không được trống.',
+                                    text: 'Chi phí (Chưa thuế) không được trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (inputBillAmount < 1000) {
+                                noty({
+                                    text: 'Chi phí (Chưa thuế) ít nhất là 1,000 VNĐ.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (inputBillAmount > 999999999) {
+                                noty({
+                                    text: 'Chi phí (Chưa thuế) không được lớn hơn 999,999,999 VNĐ.',
                                     type: 'warning',
                                     dismissQueue: false,
                                     layout: 'topCenter',
@@ -213,6 +257,7 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
+
                             } else if (inputTaxAmount.trim() === '') {
                                 noty({
                                     text: 'Tiền thuế VAT không được trống.',
@@ -231,6 +276,25 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
+                            } else if (formNo.trim() === '') {
+                                noty({
+                                    text: 'Mẫu hóa đơn không được trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            } else if (serial.trim() === '') {
+                                noty({
+                                    text: 'Mã số hóa đơn không được trống.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+
                             } else {
                                 $.ajax({
                                     url: "@(Url.Action("AddImage", "InputBill"))",
@@ -249,7 +313,9 @@
                                                     "inputBillAmountString": inputBillAmount,
                                                     "inputTaxAmountString": inputTaxAmount,
                                                     "importDate": importDate,
-                                                    "fileName": fileName
+                                                    "fileName": fileName,
+                                                    "formNo": formNo,
+                                                    "serial": serial
                                                 }),
                                                 "dataType": "json",
                                                 "contentType": 'application/json',
@@ -310,7 +376,7 @@
                                             });
                                         } else {
                                             noty({
-                                                text: 'Không thể thêm hóa đơn đầu vào',
+                                                text: 'Vui lòng chọn hình ảnh cho hóa đơn',
                                                 type: 'warning',
                                                 dismissQueue: false,
                                                 layout: 'topCenter',
@@ -357,9 +423,9 @@
 
 @section AddInputBill{
     <script type="text/javascript">
-        $(document).on("keyup", "#txtInputBillAmount", function() {
+        $(document).on("keyup", "#txtInputBillAmount", function () {
             var txtInputBillAmount = $("#txtInputBillAmount").val();
-            var vatAmount = ((txtInputBillAmount * @(ViewBag.TaxRate)) / 100);
+            var vatAmount = ((txtInputBillAmount * "@(ViewBag.TaxRate)") / 100);
             $('#txtInputTaxAmount').val(vatAmount);
             $('#txtInputTaxAmount').attr('min', vatAmount);
         })
