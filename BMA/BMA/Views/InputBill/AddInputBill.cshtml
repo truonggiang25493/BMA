@@ -65,7 +65,7 @@
                                     <label>Chi phí (Chưa thuế)<b style="color: #ff0000">*</b>: </label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <input type="number" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" placeholder="nhập số tiền từ 1.000 - 999.999.999" class="form-control" />
+                                    <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" placeholder="nhập số tiền từ 1.000 - 999.999.999" class="form-control" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -97,30 +97,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-4">
-                                    <div class="form-group">
-                                        <label>Mẫu hóa đơn số:<b style="color: #ff0000">*</b>: </label>
-                                    </div>
-                                </div>
-                                <div class="col-xs-8">
-                                    <div class="form-group">
-                                        <input type="text" name="txtFormNo" id="txtFormNo" class="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-4">
-                                    <div class="form-group">
-                                        <label>Mã số<b style="color: #ff0000">*</b>: </label>
-                                    </div>
-                                </div>
-                                <div class="col-xs-8">
-                                    <div class="form-group">
-                                        <input type="text" name="txtSerial" id="txtSerial" class="form-control" />
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-12">
                                     <b><b style="color: #ff0000">*</b>: Thông tin bắt buộc</b>
@@ -276,25 +253,7 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
-                            } else if (formNo.trim() === '') {
-                                noty({
-                                    text: 'Mẫu hóa đơn không được trống.',
-                                    type: 'warning',
-                                    dismissQueue: false,
-                                    layout: 'topCenter',
-                                    theme: 'defaultTheme',
-                                    timeout: 1000
-                                });
-                            } else if (serial.trim() === '') {
-                                noty({
-                                    text: 'Mã số hóa đơn không được trống.',
-                                    type: 'warning',
-                                    dismissQueue: false,
-                                    layout: 'topCenter',
-                                    theme: 'defaultTheme',
-                                    timeout: 1000
-                                });
-
+                            
                             } else {
                                 $.ajax({
                                     url: "@(Url.Action("AddImage", "InputBill"))",

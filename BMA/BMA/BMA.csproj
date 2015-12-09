@@ -199,7 +199,6 @@
     <Compile Include="Common\XmlResult.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
-    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CusManageController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DiscardInputMaterialController.cs" />
@@ -351,13 +350,15 @@
     <Compile Include="Models\TaxType.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TndnTaxDeclaration.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\User.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\VatTaxDeclaration.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ViewModel\AllProductInfoViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerRevenueReport.cs" />
@@ -366,6 +367,7 @@
     <Compile Include="Models\ViewModel\DiscardInputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\InputMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialInfoForProductListViewModel.cs" />
+    <Compile Include="Models\ViewModel\MaterialOfOrderViewModel.cs" />
     <Compile Include="Models\ViewModel\MaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\OrderViewModel.cs" />
     <Compile Include="Models\ViewModel\ReportIncomeViewModel.cs" />
@@ -481,6 +483,7 @@
     <Content Include="Content\Images\BakeryImages\BXX.jpg" />
     <Content Include="Content\Images\BakeryImages\KTC.jpg" />
     <Content Include="Content\Images\BakeryImages\Pudding.jpg" />
+    <Content Include="Content\Images\BakeryImages\BanhGai.jpg" />
     <Content Include="Content\Images\InputBillImages\InputBillDemo.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
     <Content Include="Content\jquery-ui.css" />
@@ -552,6 +555,7 @@
       <DependentUpon>BMA.edmx</DependentUpon>
       <LastGenOutput>BMA.cs</LastGenOutput>
     </Content>
+    <None Include="Properties\PublishProfiles\BMA.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ChartNew.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -1373,7 +1377,6 @@
     <Content Include="Views\Layout\CustomerLayout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Procedure\Index.cshtml" />
-    <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Product\Cookie.cshtml" />
     <Content Include="Views\Product\Saltine.cshtml" />
@@ -1409,7 +1412,6 @@
     <Content Include="Content\AdminLayout\plugins\input-mask\phone-codes\phone-codes.json" />
     <Content Include="Views\Layout\ManageLayout.cshtml" />
     <Content Include="Views\Order\Detail.cshtml" />
-    <Content Include="Views\Order\Delete.cshtml" />
     <Content Include="Views\Order\Edit.cshtml" />
     <Content Include="Views\Cart\Cart.cshtml" />
     <Content Include="Views\Cart\CartPartial.cshtml" />
@@ -1504,14 +1506,12 @@
     <Content Include="Views\Report\Top10ProductIncomeYearlyDetail.cshtml" />
     <Content Include="Views\Report\Top10ProductIncomeYearlyPartialView.cshtml" />
     <Content Include="Views\Tax\Index.cshtml" />
-    <Content Include="Views\Tax\TaxDeclaration.cshtml" />
+    <Content Include="Views\Tax\VatTaxDeclaration.cshtml" />
     <Content Include="Views\Tax\InputVatListExport.cshtml" />
     <Content Include="Views\Tax\OutputVatList.cshtml" />
     <Content Include="Views\Tax\TaxDeclarationExport.cshtml" />
     <Content Include="Views\Tax\TndnTaxDeclaration.cshtml" />
-    <Content Include="Views\ManageMaterial\Detail.cshtml" />
-    <Content Include="Views\ManageMaterial\Edit.cshtml" />
-    <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
+    <Content Include="Views\Supplier\InputBillBySupplier.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

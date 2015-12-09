@@ -106,7 +106,7 @@ namespace BMA.Controllers
         public ActionResult EditSupplier(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 1)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -114,7 +114,14 @@ namespace BMA.Controllers
             {
                 ViewBag.TreeView = "supplier";
                 Supplier supplier = db.Suppliers.SingleOrDefault(m => m.SupplierId == id);
-                return View(supplier);
+                if (supplier == null)
+                {
+                    return RedirectToAction("SupplierIndex", "Supplier");
+                }
+                else
+                {
+                    return View(supplier);
+                }
             }
         }
 

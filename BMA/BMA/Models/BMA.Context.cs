@@ -51,6 +51,7 @@ namespace BMA.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TaxRate> TaxRates { get; set; }
         public virtual DbSet<TaxType> TaxTypes { get; set; }
+        public virtual DbSet<TndnTaxDeclaration> TndnTaxDeclarations { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<VatTaxDeclaration> VatTaxDeclarations { get; set; }
     

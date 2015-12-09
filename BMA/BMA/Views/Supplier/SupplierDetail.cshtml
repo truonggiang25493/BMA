@@ -23,7 +23,7 @@
             <div class="box box-primary">
                 <div class="box-body box-profile">
                     <h3 class="profile-username text-center">
-                        @Model.SupplierName
+                        @(Model.SupplierName.Length <= 30 ? Model.SupplierName : Model.SupplierName.Substring(0, 26) + "...")
                     </h3>
                     <div class="nav-tabs-custom" style="margin-top: 5%">
                         <ul class="nav nav-tabs">
@@ -145,27 +145,34 @@
     }
 
     function change_supplier_status(id) {
-        
-            $.ajax({
-                "url": "@(Url.Action("ChangeSupplierStatus", "Supplier"))",
-                "method": "POST",
-                "data": {
-                    "id": id
-                },
-                "success": function(data) {
-                    if (data === "1") {
-                        $('#myModal').modal('hide');
-                        window.location.replace("@Url.Action("SupplierIndex", "Supplier", Model.SupplierId)");
-                    } else {
-                        alert("Khong the");
-                    }
-                },
-                "fail": function(e) {
-                    alert("Have error" + e);
+
+        $.ajax({
+            "url": "@(Url.Action("ChangeSupplierStatus", "Supplier"))",
+            "method": "POST",
+            "data": {
+                "id": id
+            },
+            "success": function(data) {
+                if (data === "1") {
+                    $('#myModal').modal('hide');
+                    window.location.replace("@Url.Action("SupplierIndex", "Supplier", Model.SupplierId)");
+                } else {
+                    noty({
+                        text: 'Đã có lỗi xảy ra, vui lòng thử lại.',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
                 }
-            });
-        }
-    
+            },
+            "fail": function(e) {
+                alert("Have error" + e);
+            }
+        });
+    }
+
 </script>
 <!-- Get input bill by supplier -->
 @section CustomerDetailScript{

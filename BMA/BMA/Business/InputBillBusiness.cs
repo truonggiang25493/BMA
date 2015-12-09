@@ -69,9 +69,6 @@ namespace BMA.Business
                     inputBill.ImportDate = DateTime.ParseExact(importDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     inputBill.InputBillCode = inputBillCode.Replace("-", "");
                     inputBill.InputRawImage = inputRawImage;
-                    inputBill.FormNo = formNo;
-                    inputBill.Serial = serial;
-
 
                     db.SaveChanges();
                 }

@@ -230,10 +230,6 @@
                                 </li>
                             </ul>
                         </li>
-                        <!-- Control Sidebar Toggle Button -->
-                        <li>
-                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                        </li>
                     </ul>
                 </div>
             </nav>
@@ -274,7 +270,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li id="listStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/StaffIndex')" style="cursor:pointer"><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
-                            <li id="addStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/AddStaff')" style="cursor:pointer"<i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
+                            <li id="addStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/AddStaff')" style="cursor: pointer"><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
                         </ul>
                     </li>
                     <li class="treeview" id="customer">
@@ -326,21 +322,24 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="listSupplier"><a onclick="NotificatePartialLink('http://localhost:2072/Supplier/SupplierIndex')" style="cursor:pointer"><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
-                            <li id="addSupplier"><a onclick="NotificatePartialLink('http://localhost:2072/Supplier/AddSupplier')" style="cursor:pointer"><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
+                            <li id="listSupplier"><a onclick="NotificatePartialLink('http://localhost:2072/Supplier/SupplierIndex')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
+                            <li id="addSupplier"><a onclick="NotificatePartialLink('http://localhost:2072/Supplier/AddSupplier')" style="cursor: pointer"><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
                         </ul>
                     </li>
-                    <li class="treeview" id="order">
-                        <a href="#">
-                            <i class="fa fa-file-o"></i> <span>Đơn hàng</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="orderList"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Index')" style="cursor:pointer"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
-                            <li id="addOrder"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Add')" style="cursor:pointer"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
-                            <li><a href=""><i class="fa fa-thumbs-o-up"></i>Chấp nhận đơn hàng</a></li>
-                        </ul>
-                    </li>
+                    @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 2)
+                    {
+                        <li class="treeview" id="order">
+                            <a href="#">
+                                <i class="fa fa-file-o"></i> <span>Đơn hàng</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+
+                                <li id="orderList"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Index')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
+                                <li id="addOrder"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Add')" style="cursor: pointer"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
+                            </ul>
+                        </li>
+                    }
                     <li class="treeview" id="inputBill">
                         <a href="#">
                             <i class="fa fa-file-text-o"></i> <span>Hóa đơn</span>
@@ -359,13 +358,13 @@
                     </li>
                     <li class="treeview" id="report">
                         <a href="#">
-                            <i class="fa fa-bar-chart"></i> <span>Báo cáo</span>
+                            <i class="fa fa-bar-chart"></i> <span>Thống kê</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="customerRevenue"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenuePerCustomer')" style="cursor:pointer"><i class="fa fa-usd"></i>Thống kê doanh thu theo khách hàng</a></li>
-                            <li id="incomeProduct"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenueByProduct')" style="cursor:pointer"><i class="fa fa-usd"></i>Thống kê thu nhập theo sản phẩm</a></li>
-                            <li id="incomeReport"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewIncomeByTime')" style="cursor:pointer"><i class="fa fa-usd"></i>Thống kê tổng thu nhập</a></li>
+                            <li id="customerRevenue"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenuePerCustomer')" style="cursor:pointer"><i class="fa fa-usd"></i>Doanh thu theo khách hàng</a></li>
+                            <li id="incomeProduct"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenueByProduct')" style="cursor:pointer"><i class="fa fa-usd"></i>Thu nhập theo sản phẩm</a></li>
+                            <li id="incomeReport"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewIncomeByTime')" style="cursor:pointer"><i class="fa fa-usd"></i>Thu nhập theo thời gian</a></li>
                             <li id="taxReport"><a onclick="NotificatePartialLink('http://localhost:2072/Tax/Index')" style="cursor:pointer"><i class=" fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                         </ul>
                     </li>
@@ -377,17 +376,6 @@
         <div class="content-wrapper">
             @RenderBody()
         </div>
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Create the tabs -->
-            <ul class="nav nav-tabs nav-justified control-sidebar-tabs"></ul>
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <!-- Home tab content -->
-                <div class="tab-pane" id="control-sidebar-home-tab">
-                </div><!-- /.tab-pane -->
-            </div>
-        </aside>
         <div class="control-sidebar-bg"></div>
     </div><!-- ./wrapper -->
     <!--Small Modal -->
@@ -451,8 +439,6 @@
     <!-- DataTables -->
     <script src="/Content/AdminLayout/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Content/AdminLayout/plugins/datatables/dataTables.bootstrap.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="/Content/AdminLayout/dist/js/demo.js"></script>
     <!--Own js function-->
     <script src="~/Scripts/my-own-function.js"></script>
     <!--Noty js-->
@@ -482,6 +468,7 @@
     @RenderSection("ReviewRevenuePerCustomerScript", false)
     @RenderSection("ReviewIncomeByProductScript", false)
     @RenderSection("EditInputBillScript", false)
+    @RenderSection("TaxIndexScript", false)
     <script>
         $(function () {
             $('#example2').DataTable({
@@ -506,11 +493,6 @@
         $(document).on("click", ".customer-table tbody tr", function () {
             $(this).addClass('selected').siblings().removeClass('selected');
         });
-
-
-
-
-
     </script>
     @if (ViewBag.TreeView != null)
     {

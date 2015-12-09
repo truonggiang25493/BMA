@@ -12,7 +12,7 @@ namespace BMA.Business
 
         public CustomerBusiness()
         {
-             db = new BMAEntities();
+            db = new BMAEntities();
         }
 
         public List<Customer> GetCustomerList()
@@ -87,7 +87,7 @@ namespace BMA.Business
         #region Get customer index
         public static List<Customer> GetCustomerIndex()
         {
-            List<Customer> customerList = db.Customers.OrderByDescending(n => n.IsActive).ThenBy(n=>n.CustomerId).ToList();
+            List<Customer> customerList = db.Customers.OrderByDescending(n => n.IsActive).ThenBy(n => n.CustomerId).ToList();
             return customerList;
         }
         #endregion
@@ -97,6 +97,7 @@ namespace BMA.Business
         {
             Customer customerDetail = db.Customers.SingleOrDefault(n => n.CustomerId == id);
             return customerDetail;
+
         }
         #endregion
 

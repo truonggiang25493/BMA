@@ -37,7 +37,7 @@
                     {
                         <tr class="row">
 
-                            <td style="text-align: center; width: 15%">@inputMaterial.ProductMaterial.ProductMaterialName</td>
+                            <td style="text-align: center; width: 15%">@(inputMaterial.ProductMaterial.ProductMaterialName.Length <= 30 ? inputMaterial.ProductMaterial.ProductMaterialName : inputMaterial.ProductMaterial.ProductMaterialName.Substring(0, 26) + "...")</td>
                             <td style="text-align: right; width: 15%">@inputMaterial.ImportQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @inputMaterial.ProductMaterial.ProductMaterialUnit</td>
                             <td style="text-align: right; width: 15%">@inputMaterial.RemainQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) @inputMaterial.ProductMaterial.ProductMaterialUnit</td>
                             <td style="text-align: center; width: 15%">@inputMaterial.ImportDate.ToString("dd/MM/yyyy")</td>
@@ -195,6 +195,15 @@
             if (isNaN(checkdiscardQuantity)) {
                 noty({
                     text: 'Số lượng hủy phải là số.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else if (checkdiscardQuantity.trim() === '') {
+                noty({
+                    text: 'Số lượng hủy không được trống.',
                     type: 'warning',
                     dismissQueue: false,
                     layout: 'topCenter',

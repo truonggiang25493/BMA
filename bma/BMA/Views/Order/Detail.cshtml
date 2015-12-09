@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
 @using BMA.Common
+@using BMA.Models
 @model BMA.Models.ViewModel.OrderViewModel
 @{
     ViewBag.Title = "Chi tiết đơn hàng";
@@ -251,7 +252,7 @@
                                     } else {
                                         $('#myModal').modal('hide');
                                         var n = noty({
-                                            text: 'Không thay đổi trạng thái đơn hàng',
+                                            text: 'Không thể thay đổi trạng thái đơn hàng',
                                             type: 'warning',
                                             dismissQueue: false,
                                             layout: 'topCenter',
@@ -295,7 +296,7 @@
                     Khách hàng:
                     <b style="font-size: 17px">@Model.OrderPersonName</b>
                 </div>
-                <div><b>Địa chỉ: </b>@Model.OrderPersonAddress</div>
+                <div style="word-wrap: break-word"><b>Địa chỉ: </b>@Model.OrderPersonAddress</div>
                 <div><b>Điện thoại: </b>@Model.OrderPersonPhoneNumber</div>
             }
         </div>
@@ -380,15 +381,15 @@
             <!--Edit button-->
             <div class="row">
                 <div class="col-xs-12">
-                    <a class="btn btn-primary pull-right" style="margin-right: 25px;" href="@(Url.Action("Edit", "Order", new { id = Model.Order.OrderId }))">
+                    <a class="btn btn-primary pull-right" style="margin-right: 25px;" href="@(Url.Action("Edit", "Order", new {id = Model.Order.OrderId}))">
                         <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
                     </a>
                 </div>
             </div>
         }
 
-    <!-- Material detail-->
-    <!-- Material Table Header-->
+        <!-- Material detail-->
+        <!-- Material Table Header-->
         <div class="row" style="margin-top: 15px;">
             <div class="col-xs-12">
                 <h2 class="page-header">
@@ -397,7 +398,7 @@
                 </h2>
             </div>
         </div>
-    <!-- Material Table Content-->
+        <!-- Material Table Content-->
         <div class="row">
             <div class="col-xs-12 table-responsive">
                 <table class="table table-striped">
@@ -444,6 +445,92 @@
                 <h2 class="label label-info" style="font-size: 12pt">Chi phí nguyên liệu: @Model.MaterialCost.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</h2>
             </div>
         </div>
+    }
+    else
+    {
+        if (Model.Order.OrderItems.ElementAt(0).OutputMaterials.Count > 0)
+        {
+            <!-- Material detail-->
+            <!-- Material Table Header-->
+            <div class="row" style="margin-top: 15px;">
+                <div class="col-xs-12">
+                    <h2 class="page-header">
+                        <i class="fa fa-cubes" style="margin-right: 3px;"></i>
+                        Thông tin nguyên liệu
+                    </h2>
+                </div>
+            </div>
+            <!-- Material Table Content-->
+            <div class="row">
+                <div class="col-xs-12 table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tên sản phẩm</th>
+                                <th>Tên nguyên liệu</th>
+                                <th>Số lượng</th>
+                                <th>Xuất</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var orderItem in Model.Order.OrderItems)
+                            {
+                                <tr>
+                                    <td rowspan="@(orderItem.OutputMaterials.Count)">@(orderItem.Product.ProductName)</td>
+                                    <td>@(orderItem.OutputMaterials.ElementAt(0).ProductMaterial.ProductMaterialName)</td>
+                                    <td>@(orderItem.OutputMaterials.ElementAt(0).ExportQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(orderItem.OutputMaterials.ElementAt(0).ProductMaterial.ProductMaterialUnit)</td>
+                                    <td>
+                                        @foreach (ExportFrom exportFrom in orderItem.OutputMaterials.ElementAt(0).ExportFroms)
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    Từ hóa đơn @(exportFrom.InputBill.InputBillCode) số lượng @(exportFrom.ExportFromQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(orderItem.OutputMaterials.ElementAt(0).ProductMaterial.ProductMaterialUnit)
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span>
+                                                        <a class="btn btn-info btn-xs pull-right">Chi tiết hóa đơn</a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary btn-xs pull-right" onclick="exportMaterialPopup(@(orderItem.OutputMaterials.ElementAt(0).OutputMaterialId),@(orderItem.OutputMaterials.ElementAt(0).ProductMaterialId),'@Html.Raw(orderItem.OutputMaterials.ElementAt(0).ProductMaterial.ProductMaterialName)',@(orderItem.OutputMaterials.ElementAt(0).ProductMaterial.CurrentQuantity),'@Html.Raw(orderItem.Product.ProductName)')">Xuất thêm nguyên liệu</button>
+                                    </td>
+                                </tr>
+                                for (int i = 1; i < orderItem.OutputMaterials.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@(orderItem.OutputMaterials.ElementAt(i).ProductMaterial.ProductMaterialName)</td>
+                                        <td>@(orderItem.OutputMaterials.ElementAt(i).ExportQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(orderItem.OutputMaterials.ElementAt(0).ProductMaterial.ProductMaterialUnit)</td>
+                                        <td>
+                                            @foreach (ExportFrom exportFrom in orderItem.OutputMaterials.ElementAt(i).ExportFroms)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        Từ hóa đơn @(exportFrom.InputBill.InputBillCode) số lượng @(exportFrom.ExportFromQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))) @(orderItem.OutputMaterials.ElementAt(0).ProductMaterial.ProductMaterialUnit)
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <span>
+                                                            <a class="btn btn-info btn-xs pull-right">Chi tiết hóa đơn</a>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary btn-xs pull-right" onclick="exportMaterialPopup(@(orderItem.OutputMaterials.ElementAt(i).OutputMaterialId),@(orderItem.OutputMaterials.ElementAt(i).ProductMaterialId),'@Html.Raw(orderItem.OutputMaterials.ElementAt(i).ProductMaterial.ProductMaterialName)',@(orderItem.OutputMaterials.ElementAt(i).ProductMaterial.CurrentQuantity),'@Html.Raw(orderItem.Product.ProductName)')">Xuất thêm nguyên liệu</button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
     }
 
     <!--Button-->
@@ -622,665 +709,671 @@
                     <button class="btn btn-success pull-right" id="btn-approved" onclick="open_container()">
                         <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Duyệt
                         <script type="text/javascript">
-                            function open_container() {
-                                var loyalCustControl = $("<div>", {
-                                    "class": "form-group",
-                                    "html": [
-                                        "<label>Có nhận tiền cọc không ?</label>",
-                                        $("<input>", {
-                                            "type": "radio",
-                                            "name": "isDeposit",
-                                            "value": "yes",
-                                            "style": "margin-left: 10px",
-                                            "data-role": "radio-is-deposit"
-                                        }),
-                                        "Có ",
-                                        $("<input>", {
-                                            "type": "radio",
-                                            "name": "isDeposit",
-                                            "selected":"selected",
-                                            "value": "no",
-                                            "style": "margin-left: 10px",
-                                            "data-role": "radio-is-deposit"
-                                        }),
-                                        "Không"
-                                    ]
-                                });
-                                var addNewCustomerForm = $("<div>", {
-                                    "html":[
-                                        $("<div>", {
-                                            "class": "form-group",
-                                            "style": "margin-bottom: 0px;",
-                                            "html": [
-                                                "<label>Tên khách hàng</label>",
-                                                $("<input>", {
-                                                    "type": "text",
-                                                    "class": "form-control",
-                                                    "name": "customerName",
-                                                    "id": "customerName",
-                                                    "value": "@Html.Raw(Model.OrderPersonName)"
-                                                })
-                                            ]
-                                        }),
-                                        $("<div>", {
-                                            "class": "form-group",
-                                            "style":"margin-bottom: 0px;",
-                                            "html": [
-                                                '<label>Tên đăng nhập: </label>',
-                                                $("<input>", {
-                                                    "type": "text",
-                                                    "id":"username",
-                                                    "class": "form-control",
-                                                    "name": "username"
-                                                })
-                                            ]
-                                        }),
-                                        $("<div>", {
-                                            "class": "form-group",
-                                            "style":"margin-bottom: 0px;",
-                                            "html": [
-                                                '<label>Email: </label>',
-                                                $("<input>", {
-                                                    "type": "email",
-                                                    "class": "form-control",
-                                                    "name": "customerEmail",
-                                                    "id": "customerEmail",
-                                                    "value": ""
-                                                })
-                                            ]
-                                        }),
-                                        $("<div>", {
-                                            "class": "form-group",
-                                            "style":"margin-bottom: 0px;",
-                                            "html": [
-                                                '<label>Địa chỉ: </label>',
-                                                $("<textarea>", {
-                                                    "type": "text",
-                                                    "class": "form-control",
-                                                    "name": "customerAddress",
-                                                    "id": "customerAddress",
-                                                    "html": "@Html.Raw(Model.OrderPersonAddress)"
-                                                })
-                                            ]
-                                        }),
-                                        $("<div>", {
-                                            "class": "form-group",
-                                            "style":"margin-bottom: 0px;",
-                                            "html": [
-                                                '<label>Số điện thoại: </label>',
-                                                $("<input>", {
-                                                    "type": "text",
-                                                    "class": "form-control",
-                                                    "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
-                                                    "name": "customerPhoneNumber",
-                                                    "id": "customerPhoneNumber",
-                                                    "value": "@(Model.OrderPersonPhoneNumber)"
-                                                })
-                                            ]
-                                        }),
-                                        $("<div>", {
-                                            "class": "form-group",
-                                            "style":"margin-bottom: 0px;",
-                                            "html": [
-                                                '<label>Mã số thuế: </label>',
-                                                $("<input>", {
-                                                    "type": "text",
-                                                    "class": "form-control",
-                                                    "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
-                                                    "name": "customerTaxCode",
-                                                    "id": "customerTaxCode"
-                                                })
-                                            ]
-                                        })
-                                    ]
-                                });
+    function open_container() {
+        var loyalCustControl = $("<div>", {
+            "class": "form-group",
+            "html": [
+                "<label>Có nhận tiền cọc không ?</label>",
+                $("<input>", {
+                    "type": "radio",
+                    "name": "isDeposit",
+                    "value": "yes",
+                    "style": "margin-left: 10px",
+                    "data-role": "radio-is-deposit"
+                }),
+                "Có ",
+                $("<input>", {
+                    "type": "radio",
+                    "name": "isDeposit",
+                    "selected": "selected",
+                    "value": "no",
+                    "style": "margin-left: 10px",
+                    "data-role": "radio-is-deposit"
+                }),
+                "Không"
+            ]
+        });
+        var addNewCustomerForm = $("<div>", {
+            "html": [
+                $("<div>", {
+                    "class": "form-group",
+                    "style": "margin-bottom: 0px;",
+                    "html": [
+                        "<label>Tên khách hàng</label>",
+                        $("<input>", {
+                            "type": "text",
+                            "class": "form-control",
+                            "name": "customerName",
+                            "id": "customerName",
+                            "value": "@Html.Raw(Model.OrderPersonName)"
+                        })
+                    ]
+                }),
+                $("<div>", {
+                    "class": "form-group",
+                    "style": "margin-bottom: 0px;",
+                    "html": [
+                        '<label>Tên đăng nhập: </label>',
+                        $("<input>", {
+                            "type": "text",
+                            "id": "username",
+                            "class": "form-control",
+                            "name": "username"
+                        })
+                    ]
+                }),
+                $("<div>", {
+                    "class": "form-group",
+                    "style": "margin-bottom: 0px;",
+                    "html": [
+                        '<label>Email: </label>',
+                        $("<input>", {
+                            "type": "email",
+                            "class": "form-control",
+                            "name": "customerEmail",
+                            "id": "customerEmail",
+                            "value": ""
+                        })
+                    ]
+                }),
+                $("<div>", {
+                    "class": "form-group",
+                    "style": "margin-bottom: 0px;",
+                    "html": [
+                        '<label>Địa chỉ: </label>',
+                        $("<textarea>", {
+                            "type": "text",
+                            "class": "form-control",
+                            "name": "customerAddress",
+                            "id": "customerAddress",
+                            "html": "@Html.Raw(Model.OrderPersonAddress)"
+                        })
+                    ]
+                }),
+                $("<div>", {
+                    "class": "form-group",
+                    "style": "margin-bottom: 0px;",
+                    "html": [
+                        '<label>Số điện thoại: </label>',
+                        $("<input>", {
+                            "type": "text",
+                            "class": "form-control",
+                            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                            "name": "customerPhoneNumber",
+                            "id": "customerPhoneNumber",
+                            "value": "@(Model.OrderPersonPhoneNumber)"
+                        })
+                    ]
+                }),
+                $("<div>", {
+                    "class": "form-group",
+                    "style": "margin-bottom: 0px;",
+                    "html": [
+                        '<label>Mã số thuế: </label>',
+                        $("<input>", {
+                            "type": "text",
+                            "class": "form-control",
+                            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                            "name": "customerTaxCode",
+                            "id": "customerTaxCode"
+                        })
+                    ]
+                })
+            ]
+        });
 
 
-                                /* /addNewCustomerForm */
+        /* /addNewCustomerForm */
 
-                                $(document).on("change", "[data-role=radio-is-deposit]", function() {
-                                    if ($(this).val() === "yes") {
-                                        showDeposit();
-                                    } else {
-                                        hideDeposit();
-                                    }
-                                });
-                                var contentControl = $("<form>", {
-                                    "id": "form-aprrove",
-                                    "html": [
-                                        @(Model.IsLoyal ? "loyalCustControl" : ""),
-                                        $("<div>", {
-                                            "class": "form-group",
-                                            "id": "deposit",
-                                            "style": "margin-bottom: 0px; @(Model.IsLoyal ? "display:none;" : "")",
-                                            "html": [
-                                                "<label>Tiền cọc</label>",
-                                                $("<input>", {
-                                                    "type": "number",
-                                                    "min": "@(Model.MaterialCost)",
-                                                    "class": "form-control",
-                                                    "id": "deposit-amount",
-                                                    "step": "1000",
-                                                    "name": "deposit",
-                                                    "value": "@(Model.MaterialCost)"
-                                                })
-                                            ]
-                                        }),
-                                        $("<div>", {
-                                            "class": "form-group",
-                                            "style": "margin-bottom: 0px;",
-                                            "html": [
-                                                "<label>Thời gian giao hàng</label>",
-                                                $("<div>", {
-                                                    "class": "input-group date",
-                                                    "id": "datetimepicker",
-                                                    "html": [
-                                                        $("<input>", {
-                                                            "type": "text",
-                                                            "readonly": "readonly",
-                                                            "data-format":"dd/MM/yyyy HH:mm",
-                                                            "class": "form-control",
-                                                            "name": "deliveryDate"
-                                                        }),
-                                                        $("<span>", {
-                                                            "class": "input-group-addon",
-                                                            "html" : "<span class='glyphicon glyphicon-calendar'></span>"
-                                                        })
-                                                    ]
-                                                }),
+        $(document).on("change", "[data-role=radio-is-deposit]", function () {
+            if ($(this).val() === "yes") {
+                showDeposit();
+            } else {
+                hideDeposit();
+            }
+        });
+        var contentControl = $("<form>", {
+            "id": "form-aprrove",
+            "html": [
+                @(Model.IsLoyal ? "loyalCustControl" : ""),
+                $("<div>", {
+                    "class": "form-group",
+                    "id": "deposit",
+                    "style": "margin-bottom: 0px; @(Model.IsLoyal ? "display:none;" : "")",
+                    "html": [
+                        "<label>Tiền cọc</label>",
+                        $("<input>", {
+                            "type": "text",
+                            "class": "form-control",
+                            "id": "deposit-amount",
+                            "name": "deposit",
+                            "style": "text-align: right",
+                            "data-role": "number",
+                            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                            "value": "@(((Model.MaterialCost / 1000) * 1000).ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN")))"
+                        })
+                    ]
+                }),
+                $("<div>", {
+                    "class": "form-group",
+                    "style": "margin-bottom: 0px;",
+                    "html": [
+                        "<label>Thời gian giao hàng</label>",
+                        $("<div>", {
+                            "class": "input-group date",
+                            "id": "datetimepicker",
+                            "html": [
+                                $("<input>", {
+                                    "type": "text",
+                                    "readonly": "readonly",
+                                    "data-format": "dd/MM/yyyy HH:mm",
+                                    "class": "form-control",
+                                    "name": "deliveryDate"
+                                }),
+                                $("<span>", {
+                                    "class": "input-group-addon",
+                                    "html": "<span class='glyphicon glyphicon-calendar' data-toggle='tooltip' data-placement='top' title='Chọn thời gian giao hàng'></span>"
+                                })
+                            ]
+                        }),
+                        $("<input>", {
+                            "type": "hidden",
+                            "name": "orderId",
+                            "value": "@Model.Order.OrderId"
+                        })
+                    ]
+                }),
+                @(Model.IsGuest ? "addNewCustomerForm" : "")
+            ]
+        });
+        var title = 'Xác nhận duyệt đơn hàng';
+        var footer = $("<div>", {
+            "class": "row",
+            "html": [
+                $("<button>", {
+                    "class": "btn btn-danger",
+                    "data-dismiss": "modal",
+                    "html": [
+                        "Hủy"
+                    ]
+                }),
+                $("<a>", {
+                    "class": "btn btn-success pull-right",
+                    "style": "margin-right: 10px;",
+                    "onclick": "approveOrder(@(Model.IsGuest ? "1" : "0"))",
+                    "html": [
+                        "Đồng ý"
+                    ]
+                })
+            ]
+        });
+        setModalBox(title, contentControl[0].outerHTML, footer[0].outerHTML);
 
-                                                $("<input>", {
-                                                    "type": "hidden",
-                                                    "name": "orderId",
-                                                    "value": "@Model.Order.OrderId"
-                                                })
-                                            ]
-                                        }),
-                                        @(Model.IsGuest?"addNewCustomerForm":"")
-                                    ]
-                                });
-                                var title = 'Xác nhận duyệt đơn hàng';
-                                var footer = $("<div>", {
-                                    "class": "row",
-                                    "html": [
-                                        $("<button>", {
-                                            "class": "btn btn-danger",
-                                            "data-dismiss": "modal",
-                                            "html": [
-                                                "Hủy"
-                                            ]
-                                        }),
-                                        $("<a>", {
-                                            "class": "btn btn-success pull-right",
-                                            "style": "margin-right: 10px;",
-                                            "onclick": "approveOrder(@(Model.IsGuest ? "1" : "0"))",
-                                            "html": [
-                                                "Đồng ý"
-                                            ]
-                                        })
-                                    ]
-                                });
-                                setModalBox(title, contentControl[0].outerHTML, footer[0].outerHTML);
+        $('#datetimepicker').datetimepicker({
+            locale: 'vi',
+            ignoreReadonly: true,
+            defaultDate: "@(Model.Order.PlanDeliveryTime >= DateTime.Now.AddDays(1) ? Model.Order.PlanDeliveryTime.ToString("MM/dd/yyyy HH:mm") : DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",
+            minDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))"
+        });
 
-                                $('#datetimepicker').datetimepicker({
-                                    locale: 'vi',
-                                    ignoreReadonly: true,
-                                    defaultDate: "@(Model.Order.PlanDeliveryTime >= DateTime.Now.AddDays(1) ? Model.Order.PlanDeliveryTime.ToString("MM/dd/yyyy HH:mm") : DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",
-                                    minDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))"
-                                });
-
-                                $('#myModal').modal('show');
-                            }
+        $('#myModal').modal('show');
+    }
 
 
+    function setModalBox(title, content, footer) {
+        document.getElementById('popup-body').innerHTML = content;
+        document.getElementById('popup-title').innerHTML = title;
+        document.getElementById('popup-footer').innerHTML = footer;
 
-                            function setModalBox(title, content, footer) {
-                                document.getElementById('popup-body').innerHTML = content;
-                                document.getElementById('popup-title').innerHTML = title;
-                                document.getElementById('popup-footer').innerHTML = footer;
+    }
 
-                            }
+    function showDeposit() {
+        $('#deposit').show();
+        $('#deposit-amount').val(@(((Model.MaterialCost / 1000) * 1000).ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN"))));
+    }
 
-                            function showDeposit() {
-                                $('#deposit').show();
-                                $('#deposit-amount').attr("min", @Model.MaterialCost);
-                                $('#deposit-amount').val(@Model.MaterialCost);
-                            }
+    function hideDeposit() {
+        $('#deposit').hide();
+        $('#deposit-amount').attr("min", 0);
+        $('#deposit-amount').val(0);
+    }
 
-                            function hideDeposit() {
-                                $('#deposit').hide();
-                                $('#deposit-amount').attr("min", 0);
-                                $('#deposit-amount').val(0);
-                            }
+    function approveOrder(isGuest) {
+        if (isGuest === 0) {
+            var deposit = parseInt($("#deposit-amount").val().split(".").join(""));
+            var isDeposit = $("#deposit").attr('style').indexOf("display: none");
+            if (isDeposit !== -1 && deposit < parseInt(@((Model.MaterialCost/1000)*1000))) {
+                noty({
+                    text: 'Tiền cọc không được nhỏ hơn @(((Model.MaterialCost/1000)*1000).ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN"))).',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+            } else {
+                $.ajax({
+                    url: "@Url.Action("ApproveOrder", "Order")",
+                    method: "POST",
+                    data: $("#form-aprrove").serialize(),
+                    success: function (data) {
+                        if (data === "1") {
+                            $('#myModal').modal('hide');
 
-                            function approveOrder(isGuest) {
-                                if (isGuest === 0) {
-                                    var depositAmount = $('#deposit-amount').val();
-                                    if (depositAmount.trim()==='') {
+                            noty({
+                                text: 'Duyệt đơn hàng thành công',
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 3000
+                            });
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("Index", "Order"))");
+                            }, 4000);
+
+                        } else if (data === '-7') {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Vui lòng đăng nhập với tài khoản nhân viên',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 3000
+                            });
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("Index", "Home"))");
+                            }, 4000);
+                        } else if (data === "-1") {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Khách hàng đang chỉnh sửa.Không thể duyệt đơn hàng',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (data === "-2") {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Không tìm thấy đơn hàng trong hệ thống',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (data === "-3") {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Đơn hàng không ở trạng thái "Chờ xử lý".Không thể duyệt đơn hàng',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (data === "-4") {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Không đủ nguyên liệu.Không thể duyệt đơn hàng',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Không thể duyệt đơn hàng',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    fail: function (e) {
+                        $('#myModal').modal('hide');
+                        var n = noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'bottomRight',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    }
+                });
+            }
+        } else {
+            var customerName = $("#customerName").val();
+            var username = $("#username").val();
+            var email = $("#customerEmail").val();
+            var address = $("#customerAddress").val();
+            var phoneNumber = $("#customerPhoneNumber").val();
+            var taxCode = $("#customerTaxCode").val();
+            // Validate Customer Name
+            if (customerName.trim() === '') {
+                var n = noty({
+                    text: 'Tên khách hàng không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerName").focus();
+            } else if (customerName.length > 50) {
+                var n = noty({
+                    text: 'Tên khách hàng không được quá 50 kí tự.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerName").focus();
+            }
+                // Validate Username
+            else if (username.trim() === '') {
+                var n = noty({
+                    text: 'Tên đăng nhập không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#username").focus();
+            } else if (username.length > 50) {
+                var n = noty({
+                    text: 'Tên đăng nhập không được quá 50 kí tự.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#username").focus();
+            }
+                // Validate email
+            else if (email.trim() === '') {
+                var n = noty({
+                    text: 'Email không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerEmail").focus();
+            } else if (email.length > 50) {
+                var n = noty({
+                    text: 'Email không được quá 50 kí tự.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerEmail").focus();
+            } else if (!new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i).test(email)) {
+                var n = noty({
+                    text: 'Hãy nhập email đúng định dạng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerEmail").focus();
+            }
+                // Validate address
+            else if (address.trim() === '') {
+                var n = noty({
+                    text: 'Địa chỉ không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerAddress").focus();
+            } else if (address.length > 250) {
+                var n = noty({
+                    text: 'Địa chỉ không được quá 250 kí tự.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerAddress").focus();
+            }
+                // Validate Phone Number
+            else if (phoneNumber.trim() === '') {
+                var n = noty({
+                    text: 'Số điện thoại không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerPhoneNumber").focus();
+            } else if (!new RegExp(/^\d{10,11}$/).test(phoneNumber)) {
+                var n = noty({
+                    text: 'Hãy nhập số điện thoại đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerPhoneNumber").focus();
+            } else if (taxCode.trim() === '') {
+                var n = noty({
+                    text: 'Mã số thuế không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerTaxCode").focus();
+            } else if (!new RegExp(/^\d{10,13}$/).test(taxCode)) {
+                var n = noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $("#customerTaxCode").focus();
+            } else {
+                $.ajax({
+                    url: "@(Url.Action("CheckCustomerField", "Order"))",
+                    method: "POST",
+                    data: $("#form-aprrove").serialize(),
+                    success: function (data) {
+                        if (data === '1') {
+                            var n = noty({
+                                text: 'Email này đã có trong hệ thống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                            $("#customerEmail").focus();
+                        } else if (data === '2') {
+                            var n = noty({
+                                text: 'Tên đăng nhập này đã có trong hệ thống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                            $("#username").focus();
+                        } else if (data === '3') {
+                            var n = noty({
+                                text: 'Địa chỉ này đã có trong hệ thống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                            $("#customerAddress").focus();
+                        } else if (data === '4') {
+                            var n = noty({
+                                text: 'Số điện thoại này đã có trong hệ thống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                            $("#customerPhoneNumber").focus();
+                        } else if (data === '5') {
+                            var n = noty({
+                                text: 'Mã số thuế này đã có trong hệ thống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                            $("#customerTaxCode").focus();
+                        } else if (data === '0') {
+                            $.ajax({
+                                url: "@Url.Action("ApproveOrder", "Order")",
+                                method: "POST",
+                                data: $("#form-aprrove").serialize(),
+                                success: function (data) {
+                                    if (data === "1") {
+                                        $('#myModal').modal('hide');
                                         noty({
-                                            text: 'Vui lòng nhập tiền cọc bằng số.',
+                                            text: 'Duyệt đơn hàng thành công',
+                                            type: 'success',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 3000
+                                        });
+                                        window.setTimeout(function () {
+                                            window.location.replace("@(Url.Action("Index", "Order"))");
+                                        }, 4000);
+                                    } else if (data === "-1") {
+                                        $('#myModal').modal('hide');
+                                        noty({
+                                            text: 'Khách hàng đang chỉnh sửa.Không thể duyệt đơn hàng',
                                             type: 'warning',
                                             dismissQueue: false,
                                             layout: 'topCenter',
                                             theme: 'defaultTheme',
                                             timeout: 2000
                                         });
-                                        $("#deposit-amount").focus();F
-                                    } else {
-                                        $.ajax({
-                                            url: "@Url.Action("ApproveOrder", "Order")",
-                                            method: "POST",
-                                            data: $("#form-aprrove").serialize(),
-                                            success: function(data) {
-                                                if (data === "1") {
-                                                    $('#myModal').modal('hide');
-
-                                                    noty({
-                                                        text: 'Duyệt đơn hàng thành công',
-                                                        type: 'success',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 3000
-                                                    });
-                                                    window.setTimeout(function() {
-                                                        window.location.replace("@(Url.Action("Index", "Order"))");
-                                                    }, 4000);
-
-                                                }else if (data==='-7') {
-                                                    $('#myModal').modal('hide');
-                                                    noty({
-                                                        text: 'Vui lòng đăng nhập với tài khoản nhân viên',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 3000
-                                                    });
-                                                    window.setTimeout(function() {
-                                                        window.location.replace("@(Url.Action("Index", "Home"))");
-                                                    }, 4000);
-                                                }else if(data==="-1"){
-                                                    $('#myModal').modal('hide');
-                                                    noty({
-                                                        text: 'Khách hàng đang chỉnh sửa.Không thể duyệt đơn hàng',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 2000
-                                                    });
-                                                }else if(data==="-2"){
-                                                    $('#myModal').modal('hide');
-                                                    noty({
-                                                        text: 'Không tìm thấy đơn hàng trong hệ thống',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 2000
-                                                    });
-                                                }else if(data==="-3"){
-                                                    $('#myModal').modal('hide');
-                                                    noty({
-                                                        text: 'Đơn hàng không ở trạng thái "Chờ xử lý".Không thể duyệt đơn hàng',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 2000
-                                                    });
-                                                }else if(data==="-4"){
-                                                    $('#myModal').modal('hide');
-                                                    noty({
-                                                        text: 'Không đủ nguyên liệu.Không thể duyệt đơn hàng',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 2000
-                                                    });
-                                                }else {
-                                                    $('#myModal').modal('hide');
-                                                    noty({
-                                                        text: 'Không thể duyệt đơn hàng',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 2000
-                                                    });
-                                                }
-                                            },
-                                            fail: function(e) {
-                                                $('#myModal').modal('hide');
-                                                var n = noty({
-                                                    text: 'Đã có lỗi xảy ra',
-                                                    type: 'error',
-                                                    dismissQueue: false,
-                                                    layout: 'bottomRight',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 2000
-                                                });
-                                            }
+                                    } else if (data === "-2") {
+                                        $('#myModal').modal('hide');
+                                        noty({
+                                            text: 'Không tìm thấy đơn hàng trong hệ thống',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
                                         });
+                                    } else if (data === "-3") {
+                                        $('#myModal').modal('hide');
+                                        noty({
+                                            text: 'Đơn hàng không ở trạng thái "Chờ xử lý".Không thể duyệt đơn hàng',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    } else if (data === "-4") {
+                                        $('#myModal').modal('hide');
+                                        noty({
+                                            text: 'Không đủ nguyên liệu.Không thể duyệt đơn hàng',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    } else if (data === "0") {
+                                        $('#myModal').modal('hide');
+                                        noty({
+                                            text: 'Không thể duyệt đơn hàng.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    } else if (data === '-7') {
+                                        $('#myModal').modal('hide');
+                                        noty({
+                                            text: 'Vui lòng đăng nhập với tài khoản nhân viên',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 3000
+                                        });
+                                        window.setTimeout(function () {
+                                            window.location.replace("@(Url.Action("Index", "Home"))");
+                                        }, 4000);
                                     }
-                                } else {
-                                    var customerName = $("#customerName").val();
-                                    var username = $("#username").val();
-                                    var email = $("#customerEmail").val();
-                                    var address = $("#customerAddress").val();
-                                    var phoneNumber = $("#customerPhoneNumber").val();
-                                    var taxCode = $("#customerTaxCode").val();
-                                    // Validate Customer Name
-                                    if (customerName.trim() === '') {
-                                        var n = noty({
-                                            text: 'Tên khách hàng không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerName").focus();
-                                    } else if (customerName.length > 50) {
-                                        var n = noty({
-                                            text: 'Tên khách hàng không được quá 50 kí tự.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerName").focus();
-                                    }
-                                        // Validate Username
-                                    else if (username.trim() === '') {
-                                        var n = noty({
-                                            text: 'Tên đăng nhập không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#username").focus();
-                                    } else if (username.length > 50) {
-                                        var n = noty({
-                                            text: 'Tên đăng nhập không được quá 50 kí tự.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#username").focus();
-                                    }
-                                        // Validate email
-                                    else if (email.trim() === '') {
-                                        var n = noty({
-                                            text: 'Email không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerEmail").focus();
-                                    } else if (email.length > 50) {
-                                        var n = noty({
-                                            text: 'Email không được quá 50 kí tự.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerEmail").focus();
-                                    } else if (!new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i).test(email)) {
-                                        var n = noty({
-                                            text: 'Hãy nhập email đúng định dạng.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerEmail").focus();
-                                    }
-                                        // Validate address
-                                    else if (address.trim() === '') {
-                                        var n = noty({
-                                            text: 'Địa chỉ không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerAddress").focus();
-                                    } else if (address.length > 250) {
-                                        var n = noty({
-                                            text: 'Địa chỉ không được quá 250 kí tự.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerAddress").focus();
-                                    }
-                                        // Validate Phone Number
-                                    else if (phoneNumber.trim() === '') {
-                                        var n = noty({
-                                            text: 'Số điện thoại không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerPhoneNumber").focus();
-                                    } else if (!new RegExp(/^\d{10,11}$/).test(phoneNumber)) {
-                                        var n = noty({
-                                            text: 'Hãy nhập số điện thoại đúng.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerPhoneNumber").focus();
-                                    } else if (taxCode.trim() === '') {
-                                        var n = noty({
-                                            text: 'Mã số thuế không được trống.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerTaxCode").focus();
-                                    } else if (!new RegExp(/^\d{10,13}$/).test(taxCode)) {
-                                        var n = noty({
-                                            text: 'Hãy nhập mã số thuế đúng.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                        $("#customerTaxCode").focus();
-                                    } else {
-                                        $.ajax({
-                                            url: "@(Url.Action("CheckCustomerField","Order"))",
-                                            method: "POST",
-                                            data: $("#form-aprrove").serialize(),
-                                            success: function (data) {
-                                                if (data === '1') {
-                                                    var n = noty({
-                                                        text: 'Email này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 2000
-                                                    });
-                                                    $("#customerEmail").focus();
-                                                } else if (data === '2') {
-                                                    var n = noty({
-                                                        text: 'Tên đăng nhập này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 2000
-                                                    });
-                                                    $("#username").focus();
-                                                } else if (data === '3') {
-                                                    var n = noty({
-                                                        text: 'Địa chỉ này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 2000
-                                                    });
-                                                    $("#customerAddress").focus();
-                                                } else if (data === '4') {
-                                                    var n = noty({
-                                                        text: 'Số điện thoại này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 2000
-                                                    });
-                                                    $("#customerPhoneNumber").focus();
-                                                } else if (data === '5') {
-                                                    var n = noty({
-                                                        text: 'Mã số thuế này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 2000
-                                                    });
-                                                    $("#customerTaxCode").focus();
-                                                } else if (data === '0') {
-                                                    $.ajax({
-                                                        url: "@Url.Action("ApproveOrder", "Order")",
-                                                        method: "POST",
-                                                        data: $("#form-aprrove").serialize(),
-                                                        success: function(data) {
-                                                            if (data === "1") {
-                                                                $('#myModal').modal('hide');
-                                                                noty({
-                                                                    text: 'Duyệt đơn hàng thành công',
-                                                                    type: 'success',
-                                                                    dismissQueue: false,
-                                                                    layout: 'topCenter',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 3000
-                                                                });
-                                                                window.setTimeout(function() {
-                                                                    window.location.replace("@(Url.Action("Index", "Order"))");
-                                                                }, 4000);
-                                                            } else if(data==="-1"){
-                                                                $('#myModal').modal('hide');
-                                                                noty({
-                                                                    text: 'Khách hàng đang chỉnh sửa.Không thể duyệt đơn hàng',
-                                                                    type: 'warning',
-                                                                    dismissQueue: false,
-                                                                    layout: 'topCenter',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 2000
-                                                                });
-                                                            }else if(data==="-2"){
-                                                                $('#myModal').modal('hide');
-                                                                noty({
-                                                                    text: 'Không tìm thấy đơn hàng trong hệ thống',
-                                                                    type: 'warning',
-                                                                    dismissQueue: false,
-                                                                    layout: 'topCenter',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 2000
-                                                                });
-                                                            }else if(data==="-3"){
-                                                                $('#myModal').modal('hide');
-                                                                noty({
-                                                                    text: 'Đơn hàng không ở trạng thái "Chờ xử lý".Không thể duyệt đơn hàng',
-                                                                    type: 'warning',
-                                                                    dismissQueue: false,
-                                                                    layout: 'topCenter',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 2000
-                                                                });
-                                                            }else if(data==="-4"){
-                                                                $('#myModal').modal('hide');
-                                                                noty({
-                                                                    text: 'Không đủ nguyên liệu.Không thể duyệt đơn hàng',
-                                                                    type: 'warning',
-                                                                    dismissQueue: false,
-                                                                    layout: 'topCenter',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 2000
-                                                                });
-                                                            }else if(data==="0"){
-                                                                $('#myModal').modal('hide');
-                                                                noty({
-                                                                    text: 'Không thể duyệt đơn hàng.',
-                                                                    type: 'warning',
-                                                                    dismissQueue: false,
-                                                                    layout: 'topCenter',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 2000
-                                                                });
-                                                            }else if (data==='-7') {
-                                                                $('#myModal').modal('hide');
-                                                                noty({
-                                                                    text: 'Vui lòng đăng nhập với tài khoản nhân viên',
-                                                                    type: 'warning',
-                                                                    dismissQueue: false,
-                                                                    layout: 'topCenter',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 3000
-                                                                });
-                                                                window.setTimeout(function() {
-                                                                    window.location.replace("@(Url.Action("Index", "Home"))");
-                                                                }, 4000);
-                                                            }
-                                                        },
-                                                        fail: function(e) {
-                                                            $('#myModal').modal('hide');
-                                                            var n = noty({
-                                                                text: 'Đã có lỗi xảy ra',
-                                                                type: 'error',
-                                                                dismissQueue: false,
-                                                                layout: 'bottomRight',
-                                                                theme: 'defaultTheme',
-                                                                timeout: 2000
-                                                            });
-                                                        }
-                                                    });
-                                                }
-                                            },
-                                            fail: function (e) {
-                                                var n = noty({
-                                                    text: 'Đã có lỗi xảy ra.',
-                                                    type: 'danger',
-                                                    dismissQueue: false,
-                                                    layout: 'topCenter',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 2000
-                                                });
-                                            }
-                                        });
-                                    }
+                                },
+                                fail: function (e) {
+                                    $('#myModal').modal('hide');
+                                    var n = noty({
+                                        text: 'Đã có lỗi xảy ra',
+                                        type: 'error',
+                                        dismissQueue: false,
+                                        layout: 'bottomRight',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
                                 }
-                            }
+                            });
+                        }
+                    },
+                    fail: function (e) {
+                        var n = noty({
+                            text: 'Đã có lỗi xảy ra.',
+                            type: 'danger',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    }
+                });
+            }
+        }
+    }
                         </script>
                     </button>
+                }
+                else
+                {
+                    <a href="@(Url.Action("AddInputBill", "InputBill"))" class="btn btn-info pull-right">
+                        <i class="fa fa-plus" style="margin-right: 3px"></i>
+                        Nhập nguyên liệu đầu vào
+                    </a>
                 }
             }
         </div>
@@ -1362,6 +1455,7 @@
 
     @if (Model.Order.OrderStatus != 6)
     {
+        <script src="~/Scripts/numeral.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 var data = "@(Html.Raw(timeslideData))".split(";");
@@ -1374,6 +1468,131 @@
                     }
                 });
             });
+            $(document).on('input', "[data-role='number']",function () {
+                var data = $(this).val();
+                data = data.split(".").join("");
+                data = numeral(data).format('0,0').split(",").join(".");
+                $(this).val(data);
+            });
+            $(document).on('input', '#deposit-amount', function() {
+                var data = parseInt($(this).val().split(".").join(""));
+                if (data < parseInt(@((Model.MaterialCost/1000)*1000))) {
+                    noty({
+                        text: 'Tiền cọc không được nhỏ hơn @(((Model.MaterialCost/1000)*1000).ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN"))).',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 2000
+                    });
+                    $(this).focus();
+                }
+            });
+
+            function exportMaterialPopup(outputMaterialId,productMaterialId,productMaterialName,productMaterialCurrentQuantity, productName) {
+                var bodyContent = $("<form>", {
+                    "id":"exportMaterialForm",
+                    "html":[
+                        $("<div>", {
+                            "class":"form-group",
+                            "html":[
+                                "<label>"+productMaterialName+"</label>",
+                                $("<input>", {
+                                    "type":"hidden",
+                                    "name":"productMaterialId",
+                                    "value":productMaterialId
+                                }),
+                                $("<input>", {
+                                    "type":"hidden",
+                                    "name":"outputMaterialId",
+                                    "value":outputMaterialId
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class":"form-group",
+                            "html":[
+                                "<label>Số lượng</label>",
+                                $("<input>", {
+                                    "type":"number",
+                                    "class":"form-control",
+                                    "name":"exportQuantity",
+                                    "max":productMaterialCurrentQuantity
+                                })
+                            ]
+                        })
+                    ]
+                });
+
+                var footerContent = $("<div>", {
+                    "class":"row",
+                    "style":"margin-right: 10px;",
+                    "html":[
+                        $("<button>", {
+                            "class":"btn btn-danger",
+                            "html":"Hủy",
+                            "data-dismiss": "modal"
+                        }),
+                        $("<button>", {
+                            "class":"btn btn-success",
+                            "html":"Xuất",
+                            "onclick":"exportMaterial()"
+                        })
+                    ]
+                });
+                var title = 'Xuất thêm nguyên liệu cho '+productName;
+                document.getElementById('popup-body').innerHTML = bodyContent[0].outerHTML;
+                document.getElementById('popup-title').innerHTML = title;
+                document.getElementById('popup-footer').innerHTML = footerContent[0].outerHTML;
+                $('#myModal').modal('show');
+            }
+
+            function exportMaterial() {
+                $.ajax({
+                    "url":"@(Url.Action("ExportMaterial","Order"))",
+                    "method":"POST",
+                    "data": $("#exportMaterialForm").serialize(),
+                    "success": function(data) {
+                        if (data === "1") {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Xuất nguyên liệu thành công',
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 3000
+                            });
+                            window.setTimeout(function() {
+                                location.reload();
+                            }, 4000);
+                        }
+                        if (data === "0") {
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Không thể xuất nguyên liệu',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    "fail":function(e) {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    }
+
+                });
+            }
         </script>
     }
 }

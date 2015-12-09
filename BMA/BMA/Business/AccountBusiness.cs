@@ -113,6 +113,12 @@ namespace BMA.Business
             return true;
         }
 
+        public string CreateStaffPassword(string password)
+        {
+            string salt = CreateSalt();
+            string encodePassword = CreatePasswordHash(password, salt);
+            return encodePassword;
+        }
         public string CreatePassword(string rawPassword)
         {
             return CreatePasswordHash(rawPassword, CreateSalt());
