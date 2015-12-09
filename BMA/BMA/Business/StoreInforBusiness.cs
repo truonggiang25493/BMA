@@ -15,13 +15,17 @@ namespace BMA.Business
             db = new BMAEntities();
         }
 
-        public bool EditStoreInfo(string storeName, string ownerName, string address, string phoneNumber, string taxCode, string fileName)
+        public bool EditStoreInfo(string storeName, string ownerName, string Email, string address, string Province, string District, string phoneNumber, string Fax, string taxCode, string fileName)
         {
             StoreInfo store = db.StoreInfoes.SingleOrDefault();
             store.StoreName = storeName;
             store.OwnerName = ownerName;
+            store.Email = Email;
             store.Address = address;
+            store.Province = Province;
+            store.District = District;
             store.Phonenumber = phoneNumber;
+            store.Fax = Fax;
             store.TaxCode = taxCode;
             store.BakeryImage = fileName;
             db.SaveChanges();
@@ -30,7 +34,7 @@ namespace BMA.Business
 
         public bool MinQuantity(int bound)
         {
-            Policy policty = db.Policies.SingleOrDefault();
+            Policy policty = db.Policies.SingleOrDefault(n=>n.PolicyId == 1);
             policty.PolicyBound = bound;
             db.SaveChanges();
             return true;
@@ -38,7 +42,7 @@ namespace BMA.Business
 
         public bool changeDiscountQuantity(int[] quantityFrom, int[] quantityTo, int[] discountRate, bool beUsing)
         {
-            List<DiscountByQuantity> discountByQuantity = db.DiscountByQuantities.Where(n => n.ReachNumber == 3).ToList();
+            List<DiscountByQuantity> discountByQuantity = db.DiscountByQuantities.ToList();
             for (int i = 0; i < quantityFrom.Length; i++)
             {
                 discountByQuantity[i].QuantityFrom = quantityFrom[i];

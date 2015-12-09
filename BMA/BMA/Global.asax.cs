@@ -22,6 +22,7 @@ namespace BMA
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            GlobalHost.Configuration.ConnectionTimeout = TimeSpan.FromSeconds(50);
 
             notifier.Start("BMAChangeDB", "SELECT OrderId FROM dbo.[Orders]");
             notifier.Change += this.OnChange;

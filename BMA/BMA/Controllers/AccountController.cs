@@ -28,12 +28,20 @@ namespace BMA.Controllers
                 string sAccount = f.Get("txtAccount");
                 string sPassword = f.Get("txtPassword");
                 User endUser = ab.checkLogin(sAccount, sPassword);
+                if (endUser == null)
+                {
+                    return -1;
+                }
                 if (!endUser.IsConfirmed)
                 {
-                    return -2;
+                    ab.ConfirmAccount(endUser.UserId);
                 }
                 if (endUser.RoleId == 3)
                 {
+                    if (!endUser.Customers.ElementAt(0).IsActive)
+                    {
+                        return -2;
+                    }
                     Session["User"] = endUser;
                     Session["UserId"] = endUser.UserId;
                     Session["CusUserId"] = endUser.Customers.ElementAt(0).CustomerId;
@@ -45,6 +53,13 @@ namespace BMA.Controllers
                 }
                 else
                 {
+                    if (endUser.RoleId == 2)
+                    {
+                        if (!endUser.Staffs.ElementAt(0).IsActive)
+                        {
+                            return -2;
+                        }
+                    }
                     Session["User"] = endUser;
                     Session["UserRole"] = endUser.Role.RoleId;
                     return 2;
@@ -145,7 +160,7 @@ namespace BMA.Controllers
             List<User> lstUser = db.Users.ToList();
             foreach (var item in lstUser)
             {
-                if (ab.CreateIdHash(item.UserId,salt) == strUserId)
+                if (ab.CreateIdHash(item.UserId, salt) == strUserId)
                 {
                     userId = item.UserId;
                 }

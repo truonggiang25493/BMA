@@ -82,17 +82,32 @@
                         <h3 class="profile-username text-center">@Model.StoreName</h3>
                         <ul class="list-group list-group-unbordered">
                             <li class="list-group-item">
-                                <b>Chủ doanh nghiệp</b> <a class="pull-right">@Model.OwnerName</a>
+                                <b>Chủ doanh nghiệp</b> 
+                                <a class="pull-right">@Model.OwnerName</a>
                             </li>
                             <li class="list-group-item">
-                                <b>Địa chỉ</b> <a class="pull-right">@Model.Address</a>
+                                <b>Địa chỉ Email</b>
+                                <a class="pull-right">@Model.Email</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Địa chỉ</b> 
+                                <a class="pull-right">@Model.Address</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Tỉnh thành</b>
+                                <a class="pull-right">@Model.Province</a>
                             </li>
                             <li class="list-group-item">
                                 <b>Số điện thoại</b>
-                                <a class="pull-right"><div>@Model.Phonenumber</div></a>
+                                <a class="pull-right">@Model.Phonenumber</a>
                             </li>
                             <li class="list-group-item">
-                                <b>Mã số thuế</b><a class="pull-right">g</a><a class="pull-right">@Model.TaxCode</a>
+                                <b>Fax</b>
+                                <a class="pull-right">@Model.Fax</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Mã số thuế</b>
+                                <a class="pull-right">@Model.TaxCode</a>
                             </li>
                         </ul>
                         <a href="/StoreInfor/EditStoreInfo" class="btn btn-primary"><b>Thay đổi thông tin cửa hàng</b></a>                    

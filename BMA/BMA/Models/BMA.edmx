@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BMAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -240,7 +240,6 @@
           <Property Name="OwnerName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="TaxCode" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="BakeryImage" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="ProductMaxPrice" Type="int" />
           <Property Name="District" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Province" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Fax" Type="nvarchar" MaxLength="50" />
@@ -1359,7 +1358,6 @@
           <Property Name="OwnerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TaxCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="BakeryImage" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="ProductMaxPrice" Type="Int32" />
           <Property Name="District" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Province" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Fax" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -2173,7 +2171,6 @@
                 <ScalarProperty Name="Fax" ColumnName="Fax" />
                 <ScalarProperty Name="Province" ColumnName="Province" />
                 <ScalarProperty Name="District" ColumnName="District" />
-                <ScalarProperty Name="ProductMaxPrice" ColumnName="ProductMaxPrice" />
                 <ScalarProperty Name="BakeryImage" ColumnName="BakeryImage" />
                 <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
                 <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />

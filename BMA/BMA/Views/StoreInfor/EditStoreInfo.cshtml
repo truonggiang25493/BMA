@@ -34,16 +34,32 @@
                             <input type="text" class="form-control" name="productName" value="@Model.OwnerName" placeholder="Nhập tên chủ doanh nghiệp" id="ownerName" required>
                         </div>
                         <div class="form-group">
+                            <label for="exampleInputEmail1">Địa chỉ Email <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productName" value="@Model.Email" maxlength="250" placeholder="Nhập địa chỉ email" id="storeEmail" required>
+                        </div>
+                        <div class="form-group">
                             <label for="exampleInputEmail1">Địa chỉ <span style="color:red">*</span></label>
                             <input type="text" class="form-control" name="productUnit" value="@Model.Address" placeholder="Nhập địa chỉ" id="storeAddress" required>
                         </div>
                         <div class="form-group">
+                            <label for="exampleInputEmail1">Tỉnh thành <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productWeight" value="@Model.Province" placeholder="Nhập tỉnh thành" id="storeProvince" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Quận <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="productWeight" value="@Model.District" placeholder="Nhập quận" id="storeDistrict" required>
+                        </div>
+                        <div class="form-group">
                             <label for="exampleInputEmail1">Số điện thoại <span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="productWeight" value="@Model.Phonenumber" placeholder="Nhập số điện thoại" id="storePhone" required>
+                            <input type="text" class="form-control" name="productWeight" value="@Model.Phonenumber" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Nhập số điện thoại" id="storePhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Fax</label>
+                            <input type="text" class="form-control" name="productWeight" value="@Model.Fax" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Nhập số Fax" id="storeFax" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Mã số thuế <span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="productWeight" value="@Model.TaxCode" placeholder="Nhập mã số thuế" id="storeTaxCode" required>
+                            <input type="text" class="form-control" name="productWeight" value="@Model.TaxCode" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Nhập mã số thuế" id="storeTaxCode" required>
                         </div>
                     </div><!-- /.box-body -->
                 </div><!-- /.box -->
@@ -95,12 +111,29 @@
                     return result;
                 }
 
+                function CheckEmail(address) {
+                    address = address.replace(/(^\s*)|(\s*$)/g, "");
+                    var reg = /([\w._-])+@@([\w_-])+(\.([\w_-])+){1,2}/;
+                    var matcharr = reg.exec(address);
+                    if (matcharr != null) {
+                        if (matcharr[0].length == address.length) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+
                 function checkValidate() {
                     var dataString;
                     var txtStoreName = $("#storeName").val();
                     var txtOwnerName = $("#ownerName").val();
+                    var txtEmail = $("#storeEmail").val();
                     var txtAddress = $("#storeAddress").val();
+                    var txtProvince = $("#storeProvince").val();
+                    var txtDistrict = $("#storeDistrict").val();
                     var txtPhone = $("#storePhone").val();
+                    var txtFax = $("#storeFax").val();
                     var txtTaxCode = $("#storeTaxCode").val();
                     var fileName = getFileName($("#file").val());
                     if (fileName == "") {
@@ -153,6 +186,24 @@
                             theme: 'defaultTheme',
                             timeout: 2000
                         });
+                    } else if (!CheckEmail(txtEmail)) {
+                        noty({
+                            text: 'Email không đúng định dạng - example@gmail.com',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtEmail.trim() === '') {
+                        noty({
+                            text: 'Email không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
                     } else if (txtAddress.trim() === '') {
                         noty({
                             text: 'Địa chỉ không được để trống.',
@@ -165,6 +216,42 @@
                     } else if (txtAddress.leng < 10 || txtAddress.length > 250) {
                         noty({
                             text: 'Địa chỉ phải từ 10 tới 250 ký tự.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtProvince.trim() === '') {
+                        noty({
+                            text: 'Tỉnh thành không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtProvince.leng < 3 || txtProvince.length > 100) {
+                        noty({
+                            text: 'Tỉnh thành phải từ 3 tới 100 ký tự.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtDistrict.trim() === '') {
+                        noty({
+                            text: 'Quận không được để trống.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else if (txtDistrict.leng < 1 || txtDistrict.length > 30) {
+                        noty({
+                            text: 'Quận phải từ 1 tới 30 ký tự.',
                             type: 'warning',
                             dismissQueue: false,
                             layout: 'topCenter',
@@ -218,7 +305,7 @@
                         });
                     } else if (txtTaxCode.length < 10 || txtPhone.length > 13) {
                         noty({
-                            text: 'Mã số thuế phải có độ dài từ 8-15 kí tự',
+                            text: 'Mã số thuế phải có độ dài từ 10 đến 13 kí tự',
                             type: 'warning',
                             dismissQueue: false,
                             layout: 'topCenter',
@@ -241,8 +328,12 @@
                                         "data": JSON.stringify({
                                             "storeName": txtStoreName,
                                             "ownerName": txtOwnerName,
+                                            "Email": txtEmail,
                                             "address": txtAddress,
+                                            "Province": txtProvince,
+                                            "District": txtDistrict,
                                             "phoneNumber": txtPhone,
+                                            "Fax": txtFax,
                                             "taxCode": txtTaxCode,
                                             "fileName": fileName
                                         }),

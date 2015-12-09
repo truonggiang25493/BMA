@@ -30,21 +30,21 @@
                         </div>
                         <div class="form-group required">
                             <label for="InputLastName">Địa chỉ <sup>*</sup> </label>
-                            <input required maxlength="250" type="text" class="form-control" value="@Model.Customers.ElementAt(0).CustomerAddress" id="InputAddress" placeholder="Nhập địa chỉ" name=txtAdress>
+                            <input required maxlength="200" type="text" class="form-control" value="@Model.Customers.ElementAt(0).CustomerAddress" id="InputAddress" placeholder="Nhập địa chỉ" name=txtAdress>
                         </div>
                         <div class="form-group required">
                             <label for="InputEmail"> Email <sup>*</sup></label>
-                            <input required pattern=".{5,}" title="Email phải lớn hơn 5 ký tự" maxlength="250" type="email" class="form-control" value="@Model.Email" id="InputEmail" placeholder="Nhập email - example@gmail.com" name="txtEmail">
+                            <input required pattern=".{5,}" title="Email phải lớn hơn 5 ký tự" maxlength="200" type="email" class="form-control" value="@Model.Email" id="InputEmail" placeholder="Nhập email - example@gmail.com" name="txtEmail">
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6">
                         <div class="form-group required">
                             <label for="InputName">Mã số thuế<sup>*</sup> </label>
-                            <input required maxlength="13" type="tel" class="form-control" value="@Model.Customers.ElementAt(0).TaxCode" id="InputTaxCode" placeholder="Nhập mã số thuế" name="txtTaxCode">
+                            <input required maxlength="13" type="tel" class="form-control" value="@Model.Customers.ElementAt(0).TaxCode" id="InputTaxCode" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Nhập mã số thuế" name="txtTaxCode">
                         </div>
                         <div class="form-group required">
                             <label for="InputLastName">Số điện thoại <sup>*</sup> </label>
-                            <input required maxlength="12" type="tel" class="form-control" value="@Model.Customers.ElementAt(0).CustomerPhoneNumber" id="InputPhone" placeholder="Nhập số điện thoại" name="txtPhone">
+                            <input required maxlength="15" type="tel" class="form-control" value="@Model.Customers.ElementAt(0).CustomerPhoneNumber" id="InputPhone" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Nhập số điện thoại" name="txtPhone">
                         </div>
                         <div class="form-group required">
                             <label for="InputLastName" style="margin-top:20px;"></label>
@@ -130,6 +130,15 @@
                                 theme: 'defaultTheme',
                                 timeout: 2000
                             });
+                        } else if (txtPhone.length < 8 || txtPhone.length > 15) {
+                            noty({
+                                text: 'Số điện thoại phải có độ dài từ 8-15 kí tự',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
                         } else if (isNaN(txtTaxCode)) {
                             noty({
                                 text: 'Mã số thuế phải là số.',
@@ -138,6 +147,15 @@
                                 layout: 'topCenter',
                                 theme: 'defaultTheme',
                                 timeout: 2000,
+                            });
+                        } else if (txtTaxCode.length < 10 || txtPhone.length > 13) {
+                            noty({
+                                text: 'Mã số thuế phải có độ dài từ 10 đến 13 kí tự',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
                             });
                         } else if (isNaN(txtPhone)) {
                             noty({

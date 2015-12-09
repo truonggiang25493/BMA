@@ -206,6 +206,12 @@ namespace BMA.Controllers
         {
             try
             {
+                CusManageBusiness cmb = new CusManageBusiness();
+                var order = cmb.GetOrderDetail(orderId);
+                if (order.CustomerUserId != Convert.ToInt32(Session["UserId"]))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
                 CustomerOrderBusiness cob = new CustomerOrderBusiness();
                 cob.TurnFlagOn(orderId);
                 List<CustomerCartViewModel> lstCart = new List<CustomerCartViewModel>();
@@ -214,6 +220,8 @@ namespace BMA.Controllers
                 {
                     Session["Cart"] = lstCart;
                     Session["BeEdited"] = orderId;
+                    Session["DeliveryDate"] = order.PlanDeliveryTime;
+                    Session["Note"] = order.OrderNote;
                 }
                 return RedirectToAction("Cart");
             }
@@ -240,6 +248,7 @@ namespace BMA.Controllers
             }
             //DateTime planDeliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
             DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+            string Note = Session["Note"].ToString();
             int amount = Convert.ToInt32(Session["Amount"]);
             int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
             int discount = Convert.ToInt32(Session["DiscountAmount"]);
@@ -253,7 +262,7 @@ namespace BMA.Controllers
             {
                 RedirectToAction("Index", "Product");
             }
-            cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
+            cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
             cob.TurnFlagOff(orderId);
             TempData["orderCode"] = cob.EditGetOrderCode(orderId);
             Session["DeliveryDate"] = planDeliveryDate;
@@ -262,6 +271,7 @@ namespace BMA.Controllers
             Session["Amount"] = null;
             Session["TaxAmount"] = null;
             Session["DiscountAmount"] = null;
+            Session["Note"] = null;
             return 1;
         }
 
@@ -278,6 +288,7 @@ namespace BMA.Controllers
             string orderTime = DateTime.Now.ToString("yyyyMMdd");
             //DateTime planDeliveryDate = DateTime.Now;
             DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+            string Note = Session["Note"].ToString();
             int amount = Convert.ToInt32(Session["Amount"]);
             int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
             int discount = Convert.ToInt32(Session["DiscountAmount"]);
@@ -298,12 +309,13 @@ namespace BMA.Controllers
                     return -2;
                 }
             }
-            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
+            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
             TempData["orderCode"] = cob.GetOrderCode();
             Session["Cart"] = null;
             Session["Amount"] = null;
             Session["TaxAmount"] = null;
             Session["DiscountAmount"] = null;
+            Session["Note"] = null;
             return 1;
 
         }
@@ -346,12 +358,14 @@ namespace BMA.Controllers
             }
             int cusUserId = Convert.ToInt32(Session["UserId"]);
             DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
+            string Note = Session["Note"].ToString();
+            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
             TempData["orderCode"] = cob.GetOrderCode();
             Session["Cart"] = null;
             Session["Amount"] = null;
             Session["TaxAmount"] = null;
             Session["DiscountAmount"] = null;
+            Session["Note"] = null;
             return 1;
 
         }
@@ -371,6 +385,7 @@ namespace BMA.Controllers
                 int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
                 int discount = Convert.ToInt32(Session["DiscountAmount"]);
                 DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                string Note = Session["Note"].ToString();
                 string sName = f.Get("txtName").ToString();
                 string sPhone = f.Get("txtPhoneNumber").ToString();
                 string sAddress = f.Get("txtAddress").ToString();
@@ -397,13 +412,14 @@ namespace BMA.Controllers
                 //}
                 else
                 {
-                    cob.GuestOrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cart, sName, sPhone, sAddress, sEmail);
+                    cob.GuestOrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cart, sName, sPhone, sAddress, sEmail, Note);
                 }
                 TempData["orderCode"] = cob.GetOrderCode();
                 Session["Cart"] = null;
                 Session["Amount"] = null;
                 Session["TaxAmount"] = null;
                 Session["DiscountAmount"] = null;
+                Session["Note"] = null;
                 return 1;
             }
             catch
@@ -413,6 +429,20 @@ namespace BMA.Controllers
 
         }
 
+        //public int GetDateAndNote(string planDeliveryDate, string Note)
+        //{
+        //    try
+        //    {
+        //        Session["DeliveryDate"] = planDeliveryDate;
+        //        Session["Note"] = Note;
+        //        return 1;
+        //    }
+        //    catch
+        //    {
+        //        return -1;
+        //    }
+
+        //}
         public ActionResult ProceedCheckout(FormCollection f)
         {
             try
@@ -426,6 +456,8 @@ namespace BMA.Controllers
                 ViewBag.taxRate = cob.GetTaxRate();
                 string planDeliveryDate = f["txtDelivery"].ToString();
                 Session["DeliveryDate"] = planDeliveryDate;
+                string Note = f["txtNote"];
+                Session["Note"] = Note;
                 List<CustomerCartViewModel> lstCart = GetCart();
                 foreach (var item in lstCart)
                 {
@@ -479,7 +511,7 @@ namespace BMA.Controllers
                 return RedirectToAction("Index", "Product");
             }
             try
-            {              
+            {
                 return View();
             }
             catch (Exception)

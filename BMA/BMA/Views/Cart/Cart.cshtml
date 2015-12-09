@@ -150,6 +150,11 @@
                             <a class="btn btn-primary btn-lg btn-block " title="checkout" onclick="checkTotalQuantity()" style="margin-bottom:20px"> Đặt hàng &nbsp; <i class="fa fa-arrow-right"></i> </a>
                         }
                         <script type="text/javascript">
+                            function AddNote() {
+                                var Note = $("#textarea").val();
+                                $('#txtNote').attr('value', Note);
+                            }
+
                             function checkTotalQuantity() {
                                 var totalQuantity = 0;
 
@@ -220,12 +225,34 @@
                                             <div style="max-width:202px;margin-right:-10px;">
                                                 <form role="form" action="@Url.Action("ProceedCheckout", "Cart")" method="post" name="postreview" id="myForm">
                                                     <div class="form-group">
-                                                        <div class='input-group date' id='datetimepicker'>
-                                                            <input type="text" name="txtDelivery" id="txtDelivery" class="form-control" readonly />
-                                                            <span class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-calendar"></span>
-                                                            </span>
-                                                        </div>
+                                                        @if (Session["Note"] != null)
+                                                        {
+                                                            <input type="hidden" id="txtNote" name="txtNote" value="@Session["Note"]" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="hidden" id="txtNote" name="txtNote" value="" />
+                                                        }
+
+                                                        @if (Session["DeliveryDate"] != null)
+                                                        {
+                                                            <div class='input-group date' id='datetimepickerSession'>
+                                                                <input type="text" name="txtDelivery" id="txtDelivery" class="form-control" value="@Session["DeliveryDate"]" readonly />
+                                                                <span class="input-group-addon">
+                                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class='input-group date' id='datetimepicker'>
+                                                                <input type="text" name="txtDelivery" id="txtDelivery" class="form-control" readonly />
+                                                                <span class="input-group-addon">
+                                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        }
+
                                                     </div>
                                                 </form>
                                             </div>
@@ -233,6 +260,21 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="w100 cartMiniTable" style="margin-top:10px;">
+                            <fieldset>
+                                <legend style="font-size:15px;">
+                                    Ghi chú
+                                </legend>
+                                @if (Session["Note"] != null)
+                                {
+                                    <textarea class="form-control" maxlength="200" style="max-width:338px;height:104px;" id="textarea" onkeyup="return AddNote()" name="textarea" placeholder="Thêm ghi chú vào đơn hàng.">@Session["Note"]</textarea>
+                                }
+                                else
+                                {
+                                    <textarea class="form-control" maxlength="200" style=" max-width:338px;height:104px;" id="textarea" onkeyup="return AddNote()" name="textarea" placeholder="Thêm ghi chú vào đơn hàng."></textarea>
+                                }
+                            </fieldset>
                         </div>
                     </div>
                 </div>
@@ -270,6 +312,13 @@
         });
 
         $('#datetimepicker').datetimepicker({
+            locale: 'vi',
+            ignoreReadonly: true,
+            defaultDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",
+            minDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))"
+        })
+
+        $('#datetimepickerSession').datetimepicker({
             locale: 'vi',
             ignoreReadonly: true,
             defaultDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",

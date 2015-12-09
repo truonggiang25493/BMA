@@ -6,6 +6,7 @@ using BMA.Models;
 using BMA.Models.ViewModel;
 using System.Web.Mvc;
 using BMA.Controllers;
+using System.Data.Entity;
 
 namespace BMA.Business
 {
@@ -21,6 +22,19 @@ namespace BMA.Business
         {
             var taxRate = db.TaxRates.SingleOrDefault(n => n.TaxTypeId == 1);
             return taxRate;
+        }
+
+        public string CreateOrderCode(string orderTime, int orderId)
+        {
+            string completeOrderNumber = "";
+            string orderIdString = orderId.ToString();
+            if (orderIdString.Length > 4)
+            {
+                orderIdString = orderIdString.Substring(orderIdString.Length - 4);
+            }
+            orderIdString = orderIdString.PadLeft(4, '0');
+            completeOrderNumber = String.Format("{0}{1}{2}", 'O', orderTime, orderIdString);
+            return completeOrderNumber;
         }
 
         public bool TurnFlagOn(int orderId)
@@ -77,14 +91,16 @@ namespace BMA.Business
             return lstCart;
         }
 
-        public bool EditOrder(int orderId, DateTime planDeliveryDate, int Amount, int taxAmount, int discount, int cusUserId, List<CustomerCartViewModel> cart)
+        public bool EditOrder(int orderId, DateTime planDeliveryDate, int Amount, int taxAmount, int discount, int cusUserId, List<CustomerCartViewModel> cart, string Note)
         {
+            DbContextTransaction contextTransaction = db.Database.BeginTransaction();
             Order order = db.Orders.Find(orderId);
             order.PlanDeliveryTime = planDeliveryDate;
             order.Amount = Amount;
             order.TaxAmount = taxAmount;
             order.DiscountAmount = discount;
             order.CustomerUserId = cusUserId;
+            order.OrderNote = Note;
             db.SaveChanges();
             List<OrderItem> orderItem = db.OrderItems.Where(n => n.OrderId == order.OrderId).ToList();
             for (int i = 0; i < orderItem.Count; i++)
@@ -102,10 +118,23 @@ namespace BMA.Business
                 db.OrderItems.Add(orderDetail);
             }
             db.SaveChanges();
+            try
+            {
+                contextTransaction.Commit();
+            }
+            catch (Exception)
+            {
+                contextTransaction.Rollback();
+            }
+            finally
+            {
+                contextTransaction.Dispose();
+            }
             return true;
         }
-        public bool OrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount, int discount, int cusUserId, List<CustomerCartViewModel> cart)
+        public bool OrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount, int discount, int cusUserId, List<CustomerCartViewModel> cart, string Note)
         {
+            DbContextTransaction contextTransaction = db.Database.BeginTransaction();
             Order order = new Order();
             order.OrderCode = orderTime;
             order.CreateTime = DateTime.Now;
@@ -118,10 +147,12 @@ namespace BMA.Business
             order.TaxAmount = taxAmount;
             order.DiscountAmount = discount;
             order.CustomerUserId = cusUserId;
+            order.OrderNote = Note;
             db.Orders.Add(order);
             db.SaveChanges();
-            string orderNumber = order.OrderId.ToString().PadLeft(4, '0');
-            order.OrderCode = String.Format("{0}{1}{2}", 'O', orderTime, orderNumber);
+            CreateOrderCode(orderTime, order.OrderId);
+            //string orderNumber = order.OrderId.ToString().PadLeft(4, '0');
+            //order.OrderCode = String.Format("{0}{1}{2}", 'O', orderTime, orderNumber);
             db.SaveChanges();
             foreach (var item in cart)
             {
@@ -134,12 +165,25 @@ namespace BMA.Business
                 db.OrderItems.Add(orderDetail);
             }
             db.SaveChanges();
+            try
+            {
+                contextTransaction.Commit();
+            }
+            catch (Exception)
+            {
+                contextTransaction.Rollback();
+            }
+            finally
+            {
+                contextTransaction.Dispose();
+            }
             return true;
         }
 
 
-        public bool GuestOrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount, int discount, List<CustomerCartViewModel> cart, string sName, string sPhone, string sAddress, string sEmail)
+        public bool GuestOrderProduct(string orderTime, DateTime planDeliveryDate, int Amount, int taxAmount, int discount, List<CustomerCartViewModel> cart, string sName, string sPhone, string sAddress, string sEmail, string Note)
         {
+            DbContextTransaction contextTransaction = db.Database.BeginTransaction();
             Order order = new Order();
             order.OrderCode = orderTime;
             order.CreateTime = DateTime.Now;
@@ -151,6 +195,7 @@ namespace BMA.Business
             order.Amount = Amount;
             order.TaxAmount = taxAmount;
             order.DiscountAmount = discount;
+            order.OrderNote = Note;
             GuestInfo guestInfo = new GuestInfo();
             guestInfo.GuestInfoName = sName;
             guestInfo.GuestInfoPhone = sPhone;
@@ -161,8 +206,7 @@ namespace BMA.Business
             order.GuestInfoId = guestInfo.GuestInfoId;
             db.Orders.Add(order);
             db.SaveChanges();
-            string orderNumber = order.OrderId.ToString().PadLeft(4, '0');
-            order.OrderCode = String.Format("{0}{1}{2}", 'O', orderTime, orderNumber);
+            CreateOrderCode(orderTime, order.OrderId);
             db.SaveChanges();
             foreach (var item in cart)
             {
@@ -175,6 +219,18 @@ namespace BMA.Business
                 db.OrderItems.Add(orderDetail);
             }
             db.SaveChanges();
+            try
+            {
+                contextTransaction.Commit();
+            }
+            catch (Exception)
+            {
+                contextTransaction.Rollback();
+            }
+            finally
+            {
+                contextTransaction.Dispose();
+            }
             return true;
         }
 

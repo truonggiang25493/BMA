@@ -357,6 +357,7 @@
     <Compile Include="Models\VatTaxDeclaration.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModel\AllProductInfoViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerRevenueReport.cs" />
@@ -1508,6 +1509,9 @@
     <Content Include="Views\Tax\OutputVatList.cshtml" />
     <Content Include="Views\Tax\TaxDeclarationExport.cshtml" />
     <Content Include="Views\Tax\TndnTaxDeclaration.cshtml" />
+    <Content Include="Views\ManageMaterial\Detail.cshtml" />
+    <Content Include="Views\ManageMaterial\Edit.cshtml" />
+    <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
