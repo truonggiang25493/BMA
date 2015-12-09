@@ -112,15 +112,22 @@ namespace BMA.Controllers
             }
             else
             {
-                ViewBag.TreeView = "supplier";
-                Supplier supplier = db.Suppliers.SingleOrDefault(m => m.SupplierId == id);
-                if (supplier == null)
+                try
                 {
-                    return RedirectToAction("SupplierIndex", "Supplier");
+                    ViewBag.TreeView = "supplier";
+                    Supplier supplier = db.Suppliers.SingleOrDefault(m => m.SupplierId == id);
+                    if (supplier == null)
+                    {
+                        return RedirectToAction("SupplierIndex", "Supplier");
+                    }
+                    else
+                    {
+                        return View(supplier);
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    return View(supplier);
+                    return RedirectToAction("Index", "StoreInfor");
                 }
             }
         }

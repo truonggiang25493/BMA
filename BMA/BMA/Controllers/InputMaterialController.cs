@@ -33,11 +33,11 @@ namespace BMA.Controllers
             }
             else
             {
-                db = new BMAEntities();
-                inputMaterialBusiness = new InputMaterialBusiness();
                 ViewBag.Title = "Danh sách nguyên liệu đầu vào";
                 ViewBag.TreeView = "inputMaterial";
                 ViewBag.TreeViewMenu = "listInputMaterial";
+                db = new BMAEntities();
+                inputMaterialBusiness = new InputMaterialBusiness();
                 var inputMaterialslList = InputMaterialBusiness.GetInputMaterialList();
                 if (inputMaterialslList == null)
                 {
@@ -143,7 +143,7 @@ namespace BMA.Controllers
                 int productMaterialId = Convert.ToInt32(productMaterialIdString);
                 String importQuantityString = f["txtImportQuantity"];
                 int importQuantity = Convert.ToInt32(importQuantityString);
-                String inputMaterialTotalPriceString = f["txtInputMaterialPrice"];
+                String inputMaterialUnitPriceString = f["txtUnitPrice"];
                 String importDateString = f["txtImportDate"];
                 String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
                 String inputMaterialNote = f["txtInputMaterialNote"];
@@ -155,11 +155,10 @@ namespace BMA.Controllers
                 {
                     try
                     {
-                        int inputMaterialTotalPrice = Convert.ToInt32(inputMaterialTotalPriceString);
-                        double inputMaterialPrice = Convert.ToDouble(inputMaterialTotalPrice/importQuantity);
-
+                        int inputMaterialUnitPrice = Convert.ToInt32(inputMaterialUnitPriceString);
+                        
                         inputMaterial.ImportQuantity = importQuantity;
-                        inputMaterial.InputMaterialPrice = inputMaterialPrice;
+                        inputMaterial.InputMaterialPrice = inputMaterialUnitPrice;
                         inputMaterial.ImportDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy",
                             CultureInfo.InvariantCulture);
                         inputMaterial.InputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString,
@@ -204,7 +203,7 @@ namespace BMA.Controllers
         #region Get Popup Input Bill
         public ActionResult GetInputBillList()
         {
-            List<InputBill> inputBillList = db.InputBills.ToList();
+            List<InputBill> inputBillList = db.InputBills.OrderByDescending(m=>m.ImportDate).ToList();
             return PartialView("InputListPartialView", inputBillList);
         }
         #endregion
@@ -250,7 +249,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "Manage");
+                    return RedirectToAction("Index", "StoreInfor");
                     ;
                 }
             }
@@ -271,7 +270,7 @@ namespace BMA.Controllers
             {
                 String productMaterialIdString = f["productMaterialId"];
                 String importQuantityString = f["txtImportQuantity"];
-                String inputMaterialPriceString = f["txtInputMaterialPrice"];
+                String inputMaterialPriceString = f["txtUnitPrice"];
                 String importDateString = f["txtImportDate"];
                 String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
                 String inputMaterialNote = f["txtInputMaterialNote"];
@@ -284,22 +283,39 @@ namespace BMA.Controllers
                       inputMaterialExpiryDateString.IsEmpty() || inputBillIdString.IsEmpty() ||
                       inputMaterialIdString.IsEmpty()))
                 {
-                    int inputMaterialId = Convert.ToInt32(inputMaterialIdString);
-                    int importQuantity = Convert.ToInt32(importQuantityString);
-                    int productMaterialId = Convert.ToInt32(productMaterialIdString);
-                    int inputMaterialPrice = Convert.ToInt32(inputMaterialPriceString);
-                    DateTime importDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    DateTime inputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    int inputBillId = Convert.ToInt32(inputBillIdString);
-                    //Close connection with hub
-                    MvcApplication.lowQuantityNotifer.Dispose();
-                    bool result = InputMaterialBusiness.EditInputMaterial(inputMaterialId, importQuantity,
-                        productMaterialId, inputMaterialPrice, importDate, inputMaterialExpiryDate, inputBillId,
-                        inputMaterialNote);
-                    //Connection with hub
-                    MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
-                    MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
-                    return result ? 1 : 0;
+                    var checkimportDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    var checkExpireDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy",
+                        CultureInfo.InvariantCulture);
+                    if (DateTime.Compare(checkExpireDate, checkimportDate) >= 1)
+                    {
+                        try
+                        {
+                            int inputMaterialId = Convert.ToInt32(inputMaterialIdString);
+                            int importQuantity = Convert.ToInt32(importQuantityString);
+                            int productMaterialId = Convert.ToInt32(productMaterialIdString);
+                            int inputMaterialPrice = Convert.ToInt32(inputMaterialPriceString);
+                            DateTime importDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy",
+                                CultureInfo.InvariantCulture);
+                            DateTime inputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString,
+                                "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            int inputBillId = Convert.ToInt32(inputBillIdString);
+                            //Close connection with hub
+                            MvcApplication.lowQuantityNotifer.Dispose();
+                            bool result = InputMaterialBusiness.EditInputMaterial(inputMaterialId, importQuantity,
+                                productMaterialId, inputMaterialPrice, importDate, inputMaterialExpiryDate, inputBillId,
+                                inputMaterialNote);
+                            //Connection with hub
+                            MvcApplication.lowQuantityNotifer.Start("BMAChangeDB",
+                                "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                            MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                            return result ? 1 : 0;
+                        }
+                        catch (Exception)
+                        {
+                            return 0;
+                        }
+                    }
+                    return -1;
                 }
                 return 0;
             }

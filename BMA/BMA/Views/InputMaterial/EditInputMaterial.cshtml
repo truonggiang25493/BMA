@@ -48,6 +48,14 @@
                                                             document.getElementById('popup-body').innerHTML = data;
                                                             document.getElementById('popup-footer').innerHTML = chooseButton[0].outerHTML;
                                                             $('#myModal').modal('show');
+                                                            $('#example2').DataTable({
+                                                                "paging": true,
+                                                                "lengthChange": false,
+                                                                "searching": true,
+                                                                "ordering": true,
+                                                                "info": true,
+                                                                "autoWidth": false
+                                                            });
                                                         }
                                                     });
                                                 }
@@ -80,12 +88,20 @@
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="form-group">
                                     <div class="col-xs-5">
-                                        <b>Tổng giá nhập kho<b style="color: #ff0000">*</b>: </b>
+                                        <b>Tổng giá (VNĐ)<b style="color: #ff0000">*</b>: </b>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.InputMaterialPrice*Model.ImportQuantity)" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" placeholder="nhập số từ 1-9 chữ số" class="form-control"/>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 17px;">
                                 <div class="form-group">
+                                    <div class="col-xs-5">
+                                        <b>Đơn giá (VNĐ)<b style="color: #ff0000">*</b>: </b>
+                                    </div>
                                     <div class="col-xs-7">
-                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.InputMaterialPrice*Model.ImportQuantity)" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="7" min="1" max="9999999" class="form-control" placeholder="nhập số từ 1-7 chữ số" />
+                                        <input type="number" readonly="readonly" value="@Model.InputMaterialPrice" name="txtUnitPrice" id="txtUnitPrice" class="form-control" />
                                     </div>
                                 </div>
                             </div>
@@ -154,6 +170,15 @@
                                                         document.getElementById('standard-popup-body').innerHTML = data;
                                                         document.getElementById('standard-popup-footer').innerHTML = chooseButton[0].outerHTML;
                                                         $('#myStandardModal').modal('show');
+                                                        $('#example').DataTable({
+                                                            "iDisplayLength": 5,
+                                                            "paging": true,
+                                                            "lengthChange": false,
+                                                            "searching": true,
+                                                            "ordering": false,
+                                                            "info": true,
+                                                            "autoWidth": false
+                                                        });
                                                     }
                                                 });
                                             }
@@ -268,7 +293,7 @@
                                             theme: 'defaultTheme',
                                             timeout: 1000
                                         });
-                                    } else if (txtImportQuantity > txtInputMaterialPrice) {
+                                    } else if (txtImportQuantity < txtInputMaterialPrice) {
                                         noty({
                                             text: 'Số lượng nguyên liệu nhập vào không được lớn hơn tổng giá nguyên liệu.',
                                             type: 'warning',
@@ -323,6 +348,15 @@
                                                     window.setTimeout(function () {
                                                         window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
                                                     }, 2000);
+                                                } else if (data === "-1") {
+                                                    noty({
+                                                        text: 'Ngày hết hạn phải lớn hơn ngày nhập.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
                                                 } else {
                                                     noty({
                                                         text: 'Không thể chỉnh sửa nguyên liệu đầu vào',
@@ -409,6 +443,26 @@
                 $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
             });
         });
+    </script>
+
+    <script type="text/javascript">
+        $(document).on("keyup", "#txtInputMaterialPrice", function () {
+            var importQuantity = $("#txtImportQuantity").val();
+            var inputMaterialPrice = $("#txtInputMaterialPrice").val();
+            var unitPrice = Math.ceil(inputMaterialPrice / importQuantity);
+            $('#txtUnitPrice').val(unitPrice);
+            $('#txtUnitPrice').attr('min', unitPrice);
+        })
+    </script>
+
+    <script type="text/javascript">
+        $(document).on("keyup", "#txtImportQuantity", function () {
+            var importQuantity = $("#txtImportQuantity").val();
+            var inputMaterialPrice = $("#txtInputMaterialPrice").val();
+            var unitPrice = Math.ceil(inputMaterialPrice / importQuantity);
+            $('#txtUnitPrice').val(unitPrice);
+            $('#txtUnitPrice').attr('min', unitPrice);
+        })
     </script>
 }
 
