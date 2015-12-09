@@ -41,7 +41,7 @@
                                         <div class="pull-right hidden-xs">
                                             <div class="change-view-flat">
                                                 <div class="change-view pull-right">
-                                                    <input id="searchinput" name="txtSearch" placeholder="Nhập từ khóa cần tìm" class="form-control-search input-md" type="search">
+                                                    <input id="searchinput" name="txtSearch" placeholder="Nhập tên sản phẩm cần tìm" class="form-control-search input-md" type="search">
                                                     <button id="singlebutton" name="singlebutton" class="btn btn-primary btn-sm" style="margin-left:5px;height:34px;margin-bottom:5px;"> Tìm kiếm </button>
                                                 </div>
                                             </div>
@@ -118,7 +118,12 @@
                                                         selectDongia = price;
                                                         var total = $(this).val() * selectDongia;
                                                         total = addPeriod(total);
-                                                        $('#product-details-modal #totalPriceProduct').text(total + " Đồng");
+                                                        if (isNaN(total)) {
+
+                                                        } else {
+                                                            $('#product-details-modal #totalPriceProduct').text(total + " Đồng");
+                                                        }
+
                                                     });
 
                                                     //$('#product-details-modal .quanitySniper').on('keydown keyup', function (e) {
@@ -190,7 +195,7 @@
 
                                                     <div class="productFilter productFilterLook2">
                                                         <div style="width:50%">
-                                                            <input type="text" name="txtQuantity" maxlength="5" placeholder="Nhập số lượng" class="quanitySniper" id="quantityCheck" style="font-size:16px;padding-bottom:0px;min-width:158px;" value="" />
+                                                            <input type="text" name="txtQuantity" maxlength="5" placeholder="Nhập số lượng" class="quanitySniper" id="quanitySniper" style="font-size:16px;padding-bottom:0px;min-width:158px;" value="" />
                                                         </div>
                                                     </div>
                                                     <h3 class="details-description">Thành tiền : <span id="totalPriceProduct"> </span></h3>
@@ -212,11 +217,20 @@
                                                     }
 
                                                     function validateInput() {
-                                                        var txtQuantity = $("#quantityCheck").val();
+                                                        var txtQuantity = $("#quanitySniper").val();
                                                         var numQuantity = toNumber(txtQuantity);
                                                         if (txtQuantity.trim() === '') {
                                                             noty({
                                                                 text: 'Số lượng không được để trống.',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 2000
+                                                            });
+                                                        } else if (isNaN(txtQuantity)) {
+                                                            noty({
+                                                                text: 'Số lượng sản phẩm phải là số.',
                                                                 type: 'warning',
                                                                 dismissQueue: false,
                                                                 layout: 'topCenter',

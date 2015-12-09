@@ -22,14 +22,14 @@
                     <div class="box-body">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tên nguyên liệu <span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="txtName" value="" placeholder="Nhập tên nguyên liệu" id="materialName">
+                            <input type="text" class="form-control" name="txtName" value="" maxlength="100" placeholder="Nhập tên nguyên liệu" id="materialName">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Đơn vị tính <span style="color:red">*</span></label><br />
-                            <input type="text" class="form-control" name="txtUnit" value="" placeholder="Nhập đơn vị" id="materialUnit">
+                            <input type="text" class="form-control" name="txtUnit" value="" maxlength="20" placeholder="Nhập đơn vị" id="materialUnit">
                         </div><div class="form-group">
                             <label for="exampleInputEmail1">Số lượng tối thiểu <span style="color:red">*</span></label><br />
-                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtSQuantity" value="" placeholder="Nhập đơn vị" id="materialSQuantity">
+                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="10" name="txtSQuantity" value="" placeholder="Nhập đơn vị" id="materialSQuantity">
                         </div>
                     </div><!-- /.box-body -->
                 </form>
@@ -53,7 +53,7 @@
                                 });
                             } else if (txtName.length < 2 || txtName.length > 100) {
                                 noty({
-                                    text: 'Tên nguyên liệu phải có độ dài từ 2-100 kí tự.',
+                                    text: 'Tên nguyên liệu phải có độ dài từ 2 đến 100 kí tự.',
                                     type: 'warning',
                                     dismissQueue: false,
                                     layout: 'topCenter',
@@ -71,7 +71,7 @@
                                 });
                             } else if (txtUnit.length < 2 || txtUnit.length > 20) {
                                 noty({
-                                    text: 'Đơn vị tính của nguyên liệu phải có độ dài từ 2-20 kí tự.',
+                                    text: 'Đơn vị tính của nguyên liệu phải có độ dài từ 2 đến 20 kí tự.',
                                     type: 'warning',
                                     dismissQueue: false,
                                     layout: 'topCenter',

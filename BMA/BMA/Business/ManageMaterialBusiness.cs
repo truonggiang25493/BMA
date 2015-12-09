@@ -39,7 +39,7 @@ namespace BMA.Business
             return true;
         }
 
-        public bool Edit(int materialId, string materialName, string materialUnit, int materialSQuantity)
+        public bool EditMaterial(int materialId, string materialName, string materialUnit, int materialSQuantity)
         {
             ProductMaterial productMaterial = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == materialId);
             productMaterial.ProductMaterialName = materialName;

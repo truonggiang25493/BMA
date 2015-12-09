@@ -206,6 +206,12 @@ namespace BMA.Controllers
         {
             try
             {
+                CusManageBusiness cmb = new CusManageBusiness();
+                var order = cmb.GetOrderDetail(orderId);
+                if (order.CustomerUserId != Convert.ToInt32(Session["UserId"]))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
                 CustomerOrderBusiness cob = new CustomerOrderBusiness();
                 cob.TurnFlagOn(orderId);
                 List<CustomerCartViewModel> lstCart = new List<CustomerCartViewModel>();
@@ -214,6 +220,8 @@ namespace BMA.Controllers
                 {
                     Session["Cart"] = lstCart;
                     Session["BeEdited"] = orderId;
+                    Session["DeliveryDate"] = order.PlanDeliveryTime;
+                    Session["Note"] = order.OrderNote;
                 }
                 return RedirectToAction("Cart");
             }
@@ -223,20 +231,27 @@ namespace BMA.Controllers
             }
         }
 
-        public ActionResult EditOrder(FormCollection f, int orderId)
+        public int EditOrder(int orderId)
         {
-
             CustomerOrderBusiness cob = new CustomerOrderBusiness();
             if (Session["Cart"] == null)
             {
-                return RedirectToAction("Index", "Product");
+                return -1;
             }
             List<CustomerCartViewModel> cart = GetCart();
+            foreach (var item in cart)
+            {
+                if (!cob.IsActiveProduct(item.ProductId))
+                {
+                    return -2;
+                }
+            }
             //DateTime planDeliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
             DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-            int amount = Convert.ToInt32(TempData["Amount"]);
-            int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
-            int discount = Convert.ToInt32(TempData["DiscountAmount"]);
+            string Note = Session["Note"].ToString();
+            int amount = Convert.ToInt32(Session["Amount"]);
+            int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
+            int discount = Convert.ToInt32(Session["DiscountAmount"]);
             int cusUserId = Convert.ToInt32(Session["UserId"]);
             if (Session["User"] != null)
             {
@@ -247,32 +262,36 @@ namespace BMA.Controllers
             {
                 RedirectToAction("Index", "Product");
             }
-            cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
+            cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
             cob.TurnFlagOff(orderId);
             TempData["orderCode"] = cob.EditGetOrderCode(orderId);
             Session["DeliveryDate"] = planDeliveryDate;
             Session["Cart"] = null;
             Session["BeEdited"] = null;
-            return RedirectToAction("EditOrderSuccess", new { orderId = orderId });
+            Session["Amount"] = null;
+            Session["TaxAmount"] = null;
+            Session["DiscountAmount"] = null;
+            Session["Note"] = null;
+            return 1;
         }
 
 
         //For customer order
-        public ActionResult OrderProduct()
+        public int OrderProduct()
         {
-
             CustomerOrderBusiness cob = new CustomerOrderBusiness();
             if (Session["Cart"] == null)
             {
-                return RedirectToAction("Index", "Product");
+                return -1;
             }
             List<CustomerCartViewModel> cart = GetCart();
             string orderTime = DateTime.Now.ToString("yyyyMMdd");
             //DateTime planDeliveryDate = DateTime.Now;
             DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-            int amount = Convert.ToInt32(TempData["Amount"]);
-            int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
-            int discount = Convert.ToInt32(TempData["DiscountAmount"]);
+            string Note = Session["Note"].ToString();
+            int amount = Convert.ToInt32(Session["Amount"]);
+            int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
+            int discount = Convert.ToInt32(Session["DiscountAmount"]);
             int cusUserId = Convert.ToInt32(Session["UserId"]);
             if (Session["User"] != null)
             {
@@ -281,29 +300,40 @@ namespace BMA.Controllers
             }
             else
             {
-                RedirectToAction("Index", "Product");
+                return -1;
             }
-            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
+            foreach (var item in cart)
+            {
+                if (!cob.IsActiveProduct(item.ProductId))
+                {
+                    return -2;
+                }
+            }
+            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
             TempData["orderCode"] = cob.GetOrderCode();
             Session["Cart"] = null;
-            return RedirectToAction("OrderSuccess", "Cart");
+            Session["Amount"] = null;
+            Session["TaxAmount"] = null;
+            Session["DiscountAmount"] = null;
+            Session["Note"] = null;
+            return 1;
 
         }
 
         //For customer after enter information
-        public ActionResult LoginOrderProduct(FormCollection f)
+        public int LoginOrderProduct(FormCollection f)
         {
             AccountBusiness ab = new AccountBusiness();
             CustomerOrderBusiness cob = new CustomerOrderBusiness();
             if (Session["Cart"] == null)
             {
-                return RedirectToAction("Index", "Product");
+                return -4;
             }
             List<CustomerCartViewModel> cart = GetCart();
             string orderTime = DateTime.Now.ToString("yyyyMMdd");
-            int amount = Convert.ToInt32(TempData["Amount"]);
-            int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
-            int discount = Convert.ToInt32(TempData["DiscountAmount"]);
+            int amount = Convert.ToInt32(Session["Amount"]);
+            int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
+            int discount = Convert.ToInt32(Session["DiscountAmount"]);
             string sAccount = f.Get("txtAccount").ToString();
             string sPassword = f.Get("txtPassword").ToString();
             User endUser = ab.checkLogin(sAccount, sPassword);
@@ -313,7 +343,7 @@ namespace BMA.Controllers
                 if (checkRole != 3)
                 {
                     TempData["Notify"] = "Tài khoản không hợp lệ";
-                    return RedirectToAction("OrderInfo");
+                    return -2;
                 }
                 Session["User"] = endUser;
                 Session["UserId"] = endUser.UserId;
@@ -324,61 +354,95 @@ namespace BMA.Controllers
             else
             {
                 TempData["Notify"] = "Sai tài khoản hoặc mật khẩu";
-                return RedirectToAction("OrderInfo");
+                return -3;
             }
             int cusUserId = Convert.ToInt32(Session["UserId"]);
             DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart);
+            string Note = Session["Note"].ToString();
+            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
             TempData["orderCode"] = cob.GetOrderCode();
             Session["Cart"] = null;
-            return RedirectToAction("OrderSuccess", "Cart");
+            Session["Amount"] = null;
+            Session["TaxAmount"] = null;
+            Session["DiscountAmount"] = null;
+            Session["Note"] = null;
+            return 1;
 
         }
 
-        public ActionResult GuestOrderProduct(FormCollection f)
+        public int GuestOrderProduct(FormCollection f)
         {
+            try
+            {
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                if (Session["Cart"] == null)
+                {
+                    return -1;
+                }
+                List<CustomerCartViewModel> cart = GetCart();
+                string orderTime = DateTime.Now.ToString("yyyyMMdd");
+                int amount = Convert.ToInt32(Session["Amount"]);
+                int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
+                int discount = Convert.ToInt32(Session["DiscountAmount"]);
+                DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                string Note = Session["Note"].ToString();
+                string sName = f.Get("txtName").ToString();
+                string sPhone = f.Get("txtPhoneNumber").ToString();
+                string sAddress = f.Get("txtAddress").ToString();
+                string sEmail = f.Get("txtEmail").ToString();
 
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            if (Session["Cart"] == null)
-            {
-                return RedirectToAction("Index", "Product");
-            }
-            List<CustomerCartViewModel> cart = GetCart();
-            string orderTime = DateTime.Now.ToString("yyyyMMdd");
-            int amount = Convert.ToInt32(TempData["Amount"]);
-            int taxAmount = Convert.ToInt32(TempData["TaxAmount"]);
-            int discount = Convert.ToInt32(TempData["DiscountAmount"]);
-            DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-            string sName = f.Get("txtName").ToString();
-            string sPhone = f.Get("txtPhoneNumber").ToString();
-            string sAddress = f.Get("txtAddress").ToString();
-            string sEmail = f.Get("txtEmail").ToString();
+                if (sName == null || sPhone == null || sAddress == null || sEmail == null)
+                {
+                    RedirectToAction("OrderInfo");
+                }
 
-            if (sName == null || sPhone == null || sAddress == null || sEmail == null)
-            {
-                RedirectToAction("OrderInfo");
-            }
-            //Kiểm tra guest đó có tồn tại trong dtb user hoặc guest chưa
-            if (cob.checkUserDuplicate(sEmail, sPhone))
-            {
-                TempData["guestError"] = "Email và số điện thoại đã tồn tại, nếu đã có tài khoản xin vui lòng đăng nhập.";
-                return RedirectToAction("OrderInfo");
-            }
+                if (cob.checkStaffDuplicate(sEmail, sPhone))
+                {
+                    return -2;
+                }
+                //Kiểm tra guest đó có tồn tại trong dtb user hoặc guest chưa
+                if (cob.checkCustomerDuplicate(sEmail, sPhone))
+                {
+                    return -3;
+                }
 
-            //if (cob.checkGuestDuplicate(sName, sPhone, sEmail))
-            //{
-            //    cob.GuestOrderProduct(orderTime, planDeliveryDate, amount, taxAmount, cart, sName, sPhone, sEmail);
-            //}
-            else
-            {
-                cob.GuestOrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cart, sName, sPhone, sAddress, sEmail);
+                //if (cob.checkGuestDuplicate(sName, sPhone, sEmail))
+                //{
+                //    cob.GuestOrderProduct(orderTime, planDeliveryDate, amount, taxAmount, cart, sName, sPhone, sEmail);
+                //}
+                else
+                {
+                    cob.GuestOrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cart, sName, sPhone, sAddress, sEmail, Note);
+                }
+                TempData["orderCode"] = cob.GetOrderCode();
+                Session["Cart"] = null;
+                Session["Amount"] = null;
+                Session["TaxAmount"] = null;
+                Session["DiscountAmount"] = null;
+                Session["Note"] = null;
+                return 1;
             }
-            TempData["orderCode"] = cob.GetOrderCode();
-            Session["Cart"] = null;
-            return RedirectToAction("OrderSuccess", "Cart");
+            catch
+            {
+                return -4;
+            }
 
         }
 
+        //public int GetDateAndNote(string planDeliveryDate, string Note)
+        //{
+        //    try
+        //    {
+        //        Session["DeliveryDate"] = planDeliveryDate;
+        //        Session["Note"] = Note;
+        //        return 1;
+        //    }
+        //    catch
+        //    {
+        //        return -1;
+        //    }
+
+        //}
         public ActionResult ProceedCheckout(FormCollection f)
         {
             try
@@ -392,7 +456,16 @@ namespace BMA.Controllers
                 ViewBag.taxRate = cob.GetTaxRate();
                 string planDeliveryDate = f["txtDelivery"].ToString();
                 Session["DeliveryDate"] = planDeliveryDate;
+                string Note = f["txtNote"];
+                Session["Note"] = Note;
                 List<CustomerCartViewModel> lstCart = GetCart();
+                foreach (var item in lstCart)
+                {
+                    if (!cob.IsActiveProduct(item.ProductId))
+                    {
+                        ViewBag.productName = item.ProductName;
+                    }
+                }
                 if (lstCart.Count == 0)
                 {
                     return RedirectToAction("Index", "Product");
@@ -417,11 +490,25 @@ namespace BMA.Controllers
                 return RedirectToAction("Index", "Error");
             }
         }
+
+        public int CheckProductActive()
+        {
+            CustomerOrderBusiness cob = new CustomerOrderBusiness();
+            List<CustomerCartViewModel> lstCart = GetCart();
+            foreach (var item in lstCart)
+            {
+                if (!cob.IsActiveProduct(item.ProductId))
+                {
+                    return -1;
+                }
+            }
+            return 1;
+        }
         public ActionResult OrderInfo(FormCollection f)
         {
             if (Session["Cart"] == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Product");
             }
             try
             {

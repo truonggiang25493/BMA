@@ -43,13 +43,20 @@ namespace BMA.Business
             return null;
         }
 
+        public bool ConfirmAccount(int userId)
+        {
+            var User = db.Users.FirstOrDefault(n => n.UserId == userId);
+            User.IsConfirmed = true;
+            db.SaveChanges();
+            return true;
+        }
         public User GetUser(int cusId)
         {
             User user = db.Users.SingleOrDefault(n => n.UserId == cusId);
             return user;
         }
 
-        public bool checkEmailExisted(int cusUserId,string Email)
+        public bool checkEmailExisted(int cusUserId, string Email)
         {
             var checkUser = db.Users.SingleOrDefault(n => n.Email == Email && n.UserId != cusUserId);
             if (checkUser != null)

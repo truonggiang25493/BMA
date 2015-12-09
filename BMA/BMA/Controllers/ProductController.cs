@@ -18,25 +18,33 @@ namespace BMA.Controllers
         // GET: /Product/
         public ActionResult Index(int? page, FormCollection f, int? categoryId)
         {
-            ViewBag.Show = "product";
-            int pageSize = 12;
-            int pageNumber = (page ?? 1);
-            ProductBusiness pb = new ProductBusiness();
-            List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
-            ViewBag.lstProductCart = lstProductCart;
-            var lstProduct = pb.GetProduct().ToPagedList(pageNumber, pageSize);
-            ViewBag.ProductTitle = "Tất cả sản phẩm";
-            if (categoryId != null)
+            try
             {
-                lstProduct = pb.GetProductByCategory(categoryId).ToPagedList(pageNumber, pageSize);
-                var category = db.Categories.SingleOrDefault(n => n.CategoryId == categoryId);
-                ViewBag.ProductTitle = category.CategoryName;
+                ViewBag.Show = "product";
+                int pageSize = 12;
+                int pageNumber = (page ?? 1);
+                ProductBusiness pb = new ProductBusiness();
+                List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
+                ViewBag.lstProductCart = lstProductCart;
+                var lstProduct = pb.GetProduct().ToPagedList(pageNumber, pageSize);
+                ViewBag.ProductTitle = "Tất cả sản phẩm";
+                if (categoryId != null)
+                {
+                    lstProduct = pb.GetProductByCategory(categoryId).ToPagedList(pageNumber, pageSize);
+                    var category = db.Categories.SingleOrDefault(n => n.CategoryId == categoryId);
+                    ViewBag.ProductTitle = category.CategoryName;
+                }
+                if (!String.IsNullOrEmpty(f["txtSearch"]))
+                {
+                    lstProduct = pb.SearchProduct(f["txtSearch"]).ToPagedList(pageNumber, pageSize);
+                }
+                return View(lstProduct);
             }
-            if (!String.IsNullOrEmpty(f["txtSearch"]))
+            catch
             {
-                lstProduct = pb.SearchProduct(f["txtSearch"]).ToPagedList(pageNumber, pageSize);
+                return RedirectToAction("Index", "Error");
             }
-            return View(lstProduct);
+
         }
 
         //public ActionResult Cookie(int? page)

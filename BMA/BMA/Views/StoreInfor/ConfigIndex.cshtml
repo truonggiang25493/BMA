@@ -88,7 +88,7 @@
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-7 pull-left">@ViewBag.minQuantity.PolicyName</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@ViewBag.minQuantity.PolicyBound" id="productQuantity" placeholder="Nhập số lượng" readonly>
+                                <input type="text" class="form-control" maxlength="5" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@ViewBag.minQuantity.PolicyBound" id="productQuantity" placeholder="Nhập số lượng" readonly>
                             </div>
                         </div>
                     </div><!-- /.box-body -->
@@ -138,7 +138,7 @@
                                     });
                                 } else if (txtQuantity > 5000) {
                                     noty({
-                                        text: 'Số lượng không được lớn hơn hoặc bằng 5000.',
+                                        text: 'Số lượng không được lớn hơn 5000.',
                                         type: 'warning',
                                         dismissQueue: false,
                                         layout: 'topCenter',
@@ -216,7 +216,7 @@
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-7 pull-left">Đơn giá tối đá cho sản phẩm (đồng)</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@ViewBag.maxPrice.PolicyBound" id="maxPrice" placeholder="Nhập giá tối đa" onkeyup="return formatPrice()" readonly>
+                                <input type="text" class="form-control" maxlength="10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@ViewBag.maxPrice.PolicyBound" id="maxPrice" placeholder="Nhập giá tối đa" onkeyup="return formatPrice()" readonly>
                             </div>
                         </div>
                     </div><!-- /.box-body -->
@@ -377,7 +377,7 @@
                                                     <label style="margin-top:10px;margin-left:10px;">@(++count)</label>
                                                 </td>
                                                 <td>
-                                                    <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="form-control" style="width:138px;" value="@category.ElementAt(i).CategoryName" id="categoryName" data-role="categoryName" readonly />
+                                                    <input type="text" maxlength="50" class="form-control" style="width:138px;" value="@category.ElementAt(i).CategoryName" id="categoryName" data-role="categoryName" readonly />
                                                     <input type="hidden" value="@category.ElementAt(i).CategoryName" id="hiddenCategoryName" data-role="hiddenCategoryName" />
                                                     <input type="hidden" value="@category.ElementAt(i).CategoryId" id="hiddenCategoryId" data-role="hiddenCategoryId" />
                                                 </td>
@@ -433,9 +433,9 @@
                                     theme: 'defaultTheme',
                                     timeout: 2000
                                 });
-                            } else if (categoryName.length < 6 || categoryName.length > 20) {
+                            } else if (categoryName.length < 6 || categoryName.length > 50) {
                                 noty({
-                                    text: 'Tên bánh không nhỏ hơn 6 và vượt quá 20 ký tự.',
+                                    text: 'Tên bánh không nhỏ hơn 6 và vượt quá 50 ký tự.',
                                     type: 'warning',
                                     dismissQueue: false,
                                     layout: 'topCenter',

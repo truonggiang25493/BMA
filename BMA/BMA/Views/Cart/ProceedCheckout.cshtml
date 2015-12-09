@@ -10,9 +10,9 @@
     int sumTotal = 0;
     int taxAmount = 0;
     int totalValue = 0;
-    int sumQuantity = 0;
     int discount = 0;
     int cosAfterDiscount = 0;
+    string productName = ViewBag.productName;
 }
 
 <div class="container main-container headerOffset">
@@ -34,7 +34,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-10 col-md-10 col-sm-12">
+        <div class="col-lg-9 col-md-9 col-sm-9">
             <div class="row userInfo">
                 <div class="w100 clearfix">
                     <div class="row userInfo">
@@ -50,17 +50,17 @@
                                         </tr>
                                         @foreach (var item in Model)
                                         {
-                                            <tr class="CartProduct">
-                                                <td class="CartProductThumb"><div> <a href="#"><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" style="width:86px;height:58px;"></a> </div></td>
-                                                <td>
-                                                    <div class="CartDescription">
-                                                        <h4>@item.ProductName</h4>
-                                                    </div>
-                                                </td>
-                                                <td class="delete"><div class="price ">@item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) </div></td>
-                                                <td class="hidden-xs">@item.Quantity</td>
-                                                <td class="price">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                            </tr>
+                                        <tr class="CartProduct">
+                                            <td class="CartProductThumb"><div> <a href="#"><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" style="width:86px;height:58px;"></a> </div></td>
+                                            <td>
+                                                <div class="CartDescription">
+                                                    <h4>@item.ProductName</h4>
+                                                </div>
+                                            </td>
+                                            <td class="delete"><div class="price ">@item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) </div></td>
+                                            <td class="hidden-xs">@item.Quantity</td>
+                                            <td class="price">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        </tr>
                                             sumTotal = sumTotal + @item.Total;
                                         }
                                     </tbody>
@@ -84,17 +84,18 @@
                                         <tr>
                                             <td>Tổng cộng</td>
                                             <td class="price">@sumTotal.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                            <td><input type="hidden" value="@productName" id="productName" /></td>
                                         </tr>
                                         @if (dbq != null)
                                         {
-                                            <tr>
-                                                <td>Giảm giá(@string.Format("{0}{1}", dbq.DiscountValue, "%"))</td>
-                                                <td class="price"><span class="success">@(discount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Sau giảm giá</td>
-                                                <td class="price"><span class="success">@(cosAfterDiscount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
-                                            </tr>
+                                        <tr>
+                                            <td>Giảm giá(@string.Format("{0}{1}", dbq.DiscountValue, "%"))</td>
+                                            <td class="price"><span class="success">@(discount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sau giảm giá</td>
+                                            <td class="price"><span class="success">@(cosAfterDiscount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                        </tr>
                                         }
                                         <tr>
                                             <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
@@ -117,30 +118,30 @@
                 </div>
                 <div class="cartFooter w100" style="margin-bottom:50px;">
                     <div class="box-footer">
-                        <div class="pull-left"> <a onclick="javascript:history.back(-1);" class="btn btn-success"> <i class="fa fa-arrow-left"></i> &nbsp; Quay lại giỏ hàng </a> </div>
+                        <div class="pull-left"> <a href="@Url.Action("Cart","Cart")" class="btn btn-success"> <i class="fa fa-arrow-left"></i> &nbsp; Quay lại giỏ hàng </a> </div>
                         <div class="pull-right">
                             @{
                                 if (Session["User"] != null)
                                 {
                                     if (Session["BeEdited"] != null)
                                     {
-                                        <a href="@Url.Action("EditOrder", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"]) })" c class="btn btn-primary btn-small ">
-                                            Xác nhận &nbsp; <i class="fa fa-check"></i>
-                                        </a>
+                            <a onclick="EditOrder()" class="btn btn-primary btn-small ">
+                                Xác nhận &nbsp; <i class="fa fa-check"></i>
+                            </a>
                                     }
                                     else
                                     {
-                                        <a href="@Url.Action("OrderProduct","Cart")" class="btn btn-primary btn-small ">
-                                            Xác nhận &nbsp; <i class="fa fa-check"></i>
-                                        </a>
+                            <a onclick="OrderProduct()" class="btn btn-primary btn-small ">
+                                Xác nhận &nbsp; <i class="fa fa-check"></i>
+                            </a>
                                     }
 
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("OrderInfo", "Cart")" class="btn btn-primary btn-small ">
-                                        Xác nhận &nbsp; <i class="fa fa-check"></i>
-                                    </a>
+                            <a onclick="OrderInfo()" class="btn btn-primary btn-small ">
+                                Xác nhận &nbsp; <i class="fa fa-check"></i>
+                            </a>
                                 }
                             }
                         </div>
@@ -149,7 +150,128 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="order-box">
+                <div class="order-box-header">
+                    Ghi chú
+                </div>
+                <div class="tab-pane active" style="font-size:15px;margin:10px;height:150px;word-wrap:break-word">
+                    @Session["Note"]
+                </div>
+            </div>
+        </div>
     </div>
+    <script type="text/javascript">
+        function EditOrder() {
+            var productName = $("#productName").val();
+            $.ajax({
+                url: "@(Url.Action("EditOrder", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"])}))",
+                data: "@(Url.Action("EditOrder", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"])}))",
+                success: function (data) {
+                    if (data === "1") {
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("EditOrderSuccess", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"])}))");
+                        }, 500);
+                    } if (data === "-1") {
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "Product"))");
+                        }, 500);
+                    } if (data === "-2") {
+                        noty({
+                            text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 3000
+                        });
+                    }
+                },
+                fail: function () {
+                    noty({
+                        text: 'Đã có lỗi xảy ra',
+                        type: 'error',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            })
+        }
 
+        function OrderProduct() {
+            var productName = $("#productName").val();
+            $.ajax({
+                url: "@(Url.Action("OrderProduct", "Cart"))",
+                data: "@(Url.Action("OrderProduct", "Cart"))",
+                success: function (data) {
+                    if (data === "1") {
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("OrderSuccess", "Cart"))");
+                        }, 500);
+                    } if (data === "-1") {
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "Product"))");
+                        }, 500);
+                    } if (data === "-2") {
+                        noty({
+                            text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 3000
+                        });
+                    }
+                },
+                fail: function () {
+                    noty({
+                        text: 'Đã có lỗi xảy ra',
+                        type: 'error',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            })
+        }
+
+        function OrderInfo() {
+            var productName = $("#productName").val();
+            $.ajax({
+                url: "@(Url.Action("CheckProductActive", "Cart"))",
+                data: "@(Url.Action("CheckProductActive", "Cart"))",
+                success: function (data) {
+                    if (data === "1") {
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("OrderInfo", "Cart"))");
+                        }, 500);
+                    }
+                    if (data === "-1") {
+                        noty({
+                            text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 3000
+                        });
+                    }
+                },
+                fail: function () {
+                    noty({
+                        text: 'Đã có lỗi xảy ra',
+                        type: 'error',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            })
+        }
+    </script>
     <div style="clear:both"></div>
 </div>

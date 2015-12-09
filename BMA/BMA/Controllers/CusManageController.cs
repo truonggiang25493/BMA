@@ -166,6 +166,10 @@ namespace BMA.Controllers
             {
                 int quantity = 0;
                 var order = cmb.GetOrderDetail(orderId);
+                if (order.CustomerUserId != Convert.ToInt32(Session["UserId"]))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
                 var orderItems = cmb.GetOrderItem(orderId);
                 ViewBag.taxRate = cob.GetTaxRate();
                 ViewBag.orderItems = orderItems;
@@ -187,6 +191,12 @@ namespace BMA.Controllers
         {
             try
             {
+                CusManageBusiness cmb = new CusManageBusiness();
+                var orderCheck = cmb.GetOrderDetail(orderId);
+                if (orderCheck.CustomerUserId != Convert.ToInt32(Session["UserId"]))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
                 if (orderId == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -211,6 +221,12 @@ namespace BMA.Controllers
         {
             try
             {
+                CusManageBusiness cmb = new CusManageBusiness();
+                var orderCheck = cmb.GetOrderDetail(orderId);
+                if (orderCheck.CustomerUserId != Convert.ToInt32(Session["UserId"]))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
                 OrderBusiness ob = new OrderBusiness();
                 int userId = Convert.ToInt32(Session["UserId"]);
                 ob.Cancel(orderId, 0, 0, userId);
@@ -231,6 +247,11 @@ namespace BMA.Controllers
             int quantityOld = 0;
             try
             {
+                var orderCheck = cmb.GetOrderDetail(orderId);
+                if (orderCheck.CustomerUserId != Convert.ToInt32(Session["UserId"]))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
                 Order confirmedOrder = cmb.GetOrderDetail(orderId);
                 List<OrderItem> orderItems = cmb.GetOrderItem(orderId);
                 int? previousId = confirmedOrder.PreviousOrderId;
@@ -264,6 +285,11 @@ namespace BMA.Controllers
             try
             {
                 CusManageBusiness cmb = new CusManageBusiness();
+                var orderCheck = cmb.GetOrderDetail(orderId);
+                if (orderCheck.CustomerUserId != Convert.ToInt32(Session["UserId"]))
+                {
+                    return -2;
+                }
                 cmb.AcceptEditedOrder(orderId);
                 return 1;
             }
@@ -278,6 +304,11 @@ namespace BMA.Controllers
             try
             {
                 CusManageBusiness cmb = new CusManageBusiness();
+                var orderCheck = cmb.GetOrderDetail(orderId);
+                if (orderCheck.CustomerUserId != Convert.ToInt32(Session["UserId"]))
+                {
+                    return -2;
+                }
                 cmb.CancelEditedOrder(orderId);
                 return 1;
             }
@@ -291,6 +322,12 @@ namespace BMA.Controllers
         {
             try
             {
+                CusManageBusiness cmb = new CusManageBusiness();
+                var orderCheck = cmb.GetOrderDetail(orderId);
+                if (orderCheck.CustomerUserId != Convert.ToInt32(Session["UserId"]))
+                {
+                    return -2;
+                }
                 OrderBusiness ob = new OrderBusiness();
                 int userId = Convert.ToInt32(Session["UserId"]);
                 ob.Cancel(orderId, 0, 0, userId);
