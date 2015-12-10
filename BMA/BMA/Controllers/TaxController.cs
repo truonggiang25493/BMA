@@ -72,18 +72,26 @@ namespace BMA.Controllers
             return View(result);
         }
 
-        public int SaveTaxDeclaration(FormCollection form)
+        public int SaveVatTaxDeclaration(FormCollection form)
         {
 
             #region Get data from Form
+
             string taxQuarter = form["taxQuarter"];
             string taxYear = form["taxYear"];
 
-            //Store Info Not get from form; Get from DB
+            string storeOwnerName = form["storeOwnerName"];
+            string storeTaxcode = form["storeTaxcode"].Replace(",", "");
+            string storeAddress = form["storeAddress"];
+            string storeDistrict = form["storeDistrict"];
+            string storeProvince = form["storeProvince"];
+            string storePhone = form["storePhone"];
+            string storeFax = form["storeFax"];
+            string storeEmail = form["storeEmail"];
 
             string vatAgentOwnerName = form["vatAgentOwnerName"];
             string vatAgentName = form["agentName"];
-            string vatAgentTaxCode = form["agentTaxCode"];
+            string vatAgentTaxCode = form["agentTaxCode"].Replace(",", "");
             string vatAgentNo = form["agentNo"];
             string vatAgentAddress = form["vatAgentAddress"];
             string vatAgentDistrict = form["vatAgentDistrict"];
@@ -95,24 +103,23 @@ namespace BMA.Controllers
             string value20No = form["value20No"];
             string value20Date = form["value20Date"];
             string value21 = form["value21"];
-            string value22 = form["value22"];
-            string value25 = form["value25"];
-            string value36 = form["value36"];
-            string value37 = form["value37"];
-            string value38 = form["value38"];
-            string value39 = form["value39"];
-            string value40a = form["value40a"];
-            string value40b = form["value40b"];
-            string value40 = form["value40"];
-            string value41 = form["value41"];
-            string value42 = form["value42"];
-            string value43 = form["value43"];
+            string value22 = form["value22"].Replace(".", "");
+            string value25 = form["value25"].Replace(".", "");
+            string value36 = form["value36"].Replace(".", "");
+            string value37 = form["value37"].Replace(".", "");
+            string value38 = form["value38"].Replace(".", "");
+            string value39 = form["value39"].Replace(".", "");
+            string value40a = form["value40a"].Replace(".", "");
+            string value40b = form["value40b"].Replace(".", "");
+            string value40 = form["value40"].Replace(".", "");
+            string value41 = form["value41"].Replace(".", "");
+            string value42 = form["value42"].Replace(".", "");
+            string value43 = form["value43"].Replace(".", "");
 
 
             string signName = form["signName"];
+            string createDate = form["createDate"];
             string createLocation = form["createLocation"];
-            string createDay = form["createDay"];
-            string createMonth = form["createMonth"];
 
             string outputCategory1Column2 = form["output_category1_column2"];
             string outputCategory1Column3 = form["output_category1_column3"];
@@ -170,27 +177,438 @@ namespace BMA.Controllers
             string inputCategory3Column7 = form["input_category3_column7"];
             string inputCategory3Column8 = form["input_category3_column8"];
 
+            #endregion
 
-            BMAEntities db = new BMAEntities();
+            #region ProcessData
 
-            StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
+            Models.VatTaxDeclaration taxDeclaration = new VatTaxDeclaration();
+
+            taxDeclaration.Quarter = Convert.ToInt32(taxQuarter);
+            taxDeclaration.Year = Convert.ToInt32(taxYear);
+
+            taxDeclaration.StoreOwnerName = storeOwnerName;
+            taxDeclaration.StoreTaxCode = storeTaxcode;
+            taxDeclaration.StoreAddress = storeAddress;
+            taxDeclaration.StoreDistrict = storeDistrict;
+            taxDeclaration.StoreProvince = storeProvince;
+            taxDeclaration.StorePhone = storePhone;
+            taxDeclaration.StoreEmail = storeEmail;
+            taxDeclaration.StoreFax = storeFax;
+
+            taxDeclaration.TaxAgentOwnerName = vatAgentOwnerName;
+            taxDeclaration.TaxAgentTaxCode = vatAgentTaxCode;
+            taxDeclaration.TaxAgentAddress = vatAgentAddress;
+            taxDeclaration.TaxAgentDistrict = vatAgentDistrict;
+            taxDeclaration.TaxAgentProvince = vatAgentProvince;
+            taxDeclaration.TaxAgentPhone = vatAgentPhone;
+            taxDeclaration.TaxAgentEmail = vatAgentEmail;
+            taxDeclaration.TaxAgentFax = vatAgentFax;
+            taxDeclaration.TaxAgentName = vatAgentName;
+            taxDeclaration.TaxAgentNo = vatAgentNo;
+
+            taxDeclaration.CreateLocation = createLocation;
+            taxDeclaration.CreateDate = DateTime.ParseExact(createDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            taxDeclaration.SignName = signName;
+            taxDeclaration.Value20No = value20No;
+            taxDeclaration.Value20Date = DateTime.ParseExact(value20Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+            taxDeclaration.Value21 = Convert.ToInt32(value21);
+            taxDeclaration.Value22 = Convert.ToInt32(value22);
+            taxDeclaration.Value25 = Convert.ToInt32(value25);
+            taxDeclaration.Value36 = Convert.ToInt32(value36);
+            taxDeclaration.Value37 = Convert.ToInt32(value37);
+            taxDeclaration.Value38 = Convert.ToInt32(value38);
+            taxDeclaration.Value39 = Convert.ToInt32(value39);
+            taxDeclaration.Value40 = Convert.ToInt32(value40);
+            taxDeclaration.Value40a = Convert.ToInt32(value40a);
+            taxDeclaration.Value40b = Convert.ToInt32(value40b);
+            taxDeclaration.Value41 = Convert.ToInt32(value41);
+            taxDeclaration.Value42 = Convert.ToInt32(value42);
+            taxDeclaration.Value43 = Convert.ToInt32(value43);
+
+            #region Output
+
+            int totalOutputAmount = 0;
+            int haveTaxTotalOutputAmount = 0;
+            int totalTaxOutputAmount = 0;
+
+            #region OutputCategory1
+
+            string outputCategory1 = "";
+
+            if (outputCategory1Column4 != null)
+            {
+                string[] outputCategory1Column2Array = outputCategory1Column2.Split(',');
+                string[] outputCategory1Column3Array = outputCategory1Column3.Split(',');
+                string[] outputCategory1Column4Array = outputCategory1Column4.Split(',');
+                string[] outputCategory1Column5Array = outputCategory1Column5.Split(',');
+                string[] outputCategory1Column6Array = outputCategory1Column6.Split(',');
+                string[] outputCategory1Column7Array = outputCategory1Column7.Split(',');
+                string[] outputCategory1Column8Array = outputCategory1Column8.Split(',');
+
+                int totalOutputCategory1 = 0;
+
+                for (int i = 0; i < outputCategory1Column4Array.Length; i++)
+                {
+                    string eachOutputCategory1 = "";
+
+                    eachOutputCategory1 += outputCategory1Column2Array[i] + ",";
+                    eachOutputCategory1 += outputCategory1Column3Array[i] + ",";
+                    eachOutputCategory1 += outputCategory1Column4Array[i] + ",";
+                    eachOutputCategory1 += outputCategory1Column5Array[i] + ",";
+                    eachOutputCategory1 += outputCategory1Column6Array[i].Replace(".", "") + ",";
+                    eachOutputCategory1 += outputCategory1Column7Array[i].Replace(".", "") + ",";
+                    eachOutputCategory1 += outputCategory1Column8Array[i];
+
+                    int categoryColumn6Number = Convert.ToInt32(outputCategory1Column6Array[i].Replace(".", ""));
+                    totalOutputCategory1 += categoryColumn6Number;
+
+
+                    outputCategory1 += eachOutputCategory1 + ";";
+                }
+
+                taxDeclaration.OutputCategory1TotalAmountValue26 = totalOutputCategory1;
+
+                totalOutputAmount += totalOutputCategory1;
+            }
+
+            taxDeclaration.OutputCategory1 = outputCategory1;
+
+            #endregion
+
+            #region OutputCategory2
+
+            string outputCategory2 = "";
+
+            if (outputCategory2Column4 != null)
+            {
+                string[] outputCategory2Column2Array = outputCategory2Column2.Split(',');
+                string[] outputCategory2Column3Array = outputCategory2Column3.Split(',');
+                string[] outputCategory2Column4Array = outputCategory2Column4.Split(',');
+                string[] outputCategory2Column5Array = outputCategory2Column5.Split(',');
+                string[] outputCategory2Column6Array = outputCategory2Column6.Split(',');
+                string[] outputCategory2Column7Array = outputCategory2Column7.Split(',');
+                string[] outputCategory2Column8Array = outputCategory2Column8.Split(',');
+
+                int totalOutputCategory2 = 0;
+
+                for (int i = 0; i < outputCategory2Column4Array.Length; i++)
+                {
+                    string eachOutputCategory2 = "";
+
+                    eachOutputCategory2 += outputCategory2Column2Array[i] + ",";
+                    eachOutputCategory2 += outputCategory2Column3Array[i] + ",";
+                    eachOutputCategory2 += outputCategory2Column4Array[i] + ",";
+                    eachOutputCategory2 += outputCategory2Column5Array[i] + ",";
+                    eachOutputCategory2 += outputCategory2Column6Array[i].Replace(".", "") + ",";
+                    eachOutputCategory2 += outputCategory2Column7Array[i].Replace(".", "") + ",";
+                    eachOutputCategory2 += outputCategory2Column8Array[i];
+
+                    int categoryColumn6Number = Convert.ToInt32(outputCategory2Column6Array[i].Replace(".", ""));
+                    totalOutputCategory2 += categoryColumn6Number;
+
+                    outputCategory2 += eachOutputCategory2 + ";";
+                }
+
+                taxDeclaration.OutputCategory2TotalAmountValue29 = totalOutputCategory2;
+
+                haveTaxTotalOutputAmount += totalOutputCategory2;
+                totalOutputAmount += totalOutputCategory2;
+            }
+
+            taxDeclaration.OutputCategory2 = outputCategory2;
+
+            #endregion
+
+            #region OutputCategory3
+
+            string outputCategory3List = "";
+
+            if (outputCategory3Column4 != null)
+            {
+                string[] outputCategory3Column2Array = outputCategory3Column2.Split(',');
+                string[] outputCategory3Column3Array = outputCategory3Column3.Split(',');
+                string[] outputCategory3Column4Array = outputCategory3Column4.Split(',');
+                string[] outputCategory3Column5Array = outputCategory3Column5.Split(',');
+                string[] outputCategory3Column6Array = outputCategory3Column6.Split(',');
+                string[] outputCategory3Column7Array = outputCategory3Column7.Split(',');
+                string[] outputCategory3Column8Array = outputCategory3Column8.Split(',');
+
+
+                int totalOutputCategory3 = 0;
+                int totalTaxOutputCategory3 = 0;
+
+                for (int i = 0; i < outputCategory3Column4Array.Length; i++)
+                {
+                    string outputCategory3 = "";
+
+                    outputCategory3 += outputCategory3Column2Array[i] + ",";
+                    outputCategory3 += outputCategory3Column3Array[i] + ",";
+                    outputCategory3 += outputCategory3Column4Array[i] + ",";
+                    outputCategory3 += outputCategory3Column5Array[i] + ",";
+                    outputCategory3 += outputCategory3Column6Array[i].Replace(".", "") + ",";
+                    outputCategory3 += outputCategory3Column7Array[i].Replace(".", "") + ",";
+                    outputCategory3 += outputCategory3Column8Array[i];
+
+                    int categoryColumn6Number = Convert.ToInt32(outputCategory3Column6Array[i].Replace(".", ""));
+                    totalOutputCategory3 += categoryColumn6Number;
+
+
+                    int categoryColumn7Number = Convert.ToInt32(outputCategory3Column7Array[i].Replace(".", ""));
+                    totalTaxOutputCategory3 += categoryColumn7Number;
+
+                    outputCategory3List += outputCategory3 + ";";
+                }
+
+                taxDeclaration.OutputCategory3TotalAmountValue30 = totalOutputCategory3;
+                taxDeclaration.OutputCategory3TotalTaxAmountValue31 = totalTaxOutputCategory3;
+
+                totalOutputAmount += totalOutputCategory3;
+                haveTaxTotalOutputAmount += totalOutputCategory3;
+                totalTaxOutputAmount += totalTaxOutputCategory3;
+            }
+
+            taxDeclaration.OutputCategory3 = outputCategory3List;
+
+            #endregion
+
+            #region OutputCategory4
+
+            string outputCategory4List = "";
+
+            if (outputCategory4Column4 != null)
+            {
+                string[] outputCategory4Column2Array = outputCategory4Column2.Split(',');
+                string[] outputCategory4Column3Array = outputCategory4Column3.Split(',');
+                string[] outputCategory4Column4Array = outputCategory4Column4.Split(',');
+                string[] outputCategory4Column5Array = outputCategory4Column5.Split(',');
+                string[] outputCategory4Column6Array = outputCategory4Column6.Split(',');
+                string[] outputCategory4Column7Array = outputCategory4Column7.Split(',');
+                string[] outputCategory4Column8Array = outputCategory4Column8.Split(',');
+
+                int totalOutputCategory4 = 0;
+                int totalTaxOutputCategory4 = 0;
+
+                for (int i = 0; i < outputCategory4Column4Array.Length; i++)
+                {
+                    string outputCategory4 = "";
+
+                    outputCategory4 += outputCategory4Column2Array[i] + ",";
+                    outputCategory4 += outputCategory4Column3Array[i] + ",";
+                    outputCategory4 += outputCategory4Column4Array[i] + ",";
+                    outputCategory4 += outputCategory4Column5Array[i] + ",";
+                    outputCategory4 += outputCategory4Column6Array[i].Replace(".", "") + ",";
+                    outputCategory4 += outputCategory4Column7Array[i].Replace(".", "") + ",";
+                    outputCategory4 += outputCategory4Column8Array[i];
+
+                    int categoryColumn6Number = Convert.ToInt32(outputCategory4Column6Array[i].Replace(".", ""));
+                    totalOutputCategory4 += categoryColumn6Number;
+
+                    int categoryColumn7Number = Convert.ToInt32(outputCategory4Column7Array[i].Replace(".", ""));
+                    totalTaxOutputCategory4 += categoryColumn7Number;
+
+                    outputCategory4List += outputCategory4 + ";";
+                }
+
+                taxDeclaration.OutputCategory4TotalAmountValue32 = totalOutputCategory4;
+                taxDeclaration.OutputCategory4TotalTaxAmountValue33 = totalTaxOutputCategory4;
+
+                totalOutputAmount += totalOutputCategory4;
+                haveTaxTotalOutputAmount += totalOutputCategory4;
+                totalTaxOutputAmount += totalTaxOutputCategory4;
+            }
+
+            taxDeclaration.OutputCategory4 = outputCategory4List;
+
             #endregion
 
 
-            return 1;
+            taxDeclaration.OutputTotalAmountValue34 = totalOutputAmount;
+            taxDeclaration.OutputTotalTaxAmountValue28 = totalTaxOutputAmount;
+            taxDeclaration.HaveTaxOutputTotalAmountValue27 = haveTaxTotalOutputAmount;
+
+            #endregion
+
+            #region Input
+
+            int totalInputAmount = 0;
+            int totalTaxInputAmount = 0;
+
+            #region InputCategory1
+
+            string inputCategory1List = "";
+
+            if (inputCategory1Column4 != null)
+            {
+                string[] inputCategory1Column2Array = inputCategory1Column2.Split(',');
+                string[] inputCategory1Column3Array = inputCategory1Column3.Split(',');
+                string[] inputCategory1Column4Array = inputCategory1Column4.Split(',');
+                string[] inputCategory1Column5Array = inputCategory1Column5.Split(',');
+                string[] inputCategory1Column6Array = inputCategory1Column6.Split(',');
+                string[] inputCategory1Column7Array = inputCategory1Column7.Split(',');
+                string[] inputCategory1Column8Array = inputCategory1Column8.Split(',');
+
+                int totalInputCategory1 = 0;
+                int totalTaxInputCategory1 = 0;
+
+                for (int i = 0; i < inputCategory1Column4Array.Length; i++)
+                {
+                    string inputCategory1 = "";
+
+                    inputCategory1 += inputCategory1Column2Array[i] + ",";
+                    inputCategory1 += inputCategory1Column3Array[i] + ",";
+                    inputCategory1 += inputCategory1Column4Array[i] + ",";
+                    inputCategory1 += inputCategory1Column5Array[i] + ",";
+                    inputCategory1 += inputCategory1Column6Array[i].Replace(".", "") + ",";
+                    inputCategory1 += inputCategory1Column7Array[i].Replace(".", "") + ",";
+                    inputCategory1 += inputCategory1Column8Array[i];
+
+                    int categoryColumn6Number = Convert.ToInt32(inputCategory1Column6Array[i].Replace(".", ""));
+                    totalInputCategory1 += categoryColumn6Number;
+
+                    int categoryColumn7Number = Convert.ToInt32(inputCategory1Column7Array[i].Replace(".", ""));
+                    totalTaxInputCategory1 += categoryColumn7Number;
+
+                    inputCategory1List += inputCategory1 + ";";
+                }
+
+                taxDeclaration.InputCategory1TotalAmount = totalInputCategory1;
+                taxDeclaration.InputCategory1TotalTaxAmount = totalTaxInputCategory1;
+
+                totalInputAmount += totalInputCategory1;
+                totalTaxInputAmount += totalTaxInputCategory1;
+            }
+
+            taxDeclaration.InputCategory1 = inputCategory1List;
+
+            #endregion
+
+            #region InputCategory2
+
+            string inputCategory2List = "";
+
+            if (inputCategory2Column4 != null)
+            {
+                string[] inputCategory2Column2Array = inputCategory2Column2.Split(',');
+                string[] inputCategory2Column3Array = inputCategory2Column3.Split(',');
+                string[] inputCategory2Column4Array = inputCategory2Column4.Split(',');
+                string[] inputCategory2Column5Array = inputCategory2Column5.Split(',');
+                string[] inputCategory2Column6Array = inputCategory2Column6.Split(',');
+                string[] inputCategory2Column7Array = inputCategory2Column7.Split(',');
+                string[] inputCategory2Column8Array = inputCategory2Column8.Split(',');
+
+                int totalInputCategory2 = 0;
+                int totalTaxInputCategory2 = 0;
+
+                for (int i = 0; i < inputCategory2Column4Array.Length; i++)
+                {
+                    string inputCategory2 = "";
+
+                    inputCategory2 += inputCategory2Column2Array[i] + ",";
+                    inputCategory2 += inputCategory2Column3Array[i] + ",";
+                    inputCategory2 += inputCategory2Column4Array[i] + ",";
+                    inputCategory2 += inputCategory2Column5Array[i] + ",";
+                    inputCategory2 += inputCategory2Column6Array[i].Replace(".", "") + ",";
+                    inputCategory2 += inputCategory2Column7Array[i].Replace(".", "") + ",";
+                    inputCategory2 += inputCategory2Column8Array[i];
+
+                    int categoryColumn6Number = Convert.ToInt32(inputCategory2Column6Array[i].Replace(".", ""));
+                    totalInputCategory2 += categoryColumn6Number;
+
+                    int categoryColumn7Number = Convert.ToInt32(inputCategory2Column7Array[i].Replace(".", ""));
+                    totalTaxInputCategory2 += categoryColumn7Number;
+
+                    inputCategory2List += inputCategory2 + ";";
+                }
+
+                taxDeclaration.InputCategory2TotalAmount = totalInputCategory2;
+                taxDeclaration.InputCategory2TotalTaxAmount = totalTaxInputCategory2;
+
+                totalInputAmount += totalInputCategory2;
+                totalTaxInputAmount += totalTaxInputCategory2;
+            }
+
+            taxDeclaration.InputCategory2 = inputCategory2List;
+
+            #endregion
+
+            #region InputCategory3
+
+            string inputCategory3List = "";
+
+            if (inputCategory3Column4 != null)
+            {
+                string[] inputCategory3Column2Array = inputCategory3Column2.Split(',');
+                string[] inputCategory3Column3Array = inputCategory3Column3.Split(',');
+                string[] inputCategory3Column4Array = inputCategory3Column4.Split(',');
+                string[] inputCategory3Column5Array = inputCategory3Column5.Split(',');
+                string[] inputCategory3Column6Array = inputCategory3Column6.Split(',');
+                string[] inputCategory3Column7Array = inputCategory3Column7.Split(',');
+                string[] inputCategory3Column8Array = inputCategory3Column8.Split(',');
+
+
+                int totalInputCategory3 = 0;
+                int totalTaxInputCategory3 = 0;
+
+                for (int i = 0; i < inputCategory3Column4Array.Length; i++)
+                {
+                    string inputCategory3 = "";
+
+                    inputCategory3 += inputCategory3Column2Array[i] + ",";
+                    inputCategory3 += inputCategory3Column3Array[i] + ",";
+                    inputCategory3 += inputCategory3Column4Array[i] + ",";
+                    inputCategory3 += inputCategory3Column5Array[i] + ",";
+                    inputCategory3 += inputCategory3Column6Array[i].Replace(".", "") + ",";
+                    inputCategory3 += inputCategory3Column7Array[i].Replace(".", "") + ",";
+                    inputCategory3 += inputCategory3Column8Array[i];
+
+                    int categoryColumn6Number = Convert.ToInt32(inputCategory3Column6Array[i].Replace(".", ""));
+                    totalInputCategory3 += categoryColumn6Number;
+
+                    int categoryColumn7Number = Convert.ToInt32(inputCategory3Column7Array[i].Replace(".", ""));
+                    totalTaxInputCategory3 += categoryColumn7Number;
+
+                    inputCategory3List += inputCategory3 + ";";
+                }
+
+                taxDeclaration.InputCategory3TotalAmount = totalInputCategory3;
+                taxDeclaration.InputCategory3TotalTaxAmount = totalTaxInputCategory3;
+
+            }
+
+            taxDeclaration.InputCategory3 = inputCategory3List;
+
+            #endregion
+
+            taxDeclaration.InputTotalAmountValue23 = totalInputAmount;
+            taxDeclaration.InputTotalTaxAmountValue24 = totalTaxInputAmount;
+
+            #endregion
+
+            #endregion
+
+            TaxBusiness business = new TaxBusiness();
+            return business.SaveVatTaxDeclaration(taxDeclaration) ? 1 : 0;
         }
 
-        public ActionResult ExportTaxDeclaration(FormCollection form)
+        public ActionResult ExportVatTaxDeclaration(FormCollection form)
         {
             #region Get data from Form
             string taxQuarter = form["taxQuarter"];
             string taxYear = form["taxYear"];
 
-            //Store Info Not get from form; Get from DB
+            string storeOwnerName = form["storeOwnerName"];
+            string storeTaxcode = form["storeTaxcode"].Replace(",", "");
+            string storeAddress = form["storeAddress"];
+            string storeDistrict = form["storeDistrict"];
+            string storeProvince = form["storeProvince"];
+            string storePhone = form["storePhone"];
+            string storeFax = form["storeFax"];
+            string storeEmail = form["storeEmail"];
 
             string vatAgentOwnerName = form["vatAgentOwnerName"];
             string vatAgentName = form["agentName"];
-            string vatAgentTaxCode = form["agentTaxCode"];
+            string vatAgentTaxCode = form["agentTaxCode"].Replace(",", "");
             string vatAgentNo = form["agentNo"];
             string vatAgentAddress = form["vatAgentAddress"];
             string vatAgentDistrict = form["vatAgentDistrict"];
@@ -202,24 +620,23 @@ namespace BMA.Controllers
             string value20No = form["value20No"];
             string value20Date = form["value20Date"];
             string value21 = form["value21"];
-            string value22 = form["value22"];
-            string value25 = form["value25"];
-            string value36 = form["value36"];
-            string value37 = form["value37"];
-            string value38 = form["value38"];
-            string value39 = form["value39"];
-            string value40a = form["value40a"];
-            string value40b = form["value40b"];
-            string value40 = form["value40"];
-            string value41 = form["value41"];
-            string value42 = form["value42"];
-            string value43 = form["value43"];
+            string value22 = form["value22"].Replace(".", "");
+            string value25 = form["value25"].Replace(".", "");
+            string value36 = form["value36"].Replace(".", "");
+            string value37 = form["value37"].Replace(".", "");
+            string value38 = form["value38"].Replace(".", "");
+            string value39 = form["value39"].Replace(".", "");
+            string value40a = form["value40a"].Replace(".", "");
+            string value40b = form["value40b"].Replace(".", "");
+            string value40 = form["value40"].Replace(".", "");
+            string value41 = form["value41"].Replace(".", "");
+            string value42 = form["value42"].Replace(".", "");
+            string value43 = form["value43"].Replace(".", "");
 
 
             string signName = form["signName"];
+            string createDate = form["createDate"];
             string createLocation = form["createLocation"];
-            string createDay = form["createDay"];
-            string createMonth = form["createMonth"];
 
             string outputCategory1Column2 = form["output_category1_column2"];
             string outputCategory1Column3 = form["output_category1_column3"];
@@ -278,12 +695,8 @@ namespace BMA.Controllers
             string inputCategory3Column8 = form["input_category3_column8"];
 
 
-            BMAEntities db = new BMAEntities();
 
-            StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
             #endregion
-
-           
 
             #region Process Data
 
@@ -363,7 +776,7 @@ namespace BMA.Controllers
                     outputCategory2.Column3 = DateTime.ParseExact(outputCategory2Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
                     outputCategory2.Column4 = outputCategory2Column4Array[i];
                     outputCategory2.Column5 = outputCategory2Column5Array[i];
-                    outputCategory2.Column6 = Convert.ToInt32(outputCategory2Column6Array[i].Replace(".",""));
+                    outputCategory2.Column6 = Convert.ToInt32(outputCategory2Column6Array[i].Replace(".", ""));
                     outputCategory2.Column7 = Convert.ToInt32(outputCategory2Column7Array[i].Replace(".", ""));
                     outputCategory2.Column8 = outputCategory2Column8Array[i];
 
@@ -387,7 +800,7 @@ namespace BMA.Controllers
 
             List<DeclarationVatCategory> outputCategory3List = new List<DeclarationVatCategory>();
 
-            if (outputCategory3Column4!=null)
+            if (outputCategory3Column4 != null)
             {
                 string[] outputCategory3Column2Array = outputCategory3Column2.Split(',');
                 string[] outputCategory3Column3Array = outputCategory3Column3.Split(',');
@@ -409,7 +822,7 @@ namespace BMA.Controllers
                     outputCategory3.Column3 = DateTime.ParseExact(outputCategory3Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
                     outputCategory3.Column4 = outputCategory3Column4Array[i];
                     outputCategory3.Column5 = outputCategory3Column5Array[i];
-                    outputCategory3.Column6 = Convert.ToInt32(outputCategory3Column6Array[i].Replace(".",""));
+                    outputCategory3.Column6 = Convert.ToInt32(outputCategory3Column6Array[i].Replace(".", ""));
                     outputCategory3.Column7 = Convert.ToInt32(outputCategory3Column7Array[i].Replace(".", ""));
                     outputCategory3.Column8 = outputCategory3Column8Array[i];
 
@@ -439,7 +852,7 @@ namespace BMA.Controllers
 
             List<DeclarationVatCategory> outputCategory4List = new List<DeclarationVatCategory>();
 
-            if (outputCategory4Column4!=null)
+            if (outputCategory4Column4 != null)
             {
                 string[] outputCategory4Column2Array = outputCategory4Column2.Split(',');
                 string[] outputCategory4Column3Array = outputCategory4Column3.Split(',');
@@ -501,7 +914,7 @@ namespace BMA.Controllers
 
             List<DeclarationVatCategory> inputCategory1List = new List<DeclarationVatCategory>();
 
-            if (inputCategory1Column4!=null)
+            if (inputCategory1Column4 != null)
             {
                 string[] inputCategory1Column2Array = inputCategory1Column2.Split(',');
                 string[] inputCategory1Column3Array = inputCategory1Column3.Split(',');
@@ -549,8 +962,8 @@ namespace BMA.Controllers
             #region InputCategory2
 
             List<DeclarationVatCategory> inputCategory2List = new List<DeclarationVatCategory>();
-            
-            if (inputCategory2Column4!=null)
+
+            if (inputCategory2Column4 != null)
             {
                 string[] inputCategory2Column2Array = inputCategory2Column2.Split(',');
                 string[] inputCategory2Column3Array = inputCategory2Column3.Split(',');
@@ -599,7 +1012,7 @@ namespace BMA.Controllers
 
             List<DeclarationVatCategory> inputCategory3List = new List<DeclarationVatCategory>();
 
-            if (inputCategory3Column4!=null)
+            if (inputCategory3Column4 != null)
             {
                 string[] inputCategory3Column2Array = inputCategory3Column2.Split(',');
                 string[] inputCategory3Column3Array = inputCategory3Column3.Split(',');
@@ -697,13 +1110,13 @@ namespace BMA.Controllers
             XElement kieuKy = new XElement("kieuKy", "Q");
             KyKKhaiThue.Add(kieuKy);
 
-            XElement kyKKhai = new XElement("kyKKhai", "4/2015");
+            XElement kyKKhai = new XElement("kyKKhai", taxQuarter + "/" + taxYear);
             KyKKhaiThue.Add(kyKKhai);
 
-            XElement kyKKhaiTuNgay = new XElement("kyKKhaiTuNgay", "01/10/2015");
+            XElement kyKKhaiTuNgay = new XElement("kyKKhaiTuNgay", "01/" + (Convert.ToInt32(taxQuarter) * 3 - 2) + "/" + taxYear);
             KyKKhaiThue.Add(kyKKhaiTuNgay);
 
-            XElement kyKKhaiDenNgay = new XElement("kyKKhaiDenNgay", "31/12/2015");
+            XElement kyKKhaiDenNgay = new XElement("kyKKhaiDenNgay", new DateTime(Convert.ToInt32(taxYear), (Convert.ToInt32(taxQuarter) * 3), 1).AddMonths(1).AddDays(-1).ToString("dd/MM/yyyy"));
             KyKKhaiThue.Add(kyKKhaiDenNgay);
 
             XElement kyKKhaiTuThang = new XElement("kyKKhaiTuThang");
@@ -721,7 +1134,7 @@ namespace BMA.Controllers
             XElement tenCQTNoiNop = new XElement("tenCQTNoiNop", "Chi cục Thuế Quận 12");
             TKhaiThue.Add(tenCQTNoiNop);
 
-            XElement ngayLapTKhai = new XElement("ngayLapTKhai", taxYear + "-" + createMonth + "-" + createDay);
+            XElement ngayLapTKhai = new XElement("ngayLapTKhai", createDate);
             TKhaiThue.Add(ngayLapTKhai);
 
             XElement GiaHan = new XElement("GiaHan");
@@ -737,7 +1150,7 @@ namespace BMA.Controllers
             XElement nguoiKy = new XElement("nguoiKy", signName);
             TKhaiThue.Add(nguoiKy);
 
-            XElement ngayKy = new XElement("ngayKy", taxYear + "-" + createMonth + "-" + createDay);
+            XElement ngayKy = new XElement("ngayKy", createDate);
             TKhaiThue.Add(ngayKy);
 
             XElement nganhNgheKD = new XElement("nganhNgheKD");
@@ -748,13 +1161,13 @@ namespace BMA.Controllers
 
             XElement NNT = new XElement("NNT");
 
-            XElement mst = new XElement("mst", storeInfo.TaxCode);
+            XElement mst = new XElement("mst", storeTaxcode);
             NNT.Add(mst);
 
-            XElement tenNNT = new XElement("tenNNT", storeInfo.OwnerName);
+            XElement tenNNT = new XElement("tenNNT", storeOwnerName);
             NNT.Add(tenNNT);
 
-            XElement dchiNNT = new XElement("dchiNNT", storeInfo.Address);
+            XElement dchiNNT = new XElement("dchiNNT", storeAddress);
             NNT.Add(dchiNNT);
 
             XElement phuongXa = new XElement("phuongXa");
@@ -763,29 +1176,29 @@ namespace BMA.Controllers
             XElement maHuyenNNT = new XElement("maHuyenNNT");
             NNT.Add(maHuyenNNT);
 
-            XElement tenHuyenNNT = new XElement("tenHuyenNNT", storeInfo.District);
+            XElement tenHuyenNNT = new XElement("tenHuyenNNT", storeDistrict);
             NNT.Add(tenHuyenNNT);
 
             XElement maTinhNNT = new XElement("maTinhNNT");
             NNT.Add(maTinhNNT);
 
-            XElement tenTinhNNT = new XElement("tenTinhNNT", storeInfo.Province);
+            XElement tenTinhNNT = new XElement("tenTinhNNT", storeProvince);
             NNT.Add(tenTinhNNT);
 
-            XElement dthoaiNNT = new XElement("dthoaiNNT", storeInfo.Phonenumber);
+            XElement dthoaiNNT = new XElement("dthoaiNNT", storePhone);
             NNT.Add(dthoaiNNT);
 
-            XElement faxNNT = new XElement("faxNNT", storeInfo.Fax);
+            XElement faxNNT = new XElement("faxNNT", storeFax);
             NNT.Add(faxNNT);
 
-            XElement emailNNT = new XElement("emailNNT", storeInfo.Email);
+            XElement emailNNT = new XElement("emailNNT", storeEmail);
             NNT.Add(emailNNT);
 
             TTinTKhaiThue.Add(NNT);
 
             XElement DLyThue = new XElement("DLyThue");
 
-            XElement mstDLyThue = new XElement("mstDLyThue", vatAgentTaxCode.Replace(",", ""));
+            XElement mstDLyThue = new XElement("mstDLyThue", vatAgentTaxCode);
             DLyThue.Add(mstDLyThue);
 
             XElement tenDLyThue = new XElement("tenDLyThue", vatAgentOwnerName);
@@ -1397,313 +1810,9 @@ namespace BMA.Controllers
 
             xs.Serialize(streamWriter, root);
             stream.Position = 0;
-            return File(stream, "application/xml", "MyXml.xml");
+            return File(stream, "application/xml", "VAT_Quy" + taxQuarter + "_" + taxYear + ".xml");
 
             #endregion
-
-
-            //DeclarationVatForm declarationVat = new DeclarationVatForm();
-
-
-
-            //if (vatAgentTaxCode != null)
-            //{
-            //    declarationVat.TaxAgentTaxCode = vatAgentTaxCode.Replace(",", "");
-            //}
-
-            //declarationVat.TaxAgentName = vatAgentName;
-            //declarationVat.TaxAgentNo = vatAgentNo;
-            //declarationVat.SignName = signName;
-            //declarationVat.CreateLocation = createLocation;
-            ////declarationVat.CreateDay = createDay;
-
-            //int totalAmount = 0;
-            //int totalTaxAmount = 0;
-
-
-            //if (category1Column4.Trim().Length > 0)
-            //{
-            //    string[] category1Column2Array = category1Column2.Split(',');
-            //    string[] category1Column3Array = category1Column3.Split(',');
-            //    string[] category1Column4Array = category1Column4.Split(',');
-            //    string[] category1Column5Array = category1Column5.Split(',');
-            //    string[] category1Column6Array = category1Column6.Split(',');
-            //    string[] category1Column7Array = category1Column7.Split(',');
-            //    string[] category1Column8Array = category1Column8.Split(',');
-            //    string[] category1Column9Array = category1Column9.Split(',');
-            //    string[] category1Column10Array = category1Column10.Split(',');
-            //    string[] category1Column11Array = category1Column11.Split(',');
-            //    string[] category1Column12Array = category1Column12.Split(',');
-
-            //    List<DeclarationVatCategory> category1List = new List<DeclarationVatCategory>();
-            //    int totalCategory1 = 0;
-            //    int totalTaxCategory1 = 0;
-
-            //    for (int i = 0; i < category1Column2Array.Length; i++)
-            //    {
-            //        DeclarationVatCategory category1 = new DeclarationVatCategory();
-
-            //        category1.Column2 = category1Column2Array[i];
-            //        category1.Column3 = category1Column3Array[i];
-            //        category1.Column4 = category1Column4Array[i];
-            //        category1.Column5 = category1Column5Array[i];
-            //        category1.Column6 = category1Column6Array[i];
-            //        category1.Column7 = category1Column7Array[i];
-            //        category1.Column8 = category1Column8Array[i];
-
-            //        int categoryColumn9Number = Convert.ToInt32(category1Column9Array[i]);
-            //        totalCategory1 += categoryColumn9Number;
-            //        category1.Column9 = categoryColumn9Number.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //        category1.Column10 = category1Column10Array[i];
-
-            //        int categoryColumn11Number = Convert.ToInt32(category1Column11Array[i]);
-            //        totalTaxCategory1 += categoryColumn11Number;
-            //        category1.Column11 = categoryColumn11Number.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-            //        category1.Column12 = category1Column12Array[i];
-
-            //        category1List.Add(category1);
-            //    }
-
-            //    // declarationVat.Categories1 = category1List;
-            //    //declarationVat.Categories1TotalAmount = totalCategory1.ToString("N0",
-            //    //    CultureInfo.CreateSpecificCulture("vi-VN"));
-            //    //declarationVat.Categories1TotalTaxAmount = totalTaxCategory1.ToString("N0",
-            //    //  CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //    totalAmount += totalCategory1;
-            //    totalTaxAmount += totalTaxCategory1;
-
-            //}
-
-
-            //if (category2Column4.Trim().Length > 0)
-            //{
-            //    string[] category2Column2Array = category2Column2.Split(',');
-            //    string[] category2Column3Array = category2Column3.Split(',');
-            //    string[] category2Column4Array = category2Column4.Split(',');
-            //    string[] category2Column5Array = category2Column5.Split(',');
-            //    string[] category2Column6Array = category2Column6.Split(',');
-            //    string[] category2Column7Array = category2Column7.Split(',');
-            //    string[] category2Column8Array = category2Column8.Split(',');
-            //    string[] category2Column9Array = category2Column9.Split(',');
-            //    string[] category2Column10Array = category2Column10.Split(',');
-            //    string[] category2Column11Array = category2Column11.Split(',');
-            //    string[] category2Column12Array = category2Column12.Split(',');
-
-            //    List<DeclarationVatCategory> category2List = new List<DeclarationVatCategory>();
-            //    int totalcategory2 = 0;
-            //    int totalTaxcategory2 = 0;
-
-            //    for (int i = 0; i < category2Column4Array.Length; i++)
-            //    {
-            //        DeclarationVatCategory category2 = new DeclarationVatCategory();
-
-            //        category2.Column2 = category2Column2Array[i];
-            //        category2.Column3 = category2Column3Array[i];
-            //        category2.Column4 = category2Column4Array[i];
-            //        category2.Column5 = category2Column5Array[i];
-            //        category2.Column6 = category2Column6Array[i];
-            //        category2.Column7 = category2Column7Array[i];
-            //        category2.Column8 = category2Column8Array[i];
-
-            //        int categoryColumn9Number = Convert.ToInt32(category2Column9Array[i]);
-            //        totalcategory2 += categoryColumn9Number;
-            //        category2.Column9 = categoryColumn9Number.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //        category2.Column10 = category2Column10Array[i];
-
-            //        int categoryColumn11Number = Convert.ToInt32(category2Column11Array[i]);
-            //        totalTaxcategory2 += categoryColumn11Number;
-            //        category2.Column11 = categoryColumn11Number.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-            //        category2.Column12 = category2Column12Array[i];
-
-            //        category2List.Add(category2);
-            //    }
-
-            //    //declarationVat.Categories2 = category2List;
-            //    //declarationVat.Categories2TotalAmount = totalcategory2.ToString("N0",
-            //    //     CultureInfo.CreateSpecificCulture("vi-VN"));
-            //    //declarationVat.Categories2TotalTaxAmount = totalTaxcategory2.ToString("N0",
-            //    //   CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //    totalAmount += totalcategory2;
-            //    totalTaxAmount += totalTaxcategory2;
-
-            //}
-
-            //if (category3Column4.Trim().Length > 0)
-            //{
-            //    string[] category3Column2Array = category3Column2.Split(',');
-            //    string[] category3Column3Array = category3Column3.Split(',');
-            //    string[] category3Column4Array = category3Column4.Split(',');
-            //    string[] category3Column5Array = category3Column5.Split(',');
-            //    string[] category3Column6Array = category3Column6.Split(',');
-            //    string[] category3Column7Array = category3Column7.Split(',');
-            //    string[] category3Column8Array = category3Column8.Split(',');
-            //    string[] category3Column9Array = category3Column9.Split(',');
-            //    string[] category3Column10Array = category3Column10.Split(',');
-            //    string[] category3Column11Array = category3Column11.Split(',');
-            //    string[] category3Column12Array = category3Column12.Split(',');
-
-            //    List<DeclarationVatCategory> category3List = new List<DeclarationVatCategory>();
-            //    int totalcategory3 = 0;
-            //    int totalTaxcategory3 = 0;
-
-            //    for (int i = 0; i < category3Column4Array.Length; i++)
-            //    {
-            //        DeclarationVatCategory category3 = new DeclarationVatCategory();
-
-            //        category3.Column2 = category3Column2Array[i];
-            //        category3.Column3 = category3Column3Array[i];
-            //        category3.Column4 = category3Column4Array[i];
-            //        category3.Column5 = category3Column5Array[i];
-            //        category3.Column6 = category3Column6Array[i];
-            //        category3.Column7 = category3Column7Array[i];
-            //        category3.Column8 = category3Column8Array[i];
-
-            //        int categoryColumn9Number = Convert.ToInt32(category3Column9Array[i]);
-            //        totalcategory3 += categoryColumn9Number;
-            //        category3.Column9 = categoryColumn9Number.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //        category3.Column10 = category3Column10Array[i];
-
-            //        int categoryColumn11Number = Convert.ToInt32(category3Column11Array[i]);
-            //        totalTaxcategory3 += categoryColumn11Number;
-            //        category3.Column11 = categoryColumn11Number.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-            //        category3.Column12 = category3Column12Array[i];
-
-            //        category3List.Add(category3);
-            //    }
-
-            //    //declarationVat.Categories3 = category3List;
-            //    //declarationVat.Categories3TotalAmount = totalcategory3.ToString("N0",
-            //    //CultureInfo.CreateSpecificCulture("vi-VN"));
-            //    //declarationVat.Categories3TotalTaxAmount = totalTaxcategory3.ToString("N0",
-            //    //  CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //    totalAmount += totalcategory3;
-            //    totalTaxAmount += totalTaxcategory3;
-
-            //}
-
-            //if (category4Column4.Trim().Length > 0)
-            //{
-            //    string[] category4Column2Array = category4Column2.Split(',');
-            //    string[] category4Column3Array = category4Column3.Split(',');
-            //    string[] category4Column4Array = category4Column4.Split(',');
-            //    string[] category4Column5Array = category4Column5.Split(',');
-            //    string[] category4Column6Array = category4Column6.Split(',');
-            //    string[] category4Column7Array = category4Column7.Split(',');
-            //    string[] category4Column8Array = category4Column8.Split(',');
-            //    string[] category4Column9Array = category4Column9.Split(',');
-            //    string[] category4Column10Array = category4Column10.Split(',');
-            //    string[] category4Column11Array = category4Column11.Split(',');
-            //    string[] category4Column12Array = category4Column12.Split(',');
-
-            //    List<DeclarationVatCategory> category4List = new List<DeclarationVatCategory>();
-            //    int totalcategory4 = 0;
-            //    int totalTaxcategory4 = 0;
-
-            //    for (int i = 0; i < category4Column4Array.Length; i++)
-            //    {
-            //        DeclarationVatCategory category4 = new DeclarationVatCategory();
-
-            //        category4.Column2 = category4Column2Array[i];
-            //        category4.Column3 = category4Column3Array[i];
-            //        category4.Column4 = category4Column4Array[i];
-            //        category4.Column5 = category4Column5Array[i];
-            //        category4.Column6 = category4Column6Array[i];
-            //        category4.Column7 = category4Column7Array[i];
-            //        category4.Column8 = category4Column8Array[i];
-
-            //        int categoryColumn9Number = Convert.ToInt32(category4Column9Array[i]);
-            //        totalcategory4 += categoryColumn9Number;
-            //        category4.Column9 = categoryColumn9Number.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //        category4.Column10 = category4Column10Array[i];
-
-            //        int categoryColumn11Number = Convert.ToInt32(category4Column11Array[i]);
-            //        totalTaxcategory4 += categoryColumn11Number;
-            //        category4.Column11 = categoryColumn11Number.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-            //        category4.Column12 = category4Column12Array[i];
-
-            //        category4List.Add(category4);
-            //    }
-
-            //    //declarationVat.Categories4 = category4List;
-            //    //declarationVat.Categories4TotalAmount = totalcategory4.ToString("N0",
-            //    //    CultureInfo.CreateSpecificCulture("vi-VN"));
-            //    //declarationVat.Categories4TotalTaxAmount = totalTaxcategory4.ToString("N0",
-            //    //    CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //    totalAmount += totalcategory4;
-            //    totalTaxAmount += totalTaxcategory4;
-
-            //}
-
-            //if (category5Column4.Trim().Length > 0)
-            //{
-            //    string[] category5Column2Array = category5Column2.Split(',');
-            //    string[] category5Column3Array = category5Column3.Split(',');
-            //    string[] category5Column4Array = category5Column4.Split(',');
-            //    string[] category5Column5Array = category5Column5.Split(',');
-            //    string[] category5Column6Array = category5Column6.Split(',');
-            //    string[] category5Column7Array = category5Column7.Split(',');
-            //    string[] category5Column8Array = category5Column8.Split(',');
-            //    string[] category5Column9Array = category5Column9.Split(',');
-            //    string[] category5Column10Array = category5Column10.Split(',');
-            //    string[] category5Column11Array = category5Column11.Split(',');
-            //    string[] category5Column12Array = category5Column12.Split(',');
-
-            //    List<DeclarationVatCategory> category5List = new List<DeclarationVatCategory>();
-            //    int totalcategory5 = 0;
-            //    int totalTaxcategory5 = 0;
-
-            //    for (int i = 0; i < category5Column4Array.Length; i++)
-            //    {
-            //        DeclarationVatCategory category5 = new DeclarationVatCategory();
-
-            //        category5.Column2 = category5Column2Array[i];
-            //        category5.Column3 = category5Column3Array[i];
-            //        category5.Column4 = category5Column4Array[i];
-            //        category5.Column5 = category5Column5Array[i];
-            //        category5.Column6 = category5Column6Array[i];
-            //        category5.Column7 = category5Column7Array[i];
-            //        category5.Column8 = category5Column8Array[i];
-
-            //        int categoryColumn9Number = Convert.ToInt32(category5Column9Array[i]);
-            //        totalcategory5 += categoryColumn9Number;
-            //        category5.Column9 = categoryColumn9Number.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //        category5.Column10 = category5Column10Array[i];
-
-            //        int categoryColumn11Number = Convert.ToInt32(category5Column11Array[i]);
-            //        totalTaxcategory5 += categoryColumn11Number;
-            //        category5.Column11 = categoryColumn11Number.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-            //        category5.Column12 = category5Column12Array[i];
-
-            //        category5List.Add(category5);
-            //    }
-
-            //declarationVat.Categories5 = category5List;
-            //declarationVat.Categories5TotalAmount = totalcategory5.ToString("N0",
-            //    CultureInfo.CreateSpecificCulture("vi-VN"));
-            //declarationVat.Categories5TotalTaxAmount = totalTaxcategory5.ToString("N0",
-            //    CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //totalAmount += totalcategory5;
-            //totalTaxAmount += totalTaxcategory5;
-
-            //}
-
-
-            //declarationVat.TotalAmount = (totalAmount).ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            //declarationVat.TotalTaxAmount = (totalTaxAmount).ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"));
-
-
-
         }
         #endregion
 

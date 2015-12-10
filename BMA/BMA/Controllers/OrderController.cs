@@ -257,18 +257,19 @@ namespace BMA.Controllers
                 {
                     OrderBusiness orderBusiness = new OrderBusiness();
                     Product product = orderBusiness.GetProductById(productId[i]);
-                    CartViewModel cartViewModel = new CartViewModel
+                    if (productQuantity[i] > 0)
                     {
-                        ProductId = productId[i],
-                        ProductName = product.ProductName,
-                        Quantity = productQuantity[i],
-                        RealPrice = productPrice[i],
-                        StandardPrice = product.ProductStandardPrice
-                    };
-
-                    cartList.Add(cartViewModel);
+                        CartViewModel cartViewModel = new CartViewModel
+                        {
+                            ProductId = productId[i],
+                            ProductName = product.ProductName,
+                            Quantity = productQuantity[i],
+                            RealPrice = productPrice[i],
+                            StandardPrice = product.ProductStandardPrice
+                        };
+                        cartList.Add(cartViewModel);
+                    }
                 }
-
             }
             if (cartList.Count > 0)
             {

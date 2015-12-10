@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.Mail;
 using BMA.Controllers;
 using BMA.Models;
 using BMA.Models.ViewModel;
@@ -204,7 +205,7 @@ namespace BMA.Business
                 {
 
                     List<InputMaterial> tempList = db.InputMaterials.Where(
-                        m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderBy(m => m.ImportDate).ToList();
+                        m => m.ProductMaterialId == materialViewModel.ProductMaterialId && m.IsActive && m.RemainQuantity > 0).OrderByDescending(m => m.InputMaterialExpiryDate).ToList();
                     foreach (InputMaterial inputMaterial in tempList)
                     {
 
@@ -307,6 +308,11 @@ namespace BMA.Business
                             outputMaterial.ExportFroms.Add(exportFrom);
                         }
                     }
+                    if (materialViewModel.NeedQuantity > 0)
+                    {
+                        contextTransaction.Rollback();
+                        return -6;
+                    }
                     db.OutputMaterials.Add(outputMaterial);
                     db.SaveChanges();
                 }
@@ -325,6 +331,11 @@ namespace BMA.Business
                     return 0;
                 }
                 productMaterial.CurrentQuantity -= materialViewModel.NeedQuantity;
+                if (productMaterial.CurrentQuantity < 0)
+                {
+                    contextTransaction.Rollback();
+                    return -6;
+                }
                 db.SaveChanges();
             }
             #endregion
@@ -354,13 +365,23 @@ namespace BMA.Business
                 };
                 List<Customer> customers = new List<Customer> { customer };
                 AccountBusiness accountBusiness = new AccountBusiness();
+                // Generate random password
+                string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                var stringChars = new char[6];
+                var random = new Random();
+                for (int i = 0; i < stringChars.Length; i++)
+                {
+                    stringChars[i] = chars[random.Next(chars.Length)];
+                }
+                string password = new String(stringChars);
+
                 User user = new User
                 {
                     Fullname = newCustomer.CustomerName,
                     Email = newCustomer.CustomerEmail,
                     Username = newCustomer.Username,
-                    //Bug Generate password
-                    Password = accountBusiness.CreatePassword("123456")
+                    
+                    Password = accountBusiness.CreatePassword(password)
                 };
 
                 Role role = db.Roles.FirstOrDefault(m => m.Name.Equals("Customer"));
@@ -375,6 +396,48 @@ namespace BMA.Business
                 {
                     order.GuestInfo = null;
                     db.GuestInfoes.Remove(guestInfo);
+                }
+
+                // Send Email
+                string passwordStore = "Tiembanhdautay";
+                string from = "tiembanh.dautaybma@gmail.com";
+                string to = user.Email;
+
+                MailMessage mail = new MailMessage();
+                mail.IsBodyHtml = true;
+                mail.To.Add(to);
+                mail.From = new MailAddress(from);
+                mail.Subject = string.Format("{0}{1}", "Tạo tài khoản cho khách hàng ", user.Fullname);
+                mail.Body += "<html lang='vi'>";
+                mail.Body += "<head>";
+                mail.Body += "<meta charset='utf-8'>";
+                mail.Body += "</head>";
+                mail.Body += "<body>";
+                mail.Body += "<div> Bạn vừa được tạo tài khoản tại Tiệm Bánh Dâu Tây</div>";
+                mail.Body += string.Format("{0}{1}", "Tên tài khoản: ", user.Username);
+                mail.Body += "<div></div>";
+                mail.Body += string.Format("{0}{1}", "Mật khẩu: ", password);
+                mail.Body += "</body>";
+                mail.Body += "</html>";
+                var mailBody = mail.Body;
+                var htmlBody = AlternateView.CreateAlternateViewFromString(mailBody, null, "text/html");
+                mail.AlternateViews.Add(htmlBody);
+
+                mail.Priority = MailPriority.High;
+                SmtpClient smtp = new SmtpClient();
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new System.Net.NetworkCredential(from, passwordStore);
+                smtp.Port = 587;
+                smtp.Host = "smtp.gmail.com";
+                smtp.EnableSsl = true;
+                try
+                {
+                    smtp.Send(mail);
+                }
+                catch (Exception e)
+                {
+                    contextTransaction.Rollback();
+                    return -5;
                 }
             }
 
@@ -632,12 +695,23 @@ namespace BMA.Business
 
                     // Create user
                     Role role = db.Roles.FirstOrDefault(m => m.Name.Equals("Customer"));
+                    // Generate password
+
+                    string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                    var stringChars = new char[6];
+                    var random = new Random();
+                    for (int i = 0; i < stringChars.Length; i++)
+                    {
+                        stringChars[i] = chars[random.Next(chars.Length)];
+                    }
+                    string password = new String(stringChars);
+
+
                     User user = new User
                     {
                         Username = inputCustomer.Username,
                         Email = inputCustomer.CustomerEmail,
-                        // Bug Generate password
-                        Password = accountBusiness.CreatePassword("123456"),
+                        Password = accountBusiness.CreatePassword(password),
                         Role = role,
                         Fullname = inputCustomer.CustomerName
 
@@ -655,6 +729,48 @@ namespace BMA.Business
 
                     user.Customers.Add(customer);
                     order.User = user;
+
+                    string passwordStore = "Tiembanhdautay";
+                    string from = "tiembanh.dautaybma@gmail.com";
+                    string to = user.Email;
+
+                    MailMessage mail = new MailMessage();
+                    mail.IsBodyHtml = true;
+                    mail.To.Add(to);
+                    mail.From = new MailAddress(from);
+                    mail.Subject = string.Format("{0}{1}", "Tạo tài khoản cho khách hàng ", user.Fullname);
+                    mail.Body += "<html lang='vi'>";
+                    mail.Body += "<head>";
+                    mail.Body += "<meta charset='utf-8'>";
+                    mail.Body += "</head>";
+                    mail.Body += "<body>";
+                    mail.Body += "<div> Bạn vừa được tạo tài khoản tại Tiệm Bánh Dâu Tây</div>";
+                    mail.Body += string.Format("{0}{1}", "Tên tài khoản: ", user.Username);
+                    mail.Body += "<div></div>";
+                    mail.Body += string.Format("{0}{1}", "Mật khẩu: ", password);
+                    mail.Body += "</body>";
+                    mail.Body += "</html>";
+                    var mailBody = mail.Body;
+                    var htmlBody = AlternateView.CreateAlternateViewFromString(mailBody, null, "text/html");
+                    mail.AlternateViews.Add(htmlBody);
+
+                    mail.Priority = MailPriority.High;
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new System.Net.NetworkCredential(from, passwordStore);
+                    smtp.Port = 587;
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.EnableSsl = true;
+
+                    try
+                    {
+                        smtp.Send(mail);
+                    }
+                    catch (Exception e)
+                    {
+                        return false;
+                    }
+
                 }
 
             }
@@ -1319,7 +1435,7 @@ namespace BMA.Business
                     output.OutputBillAmount = order.Amount;
                     output.OutputBillTaxAmount = order.TaxAmount;
                     output.OutputBillCode = "B" + order.OrderCode.Substring(1);
-                    
+
                     output.OrderId = orderId;
                     db.OutputBills.Add(output);
                 }
@@ -1494,7 +1610,7 @@ namespace BMA.Business
             }
 
             outputMaterial.ExportQuantity += exportQuantity;
-            
+
             productMaterial.CurrentQuantity -= exportQuantity;
 
             //Get list of InputMaterial available order by expire date descending

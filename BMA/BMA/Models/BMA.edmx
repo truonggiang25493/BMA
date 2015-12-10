@@ -385,7 +385,7 @@
           <Property Name="StoreProvince" Type="nvarchar" MaxLength="50" />
           <Property Name="StorePhone" Type="varchar" MaxLength="15" />
           <Property Name="StoreFax" Type="varchar" MaxLength="15" />
-          <Property Name="StoreEmail" Type="varchar" MaxLength="15" />
+          <Property Name="StoreEmail" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -406,7 +406,6 @@
           <Property Name="VatTaxDeclarationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Quarter" Type="int" Nullable="false" />
           <Property Name="Year" Type="int" Nullable="false" />
-          <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="TaxAgentOwnerName" Type="nvarchar" MaxLength="50" />
           <Property Name="TaxAgentTaxCode" Type="varchar" MaxLength="15" />
           <Property Name="TaxAgentName" Type="nvarchar" MaxLength="50" />
@@ -420,37 +419,27 @@
           <Property Name="InputCategory3" Type="nvarchar(max)" />
           <Property Name="InputCategory3TotalAmount" Type="int" />
           <Property Name="InputCategory3TotalTaxAmount" Type="int" />
-          <Property Name="InputCategory4" Type="nvarchar(max)" />
-          <Property Name="InputCategory4TotalAmount" Type="int" />
-          <Property Name="InputCategory4TotalTaxAmount" Type="int" />
-          <Property Name="InputCategory5" Type="nvarchar(max)" />
-          <Property Name="InputCategory5TotalAmount" Type="int" />
-          <Property Name="InputCategory5TotalTaxAmount" Type="int" />
           <Property Name="InputTotalAmountValue23" Type="int" Nullable="false" />
           <Property Name="InputTotalTaxAmountValue24" Type="int" Nullable="false" />
           <Property Name="CreateLocation" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="CreateMonth" Type="int" Nullable="false" />
-          <Property Name="CreateDay" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="date" Nullable="false" />
           <Property Name="SignName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="OutputCategory1" Type="nvarchar(max)" />
           <Property Name="OutputCategory2" Type="nvarchar(max)" />
           <Property Name="OutputCategory3" Type="nvarchar(max)" />
           <Property Name="OutputCategory4" Type="nvarchar(max)" />
-          <Property Name="OutputCategory5" Type="nvarchar(max)" />
           <Property Name="OutputCategory1TotalAmountValue26" Type="int" />
           <Property Name="OutputCategory2TotalAmountValue29" Type="int" />
           <Property Name="OutputCategory3TotalAmountValue30" Type="int" />
           <Property Name="OutputCategory4TotalAmountValue32" Type="int" />
-          <Property Name="OutputCategory5TotalAmountValue" Type="int" />
           <Property Name="OutputCategory3TotalTaxAmountValue31" Type="int" />
           <Property Name="OutputCategory4TotalTaxAmountValue33" Type="int" />
-          <Property Name="OutputCategory5TotalTaxAmount" Type="int" />
           <Property Name="OutputTotalAmountValue34" Type="int" Nullable="false" />
           <Property Name="HaveTaxOutputTotalAmountValue27" Type="int" Nullable="false" />
           <Property Name="OutputTotalTaxAmountValue28" Type="int" Nullable="false" />
-          <Property Name="Value2" Type="bit" />
-          <Property Name="Value3" Type="int" />
-          <Property Name="Value21" Type="bit" />
+          <Property Name="Value20No" Type="varchar" MaxLength="20" />
+          <Property Name="Value20Date" Type="date" />
+          <Property Name="Value21" Type="int" />
           <Property Name="Value22" Type="int" />
           <Property Name="Value25" Type="int" />
           <Property Name="Value36" Type="int" />
@@ -1000,9 +989,7 @@
           <EntitySet Name="sysdiagrams" EntityType="BMAModel.sysdiagram" />
           <EntitySet Name="TaxRates" EntityType="BMAModel.TaxRate" />
           <EntitySet Name="TaxTypes" EntityType="BMAModel.TaxType" />
-          <EntitySet Name="TndnTaxDeclarations" EntityType="BMAModel.TndnTaxDeclaration" />
           <EntitySet Name="Users" EntityType="BMAModel.User" />
-          <EntitySet Name="VatTaxDeclarations" EntityType="BMAModel.VatTaxDeclaration" />
           <AssociationSet Name="FK_Product_Category_CategoryId" Association="BMAModel.FK_Product_Category_CategoryId">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Product" EntitySet="Products" />
@@ -1095,6 +1082,8 @@
             <End Role="TaxType" EntitySet="TaxTypes" />
             <End Role="TaxRate" EntitySet="TaxRates" />
           </AssociationSet>
+          <EntitySet Name="VatTaxDeclarations" EntityType="BMAModel.VatTaxDeclaration" />
+          <EntitySet Name="TndnTaxDeclarations" EntityType="BMAModel.TndnTaxDeclaration" />
         </EntityContainer>
         <ComplexType Name="sp_GetIncomeMonthly_Result">
           <Property Type="Int32" Name="MonthNo" Nullable="true" />
@@ -1505,111 +1494,6 @@
           <Property Name="Abbreviation" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="TaxRates" Relationship="BMAModel.FK_TaxRate_TaxType_TaxRateId" FromRole="TaxType" ToRole="TaxRate" />
         </EntityType>
-        <EntityType Name="TndnTaxDeclaration">
-          <Key>
-            <PropertyRef Name="TndnTaxDeclarationId" />
-          </Key>
-          <Property Name="TndnTaxDeclarationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Year" Type="Int32" Nullable="false" />
-          <Property Name="MaxRevenueRatio" Type="Int32" />
-          <Property Name="TaxAgentOwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAgentTaxCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAgentAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentDistrict" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentProvince" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentPhone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAgentFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAgentEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="SignName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Precision="0" />
-          <Property Name="Value22No" Type="Int32" />
-          <Property Name="Value22Date" Type="DateTime" Precision="0" />
-          <Property Name="ValueA1" Type="Int32" />
-          <Property Name="ValueB1" Type="Int32" />
-          <Property Name="ValueB2" Type="Int32" />
-          <Property Name="ValueB3" Type="Int32" />
-          <Property Name="ValueB4" Type="Int32" />
-          <Property Name="ValueB5" Type="Int32" />
-          <Property Name="ValueB6" Type="Int32" />
-          <Property Name="ValueB7" Type="Int32" />
-          <Property Name="ValueB8" Type="Int32" />
-          <Property Name="ValueB9" Type="Int32" />
-          <Property Name="ValueB10" Type="Int32" />
-          <Property Name="ValueB11" Type="Int32" />
-          <Property Name="ValueB12" Type="Int32" />
-          <Property Name="ValueB13" Type="Int32" />
-          <Property Name="ValueB14" Type="Int32" />
-          <Property Name="ValueC1" Type="Int32" />
-          <Property Name="ValueC2" Type="Int32" />
-          <Property Name="ValueC3" Type="Int32" />
-          <Property Name="ValueC3a" Type="Int32" />
-          <Property Name="ValueC3b" Type="Int32" />
-          <Property Name="ValueC4" Type="Int32" />
-          <Property Name="ValueC5" Type="Int32" />
-          <Property Name="ValueC6" Type="Int32" />
-          <Property Name="ValueC7" Type="Int32" />
-          <Property Name="ValueC8" Type="Int32" />
-          <Property Name="ValueC9" Type="Int32" />
-          <Property Name="ValueC9a" Type="Int32" />
-          <Property Name="ValueC10" Type="Int32" />
-          <Property Name="ValueC11" Type="Int32" />
-          <Property Name="ValueC12" Type="Int32" />
-          <Property Name="ValueC13" Type="Int32" />
-          <Property Name="ValueC14" Type="Int32" />
-          <Property Name="ValueC15" Type="Int32" />
-          <Property Name="ValueC16" Type="Int32" />
-          <Property Name="ValueD" Type="Int32" />
-          <Property Name="ValueD1" Type="Int32" />
-          <Property Name="ValueD2" Type="Int32" />
-          <Property Name="ValueD3" Type="Int32" />
-          <Property Name="ValueE" Type="Int32" />
-          <Property Name="ValueE1" Type="Int32" />
-          <Property Name="ValueE2" Type="Int32" />
-          <Property Name="ValueE3" Type="Int32" />
-          <Property Name="ValueG" Type="Int32" />
-          <Property Name="ValueG1" Type="Int32" />
-          <Property Name="ValueG2" Type="Int32" />
-          <Property Name="ValueG3" Type="Int32" />
-          <Property Name="ValueH" Type="Int32" />
-          <Property Name="ValueI" Type="Int32" />
-          <Property Name="ValueL1" Type="Boolean" />
-          <Property Name="ValueL2No" Type="Int32" />
-          <Property Name="ValueL3" Type="DateTime" Precision="0" />
-          <Property Name="ValueL4" Type="Int32" />
-          <Property Name="ValueL5" Type="Int32" />
-          <Property Name="ValueM1FromDate" Type="DateTime" Precision="0" />
-          <Property Name="ValueM1ToDate" Type="DateTime" Precision="0" />
-          <Property Name="ValueM2" Type="Int32" />
-          <Property Name="Value1" Type="Int32" />
-          <Property Name="Value2" Type="Int32" />
-          <Property Name="Value3" Type="Int32" />
-          <Property Name="Value4" Type="Int32" />
-          <Property Name="Value5" Type="Int32" />
-          <Property Name="Value6" Type="Int32" />
-          <Property Name="Value7" Type="Int32" />
-          <Property Name="Value8" Type="Int32" />
-          <Property Name="Value9" Type="Int32" />
-          <Property Name="Value10" Type="Int32" />
-          <Property Name="Value11" Type="Int32" />
-          <Property Name="Value12" Type="Int32" />
-          <Property Name="Value13" Type="Int32" />
-          <Property Name="Value14" Type="Int32" />
-          <Property Name="Value15" Type="Int32" />
-          <Property Name="Value16" Type="Int32" />
-          <Property Name="Value17" Type="Int32" />
-          <Property Name="Value18" Type="Int32" />
-          <Property Name="Value19" Type="Int32" />
-          <Property Name="StoreOwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StoreTaxCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="StoreAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="StoreDistrict" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StoreProvince" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StorePhone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="StoreFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="StoreEmail" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="UserId" />
@@ -1627,85 +1511,6 @@
           <NavigationProperty Name="Orders2" Relationship="BMAModel.FK_Orders_User2" FromRole="User" ToRole="Order" />
           <NavigationProperty Name="Role" Relationship="BMAModel.FK_User_Role" FromRole="User" ToRole="Role" />
           <NavigationProperty Name="Staffs" Relationship="BMAModel.FK_Staff_User" FromRole="User" ToRole="Staff" />
-        </EntityType>
-        <EntityType Name="VatTaxDeclaration">
-          <Key>
-            <PropertyRef Name="VatTaxDeclarationId" />
-          </Key>
-          <Property Name="VatTaxDeclarationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Quarter" Type="Int32" Nullable="false" />
-          <Property Name="Year" Type="Int32" Nullable="false" />
-          <Property Name="Type" Type="Int32" Nullable="false" />
-          <Property Name="TaxAgentOwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentTaxCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAgentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="InputCategory1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InputCategory1TotalAmount" Type="Int32" />
-          <Property Name="InputCategory1TotalTaxAmount" Type="Int32" />
-          <Property Name="InputCategory2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InputCategory2TotalAmount" Type="Int32" />
-          <Property Name="InputCategory2TotalTaxAmount" Type="Int32" />
-          <Property Name="InputCategory3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InputCategory3TotalAmount" Type="Int32" />
-          <Property Name="InputCategory3TotalTaxAmount" Type="Int32" />
-          <Property Name="InputCategory4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InputCategory4TotalAmount" Type="Int32" />
-          <Property Name="InputCategory4TotalTaxAmount" Type="Int32" />
-          <Property Name="InputCategory5" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InputCategory5TotalAmount" Type="Int32" />
-          <Property Name="InputCategory5TotalTaxAmount" Type="Int32" />
-          <Property Name="InputTotalAmountValue23" Type="Int32" Nullable="false" />
-          <Property Name="InputTotalTaxAmountValue24" Type="Int32" Nullable="false" />
-          <Property Name="CreateLocation" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreateMonth" Type="Int32" Nullable="false" />
-          <Property Name="CreateDay" Type="Int32" Nullable="false" />
-          <Property Name="SignName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory5" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory1TotalAmountValue26" Type="Int32" />
-          <Property Name="OutputCategory2TotalAmountValue29" Type="Int32" />
-          <Property Name="OutputCategory3TotalAmountValue30" Type="Int32" />
-          <Property Name="OutputCategory4TotalAmountValue32" Type="Int32" />
-          <Property Name="OutputCategory5TotalAmountValue" Type="Int32" />
-          <Property Name="OutputCategory3TotalTaxAmountValue31" Type="Int32" />
-          <Property Name="OutputCategory4TotalTaxAmountValue33" Type="Int32" />
-          <Property Name="OutputCategory5TotalTaxAmount" Type="Int32" />
-          <Property Name="OutputTotalAmountValue34" Type="Int32" Nullable="false" />
-          <Property Name="HaveTaxOutputTotalAmountValue27" Type="Int32" Nullable="false" />
-          <Property Name="OutputTotalTaxAmountValue28" Type="Int32" Nullable="false" />
-          <Property Name="Value2" Type="Boolean" />
-          <Property Name="Value3" Type="Int32" />
-          <Property Name="Value21" Type="Boolean" />
-          <Property Name="Value22" Type="Int32" />
-          <Property Name="Value25" Type="Int32" />
-          <Property Name="Value36" Type="Int32" />
-          <Property Name="Value37" Type="Int32" />
-          <Property Name="Value38" Type="Int32" />
-          <Property Name="Value39" Type="Int32" />
-          <Property Name="Value40a" Type="Int32" />
-          <Property Name="Value40b" Type="Int32" />
-          <Property Name="Value41" Type="Int32" />
-          <Property Name="Value43" Type="Int32" />
-          <Property Name="TaxAgentAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentDistrict" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentProvince" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAgentFax" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAgentEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Value40" Type="Int32" />
-          <Property Name="Value42" Type="Int32" />
-          <Property Name="StoreOwnerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StoreTaxCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="StoreAddress" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="StoreDistrict" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StoreProvince" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StorePhone" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="StoreFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="StoreEmail" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Product_Category_CategoryId">
           <End Type="BMAModel.Category" Role="Category" Multiplicity="0..1" />
@@ -1983,6 +1788,179 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="VatTaxDeclaration">
+          <Key>
+            <PropertyRef Name="VatTaxDeclarationId" />
+          </Key>
+          <Property Name="VatTaxDeclarationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Quarter" Type="Int32" Nullable="false" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="TaxAgentOwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentTaxCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TaxAgentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="InputCategory1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InputCategory1TotalAmount" Type="Int32" />
+          <Property Name="InputCategory1TotalTaxAmount" Type="Int32" />
+          <Property Name="InputCategory2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InputCategory2TotalAmount" Type="Int32" />
+          <Property Name="InputCategory2TotalTaxAmount" Type="Int32" />
+          <Property Name="InputCategory3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InputCategory3TotalAmount" Type="Int32" />
+          <Property Name="InputCategory3TotalTaxAmount" Type="Int32" />
+          <Property Name="InputTotalAmountValue23" Type="Int32" Nullable="false" />
+          <Property Name="InputTotalTaxAmountValue24" Type="Int32" Nullable="false" />
+          <Property Name="CreateLocation" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SignName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OutputCategory1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OutputCategory2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OutputCategory3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OutputCategory4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OutputCategory1TotalAmountValue26" Type="Int32" />
+          <Property Name="OutputCategory2TotalAmountValue29" Type="Int32" />
+          <Property Name="OutputCategory3TotalAmountValue30" Type="Int32" />
+          <Property Name="OutputCategory4TotalAmountValue32" Type="Int32" />
+          <Property Name="OutputCategory3TotalTaxAmountValue31" Type="Int32" />
+          <Property Name="OutputCategory4TotalTaxAmountValue33" Type="Int32" />
+          <Property Name="OutputTotalAmountValue34" Type="Int32" Nullable="false" />
+          <Property Name="HaveTaxOutputTotalAmountValue27" Type="Int32" Nullable="false" />
+          <Property Name="OutputTotalTaxAmountValue28" Type="Int32" Nullable="false" />
+          <Property Name="Value20No" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Value20Date" Type="DateTime" Precision="0" />
+          <Property Name="Value21" Type="Int32" />
+          <Property Name="Value22" Type="Int32" />
+          <Property Name="Value25" Type="Int32" />
+          <Property Name="Value36" Type="Int32" />
+          <Property Name="Value37" Type="Int32" />
+          <Property Name="Value38" Type="Int32" />
+          <Property Name="Value39" Type="Int32" />
+          <Property Name="Value40a" Type="Int32" />
+          <Property Name="Value40b" Type="Int32" />
+          <Property Name="Value41" Type="Int32" />
+          <Property Name="Value43" Type="Int32" />
+          <Property Name="TaxAgentAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentDistrict" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentProvince" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TaxAgentFax" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TaxAgentEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Value40" Type="Int32" />
+          <Property Name="Value42" Type="Int32" />
+          <Property Name="StoreOwnerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StoreTaxCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="StoreAddress" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="StoreDistrict" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StoreProvince" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StorePhone" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="StoreFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="StoreEmail" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TndnTaxDeclaration">
+          <Key>
+            <PropertyRef Name="TndnTaxDeclarationId" />
+          </Key>
+          <Property Name="TndnTaxDeclarationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="MaxRevenueRatio" Type="Int32" />
+          <Property Name="TaxAgentOwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TaxAgentTaxCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TaxAgentAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentDistrict" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentProvince" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentPhone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TaxAgentFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TaxAgentEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SignName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="0" />
+          <Property Name="Value22No" Type="Int32" />
+          <Property Name="Value22Date" Type="DateTime" Precision="0" />
+          <Property Name="ValueA1" Type="Int32" />
+          <Property Name="ValueB1" Type="Int32" />
+          <Property Name="ValueB2" Type="Int32" />
+          <Property Name="ValueB3" Type="Int32" />
+          <Property Name="ValueB4" Type="Int32" />
+          <Property Name="ValueB5" Type="Int32" />
+          <Property Name="ValueB6" Type="Int32" />
+          <Property Name="ValueB7" Type="Int32" />
+          <Property Name="ValueB8" Type="Int32" />
+          <Property Name="ValueB9" Type="Int32" />
+          <Property Name="ValueB10" Type="Int32" />
+          <Property Name="ValueB11" Type="Int32" />
+          <Property Name="ValueB12" Type="Int32" />
+          <Property Name="ValueB13" Type="Int32" />
+          <Property Name="ValueB14" Type="Int32" />
+          <Property Name="ValueC1" Type="Int32" />
+          <Property Name="ValueC2" Type="Int32" />
+          <Property Name="ValueC3" Type="Int32" />
+          <Property Name="ValueC3a" Type="Int32" />
+          <Property Name="ValueC3b" Type="Int32" />
+          <Property Name="ValueC4" Type="Int32" />
+          <Property Name="ValueC5" Type="Int32" />
+          <Property Name="ValueC6" Type="Int32" />
+          <Property Name="ValueC7" Type="Int32" />
+          <Property Name="ValueC8" Type="Int32" />
+          <Property Name="ValueC9" Type="Int32" />
+          <Property Name="ValueC9a" Type="Int32" />
+          <Property Name="ValueC10" Type="Int32" />
+          <Property Name="ValueC11" Type="Int32" />
+          <Property Name="ValueC12" Type="Int32" />
+          <Property Name="ValueC13" Type="Int32" />
+          <Property Name="ValueC14" Type="Int32" />
+          <Property Name="ValueC15" Type="Int32" />
+          <Property Name="ValueC16" Type="Int32" />
+          <Property Name="ValueD" Type="Int32" />
+          <Property Name="ValueD1" Type="Int32" />
+          <Property Name="ValueD2" Type="Int32" />
+          <Property Name="ValueD3" Type="Int32" />
+          <Property Name="ValueE" Type="Int32" />
+          <Property Name="ValueE1" Type="Int32" />
+          <Property Name="ValueE2" Type="Int32" />
+          <Property Name="ValueE3" Type="Int32" />
+          <Property Name="ValueG" Type="Int32" />
+          <Property Name="ValueG1" Type="Int32" />
+          <Property Name="ValueG2" Type="Int32" />
+          <Property Name="ValueG3" Type="Int32" />
+          <Property Name="ValueH" Type="Int32" />
+          <Property Name="ValueI" Type="Int32" />
+          <Property Name="ValueL1" Type="Boolean" />
+          <Property Name="ValueL2No" Type="Int32" />
+          <Property Name="ValueL3" Type="DateTime" Precision="0" />
+          <Property Name="ValueL4" Type="Int32" />
+          <Property Name="ValueL5" Type="Int32" />
+          <Property Name="ValueM1FromDate" Type="DateTime" Precision="0" />
+          <Property Name="ValueM1ToDate" Type="DateTime" Precision="0" />
+          <Property Name="ValueM2" Type="Int32" />
+          <Property Name="Value1" Type="Int32" />
+          <Property Name="Value2" Type="Int32" />
+          <Property Name="Value3" Type="Int32" />
+          <Property Name="Value4" Type="Int32" />
+          <Property Name="Value5" Type="Int32" />
+          <Property Name="Value6" Type="Int32" />
+          <Property Name="Value7" Type="Int32" />
+          <Property Name="Value8" Type="Int32" />
+          <Property Name="Value9" Type="Int32" />
+          <Property Name="Value10" Type="Int32" />
+          <Property Name="Value11" Type="Int32" />
+          <Property Name="Value12" Type="Int32" />
+          <Property Name="Value13" Type="Int32" />
+          <Property Name="Value14" Type="Int32" />
+          <Property Name="Value15" Type="Int32" />
+          <Property Name="Value16" Type="Int32" />
+          <Property Name="Value17" Type="Int32" />
+          <Property Name="Value18" Type="Int32" />
+          <Property Name="Value19" Type="Int32" />
+          <Property Name="StoreOwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StoreTaxCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="StoreAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="StoreDistrict" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StoreProvince" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StorePhone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="StoreFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="StoreEmail" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2424,6 +2402,88 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="BMAModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VatTaxDeclarations">
+            <EntityTypeMapping TypeName="BMAModel.VatTaxDeclaration">
+              <MappingFragment StoreEntitySet="VatTaxDeclaration">
+                <ScalarProperty Name="StoreEmail" ColumnName="StoreEmail" />
+                <ScalarProperty Name="StoreFax" ColumnName="StoreFax" />
+                <ScalarProperty Name="StorePhone" ColumnName="StorePhone" />
+                <ScalarProperty Name="StoreProvince" ColumnName="StoreProvince" />
+                <ScalarProperty Name="StoreDistrict" ColumnName="StoreDistrict" />
+                <ScalarProperty Name="StoreAddress" ColumnName="StoreAddress" />
+                <ScalarProperty Name="StoreTaxCode" ColumnName="StoreTaxCode" />
+                <ScalarProperty Name="StoreOwnerName" ColumnName="StoreOwnerName" />
+                <ScalarProperty Name="Value42" ColumnName="Value42" />
+                <ScalarProperty Name="Value40" ColumnName="Value40" />
+                <ScalarProperty Name="TaxAgentEmail" ColumnName="TaxAgentEmail" />
+                <ScalarProperty Name="TaxAgentFax" ColumnName="TaxAgentFax" />
+                <ScalarProperty Name="TaxAgentPhone" ColumnName="TaxAgentPhone" />
+                <ScalarProperty Name="TaxAgentProvince" ColumnName="TaxAgentProvince" />
+                <ScalarProperty Name="TaxAgentDistrict" ColumnName="TaxAgentDistrict" />
+                <ScalarProperty Name="TaxAgentAddress" ColumnName="TaxAgentAddress" />
+                <ScalarProperty Name="Value43" ColumnName="Value43" />
+                <ScalarProperty Name="Value41" ColumnName="Value41" />
+                <ScalarProperty Name="Value40b" ColumnName="Value40b" />
+                <ScalarProperty Name="Value40a" ColumnName="Value40a" />
+                <ScalarProperty Name="Value39" ColumnName="Value39" />
+                <ScalarProperty Name="Value38" ColumnName="Value38" />
+                <ScalarProperty Name="Value37" ColumnName="Value37" />
+                <ScalarProperty Name="Value36" ColumnName="Value36" />
+                <ScalarProperty Name="Value25" ColumnName="Value25" />
+                <ScalarProperty Name="Value22" ColumnName="Value22" />
+                <ScalarProperty Name="Value21" ColumnName="Value21" />
+                <ScalarProperty Name="Value20Date" ColumnName="Value20Date" />
+                <ScalarProperty Name="Value20No" ColumnName="Value20No" />
+                <ScalarProperty Name="OutputTotalTaxAmountValue28" ColumnName="OutputTotalTaxAmountValue28" />
+                <ScalarProperty Name="HaveTaxOutputTotalAmountValue27" ColumnName="HaveTaxOutputTotalAmountValue27" />
+                <ScalarProperty Name="OutputTotalAmountValue34" ColumnName="OutputTotalAmountValue34" />
+                <ScalarProperty Name="OutputCategory4TotalTaxAmountValue33" ColumnName="OutputCategory4TotalTaxAmountValue33" />
+                <ScalarProperty Name="OutputCategory3TotalTaxAmountValue31" ColumnName="OutputCategory3TotalTaxAmountValue31" />
+                <ScalarProperty Name="OutputCategory4TotalAmountValue32" ColumnName="OutputCategory4TotalAmountValue32" />
+                <ScalarProperty Name="OutputCategory3TotalAmountValue30" ColumnName="OutputCategory3TotalAmountValue30" />
+                <ScalarProperty Name="OutputCategory2TotalAmountValue29" ColumnName="OutputCategory2TotalAmountValue29" />
+                <ScalarProperty Name="OutputCategory1TotalAmountValue26" ColumnName="OutputCategory1TotalAmountValue26" />
+                <ScalarProperty Name="OutputCategory4" ColumnName="OutputCategory4" />
+                <ScalarProperty Name="OutputCategory3" ColumnName="OutputCategory3" />
+                <ScalarProperty Name="OutputCategory2" ColumnName="OutputCategory2" />
+                <ScalarProperty Name="OutputCategory1" ColumnName="OutputCategory1" />
+                <ScalarProperty Name="SignName" ColumnName="SignName" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreateLocation" ColumnName="CreateLocation" />
+                <ScalarProperty Name="InputTotalTaxAmountValue24" ColumnName="InputTotalTaxAmountValue24" />
+                <ScalarProperty Name="InputTotalAmountValue23" ColumnName="InputTotalAmountValue23" />
+                <ScalarProperty Name="InputCategory3TotalTaxAmount" ColumnName="InputCategory3TotalTaxAmount" />
+                <ScalarProperty Name="InputCategory3TotalAmount" ColumnName="InputCategory3TotalAmount" />
+                <ScalarProperty Name="InputCategory3" ColumnName="InputCategory3" />
+                <ScalarProperty Name="InputCategory2TotalTaxAmount" ColumnName="InputCategory2TotalTaxAmount" />
+                <ScalarProperty Name="InputCategory2TotalAmount" ColumnName="InputCategory2TotalAmount" />
+                <ScalarProperty Name="InputCategory2" ColumnName="InputCategory2" />
+                <ScalarProperty Name="InputCategory1TotalTaxAmount" ColumnName="InputCategory1TotalTaxAmount" />
+                <ScalarProperty Name="InputCategory1TotalAmount" ColumnName="InputCategory1TotalAmount" />
+                <ScalarProperty Name="InputCategory1" ColumnName="InputCategory1" />
+                <ScalarProperty Name="TaxAgentNo" ColumnName="TaxAgentNo" />
+                <ScalarProperty Name="TaxAgentName" ColumnName="TaxAgentName" />
+                <ScalarProperty Name="TaxAgentTaxCode" ColumnName="TaxAgentTaxCode" />
+                <ScalarProperty Name="TaxAgentOwnerName" ColumnName="TaxAgentOwnerName" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Quarter" ColumnName="Quarter" />
+                <ScalarProperty Name="VatTaxDeclarationId" ColumnName="VatTaxDeclarationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="TndnTaxDeclarations">
             <EntityTypeMapping TypeName="BMAModel.TndnTaxDeclaration">
               <MappingFragment StoreEntitySet="TndnTaxDeclaration">
@@ -2527,99 +2587,6 @@
                 <ScalarProperty Name="MaxRevenueRatio" ColumnName="MaxRevenueRatio" />
                 <ScalarProperty Name="Year" ColumnName="Year" />
                 <ScalarProperty Name="TndnTaxDeclarationId" ColumnName="TndnTaxDeclarationId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="BMAModel.User">
-              <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="VatTaxDeclarations">
-            <EntityTypeMapping TypeName="BMAModel.VatTaxDeclaration">
-              <MappingFragment StoreEntitySet="VatTaxDeclaration">
-                <ScalarProperty Name="StoreEmail" ColumnName="StoreEmail" />
-                <ScalarProperty Name="StoreFax" ColumnName="StoreFax" />
-                <ScalarProperty Name="StorePhone" ColumnName="StorePhone" />
-                <ScalarProperty Name="StoreProvince" ColumnName="StoreProvince" />
-                <ScalarProperty Name="StoreDistrict" ColumnName="StoreDistrict" />
-                <ScalarProperty Name="StoreAddress" ColumnName="StoreAddress" />
-                <ScalarProperty Name="StoreTaxCode" ColumnName="StoreTaxCode" />
-                <ScalarProperty Name="StoreOwnerName" ColumnName="StoreOwnerName" />
-                <ScalarProperty Name="Value42" ColumnName="Value42" />
-                <ScalarProperty Name="Value40" ColumnName="Value40" />
-                <ScalarProperty Name="TaxAgentEmail" ColumnName="TaxAgentEmail" />
-                <ScalarProperty Name="TaxAgentFax" ColumnName="TaxAgentFax" />
-                <ScalarProperty Name="TaxAgentPhone" ColumnName="TaxAgentPhone" />
-                <ScalarProperty Name="TaxAgentProvince" ColumnName="TaxAgentProvince" />
-                <ScalarProperty Name="TaxAgentDistrict" ColumnName="TaxAgentDistrict" />
-                <ScalarProperty Name="TaxAgentAddress" ColumnName="TaxAgentAddress" />
-                <ScalarProperty Name="Value43" ColumnName="Value43" />
-                <ScalarProperty Name="Value41" ColumnName="Value41" />
-                <ScalarProperty Name="Value40b" ColumnName="Value40b" />
-                <ScalarProperty Name="Value40a" ColumnName="Value40a" />
-                <ScalarProperty Name="Value39" ColumnName="Value39" />
-                <ScalarProperty Name="Value38" ColumnName="Value38" />
-                <ScalarProperty Name="Value37" ColumnName="Value37" />
-                <ScalarProperty Name="Value36" ColumnName="Value36" />
-                <ScalarProperty Name="Value25" ColumnName="Value25" />
-                <ScalarProperty Name="Value22" ColumnName="Value22" />
-                <ScalarProperty Name="Value21" ColumnName="Value21" />
-                <ScalarProperty Name="Value3" ColumnName="Value3" />
-                <ScalarProperty Name="Value2" ColumnName="Value2" />
-                <ScalarProperty Name="OutputTotalTaxAmountValue28" ColumnName="OutputTotalTaxAmountValue28" />
-                <ScalarProperty Name="HaveTaxOutputTotalAmountValue27" ColumnName="HaveTaxOutputTotalAmountValue27" />
-                <ScalarProperty Name="OutputTotalAmountValue34" ColumnName="OutputTotalAmountValue34" />
-                <ScalarProperty Name="OutputCategory5TotalTaxAmount" ColumnName="OutputCategory5TotalTaxAmount" />
-                <ScalarProperty Name="OutputCategory4TotalTaxAmountValue33" ColumnName="OutputCategory4TotalTaxAmountValue33" />
-                <ScalarProperty Name="OutputCategory3TotalTaxAmountValue31" ColumnName="OutputCategory3TotalTaxAmountValue31" />
-                <ScalarProperty Name="OutputCategory5TotalAmountValue" ColumnName="OutputCategory5TotalAmountValue" />
-                <ScalarProperty Name="OutputCategory4TotalAmountValue32" ColumnName="OutputCategory4TotalAmountValue32" />
-                <ScalarProperty Name="OutputCategory3TotalAmountValue30" ColumnName="OutputCategory3TotalAmountValue30" />
-                <ScalarProperty Name="OutputCategory2TotalAmountValue29" ColumnName="OutputCategory2TotalAmountValue29" />
-                <ScalarProperty Name="OutputCategory1TotalAmountValue26" ColumnName="OutputCategory1TotalAmountValue26" />
-                <ScalarProperty Name="OutputCategory5" ColumnName="OutputCategory5" />
-                <ScalarProperty Name="OutputCategory4" ColumnName="OutputCategory4" />
-                <ScalarProperty Name="OutputCategory3" ColumnName="OutputCategory3" />
-                <ScalarProperty Name="OutputCategory2" ColumnName="OutputCategory2" />
-                <ScalarProperty Name="OutputCategory1" ColumnName="OutputCategory1" />
-                <ScalarProperty Name="SignName" ColumnName="SignName" />
-                <ScalarProperty Name="CreateDay" ColumnName="CreateDay" />
-                <ScalarProperty Name="CreateMonth" ColumnName="CreateMonth" />
-                <ScalarProperty Name="CreateLocation" ColumnName="CreateLocation" />
-                <ScalarProperty Name="InputTotalTaxAmountValue24" ColumnName="InputTotalTaxAmountValue24" />
-                <ScalarProperty Name="InputTotalAmountValue23" ColumnName="InputTotalAmountValue23" />
-                <ScalarProperty Name="InputCategory5TotalTaxAmount" ColumnName="InputCategory5TotalTaxAmount" />
-                <ScalarProperty Name="InputCategory5TotalAmount" ColumnName="InputCategory5TotalAmount" />
-                <ScalarProperty Name="InputCategory5" ColumnName="InputCategory5" />
-                <ScalarProperty Name="InputCategory4TotalTaxAmount" ColumnName="InputCategory4TotalTaxAmount" />
-                <ScalarProperty Name="InputCategory4TotalAmount" ColumnName="InputCategory4TotalAmount" />
-                <ScalarProperty Name="InputCategory4" ColumnName="InputCategory4" />
-                <ScalarProperty Name="InputCategory3TotalTaxAmount" ColumnName="InputCategory3TotalTaxAmount" />
-                <ScalarProperty Name="InputCategory3TotalAmount" ColumnName="InputCategory3TotalAmount" />
-                <ScalarProperty Name="InputCategory3" ColumnName="InputCategory3" />
-                <ScalarProperty Name="InputCategory2TotalTaxAmount" ColumnName="InputCategory2TotalTaxAmount" />
-                <ScalarProperty Name="InputCategory2TotalAmount" ColumnName="InputCategory2TotalAmount" />
-                <ScalarProperty Name="InputCategory2" ColumnName="InputCategory2" />
-                <ScalarProperty Name="InputCategory1TotalTaxAmount" ColumnName="InputCategory1TotalTaxAmount" />
-                <ScalarProperty Name="InputCategory1TotalAmount" ColumnName="InputCategory1TotalAmount" />
-                <ScalarProperty Name="InputCategory1" ColumnName="InputCategory1" />
-                <ScalarProperty Name="TaxAgentNo" ColumnName="TaxAgentNo" />
-                <ScalarProperty Name="TaxAgentName" ColumnName="TaxAgentName" />
-                <ScalarProperty Name="TaxAgentTaxCode" ColumnName="TaxAgentTaxCode" />
-                <ScalarProperty Name="TaxAgentOwnerName" ColumnName="TaxAgentOwnerName" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Year" ColumnName="Year" />
-                <ScalarProperty Name="Quarter" ColumnName="Quarter" />
-                <ScalarProperty Name="VatTaxDeclarationId" ColumnName="VatTaxDeclarationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
