@@ -1,5 +1,6 @@
 ﻿@model BMA.Models.Product
-
+@using BMA.Models
+@using BMA.Models.ViewModel
 @{
     ViewBag.Title = "Thêm sản phẩm";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
@@ -18,55 +19,123 @@
         <form role="form" action="/ManageProduct/AddProduct" id="productInforForm" method="post">
             <div class="col-md-6">
                 <!-- general form elements -->
-                <div class="box box-success">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Thông tin sản phẩm</h3><br />
-                        <label class="box-title" style="color:#ff0000">@TempData["Error"]</label>
-                    </div><!-- /.box-header -->
-                    <!-- form start -->
-                    @Html.AntiForgeryToken()
-                    <div class="box-body">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Tên sản phẩm <span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="productName" value="" placeholder="Nhập tên sản phẩm" id="productName" required>
-                            @Html.ValidationMessageFor(model => model.ProductName)
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Đơn vị tính <span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="productUnit" value="" placeholder="Nhập đơn vị" id="productUnit" required>
-                            @Html.ValidationMessageFor(model => model.Unit)
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Trọng lượng (gam)<span style="color:red">*</span></label>
-                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productWeight" value="" min="100" max="2000" placeholder="Nhập trọng lượng bánh" id="productWeight" required>
-                            @Html.ValidationMessageFor(model => model.ProductWeight)
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Mô tả sản phẩm</label>
-                            <textarea rows="3" class="form-control" name="productDes" placeholder="Mô tả" id="productDes"></textarea>
-                            @Html.ValidationMessageFor(model => model.Descriptions)
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Ghi chú</label>
-                            <input type="text" class="form-control" name="productNote" value="" placeholder="Ghi chú" id="productNote">
-                            @Html.ValidationMessageFor(model => model.Note)
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Đơn giá (đồng)<span style="color:red">*</span></label>
-                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" value="" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
-                            @Html.ValidationMessageFor(model => model.ProductStandardPrice)
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Loại bánh <span style="color:red">*</span></label>
-                            <select class="form-control" name="dropCate" id="dropCate">
-                                @foreach (var item in cg)
+                @if (Session["ProductInfor"] != null)
+                {
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Thông tin sản phẩm</h3><br />
+                        </div><!-- /.box-header -->
+                        <!-- form start -->
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Tên sản phẩm <span style="color:red">*</span></label>
+                                <input type="text" class="form-control" name="productName" value="@((Session["ProductInfor"] as Product).ProductName)" placeholder="Nhập tên sản phẩm" id="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Đơn vị tính <span style="color:red">*</span></label>
+                                <input type="text" class="form-control" name="productUnit" value="@((Session["ProductInfor"] as Product).Unit)" placeholder="Nhập đơn vị" id="productUnit" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Trọng lượng (gam)<span style="color:red">*</span></label>
+                                @if ((Session["ProductInfor"] as Product).ProductWeight == -1)
                                 {
-                                    <option value="@item.CategoryId">@item.CategoryName</option>
+                                    <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productWeight" value="" min="100" max="2000" placeholder="Nhập trọng lượng bánh" id="productWeight" required>
                                 }
-                            </select>
-                        </div>
-                    </div><!-- /.box-body -->
-                </div><!-- /.box -->
+                                else
+                                {
+                                    <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productWeight" value="@((Session["ProductInfor"] as Product).ProductWeight)" min="100" max="2000" placeholder="Nhập trọng lượng bánh" id="productWeight" required>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Mô tả sản phẩm</label>
+                                <textarea rows="3" class="form-control" style="max-width:509.5px" name="productDes" placeholder="Mô tả" id="productDes">@((Session["ProductInfor"] as Product).Descriptions)</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Ghi chú</label>
+                                <input type="text" class="form-control" name="productNote" value="@((Session["ProductInfor"] as Product).Note)" placeholder="Ghi chú" id="productNote">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Đơn giá (đồng)<span style="color:red">*</span></label>
+                                @if ((Session["ProductInfor"] as Product).ProductStandardPrice == -1)
+                                {
+                                    <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" value="" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" value="@((Session["ProductInfor"] as Product).ProductStandardPrice)" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Loại bánh <span style="color:red">*</span></label>
+                                <select class="form-control" name="dropCate" id="dropCate">
+                                    @foreach (var item in cg)
+                                    {
+                                        if (item.CategoryId == (Session["ProductInfor"] as Product).CategoryId)
+                                        {
+                                            <option value="@item.CategoryId" selected>@item.CategoryName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.CategoryId">@item.CategoryName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                }
+                else
+                {
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Thông tin sản phẩm</h3><br />
+                            <label class="box-title" style="color:#ff0000">@TempData["Error"]</label>
+                        </div><!-- /.box-header -->
+                        <!-- form start -->
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Tên sản phẩm <span style="color:red">*</span></label>
+                                <input type="text" class="form-control" name="productName" value="" placeholder="Nhập tên sản phẩm" id="productName" required>
+                                @Html.ValidationMessageFor(model => model.ProductName)
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Đơn vị tính <span style="color:red">*</span></label>
+                                <input type="text" class="form-control" name="productUnit" value="" placeholder="Nhập đơn vị" id="productUnit" required>
+                                @Html.ValidationMessageFor(model => model.Unit)
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Trọng lượng (gam)<span style="color:red">*</span></label>
+                                <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productWeight" value="" min="100" max="2000" placeholder="Nhập trọng lượng bánh" id="productWeight" required>
+                                @Html.ValidationMessageFor(model => model.ProductWeight)
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Mô tả sản phẩm</label>
+                                <textarea rows="3" class="form-control" style="max-width:509.5px;" name="productDes" placeholder="Mô tả" id="productDes"></textarea>
+                                @Html.ValidationMessageFor(model => model.Descriptions)
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Ghi chú</label>
+                                <input type="text" class="form-control" name="productNote" value="" placeholder="Ghi chú" id="productNote">
+                                @Html.ValidationMessageFor(model => model.Note)
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Đơn giá (đồng)<span style="color:red">*</span></label>
+                                <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" value="" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
+                                @Html.ValidationMessageFor(model => model.ProductStandardPrice)
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Loại bánh <span style="color:red">*</span></label>
+                                <select class="form-control" name="dropCate" id="dropCate">
+                                    @foreach (var item in cg)
+                                    {
+                                        <option value="@item.CategoryId">@item.CategoryName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                }
+
             </div><!--/.col (left) -->
         </form>
         <form role="form" action="/ManageProduct/AddImage" id="imageForm" method="post" enctype="multipart/form-data">
@@ -120,7 +189,29 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                @if (HttpContext.Current.Session["Material"] != null)
+                                    {
+                                        foreach (var item in (Session["Material"] as List<AllProductInfoViewModel>))
+                                        {
+                                            <tr>
+                                                <td style="vertical-align:middle">
+                                                    @item.MaterialName
+                                                    <input type="hidden" name="materialId" value="@item.MaterialId"/>
+                                                </td>
+                                                <td style="vertical-align:middle">
+                                                    <input type="number" name="productQuantity" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@item.MaterialQuantity" min="1" />
+                                                </td>
+                                                <td style="vertical-align:middle">
+                                                    @item.MaterialUnit
+                                                </td>
+                                                <td style="text-align:center; vertical-align:middle">
+                                                    <a class="btn btn-warning" data-role="remove-row-btn">Hủy</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                            </tbody>
                         </table>
                     </form>
                     <div class="box-footer">
@@ -135,6 +226,14 @@
                                         document.getElementById('standard-popup-title').innerHTML = "Chọn nguyên liệu";
                                         document.getElementById('standard-popup-body').innerHTML = data;
                                         $('#myStandardModal').modal('show');
+                                        $('#example2').DataTable({
+                                            "paging": true,
+                                            "lengthChange": false,
+                                            "searching": true,
+                                            "ordering": true,
+                                            "info": true,
+                                            "autoWidth": false
+                                        });
                                     },
                                     fail: function (e) {
                                         alert("Have error" + e.toString());
@@ -142,80 +241,87 @@
                                 });
                             }
 
-                            function fnselect() {
-                                var selectedIds = [];
-                                var selectedName = [];
-                                var selectedUnit = [];
-
-                                $(".multiple-choice-table tr.selected").each(function (index, row) {
-                                    selectedIds.push($(row).find("td:first input").val());
-                                    selectedName.push($(row).find("td:first span").text());
-                                    selectedUnit.push($(row).find("td:nth-child(2) span").text());
-                                });
-
-
-                                $.ajax({
-                                    "url": "@Url.Action("RemoveMaterialFromListToAdd", "ManageProduct")",
-                                    "method": "POST",
-                                    "data": JSON.stringify({ "materialId": selectedIds }),
-                                    "dataType": 'json',
-                                    "contentType": 'application/json',
-                                    "success": function (data) {
-                                        if (data === 1) {
-                                            $('#myStandardModal').modal('hide');
-                                            for (i = 0; i < selectedIds.length; i++) {
-                                                var productRow = $("<tr>", {
-                                                    "html": [
-                                                        $("<td>", {
-                                                            "style": "vertical-align: middle;",
-                                                            "html": [
-                                                                selectedName[i],
-                                                                $("<input>", {
-                                                                    "type": "hidden",
-                                                                    "name": "materialId",
-                                                                    "value": selectedIds[i]
-                                                                })
-                                                            ]
-                                                        }),
-                                                        $("<td>", {
-                                                            "style": "vertical-align: middle;",
-                                                            "html": $("<input>", {
-                                                                "type": "number",
-                                                                "name": "productQuantity",
-                                                                "value": "1",
-                                                                "min": "1",
-                                                            })
-                                                        }),
-                                                        $("<td>", {
-                                                            "style": "vertical-align: middle;",
-                                                            "html": [
-                                                                selectedUnit[i]
-                                                            ]
-                                                        }),
-                                                        $("<td>", {
-                                                            "style": "text-align: center; vertical-align: middle;",
-                                                            "html": $("<a>", {
-                                                                "class": "btn btn-warning",
-                                                                "data-role": "remove-row-btn",
-                                                                "html": "Hủy"
-                                                            })
-                                                        })
-                                                    ]
-                                                });
-                                                $("#material-table tbody").append(productRow);
-                                            }
-                                        } else {
-                                            alert("Không thể thêm nguyên liệu");
-                                        }
-                                    },
-                                    "fail": function (e) {
-                                        alert("Have error" + e.toString());
-                                    }
-                                });
-                            }
                         </script>
 
-                        <a style="float:right" href="@Url.Action("AddMaterial", "ManageMaterial", new { strURL = Request.Url.AbsolutePath})" class="btn btn-danger">Tạo mới nguyên liệu</a>
+                        <a style="float:right" onclick="AddTempProductInfor()" class="btn btn-danger">Tạo mới nguyên liệu</a>
+                        <script type="text/javascript">
+                            function AddTempProductInfor() {
+                                var txtName = $("#productName").val();
+                                var txtUnit = $("#productUnit").val();
+                                var txtWeight = $("#productWeight").val();
+                                var txtDes = $("#productDes").val();
+                                var txtNote = $("#productNote").val();
+                                var txtCate = $("#dropCate").val();
+                                var fileName = getFileName($("#file").val());
+                                var txtPrice = $("#productPrice").val();
+                                var lstId = [];
+                                var lstQuantity = [];
+                                $("#material-table tbody tr").each(function (index, element) {
+                                    lstId.push($(element).find("td:first input").val());
+                                    lstQuantity.push($(element).find("td:nth-child(2) input").val());
+                                    materialQuantity = $(element).find("td:nth-child(2) input").val();
+
+                                });
+                                var action = $("#imageForm").attr("action");
+
+                                if ($("#imageForm").attr("enctype") == "multipart/form-data") {
+                                    dataString = new FormData($("#imageForm").get(0));
+                                    contentType = false;
+                                    processData = false;
+                                } else {
+
+                                }
+
+                                $.ajax({
+                                    "url": "@(Url.Action("AddTempProductInfor", "ManageProduct"))",
+                                    "method": "POST",
+                                    "data": JSON.stringify({
+                                        "productName": txtName,
+                                        "productUnit": txtUnit,
+                                        "productWeight": txtWeight,
+                                        "productDes": txtDes,
+                                        "productNote": txtNote,
+                                        "productPrice": txtPrice,
+                                        "dropCate": txtCate,
+                                        "fileName": fileName,
+                                        "materialId": lstId,
+                                        "materialQuantity": lstQuantity
+                                    }),
+                                    "dataType": "json",
+                                    "contentType": 'application/json',
+                                    "processData": false,
+                                    "success": function (data) {
+                                        if (data === 1) {
+                                            window.setTimeout(function () {
+                                                window.location.replace("@(Url.Action("AddMaterial", "ManageMaterial", new { strURL = Request.Url.AbsolutePath }))");
+                                            }, 500);
+                                        } else {
+                                            noty({
+                                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                        }
+                                    },
+                                    "fail": function () {
+                                        noty({
+                                            text: 'Đã có lỗi xảy ra',
+                                            type: 'error',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                        window.setTimeout(function () {
+                                            window.location.replace("@(Url.Action("Index", "ManageProduct"))");
+                                        }, 3000)
+                                    }
+                                })
+                            }
+                        </script>
                     </div>
                 </div>
             </div>
@@ -234,6 +340,7 @@
 
                 function checkValidate() {
                     var dataString;
+                    var check = 0;
                     var txtName = $("#productName").val();
                     var txtUnit = $("#productUnit").val();
                     var txtWeight = $("#productWeight").val();
@@ -270,233 +377,252 @@
                             theme: 'defaultTheme',
                             timeout: 2000
                         });
-                        //} else if (lstQuantity.length != 0) {
-                        //    lstQuantity = lstQuantity.toString().split(',');
-                        //    for (i = 0; i < lstQuantity.length ; i++) {
-                        //        if (lstQuantity[i] == 0 || lstQuantity[i] == "") {
-                        //            noty({
-                        //                text: 'Số lượng nguyên liệu phải lớn hơn 0 và không được bỏ trống.',
-                        //                type: 'warning',
-                        //                dismissQueue: false,
-                        //                layout: 'topCenter',
-                        //                theme: 'defaultTheme',
-                        //                timeout: 2000
-                        //            });
-                        //        }
-                        //    }
-                    } else if (txtName.trim() === '') {
-                        noty({
-                            text: 'Tên sản phẩm không được để trống.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (txtUnit.trim() === '') {
-                        noty({
-                            text: 'Đơn vị tính không được để trống.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (!isNaN(txtUnit)) {
-                        noty({
-                            text: 'Đơn vị tính không được là số.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (txtUnit.length < 2 || txtUnit.length > 20) {
-                        noty({
-                            text: 'Đơn vị tính của sản phẩm phải có độ dài từ 2-20 kí tự',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (txtWeight.trim() === '') {
-                        noty({
-                            text: 'Trọng lượng sản phẩm không được để trống.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (isNaN(txtWeight)) {
-                        noty({
-                            text: 'Trọng lượng sản phẩm phải là số.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (parseInt(txtWeight) < 100) {
-                        noty({
-                            text: 'Trọng lượng sản phẩm phải lớn hơn hoặc bằng 100 gam.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (parseInt(txtWeight) > 2000) {
-                        noty({
-                            text: 'Trọng lượng sản phẩm phải nhỏ hơn 2000 gam.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (txtPrice.trim() === '') {
-                        noty({
-                            text: 'Giá phẩm không được để trống.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (isNaN(txtPrice)) {
-                        noty({
-                            text: 'Giá sản phẩm phải là số.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (parseInt(txtPrice) < 1000) {
-                        noty({
-                            text: 'Giá phẩm phải lớn hơn hoặc bằng 1000 đồng.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else if (parseInt(txtPrice) > "@(ViewBag.maxPrice)") {
-                        noty({
-                            text: 'Giá phẩm không được lớn hơn "@(ViewBag.maxPrice.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")))".',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 2000
-                        });
-                    } else {
-                        $.ajax({
-                            "url": action,
-                            "method": "POST",
-                            "data": dataString,
-                            "dataType": "json",
-                            "contentType": contentType,
-                            "processData": processData,
-                            "success": function (data) {
-                                if (data === 1) {
-                                    $.ajax({
-                                        "url": "@(Url.Action("AddProduct", "ManageProduct"))",
-                                        "method": "POST",
-                                        "data": JSON.stringify({
-                                            "productName": txtName,
-                                            "productUnit": txtUnit,
-                                            "productWeight": txtWeight,
-                                            "productDes": txtDes,
-                                            "productNote": txtNote,
-                                            "productPrice": txtPrice,
-                                            "dropCate": txtCate,
-                                            "fileName": fileName,
-                                            "materialId": lstId,
-                                            "materialQuantity": lstQuantity
-                                        }),
-                                        "dataType": "json",
-                                        "contentType": 'application/json',
-                                        "processData": processData,
-                                        "success": function (data) {
-                                            if (data === 2) {
+                    } else if (lstQuantity.length != 0) {
+                        lstQuantity = lstQuantity.toString().split(',');
+                        outerloop:
+                            for (i = 0; i < lstQuantity.length ; i++) {
+                                if (lstQuantity[i] == 0 || lstQuantity[i] == "") {
+                                    noty({
+                                        text: 'Số lượng nguyên liệu phải lớn hơn 0 và không được bỏ trống.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                    check = 0;
+                                    break outerloop;
+                                } else if (isNaN(lstQuantity[i])) {
+                                    noty({
+                                        text: 'Số lượng nguyên liệu phải là số.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                    check = 0;
+                                    break outerloop;
+                                }
+                                check = 1;
+                            }
+                    }
+
+                    if (check === 1) {
+                        if (txtName.trim() === '') {
+                            noty({
+                                text: 'Tên sản phẩm không được để trống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (txtUnit.trim() === '') {
+                            noty({
+                                text: 'Đơn vị tính không được để trống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (!isNaN(txtUnit)) {
+                            noty({
+                                text: 'Đơn vị tính không được là số.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (txtUnit.length < 2 || txtUnit.length > 20) {
+                            noty({
+                                text: 'Đơn vị tính của sản phẩm phải có độ dài từ 2-20 kí tự',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (txtWeight.trim() === '') {
+                            noty({
+                                text: 'Trọng lượng sản phẩm không được để trống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (isNaN(txtWeight)) {
+                            noty({
+                                text: 'Trọng lượng sản phẩm phải là số.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (parseInt(txtWeight) < 100) {
+                            noty({
+                                text: 'Trọng lượng sản phẩm phải lớn hơn hoặc bằng 100 gam.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (parseInt(txtWeight) > 2000) {
+                            noty({
+                                text: 'Trọng lượng sản phẩm phải nhỏ hơn 2000 gam.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (txtPrice.trim() === '') {
+                            noty({
+                                text: 'Giá phẩm không được để trống.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (isNaN(txtPrice)) {
+                            noty({
+                                text: 'Giá sản phẩm phải là số.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (parseInt(txtPrice) < 1000) {
+                            noty({
+                                text: 'Giá phẩm phải lớn hơn hoặc bằng 1000 đồng.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else if (parseInt(txtPrice) > "@(ViewBag.maxPrice)") {
+                            noty({
+                                text: 'Giá phẩm không được lớn hơn "@(ViewBag.maxPrice.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")))".',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        } else {
+                            $.ajax({
+                                "url": action,
+                                "method": "POST",
+                                "data": dataString,
+                                "dataType": "json",
+                                "contentType": contentType,
+                                "processData": processData,
+                                "success": function (data) {
+                                    if (data === 1) {
+                                        $.ajax({
+                                            "url": "@(Url.Action("AddProduct", "ManageProduct"))",
+                                            "method": "POST",
+                                            "data": JSON.stringify({
+                                                "productName": txtName,
+                                                "productUnit": txtUnit,
+                                                "productWeight": txtWeight,
+                                                "productDes": txtDes,
+                                                "productNote": txtNote,
+                                                "productPrice": txtPrice,
+                                                "dropCate": txtCate,
+                                                "fileName": fileName,
+                                                "materialId": lstId,
+                                                "materialQuantity": lstQuantity
+                                            }),
+                                            "dataType": "json",
+                                            "contentType": 'application/json',
+                                            "processData": processData,
+                                            "success": function (data) {
+                                                if (data === 2) {
+                                                    noty({
+                                                        text: 'Thêm sản phẩm thành công',
+                                                        type: 'success',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 2000
+                                                    });
+                                                    window.setTimeout(function () {
+                                                        window.location.replace("@(Url.Action("Index", "ManageProduct"))");
+                                                    }, 3000);
+                                                } else if (data === -4) {
+                                                    noty({
+                                                        text: 'Đã tồn tại sản phẩm cùng tên',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 2000
+                                                    });
+                                                } else if (data === -5) {
+                                                    noty({
+                                                        text: 'Không thế thêm, vui lòng thử lại',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 2000
+                                                    });
+                                                }
+                                            },
+                                            "fail": function () {
                                                 noty({
-                                                    text: 'Thêm sản phẩm thành công',
-                                                    type: 'success',
+                                                    text: 'Đã có lỗi xảy ra',
+                                                    type: 'error',
                                                     dismissQueue: false,
                                                     layout: 'topCenter',
                                                     theme: 'defaultTheme',
-                                                    timeout: 2000
+                                                    timeout: 1000
                                                 });
                                                 window.setTimeout(function () {
                                                     window.location.replace("@(Url.Action("Index", "ManageProduct"))");
-                                                }, 3000);
-                                            } else if (data === -4) {
-                                                noty({
-                                                    text: 'Đã tồn tại sản phẩm cùng tên',
-                                                    type: 'warning',
-                                                    dismissQueue: false,
-                                                    layout: 'topCenter',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 2000
-                                                });
-                                            } else if (data === -5) {
-                                                noty({
-                                                    text: 'Không thế thêm, vui lòng thử lại',
-                                                    type: 'warning',
-                                                    dismissQueue: false,
-                                                    layout: 'topCenter',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 2000
-                                                });
+                                                }, 3000)
                                             }
-                                        },
-                                        "fail": function () {
-                                            noty({
-                                                text: 'Đã có lỗi xảy ra',
-                                                type: 'error',
-                                                dismissQueue: false,
-                                                layout: 'topCenter',
-                                                theme: 'defaultTheme',
-                                                timeout: 1000
-                                            });
-                                            window.setTimeout(function () {
-                                                window.location.replace("@(Url.Action("Index", "ManageProduct"))");
-                                            }, 3000)
-                                        }
-                                    })
-                                } else if (data === -1) {
-                                    noty({
-                                        text: 'Vui lòng thêm hình ảnh cho sản phẩm',
-                                        type: 'warning',
-                                        dismissQueue: false,
-                                        layout: 'topCenter',
-                                        theme: 'defaultTheme',
-                                        timeout: 2000
-                                    });
-                                } else if (data === -2) {
-                                    noty({
-                                        text: 'Kích thước hình ảnh quá lớn',
-                                        type: 'warning',
-                                        dismissQueue: false,
-                                        layout: 'topCenter',
-                                        theme: 'defaultTheme',
-                                        timeout: 2000
-                                    });
-                                } else if (data === -3) {
-                                    noty({
-                                        text: 'Xin chọn file hình ảnh (đuôi .png", ".jpg", "jpeg"...)',
-                                        type: 'warning',
-                                        dismissQueue: false,
-                                        layout: 'topCenter',
-                                        theme: 'defaultTheme',
-                                        timeout: 2000
-                                    });
+                                        })
+                                    } else if (data === -1) {
+                                        noty({
+                                            text: 'Vui lòng thêm hình ảnh cho sản phẩm',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    } else if (data === -2) {
+                                        noty({
+                                            text: 'Kích thước hình ảnh quá lớn',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    } else if (data === -3) {
+                                        noty({
+                                            text: 'Xin chọn file hình ảnh (đuôi .png", ".jpg", "jpeg"...)',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        }
                     }
                 }
             </script>
@@ -505,11 +631,40 @@
 </section>
 @section AddOrderScript{
     <script type="text/javascript">
+        var selectedIds = [];
+        var selectedName = [];
+        var selectedUnit = [];
+
         $(document).on("click", ".multiple-choice-table tbody tr", function () {
             if ($(this).attr('class') === 'selected') {
                 $(this).removeClass('selected');
+
+                // Remove id
+                var idTemp = $(this).find("td:first input").val();
+                var idIndex = selectedIds.indexOf(idTemp);
+                if (idIndex > -1) {
+                    selectedIds.splice(idIndex, 1);
+                }
+
+                // Remove name
+                var nameTemp = $(this).find("td:first span").text();
+                var nameIndex = selectedName.indexOf(nameTemp);
+                if (nameIndex > -1) {
+                    selectedName.splice(nameIndex, 1);
+                }
+
+                // Remove Unit
+                var unitTemp = $(this).find("td:first span").text();
+                var unitIndex = selectedUnit.indexOf(unitTemp);
+                if (unitIndex > -1) {
+                    selectedUnit.splice(unitIndex, 1);
+                }
             } else {
                 $(this).addClass('selected');
+
+                selectedIds.push($(this).find("td:first input").val());
+                selectedName.push($(this).find("td:first span").text());
+                selectedUnit.push($(this).find("td:nth-child(2) span").text());
             }
         });
         $(document).on("click", "[data-role=remove-row-btn]", function () {
@@ -538,4 +693,68 @@
                 }
             });
         });
+
+
+        function fnselect() {
+
+            $.ajax({
+                "url": "@Url.Action("RemoveMaterialFromListToAdd", "ManageProduct")",
+                "method": "POST",
+                "data": JSON.stringify({ "materialId": selectedIds }),
+                "dataType": 'json',
+                "contentType": 'application/json',
+                "success": function (data) {
+                    if (data === 1) {
+                        $('#myStandardModal').modal('hide');
+                        for (i = 0; i < selectedIds.length; i++) {
+                            var productRow = $("<tr>", {
+                                "html": [
+                                    $("<td>", {
+                                        "style": "vertical-align: middle;",
+                                        "html": [
+                                            selectedName[i],
+                                            $("<input>", {
+                                                "type": "hidden",
+                                                "name": "materialId",
+                                                "value": selectedIds[i]
+                                            })
+                                        ]
+                                    }),
+                                    $("<td>", {
+                                        "style": "vertical-align: middle;",
+                                        "html": $("<input>", {
+                                            "type": "number",
+                                            "name": "productQuantity",
+                                            "onkeypress" : "return event.charCode >= 48 && event.charCode <= 57",
+                                            "value": "1",
+                                            "min": "1",
+                                        })
+                                    }),
+                                    $("<td>", {
+                                        "style": "vertical-align: middle;",
+                                        "html": [
+                                            selectedUnit[i]
+                                        ]
+                                    }),
+                                    $("<td>", {
+                                        "style": "text-align: center; vertical-align: middle;",
+                                        "html": $("<a>", {
+                                            "class": "btn btn-warning",
+                                            "data-role": "remove-row-btn",
+                                            "html": "Hủy"
+                                        })
+                                    })
+                                ]
+                            });
+                            $("#material-table tbody").append(productRow);
+                        }
+                    } else {
+                        alert("Không thể thêm nguyên liệu");
+                    }
+                },
+                "fail": function (e) {
+                    alert("Have error" + e.toString());
+                }
+            });
+        }
     </script>}

@@ -84,12 +84,12 @@ namespace BMA.Controllers
         }
 
         [HttpPost, ActionName("EditStoreInfo")]
-        public int EditStoreInfoConfirm(string storeName, string ownerName, string address, string phoneNumber, string taxCode, string fileName)
+        public int EditStoreInfoConfirm(string storeName, string ownerName, string Email, string address, string Province, string District, string phoneNumber, string Fax, string taxCode, string fileName)
         {
             StoreInforBusiness sib = new StoreInforBusiness();
             try
             {
-                sib.EditStoreInfo(storeName, ownerName, address, phoneNumber, taxCode, fileName);
+                sib.EditStoreInfo(storeName, ownerName, Email, address, Province, District, phoneNumber, Fax, taxCode, fileName);
                 return 2;
             }
             catch

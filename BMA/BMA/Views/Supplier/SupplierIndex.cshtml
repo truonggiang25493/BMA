@@ -38,7 +38,7 @@
                     {
                         <tr>
 
-                            <td style="width: 25%">@supplier.SupplierName</td>
+                            <td style="width: 25%">@(supplier.SupplierName.Length <= 30 ? supplier.SupplierName : supplier.SupplierName.Substring(0, 26) + "...")</td>
                             <td style="width: 30%">@(supplier.SupplierAddress.Length <= 40 ? supplier.SupplierAddress : supplier.SupplierAddress.Substring(0, 36) + "...")</td>
                             <td style="width: 10%">@supplier.SupplierPhoneNumber</td>
                             @if (supplier.IsActive)

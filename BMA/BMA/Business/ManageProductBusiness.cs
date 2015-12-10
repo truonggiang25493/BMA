@@ -21,6 +21,11 @@ namespace BMA.Business
             return product;
         }
 
+        public ProductMaterial GetMaterialById(int materialId)
+        {
+            var material = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == materialId);
+            return material;
+        }
         public List<Product> GetActiveProduct()
         {
             var product = db.Products.Where(n => n.IsActive).ToList();

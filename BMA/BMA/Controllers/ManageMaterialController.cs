@@ -59,7 +59,7 @@ namespace BMA.Controllers
             }
             if (ModelState.IsValid)
             {
-                mmb.Edit(materialId, materialName, materialUnit, materialSQuantity);
+                mmb.EditMaterial(materialId, materialName, materialUnit, materialSQuantity);
                 return 1;
             }
             return -1;
@@ -121,7 +121,7 @@ namespace BMA.Controllers
             var materialList = mmb.GetMaterial();
             for (int i = 0; i < materialList.Count; i++)
             {
-                if (materialName == materialList[i].ProductMaterialName)
+                if (StringComparer.CurrentCultureIgnoreCase.Equals(materialName, materialList[i].ProductMaterialName))
                 {
                     //TempData["Error"] = String.Format("{0}{1}", materialName, " đã tồn tại");
                     return -2;

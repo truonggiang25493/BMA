@@ -50,10 +50,6 @@ namespace BMA.Business
                 string s = e.ToString();
                 return false;
             }
-            finally
-            {
-                db.Dispose();
-            }
             return true;
         }
         #endregion

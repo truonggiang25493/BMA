@@ -118,7 +118,7 @@
                         timeout: false
                     });
                 }
-            }, 600);
+            }, 1000);
         }
 
         window.addEventListener('load', function () {
@@ -153,50 +153,82 @@
                         </div>
                         <script type="text/javascript">
                             function checkLogin() {
-                                $.ajax({
-                                    url: "@Url.Action("Login", "Account")",
-                                    method: "POST",
-                                    data: $("#loginForm").serialize(),
-                                    success: function (data) {
-                                        if (data === "1") {
-                                            window.setTimeout(function () {
-                                                window.location.replace("@(Url.Action("Index", "Product"))");
-                                            }, 500);
-                                        } else if (data === "2") {
-                                            window.setTimeout(function () {
-                                                window.location.replace("@(Url.Action("Index", "StoreInfor"))");
-                                            }, 500);
-                                        } else if (data === "-1") {
-                                            noty({
-                                                text: 'Tài khoản hoặc mật khẩu không đúng.',
-                                                type: 'warning',
+                                var txtAccount = $("#login-user").val();
+                                var txtPassword = $("#login-password").val();
+
+                                if (txtAccount.trim() === '') {
+                                    noty({
+                                        text: 'Tài khoản không được để trống.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (txtPassword.trim() === '') {
+                                    noty({
+                                        text: 'Mật khẩu không được để trống.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (txtPassword.length < 6) {
+                                    noty({
+                                        text: 'Mật khẩu không được ít hơn 6 ký tự.',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else {
+                                    $.ajax({
+                                        url: "@Url.Action("Login", "Account")",
+                                        method: "POST",
+                                        data: $("#loginForm").serialize(),
+                                        success: function (data) {
+                                            if (data === "1") {
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("Index", "Product"))");
+                                                }, 500);
+                                            } else if (data === "2") {
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                                                }, 500);
+                                            } else if (data === "-1") {
+                                                noty({
+                                                    text: 'Tài khoản hoặc mật khẩu không đúng.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            } else if (data === "-2") {
+                                                noty({
+                                                    text: 'Tài khoản đã bị khóa, vui lòng liên hệ quản lý để biết thêm chi tiết.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 2000
+                                                });
+                                            }
+                                        },
+                                        fail: function (e) {
+                                            var n = noty({
+                                                text: 'Đã có lỗi xảy ra',
+                                                type: 'error',
                                                 dismissQueue: false,
-                                                layout: 'topCenter',
-                                                theme: 'defaultTheme',
-                                                timeout: 2000
-                                            });
-                                        } else if (data === "-2") {
-                                            noty({
-                                                text: 'Tài khoản đã bị khóa, vui lòng liên hệ quản lý để biết thêm chi tiết.',
-                                                type: 'warning',
-                                                dismissQueue: false,
-                                                layout: 'topCenter',
+                                                layout: 'bottomRight',
                                                 theme: 'defaultTheme',
                                                 timeout: 2000
                                             });
                                         }
-                                    },
-                                    fail: function (e) {
-                                        var n = noty({
-                                            text: 'Đã có lỗi xảy ra',
-                                            type: 'error',
-                                            dismissQueue: false,
-                                            layout: 'bottomRight',
-                                            theme: 'defaultTheme',
-                                            timeout: 2000
-                                        });
-                                    }
-                                })
+                                    })
+                                }
                             }
                         </script>
                     </div>

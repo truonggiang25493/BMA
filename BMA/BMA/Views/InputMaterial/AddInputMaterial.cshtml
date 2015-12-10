@@ -310,6 +310,7 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
+                            
                             } else if (inputBillCode.trim() === '') {
                                 noty({
                                     text: 'Hóa đơn nhập không được trống.',
@@ -337,7 +338,18 @@
                                             window.setTimeout(function () {
                                                 window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
                                             }, 4000);
-                                        } else {
+                                        }
+                                        else if (data === "-1") {
+                                            noty({
+                                                text: 'Ngày hết hạn không được lớn hơn ngày nhập.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }
+                                        else {
                                             noty({
                                                 text: 'Không thể thêm nguyên liệu đầu vào',
                                                 type: 'warning',

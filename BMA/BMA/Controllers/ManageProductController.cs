@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BMA.Models;
+using BMA.Models.ViewModel;
 using System.Net;
 using System.Data;
 using BMA.Business;
@@ -200,6 +201,8 @@ namespace BMA.Controllers
             try
             {
                 mpb.AddProduct(productName, productUnit, productWeight, productDes, productNote, productPrice, dropCate, productCode, fileName, materialId, materialQuantity);
+                Session["ProductInfor"] = null;
+                Session["Material"] = null;
                 return 2;
             }
             catch (Exception)
@@ -336,12 +339,80 @@ namespace BMA.Controllers
             return Redirect(strURL);
         }
 
+        public int AddTempProductInfor(string productName, string productUnit, double? productWeight, string productDes, string productNote, int? productPrice, int dropCate, string fileName, int[] materialId, int[] materialQuantity)
+        {
+            try
+            {
+                Product product = new Product();
+                product.ProductName = productName;
+                product.Unit = productUnit;
+                if (productWeight == null)
+                {
+                    product.ProductWeight = -1;
+                }
+                else
+                {
+                    product.ProductWeight = productWeight.Value;
+                }
 
+                product.Descriptions = productDes;
+                product.Note = productNote;
+                if (productPrice == null)
+                {
+                    product.ProductStandardPrice = -1;
+                }
+                else
+                {
+                    product.ProductStandardPrice = productPrice.Value;
+                }
+
+                product.CategoryId = dropCate;
+                product.ProductImage = fileName;
+
+                Session["ProductInfor"] = product;
+
+                ManageProductBusiness mpb = new ManageProductBusiness();
+                List<AllProductInfoViewModel> apivList = new List<AllProductInfoViewModel>();
+                if (materialId != null && materialQuantity != null && materialQuantity.Length > 0 && materialId.Length > 0)
+                {
+                    for (int i = 0; i < materialId.Length; i++)
+                    {
+                        var pm = mpb.GetMaterialById(materialId[i]);
+                        AllProductInfoViewModel apiv = new AllProductInfoViewModel
+                        {
+                            MaterialId = pm.ProductMaterialId,
+                            MaterialName = pm.ProductMaterialName,
+                            MaterialUnit = pm.ProductMaterialUnit,
+                            MaterialQuantity = materialQuantity[i]
+                        };
+                        apivList.Add(apiv);
+                    }
+                }
+
+                if (apivList.Count > 0)
+                {
+                    Session["Material"] = apivList;
+                }
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
         private void InitiateMaterialList(int? productId)
         {
             List<ProductMaterial> materialList = db.ProductMaterials.Where(n => n.IsActive).ToList();
             if (productId == null)
             {
+                List<AllProductInfoViewModel> materialToProductList = Session["Material"] as List<AllProductInfoViewModel>;
+                if (materialToProductList != null)
+                {
+                    foreach (var item in materialToProductList)
+                    {
+                        materialList.Remove(materialList.FirstOrDefault(n => n.ProductMaterialId == item.MaterialId));
+                    }
+                }
                 Session["MaterialListToAdd"] = materialList;
             }
             else
