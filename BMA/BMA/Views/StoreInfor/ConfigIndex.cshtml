@@ -216,7 +216,7 @@
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-7 pull-left">Đơn giá tối đá cho sản phẩm (đồng)</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" maxlength="10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@ViewBag.maxPrice.PolicyBound" id="maxPrice" placeholder="Nhập giá tối đa" onkeyup="return formatPrice()" readonly>
+                                <input type="text" class="form-control" maxlength="10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" data-role="number" value="@ViewBag.maxPrice.PolicyBound.ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"))" id="maxPrice" placeholder="Nhập giá tối đa" onkeyup="return formatPrice()" readonly>
                             </div>
                         </div>
                     </div><!-- /.box-body -->
@@ -246,6 +246,7 @@
                         function changePriceConfirm() {
                             $("#changePriceConfirm").text("Xác nhận");
                             var txtPrice = $("#maxPrice").val();
+                            txtPrice = txtPrice.split(".").join("");
                             $.fn.hasAttr = function (name) {
                                 return this.attr(name) !== undefined;
                             };
@@ -1012,3 +1013,12 @@
         </div>
     </div>
 </section>
+<script src="~/Scripts/numeral.js"></script>
+<script type="text/javascript">
+    $("[data-role='number']").on('input', function () {
+        var data = $(this).val();
+        data = data.split(".").join("");
+        data = numeral(data).format('0,0').split(",").join(".");
+        $(this).val(data);
+    });
+</script>

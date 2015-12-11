@@ -32,5 +32,10 @@ namespace BMA.Hubs
         {
             this.Clients.All.onChange3(info, source, type);
         }
+
+        public void OnChange4(Int32 info, Int32 source, Int32 type)
+        {
+            this.Clients.All.onChange4(info, source, type);
+        }
     }
 }

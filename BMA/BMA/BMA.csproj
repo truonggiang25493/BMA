@@ -223,6 +223,7 @@
     <Compile Include="DBChangeNotifer\ChangeNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeSource.cs" />
     <Compile Include="DBChangeNotifer\ChangeStatusNotifier.cs" />
+    <Compile Include="DBChangeNotifer\ChangeToConfirmNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeType.cs" />
     <Compile Include="DBChangeNotifer\QuantityLowNotifer.cs" />
     <Compile Include="Global.asax.cs">
@@ -359,6 +360,7 @@
     <Compile Include="Models\VatTaxDeclaration.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModel\AllProductInfoViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerRevenueReport.cs" />
@@ -469,6 +471,7 @@
     <Content Include="Content\font-awesome-4.3.0\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\font-awesome-4.3.0\HELP-US-OUT.txt" />
+    <Content Include="Content\Images\ajax-loader.gif" />
     <Content Include="Content\Images\BakeryImages\BB1T.jpg" />
     <Content Include="Content\Images\BakeryImages\BB2T.jpg" />
     <Content Include="Content\Images\BakeryImages\BBL.jpg" />
@@ -1512,6 +1515,7 @@
     <Content Include="Views\Tax\TaxDeclarationExport.cshtml" />
     <Content Include="Views\Tax\TndnTaxDeclaration.cshtml" />
     <Content Include="Views\Supplier\InputBillBySupplier.cshtml" />
+    <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -184,7 +184,7 @@
                                         window.setTimeout(function () {
                                             window.location.replace("@(Url.Action("Index", "CusManage"))");
                                         }, 3000);
-                                    } else {
+                                    } else if (data === "-1") {
                                         noty({
                                             text: 'Email đã tồn tại trong hệ thống, vui lòng thử lại.',
                                             type: 'warning',
@@ -193,8 +193,25 @@
                                             theme: 'defaultTheme',
                                             timeout: 2000
                                         });
+                                    } else if (data === "-2") {
+                                        noty({
+                                            text: 'Số điện thoại đã tồn tại trong hệ thống, vui lòng thử lại.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                    } else if (data === "-3") {
+                                        noty({
+                                            text: 'Mã số thuế đã tồn tại trong hệ thống, vui lòng thử lại.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
                                     }
-                                        
                                 },
                                 fail: function () {
                                     noty({

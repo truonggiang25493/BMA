@@ -47,6 +47,7 @@
         function NotificatePartialLink(strURL) {
             var txtHiddenNoti = $("#hiddenNumberOfNoti").val();
             var txtHiddenOrder = $("#hiddenOrderCount").val();
+            var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
             var txtHiddenMaterial = $("#hiddenMaterialCount").val();
             $.ajax({
                 "url": "@(Url.Action("NotificatePartialLink", "StoreInfor"))",
@@ -54,6 +55,7 @@
                 "data": JSON.stringify({
                     "count": txtHiddenNoti,
                     "newOrderCount": txtHiddenOrder,
+                    "confirmOrderCount": txtHiddenConfirmOrder,
                     "lowMaterialCount": txtHiddenMaterial
                 }),
                 "dataType": "json",
@@ -95,11 +97,13 @@
 
             } else {
                 var txtHiddenMaterial = $("#hiddenMaterialCount").val();
+                var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
                 $.ajax({
                     "url": "@(Url.Action("RemoveOrderNoty", "StoreInfor"))",
                     "method": "POST",
                     "data": JSON.stringify({
-                        "lowMaterialCount": txtHiddenMaterial
+                        "lowMaterialCount": txtHiddenMaterial,
+                        "confirmOrderCount": txtHiddenConfirmOrder
                     }),
                     "dataType": "json",
                     "contentType": 'application/json',
@@ -137,16 +141,66 @@
 
         }
 
+        function RemoveConfirmStatusNoty(strURL) {
+            if ($("[data-role='numberOfConfirmOrder']").text() == 0) {
+
+            } else {
+                var txtHiddenOrder = $("#hiddenOrderCount").val();
+                var txtHiddenMaterial = $("#hiddenMaterialCount").val();
+                $.ajax({
+                    "url": "@(Url.Action("RemoveConfirmStatusNoty", "StoreInfor"))",
+                    "method": "POST",
+                    "data": JSON.stringify({
+                        "newOrderCount": txtHiddenOrder,
+                        "lowMaterialCount": txtHiddenMaterial
+                    }),
+                    "dataType": "json",
+                    "contentType": 'application/json',
+                    "success": function (data) {
+                        if (data === 1) {
+                            window.setTimeout(function () {
+                                window.location.replace(strURL);
+                            });
+                        } else {
+                            noty({
+                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    "fail": function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                        }, 3000)
+                    }
+                })
+            }
+        }
+
         function RemoveMaterialNoty(strURL) {
             if ($("[data-role='numberOfLowMaterial']").text() == 0) {
 
             } else {
                 var txtHiddenOrder = $("#hiddenOrderCount").val();
+                var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
                 $.ajax({
                     "url": "@(Url.Action("RemoveMaterialNoty", "StoreInfor"))",
                     "method": "POST",
                     "data": JSON.stringify({
-                        "newOrderCount": txtHiddenOrder
+                        "newOrderCount": txtHiddenOrder,
+                        "confirmOrderCount": txtHiddenConfirmOrder
                     }),
                     "dataType": "json",
                     "contentType": 'application/json',
@@ -222,7 +276,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="@Url.Action("StaffEditInfo", "Staff", new { id = (Session["User"] as BMA.Models.User).UserId })" class="btn btn-default btn-flat">Thông tin cá nhân</a>
+                                        <a href="@Url.Action("Index", "Manage", new { userId = (Session["User"] as BMA.Models.User).UserId })" class="btn btn-default btn-flat">Thông tin cá nhân</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="@Url.Action("Logout", "Account")" class="btn btn-default btn-flat">Đăng xuất</a>

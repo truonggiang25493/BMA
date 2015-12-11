@@ -150,7 +150,7 @@ namespace BMA.Business
             order.OrderNote = Note;
             db.Orders.Add(order);
             db.SaveChanges();
-            CreateOrderCode(orderTime, order.OrderId);
+            order.OrderCode = CreateOrderCode(orderTime, order.OrderId);
             //string orderNumber = order.OrderId.ToString().PadLeft(4, '0');
             //order.OrderCode = String.Format("{0}{1}{2}", 'O', orderTime, orderNumber);
             db.SaveChanges();
@@ -206,7 +206,7 @@ namespace BMA.Business
             order.GuestInfoId = guestInfo.GuestInfoId;
             db.Orders.Add(order);
             db.SaveChanges();
-            CreateOrderCode(orderTime, order.OrderId);
+            order.OrderCode = CreateOrderCode(orderTime, order.OrderId);
             db.SaveChanges();
             foreach (var item in cart)
             {

@@ -71,3 +71,23 @@ fieldset[disabled] .btn-cancel.active {
 .unborder {
     border: 0;
 }
+
+#loading-indicator {
+  position: absolute;
+  left: 630px;
+  top: 280px;
+  width:60px;
+  height:60px;
+  z-index:9999999;
+}
+
+
+#loading-background{
+    position:absolute;
+    width:1349px;
+    height:668px;
+    opacity:0.3;
+    color:black;
+    background-color:black;
+    z-index:1;
+}
