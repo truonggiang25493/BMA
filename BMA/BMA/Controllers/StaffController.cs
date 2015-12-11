@@ -62,7 +62,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "Manage");
+                    return RedirectToAction("Index", "StoreInfor");
                 }
             }
         }
@@ -234,7 +234,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "Manage");
+                    return RedirectToAction("Index", "StoreInfor");
                 }
             }
         }

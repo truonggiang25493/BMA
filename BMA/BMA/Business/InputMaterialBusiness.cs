@@ -19,11 +19,26 @@ namespace BMA.Business
         }
 
         #region Get Input Material List
-
         public static List<InputMaterial> GetInputMaterialList()
         {
             List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderByDescending(n => n.InputMaterialId).ToList();
             return inputMaterialslList;
+        }
+        #endregion
+
+        #region Get Input Material List
+        public void CheckInputMaterialListStartup()
+        {
+            List<InputMaterial> inputMaterialslList = db.InputMaterials.ToList();
+
+            foreach (var inputMaterial in inputMaterialslList)
+            {
+                if (DateTime.Compare(inputMaterial.InputMaterialExpiryDate, DateTime.Today) < 1)
+                {
+                    inputMaterial.IsActive = false;
+                }
+            }
+            db.SaveChanges();
         }
         #endregion
 
@@ -81,7 +96,7 @@ namespace BMA.Business
             if (inputMaterialDetail != null)
             {
                 try
-                {                   
+                {
                     inputMaterialDetail.ProductMaterial.ProductMaterialId = productMaterialId;
                     inputMaterialDetail.ImportQuantity = importQuantity;
                     inputMaterialDetail.InputMaterialPrice = inputMaterialPrice;

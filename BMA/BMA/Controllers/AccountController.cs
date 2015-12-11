@@ -61,6 +61,7 @@ namespace BMA.Controllers
                         }
                     }
                     Session["User"] = endUser;
+                    Session["UserId"] = endUser.UserId;
                     Session["UserRole"] = endUser.Role.RoleId;
                     return 2;
                 }
@@ -78,7 +79,7 @@ namespace BMA.Controllers
         }
         public ActionResult Logout()
         {
-            if (Session["UserId"] != null)
+            if (Session["CusUserId"] != null)
             {
                 MvcApplication.changeStatusNotifer.Dispose();
             }

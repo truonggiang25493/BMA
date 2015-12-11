@@ -5,6 +5,21 @@
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 
+@*<div id="loading-background" style="display:none;"></div>
+<img src="~/Content/Images/ajax-loader.gif" id="loading-indicator" style="display:none" />
+
+<script type="text/javascript">
+    $(document).ajaxSend(function (event, request, settings) {
+        $('#loading-indicator').show();
+        $('#loading-background').show();
+    });
+
+    $(document).ajaxComplete(function (event, request, settings) {
+        $('#loading-indicator').hide();
+        $('#loading-background').hide();
+    });
+</script>*@
+
 <section class="content-header">
     <h1>Danh sách nguyên liệu đầu vào</h1>
 </section>
@@ -253,10 +268,13 @@
                                 dismissQueue: false,
                                 layout: 'topCenter',
                                 theme: 'defaultTheme',
-                                timeout: 1500
+                                timeout: 1000
                             });
                             $('#myModal').modal('hide');
-                            window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial")");
+                            window.setTimeout(function () {
+                                window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
+                            }, 4000);
+                            @*window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial")");*@
                         } else {
                             noty({
                                 text: 'Không thể hủy nguyên liệu đầu vào',

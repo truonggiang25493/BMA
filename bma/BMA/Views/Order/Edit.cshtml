@@ -5,6 +5,20 @@
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 
+@*<div id="loading-background" style="display:none;"></div>
+<img src="~/Content/Images/ajax-loader.gif" id="loading-indicator" style="display:none" />
+
+<script type="text/javascript">
+    $(document).ajaxSend(function (event, request, settings) {
+        $('#loading-indicator').show();
+        $('#loading-background').show();
+    });
+
+    $(document).ajaxComplete(function (event, request, settings) {
+        $('#loading-indicator').hide();
+        $('#loading-background').hide();
+    });
+</script>*@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>@ViewBag.Title</h1>
@@ -136,9 +150,6 @@
                         <button class="btn btn-primary">
                             <i class="fa fa-arrow-left" style="margin-right: 3px"></i>Quay lại
                         </button>
-
-
-
                         <!--Update order-->
                         <button class="btn btn-primary pull-right" style="margin-right: 10px; display: none;" id="updateInfo" onclick="update_material_list()">
                             <i class="fa fa-refresh" style="margin-right: 3px"></i>Cập nhật danh sách
@@ -841,7 +852,7 @@
                             dismissQueue: false,
                             layout: 'topCenter',
                             theme: 'defaultTheme',
-                            timeout: 3000
+                            timeout: 1000
                         });
                         window.setTimeout(function() {
                             window.location.replace("@(Url.Action("Index", "Order"))");

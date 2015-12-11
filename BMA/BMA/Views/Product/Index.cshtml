@@ -93,8 +93,15 @@
                                                 <h4><a href="product-details.html">@item.ProductName</a></h4>
                                             </div>
                                             <div class="price"> <span>@item.ProductStandardPrice.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</span> </div>
-                                            <div class="action-control"><a title="Chi tiết" class="btn btn-primary" data-target="#product-details-modal" data-toggle="modal" onclick="return openPopup('@item.ProductName','@item.ProductId','@item.ProductStandardPrice','@item.ProductImage','@item.ProductCode','@quantity','@selectDongia');"><span class="add2cart"><i class="glyphicon glyphicon-shopping-cart"></i> Mua hàng </span></a></div>
+                                            @if (Session["UserRole"] != null)
+                                            {
 
+                                            }
+                                            else
+                                            {
+                                                <div class="action-control"><a title="Chi tiết" class="btn btn-primary" data-target="#product-details-modal" data-toggle="modal" onclick="return openPopup('@item.ProductName','@item.ProductId','@item.ProductStandardPrice','@item.ProductImage','@item.ProductCode','@quantity','@selectDongia');"><span class="add2cart"><i class="glyphicon glyphicon-shopping-cart"></i> Mua hàng </span></a></div>
+                                            }
+                                            
                                             <script type="text/javascript">
                                                 var imageLink;
                                                 function openPopup(productName, productId, price, image, code, quantity, selectDongia) {
