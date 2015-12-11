@@ -42,11 +42,11 @@
             }
             else
             {
-                <div>
+                <div style="-ms-word-break: break-all;word-break: break-all;-webkit-hyphens: auto;-moz-hyphens: auto;-ms-hyphens: auto;hyphens: auto;">
                     Khách hàng:
-                    <b style="font-size: 17px">@Model.OrderPersonName</b>
+                    <b style="font-size: 17px;">@Model.OrderPersonName</b>
                 </div>
-                <div>
+                <div style="-ms-word-break: break-all;word-break: break-all;-webkit-hyphens: auto;-moz-hyphens: auto;-ms-hyphens: auto;hyphens: auto;">
                     <b>Địa chỉ: </b>
                     @Model.OrderPersonAddress
                 </div>
@@ -409,7 +409,29 @@
 
 </section>
 @section CheckoutWithCustomerScript{
+    <script src="~/Scripts/numeral.js"></script>
     <script type="text/javascript">
+        $(document).on('input', '#deposit-amount', function () {
+            var data = parseInt($(this).val().split(".").join(""));
+            if (data < parseInt(@((Model.MaterialCost/1000)*1000))) {
+                noty({
+                    text: 'Tiền cọc không được nhỏ hơn @(((Model.MaterialCost/1000)*1000).ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN"))).',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+            }
+        });
+
+        $(document).on('input', "[data-role='number']", function () {
+            var data = $(this).val();
+            data = data.split(".").join("");
+            data = numeral(data).format('0,0').split(",").join(".");
+            $(this).val(data);
+        });
         var tempFunction;
 
         $(document).ready(function () {

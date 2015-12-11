@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using System.Web.WebPages;
 using BMA.Models;
 using BMA.Models.ViewModel;
 
@@ -79,10 +80,10 @@ namespace BMA.Business
                 db.VatTaxDeclarations.FirstOrDefault(m => m.Quarter == quarter && m.Year == year);
             if (vatTaxDeclaration == null)
             {
-
                 result.Quarter = quarter;
                 result.Year = year;
-                result.CreateMonth = quarter * 3;
+                result.CreateDate = new DateTime(year, quarter * 3, 1).AddMonths(1).AddDays(-1);
+                result.Value20Date = new DateTime(2013, 1, 1);
                 // Get StoreInfo
                 StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
                 if (storeInfo != null)
@@ -103,7 +104,9 @@ namespace BMA.Business
                 // Get Input Bill
                 List<InputBill> inputBillList =
                     db.InputBills.Where(
-                        m => m.ImportDate.Month >= startMonth && m.ImportDate.Month <= endMonth && m.ImportDate.Year == year)
+                        m =>
+                            m.ImportDate.Month >= startMonth && m.ImportDate.Month <= endMonth &&
+                            m.ImportDate.Year == year)
                         .ToList();
                 List<DeclarationVatCategory> inputCategories1 = new List<DeclarationVatCategory>();
                 int totalInputCategory1 = 0;
@@ -177,12 +180,414 @@ namespace BMA.Business
                 result.HaveTaxOutputAmount = totalOutputCategory4;
                 result.OutputTotalTaxAmount = totalTaxOutputCategory4;
 
-                result.Value36 = result.OutputTotalAmount;
-                result.Value40A = result.Value36;
+                result.Value25 = result.InputTotalTaxAmount;
+
+                result.Value36 = result.OutputTotalAmount - result.Value25;
+                if (result.Value36 >= 0)
+                {
+                    result.Value40A = result.Value36;
+                    result.Value40 = result.Value40A;
+                }
+                else
+                {
+                    result.Value41 = -result.Value36;
+                    result.Value42 = result.Value41;
+                }
+
                 result.Value40 = result.Value40A;
+                if (result.InputTotalAmount == 0 && result.OutputCategories1TotalAmount == 0 &&
+                    result.HaveTaxOutputAmount == 0)
+                {
+                    result.Value21 = true;
+                }
+                else
+                {
+                    result.Value21 = false;
+                }
+            }
+            else
+            {
+                result.Quarter = quarter;
+                result.Year = year;
+                if (vatTaxDeclaration.CreateDate == null)
+                {
+                    result.CreateDate = new DateTime(year, quarter * 3, 1).AddMonths(1).AddDays(-1);
+                }
+                else
+                {
+                    result.CreateDate = vatTaxDeclaration.CreateDate;
+                }
+
+                if (vatTaxDeclaration.Value20Date == null)
+                {
+                    result.Value20Date = new DateTime(2013, 1, 1);
+                }
+                else
+                {
+                    result.Value20Date = vatTaxDeclaration.Value20Date.Value;
+                }
+
+                result.Value20No = vatTaxDeclaration.Value20No;
+
+                // Get StoreInfo
+                StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
+
+                if (vatTaxDeclaration.StoreOwnerName.Trim() == "")
+                {
+                    if (storeInfo != null)
+                    {
+                        result.StoreOwnerName = storeInfo.OwnerName;
+                    }
+                }
+                else
+                {
+                    result.StoreOwnerName = vatTaxDeclaration.StoreOwnerName;
+                }
+
+                if (vatTaxDeclaration.StoreTaxCode.Trim() == "")
+                {
+                    if (storeInfo != null)
+                    {
+                        result.StoreTaxCode = storeInfo.TaxCode;
+                    }
+                }
+                else
+                {
+                    result.StoreTaxCode = vatTaxDeclaration.StoreTaxCode;
+                }
+
+                if (vatTaxDeclaration.StoreAddress.Trim() == "")
+                {
+                    if (storeInfo != null)
+                    {
+                        result.StoreAddress = storeInfo.Address;
+                    }
+                }
+                else
+                {
+                    result.StoreAddress = vatTaxDeclaration.StoreAddress;
+                }
+
+                if (vatTaxDeclaration.StoreDistrict.Trim() == "")
+                {
+                    if (storeInfo != null)
+                    {
+                        result.StoreDistrict = storeInfo.District;
+                    }
+                }
+                else
+                {
+                    result.StoreDistrict = vatTaxDeclaration.StoreDistrict;
+                }
+
+                if (vatTaxDeclaration.StoreProvince.Trim() == "")
+                {
+                    if (storeInfo != null)
+                    {
+                        result.StoreProvince = storeInfo.Province;
+                    }
+                }
+                else
+                {
+                    result.StoreProvince = vatTaxDeclaration.StoreProvince;
+                }
+
+                if (vatTaxDeclaration.StorePhone.Trim() == "")
+                {
+                    if (storeInfo != null)
+                    {
+                        result.StorePhone = storeInfo.Phonenumber;
+                    }
+                }
+                else
+                {
+                    result.StorePhone = vatTaxDeclaration.StorePhone;
+                }
+
+                if (vatTaxDeclaration.StoreFax.Trim() == "")
+                {
+                    if (storeInfo != null)
+                    {
+                        result.StoreFax = storeInfo.Fax;
+                    }
+                }
+                else
+                {
+                    result.StoreFax = vatTaxDeclaration.StoreFax;
+                }
+
+                if (vatTaxDeclaration.StoreEmail.Trim() == "")
+                {
+                    if (storeInfo != null)
+                    {
+                        result.StoreEmail = storeInfo.Email;
+                    }
+                }
+                else
+                {
+                    result.StoreEmail = vatTaxDeclaration.StoreEmail;
+                }
+
+                // Tax agent info
+                result.VatAgentOwnerName = vatTaxDeclaration.TaxAgentOwnerName;
+                result.VatAgentTaxCode = vatTaxDeclaration.TaxAgentTaxCode;
+                result.VatAgentName = vatTaxDeclaration.TaxAgentName;
+                result.VatAgentNo = vatTaxDeclaration.TaxAgentNo;
+                result.VatAgentAddress = vatTaxDeclaration.TaxAgentAddress;
+                result.VatAgentDistrict = vatTaxDeclaration.TaxAgentDistrict;
+                result.VatAgentProvince = vatTaxDeclaration.TaxAgentProvince;
+                result.VatAgentPhone = vatTaxDeclaration.TaxAgentPhone;
+                result.VatAgentFax = vatTaxDeclaration.TaxAgentFax;
+                result.VatAgentEmail = vatTaxDeclaration.TaxAgentEmail;
+
+                result.Value21 = (vatTaxDeclaration.Value21 == 1);
+                result.Value22 = vatTaxDeclaration.Value22.Value;
+                result.Value25 = vatTaxDeclaration.Value25.Value;
+                result.Value36 = vatTaxDeclaration.Value36.Value;
+                result.Value37 = vatTaxDeclaration.Value37.Value;
+                result.Value38 = vatTaxDeclaration.Value38.Value;
+                result.Value39 = vatTaxDeclaration.Value39.Value;
+                result.Value40 = vatTaxDeclaration.Value40.Value;
+                result.Value40A = vatTaxDeclaration.Value40a.Value;
+                result.Value40B = vatTaxDeclaration.Value40b.Value;
+                result.Value41 = vatTaxDeclaration.Value41.Value;
+                result.Value42 = vatTaxDeclaration.Value42.Value;
+                result.Value43 = vatTaxDeclaration.Value43.Value;
+
+                #region Input
+
+                if (!vatTaxDeclaration.InputCategory1.Trim().IsEmpty())
+                {
+                    List<DeclarationVatCategory> inputCategory1List = new List<DeclarationVatCategory>();
+                    string[] inputCategory1ListString = vatTaxDeclaration.InputCategory1.Split(';');
+                    foreach (string s in inputCategory1ListString)
+                    {
+                        string[] inputCategory1String = s.Split(',');
+                        if (inputCategory1String.Length == 7)
+                        {
+                            DeclarationVatCategory inputCategory1 = new DeclarationVatCategory();
+                            inputCategory1.Column2 = inputCategory1String[0];
+                            inputCategory1.Column3 = DateTime.ParseExact(inputCategory1String[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                            inputCategory1.Column4 = inputCategory1String[2];
+                            inputCategory1.Column5 = inputCategory1String[3];
+                            inputCategory1.Column6 = Convert.ToInt32(inputCategory1String[4]);
+                            inputCategory1.Column7 = Convert.ToInt32(inputCategory1String[5]);
+                            inputCategory1.Column8 = inputCategory1String[6];
+
+                            inputCategory1List.Add(inputCategory1);
+                        }
+                    }
+                    result.InputCategories1 = inputCategory1List;
+                }
+
+                if (!vatTaxDeclaration.InputCategory2.Trim().IsEmpty())
+                {
+                    List<DeclarationVatCategory> inputCategory2List = new List<DeclarationVatCategory>();
+                    string[] inputCategory2ListString = vatTaxDeclaration.InputCategory2.Split(';');
+                    foreach (string s in inputCategory2ListString)
+                    {
+                        string[] inputCategory2String = s.Split(',');
+                        if (inputCategory2String.Length == 7)
+                        {
+                            DeclarationVatCategory inputCategory2 = new DeclarationVatCategory();
+                            inputCategory2.Column2 = inputCategory2String[0];
+                            inputCategory2.Column3 = DateTime.ParseExact(inputCategory2String[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                            inputCategory2.Column4 = inputCategory2String[2];
+                            inputCategory2.Column5 = inputCategory2String[3];
+                            inputCategory2.Column6 = Convert.ToInt32(inputCategory2String[4]);
+                            inputCategory2.Column7 = Convert.ToInt32(inputCategory2String[5]);
+                            inputCategory2.Column8 = inputCategory2String[6];
+
+                            inputCategory2List.Add(inputCategory2);
+                        }
+                    }
+                    result.InputCategories2 = inputCategory2List;
+                }
+
+                if (!vatTaxDeclaration.InputCategory3.Trim().IsEmpty())
+                {
+                    List<DeclarationVatCategory> inputCategory3List = new List<DeclarationVatCategory>();
+                    string[] inputCategory3ListString = vatTaxDeclaration.InputCategory3.Split(';');
+                    foreach (string s in inputCategory3ListString)
+                    {
+                        string[] inputCategory3String = s.Split(',');
+                        if (inputCategory3String.Length == 7)
+                        {
+                            DeclarationVatCategory inputCategory3 = new DeclarationVatCategory();
+                            inputCategory3.Column2 = inputCategory3String[0];
+                            inputCategory3.Column3 = DateTime.ParseExact(inputCategory3String[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                            inputCategory3.Column4 = inputCategory3String[2];
+                            inputCategory3.Column5 = inputCategory3String[3];
+                            inputCategory3.Column6 = Convert.ToInt32(inputCategory3String[4]);
+                            inputCategory3.Column7 = Convert.ToInt32(inputCategory3String[5]);
+                            inputCategory3.Column8 = inputCategory3String[6];
+
+                            inputCategory3List.Add(inputCategory3);
+                        }
+                    }
+                    result.InputCategories3 = inputCategory3List;
+                }
+
+                #endregion
+
+                #region Output
+
+                if (!vatTaxDeclaration.OutputCategory1.Trim().IsEmpty())
+                {
+                    List<DeclarationVatCategory> outputCategory1List = new List<DeclarationVatCategory>();
+                    string[] outputCategory1ListString = vatTaxDeclaration.OutputCategory1.Split(';');
+                    foreach (string s in outputCategory1ListString)
+                    {
+                        string[] outputCategory1String = s.Split(',');
+                        if (outputCategory1String.Length == 7)
+                        {
+                            DeclarationVatCategory outputCategory1 = new DeclarationVatCategory();
+                            outputCategory1.Column2 = outputCategory1String[0];
+                            outputCategory1.Column3 = DateTime.ParseExact(outputCategory1String[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                            outputCategory1.Column4 = outputCategory1String[2];
+                            outputCategory1.Column5 = outputCategory1String[3];
+                            outputCategory1.Column6 = Convert.ToInt32(outputCategory1String[4]);
+                            outputCategory1.Column7 = Convert.ToInt32(outputCategory1String[5]);
+                            outputCategory1.Column8 = outputCategory1String[6];
+
+                            outputCategory1List.Add(outputCategory1);
+                        }
+                    }
+                    result.OutputCategories1 = outputCategory1List;
+                }
+
+                if (!vatTaxDeclaration.OutputCategory2.Trim().IsEmpty())
+                {
+                    List<DeclarationVatCategory> outputCategory2List = new List<DeclarationVatCategory>();
+                    string[] outputCategory2ListString = vatTaxDeclaration.OutputCategory2.Split(';');
+                    foreach (string s in outputCategory2ListString)
+                    {
+                        string[] outputCategory2String = s.Split(',');
+                        if (outputCategory2String.Length == 7)
+                        {
+                            DeclarationVatCategory outputCategory2 = new DeclarationVatCategory();
+                            outputCategory2.Column2 = outputCategory2String[0];
+                            outputCategory2.Column3 = DateTime.ParseExact(outputCategory2String[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                            outputCategory2.Column4 = outputCategory2String[2];
+                            outputCategory2.Column5 = outputCategory2String[3];
+                            outputCategory2.Column6 = Convert.ToInt32(outputCategory2String[4]);
+                            outputCategory2.Column7 = Convert.ToInt32(outputCategory2String[5]);
+                            outputCategory2.Column8 = outputCategory2String[6];
+
+                            outputCategory2List.Add(outputCategory2);
+                        }
+                    }
+                    result.OutputCategories2 = outputCategory2List;
+                }
+
+                if (!vatTaxDeclaration.OutputCategory3.Trim().IsEmpty())
+                {
+                    List<DeclarationVatCategory> outputCategory3List = new List<DeclarationVatCategory>();
+                    string[] outputCategory3ListString = vatTaxDeclaration.OutputCategory3.Split(';');
+                    foreach (string s in outputCategory3ListString)
+                    {
+                        string[] outputCategory3String = s.Split(',');
+                        if (outputCategory3String.Length == 7)
+                        {
+                            DeclarationVatCategory outputCategory3 = new DeclarationVatCategory();
+                            outputCategory3.Column2 = outputCategory3String[0];
+                            outputCategory3.Column3 = DateTime.ParseExact(outputCategory3String[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                            outputCategory3.Column4 = outputCategory3String[2];
+                            outputCategory3.Column5 = outputCategory3String[3];
+                            outputCategory3.Column6 = Convert.ToInt32(outputCategory3String[4]);
+                            outputCategory3.Column7 = Convert.ToInt32(outputCategory3String[5]);
+                            outputCategory3.Column8 = outputCategory3String[6];
+
+                            outputCategory3List.Add(outputCategory3);
+                        }
+                    }
+                    result.OutputCategories3 = outputCategory3List;
+                }
+
+                if (!vatTaxDeclaration.OutputCategory4.Trim().IsEmpty())
+                {
+                    List<DeclarationVatCategory> outputCategory4List = new List<DeclarationVatCategory>();
+                    string[] outputCategory4ListString = vatTaxDeclaration.OutputCategory4.Split(';');
+                    foreach (string s in outputCategory4ListString)
+                    {
+                        string[] outputCategory4String = s.Split(',');
+                        if (outputCategory4String.Length == 7)
+                        {
+                            DeclarationVatCategory outputCategory4 = new DeclarationVatCategory();
+                            outputCategory4.Column2 = outputCategory4String[0];
+                            outputCategory4.Column3 = DateTime.ParseExact(outputCategory4String[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                            outputCategory4.Column4 = outputCategory4String[2];
+                            outputCategory4.Column5 = outputCategory4String[3];
+                            outputCategory4.Column6 = Convert.ToInt32(outputCategory4String[4]);
+                            outputCategory4.Column7 = Convert.ToInt32(outputCategory4String[5]);
+                            outputCategory4.Column8 = outputCategory4String[6];
+
+                            outputCategory4List.Add(outputCategory4);
+                        }
+                    }
+                    result.OutputCategories4 = outputCategory4List;
+                }
+
+                #endregion
+
+                result.InputCategories1TotalAmount = vatTaxDeclaration.InputCategory1TotalAmount ?? 0;
+                result.InputCategories2TotalAmount = vatTaxDeclaration.InputCategory2TotalAmount ?? 0;
+                result.InputCategories3TotalAmount = vatTaxDeclaration.InputCategory3TotalAmount ?? 0;
+                result.InputCategories1TotalTaxAmount = vatTaxDeclaration.InputCategory1TotalTaxAmount ?? 0;
+                result.InputCategories2TotalTaxAmount = vatTaxDeclaration.InputCategory2TotalTaxAmount ?? 0;
+                result.InputCategories3TotalTaxAmount = vatTaxDeclaration.InputCategory3TotalTaxAmount ?? 0;
+                result.InputTotalAmount = vatTaxDeclaration.InputTotalAmountValue23;
+                result.InputTotalTaxAmount = vatTaxDeclaration.InputTotalTaxAmountValue24;
+
+                result.OutputCategories1TotalAmount = vatTaxDeclaration.OutputCategory1TotalAmountValue26 ?? 0;
+                result.OutputCategories2TotalAmount = vatTaxDeclaration.OutputCategory2TotalAmountValue29 ?? 0;
+                result.OutputCategories3TotalAmount = vatTaxDeclaration.OutputCategory3TotalAmountValue30 ?? 0;
+                result.OutputCategories4TotalAmount = vatTaxDeclaration.OutputCategory4TotalAmountValue32 ?? 0;
+
+                result.OutputCategories3TotalTaxAmount = vatTaxDeclaration.OutputCategory3TotalTaxAmountValue31 ?? 0;
+                result.OutputCategories4TotalTaxAmount = vatTaxDeclaration.OutputCategory4TotalTaxAmountValue33 ?? 0;
+                result.OutputTotalAmount = vatTaxDeclaration.OutputTotalAmountValue34;
+                result.HaveTaxOutputAmount = vatTaxDeclaration.HaveTaxOutputTotalAmountValue27;
+                result.OutputTotalTaxAmount = vatTaxDeclaration.OutputTotalTaxAmountValue28;
+
+                if (result.InputTotalAmount == 0 && result.OutputCategories1TotalAmount == 0 &&
+                    result.HaveTaxOutputAmount == 0)
+                {
+                    result.Value21 = true;
+                }
+                else
+                {
+                    result.Value21 = false;
+                }
             }
             return result;
         }
+
+        public bool SaveVatTaxDeclaration(VatTaxDeclaration declaration)
+        {
+            int year = declaration.Year;
+            int quarter = declaration.Quarter;
+
+            VatTaxDeclaration check = db.VatTaxDeclarations.FirstOrDefault(m => m.Year == year && m.Quarter == quarter);
+
+            if (check != null)
+            {
+                db.VatTaxDeclarations.Remove(check);
+            }
+            db.VatTaxDeclarations.Add(declaration);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         #endregion
 
         #region TNDN
@@ -365,8 +770,16 @@ namespace BMA.Business
                 db.TndnTaxDeclarations.Remove(check);
             }
             db.TndnTaxDeclarations.Add(declaration);
-            db.SaveChanges();
-            
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
             return true;
         }
 

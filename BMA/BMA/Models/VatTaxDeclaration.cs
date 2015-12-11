@@ -17,7 +17,6 @@ namespace BMA.Models
         public int VatTaxDeclarationId { get; set; }
         public int Quarter { get; set; }
         public int Year { get; set; }
-        public int Type { get; set; }
         public string TaxAgentOwnerName { get; set; }
         public string TaxAgentTaxCode { get; set; }
         public string TaxAgentName { get; set; }
@@ -31,37 +30,27 @@ namespace BMA.Models
         public string InputCategory3 { get; set; }
         public Nullable<int> InputCategory3TotalAmount { get; set; }
         public Nullable<int> InputCategory3TotalTaxAmount { get; set; }
-        public string InputCategory4 { get; set; }
-        public Nullable<int> InputCategory4TotalAmount { get; set; }
-        public Nullable<int> InputCategory4TotalTaxAmount { get; set; }
-        public string InputCategory5 { get; set; }
-        public Nullable<int> InputCategory5TotalAmount { get; set; }
-        public Nullable<int> InputCategory5TotalTaxAmount { get; set; }
         public int InputTotalAmountValue23 { get; set; }
         public int InputTotalTaxAmountValue24 { get; set; }
         public string CreateLocation { get; set; }
-        public int CreateMonth { get; set; }
-        public int CreateDay { get; set; }
+        public System.DateTime CreateDate { get; set; }
         public string SignName { get; set; }
         public string OutputCategory1 { get; set; }
         public string OutputCategory2 { get; set; }
         public string OutputCategory3 { get; set; }
         public string OutputCategory4 { get; set; }
-        public string OutputCategory5 { get; set; }
         public Nullable<int> OutputCategory1TotalAmountValue26 { get; set; }
         public Nullable<int> OutputCategory2TotalAmountValue29 { get; set; }
         public Nullable<int> OutputCategory3TotalAmountValue30 { get; set; }
         public Nullable<int> OutputCategory4TotalAmountValue32 { get; set; }
-        public Nullable<int> OutputCategory5TotalAmountValue { get; set; }
         public Nullable<int> OutputCategory3TotalTaxAmountValue31 { get; set; }
         public Nullable<int> OutputCategory4TotalTaxAmountValue33 { get; set; }
-        public Nullable<int> OutputCategory5TotalTaxAmount { get; set; }
         public int OutputTotalAmountValue34 { get; set; }
         public int HaveTaxOutputTotalAmountValue27 { get; set; }
         public int OutputTotalTaxAmountValue28 { get; set; }
-        public Nullable<bool> Value2 { get; set; }
-        public Nullable<int> Value3 { get; set; }
-        public Nullable<bool> Value21 { get; set; }
+        public string Value20No { get; set; }
+        public Nullable<System.DateTime> Value20Date { get; set; }
+        public Nullable<int> Value21 { get; set; }
         public Nullable<int> Value22 { get; set; }
         public Nullable<int> Value25 { get; set; }
         public Nullable<int> Value36 { get; set; }

@@ -52,14 +52,14 @@
                     <table id="example1" class="table table-hover table-bordered">
                         <thead style="font-weight: bold">
                             <tr>
-                                <th>Mã đơn hàng</th>
-                                <th>Thời gian đặt hàng</th>
-                                <th>Thời gian giao hàng dự kiến</th>
-                                <th>Tổng giá trị</th>
-                                <th>Thời gian duyệt</th>
-                                <th>Tiền cọc</th>
-                                <th>Trạng thái</th>
-                                <th></th>
+                                <th style="vertical-align: middle">Mã đơn hàng</th>
+                                <th style="vertical-align: middle">Thời gian đặt hàng</th>
+                                <th style="vertical-align: middle">Thời gian giao hàng dự kiến</th>
+                                <th style="vertical-align: middle">Khách hàng</th>
+                                <th style="vertical-align: middle">Tổng giá trị</th>
+                                <th style="vertical-align: middle">Tiền cọc</th>
+                                <th style="vertical-align: middle">Trạng thái</th>
+                                <th style="vertical-align: middle"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,18 +74,15 @@
                                     </td>
                                     <!--Thời gian giao hàng dự kiến-->
                                     <td style="vertical-align: middle">
-                                        @( orderViewModel.Order.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm"))
+                                        @(orderViewModel.Order.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm"))
+                                    </td>
+                                    <!--Khách hàng-->
+                                    <td style="vertical-align: middle">
+                                        @(orderViewModel.OrderPersonName)
                                     </td>
                                     <!--Tổng giá trị-->
-                                    <td style="text-align: right; vertical-align: middle">
+                                    <td style="text-align: right; vertical-align: middle; padding-right: 5px">
                                         @((orderViewModel.Order.Amount + orderViewModel.Order.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
-                                    </td>
-                                    <!--Thời gian duyệt-->
-                                    <td style="vertical-align: middle">
-                                        @if (orderViewModel.Order.OrderStatus != 0 && orderViewModel.Order.OrderStatus != 1 && orderViewModel.Order.ApproveTime != null)
-                                        {
-                                            @(((DateTime)orderViewModel.Order.ApproveTime).ToString("dd/MM/yyyy HH:mm"))
-                                        }
                                     </td>
                                     <!--Tiền cọc-->
                                     <td style="vertical-align: middle; text-align: right">

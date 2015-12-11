@@ -44,10 +44,10 @@
                                                 <input type="hidden" name="productId" value="@(cartViewModel.ProductId)" />
                                             </td>
                                             <td style="vertical-align: middle;">
-                                                <input type="number" name="productPrice" min="1000" value="@(cartViewModel.RealPrice)" />
+                                                <input type="number" name="productPrice" style="text-align: right" min="1000" value="@(cartViewModel.RealPrice)" />
                                             </td>
                                             <td style="vertical-align: middle;">
-                                                <input type="number" name="productQuantity" min="1" value="@(cartViewModel.Quantity)" />
+                                                <input type="number" name="productQuantity" style="text-align: right" min="1" value="@(cartViewModel.Quantity)" />
                                             </td>
                                             <td style="text-align: right; vertical-align: middle;">
                                                 <span id="orderItemAmount">@((cartViewModel.RealPrice * cartViewModel.Quantity).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span>
@@ -73,7 +73,6 @@
                                     <tr>
                                         <th>
                                             Tên sản phẩm
-
                                         </th>
                                         <th>Đơn giá</th>
                                         <th>Số lượng</th>
@@ -112,13 +111,39 @@
                     <script type="text/javascript">
                         function checkCart() {
                             var totalQuantity = 0;
+                            var checkQuantity = 1;
+                            var checkPrice = 1;
                             $("#product-table tbody tr").each(function(index, element) {
-                                var productQuantity = $(element).find("td:nth-child(3) input").val();
-                                totalQuantity += parseInt(productQuantity);
+                                var productQuantity = parseInt($(element).find("td:nth-child(3) input").val());
+                                var productPrice = parseInt($(element).find("td:nth-child(2) input").val());
+                                if (productQuantity < 1) {
+                                    checkQuantity = 0;
+                                }
+                                if (productPrice < 1000) {
+                                    checkPrice = 0;
+                                }
+                                totalQuantity += productQuantity;
                             });
-
-                            if (totalQuantity === 0) {
-                                var n = noty({
+                            if (checkPrice ===0) {
+                                noty({
+                                    text: 'Giá sản phẩm phải lớn hơn 1000',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            }else if (checkQuantity === 0) {
+                                noty({
+                                    text: 'Số lượng sản phẩm phải lớn hơn 0',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            }else if (totalQuantity === 0) {
+                                noty({
                                     text: 'Vui lòng có một sản phẩm có số lượng lớn hơn 0',
                                     type: 'warning',
                                     dismissQueue: false,
@@ -337,7 +362,7 @@
                                             "data-role":"price",
                                             "step":"100",
                                             "value": price,
-                                            "min":0,
+                                            "min":1000,
                                             "style":"text-align: right;",
                                             "onkeypress":"return event.charCode >= 48 && event.charCode <= 57"
 
