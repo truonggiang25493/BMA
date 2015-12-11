@@ -18,6 +18,7 @@ namespace BMA
         public static ChangeStatusNotifier changeStatusNotifer = new ChangeStatusNotifier();
         public static ChangeNotifier notifier = new ChangeNotifier();
         public static QuantityLowNotifer lowQuantityNotifer = new QuantityLowNotifer();
+        public static ChangeToConfirmNotifier changeToConfirmNotifier = new ChangeToConfirmNotifier();
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
