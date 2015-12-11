@@ -1814,6 +1814,13 @@ namespace BMA.Controllers
 
             #endregion
         }
+
+        public int CancelVatTaxDeclaration(int quarter, int year)
+        {
+            TaxBusiness business = new TaxBusiness();
+            return (business.CancelVatTaxDeclaration(quarter, year) ? 1 : 0);
+        }
+
         #endregion
 
         #region TNDN Tax report

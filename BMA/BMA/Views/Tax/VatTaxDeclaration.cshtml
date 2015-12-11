@@ -307,7 +307,7 @@
                                 </div>
                                 <div class="col-md-1">
                                     <p style="font-size: 18px;">
-                                        [10] Fax:
+                                        <b>[10]</b> Fax:
                                     </p>
                                 </div>
                                 <div class="col-md-1" style="margin-right: 25px">
@@ -336,7 +336,9 @@
                             <div class="row" style="margin-top: 0">
                                 <div class="col-md-2"></div>
                                 <div class="col-md-3" style="vertical-align: middle">
-                                    <p style="font-size: 18px; margin: 0;">[13] Mã số thuế :</p>
+                                    <p style="font-size: 18px; margin: 0;">
+                                        <b>[13]</b> Mã số thuế :
+                                    </p>
                                 </div>
                                 <div class="col-md-5">
                                     <table style="margin: 0">
@@ -491,7 +493,7 @@
                                 <div class="col-md-2"></div>
                                 <div class="col-md-2">
                                     <p style="font-size: 18px;">
-                                        [15] Quận/huyện:
+                                        <b>[15]</b> Quận/huyện:
                                     </p>
                                 </div>
                                 <div class="col-md-2">
@@ -499,7 +501,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <p style="font-size: 18px">
-                                        [16] Tỉnh/Thành phố:
+                                        <b>[16]</b> Tỉnh/Thành phố:
                                     </p>
                                 </div>
                                 <div class="col-md-2">
@@ -511,7 +513,7 @@
                                 <div class="col-md-2"></div>
                                 <div class="col-md-2">
                                     <p style="font-size: 18px;">
-                                        [17] Điện thoại:
+                                        <b>[17]</b> Điện thoại:
                                     </p>
                                 </div>
                                 <div class="col-md-1" style="margin-right: 25px">
@@ -519,7 +521,7 @@
                                 </div>
                                 <div class="col-md-1">
                                     <p style="font-size: 18px;">
-                                        [18] Fax:
+                                        <b>[18]</b> Fax:
                                     </p>
                                 </div>
                                 <div class="col-md-1" style="margin-right: 25px">
@@ -527,7 +529,7 @@
                                 </div>
                                 <div class="col-md-1" style="padding-right: 0">
                                     <p style="font-size: 18px;">
-                                        [19] Email:
+                                        <b>[19]</b> Email:
                                     </p>
                                 </div>
                                 <div class="col-md-3">
@@ -538,7 +540,7 @@
                                 <div class="col-md-2"></div>
                                 <div class="col-md-3">
                                     <p style="font-size: 18px;">
-                                        [20] Hợp đồng đại lý thuế: số:
+                                        <b>[20]</b> Hợp đồng đại lý thuế: số:
                                     </p>
                                 </div>
                                 <div class="col-md-2">
@@ -585,7 +587,7 @@
                                                     [21]
                                                 </td>
                                                 <td class="col-md-1">
-                                                    <select name="value21" style="width: 100%">
+                                                    <select name="value21" style="width: 100%" disabled="disabled">
                                                         <option @(Model.Value21 ? "selected" : "") value="1">
                                                             X
                                                         </option>
@@ -1395,19 +1397,19 @@
                                             <tr style="height: 0.74cm" id="output_category1">
                                                 <td style="text-align: center" class="count2"></td>
                                                 <td>
-                                                    <input type="text" name="output_category1_column2" style="text-align: center;" maxlength="15" value="@(Model.OutputCategories1.ElementAt(i).Column2)" />
+                                                    <input type="text" name="output_category1_column2" style="text-align: center; height: 100%; border:0" maxlength="15" value="@(Model.OutputCategories1.ElementAt(i).Column2)" />
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="date" name="output_category1_column3" style="text-align: center;" value="@(Model.OutputCategories1.ElementAt(i).Column3.ToString("yyyy-MM-dd"))" />
+                                                    <input type="date" name="output_category1_column3" style="text-align: center; height: 100%; border:0" value="@(Model.OutputCategories1.ElementAt(i).Column3.ToString("yyyy-MM-dd"))" />
                                                 </td>
                                                 <td>
                                                     <textarea name="output_category1_column4" style="vertical-align: middle">@(Model.OutputCategories1.ElementAt(i).Column4)</textarea>
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="text" name="output_category1_column5" style="text-align: center;" maxlength="13" value="@(Model.OutputCategories1.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="output_category1_column5" style="text-align: center; height: 100%; border:0" maxlength="13" value="@(Model.OutputCategories1.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="output_category1_column6" date-role="number" style="text-align: right" value="@(Model.OutputCategories1.ElementAt(i).Column6.ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="output_category1_column6" date-role="number" style="text-align: right; height: 100%; border:0" value="@(Model.OutputCategories1.ElementAt(i).Column6.ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td></td>
                                                 <td>
@@ -1456,19 +1458,19 @@
                                             <tr style="height: 0.74cm" id="output_category2">
                                                 <td style="text-align: center" class="count2"></td>
                                                 <td>
-                                                    <input type="text" name="output_category2_column2" style="text-align: center;" maxlength="15" value="@(Model.OutputCategories2.ElementAt(i).Column2)" />
+                                                    <input type="text" name="output_category2_column2" style="text-align: center; height: 100%; border:0" maxlength="15" value="@(Model.OutputCategories2.ElementAt(i).Column2)" />
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="date" name="output_category2_column3" style="text-align: center;" value="@(Model.OutputCategories2.ElementAt(i).Column3.ToString("yyyy-MM-dd"))" />
+                                                    <input type="date" name="output_category2_column3" style="text-align: center; height: 100%; border:0" value="@(Model.OutputCategories2.ElementAt(i).Column3.ToString("yyyy-MM-dd"))" />
                                                 </td>
                                                 <td>
                                                     <textarea name="output_category2_column4" style="vertical-align: middle">@(Model.OutputCategories2.ElementAt(i).Column4)</textarea>
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="text" name="output_category2_column5" style="text-align: center;" maxlength="13" value="@(Model.OutputCategories2.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="output_category2_column5" style="text-align: center; height: 100%; border:0" maxlength="13" value="@(Model.OutputCategories2.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="output_category2_column6" data-role="number" style="text-align: right" value="@(Model.OutputCategories2.ElementAt(i).Column6.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="output_category2_column6" data-role="number" style="text-align: right; height: 100%; border:0" value="@(Model.OutputCategories2.ElementAt(i).Column6.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td></td>
                                                 <td>
@@ -1515,22 +1517,22 @@
                                             <tr style="height: 0.74cm" id="output_category3">
                                                 <td style="text-align: center" class="count3"></td>
                                                 <td>
-                                                    <input type="text" name="output_category3_column2" style="text-align: center;" maxlength="15" value="@(Model.OutputCategories3.ElementAt(i).Column2)" />
+                                                    <input type="text" name="output_category3_column2" style="text-align: center; height: 100%; border:0" maxlength="15" value="@(Model.OutputCategories3.ElementAt(i).Column2)" />
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="date" name="output_category3_column3" style="text-align: center;" value="@(Model.OutputCategories3.ElementAt(i).Column3.ToString("yyyy-MM-dd"))" />
+                                                    <input type="date" name="output_category3_column3" style="text-align: center; height: 100%; border:0" value="@(Model.OutputCategories3.ElementAt(i).Column3.ToString("yyyy-MM-dd"))" />
                                                 </td>
                                                 <td>
                                                     <textarea name="output_category3_column4" style="vertical-align: middle">@(Model.OutputCategories3.ElementAt(i).Column4)</textarea>
                                                 </td>
                                                 <td style="text-align: center">
-                                                    <input type="text" name="output_category3_column5" style="text-align: center;" maxlength="13" value="@(Model.OutputCategories3.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="output_category3_column5" style="text-align: center; height: 100%; border:0" maxlength="13" value="@(Model.OutputCategories3.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="output_category3_column6" style="text-align: right" value="@(Model.OutputCategories3.ElementAt(i).Column6.ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN")))" data-role="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="output_category3_column6" style="text-align: right; height: 100%; border:0" value="@(Model.OutputCategories3.ElementAt(i).Column6.ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN")))" data-role="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="output_category3_column7" style="text-align: right" value="@(Model.OutputCategories3.ElementAt(i).Column7.ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN")))" data-role="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="output_category3_column7" style="text-align: right; height: 100%; border:0" value="@(Model.OutputCategories3.ElementAt(i).Column7.ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN")))" data-role="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td>
                                                     <textarea name="output_category3_column8" style="vertical-align: middle">@(Model.OutputCategories3.ElementAt(i).Column8)</textarea>
@@ -1579,22 +1581,22 @@
                                             <tr style="height: 0.74cm" id="output_category4">
                                                 <td style="text-align: center" class="count3"></td>
                                                 <td>
-                                                    <input type="text" name="output_category4_column2" style="text-align: center;" maxlength="15" value="@(Model.OutputCategories4.ElementAt(i).Column2)" />
+                                                    <input type="text" name="output_category4_column2" style="text-align: center; height: 100%; border:0" maxlength="15" value="@(Model.OutputCategories4.ElementAt(i).Column2)" />
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="date" name="output_category4_column3" style="text-align: center;" value="@(Model.OutputCategories4.ElementAt(i).Column3.ToString("yyyy-MM-dd"))" />
+                                                    <input type="date" name="output_category4_column3" style="text-align: center; height: 100%; border:0" value="@(Model.OutputCategories4.ElementAt(i).Column3.ToString("yyyy-MM-dd"))" />
                                                 </td>
                                                 <td>
                                                     <textarea name="output_category4_column4" style="vertical-align: middle">@(Model.OutputCategories4.ElementAt(i).Column4)</textarea>
                                                 </td>
                                                 <td style="text-align: center">
-                                                    <input type="text" name="output_category4_column5" style="text-align: center;" maxlength="13" value="@(Model.OutputCategories4.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="output_category4_column5" style="text-align: center; height: 100%; border:0" maxlength="13" value="@(Model.OutputCategories4.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="output_category4_column6" data-role="number" style="text-align: right" value="@(Model.OutputCategories4.ElementAt(i).Column6.ToString("N0",CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="output_category4_column6" data-role="number" style="text-align: right; height: 100%; border:0" value="@(Model.OutputCategories4.ElementAt(i).Column6.ToString("N0",CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="output_category4_column7" readonly="readonly" data-role="number" style="text-align: right" value="@(Model.OutputCategories4.ElementAt(i).Column7.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="output_category4_column7" readonly="readonly" data-role="number" style="text-align: right; height: 100%; border:0" value="@(Model.OutputCategories4.ElementAt(i).Column7.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td>
                                                     <textarea name="output_category4_column8" style="vertical-align: middle">@(Model.OutputCategories4.ElementAt(i).Column8)</textarea>
@@ -2176,22 +2178,22 @@
                                             <tr style="height: 0.74cm" id="input_category1">
                                                 <td style="text-align: center" class="count1"></td>
                                                 <td>
-                                                    <input type="text" name="input_category1_column2" style="text-align: center;" maxlength="15" value="@(Model.InputCategories1.ElementAt(i).Column2)" />
+                                                    <input type="text" name="input_category1_column2" style="text-align: center; height: 100%; border:0" maxlength="15" value="@(Model.InputCategories1.ElementAt(i).Column2)" />
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="date" name="input_category1_column3" style="text-align: center;" maxlength="10" value="@Model.InputCategories1.ElementAt(i).Column3.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture)" />
+                                                    <input type="date" name="input_category1_column3" style="text-align: center; height: 100%; border:0" maxlength="10" value="@Model.InputCategories1.ElementAt(i).Column3.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture)" />
                                                 </td>
                                                 <td>
                                                     <textarea name="input_category1_column4" style="vertical-align: middle">@(Model.InputCategories1.ElementAt(i).Column4)</textarea>
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="text" name="input_category1_column5" style="text-align: center;" maxlength="13" value="@(Model.InputCategories1.ElementAt(i).Column5.Trim())" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="input_category1_column5" style="text-align: center; height: 100%; border:0" maxlength="13" value="@(Model.InputCategories1.ElementAt(i).Column5.Trim())" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="input_category1_column6" style="text-align: right" data-role="number" value="@(Model.InputCategories1.ElementAt(i).Column6.ToString("N0",CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="input_category1_column6" style="text-align: right; height: 100%; border:0" data-role="number" value="@(Model.InputCategories1.ElementAt(i).Column6.ToString("N0",CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="input_category1_column7" style="text-align: right" data-role="number" value="@(Model.InputCategories1.ElementAt(i).Column7.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="input_category1_column7" style="text-align: right; height: 100%; border:0" data-role="number" value="@(Model.InputCategories1.ElementAt(i).Column7.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td>
                                                     <textarea name="input_category1_column8" style="vertical-align: middle">@(Model.InputCategories1.ElementAt(i).Column8)</textarea>
@@ -2238,22 +2240,22 @@
                                             <tr style="height: 0.74cm" id="input_category2">
                                                 <td style="text-align: center" class="count1"></td>
                                                 <td>
-                                                    <input type="text" name="input_category2_column2" style="text-align: center;" maxlength="15" value="@(Model.InputCategories2.ElementAt(i).Column2)" />
+                                                    <input type="text" name="input_category2_column2" style="text-align: center; height: 100%; border:0" maxlength="15" value="@(Model.InputCategories2.ElementAt(i).Column2)" />
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="date" name="input_category2_column3" style="text-align: center;" maxlength="10" value="@(Model.InputCategories2.ElementAt(i).Column3.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture))" />
+                                                    <input type="date" name="input_category2_column3" style="text-align: center; height: 100%; border:0" maxlength="10" value="@(Model.InputCategories2.ElementAt(i).Column3.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture))" />
                                                 </td>
                                                 <td>
                                                     <textarea name="input_category2_column4" style="vertical-align: middle">@(Model.InputCategories2.ElementAt(i).Column4)</textarea>
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="text" name="input_category2_column5" style="text-align: center;" maxlength="13" value="@(Model.InputCategories2.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="input_category2_column5" style="text-align: center; height: 100%; border:0" maxlength="13" value="@(Model.InputCategories2.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="input_category2_column6" style="text-align: right" data-role="number" value="@(Model.InputCategories2.ElementAt(i).Column6.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="input_category2_column6" style="text-align: right; height: 100%; border:0" data-role="number" value="@(Model.InputCategories2.ElementAt(i).Column6.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="input_category2_column7" style="text-align: right" data-role="number" value="@(Model.InputCategories2.ElementAt(i).Column7.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="input_category2_column7" style="text-align: right; height: 100%; border:0" data-role="number" value="@(Model.InputCategories2.ElementAt(i).Column7.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td>
                                                     <textarea name="input_category2_column8" style="vertical-align: middle">@(Model.InputCategories2.ElementAt(i).Column8)</textarea>
@@ -2302,22 +2304,22 @@
                                             <tr style="height: 0.74cm" id="input_category3">
                                                 <td style="text-align: center" class="count1"></td>
                                                 <td>
-                                                    <input type="text" name="input_category3_column2" style="text-align: center;" maxlength="15" value="@(Model.InputCategories3.ElementAt(i).Column2)" />
+                                                    <input type="text" name="input_category3_column2" style="text-align: center; height: 100%; border:0" maxlength="15" value="@(Model.InputCategories3.ElementAt(i).Column2)" />
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="date" name="input_category3_column3" style="text-align: center;" value="@(Model.InputCategories3.ElementAt(i).Column3.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture))" />
+                                                    <input type="date" name="input_category3_column3" style="text-align: center; height: 100%; border:0" value="@(Model.InputCategories3.ElementAt(i).Column3.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture))" />
                                                 </td>
                                                 <td>
                                                     <textarea name="input_category3_column4" style="vertical-align: middle">@(Model.InputCategories3.ElementAt(i).Column4)</textarea>
                                                 </td>
                                                 <td style="text-align: center;">
-                                                    <input type="text" name="input_category3_column5" style="text-align: center;" maxlength="13" value="@(Model.InputCategories3.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="input_category3_column5" style="text-align: center; height: 100%; border:0" maxlength="13" value="@(Model.InputCategories3.ElementAt(i).Column5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="input_category3_column6" data-role="number" style="text-align: right" value="@(Model.InputCategories3.ElementAt(i).Column6.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="input_category3_column6" data-role="number" style="text-align: right; height: 100%; border:0" value="@(Model.InputCategories3.ElementAt(i).Column6.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <input type="text" name="input_category3_column7" data-role="number" style="text-align: right" value="@(Model.InputCategories3.ElementAt(i).Column7.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                                    <input type="text" name="input_category3_column7" data-role="number" style="text-align: right; height: 100%; border:0" value="@(Model.InputCategories3.ElementAt(i).Column7.ToString("N0", CultureInfo.CreateSpecificCulture("vi-vn")))" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                                 </td>
                                                 <td>
                                                     <textarea name="input_category3_column8" style="vertical-align: middle">@(Model.InputCategories3.ElementAt(i).Column8)</textarea>
@@ -2470,8 +2472,11 @@
                 <button class="btn btn-info  btn-sm pull-right" onclick="exportTaxDeclaration()">
                     <span class="glyphicon glyphicon-export" aria-hidden="true"></span> Xuất XML
                 </button>
-                <button class="btn btn-danger btn-sm">
+                <button class="btn btn-danger btn-sm" onclick="cancelVatTaxDeclaration()">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Hủy
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="back()">
+                    <i class="fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
                 </button>
             </div>
         </div>
@@ -2505,7 +2510,7 @@
                         $("<input>", {
                             type: "text",
                             name: "input_category1_column2",
-                            style: "text-align: center;width:100%;height:100%;border:0",
+                            style: "text-align: center;height:100%;border:0",
                             maxlength: "15",
                             "class":"invalid"
                         })
@@ -2517,7 +2522,7 @@
                         $("<input>", {
                             type: "date",
                             name: "input_category1_column3",
-                            style: "text-align: center;width:100%;height:100%;border:0",
+                            style: "text-align: center;height:100%;border:0",
                             min: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
                             value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
                             "class": "invalid"
@@ -2540,7 +2545,7 @@
                             type: "text",
                             name: "input_category1_column5",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: center;width:100%;height:100%;border:0",
+                            style: "text-align: center;height:100%;border:0",
                             maxlength: "13",
                             "class": "invalid"
                         })
@@ -2553,7 +2558,7 @@
                             type: "text",
                             name: "input_category1_column6",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: right;width:100%;height:100%;border:0",
+                            style: "text-align: right;height:100%;border:0",
                             "data-role": "number",
                             "class": "invalid"
                         })
@@ -2566,7 +2571,7 @@
                             type: "text",
                             name: "input_category1_column7",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: right;width:100%;height:100%;border:0",
+                            style: "text-align: right;height:100%;border:0",
                             "data-role": "number",
                             "class": "invalid"
                         })
@@ -2614,8 +2619,9 @@
                         $("<input>", {
                             type: "text",
                             name: "input_category2_column2",
-                            style: "text-align: center;",
-                            maxlength: "15"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "15",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2625,9 +2631,10 @@
                         $("<input>", {
                             type: "date",
                             name: "input_category2_column3",
-                            style: "text-align: center;",
+                            style: "text-align: center;height:100%;border:0",
                             min: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
-                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")"
+                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2635,7 +2642,8 @@
                     html: [
                         $("<textarea>", {
                             name: "input_category2_column4",
-                            style: "vertical-align: middle;"
+                            style: "vertical-align: middle;",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2646,8 +2654,9 @@
                             type: "text",
                             name: "input_category2_column5",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: center;",
-                            maxlength: "13"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "13",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2658,8 +2667,9 @@
                             type: "text",
                             name: "input_category2_column6",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: right",
-                            "data-role": "number"
+                            style: "text-align: right;height:100%;border:0",
+                            "data-role": "number",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2670,8 +2680,9 @@
                             type: "text",
                             name: "input_category2_column7",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: right",
-                            "data-role": "number"
+                            style: "text-align: right;height:100%;border:0",
+                            "data-role": "number",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2717,8 +2728,9 @@
                         $("<input>", {
                             type: "text",
                             name: "input_category3_column2",
-                            style: "text-align: center;",
-                            maxlength: "15"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "15",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2728,9 +2740,10 @@
                         $("<input>", {
                             type: "date",
                             name: "input_category3_column3",
-                            style: "text-align: center;",
+                            style: "text-align: center;height:100%;border:0",
                             min: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
-                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")"
+                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2738,7 +2751,8 @@
                     html: [
                         $("<textarea>", {
                             name: "input_category3_column4",
-                            style: "vertical-align: middle;"
+                            style: "vertical-align: middle;",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2749,8 +2763,9 @@
                             type: "text",
                             name: "input_category3_column5",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: center;",
-                            maxlength: "13"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "13",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2761,8 +2776,9 @@
                             type: "text",
                             name: "input_category3_column6",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: right",
-                            "data-role": "number"
+                            style: "text-align: right;height:100%;border:0",
+                            "data-role": "number",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2773,8 +2789,9 @@
                             type: "text",
                             name: "input_category3_column7",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: right",
-                            "data-role": "number"
+                            style: "text-align: right;height:100%;border:0",
+                            "data-role": "number",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2820,8 +2837,9 @@
                         $("<input>", {
                             type: "text",
                             name: "output_category1_column2",
-                            style: "text-align: center;",
-                            maxlength: "15"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "15",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2829,11 +2847,12 @@
                     style: "text-align: center;",
                     html: [
                         $("<input>", {
-                            type: "text",
+                            type: "date",
                             name: "output_category1_column3",
-                            style: "text-align: center;",
+                            style: "text-align: center;height:100%;border:0",
                             min: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
-                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")"
+                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2841,7 +2860,8 @@
                     html: [
                         $("<textarea>", {
                             name: "output_category1_column4",
-                            style: "vertical-align: middle;"
+                            style: "vertical-align: middle;",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2852,8 +2872,9 @@
                             type: "text",
                             name: "output_category1_column5",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: center;",
-                            maxlength: "13"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "13",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2864,8 +2885,9 @@
                             type: "text",
                             name: "output_category1_column6",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: right",
-                            "data-role": "number"
+                            style: "text-align: right;height:100%;border:0",
+                            "data-role": "number",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2912,8 +2934,9 @@
                         $("<input>", {
                             type: "text",
                             name: "output_category2_column2",
-                            style: "text-align: center;",
-                            maxlength: "15"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "15",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2921,11 +2944,12 @@
                     style: "text-align: center;",
                     html: [
                         $("<input>", {
-                            type: "text",
+                            type: "date",
                             name: "output_category2_column3",
-                            style: "text-align: center;",
+                            style: "text-align: center;height:100%;border:0",
                             min: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
-                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")"
+                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2933,7 +2957,8 @@
                     html: [
                         $("<textarea>", {
                             name: "output_category2_column4",
-                            style: "vertical-align: middle;"
+                            style: "vertical-align: middle;",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2944,8 +2969,9 @@
                             type: "text",
                             name: "output_category2_column5",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: center;",
-                            maxlength: "13"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "13",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -2956,8 +2982,9 @@
                             type: "text",
                             name: "output_category2_column6",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: right",
-                            "data-role": "number"
+                            style: "text-align: right;height:100%;border:0",
+                            "data-role": "number",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -3004,8 +3031,9 @@
                         $("<input>", {
                             type: "text",
                             name: "output_category3_column2",
-                            style: "text-align: center;",
-                            maxlength: "15"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "15",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -3015,9 +3043,10 @@
                         $("<input>", {
                             type: "date",
                             name: "output_category3_column3",
-                            style: "text-align: center;",
+                            style: "text-align: center;height:100%;border:0",
                             min: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
-                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")"
+                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -3025,7 +3054,8 @@
                     html: [
                         $("<textarea>", {
                             name: "output_category3_column4",
-                            style: "vertical-align: middle;"
+                            style: "vertical-align: middle;",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -3036,8 +3066,9 @@
                             type: "text",
                             name: "output_category3_column5",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: center;",
-                            maxlength: "13"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "13",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -3048,8 +3079,9 @@
                             type: "text",
                             name: "output_category3_column6",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: right",
-                            "data-role": "number"
+                            style: "text-align: right;height:100%;border:0",
+                            "data-role": "number",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -3060,7 +3092,7 @@
                             type: "text",
                             name: "output_category3_column7",
                             onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                            style: "text-align: right",
+                            style: "text-align: right;height:100%;border:0",
                             readonly: "readonly"
                         })
                     ]
@@ -3107,8 +3139,9 @@
                         $("<input>", {
                             type: "text",
                             name: "output_category4_column2",
-                            style: "text-align: center;",
-                            maxlength: "15"
+                            style: "text-align: center;height:100%;border:0",
+                            maxlength: "15",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -3118,9 +3151,10 @@
                         $("<input>", {
                             type: "date",
                             name: "output_category4_column3",
-                            style: "text-align: center;",
+                            style: "text-align: center;height:100%;border:0",
                             min: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
-                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")"
+                            value: "@(Model.Year+"-"+(Model.Quarter*3-2)+"-01")",
+                            "class": "invalid"
                         })
                     ]
                 }),
@@ -3128,7 +3162,8 @@
                             html: [
                                 $("<textarea>", {
                                     name: "output_category4_column4",
-                                    style: "vertical-align: middle;"
+                                    style: "vertical-align: middle;",
+                                    "class": "invalid"
                                 })
                             ]
                         }),
@@ -3139,8 +3174,9 @@
                                     type: "text",
                                     name: "output_category4_column5",
                                     onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                                    style: "text-align: center;",
-                                    maxlength: "13"
+                                    style: "text-align: center;height:100%;border:0",
+                                    maxlength: "13",
+                                    "class": "invalid"
                                 })
                             ]
                         }),
@@ -3151,8 +3187,9 @@
                                     type: "text",
                                     name: "output_category4_column6",
                                     onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                                    style: "text-align: right",
-                                    "data-role": "number"
+                                    style: "text-align: right;height:100%;border:0",
+                                    "data-role": "number",
+                                    "class": "invalid"
                                 })
                             ]
                         }),
@@ -3163,7 +3200,7 @@
                                     type: "text",
                                     name: "output_category4_column7",
                                     onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
-                                    style: "text-align: right",
+                                    style: "text-align: right;height:100%;border:0",
                                     readonly: "readonly"
                                 })
                             ]
@@ -3196,8 +3233,15 @@
 
     });
 
-    $(document).on('input', "[name='input_category1_column2']", function() {
-        $(this).removeClass('invalid');
+    // Validate Input Category 1
+    $(document).on('input', "[name='input_category1_column2']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
     });
 
     $(document).on('input', "[name='input_category1_column3']", function () {
@@ -3209,20 +3253,1032 @@
                 dismissQueue: false,
                 layout: 'topCenter',
                 theme: 'defaultTheme',
-                timeout: 2000
+                timeout: 500
             });
             $(this).focus();
             $(this).addClass('invalid');
-        } else if (moment(data, "YYYY-MM-DD").month() < "@(Model.Quarter*3-2)" || moment(data, "YYYY-MM-DD").month() < "@(Model.Quarter*3)") {
+        } else {
+            if ((moment(data, "YYYY-MM-DD").month() + 1) < parseInt("@(Model.Quarter*3-2)") || (moment(data, "YYYY-MM-DD").month() + 1) > parseInt("@(Model.Quarter*3)") || moment(data, "YYYY-MM-DD").year() !== parseInt("@(Model.Year)")) {
+                noty({
+                    text: 'Vui lòng nhập thời gian từ tháng ' + "@(Model.Quarter*3-2)" + "/" + "@(Model.Year)" + " đến " + "@(Model.Quarter*3)" + "/" + "@(Model.Year)",
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            }else{
+                $(this).removeClass('invalid');
+            }
+        }
+    });
+
+    $(document).on('input', "[name='input_category1_column4']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='input_category1_column5']", function () {
+        var value = $(this).val();
+        if (value.trim() === '') {
             noty({
-                text: 'Vui lòng nhập thời gian từ tháng ' + "@(Model.Quarter*3-2)" + " đến " + "@(Model.Quarter*3)",
+                text: 'Mã số thuế không được trống.',
                 type: 'warning',
                 dismissQueue: false,
                 layout: 'topCenter',
                 theme: 'defaultTheme',
-                timeout: 2000
+                timeout: 500
             });
-        }else{
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else if (value.length !== 10 && value.length !== 13) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var value1 = parseInt(value[0]);
+            var value2 = parseInt(value[1]);
+            var value3 = parseInt(value[2]);
+            var value4 = parseInt(value[3]);
+            var value5 = parseInt(value[4]);
+            var value6 = parseInt(value[5]);
+            var value7 = parseInt(value[6]);
+            var value8 = parseInt(value[7]);
+            var value9 = parseInt(value[8]);
+            var value10 = parseInt(value[9]);
+
+            var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+            var mod11 = sum % 11;
+            var result = 10 - mod11;
+            if (result !== value10) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass("invalid");
+            }
+        }
+    });
+
+    $(document).on('input', "[name='input_category1_column6']", function () {
+        var data = $(this).val().split(".").join("");
+        if (data.trim() === '') {
+            noty({
+                text: 'Giá trị HHDV không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var data1 = $(this).parent().parent().find("[name='input_category1_column7']").val().split(".").join("");
+            if (data1 === "") {
+                $(this).removeClass('invalid');
+            } else {
+                if (parseInt(data) >= parseInt(data1)) {
+                    $(this).removeClass('invalid');
+                    $(this).parent().parent().find("[name='input_category1_column7']").removeClass('invalid');
+                } else {
+                    noty({
+                        text: 'Giá trị HHDV không được nhỏ hơn thuế GTGT.',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 500
+                    });
+                    $(this).focus();
+                    $(this).addClass('invalid');
+                }
+            }
+        }
+    });
+
+    $(document).on('input', "[name='input_category1_column7']", function () {
+        var data = $(this).val().split(".").join("");
+        if (data.trim() === '') {
+            noty({
+                text: 'Thuế GTGT không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var data1 = $(this).parent().parent().find("[name='input_category1_column6']").val().split(".").join("");
+            if (data1 === "") {
+                $(this).removeClass('invalid');
+            } else {
+                if (parseInt(data) <= parseInt(data1)) {
+                    $(this).removeClass('invalid');
+                    $(this).parent().parent().find("[name='input_category1_column6']").removeClass('invalid');
+                } else {
+                    noty({
+                        text: 'Thuế GTGT không được lớn hơn giá trị HHDV.',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 500
+                    });
+                    $(this).focus();
+                    $(this).addClass('invalid');
+                }
+            }
+        }
+    });
+
+    // Validate Input Category 2
+    $(document).on('input', "[name='input_category2_column2']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='input_category2_column3']", function () {
+        var data = $(this).val();
+        if (!moment(data, "YYYY-MM-DD").isValid()) {
+            noty({
+                text: 'Vui lòng nhập thời gian đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            if ((moment(data, "YYYY-MM-DD").month() + 1) < parseInt("@(Model.Quarter*3-2)") || (moment(data, "YYYY-MM-DD").month() + 1) > parseInt("@(Model.Quarter*3)") || moment(data, "YYYY-MM-DD").year() !== parseInt("@(Model.Year)")) {
+                noty({
+                    text: 'Vui lòng nhập thời gian từ tháng ' + "@(Model.Quarter*3-2)" + "/" + "@(Model.Year)" + " đến " + "@(Model.Quarter*3)" + "/" + "@(Model.Year)",
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            }else{
+                $(this).removeClass('invalid');
+            }
+        }
+    });
+
+    $(document).on('input', "[name='input_category2_column4']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='input_category2_column5']", function () {
+        var value = $(this).val();
+        if (value.trim() === '') {
+            noty({
+                text: 'Mã số thuế không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else if (value.length !== 10 && value.length !== 13) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var value1 = parseInt(value[0]);
+            var value2 = parseInt(value[1]);
+            var value3 = parseInt(value[2]);
+            var value4 = parseInt(value[3]);
+            var value5 = parseInt(value[4]);
+            var value6 = parseInt(value[5]);
+            var value7 = parseInt(value[6]);
+            var value8 = parseInt(value[7]);
+            var value9 = parseInt(value[8]);
+            var value10 = parseInt(value[9]);
+
+            var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+            var mod11 = sum % 11;
+            var result = 10 - mod11;
+            if (result !== value10) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass("invalid");
+            }
+        }
+    });
+
+    $(document).on('input', "[name='input_category2_column6']", function () {
+        var data = $(this).val().split(".").join("");
+        if (data.trim() === '') {
+            noty({
+                text: 'Giá trị HHDV không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var data1 = $(this).parent().parent().find("[name='input_category2_column7']").val().split(".").join("");
+            if (data1 === "") {
+                $(this).removeClass('invalid');
+            } else {
+                if (parseInt(data) >= parseInt(data1)) {
+                    $(this).removeClass('invalid');
+                    $(this).parent().parent().find("[name='input_category2_column7']").removeClass('invalid');
+                } else {
+                    noty({
+                        text: 'Giá trị HHDV không được nhỏ hơn thuế GTGT.',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 500
+                    });
+                    $(this).focus();
+                    $(this).addClass('invalid');
+                }
+            }
+        }
+    });
+
+    $(document).on('input', "[name='input_category2_column7']", function () {
+        var data = $(this).val().split(".").join("");
+        if (data.trim() === '') {
+            noty({
+                text: 'Thuế GTGT không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var data1 = $(this).parent().parent().find("[name='input_category2_column6']").val().split(".").join("");
+            if (data1 === "") {
+                $(this).removeClass('invalid');
+            } else {
+                if (parseInt(data) <= parseInt(data1)) {
+                    $(this).removeClass('invalid');
+                    $(this).parent().parent().find("[name='input_category2_column6']").removeClass('invalid');
+                } else {
+                    noty({
+                        text: 'Thuế GTGT không được lớn hơn giá trị HHDV.',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 500
+                    });
+                    $(this).focus();
+                    $(this).addClass('invalid');
+                }
+            }
+        }
+    });
+
+    // Validate Input Category 3
+    $(document).on('input', "[name='input_category3_column2']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='input_category3_column3']", function () {
+        var data = $(this).val();
+        if (!moment(data, "YYYY-MM-DD").isValid()) {
+            noty({
+                text: 'Vui lòng nhập thời gian đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            if ((moment(data, "YYYY-MM-DD").month() + 1) < parseInt("@(Model.Quarter*3-2)") || (moment(data, "YYYY-MM-DD").month() + 1) > parseInt("@(Model.Quarter*3)") || moment(data, "YYYY-MM-DD").year() !== parseInt("@(Model.Year)")) {
+                noty({
+                    text: 'Vui lòng nhập thời gian từ tháng ' + "@(Model.Quarter*3-2)" + "/" + "@(Model.Year)" + " đến " + "@(Model.Quarter*3)" + "/" + "@(Model.Year)",
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            }else{
+                $(this).removeClass('invalid');
+            }
+        }
+    });
+
+    $(document).on('input', "[name='input_category3_column4']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='input_category3_column5']", function () {
+        var value = $(this).val();
+        if (value.trim() === '') {
+            noty({
+                text: 'Mã số thuế không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else if (value.length !== 10 && value.length !== 13) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var value1 = parseInt(value[0]);
+            var value2 = parseInt(value[1]);
+            var value3 = parseInt(value[2]);
+            var value4 = parseInt(value[3]);
+            var value5 = parseInt(value[4]);
+            var value6 = parseInt(value[5]);
+            var value7 = parseInt(value[6]);
+            var value8 = parseInt(value[7]);
+            var value9 = parseInt(value[8]);
+            var value10 = parseInt(value[9]);
+
+            var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+            var mod11 = sum % 11;
+            var result = 10 - mod11;
+            if (result !== value10) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass("invalid");
+            }
+        }
+    });
+
+    $(document).on('input', "[name='input_category3_column6']", function () {
+        var data = $(this).val().split(".").join("");
+        if (data.trim() === '') {
+            noty({
+                text: 'Giá trị HHDV không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var data1 = $(this).parent().parent().find("[name='input_category3_column7']").val().split(".").join("");
+            if (data1 === "") {
+                $(this).removeClass('invalid');
+            } else {
+                if (parseInt(data) >= parseInt(data1)) {
+                    $(this).removeClass('invalid');
+                    $(this).parent().parent().find("[name='input_category3_column7']").removeClass('invalid');
+                } else {
+                    noty({
+                        text: 'Giá trị HHDV không được nhỏ hơn thuế GTGT.',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 500
+                    });
+                    $(this).focus();
+                    $(this).addClass('invalid');
+                }
+            }
+        }
+    });
+
+    $(document).on('input', "[name='input_category3_column7']", function () {
+        var data = $(this).val().split(".").join("");
+        if (data.trim() === '') {
+            noty({
+                text: 'Thuế GTGT không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var data1 = $(this).parent().parent().find("[name='input_category3_column6']").val().split(".").join("");
+            if (data1 === "") {
+                $(this).removeClass('invalid');
+            } else {
+                if (parseInt(data) <= parseInt(data1)) {
+                    $(this).removeClass('invalid');
+                    $(this).parent().parent().find("[name='input_category3_column6']").removeClass('invalid');
+                } else {
+                    noty({
+                        text: 'Thuế GTGT không được lớn hơn giá trị HHDV.',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 500
+                    });
+                    $(this).focus();
+                    $(this).addClass('invalid');
+                }
+            }
+        }
+    });
+
+    // Validate Output Category 1
+    $(document).on('input', "[name='output_category1_column2']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='output_category1_column3']", function () {
+        var data = $(this).val();
+        if (!moment(data, "YYYY-MM-DD").isValid()) {
+            noty({
+                text: 'Vui lòng nhập thời gian đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            if ((moment(data, "YYYY-MM-DD").month() + 1) < parseInt("@(Model.Quarter*3-2)") || (moment(data, "YYYY-MM-DD").month() + 1) > parseInt("@(Model.Quarter*3)") || moment(data, "YYYY-MM-DD").year() !== parseInt("@(Model.Year)")) {
+                noty({
+                    text: 'Vui lòng nhập thời gian từ tháng ' + "@(Model.Quarter*3-2)" + "/" + "@(Model.Year)" + " đến " + "@(Model.Quarter*3)" + "/" + "@(Model.Year)",
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            }else{
+                $(this).removeClass('invalid');
+            }
+        }
+    });
+
+    $(document).on('input', "[name='output_category1_column4']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='output_category1_column5']", function () {
+        var value = $(this).val();
+        if (value.trim() === '') {
+            noty({
+                text: 'Mã số thuế không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else if (value.length !== 10 && value.length !== 13) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var value1 = parseInt(value[0]);
+            var value2 = parseInt(value[1]);
+            var value3 = parseInt(value[2]);
+            var value4 = parseInt(value[3]);
+            var value5 = parseInt(value[4]);
+            var value6 = parseInt(value[5]);
+            var value7 = parseInt(value[6]);
+            var value8 = parseInt(value[7]);
+            var value9 = parseInt(value[8]);
+            var value10 = parseInt(value[9]);
+
+            var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+            var mod11 = sum % 11;
+            var result = 10 - mod11;
+            if (result !== value10) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass("invalid");
+            }
+        }
+    });
+
+    $(document).on('input', "[name='output_category1_column6']", function () {
+        var data = $(this).val().split(".").join("");
+        if (data.trim() === '') {
+            noty({
+                text: 'Doanh thu không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            $(this).removeClass('invalid');
+        }
+    });
+
+    // Validate Output Category 2
+    $(document).on('input', "[name='output_category2_column2']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='output_category2_column3']", function () {
+        var data = $(this).val();
+        if (!moment(data, "YYYY-MM-DD").isValid()) {
+            noty({
+                text: 'Vui lòng nhập thời gian đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            if ((moment(data, "YYYY-MM-DD").month() + 1) < parseInt("@(Model.Quarter*3-2)") || (moment(data, "YYYY-MM-DD").month() + 1) > parseInt("@(Model.Quarter*3)") || moment(data, "YYYY-MM-DD").year() !== parseInt("@(Model.Year)")) {
+                noty({
+                    text: 'Vui lòng nhập thời gian từ tháng ' + "@(Model.Quarter*3-2)" + "/" + "@(Model.Year)" + " đến " + "@(Model.Quarter*3)" + "/" + "@(Model.Year)",
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            }else{
+                $(this).removeClass('invalid');
+            }
+        }
+    });
+
+    $(document).on('input', "[name='output_category2_column4']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='output_category2_column5']", function () {
+        var value = $(this).val();
+        if (value.trim() === '') {
+            noty({
+                text: 'Mã số thuế không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else if (value.length !== 10 && value.length !== 13) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var value1 = parseInt(value[0]);
+            var value2 = parseInt(value[1]);
+            var value3 = parseInt(value[2]);
+            var value4 = parseInt(value[3]);
+            var value5 = parseInt(value[4]);
+            var value6 = parseInt(value[5]);
+            var value7 = parseInt(value[6]);
+            var value8 = parseInt(value[7]);
+            var value9 = parseInt(value[8]);
+            var value10 = parseInt(value[9]);
+
+            var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+            var mod11 = sum % 11;
+            var result = 10 - mod11;
+            if (result !== value10) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass("invalid");
+            }
+        }
+    });
+
+    $(document).on('input', "[name='output_category2_column6']", function () {
+        var data = $(this).val().split(".").join("");
+        if (data.trim() === '') {
+            noty({
+                text: 'Doanh thu không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            $(this).removeClass('invalid');
+        }
+    });
+
+    // Validate Output Category 3
+    $(document).on('input', "[name='output_category3_column2']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='output_category3_column3']", function () {
+        var data = $(this).val();
+        if (!moment(data, "YYYY-MM-DD").isValid()) {
+            noty({
+                text: 'Vui lòng nhập thời gian đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            if ((moment(data, "YYYY-MM-DD").month() + 1) < parseInt("@(Model.Quarter*3-2)") || (moment(data, "YYYY-MM-DD").month() + 1) > parseInt("@(Model.Quarter*3)") || moment(data, "YYYY-MM-DD").year() !== parseInt("@(Model.Year)")) {
+                noty({
+                    text: 'Vui lòng nhập thời gian từ tháng ' + "@(Model.Quarter*3-2)" + "/" + "@(Model.Year)" + " đến " + "@(Model.Quarter*3)" + "/" + "@(Model.Year)",
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            }else{
+                $(this).removeClass('invalid');
+            }
+        }
+    });
+
+    $(document).on('input', "[name='output_category3_column4']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='output_category3_column5']", function () {
+        var value = $(this).val();
+        if (value.trim() === '') {
+            noty({
+                text: 'Mã số thuế không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else if (value.length !== 10 && value.length !== 13) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var value1 = parseInt(value[0]);
+            var value2 = parseInt(value[1]);
+            var value3 = parseInt(value[2]);
+            var value4 = parseInt(value[3]);
+            var value5 = parseInt(value[4]);
+            var value6 = parseInt(value[5]);
+            var value7 = parseInt(value[6]);
+            var value8 = parseInt(value[7]);
+            var value9 = parseInt(value[8]);
+            var value10 = parseInt(value[9]);
+
+            var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+            var mod11 = sum % 11;
+            var result = 10 - mod11;
+            if (result !== value10) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass("invalid");
+            }
+        }
+    });
+
+    $(document).on('input', "[name='output_category3_column6']", function () {
+        var data = $(this).val().split(".").join("");
+        if (data.trim() === '') {
+            noty({
+                text: 'Doanh thu không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            $(this).removeClass('invalid');
+        }
+    });
+
+    // Validate Output Category 4
+    $(document).on('input', "[name='output_category4_column2']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='output_category4_column3']", function () {
+        var data = $(this).val();
+        if (!moment(data, "YYYY-MM-DD").isValid()) {
+            noty({
+                text: 'Vui lòng nhập thời gian đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            if ((moment(data, "YYYY-MM-DD").month() + 1) < parseInt("@(Model.Quarter*3-2)") || (moment(data, "YYYY-MM-DD").month() + 1) > parseInt("@(Model.Quarter*3)") || moment(data, "YYYY-MM-DD").year() !== parseInt("@(Model.Year)")) {
+                noty({
+                    text: 'Vui lòng nhập thời gian từ tháng ' + "@(Model.Quarter*3-2)" + "/" + "@(Model.Year)" + " đến " + "@(Model.Quarter*3)" + "/" + "@(Model.Year)",
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            }else{
+                $(this).removeClass('invalid');
+            }
+        }
+    });
+
+    $(document).on('input', "[name='output_category4_column4']", function () {
+        var data = $(this).val();
+        if (data.trim() !== '') {
+            $(this).removeClass('invalid');
+        } else {
+            $(this).focus();
+            $(this).addClass('invalid');
+        }
+    });
+
+    $(document).on('input', "[name='output_category4_column5']", function () {
+        var value = $(this).val();
+        if (value.trim() === '') {
+            noty({
+                text: 'Mã số thuế không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else if (value.length !== 10 && value.length !== 13) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            var value1 = parseInt(value[0]);
+            var value2 = parseInt(value[1]);
+            var value3 = parseInt(value[2]);
+            var value4 = parseInt(value[3]);
+            var value5 = parseInt(value[4]);
+            var value6 = parseInt(value[5]);
+            var value7 = parseInt(value[6]);
+            var value8 = parseInt(value[7]);
+            var value9 = parseInt(value[8]);
+            var value10 = parseInt(value[9]);
+
+            var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+            var mod11 = sum % 11;
+            var result = 10 - mod11;
+            if (result !== value10) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 500
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass("invalid");
+            }
+        }
+    });
+
+    $(document).on('input', "[name='output_category4_column6']", function () {
+        var data = $(this).val().split(".").join("");
+        if (data.trim() === '') {
+            noty({
+                text: 'Doanh thu không được trống.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
             $(this).removeClass('invalid');
         }
     });
@@ -5036,6 +6092,55 @@
         $("#storeTaxcodeLetter12_1").trigger('input');
     });
 
+    function back() {
+        window.close();
+    }
+
+    function cancelVatTaxDeclaration() {
+        $.ajax({
+            url: "@(Url.Action("CancelVatTaxDeclaration", "Tax"))",
+            method: "POST",
+            data: {
+                quarter: "@(Model.Quarter)",
+                year:"@(Model.Year)"
+            },
+            success: function (data) {
+                if (data === "1") {
+                    noty({
+                        text: 'Hủy thành công',
+                        type: 'success',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 2000
+                    });
+                    window.setTimeout(function () {
+                        window.close();
+                    }, 4000);
+                } else {
+                    noty({
+                        text: 'Hủy thất bại. Vui lòng thử lại.',
+                        type: 'danger',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 2000
+                    });
+                }
+            },
+            fail: function (e) {
+                noty({
+                    text: 'Không thể hủy. Vui lòng thử lại.',
+                    type: 'danger',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+            }
+        });
+    }
+
     function saveTaxDeclaration() {
         if ($(".invalid").length === 0) {
             $.ajax({
@@ -5088,7 +6193,19 @@
     }
 
     function exportTaxDeclaration() {
-        $("#taxDeclaration").submit();
+        if ($(".invalid").length === 0) {
+            $("#taxDeclaration").submit();
+        } else {
+            noty({
+                text: 'Dữ liệu nhập vào không đúng. Vui lòng xem lại',
+                type: 'danger',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 2000
+            });
+        }
+
     }
 
 
@@ -5293,6 +6410,50 @@
         $("#value26").trigger('input');
     });
 
+    $("[name='value25']").on('input', function() {
+        var data = parseInt($(this).val().split(".").join(""));
+
+        var data24 = parseInt($("#value24").html().split(".").join(""));
+
+        if (data > data24) {
+            noty({
+                text: 'Giá trị ô 25 không được lớn hơn ô 24.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            $(this).removeClass('invalid');
+        }
+    });
+
+    $("[name='value42']").on('input', function() {
+        var data = parseInt($(this).val().split(".").join(""));
+
+        var data24 = parseInt($("[name='value41']").val().split(".").join(""));
+
+        if (data > data24) {
+            noty({
+                text: 'Giá trị ô 42 không được lớn hơn ô 41.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+
+            $(this).focus();
+            $(this).addClass('invalid');
+        } else {
+            $(this).removeClass('invalid');
+        }
+    });
+
     $("#total-output_category2").on('input', function () {
         var data = parseInt($(this).html().split(".").join(""));
 
@@ -5427,6 +6588,14 @@
 
         $("#value34").html(numeral(data34).format('0,0').split(",").join("."));
         $("#value34").trigger('input');
+
+        var data23 = parseInt($("#value23").html().split(".").join(""));
+
+        if (data26 === 0 && data27 === 0 && data23 === 0) {
+            $("[name='value21']").val("1").change();
+        } else {
+            $("[name='value21']").val("0").change();
+        }
     });
 
     $("#value27").on('input', function () {
@@ -5437,6 +6606,26 @@
 
         $("#value34").html(numeral(data34).format('0,0').split(",").join("."));
         $("#value34").trigger('input');
+
+        var data23 = parseInt($("#value23").html().split(".").join(""));
+
+        if (data26 === 0 && data27 === 0 && data23 === 0) {
+            $("[name='value21']").val("1").change();
+        } else {
+            $("[name='value21']").val("0").change();
+        }
+    });
+
+    $("#value23").on('input', function () {
+        var data23 = parseInt($(this).html().split(".").join(""));
+        var data26 = parseInt($("#value26").html().split(".").join(""));
+        var data27 = parseInt($("#value27").html().split(".").join(""));
+
+        if (data26 === 0 && data27 === 0 && data23 === 0) {
+            $("[name='value21']").val("1").change();
+        } else {
+            $("[name='value21']").val("0").change();
+        }
     });
 
     $("#value35").on('input', function () {
@@ -5476,6 +6665,13 @@
             $("[name='value40a']").trigger('input');
         }
     });
+
+    $("[name='value41']").on('input', function() {
+        var data41 = $(this).val();
+
+        $("[name='value42']").val(numeral(data41).format('0,0').split(",").join("."));
+        $("[name='value42']").trigger('input');
+    })
 
     $("[name='value22']").on('input', function () {
         var data22 = parseInt($(this).val().split(".").join(""));

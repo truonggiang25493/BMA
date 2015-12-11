@@ -70,7 +70,28 @@ namespace BMA.Business
             return true;
         }
 
-
+        public bool CancelVatTaxDeclaration(int quarter, int year)
+        {
+            VatTaxDeclaration taxDeclaration =
+                db.VatTaxDeclarations.FirstOrDefault(m => m.Quarter == quarter && m.Year == year);
+            if (taxDeclaration != null)
+            {
+                db.VatTaxDeclarations.Remove(taxDeclaration);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public DeclarationVatForm GetVatTaxDeclaration(int quarter, int year)
         {
