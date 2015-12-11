@@ -191,26 +191,26 @@
                             </thead>
                             <tbody>
                                 @if (HttpContext.Current.Session["Material"] != null)
+                                {
+                                    foreach (var item in (Session["Material"] as List<AllProductInfoViewModel>))
                                     {
-                                        foreach (var item in (Session["Material"] as List<AllProductInfoViewModel>))
-                                        {
-                                            <tr>
-                                                <td style="vertical-align:middle">
-                                                    @item.MaterialName
-                                                    <input type="hidden" name="materialId" value="@item.MaterialId"/>
-                                                </td>
-                                                <td style="vertical-align:middle">
-                                                    <input type="number" name="productQuantity" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@item.MaterialQuantity" min="1" />
-                                                </td>
-                                                <td style="vertical-align:middle">
-                                                    @item.MaterialUnit
-                                                </td>
-                                                <td style="text-align:center; vertical-align:middle">
-                                                    <a class="btn btn-warning" data-role="remove-row-btn">Hủy</a>
-                                                </td>
-                                            </tr>
-                                        }
+                                        <tr>
+                                            <td style="vertical-align:middle">
+                                                @item.MaterialName
+                                                <input type="hidden" name="materialId" value="@item.MaterialId" />
+                                            </td>
+                                            <td style="vertical-align:middle">
+                                                <input type="number" name="productQuantity" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@item.MaterialQuantity" min="1" />
+                                            </td>
+                                            <td style="vertical-align:middle">
+                                                @item.MaterialUnit
+                                            </td>
+                                            <td style="text-align:center; vertical-align:middle">
+                                                <a class="btn btn-warning" data-role="remove-row-btn">Hủy</a>
+                                            </td>
+                                        </tr>
                                     }
+                                }
                             </tbody>
                         </table>
                     </form>
@@ -725,7 +725,7 @@
                                         "html": $("<input>", {
                                             "type": "number",
                                             "name": "productQuantity",
-                                            "onkeypress" : "return event.charCode >= 48 && event.charCode <= 57",
+                                            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
                                             "value": "1",
                                             "min": "1",
                                         })
@@ -748,6 +748,9 @@
                             });
                             $("#material-table tbody").append(productRow);
                         }
+                        selectedIds = [];
+                        selectedName = [];
+                        selectedUnit = [];
                     } else {
                         alert("Không thể thêm nguyên liệu");
                     }

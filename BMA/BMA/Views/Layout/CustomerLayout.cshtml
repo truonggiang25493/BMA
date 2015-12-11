@@ -255,7 +255,7 @@
                                 <ul class="userMenu">
                                     @if (Session["UserRole"] != null)
                                     {
-                                        <li> <a href="#" style="cursor:default"><span class="hidden-xs"><i class="fa fa-street-view"></i> @((Session["User"] as User).Username)</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                        <li> <a href="#" style="cursor:default"><span class="hidden-xs" style="text-transform: none"><i class="fa fa-street-view"></i> @((Session["User"] as User).Username)</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
                                     }
                                     else
                                     {

@@ -334,7 +334,8 @@
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
                         annotateDisplay: true,
-                        annotateFunctionIn: myFctIn
+                        annotateFunctionIn: myFctIn,
+                        bezierCurve: false
                     }
                     new Chart(document.getElementById("lineChart").getContext("2d")).Line(linedata, opt1);
 

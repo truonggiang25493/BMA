@@ -251,81 +251,107 @@
                 <div></div>
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu">
-                    <li class="treeview">
-                        <a href="">
-                            <i class="fa fa-home"></i> <span>Quản lý cửa hàng</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a onclick="NotificatePartialLink('http://localhost:2072/StoreInfor/Index')" style="cursor:pointer"><i class="fa fa-home"></i>Thông tin cửa hàng</a></li>
-                            <li>
-                                <a onclick="NotificatePartialLink('http://localhost:2072/StoreInfor/ConfigIndex')" style="cursor:pointer"><i class="fa fa-gears"></i>Cấu hình hệ thống</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="treeview" id="staff">
-                        <a href="#">
-                            <i class="fa fa-user"></i> <span>Nhân viên</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="listStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/StaffIndex')" style="cursor:pointer"><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
-                            <li id="addStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/AddStaff')" style="cursor: pointer"><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview" id="customer">
-                        <a href="#">
-                            <i class="fa fa-user"></i> <span>Khách hàng</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="listCustomer"><a onclick="NotificatePartialLink('http://localhost:2072/Customer/CustomerIndex')" style="cursor:pointer"><i class="fa fa-users"></i>Danh sách khách hàng</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-coffee"></i> <span>Sản phẩm</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageProduct/Index')" style="cursor:pointer"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
-
-                            <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageProduct/AddProduct')" style="cursor:pointer"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
-
-
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-cube"></i> <span>Nguyên liệu</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageMaterial/Index')" style="cursor:pointer"><i class="fa fa-cubes"></i>Danh sách nguyên liệu</a></li>
-                            <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageMaterial/AddMaterial?strURL=%2FManageMaterial%2FIndex')" style="cursor:pointer"><i class=" fa fa-plus"></i>Tạo mới nguyên liệu</a></li>
-                            <li><a href=""><i class="fa fa-home"></i>Quản lí kho</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview" id="inputMaterial">
-                        <a href="#">
-                            <i class="fa fa-flask"></i> <span>Nguyên liệu đầu vào</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="listInputMaterial"><a onclick="NotificatePartialLink('http://localhost:2072/InputMaterial/InputMaterialIndex')" style="cursor:pointer"><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
-                            <li id="addInputMaterial"><a onclick="NotificatePartialLink('http://localhost:2072/InputMaterial/AddInputMaterial')" style="cursor:pointer"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview" id="supplier">
-                        <a href="#">
-                            <i class="fa fa-truck"></i> <span>Nhà cung cấp</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="listSupplier"><a onclick="NotificatePartialLink('http://localhost:2072/Supplier/SupplierIndex')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
-                            <li id="addSupplier"><a onclick="NotificatePartialLink('http://localhost:2072/Supplier/AddSupplier')" style="cursor: pointer"><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
-                        </ul>
-                    </li>
+                    @if (Session["User"] != null && Session["UserRole"] != null && ((int)Session["UserRole"] == 1 || (int)Session["UserRole"] == 2))
+                    {
+                        <li class="treeview">
+                            <a href="">
+                                <i class="fa fa-home"></i> <span>Quản lý cửa hàng</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a onclick="NotificatePartialLink('http://localhost:2072/StoreInfor/Index')" style="cursor: pointer"><i class="fa fa-home"></i>Thông tin cửa hàng</a></li>
+                                <li>
+                                    <a onclick="NotificatePartialLink('http://localhost:2072/StoreInfor/ConfigIndex')" style="cursor: pointer"><i class="fa fa-gears"></i>Cấu hình hệ thống</a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 1)
+                    {
+                        <li class="treeview" id="staff">
+                            <a href="#">
+                                <i class="fa fa-user"></i> <span>Nhân viên</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="listStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/StaffIndex')" style="cursor: pointer"><i class="fa fa-users"></i>Danh sách nhân viên</a></li>
+                                <li id="addStaff"><a onclick="NotificatePartialLink('http://localhost:2072/Staff/AddStaff')" style="cursor: pointer"><i class="fa fa-user-plus"></i> Tạo tài khoản nhân viên</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @if (Session["User"] != null && Session["UserRole"] != null && ((int)Session["UserRole"] == 1 || (int)Session["UserRole"] == 2))
+                    {
+                        <li class="treeview" id="customer">
+                            <a href="#">
+                                <i class="fa fa-user"></i> <span>Khách hàng</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="listCustomer"><a onclick="NotificatePartialLink('http://localhost:2072/Customer/CustomerIndex')" style="cursor: pointer"><i class="fa fa-users"></i>Danh sách khách hàng</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @if (Session["User"] != null && Session["UserRole"] != null && ((int)Session["UserRole"] == 1 || (int)Session["UserRole"] == 2))
+                    {
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-coffee"></i> <span>Sản phẩm</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageProduct/Index')" style="cursor: pointer"><i class="fa fa-coffee"></i>Danh sách sản phẩm</a></li>
+                                @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 2)
+                                {
+                                    <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageProduct/AddProduct')" style="cursor: pointer"><i class=" fa fa-plus"></i> Tạo mới sản phẩm</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    @if (Session["User"] != null && Session["UserRole"] != null && ((int)Session["UserRole"] == 1 || (int)Session["UserRole"] == 2))
+                    {
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-cube"></i> <span>Nguyên liệu</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageMaterial/Index')" style="cursor: pointer"><i class="fa fa-cubes"></i>Danh sách nguyên liệu</a></li>
+                                @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 2)
+                                {
+                                    <li><a onclick="NotificatePartialLink('http://localhost:2072/ManageMaterial/AddMaterial?strURL=%2FManageMaterial%2FIndex')" style="cursor: pointer"><i class=" fa fa-plus"></i>Tạo mới nguyên liệu</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    @if (Session["User"] != null && Session["UserRole"] != null && ((int)Session["UserRole"] == 1 || (int)Session["UserRole"] == 2))
+                    {
+                        <li class="treeview" id="inputMaterial">
+                            <a href="#">
+                                <i class="fa fa-flask"></i> <span>Nguyên liệu đầu vào</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="listInputMaterial"><a onclick="NotificatePartialLink('http://localhost:2072/InputMaterial/InputMaterialIndex')" style="cursor: pointer"><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
+                                @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 2)
+                                {
+                                    <li id="addInputMaterial"><a onclick="NotificatePartialLink('http://localhost:2072/InputMaterial/AddInputMaterial')" style="cursor: pointer"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 1)
+                    {
+                        <li class="treeview" id="supplier">
+                            <a href="#">
+                                <i class="fa fa-truck"></i> <span>Nhà cung cấp</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="listSupplier"><a onclick="NotificatePartialLink('http://localhost:2072/Supplier/SupplierIndex')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách nhà cung cấp</a></li>
+                                <li id="addSupplier"><a onclick="NotificatePartialLink('http://localhost:2072/Supplier/AddSupplier')" style="cursor: pointer"><i class="fa fa-plus"></i>Thêm nhà cung cấp mới</a></li>
+                            </ul>
+                        </li>
+                    }
                     @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 2)
                     {
                         <li class="treeview" id="order">
@@ -340,34 +366,40 @@
                             </ul>
                         </li>
                     }
-                    <li class="treeview" id="inputBill">
-                        <a href="#">
-                            <i class="fa fa-file-text-o"></i> <span>Hóa đơn</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="listInputBill"><a onclick="NotificatePartialLink('http://localhost:2072/InputBill/InputBillIndex')" style="cursor:pointer"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
-                            <li id="addInputBill"><a onclick="NotificatePartialLink('http://localhost:2072/InputBill/AddInputBill')" style="cursor:pointer"><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview" id="otherExpense">
-                        <a href="@(Url.Action("Index", "OtherExpense"))">
-                            <i class="fa fa-bar-chart"></i> <span>Chi phí khác</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                    </li>
-                    <li class="treeview" id="report">
-                        <a href="#">
-                            <i class="fa fa-bar-chart"></i> <span>Thống kê</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="customerRevenue"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenuePerCustomer')" style="cursor:pointer"><i class="fa fa-usd"></i>Doanh thu theo khách hàng</a></li>
-                            <li id="incomeProduct"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenueByProduct')" style="cursor:pointer"><i class="fa fa-usd"></i>Thu nhập theo sản phẩm</a></li>
-                            <li id="incomeReport"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewIncomeByTime')" style="cursor:pointer"><i class="fa fa-usd"></i>Thu nhập theo thời gian</a></li>
-                            <li id="taxReport"><a onclick="NotificatePartialLink('http://localhost:2072/Tax/Index')" style="cursor:pointer"><i class=" fa fa-file-text-o"></i>Báo cáo thuế</a></li>
-                        </ul>
-                    </li>
+                    @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 2)
+                    {
+                        <li class="treeview" id="inputBill">
+                            <a href="#">
+                                <i class="fa fa-file-text-o"></i> <span>Hóa đơn</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="listInputBill"><a onclick="NotificatePartialLink('http://localhost:2072/InputBill/InputBillIndex')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
+                                <li id="addInputBill"><a onclick="NotificatePartialLink('http://localhost:2072/InputBill/AddInputBill')" style="cursor: pointer"><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 1)
+                    {
+                        <li class="treeview" id="otherExpense">
+                            <a href="@(Url.Action("Index", "OtherExpense"))">
+                                <i class="fa fa-bar-chart"></i> <span>Chi phí khác</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                        </li>
+                        <li class="treeview" id="report">
+                            <a href="#">
+                                <i class="fa fa-bar-chart"></i> <span>Thống kê</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="customerRevenue"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenuePerCustomer')" style="cursor: pointer"><i class="fa fa-usd"></i>Doanh thu theo khách hàng</a></li>
+                                <li id="incomeProduct"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenueByProduct')" style="cursor: pointer"><i class="fa fa-usd"></i>Thu nhập theo sản phẩm</a></li>
+                                <li id="incomeReport"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewIncomeByTime')" style="cursor: pointer"><i class="fa fa-usd"></i>Thu nhập theo thời gian</a></li>
+                                <li id="taxReport"><a onclick="NotificatePartialLink('http://localhost:2072/Tax/Index')" style="cursor: pointer"><i class=" fa fa-file-text-o"></i>Báo cáo thuế</a></li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
             </section>
             <!-- /.sidebar -->
@@ -469,6 +501,8 @@
     @RenderSection("ReviewIncomeByProductScript", false)
     @RenderSection("EditInputBillScript", false)
     @RenderSection("TaxIndexScript", false)
+    @RenderSection("CustomerIndexScript",false)
+    @RenderSection("SupplierIndexScript",false)
     <script>
         $(function () {
             $('#example2').DataTable({

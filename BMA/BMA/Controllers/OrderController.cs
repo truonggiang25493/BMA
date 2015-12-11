@@ -218,7 +218,7 @@ namespace BMA.Controllers
                           customerAddress.IsEmpty() || customerPhoneNumber.IsEmpty() || customerTaxCode.IsEmpty()))
                     {
                         int orderId = Convert.ToInt32(orderIdString);
-                        int deposit = Convert.ToInt32(form["deposit"]);
+                        int deposit = Convert.ToInt32(form["deposit"].Replace(".",""));
 
                         CustomerViewModel customer = new CustomerViewModel
                         {

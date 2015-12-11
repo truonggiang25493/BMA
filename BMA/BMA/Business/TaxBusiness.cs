@@ -195,6 +195,15 @@ namespace BMA.Business
                 }
 
                 result.Value40 = result.Value40A;
+                if (result.InputTotalAmount == 0 && result.OutputCategories1TotalAmount == 0 &&
+                    result.HaveTaxOutputAmount == 0)
+                {
+                    result.Value21 = true;
+                }
+                else
+                {
+                    result.Value21 = false;
+                }
             }
             else
             {
@@ -541,6 +550,15 @@ namespace BMA.Business
                 result.HaveTaxOutputAmount = vatTaxDeclaration.HaveTaxOutputTotalAmountValue27;
                 result.OutputTotalTaxAmount = vatTaxDeclaration.OutputTotalTaxAmountValue28;
 
+                if (result.InputTotalAmount == 0 && result.OutputCategories1TotalAmount == 0 &&
+                    result.HaveTaxOutputAmount == 0)
+                {
+                    result.Value21 = true;
+                }
+                else
+                {
+                    result.Value21 = false;
+                }
             }
             return result;
         }

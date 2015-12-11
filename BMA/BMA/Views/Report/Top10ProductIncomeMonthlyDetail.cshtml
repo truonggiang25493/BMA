@@ -135,8 +135,7 @@
                         <div class="box  collapsed-box">
                             <div class="box-header">
                                 <h3 class="box-title">
-                                    Từ @(Model.ReportProductIncomePeriodList.ElementAt(i).StartDate.ToString("dd/MM/yyyy")) đến @(Model.ReportProductIncomePeriodList.ElementAt(i).EndDate.ToString("dd/MM/yyyy"))
-                                    <br />
+                                    Tháng @(Model.ReportProductIncomePeriodList.ElementAt(i).Month)/@(Model.ReportProductIncomePeriodList.ElementAt(i).Year)                                    <br />
                                     <br />
                                     Thu nhập: <b>@(Model.ReportProductIncomePeriodList.ElementAt(i).Income.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b> gồm
                                 </h3>
