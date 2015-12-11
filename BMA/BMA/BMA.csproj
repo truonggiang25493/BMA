@@ -360,6 +360,7 @@
     <Compile Include="Models\VatTaxDeclaration.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModel\AllProductInfoViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerCartViewModel.cs" />
     <Compile Include="Models\ViewModel\CartViewModel.cs" />
     <Compile Include="Models\ViewModel\CustomerRevenueReport.cs" />

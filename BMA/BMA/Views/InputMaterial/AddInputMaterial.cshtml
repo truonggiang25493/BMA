@@ -76,7 +76,7 @@
                                         <b>Số lượng<b style="color: #ff0000">*</b>: </b>
                                     </div>
                                     <div class="col-xs-7">
-                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtImportQuantity" id="txtImportQuantity" oninput="maxLengthCheck(this)" maxlength="8" min="1" max="99999999" placeholder="nhập số từ 1-8 chữ số" class="form-control" value="1" />
+                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtImportQuantity" id="txtImportQuantity" oninput="maxLengthCheck(this)" maxlength="8" placeholder="nhập số từ 1-8 chữ số" class="form-control" value="1" />
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@
                                         <b>Tổng giá (VNĐ)<b style="color: #ff0000">*</b>: </b>
                                     </div>
                                     <div class="col-xs-7">
-                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" placeholder="nhập số từ 1-9 chữ số" class="form-control" value="1" />
+                                        <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtInputMaterialPrice" id="txtInputMaterialPrice" required oninput="maxLengthCheck(this)" maxlength="9" placeholder="nhập số từ 1-9 chữ số" class="form-control" value="1" />
                                     </div>
                                 </div>
                             </div>
@@ -414,7 +414,7 @@
 </section>
 
 @section AddInputMaterialScript{
-
+    <script src="~/Scripts/numeral.js"></script>
     <script type="text/javascript">
         $(function () {
             $('#datetimepicker6').datetimepicker({
@@ -460,12 +460,18 @@
     </script>
 
     <script type="text/javascript">
-        $(document).on("keyup", "#txtImportQuantity", function () {
+        $(document).on("keyup", "#txtImportQuantity", function() {
             var importQuantity = $("#txtImportQuantity").val();
             var inputMaterialPrice = $("#txtInputMaterialPrice").val();
             var unitPrice = Math.ceil(inputMaterialPrice / importQuantity);
             $('#txtUnitPrice').val(unitPrice);
             $('#txtUnitPrice').attr('min', unitPrice);
-        })
+        });
+        $(document).on('input', "[data-role='number']", function () {
+            var data = $(this).val();
+            data = data.split(".").join("");
+            data = numeral(data).format('0,0').split(",").join(".");
+            $(this).val(data);
+        });
     </script>
 }

@@ -148,7 +148,7 @@ namespace BMA.Controllers
                 String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
                 String inputMaterialNote = f["txtInputMaterialNote"];
                 String inputBillId = f["inputBillId"];
-
+                
                 var importDate =DateTime.ParseExact(importDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var expireDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 if (DateTime.Compare(expireDate,importDate)>=1)
