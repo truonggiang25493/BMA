@@ -33,7 +33,7 @@
                                     <b>Địa chỉ<b style="color: #ff0000">*</b>:</b>
                                 </div>
                                 <div class="col-xs-7">
-                                    <textarea name="txtSupplierAddress" id="txtSupplierAddress" maxlength="200"  rows="3" style="width: 95%; resize: none"></textarea>
+                                    <textarea name="txtSupplierAddress" id="txtSupplierAddress" maxlength="200" rows="3" style="width: 95%; resize: none"></textarea>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
@@ -174,126 +174,151 @@
                                             timeout: 1000
                                         });
                                     } else {
-                                        $.ajax({
-                                            url: "@(Url.Action("CheckSupplierInfo", "Supplier"))",
-                                            method: "POST",
-                                            data: $("#add-supplier-form").serialize(),
-                                            success: function (data) {
-                                                if (data === '1') {
-                                                    noty({
-                                                        text: 'Tên nhà cung cấp này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 1000
-                                                    });
-                                                    $("#txtSupplierName").focus();
-                                                } else if (data === '2') {
-                                                    noty({
-                                                        text: 'Địa chỉ này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 1000
-                                                    });
-                                                    $("#txtSupplierAddress").focus();
-                                                } else if (data === '3') {
-                                                    noty({
-                                                        text: 'Số điện thoại này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 1000
-                                                    });
-                                                    $("#txtSupplierPhoneNumber").focus();
-                                                } else if (data === '4') {
-                                                    noty({
-                                                        text: 'Địa chỉ E-mail này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 1000
-                                                    });
-                                                    $("#txtSupplierEmail").focus();
-                                                } else if (data === '5') {
-                                                    noty({
-                                                        text: 'Mã số thuế này đã có trong hệ thống.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 1000
-                                                    });
-                                                    $("#txtSupplierTaxCode").focus();
-                                                } else if (data === '-7') {
-                                                    noty({
-                                                        text: 'Bạn không có quyền thực hiện chức năng này.',
-                                                        type: 'warning',
-                                                        dismissQueue: false,
-                                                        layout: 'topCenter',
-                                                        theme: 'defaultTheme',
-                                                        timeout: 1000
-                                                    });
-                                                   } else if (data === '0') {
-                                                    $.ajax({
-                                                        url: "@(Url.Action("AddSupplier", "Supplier"))",
-                                                        method: "POST",
-                                                        data: $("#add-supplier-form").serialize(),
-                                                        success: function (data) {
-                                                            if (data === "1") {
+                                        var value1 = parseInt(supplierTaxCode[0]);
+                                        var value2 = parseInt(supplierTaxCode[1]);
+                                        var value3 = parseInt(supplierTaxCode[2]);
+                                        var value4 = parseInt(supplierTaxCode[3]);
+                                        var value5 = parseInt(supplierTaxCode[4]);
+                                        var value6 = parseInt(supplierTaxCode[5]);
+                                        var value7 = parseInt(supplierTaxCode[6]);
+                                        var value8 = parseInt(supplierTaxCode[7]);
+                                        var value9 = parseInt(supplierTaxCode[8]);
+                                        var value10 = parseInt(supplierTaxCode[9]);
+
+                                        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+                                        var mod11 = sum % 11;
+                                        var result = 10 - mod11;
+                                        if (result !== value10) {
+                                            noty({
+                                                text: 'Hãy nhập mã số thuế đúng.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                            $("#customerTaxCode").focus();
+                                        } else {
+                                            $.ajax({
+                                                url: "@(Url.Action("CheckSupplierInfo", "Supplier"))",
+                                                method: "POST",
+                                                data: $("#add-supplier-form").serialize(),
+                                                success: function (data) {
+                                                    if (data === '1') {
+                                                        noty({
+                                                            text: 'Tên nhà cung cấp này đã có trong hệ thống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        $("#txtSupplierName").focus();
+                                                    } else if (data === '2') {
+                                                        noty({
+                                                            text: 'Địa chỉ này đã có trong hệ thống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        $("#txtSupplierAddress").focus();
+                                                    } else if (data === '3') {
+                                                        noty({
+                                                            text: 'Số điện thoại này đã có trong hệ thống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        $("#txtSupplierPhoneNumber").focus();
+                                                    } else if (data === '4') {
+                                                        noty({
+                                                            text: 'Địa chỉ E-mail này đã có trong hệ thống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        $("#txtSupplierEmail").focus();
+                                                    } else if (data === '5') {
+                                                        noty({
+                                                            text: 'Mã số thuế này đã có trong hệ thống.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        $("#txtSupplierTaxCode").focus();
+                                                    } else if (data === '-7') {
+                                                        noty({
+                                                            text: 'Bạn không có quyền thực hiện chức năng này.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                    } else if (data === '0') {
+                                                        $.ajax({
+                                                            url: "@(Url.Action("AddSupplier", "Supplier"))",
+                                                            method: "POST",
+                                                            data: $("#add-supplier-form").serialize(),
+                                                            success: function (data) {
+                                                                if (data === "1") {
+                                                                    noty({
+                                                                        text: 'Thêm nhà cung cấp thành công',
+                                                                        type: 'success',
+                                                                        dismissQueue: false,
+                                                                        layout: 'topCenter',
+                                                                        theme: 'defaultTheme',
+                                                                        timeout: 1000
+                                                                    });
+                                                                    window.setTimeout(function () {
+                                                                        window.location.replace("@(Url.Action("SupplierIndex", "Supplier"))");
+                                                                    }, 4000);
+                                                                } else {
+                                                                    noty({
+                                                                        text: 'Không thể thêm nhà cung cấp',
+                                                                        type: 'warning',
+                                                                        dismissQueue: false,
+                                                                        layout: 'topCenter',
+                                                                        theme: 'defaultTheme',
+                                                                        timeout: 1000
+                                                                    });
+                                                                }
+                                                            },
+                                                            fail: function () {
                                                                 noty({
-                                                                    text: 'Thêm nhà cung cấp thành công',
-                                                                    type: 'success',
-                                                                    dismissQueue: false,
-                                                                    layout: 'topCenter',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 1000
-                                                                });
-                                                                window.setTimeout(function () {
-                                                                    window.location.replace("@(Url.Action("SupplierIndex", "Supplier"))");
-                                                                }, 4000);
-                                                            } else {
-                                                                noty({
-                                                                    text: 'Không thể thêm nhà cung cấp',
-                                                                    type: 'warning',
+                                                                    text: 'Đã có lỗi xảy ra',
+                                                                    type: 'error',
                                                                     dismissQueue: false,
                                                                     layout: 'topCenter',
                                                                     theme: 'defaultTheme',
                                                                     timeout: 1000
                                                                 });
                                                             }
-                                                        },
-                                                        fail: function () {
-                                                            noty({
-                                                                text: 'Đã có lỗi xảy ra',
-                                                                type: 'error',
-                                                                dismissQueue: false,
-                                                                layout: 'topCenter',
-                                                                theme: 'defaultTheme',
-                                                                timeout: 1000
-                                                            });
-                                                        }
+                                                        });
+                                                    }
+                                                },
+                                                fail: function () {
+                                                    noty({
+                                                        text: 'Đã có lỗi xảy ra.',
+                                                        type: 'danger',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
                                                     });
                                                 }
-                                            },
-                                            fail: function () {
-                                                noty({
-                                                    text: 'Đã có lỗi xảy ra.',
-                                                    type: 'danger',
-                                                    dismissQueue: false,
-                                                    layout: 'topCenter',
-                                                    theme: 'defaultTheme',
-                                                    timeout: 1000
-                                                });
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                 }
-
                             </script>
                         </button>
                         <!-- "Hủy" button -->
@@ -321,5 +346,57 @@
             if (object.value.length > object.maxLength)
                 object.value = object.value.slice(0, object.maxLength);
         }
+    </script>
+    <script>
+        $(document).on("change", "#txtSupplierTaxCode", function () {
+            var value = $(this).val();
+            if (value.trim() === '') {
+                noty({
+                    text: 'Mã số thuế không được trống.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+                $(this).focus();
+            } else if (value.length !== 10 && value.length !== 13) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+                $(this).focus();
+            } else {
+                var value1 = parseInt(value[0]);
+                var value2 = parseInt(value[1]);
+                var value3 = parseInt(value[2]);
+                var value4 = parseInt(value[3]);
+                var value5 = parseInt(value[4]);
+                var value6 = parseInt(value[5]);
+                var value7 = parseInt(value[6]);
+                var value8 = parseInt(value[7]);
+                var value9 = parseInt(value[8]);
+                var value10 = parseInt(value[9]);
+
+                var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+                var mod11 = sum % 11;
+                var result = 10 - mod11;
+                if (result !== value10) {
+                    noty({
+                        text: 'Hãy nhập mã số thuế đúng.',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                    $(this).focus();
+                }
+            }
+        });
     </script>
 </section>

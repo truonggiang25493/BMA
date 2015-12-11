@@ -22,7 +22,7 @@ namespace BMA.Controllers
         public ActionResult InputBillIndex()
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -47,7 +47,7 @@ namespace BMA.Controllers
         public ActionResult InputBillDetail(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -66,7 +66,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "Manage");
+                    return RedirectToAction("Index", "StoreInfor");
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace BMA.Controllers
         public ActionResult GetInputMaterialInBill(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -254,7 +254,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "Manage");
+                    return RedirectToAction("Index", "StoreInfor");
                 }
             }
         }

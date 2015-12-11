@@ -4,7 +4,7 @@
 <h3>Danh sách hóa đơn</h3>
 
 <div class="box-body">
-    <table id="example2" data-role="input-bill" class="table table-bordered customer-table">
+    <table id="example" data-role="input-bill" class="table table-bordered customer-table">
         <thead style="font-weight: bold">
             <tr>
 
@@ -32,3 +32,16 @@
         </tbody>
     </table>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "iDisplayLength": 5,
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": false,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>

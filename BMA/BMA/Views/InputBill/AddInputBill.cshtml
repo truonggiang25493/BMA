@@ -43,6 +43,14 @@
                                                         document.getElementById('standard-popup-body').innerHTML = data;
                                                         document.getElementById('standard-popup-footer').innerHTML = chooseButton[0].outerHTML;
                                                         $('#myStandardModal').modal('show');
+                                                        $('#example2').DataTable({
+                                                            "paging": true,
+                                                            "lengthChange": false,
+                                                            "searching": true,
+                                                            "ordering": true,
+                                                            "info": true,
+                                                            "autoWidth": false
+                                                        });
                                                     }
                                                 });
                                             }
@@ -97,7 +105,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-12">
                                     <b><b style="color: #ff0000">*</b>: Thông tin bắt buộc</b>
@@ -253,7 +261,7 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
-                            
+
                             } else {
                                 $.ajax({
                                     url: "@(Url.Action("AddImage", "InputBill"))",
