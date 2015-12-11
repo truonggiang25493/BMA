@@ -237,7 +237,7 @@ namespace BMA.Controllers
                 try
                 {
                     InputMaterial inputMaterials = db.InputMaterials.SingleOrDefault(m => m.InputMaterialId == id);
-                    if (inputMaterials == null)
+                    if (inputMaterials == null || (inputMaterials.RemainQuantity) != inputMaterials.ImportQuantity || (DateTime.Compare(inputMaterials.InputMaterialExpiryDate, DateTime.Today) < 1))
                     {
                         return RedirectToAction("InputMaterialIndex", "InputMaterial");
                     }
