@@ -23,7 +23,8 @@ namespace BMA.Business
             {
                 db.DiscardedInputMaterials.Add(discardedInputMaterial);
                 inputMaterial.RemainQuantity = inputMaterial.RemainQuantity - discardedInputMaterial.DiscardQuantity;
-                productMaterial.CurrentQuantity = productMaterial.CurrentQuantity - discardedInputMaterial.DiscardQuantity;
+                int changeMaterial = productMaterial.CurrentQuantity - discardedInputMaterial.DiscardQuantity;
+                productMaterial.CurrentQuantity = changeMaterial;
                 db.SaveChanges();
             }
             catch (Exception e)

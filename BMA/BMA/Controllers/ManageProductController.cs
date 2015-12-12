@@ -45,7 +45,7 @@ namespace BMA.Controllers
         }
 
         [HttpPost]
-        public int AddImage(HttpPostedFileBase file)
+        public int AddImage(HttpPostedFileBase file, FormCollection f)
         {
             var allowedExtensions = new[] {  
             ".Jpg", ".png", ".jpg", "jpeg", ".JPG", ".PNG", ".JPEG"  
@@ -85,6 +85,11 @@ namespace BMA.Controllers
             }
             else
             {
+                string fileBackup = f["fileBackup"];
+                if (fileBackup != null || fileBackup != "")
+                {
+                    return 1;
+                }
                 return -1;
             }
         }
@@ -200,6 +205,7 @@ namespace BMA.Controllers
             }
             try
             {
+                productPrice = Convert.ToInt32(productPrice.ToString().Replace(".", ""));
                 mpb.AddProduct(productName, productUnit, productWeight, productDes, productNote, productPrice, dropCate, productCode, fileName, materialId, materialQuantity);
                 Session["ProductInfor"] = null;
                 Session["Material"] = null;
@@ -221,30 +227,37 @@ namespace BMA.Controllers
 
         public ActionResult Edit(int productId)
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] == 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+                ManageProductBusiness mpb = new ManageProductBusiness();
+                var product = mpb.GetProductDetail(productId);
+                var materialList = mpb.GetListMaterial(productId);
+                var category = mpb.GetCategory();
+                Policy maxPricePolicy = db.Policies.SingleOrDefault(n => n.PolicyId == 2);
+                int maxPrice = maxPricePolicy.PolicyBound;
+                ViewBag.maxPrice = maxPrice;
+                ViewBag.materialList = materialList;
+                ViewBag.category = category;
+                if (product == null)
+                {
+                    return HttpNotFound();
+                }
+                InitiateMaterialList(productId);
+                return View(product);
             }
-            if ((int)Session["UserRole"] == 1)
+            catch
             {
-                return RedirectToAction("Index", "StoreInfor");
+                return RedirectToAction("ManageError", "Error");
             }
-            ManageProductBusiness mpb = new ManageProductBusiness();
-            var product = mpb.GetProductDetail(productId);
-            var materialList = mpb.GetListMaterial(productId);
-            var category = mpb.GetCategory();
-            Policy maxPricePolicy = db.Policies.SingleOrDefault(n => n.PolicyId == 2);
-            int maxPrice = maxPricePolicy.PolicyBound;
-            ViewBag.maxPrice = maxPrice;
-            ViewBag.materialList = materialList;
-            ViewBag.category = category;
-            if (product == null)
-            {
-                return HttpNotFound();
-            }
-            InitiateMaterialList(productId);
-            return View(product);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -269,6 +282,7 @@ namespace BMA.Controllers
             }
             try
             {
+                productPrice = Convert.ToInt32(productPrice.ToString().Replace(".", ""));
                 mpb.EditProduct(productId, productName, productUnit, productWeight, productDes, productNote, productPrice, dropCate, productCode, fileName, materialId, materialQuantity);
                 return 2;
             }

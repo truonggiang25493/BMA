@@ -58,11 +58,11 @@
                                 <label for="exampleInputEmail1">Đơn giá (đồng)<span style="color:red">*</span></label>
                                 @if ((Session["ProductInfor"] as Product).ProductStandardPrice == -1)
                                 {
-                                    <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" value="" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
+                                    <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" data-role="number" value="" maxlength="8" placeholder="Nhập giả sản phẩm - example : 30.000" id="productPrice" required>
                                 }
                                 else
                                 {
-                                    <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" value="@((Session["ProductInfor"] as Product).ProductStandardPrice)" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
+                                    <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" data-role="number" value="@((Session["ProductInfor"] as Product).ProductStandardPrice.ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")))" maxlength="8" placeholder="Nhập giả sản phẩm - example : 30.000" id="productPrice" required>
                                 }
                             </div>
                             <div class="form-group">
@@ -120,7 +120,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Đơn giá (đồng)<span style="color:red">*</span></label>
-                                <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" value="" min="1000" max="100000" placeholder="Nhập giả sản phẩm - example : 30000" id="productPrice" required>
+                                <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="productPrice" value="" data-role="number" maxlength="8" placeholder="Nhập giả sản phẩm - example : 30.000" id="productPrice" required>
                                 @Html.ValidationMessageFor(model => model.ProductStandardPrice)
                             </div>
                             <div class="form-group">
@@ -135,44 +135,85 @@
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
                 }
-
             </div><!--/.col (left) -->
         </form>
-        <form role="form" action="/ManageProduct/AddImage" id="imageForm" method="post" enctype="multipart/form-data">
-            <div class="col-md-6">
-                <!-- Horizontal Form -->
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Hình ảnh sản phẩm</h3><br />
-                        <label class="box-title" style="color:#ff0000">@TempData["Message"]</label>
-                    </div><!-- /.box-header -->
-                    <!-- form start -->
-                    <div class="box-body">
-                        <div class="form-group" style="margin-left:0px;">
-                            <label for="exampleInputFile">Hình ảnh</label>
-                            <input type="file" value="" name="file" id="file" onchange="show(this)">
-                            <div style="margin-top:10px;">
-                                <img id="user_img"
-                                     height="300"
-                                     width="506"
-                                     style="border:solid" />
-                            </div>
-                            <script type="text/javascript">
-                                function show(input) {
-                                    if (input.files && input.files[0]) {
-                                        var filerdr = new FileReader();
-                                        filerdr.onload = function (e) {
-                                            $('#user_img').attr('src', e.target.result);
+        @if (Session["ProductInfor"] != null)
+        {
+            <form role="form" action="/ManageProduct/AddImage" id="imageForm" method="post" enctype="multipart/form-data">
+                <div class="col-md-6">
+                    <!-- Horizontal Form -->
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Hình ảnh sản phẩm</h3><br />
+                            <label class="box-title" style="color:#ff0000">@TempData["Message"]</label>
+                        </div><!-- /.box-header -->
+                        <!-- form start -->
+                        <div class="box-body">
+                            <div class="form-group" style="margin-left:0px;">
+                                <label for="exampleInputFile">Hình ảnh</label>
+                                <input type="file" value="@((Session["ProductInfor"] as Product).ProductImage)" name="file" id="file" onchange="show(this)">
+                                <input type="hidden" value="@((Session["ProductInfor"] as Product).ProductImage)" id="fileBackup" name="fileBackup" />
+                                <div style="margin-top:10px;">
+                                    <img id="user_img"
+                                         height="300"
+                                         width="506"
+                                         style="border:solid" src="@Url.Content("/Content/Images/BakeryImages/" + (Session["ProductInfor"] as Product).ProductImage)" />
+                                </div>
+                                <script type="text/javascript">
+                                    function show(input) {
+                                        if (input.files && input.files[0]) {
+                                            var filerdr = new FileReader();
+                                            filerdr.onload = function (e) {
+                                                $('#user_img').attr('src', e.target.result);
+                                            }
+                                            filerdr.readAsDataURL(input.files[0]);
                                         }
-                                        filerdr.readAsDataURL(input.files[0]);
                                     }
-                                }
-                            </script>
-                        </div>
-                    </div><!-- /.box-body -->
-                </div><!-- /.box -->
-            </div>
-        </form>
+                                </script>
+                            </div>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                </div>
+            </form>
+        }
+        else
+        {
+            <form role="form" action="/ManageProduct/AddImage" id="imageForm" method="post" enctype="multipart/form-data">
+                <div class="col-md-6">
+                    <!-- Horizontal Form -->
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Hình ảnh sản phẩm</h3><br />
+                            <label class="box-title" style="color:#ff0000">@TempData["Message"]</label>
+                        </div><!-- /.box-header -->
+                        <!-- form start -->
+                        <div class="box-body">
+                            <div class="form-group" style="margin-left:0px;">
+                                <label for="exampleInputFile">Hình ảnh</label>
+                                <input type="file" value="" name="file" id="file" onchange="show(this)">
+                                <div style="margin-top:10px;">
+                                    <img id="user_img"
+                                         height="300"
+                                         width="506"
+                                         style="border:solid" />
+                                </div>
+                                <script type="text/javascript">
+                                    function show(input) {
+                                        if (input.files && input.files[0]) {
+                                            var filerdr = new FileReader();
+                                            filerdr.onload = function (e) {
+                                                $('#user_img').attr('src', e.target.result);
+                                            }
+                                            filerdr.readAsDataURL(input.files[0]);
+                                        }
+                                    }
+                                </script>
+                            </div>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                </div>
+            </form>
+        }
         <div class="col-md-6">
             <div class="box box-danger">
                 <div class="box-header with-border">
@@ -191,26 +232,26 @@
                             </thead>
                             <tbody>
                                 @if (HttpContext.Current.Session["Material"] != null)
+                                {
+                                    foreach (var item in (Session["Material"] as List<AllProductInfoViewModel>))
                                     {
-                                        foreach (var item in (Session["Material"] as List<AllProductInfoViewModel>))
-                                        {
-                                            <tr>
-                                                <td style="vertical-align:middle">
-                                                    @item.MaterialName
-                                                    <input type="hidden" name="materialId" value="@item.MaterialId"/>
-                                                </td>
-                                                <td style="vertical-align:middle">
-                                                    <input type="number" name="productQuantity" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@item.MaterialQuantity" min="1" />
-                                                </td>
-                                                <td style="vertical-align:middle">
-                                                    @item.MaterialUnit
-                                                </td>
-                                                <td style="text-align:center; vertical-align:middle">
-                                                    <a class="btn btn-warning" data-role="remove-row-btn">Hủy</a>
-                                                </td>
-                                            </tr>
-                                        }
+                                        <tr>
+                                            <td style="vertical-align:middle">
+                                                @item.MaterialName
+                                                <input type="hidden" name="materialId" value="@item.MaterialId" />
+                                            </td>
+                                            <td style="vertical-align:middle">
+                                                <input type="number" name="productQuantity" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@item.MaterialQuantity" min="1" />
+                                            </td>
+                                            <td style="vertical-align:middle">
+                                                @item.MaterialUnit
+                                            </td>
+                                            <td style="text-align:center; vertical-align:middle">
+                                                <a class="btn btn-warning" data-role="remove-row-btn">Hủy</a>
+                                            </td>
+                                        </tr>
                                     }
+                                }
                             </tbody>
                         </table>
                     </form>
@@ -246,6 +287,7 @@
                         <a style="float:right" onclick="AddTempProductInfor()" class="btn btn-danger">Tạo mới nguyên liệu</a>
                         <script type="text/javascript">
                             function AddTempProductInfor() {
+                                var dataString;
                                 var txtName = $("#productName").val();
                                 var txtUnit = $("#productUnit").val();
                                 var txtWeight = $("#productWeight").val();
@@ -254,6 +296,7 @@
                                 var txtCate = $("#dropCate").val();
                                 var fileName = getFileName($("#file").val());
                                 var txtPrice = $("#productPrice").val();
+                                txtPrice = txtPrice.split(".").join("");
                                 var lstId = [];
                                 var lstQuantity = [];
                                 $("#material-table tbody tr").each(function (index, element) {
@@ -273,52 +316,64 @@
                                 }
 
                                 $.ajax({
-                                    "url": "@(Url.Action("AddTempProductInfor", "ManageProduct"))",
+                                    "url": action,
                                     "method": "POST",
-                                    "data": JSON.stringify({
-                                        "productName": txtName,
-                                        "productUnit": txtUnit,
-                                        "productWeight": txtWeight,
-                                        "productDes": txtDes,
-                                        "productNote": txtNote,
-                                        "productPrice": txtPrice,
-                                        "dropCate": txtCate,
-                                        "fileName": fileName,
-                                        "materialId": lstId,
-                                        "materialQuantity": lstQuantity
-                                    }),
+                                    "data": dataString,
                                     "dataType": "json",
-                                    "contentType": 'application/json',
-                                    "processData": false,
+                                    "contentType": contentType,
+                                    "processData": processData,
                                     "success": function (data) {
-                                        if (data === 1) {
-                                            window.setTimeout(function () {
-                                                window.location.replace("@(Url.Action("AddMaterial", "ManageMaterial", new { strURL = Request.Url.AbsolutePath }))");
-                                            }, 500);
-                                        } else {
-                                            noty({
-                                                text: 'Có lỗi xảy ra, vui lòng thử lại',
-                                                type: 'warning',
-                                                dismissQueue: false,
-                                                layout: 'topCenter',
-                                                theme: 'defaultTheme',
-                                                timeout: 2000
-                                            });
-                                        }
-                                    },
-                                    "fail": function () {
-                                        noty({
-                                            text: 'Đã có lỗi xảy ra',
-                                            type: 'error',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                        window.setTimeout(function () {
-                                            window.location.replace("@(Url.Action("Index", "ManageProduct"))");
-                                        }, 3000)
+                                        //if (data === 1) {
+                                        $.ajax({
+                                            "url": "@(Url.Action("AddTempProductInfor", "ManageProduct"))",
+                                            "method": "POST",
+                                            "data": JSON.stringify({
+                                                "productName": txtName,
+                                                "productUnit": txtUnit,
+                                                "productWeight": txtWeight,
+                                                "productDes": txtDes,
+                                                "productNote": txtNote,
+                                                "productPrice": txtPrice,
+                                                "dropCate": txtCate,
+                                                "fileName": fileName,
+                                                "materialId": lstId,
+                                                "materialQuantity": lstQuantity
+                                            }),
+                                            "dataType": "json",
+                                            "contentType": 'application/json',
+                                            "processData": false,
+                                            "success": function (data) {
+                                                if (data === 1) {
+                                                    window.setTimeout(function () {
+                                                        window.location.replace("@(Url.Action("AddMaterial", "ManageMaterial", new { strURL = Request.Url.AbsolutePath }))");
+                                                    }, 500);
+                                                } else {
+                                                    noty({
+                                                        text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 2000
+                                                    });
+                                                }
+                                            },
+                                            "fail": function () {
+                                                noty({
+                                                    text: 'Đã có lỗi xảy ra',
+                                                    type: 'error',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                window.setTimeout(function () {
+                                                    window.location.replace("@(Url.Action("Index", "ManageProduct"))");
+                                                }, 3000)
+                                            }
+                                        })
                                     }
+                                    //}
                                 })
                             }
                         </script>
@@ -349,9 +404,14 @@
                     var txtCate = $("#dropCate").val();
                     var fileName = getFileName($("#file").val());
                     var txtPrice = $("#productPrice").val();
-
+                    txtPrice = txtPrice.split(".").join("");
                     var lstId = [];
                     var lstQuantity = [];
+                    if (fileName == "") {
+                        fileName = $("#fileBackup").val();
+                        @*fileName = "@((Session["ProductInfor"] as Product).ProductImage)";*@
+                    }
+
                     $("#material-table tbody tr").each(function (index, element) {
                         lstId.push($(element).find("td:first input").val());
                         lstQuantity.push($(element).find("td:nth-child(2) input").val());
@@ -630,7 +690,15 @@
     </div>
 </section>
 @section AddOrderScript{
+    <script src="~/Scripts/numeral.js"></script>
     <script type="text/javascript">
+        $("[data-role='number']").on('input', function () {
+            var data = $(this).val();
+            data = data.split(".").join("");
+            data = numeral(data).format('0,0').split(",").join(".");
+            $(this).val(data);
+        });
+
         var selectedIds = [];
         var selectedName = [];
         var selectedUnit = [];
@@ -696,7 +764,6 @@
 
 
         function fnselect() {
-
             $.ajax({
                 "url": "@Url.Action("RemoveMaterialFromListToAdd", "ManageProduct")",
                 "method": "POST",
@@ -725,7 +792,7 @@
                                         "html": $("<input>", {
                                             "type": "number",
                                             "name": "productQuantity",
-                                            "onkeypress" : "return event.charCode >= 48 && event.charCode <= 57",
+                                            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
                                             "value": "1",
                                             "min": "1",
                                         })
@@ -748,6 +815,10 @@
                             });
                             $("#material-table tbody").append(productRow);
                         }
+
+                        selectedIds = [];
+                        selectedName = [];
+                        selectedUnit = [];
                     } else {
                         alert("Không thể thêm nguyên liệu");
                     }

@@ -1,8 +1,596 @@
-﻿
+﻿@using BMA.Models.ViewModel
+@model BMA.Models.User
 @{
-    ViewBag.Title = "Quản lí tiệm bánh";
+    ViewBag.Title = "Quản lý thông tin";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
+<section class="content-header">
+    <h1>Quản lý thông tin</h1>
+</section>
+<section class="content">
+    <div class="box" style="height: 650px;">
+        <div class="box-header">
+            <h3>
+                Thay đổi thông tin
+            </h3>
+        </div>
+        <div class="box-body">
+            <div class="col-xs-3">
+                <div class="row" style="margin-left: 20px;">
+                    <button class="btn btn-facebook" style="margin-bottom: 10px;" onclick="open_choose_customer()">Thay đổi thông tin cá nhân</button>
+                    <br />
+                    <button class="btn btn-facebook" onclick="open_add_customer()" style="min-width:181px">Thay đổi mật khẩu</button>
+                </div>
 
-<h2>Quản lí tiệm bánh</h2>
+            </div>
+            <div class="col-xs-9" id="announce">
+                <h3>Vui lòng chọn "Thay đổi thông tin cá nhân" hoặc "Thay đổi mật khẩu" !</h3>
+            </div>
+            <div class="col-xs-9" id="choose-customer" style="display: none">
+                @if ((int)Session["UserRole"] == 2)
+                {     <div class="box">
+                    <div class="box-body" id="customer-table">
+                        <form action="@Url.Action("EditInformation", "Manage")" id="add-customer-form" method="POST">
+                            <table class="table">
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Họ tên(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="customerName" type="text" class="col-xs-9" name="customerName" value="@Model.Fullname" required maxlength="50" placeholder="Hãy nhập tên. Không quá 50 kí tự" />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Địa chỉ(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="customerAddress" type="text" class="col-xs-9" name="customerAddress" maxlength="250" value="@Model.Staffs.ElementAt(0).StaffAddress" required placeholder="Hãy địa chỉ. Không quá 250 kí tự" />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Email(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="customerEmail" type="email" class="col-xs-9" name="customerEmail" value="@Model.Email" required maxlength="250" placeholder="Hãy email. Không quá 50 kí tự" />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Số điện thoại(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="customerPhoneNumber" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@Model.Staffs.ElementAt(0).StaffPhoneNumber" maxlength="12" type="text" class="col-xs-9" name="customerPhoneNumber" required placeholder="Hãy nhập số điện thoại 0999999999 hoặc 01676666666." />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td colspan="2">
+                                        <label style="font-weight: normal">(<span style="color: red">*</span>) là các trường bắt buộc</label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="box-footer">
+                        <div class="row">
+                            <button class="btn btn-cancel">Xóa</button>
+                            <button class="btn btn-success" onclick="addCustomer()">
+                                Đồng ý
+                                <script type="text/javascript">
+                                    function addCustomer() {
+                                        var customerName = $("#customerName").val();
+                                        var email = $("#customerEmail").val();
+                                        var address = $("#customerAddress").val();
+                                        var phoneNumber = $("#customerPhoneNumber").val();
+                                        if (customerName.indexOf("<") > 0 || customerName.indexOf(">") > 0 || email.indexOf("<") > 0 || email.indexOf(">") > 0 || address.indexOf("<") > 0 || address.indexOf(">") > 0 || phoneNumber.indexOf("<") > 0 || phoneNumber.indexOf(">") > 0) {
+                                            var n = noty({
+                                                text: 'Nhập sai cú pháp',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        } else
+                                            // Validate Customer Name
+                                            if (customerName.trim() === '') {
+                                                var n = noty({
+                                                    text: 'Họ tên không được trống.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                $("#customerName").focus();
+                                            } else if (customerName.length > 50) {
+                                                var n = noty({
+                                                    text: 'Họ tên không được quá 50 kí tự.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                $("#customerName").focus();
+                                            }
 
+                                                // Validate email
+                                            else if (email.trim() === '') {
+                                                var n = noty({
+                                                    text: 'Email không được trống.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                $("#customerEmail").focus();
+                                            } else if (email.length > 250) {
+                                                var n = noty({
+                                                    text: 'Email không được quá 250 kí tự.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                $("#customerEmail").focus();
+                                            } else if (!new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i).test(email)) {
+                                                var n = noty({
+                                                    text: 'Hãy nhập email đúng định dạng.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                $("#customerEmail").focus();
+                                            }
+                                                // Validate address
+                                            else if (address.trim() === '') {
+                                                var n = noty({
+                                                    text: 'Địa chỉ không được trống.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                $("#customerAddress").focus();
+                                            } else if (address.length > 250) {
+                                                var n = noty({
+                                                    text: 'Địa chỉ không được quá 250 kí tự.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                $("#customerAddress").focus();
+                                            }
+                                                // Validate Phone Number
+                                            else if (phoneNumber.trim() === '') {
+                                                var n = noty({
+                                                    text: 'Số điện thoại không được trống.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                $("#customerPhoneNumber").focus();
+                                            } else if (!new RegExp(/^\d{8,13}$/).test(phoneNumber)) {
+                                                var n = noty({
+                                                    text: 'Hãy nhập số điện thoại đúng.',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                                $("#customerPhoneNumber").focus();
+                                            } else {
+                                                $.ajax({
+                                                    url: "@(Url.Action("EditInformation", "Manage"))",
+                                                    method: "POST",
+                                                    data: $("#add-customer-form").serialize(),
+                                                    success: function (data) {
+                                                        if (data === '-1') {
+                                                            var n = noty({
+                                                                text: 'Email này đã có trong hệ thống.',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1000
+                                                            });
+                                                            $("#customerEmail").focus();
+                                                        } else if (data === '-2') {
+                                                            var n = noty({
+                                                                text: 'Số điện thoại này đã có trong hệ thống.',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1000
+                                                            });
+                                                            $("#customerPhoneNumber").focus();
+                                                        } else if (data === '-3') {
+                                                            var n = noty({
+                                                                text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1000
+                                                            });
+                                                        } else if (data === '1') {
+                                                            var n = noty({
+                                                                text: 'Thay đổi thông tin thành công.',
+                                                                type: 'success',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1000
+                                                            });
+                                                            window.setTimeout(function () {
+                                                                window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                                                            }, 2000);
+                                                        }
+                                                    },
+                                                    fail: function (e) {
+                                                        var n = noty({
+                                                            text: 'Đã có lỗi xảy ra.',
+                                                            type: 'danger',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                    }
+                                </script>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                }
+                else
+                {
+                    <div class="box">
+                        <div class="box-body" id="customer-table">
+                            <form action="@Url.Action("EditInformation", "Manage")" id="add-customer-form" method="POST">
+                                <table class="table">
+                                    <tr class="row">
+                                        <td class="col-xs-3">
+                                            <label>Họ tên(<span style="color: red">*</span>): </label>
+                                        </td>
+                                        <td class="col-xs-9">
+                                            <input id="customerName" type="text" class="col-xs-9" name="customerName" value="@Model.Fullname" required maxlength="50" placeholder="Hãy nhập tên. Không quá 50 kí tự" />
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td class="col-xs-3">
+                                            <label>Email(<span style="color: red">*</span>): </label>
+                                        </td>
+                                        <td class="col-xs-9">
+                                            <input id="customerEmail" type="email" class="col-xs-9" name="customerEmail" value="@Model.Email" required maxlength="250" placeholder="Hãy email. Không quá 50 kí tự" />
+                                        </td>
+                                    </tr>
+                                    <tr class="row">
+                                        <td colspan="2">
+                                            <label style="font-weight: normal">(<span style="color: red">*</span>) là các trường bắt buộc</label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                        <div class="box-footer">
+                            <div class="row">
+                                <button class="btn btn-cancel">Xóa</button>
+                                <button class="btn btn-success" onclick="addCustomer()">
+                                    Đồng ý
+                                    <script type="text/javascript">
+                                        function addCustomer() {
+                                            var customerName = $("#customerName").val();
+                                            var email = $("#customerEmail").val();
+                                            if (customerName.indexOf("<") > 0 || customerName.indexOf(">") > 0 || email.indexOf("<") > 0 || email.indexOf(">") > 0) {
+                                                var n = noty({
+                                                    text: 'Nhập sai cú pháp',
+                                                    type: 'warning',
+                                                    dismissQueue: false,
+                                                    layout: 'topCenter',
+                                                    theme: 'defaultTheme',
+                                                    timeout: 1000
+                                                });
+                                            } else
+                                                // Validate Customer Name
+                                                if (customerName.trim() === '') {
+                                                    var n = noty({
+                                                        text: 'Họ tên không được trống.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                    $("#customerName").focus();
+                                                } else if (customerName.length > 50) {
+                                                    var n = noty({
+                                                        text: 'Họ tên không được quá 50 kí tự.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                    $("#customerName").focus();
+                                                }
+
+                                                    // Validate email
+                                                else if (email.trim() === '') {
+                                                    var n = noty({
+                                                        text: 'Email không được trống.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                    $("#customerEmail").focus();
+                                                } else if (email.length > 250) {
+                                                    var n = noty({
+                                                        text: 'Email không được quá 250 kí tự.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                    $("#customerEmail").focus();
+                                                } else if (!new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i).test(email)) {
+                                                    var n = noty({
+                                                        text: 'Hãy nhập email đúng định dạng.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                    $("#customerEmail").focus();
+                                                } else {
+                                                    $.ajax({
+                                                        url: "@(Url.Action("EditInformation", "Manage"))",
+                                                        method: "POST",
+                                                        data: $("#add-customer-form").serialize(),
+                                                        success: function (data) {
+                                                            if (data === '-1') {
+                                                                var n = noty({
+                                                                    text: 'Email này đã có trong hệ thống.',
+                                                                    type: 'warning',
+                                                                    dismissQueue: false,
+                                                                    layout: 'topCenter',
+                                                                    theme: 'defaultTheme',
+                                                                    timeout: 1000
+                                                                });
+                                                                $("#customerEmail").focus();
+                                                            } else if (data === '-2') {
+                                                                var n = noty({
+                                                                    text: 'Số điện thoại này đã có trong hệ thống.',
+                                                                    type: 'warning',
+                                                                    dismissQueue: false,
+                                                                    layout: 'topCenter',
+                                                                    theme: 'defaultTheme',
+                                                                    timeout: 1000
+                                                                });
+                                                                $("#customerPhoneNumber").focus();
+                                                            } else if (data === '-3') {
+                                                                var n = noty({
+                                                                    text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                                                                    type: 'warning',
+                                                                    dismissQueue: false,
+                                                                    layout: 'topCenter',
+                                                                    theme: 'defaultTheme',
+                                                                    timeout: 1000
+                                                                });
+                                                            } else if (data === '1') {
+                                                                var n = noty({
+                                                                    text: 'Thay đổi thông tin thành công.',
+                                                                    type: 'success',
+                                                                    dismissQueue: false,
+                                                                    layout: 'topCenter',
+                                                                    theme: 'defaultTheme',
+                                                                    timeout: 1000
+                                                                });
+                                                                window.setTimeout(function () {
+                                                                    window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                                                                }, 2000);
+                                                            }
+                                                        },
+                                                        fail: function (e) {
+                                                            var n = noty({
+                                                                text: 'Đã có lỗi xảy ra.',
+                                                                type: 'danger',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1000
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                        }
+                                    </script>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+            <div class="col-xs-9" id="add-customer" style="display: none">
+                <!--Header-->
+                <div class="box">
+                    <div class="box-body">
+                        <form action="@Url.Action("ChangePassword", "Manage")" id="changePassForm" method="POST">
+                            <table class="table">
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Mật khẩu cũ(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="InputPasswordCurrent" type="password" class="col-xs-9" name="txtOldPass" required maxlength="32" placeholder="Hãy nhập mật khẩu cũ. Tối đa 32 kí tự" />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Mật khẩu mới(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="InputPasswordnew" type="password" class="col-xs-9" name="txtNewPass" maxlength="32" required placeholder="Hãy nhập mật khẩu mới. Tối đa 32 kí tự" />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-xs-3">
+                                        <label>Xác nhận lại(<span style="color: red">*</span>): </label>
+                                    </td>
+                                    <td class="col-xs-9">
+                                        <input id="InputPasswordnewConfirm" type="password" class="col-xs-9" name="txtNewPassConfirm" required maxlength="32" placeholder="Xác nhận lại mật khẩu mới. Tôi đa 32 kí tự" />
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td colspan="2">
+                                        <label style="font-weight: normal">(<span style="color: red">*</span>) là các trường bắt buộc</label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="box-footer">
+                        <div class="row">
+                            <button class="btn btn-cancel">Xóa</button>
+                            <button class="btn btn-success" onclick="changePassword()">
+                                Đồng ý
+                                <script type="text/javascript">
+                                    function changePassword() {
+                                        var txtOldPass = $("#InputPasswordCurrent").val();
+                                        var txtNewPass = $("#InputPasswordnew").val();
+                                        var txtNewPassConfirm = $("#InputPasswordnewConfirm").val();
+
+                                        if (txtOldPass.trim() === '' || txtNewPass.trim() === '' || txtNewPassConfirm.trim() === '') {
+                                            noty({
+                                                text: 'Mật khẩu không được để trống.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                        } else if (txtOldPass.length < 6 || txtNewPass.length < 6 || txtNewPassConfirm.length < 6) {
+                                            noty({
+                                                text: 'Mật khẩu không được ít hơn 6 ký tự.',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
+                                        } else {
+                                            $.ajax({
+                                                url: "@Url.Action("ChangePassword", "Manage")",
+                                                method: "POST",
+                                                data: $("#changePassForm").serialize(),
+                                                success: function (data) {
+                                                    if (data === "1") {
+                                                        noty({
+                                                            text: 'Thay đổi mật khẩu thành công.',
+                                                            type: 'success',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 2000
+                                                        });
+                                                        window.setTimeout(function () {
+                                                            window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                                                        }, 3000);
+                                                    } else if (data === "-1") {
+                                                        noty({
+                                                            text: 'Mật khẩu không đúng! Vui lòng thử lại.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 2000
+                                                        });
+                                                    } else if (data === "-2") {
+                                                        noty({
+                                                            text: 'Mật khẩu mới và mật khẩu cũ giống nhau! Vui lòng thử lại.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 2000
+                                                        });
+                                                    } else if (data === "-3") {
+                                                        noty({
+                                                            text: 'Mật khẩu mới và mật khẩu xác nhận không trùng khớp.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 2000
+                                                        });
+                                                    }
+                                                },
+                                                fail: function (e) {
+                                                    var n = noty({
+                                                        text: 'Đã có lỗi xảy ra',
+                                                        type: 'error',
+                                                        dismissQueue: false,
+                                                        layout: 'bottomRight',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 2000
+                                                    });
+                                                }
+                                            })
+                                        }
+                                    }
+                                </script>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                function open_choose_customer() {
+                    $('#announce').hide();
+                    $('#choose-customer').show();
+                    $('#add-customer').hide();
+                }
+
+                function open_add_customer() {
+                    $('#announce').hide();
+                    $('#choose-customer').hide();
+                    $('#add-customer').show();
+                }
+            </script>
+        </div>
+        <div class="box-footer" style="margin-top: 30px">
+            <div class="col-xs-12">
+
+                <a class="btn btn-primary" href="@(Url.Action("Add","Order"))">
+                    <i class=" fa fa-arrow-left" style="margin-right: 3px;"></i>Quay lại
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</section>

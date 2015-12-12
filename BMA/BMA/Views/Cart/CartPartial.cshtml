@@ -56,7 +56,14 @@ Giỏ hàng(@ViewBag.SumQuantity)<b class="caret"> </b>
             <div class="miniCartFooter text-right" style="margin-top:-15px;">
                 <h4 class="text-right subtotal" style="margin:-5px 0"> Tổng cộng: @total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</h4>
                 <a onclick="return window.location.assign('http://www.w3schools.com')"><div style="font-family: 'Patrick Hand SC'"></div></a>
-                <button onclick="return window.location.assign('/Cart/Cart')" class="btn btn-sm btn-danger" style="font-family: 'Patrick Hand SC'"><i class="fa fa-shopping-cart"></i> THANH TOÁN</button>
+                @if (Session["UserRole"] != null)
+                {
+
+                }
+                else
+                {
+                    <button onclick="return window.location.assign('/Cart/Cart')" class="btn btn-sm btn-danger" style="font-family: 'Patrick Hand SC'"><i class="fa fa-shopping-cart"></i> THANH TOÁN</button>
+                }
             </div>
         </div>
     }

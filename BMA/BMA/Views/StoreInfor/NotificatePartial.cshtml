@@ -31,13 +31,13 @@
 
                 $("[data-role='numberOfLowMaterial']").text(numberOfLowQuantity);
             }
-        } 
+        }
     }
 
     function onChange(info, source, type) {
         if (info == 1) {
             noty({
-                text: 'Có một đơn hàng vừa được thêm mới.' + info + "-" + source + "-" + type,
+                text: 'Có một đơn hàng vừa được thêm mới.',
                 type: 'success',
                 dismissQueue: false,
                 layout: 'topCenter',
@@ -68,10 +68,46 @@
         }
     }
 
+    function confirmOnChange(info, source, type) {
+        if (info == 2) {
+            noty({
+                text: 'Có một đơn hàng vừa được chuyển sang trạng thái <b>Đã duyệt</b>.',
+                type: 'success',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: false
+            });
+            var numberOfNoti = $("#hiddenNumberOfNoti").val();
+            var numberOfConfirmOrder = $("#hiddenConfirmOrderCount").val();
+            if (numberOfNoti == "") {
+                $("#hiddenNumberOfNoti").attr('value', 1);
+                $("#hiddenConfirmOrderCount").attr('value', 1)
+                $("#numberOfNoti").text(1);
+                $("[data-role='numberOfNewOrder']").text(1);
+            }
+            else {
+                numberOfNoti = parseInt(numberOfNoti) + 1;
+                $("#hiddenNumberOfNoti").attr('value', numberOfNoti);
+                if (numberOfConfirmOrder == "") {
+                    $("#hiddenConfirmOrderCount").attr('value', 1)
+                }
+                else {
+                    numberOfConfirmOrder = parseInt(numberOfConfirmOrder) + 1;
+                    $("#hiddenConfirmOrderCount").attr('value', numberOfConfirmOrder)
+                }
+                $("#numberOfNoti").text(numberOfNoti);
+                $("[data-role='numberOfConfirmOrder']").text(numberOfConfirmOrder);
+            }
+        }
+    }
+
+
     window.addEventListener('load', function () {
         var notifier = $.connection.realtimeNotifierHub;
         notifier.client.onChange2 = quantityLowThanStandard;
         notifier.client.onChange = onChange;
+        notifier.client.onChange4 = confirmOnChange;
         $.connection.hub.start();
     });
 </script>
@@ -96,6 +132,7 @@
 <form action="/StoreInfor/NotificatePartialLink" method="post" role="form" id="notificateForm">
     <input type="hidden" value="@ViewBag.notificatePartialCount" id="hiddenNumberOfNoti" name="hiddenNumberOfNoti" />
     <input type="hidden" value="@ViewBag.newOrderCountPartial" id="hiddenOrderCount" name="hiddenOrderCount" />
+    <input type="hidden" value="@ViewBag.confirmOrderCountPartial" id="hiddenConfirmOrderCount" name="hiddenConfirmOrderCount" />
     <input type="hidden" value="@ViewBag.lowMaterialCountPartial" id="hiddenMaterialCount" name="hiddenMaterialCount" />
 </form>
 
@@ -114,6 +151,20 @@
                         <span id="numberOfNewOrder" data-role="numberOfNewOrder">@ViewBag.newOrderCountPartial</span>
                     }
                     đơn hàng mới
+                </a>
+            </li>
+            <li>
+                <a onclick="RemoveConfirmStatusNoty('http://localhost:2072/Order/Index')" style="cursor:pointer">
+                    <i class="fa fa-shopping-cart text-green"></i> Có
+                    @if (ViewBag.confirmOrderCountPartial == 0)
+                    {
+                        <span id="numberOfConfirmOrder" data-role="numberOfConfirmOrder">0</span>
+                    }
+                    else
+                    {
+                        <span id="numberOfConfirmOrder" data-role="numberOfConfirmOrder">@ViewBag.confirmOrderCountPartial</span>
+                    }
+                    đơn hàng sang Đã duyệt
                 </a>
             </li>
             <li>

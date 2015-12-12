@@ -10,6 +10,9 @@ using System.Net;
 using System.Data;
 using System.Data.Entity;
 using BMA.Business;
+using BMA.DBChangesNotifer;
+using Microsoft.AspNet.SignalR;
+using BMA.Hubs;
 
 namespace BMA.Controllers
 {
@@ -57,8 +60,15 @@ namespace BMA.Controllers
             string sPhone = f["txtPhone"];
             if (ab.checkEmailExisted(cusUserId, sEmail))
             {
-                TempData["checkEmailExisted"] = "Email đã tồn tại trong hệ thống, vui lòng thử lại.";
                 return -1;
+            }
+            if (ab.checkPhoneExisted(cusUserId, sPhone))
+            {
+                return -2;
+            }
+            if (ab.checkTaxCodeExisted(cusUserId, sTaxCode))
+            {
+                return -3;
             }
             ab.ChangeInformation(cusUserId, sName, sEmail, sAddress, sTaxCode, sPhone);
             return 1;
@@ -132,6 +142,7 @@ namespace BMA.Controllers
 
         public ActionResult ConfirmList(int? page)
         {
+            MvcApplication.changeToConfirmNotifier.Dispose();
             CusManageBusiness cmb = new CusManageBusiness();
             try
             {
@@ -290,6 +301,9 @@ namespace BMA.Controllers
                 {
                     return -2;
                 }
+
+                MvcApplication.changeToConfirmNotifier.Start("BMAChangeDB", "SELECT OrderId FROM dbo.[Orders] WHERE OrderStatus = 2");
+                MvcApplication.changeToConfirmNotifier.Change += this.ConfirmOnChange;
                 cmb.AcceptEditedOrder(orderId);
                 return 1;
             }
@@ -297,6 +311,12 @@ namespace BMA.Controllers
             {
                 return -1;
             }
+        }
+
+        private void ConfirmOnChange(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange4(e.Info, e.Source, e.Type);
         }
 
         public int CancelEditedOrder(int orderId)

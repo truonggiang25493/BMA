@@ -5,7 +5,20 @@
     ViewBag.Title = "Thêm nhân viên mới";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
+<div id="loading-background" style="display:none;"></div>
+<img src="~/Content/Images/ajax-loader.gif" id="loading-indicator" style="display:none" />
 
+<script type="text/javascript">
+    $(document).ajaxSend(function (event, request, settings) {
+        $('#loading-indicator').show();
+        $('#loading-background').show();
+    });
+
+    $(document).ajaxComplete(function (event, request, settings) {
+        $('#loading-indicator').hide();
+        $('#loading-background').hide();
+    });
+</script>
 <section class="content-header">
     <h1 style="text-align: center; margin-top: 2%">Thêm nhân viên mới</h1>
 </section>

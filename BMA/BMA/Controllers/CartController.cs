@@ -129,9 +129,9 @@ namespace BMA.Controllers
             {
                 CustomerOrderBusiness cob = new CustomerOrderBusiness();
                 int quantity = 0;
-                if (Session["Cart"] == null)
+                if (Session["Cart"] == null || Session["UserRole"] != null)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Product");
                 }
                 ViewBag.taxRate = cob.GetTaxRate();
                 List<CustomerCartViewModel> lstCart = GetCart();

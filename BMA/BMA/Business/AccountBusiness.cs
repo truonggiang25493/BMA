@@ -65,16 +65,62 @@ namespace BMA.Business
             }
             return false;
         }
-        public bool ChangeInformation(int cusId, string name, string email, string address, string taxCode, string phone)
+
+        public bool checkPhoneExisted(int userId, string phoneNumber)
         {
-            User user = db.Users.SingleOrDefault(n => n.UserId == cusId);
-            user.Fullname = name;
-            user.Email = email;
-            user.Customers.ElementAt(0).CustomerAddress = address;
-            user.Customers.ElementAt(0).TaxCode = taxCode;
-            user.Customers.ElementAt(0).CustomerPhoneNumber = phone;
-            db.SaveChanges();
-            return true;
+            var checkCustomerUser = db.Customers.SingleOrDefault(n => n.CustomerPhoneNumber == phoneNumber && n.UserId != userId);
+            if (checkCustomerUser != null)
+            {
+                return true;
+            }
+            var checkStaffUser = db.Staffs.SingleOrDefault(n => n.StaffPhoneNumber == phoneNumber && n.UserId != userId);
+            if (checkStaffUser != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool checkTaxCodeExisted(int cusUserId, string taxCode)
+        {
+            var checkUser = db.Customers.SingleOrDefault(n => n.TaxCode == taxCode && n.UserId != cusUserId);
+            if (checkUser != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool ChangeInformation(int userId, string name, string email, string address, string taxCode, string phone)
+        {
+            User user = db.Users.SingleOrDefault(n => n.UserId == userId);
+            if (user.RoleId == 3)
+            {
+                user.Fullname = name;
+                user.Email = email;
+                user.Customers.ElementAt(0).CustomerAddress = address;
+                user.Customers.ElementAt(0).TaxCode = taxCode;
+                user.Customers.ElementAt(0).CustomerPhoneNumber = phone;
+                db.SaveChanges();
+                return true;
+            }
+            else if (user.RoleId == 2)
+            {
+                user.Fullname = name;
+                user.Email = email;
+                user.Staffs.ElementAt(0).StaffAddress = address;
+                user.Staffs.ElementAt(0).StaffPhoneNumber = phone;
+                db.SaveChanges();
+                return true;
+            }
+            else if (user.RoleId == 1)
+            {
+                user.Fullname = name;
+                user.Email = email;
+                db.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         public bool checkPass(int cusId, string oldPass)

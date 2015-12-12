@@ -30,8 +30,7 @@ namespace BMA.Models.ViewModel
 
         public string SignName { get; set; }
         public string CreateLocation { get; set; }
-        public int CreateMonth { get; set; }
-        public int CreateDay { get; set; }
+        public DateTime CreateDate { get; set; }
 
         public List<DeclarationVatCategory> InputCategories1 { get; set; }
         public int InputCategories1TotalAmount { get; set; }
@@ -66,7 +65,7 @@ namespace BMA.Models.ViewModel
         public int HaveTaxOutputAmount { get; set; }
         public int OutputTotalTaxAmount { get; set; }
 
-        public int Value20No { get; set; }
+        public string Value20No { get; set; }
         public DateTime Value20Date { get; set; }
         public bool Value21 { get; set; }
         public int Value22 { get; set; }

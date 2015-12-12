@@ -277,7 +277,7 @@
                                         </tr>
                                         <tr>
                                             <td>Sau giảm giá</td>
-                                            <td class="price"><span class="success">@((oldOrder.Amount - Model.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                            <td class="price"><span class="success">@((oldOrder.Amount - oldOrder.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
                                         </tr>
                                         <tr>
                                             <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
@@ -473,7 +473,7 @@
                         <li> <span class="address-line1"> Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc. Quý khách có muốn hủy đơn hàng này không ? </span></li>
                     </ul>
                 </div>
-                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return deleteBoth(@Model.OrderId)" id="deleteBothRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
+                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return deleteBoth(@Model.OrderId)" id="deleteBothRequest"> Đồng ý </a> </div>
             </div>
         </div>
 
@@ -487,7 +487,7 @@
                         <li> <span class="address-line1"> Nếu hủy thay đổi thì đơn hàng sẽ như cũ. Quý khách có muốn hủy thay đổi không ? </span></li>
                     </ul>
                 </div>
-                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return deleteEdited(@Model.OrderId)" id="deleteChangeRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
+                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return deleteEdited(@Model.OrderId)" id="deleteChangeRequest"> Đồng ý </a> </div>
             </div>
         </div>
 
@@ -501,7 +501,7 @@
                         <li> <span class="address-line1"> Sau khi xác nhận, đơn hàng sẽ được tiến hành. Xác nhận ?</span></li>
                     </ul>
                 </div>
-                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return approveEdited(@Model.OrderId)" id="approveRequest"> <i class="fa fa-minus-circle"></i> Đồng ý </a> </div>
+                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return approveEdited(@Model.OrderId)" id="approveRequest"> Đồng ý </a> </div>
             </div>
         </div>
 
@@ -530,7 +530,7 @@
                         } else if (data === "-1") {
                             noty({
                                 text: 'Có lỗi xảy ra, vui lòng thử lại',
-                                type: 'success',
+                                type: 'warning',
                                 dismissQueue: false,
                                 layout: 'topCenter',
                                 theme: 'defaultTheme',
