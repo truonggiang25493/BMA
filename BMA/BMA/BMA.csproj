@@ -486,6 +486,7 @@
     <Content Include="Content\Images\BakeryImages\KTC.jpg" />
     <Content Include="Content\Images\BakeryImages\Pudding.jpg" />
     <Content Include="Content\Images\BakeryImages\BanhGai.jpg" />
+    <Content Include="Content\Images\ErrorIcon.png" />
     <Content Include="Content\Images\InputBillImages\InputBillDemo.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
     <Content Include="Content\jquery-ui.css" />
@@ -1514,6 +1515,7 @@
     <Content Include="Views\Tax\TaxDeclarationExport.cshtml" />
     <Content Include="Views\Tax\TndnTaxDeclaration.cshtml" />
     <Content Include="Views\Supplier\InputBillBySupplier.cshtml" />
+    <Content Include="Views\Error\ManageError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
