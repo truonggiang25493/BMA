@@ -175,6 +175,7 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\InputMaterialExpireDate.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\AccountBusiness.cs" />
@@ -223,7 +224,6 @@
     <Compile Include="DBChangeNotifer\ChangeNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeSource.cs" />
     <Compile Include="DBChangeNotifer\ChangeStatusNotifier.cs" />
-    <Compile Include="DBChangeNotifer\ChangeToConfirmNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeType.cs" />
     <Compile Include="DBChangeNotifer\QuantityLowNotifer.cs" />
     <Compile Include="Global.asax.cs">
@@ -471,7 +471,6 @@
     <Content Include="Content\font-awesome-4.3.0\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\font-awesome-4.3.0\HELP-US-OUT.txt" />
-    <Content Include="Content\Images\ajax-loader.gif" />
     <Content Include="Content\Images\BakeryImages\BB1T.jpg" />
     <Content Include="Content\Images\BakeryImages\BB2T.jpg" />
     <Content Include="Content\Images\BakeryImages\BBL.jpg" />
@@ -487,6 +486,7 @@
     <Content Include="Content\Images\BakeryImages\KTC.jpg" />
     <Content Include="Content\Images\BakeryImages\Pudding.jpg" />
     <Content Include="Content\Images\BakeryImages\BanhGai.jpg" />
+    <Content Include="Content\Images\ErrorIcon.png" />
     <Content Include="Content\Images\InputBillImages\InputBillDemo.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
     <Content Include="Content\jquery-ui.css" />
@@ -1374,9 +1374,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Views\Web.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Layout\CustomerLayout.cshtml" />
@@ -1517,11 +1515,6 @@
     <Content Include="Views\Tax\TaxDeclarationExport.cshtml" />
     <Content Include="Views\Tax\TndnTaxDeclaration.cshtml" />
     <Content Include="Views\Supplier\InputBillBySupplier.cshtml" />
-    <Content Include="Views\ManageMaterial\Detail.cshtml" />
-    <Content Include="Views\ManageMaterial\Edit.cshtml" />
-    <Content Include="Views\ManageProduct\GetListMaterialToAdd.cshtml" />
-    <Content Include="Views\ManageProduct\ListMaterial.cshtml" />
-    <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
     <Content Include="Views\Error\ManageError.cshtml" />
   </ItemGroup>
   <ItemGroup>
