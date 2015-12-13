@@ -5,14 +5,14 @@
 
 <section class="content">
     <div class="error-page">
-        <div class="error-content">
-            
-                <img src="~/Content/Images/ErrorIcon.png" style="height: 100px; width: 100px" />
-                <h3>
-                    Đã có lỗi xảy ra.<br>
-                    Vui lòng thử lại sau!
-                </h3>
-            
+        <h2 class="headline text-yellow">
+            <i class="fa fa-warning text-yellow"></i>
+        </h2>
+        <div class="error-content" style="padding-top: 20px">
+            <h3>
+                <b>Rất tiếc đã có lỗi xảy ra !</b><br />
+                Bấm vào <a href="@(Url.Action("Index", "StoreInfor"))">đây</a> để trở về trang quản lý.
+            </h3>
         </div>
     </div><!-- /.error-page -->
 </section>

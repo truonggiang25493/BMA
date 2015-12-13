@@ -175,7 +175,6 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\InputMaterialExpireDate.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\AccountBusiness.cs" />
@@ -224,6 +223,7 @@
     <Compile Include="DBChangeNotifer\ChangeNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeSource.cs" />
     <Compile Include="DBChangeNotifer\ChangeStatusNotifier.cs" />
+    <Compile Include="DBChangeNotifer\ChangeToConfirmNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeType.cs" />
     <Compile Include="DBChangeNotifer\QuantityLowNotifer.cs" />
     <Compile Include="Global.asax.cs">
@@ -382,6 +382,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
+    <Content Include="Content\AdminLayout\dist\img\VipIcon.gif" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\CustomerLayout\ajax.googleapis.com\ajax\libs\jquery\1.10.1\jquery.min.js" />
     <Content Include="Content\CustomerLayout\assets\bootstrap\css\bootstrap.css" />
