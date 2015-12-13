@@ -1374,7 +1374,9 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Layout\CustomerLayout.cshtml" />
@@ -1520,6 +1522,7 @@
     <Content Include="Views\ManageProduct\GetListMaterialToAdd.cshtml" />
     <Content Include="Views\ManageProduct\ListMaterial.cshtml" />
     <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
+    <Content Include="Views\Error\ManageError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
