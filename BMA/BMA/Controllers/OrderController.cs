@@ -601,7 +601,7 @@ namespace BMA.Controllers
         public int RemoveProductInProductListForAdd(int[] productId)
         {
             List<Product> productList = Session["ProductListForAdd"] as List<Product>;
-            if (productId.Length > 0)
+            if (productId!=null && productId.Length > 0)
             {
                 foreach (int index in productId)
                 {

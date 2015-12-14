@@ -5,7 +5,7 @@
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 
-@*<div id="loading-background" style="display:none;"></div>
+<div id="loading-background" style="display:none;"></div>
 <img src="~/Content/Images/ajax-loader.gif" id="loading-indicator" style="display:none" />
 
 <script type="text/javascript">
@@ -18,7 +18,7 @@
         $('#loading-indicator').hide();
         $('#loading-background').hide();
     });
-</script>*@
+</script>
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>@ViewBag.Title</h1>
@@ -210,110 +210,7 @@
                         <button class="btn btn-success pull-right" style="margin-right: 10px;" onclick="show_list_product()">
                             <i class="fa fa-plus" style="margin-right: 3px"></i>Thêm sản phẩm
                             <script type="text/javascript">
-                                function show_list_product() {
-                                    $.ajax({
-                                        url: "@(Url.Action("GetListOfProductToAdd", "Order"))",
-                                        data: {
-                                            orderId: "@Model.Order.OrderId"
-                                        },
-                                        method: "POST",
-                                        success: function (data) {
-                                            document.getElementById('standard-popup-title').innerHTML = "Chọn sản phẩm";
-                                            document.getElementById('standard-popup-body').innerHTML = data;
-                                            $('#myStandardModal').modal('show');
-                                        },
-                                        fail: function (e) {
-                                            alert("Have error" + e.toString());
-                                        }
-                                    });
-                                }
-                                function fnselect() {
-                                    var selectedIds = [];
-                                    var selectedName = [];
-                                    var selectedPrice = [];
 
-                                    $(".multiple-choice-table tr.selected").each(function(index, row) {
-                                        selectedIds.push($(row).find("td:first input").val());
-                                        selectedName.push($(row).find("td:first span").text());
-                                        selectedPrice.push($(row).find("td:nth-child(2) span").text());
-                                    });
-
-
-                                    $.ajax({
-                                        "url": "@Url.Action("RemoveProductInProductList", "Order")",
-                                        "method": "POST",
-                                        "data": JSON.stringify({ "productId": selectedIds }),
-                                        "dataType": 'json',
-                                        "contentType": 'application/json',
-                                        "success": function (data) {
-                                            if (data === 1) {
-                                                $('#myStandardModal').modal('hide');
-                                                for (i = 0; i < selectedIds.length; i++) {
-                                                    var productRow = $("<tr>", {
-                                                        "html": [
-                                                            $("<td>", {
-                                                                "style":"vertical-align: middle;",
-                                                                "html": [
-                                                                    selectedName[i],
-                                                                    $("<input>", {
-                                                                        "type": "hidden",
-                                                                        "name": "productId",
-                                                                        "value": selectedIds[i]
-                                                                    })
-                                                                ]
-                                                            }),
-                                                            $("<td>", {
-                                                                "style":"vertical-align: middle;",
-                                                                "html": $("<input>", {
-                                                                    "type": "number",
-                                                                    "name": "productPrice",
-                                                                    "style":"text-align: right;",
-                                                                    "step":"100",
-                                                                    "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
-                                                                    "value": selectedPrice[i].split(".").join("")
-                                                                })
-                                                            }),
-                                                            $("<td>", {
-                                                                "style":"vertical-align: middle;",
-                                                                "html": $("<input>", {
-                                                                    "type": "number",
-                                                                    "name": "productQuantity",
-                                                                    "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
-                                                                    "style":"text-align: right;",
-                                                                    "value": "1",
-                                                                    "min": "1"
-                                                                })
-                                                            }),
-                                                            $("<td>", {
-                                                                "style": "text-align: right; vertical-align: middle;",
-                                                                "html": $("<span>", {
-                                                                    id:"orderItemAmount",
-                                                                    "html":formatCurrency(selectedPrice[i])
-                                                                })
-                                                            }),
-                                                            $("<td>", {
-                                                                "style": "text-align: center; vertical-align: middle;",
-                                                                "html": $("<a>", {
-                                                                    "class": "btn btn-warning",
-                                                                    "data-role": "remove-row-btn",
-                                                                    "html": "Hủy"
-                                                                })
-                                                            })
-                                                        ]
-                                                    });
-                                                    $("#product-table tbody").append(productRow);
-                                                }
-                                                $("#updateInfo").show();
-                                                $("#material-info").hide();
-                                            } else {
-                                                alert("Không thể thêm sản phẩm");
-                                            }
-                                        },
-                                        "fail": function (e) {
-                                            alert("Have error" + e.toString());
-                                        }
-                                    });
-                                }
                             </script>
                         </button>
 
@@ -644,7 +541,7 @@
                 }
                 totalQuantity += productQuantity;
             });
-            if (totalQuantity < @(ViewBag.MinQuantity)) {
+            if (totalQuantity < parseInt("@(ViewBag.MinQuantity)")) {
                 noty({
                 text: 'Tổng số lượng phải lớn hơn @(ViewBag.MinQuantity)',
                 type: 'warning',
@@ -862,11 +759,182 @@
             });
         }
 
-        $(document).on("click", ".multiple-choice-table tbody tr", function() {
-            if ($(this).attr('class') === 'selected') {
+        // Add More product
+
+        var selectedIds = [];
+        var selectedName = [];
+        var selectedPrice = [];
+
+        function show_list_product() {
+            selectedIds = [];
+            selectedName = [];
+            selectedPrice = [];
+
+            $.ajax({
+                url: "@(Url.Action("GetListOfProductToAdd", "Order"))",
+                data: {
+                    orderId: "@Model.Order.OrderId"
+                },
+                method: "POST",
+                success: function (data) {
+                    document.getElementById('standard-popup-title').innerHTML = "Chọn sản phẩm";
+                    document.getElementById('standard-popup-body').innerHTML = data;
+                    $('#example2').DataTable({
+                        "paging": true,
+                        "lengthChange": false,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": false
+                    });
+                    $('#myStandardModal').modal('show');
+                },
+                fail: function (e) {
+                    noty({
+                        text: 'Đã có lỗi xảy ra.',
+                        type: 'danger',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            });
+        }
+        function fnselect() {
+
+            if (selectedIds.length === 0) {
+                noty({
+                    text: 'Vui lòng chọn 1 sản phẩm.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else {
+                $.ajax({
+                    "url": "@Url.Action("RemoveProductInProductList", "Order")",
+                    "method": "POST",
+                    "data": JSON.stringify({ "productId": selectedIds }),
+                    "dataType": 'json',
+                    "contentType": 'application/json',
+                    "success": function (data) {
+                        if (data === 1) {
+                            $('#myStandardModal').modal('hide');
+                            for (i = 0; i < selectedIds.length; i++) {
+                                var productRow = $("<tr>", {
+                                    "html": [
+                                        $("<td>", {
+                                            "style":"vertical-align: middle;",
+                                            "html": [
+                                                selectedName[i],
+                                                $("<input>", {
+                                                    "type": "hidden",
+                                                    "name": "productId",
+                                                    "value": selectedIds[i]
+                                                })
+                                            ]
+                                        }),
+                                        $("<td>", {
+                                            "style":"vertical-align: middle;",
+                                            "html": $("<input>", {
+                                                "type": "number",
+                                                "name": "productPrice",
+                                                "style":"text-align: right;",
+                                                "step":"100",
+                                                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                                                "value": selectedPrice[i].split(".").join("")
+                                            })
+                                        }),
+                                        $("<td>", {
+                                            "style":"vertical-align: middle;",
+                                            "html": $("<input>", {
+                                                "type": "number",
+                                                "name": "productQuantity",
+                                                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                                                "style":"text-align: right;",
+                                                "value": "1",
+                                                "min": "1"
+                                            })
+                                        }),
+                                        $("<td>", {
+                                            "style": "text-align: right; vertical-align: middle;",
+                                            "html": $("<span>", {
+                                                id:"orderItemAmount",
+                                                "html":formatCurrency(selectedPrice[i])
+                                            })
+                                        }),
+                                        $("<td>", {
+                                            "style": "text-align: center; vertical-align: middle;",
+                                            "html": $("<a>", {
+                                                "class": "btn btn-warning",
+                                                "data-role": "remove-row-btn",
+                                                "html": "Hủy"
+                                            })
+                                        })
+                                    ]
+                                });
+                                $("#product-table tbody").append(productRow);
+                            }
+                            $("#updateInfo").show();
+                            $("#material-info").hide();
+                            // Clear array
+                            selectedIds = [];
+                            selectedName = [];
+                            selectedPrice = [];
+                        } else {
+                            noty({
+                                text: 'Không thể thêm sản phẩm.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 1000
+                            });
+                        }
+                    },
+                    "fail": function (e) {
+                        noty({
+                            text: 'Đã có lỗi xảy ra.',
+                            type: 'danger',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }
+                });
+            }
+        }
+
+        $(document).on("click", ".multiple-choice-table tbody tr", function () {
+            if ($(this).attr('class').indexOf('selected') > -1) {
                 $(this).removeClass('selected');
+                // Remove id
+                var idTemp = $(this).find("td:first input").val();
+                var idIndex = selectedIds.indexOf(idTemp);
+                if (idIndex > -1) {
+                    selectedIds.splice(idIndex, 1);
+                }
+                // Remove name
+                var nameTemp = $(this).find("td:first span").text();
+                var nameIndex = selectedName.indexOf(nameTemp);
+                if (nameIndex > -1) {
+                    selectedName.splice(nameIndex, 1);
+                }
+                // Remove price
+                var priceTemp = $(this).find("td:nth-child(2) span").text();
+                var priceIndex = selectedPrice.indexOf(priceTemp);
+                if (priceIndex > -1) {
+                    selectedPrice.splice(priceIndex, 1);
+                }
             } else {
                 $(this).addClass('selected');
+                // Add id, name, price
+                selectedIds.push($(this).find("td:first input").val());
+                selectedName.push($(this).find("td:first span").text());
+                selectedPrice.push($(this).find("td:nth-child(2) span").text());
             }
         });
 

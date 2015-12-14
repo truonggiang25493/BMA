@@ -376,6 +376,7 @@
     <Compile Include="Models\ViewModel\ReportProductIncomeViewModel.cs" />
     <Compile Include="Models\ViewModel\ShortageMaterialViewModel.cs" />
     <Compile Include="Models\ViewModel\SupplierViewModel.cs" />
+    <Compile Include="Models\ViewModel\TaxRateViewModel.cs" />
     <Compile Include="Models\ViewModel\TndnTaxDeclarationViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

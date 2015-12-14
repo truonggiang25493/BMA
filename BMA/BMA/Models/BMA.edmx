@@ -250,7 +250,7 @@
           <Property Name="SupplierName" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="SupplierAddress" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="SupplierPhoneNumber" Type="char" MaxLength="12" Nullable="false" />
-          <Property Name="SupplierEmail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SupplierEmail" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="SupplierTaxCode" Type="char" MaxLength="20" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
@@ -1199,7 +1199,7 @@
           <Property Name="SupplierName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SupplierAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SupplierPhoneNumber" Type="String" MaxLength="12" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="SupplierEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SupplierEmail" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SupplierTaxCode" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="InputBills" Relationship="Self.FK_InputBill_Supplier_SupplierId" FromRole="Supplier" ToRole="InputBill" />

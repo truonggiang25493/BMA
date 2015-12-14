@@ -1,5 +1,5 @@
 ﻿@using System.Globalization
-@model List<BMA.Models.TaxRate>
+@model BMA.Models.ViewModel.TaxRateViewModel
 @{
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
@@ -30,28 +30,16 @@
                         <div class="box">
                             <div class="box-header">
                                 <h3 class="box-title">
-                                    Tỉ suất thuế hiện tại
+                                    Tỉ suất thuế
                                 </h3>
                             </div>
                             <div class="box-body">
-                                <!-- Method -->
                                 <div class="row">
-                                    <div class="col-md-8">Phương pháp tính thuế áp dụng:</div>
-                                    <div class="col-md-2">
-                                        <b>Khấu trừ</b>
-                                    </div>
-                                    <div class="col-md-2"></div>
-                                </div>
-                                <!-- VAT Rate -->
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        Tỉ suất thuế GTGT :
-                                    </div>
-                                    <div class="col-md-2">
-                                        <b>@(Model.ElementAt(0).TaxRateValue) %</b>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn btn-primary btn-xs">
+                                    <!-- Current VAT tax rate -->
+                                    <div class="col-md-4">
+                                        Tỉ suất thuế GTGT hiện tại:
+                                        <b>@(Model.CurrentTaxList.ElementAt(0).TaxRateValue) %</b>
+                                        <button class="btn btn-primary btn-xs" onclick="openChangeVATPopup()">
                                             <i class="fa fa-edit" style="margin-right: 3px;"></i>
                                             Thay đổi
                                             <script type="text/javascript">
@@ -70,7 +58,8 @@
                                                                         "min": "1",
                                                                         "max": "100",
                                                                         "name": "vatRate",
-                                                                        "value": "@(Model.ElementAt(0).TaxRateValue)",
+                                                                        "value": "@(Model.CurrentTaxList.ElementAt(0).TaxRateValue)",
+                                                                        "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
                                                                         "style": "margin-left: 15px; margin-right: 10px;"
                                                                     }),
                                                                     "<label>%</label>"
@@ -82,10 +71,10 @@
                                                                     "<label>Áp dụng từ ngày: </label>",
                                                                     $("<input>", {
                                                                         "type": "date",
-                                                                        "name": "beginDate",
+                                                                        "name": "vatBeginDate",
                                                                         "style": "margin-left: 10px;",
                                                                         "min": "@((DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"))",
-                                                                        "value": "@((new DateTime((DateTime.Now.Year), (DateTime.Now.AddMonths(1).Month), 1).ToString("yyyy-MM-dd")))"
+                                                                        "value": "@((new DateTime((DateTime.Now.AddMonths(1).Year), (DateTime.Now.AddMonths(1).Month), 1).ToString("yyyy-MM-dd")))"
                                                                     })
                                                                 ]
                                                             })
@@ -119,51 +108,87 @@
                                                 }
 
                                                 function changeVat() {
-                                                    $.ajax({
-                                                        url: "@(Url.Action("ChangeVat","Tax"))",
-                                                        method: "POST",
-                                                        data: $("#changeVAT").serialize(),
-                                                        success: function (data) {
-                                                            $('#myModal').modal('hide');
-                                                            if (data === "1") {
-                                                                var n = noty({
-                                                                    text: 'Cập nhật thuế giá trị gia tăng (VAT) thành công',
-                                                                    type: 'success',
-                                                                    dismissQueue: false,
-                                                                    layout: 'bottomLeft',
-                                                                    theme: 'defaultTheme',
-                                                                    timeout: 3000
-                                                                });
-                                                                window.setTimeout(function () {
-                                                                    window.reload();
-                                                                }, 4000);
-                                                            } else {
+                                                    var value = parseInt($("[name='vatRate']").val());
+                                                    if (value === parseInt("@(Model.CurrentTaxList.ElementAt(0).TaxRateValue)")) {
+                                                        noty({
+                                                            text: 'Tỉ suất thuế bằng giá trị hiện tại. Không thể cập nhật thuế giá trị gia tăng (VAT)',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                    } else {
+                                                        $.ajax({
+                                                            url: "@(Url.Action("ChangeVat", "Tax"))",
+                                                            method: "POST",
+                                                            data: $("#changeVAT").serialize(),
+                                                            success: function (data) {
                                                                 $('#myModal').modal('hide');
-                                                                var n = noty({
-                                                                    text: 'Không thể cập nhật thuế giá trị gia tăng (VAT)',
-                                                                    type: 'warning',
+                                                                if (data === "1") {
+                                                                    noty({
+                                                                        text: 'Cập nhật thuế giá trị gia tăng (VAT) thành công',
+                                                                        type: 'success',
+                                                                        dismissQueue: false,
+                                                                        layout: 'topCenter',
+                                                                        theme: 'defaultTheme',
+                                                                        timeout: 3000
+                                                                    });
+                                                                    window.setTimeout(function () {
+                                                                        location.reload();
+                                                                    }, 4000);
+                                                                } else {
+                                                                    $('#myModal').modal('hide');
+                                                                    noty({
+                                                                        text: 'Không thể cập nhật thuế giá trị gia tăng (VAT)',
+                                                                        type: 'warning',
+                                                                        dismissQueue: false,
+                                                                        layout: 'topCenter',
+                                                                        theme: 'defaultTheme',
+                                                                        timeout: 1000
+                                                                    });
+                                                                }
+                                                            },
+                                                            fail: function (e) {
+                                                                $('#myModal').modal('hide');
+                                                                noty({
+                                                                    text: 'Đã có lỗi xảy ra',
+                                                                    type: 'error',
                                                                     dismissQueue: false,
-                                                                    layout: 'bottomLeft',
+                                                                    layout: 'bottomRight',
                                                                     theme: 'defaultTheme',
                                                                     timeout: 1000
                                                                 });
                                                             }
-                                                        },
-                                                        fail: function (e) {
-                                                            $('#myModal').modal('hide');
-                                                            var n = noty({
-                                                                text: 'Đã có lỗi xảy ra',
-                                                                type: 'error',
-                                                                dismissQueue: false,
-                                                                layout: 'bottomRight',
-                                                                theme: 'defaultTheme',
-                                                                timeout: 1000
-                                                            });
-                                                        }
-                                                    });
+                                                        });
+                                                    }
                                                 }
                                             </script>
                                         </button>
+                                    </div>
+                                    <!-- VAT tax rate list -->
+                                    <div class="col-md-8">
+                                        <table id="example3" class="table table-hover table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Giá trị</th>
+                                                    <th>Từ</th>
+                                                    <th>Đến</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i < Model.VatTaxList.Count; i++)
+                                                {
+                                                <tr>
+                                                    <td>@(i + 1)</td>
+                                                    <td>@(Model.VatTaxList.ElementAt(i).TaxRateValue) %</td>
+                                                    <td>@(Model.VatTaxList.ElementAt(i).BeginDate.ToString("dd/MM/yyyy"))</td>
+                                                    <td>@(Model.VatTaxList.ElementAt(i).EndDate.Value.Year == 9999 ? "Chưa xác định" : Model.VatTaxList.ElementAt(0).EndDate.Value.ToString("dd/MM/yyyy"))</td>
+                                                </tr>
+                                                }
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -224,94 +249,165 @@
                         <!--Tax rate-->
                         <div class="box">
                             <div class="box-header">
-                                <h3 class="box-title">Tỉ suất thuế hiện tại</h3>
+                                <h3 class="box-title">Tỉ suất thuế</h3>
                             </div>
-                            <!--PP khấu trừ-->
                             <div class="box-body" id="deductWay">
                                 <div class="row">
-                                    <div class="col-md-8">Phương pháp tính thuế áp dụng:</div>
-                                    <div class="col-md-2">
-                                        <b>Khấu trừ</b>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn btn-primary btn-xs">
-                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
-                                            Thay đổi
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row" style="margin-bottom: 10px; margin-top: 10px;">
-                                    <div class="col-md-8">
-                                        Tổng thu nhập năm @(DateTime.Now.AddYears(-1).Year):
-                                    </div>
-                                    <div class="col-md-2">
-                                        <b>@(19000000000.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn btn-primary btn-xs">
-                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
-                                            Thay đổi
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        Tỉ suất thuế TNDN :
-                                    </div>
-                                    <div class="col-md-2">
-                                        <b>10%</b>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn btn-primary btn-xs">
-                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
-                                            Thay đổi
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <!--PP trực tiếp-->
-                            <div class="box-body" id="directWay" style="display: none;">
-                                <div class="row">
-                                    <div class="col-md-8">Phương pháp tính thuế áp dụng:</div>
-                                    <div class="col-md-2">
-                                        <b>Trực tiếp</b>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn btn-primary btn-xs">
-                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
-                                            Thay đổi
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row" style="margin-bottom: 10px; margin-top: 10px;">
-                                    <div class="col-md-8">
-                                        Loại hình kinh doanh:
-                                    </div>
-                                    <div class="col-md-2">
-                                        <b>Hàng hóa</b>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn btn-primary btn-xs">
-                                            <i class="fa fa-edit" style="margin-right: 3px;"></i>
-                                            Thay đổi
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8">
+                                    <!-- Current Excise tax rate -->
+                                    <div class="col-md-4">
                                         Tỉ suất thuế TNDN hiện tại:
-                                    </div>
-                                    <div class="col-md-2">
-                                        <b>1%</b>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn btn-primary btn-xs">
+                                        <b>@(Model.CurrentTaxList.ElementAt(1).TaxRateValue) %</b>
+                                        <button class="btn btn-primary btn-xs" onclick="openChangeExcisePopup()">
                                             <i class="fa fa-edit" style="margin-right: 3px;"></i>
                                             Thay đổi
+                                            <script type="text/javascript">
+                                                function openChangeExcisePopup() {
+                                                    var title = "Cập nhật tỉ suất thuế thu nhập doanh nghiệp(TNDN)";
+                                                    var body = $("<form>", {
+                                                        "id": "changeTndn",
+                                                        "class": "form-group",
+                                                        "html": [
+                                                            $("<div>", {
+                                                                "class": "form-group",
+                                                                "html": [
+                                                                    "<label>Tỉ suất TNDN mới: </label>",
+                                                                    $("<input>", {
+                                                                        "type": "number",
+                                                                        "min": "1",
+                                                                        "max": "100",
+                                                                        "name": "tndnRate",
+                                                                        "value": "@(Model.CurrentTaxList.ElementAt(1).TaxRateValue)",
+                                                                        "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                                                                        "style": "margin-left: 15px; margin-right: 10px;"
+                                                                    }),
+                                                                    "<label>%</label>"
+                                                                ]
+                                                            }),
+                                                            $("<div>", {
+                                                                "class": "form-group",
+                                                                "html": [
+                                                                    "<label>Áp dụng từ ngày: </label>",
+                                                                    $("<input>", {
+                                                                        "type": "date",
+                                                                        "name": "tndnBeginDate",
+                                                                        "style": "margin-left: 10px;",
+                                                                        "min": "@((DateTime.Now.AddDays(1)).ToString("yyyy-MM-dd"))",
+                                                                        "value": "@((new DateTime((DateTime.Now.AddMonths(1).Year), (DateTime.Now.AddMonths(1).Month), 1).ToString("yyyy-MM-dd")))"
+                                                                    })
+                                                                ]
+                                                            })
+                                                        ]
+                                                    });
+                                                    var footer = $("<div>", {
+                                                        "class": "row",
+                                                        "html": [
+                                                            $("<button>", {
+                                                                "class": "btn btn-primary",
+                                                                "data-dismiss": "modal",
+                                                                "style": "margin-right: 10px",
+                                                                "html": [
+                                                                    "Đóng"
+                                                                ]
+                                                            }),
+                                                            $("<button>", {
+                                                                "class": "btn btn-success",
+                                                                "style": "margin-right: 10px;",
+                                                                "onclick": "changeTndn()",
+                                                                "html": [
+                                                                    "Đồng ý"
+                                                                ]
+                                                            })
+                                                        ]
+                                                    });
+                                                    document.getElementById('popup-body').innerHTML = body[0].outerHTML;
+                                                    document.getElementById('popup-title').innerHTML = title;
+                                                    document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
+                                                    $('#myModal').modal('show');
+                                                }
+
+                                                function changeTndn() {
+                                                    var value = parseInt($("[name='tndnRate']").val());
+                                                    if (value === parseInt("@(Model.CurrentTaxList.ElementAt(1).TaxRateValue)")) {
+                                                        noty({
+                                                            text: 'Tỉ suất thuế bằng giá trị hiện tại. Không thể cập nhật thuế thu nhập doanh nghiệp (TNDN)',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                    } else {
+                                                        $.ajax({
+                                                            url: "@(Url.Action("ChangeTndn", "Tax"))",
+                                                            method: "POST",
+                                                            data: $("#changeTndn").serialize(),
+                                                            success: function (data) {
+                                                                $('#myModal').modal('hide');
+                                                                if (data === "1") {
+                                                                    noty({
+                                                                        text: 'Cập nhật thuế thu nhập doanh nghiệp (TNDN) thành công',
+                                                                        type: 'success',
+                                                                        dismissQueue: false,
+                                                                        layout: 'topCenter',
+                                                                        theme: 'defaultTheme',
+                                                                        timeout: 3000
+                                                                    });
+                                                                    window.setTimeout(function () {
+                                                                        location.reload();
+                                                                    }, 4000);
+                                                                } else {
+                                                                    $('#myModal').modal('hide');
+                                                                    noty({
+                                                                        text: 'Không thể cập nhật thuế thu nhập doanh nghiệp (TNDN)',
+                                                                        type: 'warning',
+                                                                        dismissQueue: false,
+                                                                        layout: 'topCenter',
+                                                                        theme: 'defaultTheme',
+                                                                        timeout: 1000
+                                                                    });
+                                                                }
+                                                            },
+                                                            fail: function (e) {
+                                                                $('#myModal').modal('hide');
+                                                                noty({
+                                                                    text: 'Đã có lỗi xảy ra',
+                                                                    type: 'error',
+                                                                    dismissQueue: false,
+                                                                    layout: 'bottomRight',
+                                                                    theme: 'defaultTheme',
+                                                                    timeout: 1000
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            </script>
                                         </button>
                                     </div>
-
+                                    <!-- Excise tax rate list -->
+                                    <div class="col-md-8">
+                                        <table id="example4" class="table table-hover table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Giá trị</th>
+                                                    <th>Từ</th>
+                                                    <th>Đến</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i < Model.ExciseTaxList.Count; i++)
+                                                {
+                                                    <tr>
+                                                        <td>@(i + 1)</td>
+                                                        <td>@(Model.ExciseTaxList.ElementAt(i).TaxRateValue) %</td>
+                                                        <td>@(Model.ExciseTaxList.ElementAt(i).BeginDate.ToString("dd/MM/yyyy"))</td>
+                                                        <td>@(Model.ExciseTaxList.ElementAt(i).EndDate.Value.Year == 9999 ? "Chưa xác định" : Model.ExciseTaxList.ElementAt(0).EndDate.Value.ToString("dd/MM/yyyy"))</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
