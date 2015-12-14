@@ -26,24 +26,31 @@ namespace BMA.Controllers
 
         public ActionResult InputMaterialIndex()
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                ViewBag.Title = "Danh sách nguyên liệu đầu vào";
-                ViewBag.TreeView = "inputMaterial";
-                ViewBag.TreeViewMenu = "listInputMaterial";
-                db = new BMAEntities();
-                inputMaterialBusiness = new InputMaterialBusiness();
-                var inputMaterialslList = InputMaterialBusiness.GetInputMaterialList();
-                if (inputMaterialslList == null)
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
                 {
-                    return RedirectToAction("Index", "StoreInfor");
+                    return RedirectToAction("Index", "Home");
                 }
-                return View(inputMaterialslList);
+                else
+                {
+                    ViewBag.Title = "Danh sách nguyên liệu đầu vào";
+                    ViewBag.TreeView = "inputMaterial";
+                    ViewBag.TreeViewMenu = "listInputMaterial";
+                    db = new BMAEntities();
+                    inputMaterialBusiness = new InputMaterialBusiness();
+                    var inputMaterialslList = InputMaterialBusiness.GetInputMaterialList();
+                    if (inputMaterialslList == null)
+                    {
+                        return RedirectToAction("Index", "StoreInfor");
+                    }
+                    return View(inputMaterialslList);
+                }
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
             }
         }
 
@@ -53,7 +60,7 @@ namespace BMA.Controllers
         public ActionResult InputMaterialDetail(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -67,62 +74,40 @@ namespace BMA.Controllers
                     if (inputMaterialDetail == null)
                     {
                         return RedirectToAction("InputMaterialIndex", "InputMaterial");
-
                     }
-
                     return View(inputMaterialDetail);
-
-                }
+                    }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "StoreInfor"); ;
+                    return RedirectToAction("ManageError", "Error"); ;
                 }
             }
         }
-        #endregion
-
-        #region Change Input Material Status
-
-        [HttpPost]
-        public int ChangeInputMaterialStatus(int id)
-        {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
-            {
-                return -7;
-            }
-            else
-            {
-                Boolean result = InputMaterialBusiness.ChangeInputMaterialStage(id);
-                if (result)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-
         #endregion
 
         #region Add New Input Material View
 
         public ActionResult AddInputMaterial()
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 2)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    db = new BMAEntities();
+                    ViewBag.TreeView = "inputMaterial";
+                    ViewBag.TreeViewMenu = "addInputMaterial";
+                    List<ProductMaterial> productMaterials = db.ProductMaterials.ToList();
+                    return View(productMaterials);
+                }
             }
-            else
+            catch (Exception)
             {
-                db = new BMAEntities();
-                ViewBag.TreeView = "inputMaterial";
-                ViewBag.TreeViewMenu = "addInputMaterial";
-                List<ProductMaterial> productMaterials = db.ProductMaterials.ToList();
-                return View(productMaterials);
+                return RedirectToAction("ManageError", "Error");
             }
         }
 
@@ -148,15 +133,15 @@ namespace BMA.Controllers
                 String inputMaterialExpiryDateString = f["txtInputMaterialExpiryDate"];
                 String inputMaterialNote = f["txtInputMaterialNote"];
                 String inputBillId = f["inputBillId"];
-                
-                var importDate =DateTime.ParseExact(importDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                var importDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var expireDate = DateTime.ParseExact(inputMaterialExpiryDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                if (DateTime.Compare(expireDate,importDate)>=1)
+                if (DateTime.Compare(expireDate, importDate) >= 1)
                 {
                     try
                     {
                         int inputMaterialUnitPrice = Convert.ToInt32(inputMaterialUnitPriceString);
-                        
+
                         inputMaterial.ImportQuantity = importQuantity;
                         inputMaterial.InputMaterialPrice = inputMaterialUnitPrice;
                         inputMaterial.ImportDate = DateTime.ParseExact(importDateString, "dd/MM/yyyy",
@@ -203,7 +188,7 @@ namespace BMA.Controllers
         #region Get Popup Input Bill
         public ActionResult GetInputBillList()
         {
-            List<InputBill> inputBillList = db.InputBills.OrderByDescending(m=>m.ImportDate).ToList();
+            List<InputBill> inputBillList = db.InputBills.OrderByDescending(m => m.ImportDate).ToList();
             return PartialView("InputListPartialView", inputBillList);
         }
         #endregion
@@ -228,7 +213,7 @@ namespace BMA.Controllers
         public ActionResult EditInputMaterial(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -241,7 +226,8 @@ namespace BMA.Controllers
                     {
                         return RedirectToAction("InputMaterialIndex", "InputMaterial");
                     }
-                    else{
+                    else
+                    {
                         var productMaterial = db.ProductMaterials.ToList();
                         ViewBag.productMaterial = productMaterial;
                         return View(inputMaterials);
@@ -249,11 +235,11 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "StoreInfor");
+                    return RedirectToAction("ManageError", "Error");
                     ;
                 }
             }
-            
+
         }
         #endregion
 

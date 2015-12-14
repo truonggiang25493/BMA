@@ -64,14 +64,21 @@ namespace BMA.Controllers
             }
             else
             {
-                ViewBag.TreeView = "customerIndex";
-
-                var stafflList = CustomerBusiness.GetCustomerIndex();
-                if (stafflList == null)
+                try
                 {
-                    RedirectToAction("CustomerIndex", "Customer");
+                    ViewBag.TreeView = "customerIndex";
+
+                    var stafflList = CustomerBusiness.GetCustomerIndex();
+                    if (stafflList == null)
+                    {
+                        RedirectToAction("CustomerIndex", "Customer");
+                    }
+                    return View(stafflList);
                 }
-                return View(stafflList);
+                catch (Exception)
+                {
+                   return RedirectToAction("ManageError", "Error");
+                }
             }
         }
 
@@ -100,7 +107,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "StoreInfor");
+                    return RedirectToAction("ManageError", "Error");
                 }
             }
         }

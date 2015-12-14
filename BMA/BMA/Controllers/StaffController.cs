@@ -18,20 +18,27 @@ namespace BMA.Controllers
         public ActionResult StaffIndex()
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 1)
             {
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                ViewBag.TreeView = "staff";
-                ViewBag.TreeViewMenu = "listStaff";
-                var stafflList = staffBusiness.GetStaffList();
-                if (stafflList == null)
+                try
                 {
-                    RedirectToAction("StaffIndex", "Staff");
+                    ViewBag.TreeView = "staff";
+                    ViewBag.TreeViewMenu = "listStaff";
+                    var stafflList = staffBusiness.GetStaffList();
+                    if (stafflList == null)
+                    {
+                        RedirectToAction("StaffIndex", "Staff");
+                    }
+                    return View(stafflList);
                 }
-                return View(stafflList);
+                catch (Exception)
+                {
+                    return RedirectToAction("ManageError", "Error");
+                }
             }
         }
 
@@ -62,7 +69,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "StoreInfor");
+                    return RedirectToAction("ManageError", "Error");
                 }
             }
         }
@@ -234,7 +241,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "StoreInfor");
+                    return RedirectToAction("ManageError", "Error");
                 }
             }
         }

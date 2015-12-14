@@ -47,8 +47,8 @@
                     </a>
                 </div>
             </div>
-            <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
-                <div class="col-md-3" style="padding-left: 40px">
+            <div class="row">
+                <div class="col-md-3">
                     Đặt hàng từ
                     <div class="input-group date" id="fromDate" style="width: 40%">
                         <input type="text" readonly="readonly" id="search_from_date" style="height: 30px" />
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="padding-top: 20px">
-                    <input type="text" id="search_customer" placeholder="Tên khách hàng" style="height: 30px" value="@((ViewBag.CustomerName != null && !(ViewBag.CustomerName as string).IsEmpty()) ? ViewBag.CustomerName : "")" />
+                    <input type="text" id="search_customer" placeholder="Tên khách hàng" style="height: 30px" value="@((ViewBag.CustomerName!=null&&!(ViewBag.CustomerName as string).IsEmpty())?ViewBag.CustomerName:"")" />
                 </div>
                 <div class="col-md-3" style="padding-top: 20px">
                     Trạng thái:
@@ -82,17 +82,10 @@
                         <option value="6" @((ViewBag.OrderStatus != null && ViewBag.OrderStatus == 6) ? "selected='selected'" : "")>Hủy</option>
                     </select>
                 </div>
-                <div class="col-md-1" style="padding-top: 20px; padding-left: 0">
+                <div class="col-md-1" style="padding-top: 20px">
                     <button class="btn btn-info btn-sm" onclick="search()">
                         <i class="fa fa-search" style="margin-right: 3px"></i>Tìm
                     </button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12" style="padding-left: 40px">
-                    <a class="btn btn-info" href="@(Url.Action("Index", "Order"))">
-                        <i class="fa fa-th-large" style="margin-right: 3px"></i>Hiện toàn bộ
-                    </a>
                 </div>
             </div>
             <div class="row" style="margin-right: 10px; margin-left: 10px; margin-top: 10px;">
