@@ -476,7 +476,7 @@
                             </a>
                             <ul class="treeview-menu">
 
-                                <li id="orderList"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Index')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
+                                <li id="orderList"><a onclick="NotificatePartialLink('@(Url.Action("Index", "Order") + "?fromDate=" + DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy") + "&toDate=" + DateTime.Now.ToString("dd/MM/yyyy"))')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
                                 <li id="addOrder"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Add')" style="cursor: pointer"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
                             </ul>
                         </li>

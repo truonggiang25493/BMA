@@ -1474,19 +1474,21 @@ namespace BMA.Business
             List<Order> orderList;
             if (fromDate != null && toDate != null)
             {
+                DateTime toDateTemp = toDate.Value.AddDays(1);
                 if (orderStatus != null && orderStatus != -1)
                 {
+
                     orderList =
                         db.Orders.Where(
                             m =>
-                                !m.IsStaffEdit && m.CreateTime >= fromDate.Value && m.CreateTime <= toDate.Value &&
+                                !m.IsStaffEdit && m.CreateTime >= fromDate.Value && m.CreateTime < toDateTemp &&
                                 m.OrderStatus == orderStatus.Value).ToList();
                 }
                 else
                 {
                     orderList = db.Orders.Where(
                         m =>
-                            !m.IsStaffEdit && m.CreateTime >= fromDate.Value && m.CreateTime <= toDate.Value).ToList();
+                            !m.IsStaffEdit && m.CreateTime >= fromDate.Value && m.CreateTime <= toDateTemp).ToList();
                 }
             }
             else if (fromDate == null && toDate == null && orderStatus != null && orderStatus != -1)
@@ -1539,18 +1541,18 @@ namespace BMA.Business
             foreach (Order order in resultList)
             {
                 OrderViewModel orderViewModel = new OrderViewModel { Order = order };
-            //    if (order.GuestInfo != null)
-            //    {
-            //        orderViewModel.OrderPersonName = order.GuestInfo.GuestInfoName;
-            //    }
-            //    else
-            //    {
-            //        orderViewModel.OrderPersonName = order.User.Fullname;
-            //    }
-            //    if (order.OrderStatus == 0)
-            //    {
-            //        orderViewModel.IsEnoughMaterial = IsEnoughMaterialForOrder(order);
-            //    }
+                if (order.GuestInfo != null)
+                {
+                    orderViewModel.OrderPersonName = order.GuestInfo.GuestInfoName;
+                }
+                else
+                {
+                    orderViewModel.OrderPersonName = order.User.Fullname;
+                }
+                if (order.OrderStatus == 0)
+                {
+                    orderViewModel.IsEnoughMaterial = IsEnoughMaterialForOrder(order);
+                }
                 orderViewModelList.Add(orderViewModel);
             }
             return orderViewModelList;
