@@ -218,6 +218,7 @@
     <Compile Include="Controllers\StoreInforController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\TaxController.cs" />
+    <Compile Include="DBChangeNotifer\CancelOrderNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeEventArgs.cs" />
     <Compile Include="DBChangeNotifer\ChangeInfo.cs" />
     <Compile Include="DBChangeNotifer\ChangeNotifier.cs" />
@@ -225,6 +226,7 @@
     <Compile Include="DBChangeNotifer\ChangeStatusNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeToConfirmNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeType.cs" />
+    <Compile Include="DBChangeNotifer\ConfirmToCustomerNotifier.cs" />
     <Compile Include="DBChangeNotifer\QuantityLowNotifer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1518,6 +1520,7 @@
     <Content Include="Views\Tax\TndnTaxDeclaration.cshtml" />
     <Content Include="Views\Supplier\InputBillBySupplier.cshtml" />
     <Content Include="Views\Error\ManageError.cshtml" />
+    <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
