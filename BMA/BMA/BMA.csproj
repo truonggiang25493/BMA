@@ -382,6 +382,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AdminLayout\dist\img\Admin 128x128.png" />
+    <Content Include="Content\AdminLayout\dist\img\VipIcon.gif" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\CustomerLayout\ajax.googleapis.com\ajax\libs\jquery\1.10.1\jquery.min.js" />
     <Content Include="Content\CustomerLayout\assets\bootstrap\css\bootstrap.css" />

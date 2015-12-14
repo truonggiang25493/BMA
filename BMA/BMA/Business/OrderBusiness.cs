@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Mail;
+using System.Web.WebPages;
 using BMA.Controllers;
 using BMA.Models;
 using BMA.Models.ViewModel;
@@ -865,7 +866,7 @@ namespace BMA.Business
             Order order = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
             if (order != null)
             {
-                #region If status is "Chờ xử lý) (0) remove order from DB. If GuestInfo is exist, remove GuestInfo
+                #region If status is "Chờ xử lý) (0) remove order from DB. If GuestInfo is exist, remove GuestInfo. Remove Previous OrderId
                 if (order.OrderStatus == 0)
                 {
                     db.OrderItems.RemoveRange(order.OrderItems);
@@ -875,6 +876,11 @@ namespace BMA.Business
 
                         order.GuestInfo = null;
                         db.GuestInfoes.Remove(guestInfo);
+                    }
+                    Order orderCheck = db.Orders.FirstOrDefault(m => m.PreviousOrderId == orderId);
+                    if (orderCheck != null)
+                    {
+                        orderCheck.PreviousOrderId = null;
                     }
                     db.Orders.Remove(order);
                     db.SaveChanges();
@@ -906,7 +912,6 @@ namespace BMA.Business
                                 {
                                     productMaterial.CurrentQuantity += exportFrom.ExportFromQuantity;
                                 }
-
                             }
                             db.SaveChanges();
                             // Remove ExportFrom
@@ -1464,11 +1469,63 @@ namespace BMA.Business
         /// </summary>
         /// <returns></returns>
         #region Get sorted order view model list
-        public List<OrderViewModel> GetSortedOrderViewModelList()
+        public List<OrderViewModel> GetSortedOrderViewModelList(DateTime? fromDate, DateTime? toDate, string customerName, int? orderStatus)
         {
-            List<Order> orderList = db.Orders.Where(m => !m.IsStaffEdit).ToList();
+            List<Order> orderList;
+            if (fromDate != null && toDate != null)
+            {
+                if (orderStatus != null && orderStatus != -1)
+                {
+                    orderList =
+                        db.Orders.Where(
+                            m =>
+                                !m.IsStaffEdit && m.CreateTime >= fromDate.Value && m.CreateTime <= toDate.Value &&
+                                m.OrderStatus == orderStatus.Value).ToList();
+                }
+                else
+                {
+                    orderList = db.Orders.Where(
+                        m =>
+                            !m.IsStaffEdit && m.CreateTime >= fromDate.Value && m.CreateTime <= toDate.Value).ToList();
+                }
+            }
+            else if (fromDate == null && toDate == null && orderStatus != null && orderStatus != -1)
+            {
+                orderList = db.Orders.Where(m => !m.IsStaffEdit && m.OrderStatus == orderStatus.Value).ToList();
+            }
+            else
+            {
+                orderList = db.Orders.Where(m => !m.IsStaffEdit).ToList();
+            }
+            List<Order> resultList;
+            if (customerName != null && !customerName.Trim().IsEmpty())
+            {
+                resultList = new List<Order>();
+                foreach (Order order in orderList)
+                {
+                    if (order.GuestInfo != null)
+                    {
+                        if (order.GuestInfo.GuestInfoName.Contains(customerName))
+                        {
+                            resultList.Add(order);
+                        }
+                    }
+                    else
+                    {
+                        if (order.User.Fullname.Contains(customerName))
+                        {
+                            resultList.Add(order);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                resultList = orderList;
+            }
+
             // Custom sort
-            orderList.Sort(
+            resultList.Sort(
                 delegate(Order o1, Order o2)
                 {
                     if (o1.OrderStatus != o2.OrderStatus)
@@ -1479,7 +1536,7 @@ namespace BMA.Business
 
                 });
             List<OrderViewModel> orderViewModelList = new List<OrderViewModel>();
-            foreach (Order order in orderList)
+            foreach (Order order in resultList)
             {
                 OrderViewModel orderViewModel = new OrderViewModel { Order = order };
                 if (order.GuestInfo != null)
@@ -1557,42 +1614,42 @@ namespace BMA.Business
             User checkEmail = db.Users.FirstOrDefault(m => m.Email.Equals(customerEmail.Trim()));
             if (checkEmail != null)
             {
-                return 1;
+                return 11;
             }
 
             // Check Username
             User checkUsername = db.Users.FirstOrDefault(m => m.Username.Equals(username.Trim()));
             if (checkUsername != null)
             {
-                return 2;
+                return 12;
             }
 
             // Check Address
             Customer checkAddress = db.Customers.FirstOrDefault(m => m.CustomerAddress.Equals(customerAddress.Trim()));
             if (checkAddress != null)
             {
-                return 3;
+                return 13;
             }
 
             // Check Phone Number
             Customer checkPhoneCustomer = db.Customers.FirstOrDefault(m => m.CustomerPhoneNumber.Equals(customerPhoneNumber.Trim()));
             if (checkPhoneCustomer != null)
             {
-                return 4;
+                return 14;
             }
 
             Staff checkPhoneStaff =
                 db.Staffs.FirstOrDefault(m => m.StaffPhoneNumber.Equals(customerPhoneNumber.Trim()) && m.IsActive);
             if (checkPhoneStaff != null)
             {
-                return 4;
+                return 14;
             }
 
             // Check Tax Code
             Customer checkTaxCode = db.Customers.FirstOrDefault(m => m.TaxCode.Equals(customerTaxCode.Trim()));
             if (checkTaxCode != null)
             {
-                return 5;
+                return 15;
             }
 
             return 0;

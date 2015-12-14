@@ -51,9 +51,9 @@ namespace BMA.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TaxRate> TaxRates { get; set; }
         public virtual DbSet<TaxType> TaxTypes { get; set; }
+        public virtual DbSet<TndnTaxDeclaration> TndnTaxDeclarations { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<VatTaxDeclaration> VatTaxDeclarations { get; set; }
-        public virtual DbSet<TndnTaxDeclaration> TndnTaxDeclarations { get; set; }
     
         public virtual ObjectResult<sp_GetIncomeMonthly_Result> sp_GetIncomeMonthly(Nullable<int> startMonth, Nullable<int> startYear, Nullable<int> endMonth, Nullable<int> endYear)
         {

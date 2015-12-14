@@ -6,6 +6,20 @@
     ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
+<div id="loading-background" style="display:none;"></div>
+<img src="~/Content/Images/ajax-loader.gif" id="loading-indicator" style="display:none" />
+
+<script type="text/javascript">
+    $(document).ajaxSend(function (event, request, settings) {
+        $('#loading-indicator').show();
+        $('#loading-background').show();
+    });
+
+    $(document).ajaxComplete(function (event, request, settings) {
+        $('#loading-indicator').hide();
+        $('#loading-background').hide();
+    });
+</script>
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -772,7 +786,7 @@
                                                     "class": "form-control",
                                                     "name": "customerEmail",
                                                     "id": "customerEmail",
-                                                    "value": "@Html.Raw(Model.Order.GuestInfo.GuestInfoEmail)"
+                                                    "value": ""
                                                 })
                                             ]
                                         }),
