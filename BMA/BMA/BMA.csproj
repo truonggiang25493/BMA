@@ -175,7 +175,6 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\InputMaterialExpireDate.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\AccountBusiness.cs" />
@@ -224,6 +223,7 @@
     <Compile Include="DBChangeNotifer\ChangeNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeSource.cs" />
     <Compile Include="DBChangeNotifer\ChangeStatusNotifier.cs" />
+    <Compile Include="DBChangeNotifer\ChangeToConfirmNotifier.cs" />
     <Compile Include="DBChangeNotifer\ChangeType.cs" />
     <Compile Include="DBChangeNotifer\QuantityLowNotifer.cs" />
     <Compile Include="Global.asax.cs">
