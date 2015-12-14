@@ -29,14 +29,21 @@ namespace BMA.Controllers
             }
             else
             {
-                ViewBag.TreeView = "supplier";
-                ViewBag.TreeViewMenu = "listSupplier";
-                var supplierslList = SupplierBusiness.GetSupplierList();
-                if (supplierslList == null)
+                try
                 {
-                    RedirectToAction("SupplierIndex", "Supplier");
+                    ViewBag.TreeView = "supplier";
+                    ViewBag.TreeViewMenu = "listSupplier";
+                    var supplierslList = SupplierBusiness.GetSupplierList();
+                    if (supplierslList == null)
+                    {
+                        RedirectToAction("SupplierIndex", "Supplier");
+                    }
+                    return View(supplierslList);
                 }
-                return View(supplierslList);
+                catch (Exception)
+                {
+                    return RedirectToAction("ManageError", "Error");
+                }
             }
         }
 
@@ -52,14 +59,21 @@ namespace BMA.Controllers
             }
             else
             {
-                ViewBag.TreeView = "supplier";
-                Supplier supplierDetail = supplierBusiness.GetSupplier(id);
-                if (supplierDetail == null)
+                try
                 {
-                    RedirectToAction("SupplierIndex", "Supplier");
+                    ViewBag.TreeView = "supplier";
+                    Supplier supplierDetail = supplierBusiness.GetSupplier(id);
+                    if (supplierDetail == null)
+                    {
+                        RedirectToAction("SupplierIndex", "Supplier");
 
+                    }
+                    return View(supplierDetail);
                 }
-                return View(supplierDetail);
+                catch (Exception)
+                {
+                    return RedirectToAction("ManageError", "Error");
+                }
             }
         }
 
@@ -106,7 +120,7 @@ namespace BMA.Controllers
         public ActionResult EditSupplier(int id)
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 1)
+            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 1)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -127,7 +141,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "StoreInfor");
+                    return RedirectToAction("ManageError", "Error");
                 }
             }
         }
@@ -174,9 +188,18 @@ namespace BMA.Controllers
             }
             else
             {
-                ViewBag.TreeView = "supplier";
-                ViewBag.TreeViewMenu = "addSupplier";
-                return View("AddSupplier");
+                try
+                {
+                    ViewBag.TreeView = "supplier";
+                    ViewBag.TreeViewMenu = "addSupplier";
+                    return View("AddSupplier");
+                }
+                catch (Exception)
+                {
+
+                    return RedirectToAction("ManageError", "Error");
+                }
+
             }
         }
 

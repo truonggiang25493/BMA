@@ -102,18 +102,34 @@
                                     }
                                 }
                                 @{
-                                int id = 0;
-                                while (id == 0)
-                                {
-                                    foreach (sp_GetTop10IncomeOfProductMonthly_Result result in Model)
+                                    int id = 0;
+                                    while (id == 0)
                                     {
-                                        if (result.ProductCode.Equals(productCode.ElementAt(i)))
+                                        foreach (sp_GetTop10IncomeOfProductMonthly_Result result in Model)
                                         {
-                                            id = result.ProductId.Value;
+                                            if (result.ProductCode.Equals(productCode.ElementAt(i)))
+                                            {
+                                                id = result.ProductId.Value;
+                                            }
                                         }
                                     }
-                                }
-                                string queryString = id + ";" + timeList.First() + " - " + timeList.Last();
+                                    string queryString = "";
+                                    if (timeList.First().Length == 7 && timeList.Last().Length == 7)
+                                    {
+                                        queryString = id + ";" + timeList.First() + " - " + timeList.Last();
+                                    }
+                                    else if (timeList.First().Length == 6 && timeList.Last().Length == 7)
+                                    {
+                                        queryString = id + ";" + "0" + timeList.First() + " - " + timeList.Last();
+                                    }
+                                    else if (timeList.First().Length == 7 && timeList.Last().Length == 6)
+                                    {
+                                        queryString = id + ";" + timeList.First() + " - " + "0" + timeList.Last();
+                                    }
+                                    else
+                                    {
+                                        queryString = id + ";" + "0" + timeList.First() + " - " + "0" + timeList.Last();
+                                    }
                                 }
 
                                 <td>

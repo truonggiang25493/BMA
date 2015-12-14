@@ -77,14 +77,17 @@
                         <!-- Change stage button -->
                         <div class="col-xs-12" style="text-align: center">
                             <!-- Edit button -->
-                            <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputBill()">
-                                <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
-                                <script type="text/javascript">
-                                    function editInputBill() {
-                                        window.location.replace("@(Url.Action("EditInputBill", "InputBill", new {@id = Model.InputBillId}))");
-                                    }
-                                </script>
-                            </button>
+                            @if ((int)Session["UserRole"] == 2)
+                            {
+                                <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputBill()">
+                                    <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
+                                    <script type="text/javascript">
+                                        function editInputBill() {
+                                            window.location.replace("@(Url.Action("EditInputBill", "InputBill", new {@id = Model.InputBillId}))");
+                                        }
+                                    </script>
+                                </button>
+                            }
                             <!-- Comeback button -->
                             <button class="btn btn-success pull-left" style="margin-left: 25px;" onclick="comebackToIndex()">
                                 <i class="fa fa-arrow-left" style="margin-right: 2px;"></i>Quay lại trang danh sách

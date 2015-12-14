@@ -21,19 +21,43 @@ namespace BMA.Business
         #region Get current tax rates
 
 
-        public List<TaxRate> GetCurrentTaxRate()
+        public TaxRateViewModel GetTaxRate()
         {
-            List<TaxRate> result = new List<TaxRate>();
+            TaxRateViewModel taxRate = new TaxRateViewModel();
+
+            #region Current tax rate
+
+            List<TaxRate> cuurentTaxRate = new List<TaxRate>();
+
             // Get current VAT
             TaxRate vatTaxRate = db.TaxRates.FirstOrDefault(m => m.TaxType.Abbreviation.Equals("GTGT") && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
-            result.Add(vatTaxRate);
+            cuurentTaxRate.Add(vatTaxRate);
 
             // Get current TNDN
-            // Temp income
+            TaxRate tndnTaxRate = db.TaxRates.FirstOrDefault(m => m.TaxType.Abbreviation.Equals("TNDN") && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
+            cuurentTaxRate.Add(tndnTaxRate);
 
-            List<TaxRate> tndnTaxRateList = db.TaxRates.Where(m => DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate).ToList();
-            //result.Add(tndnTaxRate);
-            return result;
+            taxRate.CurrentTaxList = cuurentTaxRate;
+
+            #endregion
+
+            #region Vat tax rate
+
+            List<TaxRate> vatTaxRateList = db.TaxRates.Where(m => m.TaxType.Abbreviation.Equals("GTGT")).ToList();
+
+            taxRate.VatTaxList = vatTaxRateList;
+
+            #endregion
+
+            #region Excise tax rate
+
+            List<TaxRate> exciseTaxRateList = db.TaxRates.Where(m => m.TaxType.Abbreviation.Equals("TNDN")).ToList();
+
+            taxRate.ExciseTaxList = exciseTaxRateList;
+
+            #endregion
+
+            return taxRate;
         }
         #endregion
 
@@ -44,7 +68,7 @@ namespace BMA.Business
             TaxRate currentVatTaxRate =
                 db.TaxRates.FirstOrDefault(
                     m => m.TaxTypeId == 1 && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
-            if (currentVatTaxRate == null)
+            if (currentVatTaxRate == null || currentVatTaxRate.TaxRateValue == vatRate)
             {
                 return false;
             }
@@ -70,7 +94,28 @@ namespace BMA.Business
             return true;
         }
 
-
+        public bool CancelVatTaxDeclaration(int quarter, int year)
+        {
+            VatTaxDeclaration taxDeclaration =
+                db.VatTaxDeclarations.FirstOrDefault(m => m.Quarter == quarter && m.Year == year);
+            if (taxDeclaration != null)
+            {
+                db.VatTaxDeclarations.Remove(taxDeclaration);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public DeclarationVatForm GetVatTaxDeclaration(int quarter, int year)
         {
@@ -592,7 +637,36 @@ namespace BMA.Business
 
         #region TNDN
 
+        public bool ChangeTndn(int tndnRate, DateTime beginDate)
+        {
+            TaxRate currentTndnTaxRate =
+                db.TaxRates.FirstOrDefault(
+                    m => m.TaxTypeId == 2 && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
+            if (currentTndnTaxRate == null || currentTndnTaxRate.TaxRateValue == tndnRate)
+            {
+                return false;
+            }
 
+            currentTndnTaxRate.EndDate = beginDate.AddDays(-1);
+            TaxRate taxRate = new TaxRate();
+            taxRate.TaxTypeId = 2;
+            taxRate.TaxRateValue = tndnRate;
+            taxRate.BeginDate = beginDate;
+            taxRate.EndDate = new DateTime(9999, 12, 31);
+
+            db.TaxRates.Add(taxRate);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         public TndnTaxDeclaration GeTndnTaxDeclaration(int year)
         {

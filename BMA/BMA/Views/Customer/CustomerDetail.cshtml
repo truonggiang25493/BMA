@@ -62,12 +62,15 @@
                     <div class="row">
                         <!-- Change stage button -->
                         <div class="col-xs-12" style="text-align: center">
-                            <button class="btn btn-bitbucket" id="btn-approved" onclick="open_container1(@(Model.CustomerId),@(Model.IsActive?1:0));">
-                                <i class="fa fa-refresh" style="margin-right: 5%;"></i>Thay đổi trạng thái
-                            </button>
-                            <button class="btn btn-bitbucket" id="btn-change-loyal" onclick="open_container2(@(Model.CustomerId),@(Model.IsLoyal?1:0));">
-                                <i class="fa fa-refresh" style="margin-right: 5%;"></i>Khách hàng thân thiết
-                            </button>
+                            @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 1)
+                            {
+                                <button class="btn btn-bitbucket" id="btn-approved" onclick="open_container1(@(Model.CustomerId), @(Model.IsActive ? 1 : 0));">
+                                    <i class="fa fa-refresh" style="margin-right: 5%;"></i>Thay đổi trạng thái
+                                </button>
+                                <button class="btn btn-bitbucket" id="btn-change-loyal" onclick="open_container2(@(Model.CustomerId), @(Model.IsLoyal ? 1 : 0));">
+                                    <i class="fa fa-refresh" style="margin-right: 5%;"></i>Khách hàng thân thiết
+                                </button>
+                            }
                         </div>
                     </div>
 

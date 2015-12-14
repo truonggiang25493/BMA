@@ -66,7 +66,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "StoreInfor");
+                    return RedirectToAction("ManageError", "Error");
                 }
             }
         }
@@ -114,20 +114,27 @@ namespace BMA.Controllers
         public ActionResult AddInputBill()
         {
             User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 2)
             {
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                ViewBag.TreeView = "inputBill";
-                ViewBag.TreeViewMenu = "addInputBill";
+                try
+                {
+                    ViewBag.TreeView = "inputBill";
+                    ViewBag.TreeViewMenu = "addInputBill";
 
-                OrderBusiness business = new OrderBusiness();
-                ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
+                    OrderBusiness business = new OrderBusiness();
+                    ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
 
-                List<InputBill> inputBills = db.InputBills.ToList();
-                return View(inputBills);
+                    List<InputBill> inputBills = db.InputBills.ToList();
+                    return View(inputBills);
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("ManageError", "Error");
+                }
             }
         }
 
@@ -254,7 +261,7 @@ namespace BMA.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Index", "StoreInfor");
+                    return RedirectToAction("ManageError", "Error");
                 }
             }
         }

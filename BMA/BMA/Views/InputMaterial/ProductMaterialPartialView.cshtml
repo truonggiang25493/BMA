@@ -1,5 +1,4 @@
-﻿
-@using BMA.Models
+﻿@using BMA.Models
 @model List<BMA.Models.ProductMaterial>
 
 <h3 style="text-align: center">Danh sách nguyên liệu</h3>
@@ -9,8 +8,8 @@
         <thead style="font-weight: bold">
             <tr>
 
-                <th>Nguyên liệu</th>
-                <th>Đơn vị tính</th>               
+                <th style="width: 70%">Nguyên liệu</th>
+                <th style="width: 30%">Đơn vị tính</th>
             </tr>
         </thead>
         <tbody>
@@ -19,12 +18,12 @@
                 if (productMaterial.IsActive)
                 {
                     <tr>
-                        <td>
+                        <td style="width: 70%">
                             <span>@(productMaterial.ProductMaterialName.Length <= 30 ? productMaterial.ProductMaterialName : productMaterial.ProductMaterialName.Substring(0, 26) + "...")</span>
-                            <input type="hidden" name="txtProductMaterialId" value="@productMaterial.ProductMaterialId"/>
+                            <input type="hidden" name="txtProductMaterialId" value="@productMaterial.ProductMaterialId" />
                         </td>
-                        <td>
-                            @(productMaterial.ProductMaterialUnit)
+                        <td style="width: 30%">
+                            <span>@(productMaterial.ProductMaterialUnit.Length <= 10 ? productMaterial.ProductMaterialUnit : productMaterial.ProductMaterialUnit.Substring(0, 7) + "...")</span>
                         </td>
                     </tr>
                 }

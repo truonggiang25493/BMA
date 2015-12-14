@@ -44,9 +44,12 @@
                                 <a class="btn btn-link btn-xs" href="@(Url.Action("InputBillDetail", "InputBill", new {id = inputBill.InputBillId}))" data-toggle="tooltip" data-placement="top" title="Xem">
                                     <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                 </a>
-                                <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputBill", "InputBill", new {id = inputBill.InputBillId}))" data-toggle="tooltip" data-placement="top" title="Sửa">
-                                    <i class="fa fa-edit" style="margin-right: 3px"></i>
-                                </a>
+                                @if ((int)Session["UserRole"] == 2)
+                                {
+                                    <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputBill", "InputBill", new {id = inputBill.InputBillId}))" data-toggle="tooltip" data-placement="top" title="Sửa">
+                                        <i class="fa fa-edit" style="margin-right: 3px"></i>
+                                    </a>
+                                }
                             </td>
 
                         </tr>

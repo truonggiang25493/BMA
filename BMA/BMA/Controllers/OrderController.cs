@@ -8,9 +8,6 @@ using System.Web.WebPages;
 using BMA.Business;
 using BMA.Models;
 using BMA.Models.ViewModel;
-using BMA.DBChangesNotifer;
-using Microsoft.AspNet.SignalR;
-using BMA.Hubs;
 
 namespace BMA.Controllers
 {
@@ -20,40 +17,49 @@ namespace BMA.Controllers
 
 
         // GET: Order
-        public ActionResult Index()
+        public ActionResult Index(string fromDate, string toDate, string customerName, int? orderStatus)
         {
-            // Dispose notificate and reinitial
-            if (Session["TempCusUserId"] != null)
+            try
             {
-                int userId = (int)Session["TempCusUserId"];
-                MvcApplication.changeStatusNotifer.Dispose();
-                MvcApplication.confirmToCustomerNotifer.Dispose();
-                string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId=", userId);
-                Session["CheckToNotify"] = userId;
-                MvcApplication.changeStatusNotifer.Start("BMAChangeDB", dependencyCheckSql);
-                MvcApplication.changeStatusNotifer.Change += this.OnChange3;
-                Session["TempCusUserId"] = null;
-            }
-
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
                 Session["Cart"] = null;
                 ViewBag.TreeView = "order";
                 ViewBag.TreeViewMenu = "orderList";
                 ViewBag.Title = "Danh sách đơn hàng";
 
                 OrderBusiness orderBusiness = new OrderBusiness();
-                List<OrderViewModel> orderViewModelList = orderBusiness.GetSortedOrderViewModelList();
-
-                // Bug if orderViewModelList is null return error
+                List<OrderViewModel> orderViewModelList;
+                if (fromDate != null && !fromDate.Trim().IsEmpty() && toDate != null && !toDate.Trim().IsEmpty())
+                {
+                    DateTime FromDate = DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime ToDate = DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    orderViewModelList = orderBusiness.GetSortedOrderViewModelList(FromDate, ToDate, customerName, orderStatus);
+                }
+                else
+                {
+                    orderViewModelList = orderBusiness.GetSortedOrderViewModelList(null, null, customerName, orderStatus);
+                }
+                
+                if (orderViewModelList == null)
+                {
+                    return RedirectToAction("ManageError", "Error");
+                }
                 ViewBag.Title = "Danh sách đơn hàng";
+                ViewBag.FromDate = fromDate;
+                ViewBag.ToDate = toDate;
+                ViewBag.CustomerName = customerName;
+                ViewBag.OrderStatus = orderStatus;
                 return View(orderViewModelList);
+               
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
             }
 
         }
@@ -61,30 +67,32 @@ namespace BMA.Controllers
         // GET: Detail
         public ActionResult Detail(int id)
         {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
                 OrderBusiness orderBusiness = new OrderBusiness();
                 OrderViewModel orderViewModel = orderBusiness.GetOrderViewModel(id);
-                if (orderViewModel != null)
+                if (orderViewModel == null)
                 {
-                    ViewBag.TreeView = "order";
-                    ViewBag.TaxRate = orderBusiness.GetVatRateAtTime(orderViewModel.Order.CreateTime);
-                    if (!orderViewModel.IsEnoughMaterial)
-                    {
-                        ViewBag.ShortageOfMaterial = true;
-                    }
-                    return View(orderViewModel);
+                    return RedirectToAction("ManageError", "Error");
                 }
-                // Bug return error page when orderViewModel is null
-                return RedirectToAction("Index");
+                ViewBag.TreeView = "order";
+                ViewBag.TaxRate = orderBusiness.GetVatRateAtTime(orderViewModel.Order.CreateTime);
+                if (!orderViewModel.IsEnoughMaterial)
+                {
+                    ViewBag.ShortageOfMaterial = true;
+                }
+                return View(orderViewModel);
             }
-
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
         }
 
 
@@ -92,16 +100,14 @@ namespace BMA.Controllers
         // GET: Edit
         public ActionResult Edit(int id)
         {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                ViewBag.Title = "Chỉnh sửa đơn hàng";
-                ViewBag.TreeView = "order";
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
 
                 OrderBusiness orderBusiness = new OrderBusiness();
                 int minQuantity = orderBusiness.GetMinQuantity();
@@ -115,26 +121,29 @@ namespace BMA.Controllers
                 {
                     orderViewModel.TaxRate = taxRate.TaxRateValue;
                 }
-                if (orderViewModel != null)
+                if (orderViewModel == null)
                 {
-                    if (orderViewModel.Order.OrderStatus == 0 && !orderViewModel.Order.CustomerEditingFlag)
-                    {
-                        if (!orderViewModel.IsEnoughMaterial)
-                        {
-                            ViewBag.ShortageOfMaterial = true;
-                        }
-                        InitiateProductList(orderViewModel.Order.OrderId);
-                        return View(orderViewModel);
-                    }
-
+                    return RedirectToAction("ManageError", "Error");
                 }
-                // Return error and redirect to url string Bug
-                return RedirectToAction("Index");
-
+                if (orderViewModel.Order.OrderStatus == 0 && !orderViewModel.Order.CustomerEditingFlag)
+                {
+                    if (!orderViewModel.IsEnoughMaterial)
+                    {
+                        ViewBag.ShortageOfMaterial = true;
+                    }
+                    ViewBag.Title = "Chỉnh sửa đơn hàng";
+                    ViewBag.TreeView = "order";
+                    InitiateProductList(orderViewModel.Order.OrderId);
+                    return View(orderViewModel);
+                }
+                return RedirectToAction("ManageError", "Error");
             }
-
-
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
         }
+
         [HttpPost]
         public int Edit(FormCollection form)
         {
@@ -182,17 +191,6 @@ namespace BMA.Controllers
                 int orderId = Convert.ToInt32(orderIdString);
                 int depositAmount = Convert.ToInt32(depositAmountString);
                 DateTime deliveryDate = DateTime.ParseExact(deliveryDateString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-                
-                //Manh code them
-                Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-                int cusUserId = order.CustomerUserId.Value;
-                Session["TempCusUserId"] = cusUserId;
-                MvcApplication.changeStatusNotifer.Dispose();
-                string dependencyCheckSql = string.Format("{0}{1}{2}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId = ", cusUserId, " AND OrderStatus = 1");
-                MvcApplication.confirmToCustomerNotifer.Start("BMAChangeDB", dependencyCheckSql);
-                MvcApplication.confirmToCustomerNotifer.Change += this.OnChange6;
-                //het
-                
                 bool rs = true;
                 rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate, staffUser.UserId);
                 if (rs)
@@ -204,18 +202,10 @@ namespace BMA.Controllers
                 return 0;
             }
 
+
+
         }
 
-        private void OnChange3(object sender, ChangeEventArgs e)
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
-            context.Clients.All.OnChange3(e.Info, e.Source, e.Type);
-        }
-        private void OnChange6(object sender, ChangeEventArgs e)
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
-            context.Clients.All.OnChange6(e.Info, e.Source, e.Type);
-        }
         [HttpPost]
         public int ApproveOrder(FormCollection form)
         {
@@ -252,8 +242,16 @@ namespace BMA.Controllers
                     if (!(customerName.IsEmpty() || orderIdString.IsEmpty() || username.IsEmpty() || email.IsEmpty() ||
                           customerAddress.IsEmpty() || customerPhoneNumber.IsEmpty() || customerTaxCode.IsEmpty()))
                     {
+                        OrderBusiness orderBusiness = new OrderBusiness();
+                        int check = orderBusiness.CheckCustomerField(email, customerAddress, customerPhoneNumber,
+                            customerTaxCode, username);
+                        if(check != 0)
+                        {
+                            return check;
+                        }
+
                         int orderId = Convert.ToInt32(orderIdString);
-                        int deposit = Convert.ToInt32(form["deposit"].Replace(".",""));
+                        int deposit = Convert.ToInt32(form["deposit"].Replace(".", ""));
 
                         CustomerViewModel customer = new CustomerViewModel
                         {
@@ -267,18 +265,13 @@ namespace BMA.Controllers
 
 
                         DateTime deliveryDate = DateTime.ParseExact(form["deliveryDate"], "MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture);
-
-                        OrderBusiness orderBusiness = new OrderBusiness();
+                        
                         int rs = orderBusiness.ApproveOrder(orderId, deposit, deliveryDate, staffUser.UserId, customer);
                         return rs;
                     }
-
                     return 0;
-
                 }
             }
-
-
         }
 
         [HttpPost]
@@ -317,14 +310,15 @@ namespace BMA.Controllers
 
         public ActionResult Add()
         {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
                 OrderBusiness orderBusiness = new OrderBusiness();
                 InitiateProductList(null);
                 ViewBag.MinQuantity = orderBusiness.GetMinQuantity();
@@ -332,43 +326,48 @@ namespace BMA.Controllers
                 ViewBag.TreeViewMenu = "addOrder";
                 return View();
             }
-
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
         }
-
-
-
-
 
         public ActionResult AddCustomerToOrder()
         {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                Session["Cart"] = null;
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    Session["Cart"] = null;
+                    return RedirectToAction("Index", "Home");
+                }
                 ViewBag.TreeView = "order";
                 ViewBag.TreeViewMenu = "addOrder";
                 return View("AddCustomerToOrder");
             }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+
 
         }
 
         [HttpPost]
         public ActionResult CheckoutWithCustomer(int customerId)
         {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                Session["Cart"] = null;
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    Session["Cart"] = null;
+                    return RedirectToAction("Index", "Home");
+                }
+
                 List<CartViewModel> inputCartList = Session["Cart"] as List<CartViewModel>;
                 OrderBusiness orderBusiness = new OrderBusiness();
                 OrderViewModel order = orderBusiness.MakeOrderViewModel(inputCartList, customerId, null);
@@ -381,6 +380,10 @@ namespace BMA.Controllers
                 ViewBag.TreeView = "order";
                 ViewBag.TreeViewMenu = "addOrder";
                 return View(order);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
             }
 
         }
@@ -454,15 +457,16 @@ namespace BMA.Controllers
         [HttpPost]
         public ActionResult CheckoutWithNewCustomer(FormCollection form)
         {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                Session["Cart"] = null;
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    Session["Cart"] = null;
+                    return RedirectToAction("Index", "Home");
+                }
+
                 List<CartViewModel> inputCartList = Session["Cart"] as List<CartViewModel>;
 
                 string customerNameString = form["customerName"];
@@ -492,38 +496,32 @@ namespace BMA.Controllers
                 }
                 return RedirectToAction("AddCustomerToOrder");
             }
-
-        }
-        [HttpPost]
-        public ActionResult Cancel(int orderId, int isReturnDeposit, int returnDeposit, string url)
-        {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            catch (Exception)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("ManageError", "Error");
             }
-            else
+        }
+
+        [HttpPost]
+        public int Cancel(int orderId, int isReturnDeposit, int returnDeposit, string url)
+        {
+            try
             {
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    return -7;
+                }
+
                 OrderBusiness orderBusiness = new OrderBusiness();
                 bool rs = orderBusiness.Cancel(orderId, returnDeposit, isReturnDeposit, staffUser.UserId);
-                // Call cancel order from OrderBusiness
-                if (rs)
-                {
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    // Error message
-                    // Ridirect to url
-                    if (url == null || url.IsEmpty())
-                    {
-                        url = "Index";
-                    }
-                    return RedirectToAction(url);
-                }
+                return rs ? 1 : 0;
             }
-
+            catch (Exception)
+            {
+                return 0;
+            }
         }
         private void InitiateProductList(int? orderId)
         {
@@ -568,7 +566,7 @@ namespace BMA.Controllers
         [HttpPost]
         public ActionResult GetListOfProductToAdd(int? orderId)
         {
-            List<Product> productList = new List<Product>();
+            List<Product> productList;
             if (orderId != null)
             {
                 productList = Session["ProductList"] as List<Product>;
@@ -577,7 +575,6 @@ namespace BMA.Controllers
             {
                 productList = Session["ProductListForAdd"] as List<Product>;
             }
-
             return PartialView(productList);
         }
 
@@ -604,7 +601,7 @@ namespace BMA.Controllers
         public int RemoveProductInProductListForAdd(int[] productId)
         {
             List<Product> productList = Session["ProductListForAdd"] as List<Product>;
-            if (productId.Length > 0)
+            if (productId!=null && productId.Length > 0)
             {
                 foreach (int index in productId)
                 {
@@ -791,8 +788,6 @@ namespace BMA.Controllers
             string outputMaterialIdString = form["outputMaterialId"];
             string exportQuantityString = form["exportQuantity"];
 
-
-
             try
             {
                 int productMaterialId = Convert.ToInt32(productMaterialIdString);
@@ -806,10 +801,7 @@ namespace BMA.Controllers
             catch (Exception)
             {
                 return 0;
-
             }
-
         }
-
     }
 }

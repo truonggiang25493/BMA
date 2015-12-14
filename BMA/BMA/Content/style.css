@@ -84,10 +84,10 @@ fieldset[disabled] .btn-cancel.active {
 
 #loading-background{
     position:absolute;
-    width:1349px;
-    height:668px;
+    width: 1136px;
+    height:603px;
     opacity:0.3;
     color:black;
     background-color:black;
-    z-index:1;
+    z-index:9999999999999;
 }

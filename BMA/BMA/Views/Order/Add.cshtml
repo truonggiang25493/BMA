@@ -100,12 +100,9 @@
         </div>
         <div class="box-footer">
             <div class="col-xs-12">
-
                 <a class="btn btn-danger" href="@(Url.Action("CancelAddOrder", "Order"))">
                     <i class="fa fa-close" style="margin-right: 3px;"></i>Hủy đơn hàng
                 </a>
-
-
                 <a class="btn btn-primary pull-right" onclick="checkCart()">
                     <i class="fa fa-edit" style="margin-right: 3px;"></i>Tiếp tục
                     <script type="text/javascript">
@@ -113,7 +110,7 @@
                             var totalQuantity = 0;
                             var checkQuantity = 1;
                             var checkPrice = 1;
-                            $("#product-table tbody tr").each(function(index, element) {
+                            $("#product-table tbody tr").each(function (index, element) {
                                 var productQuantity = parseInt($(element).find("td:nth-child(3) input").val());
                                 var productPrice = parseInt($(element).find("td:nth-child(2) input").val());
                                 if (productQuantity < 1) {
@@ -124,7 +121,7 @@
                                 }
                                 totalQuantity += productQuantity;
                             });
-                            if (checkPrice ===0) {
+                            if (checkPrice === 0) {
                                 noty({
                                     text: 'Giá sản phẩm phải lớn hơn 1000',
                                     type: 'warning',
@@ -133,7 +130,7 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
-                            }else if (checkQuantity === 0) {
+                            } else if (checkQuantity === 0) {
                                 noty({
                                     text: 'Số lượng sản phẩm phải lớn hơn 0',
                                     type: 'warning',
@@ -142,7 +139,7 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
-                            }else if (totalQuantity === 0) {
+                            } else if (totalQuantity === 0) {
                                 noty({
                                     text: 'Vui lòng có một sản phẩm có số lượng lớn hơn 0',
                                     type: 'warning',
@@ -151,7 +148,7 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
-                            } else if (totalQuantity < @((int) ViewBag.MinQuantity)) {
+                            } else if (totalQuantity < parseInt("@((int) ViewBag.MinQuantity)")) {
                                 noty({
                                     text: "Số lượng sản phẩm phải lớn hơn " + "@(((int) ViewBag.MinQuantity).ToString())",
                                     type: 'warning',
@@ -159,72 +156,68 @@
                                     layout: 'topCenter',
                                     theme: 'defaultTheme',
                                     timeout: 1000
-                            });
-                        } else {
+                                });
+                            } else {
                                 var listId = [];
-                        var listQuantity = [];
-                        var listPrice = [];
-                        $("#product-table tbody tr").each(function(index, element) {
-                            listId.push($(element).find("td:first input").val());
-                            listQuantity.push($(element).find("td:nth-child(3) input").val());
-                            listPrice.push($(element).find("td:nth-child(2) input").val());
-                        });
-                        $.ajax({
-                            "url": "@(Url.Action("AddToCart","Order"))",
-                            "method": "POST",
-                            "data": JSON.stringify({
-                                "productId": listId,
-                                "productQuantity": listQuantity,
-                                "productPrice": listPrice
-                            }),
-                            "dataType": 'json',
-                            "contentType": 'application/json',
-                            "success": function(data) {
-                                if (data === 1) {
-                                    noty({
-                                        text: "Hoàn tất chọn sản phẩm",
-                                        type: 'success',
-                                        dismissQueue: false,
-                                        layout: 'topCenter',
-                                        theme: 'defaultTheme',
-                                        timeout: 3000
-                                    });
-                                    window.setTimeout(function() {
-                                        window.location.replace("@(Url.Action("AddCustomerToOrder", "Order"))");
-                                    }, 4000);
-                                } else {
-                                    noty({
-                                        text: 'Không thể chọn sản phẩm',
-                                        type: 'warning',
-                                        dismissQueue: false,
-                                        layout: 'topCenter',
-                                        theme: 'defaultTheme',
-                                        timeout: 1000
-                                    });
-                                }
-                            },
-                            "fail":function(e) {
-                                noty({
-                                    text: 'Đã có lỗi xảy ra',
-                                    type: 'warning',
-                                    dismissQueue: false,
-                                    layout: 'topCenter',
-                                    theme: 'defaultTheme',
-                                    timeout: 1000
+                                var listQuantity = [];
+                                var listPrice = [];
+                                $("#product-table tbody tr").each(function (index, element) {
+                                    listId.push($(element).find("td:first input").val());
+                                    listQuantity.push($(element).find("td:nth-child(3) input").val());
+                                    listPrice.push($(element).find("td:nth-child(2) input").val());
+                                });
+                                $.ajax({
+                                    "url": "@(Url.Action("AddToCart","Order"))",
+                                    "method": "POST",
+                                    "data": JSON.stringify({
+                                        "productId": listId,
+                                        "productQuantity": listQuantity,
+                                        "productPrice": listPrice
+                                    }),
+                                    "dataType": 'json',
+                                    "contentType": 'application/json',
+                                    "success": function (data) {
+                                        if (data === 1) {
+                                            noty({
+                                                text: "Hoàn tất chọn sản phẩm",
+                                                type: 'success',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 3000
+                                            });
+                                            window.setTimeout(function () {
+                                                window.location.replace("@(Url.Action("AddCustomerToOrder", "Order"))");
+                                            }, 4000);
+                                        } else {
+                                            noty({
+                                                text: 'Không thể chọn sản phẩm',
+                                                type: 'warning',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 1000
+                                            });
+                                        }
+                                    },
+                                    "fail": function (e) {
+                                        noty({
+                                            text: 'Đã có lỗi xảy ra',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
                                 });
                             }
-                        });
-                        }
                         }
                     </script>
                 </a>
             </div>
         </div>
-
     </div>
-
-
-
 </section>
 @section AddOrderScript{
     <script src="~/Scripts/numeral.js"></script>
@@ -233,7 +226,7 @@
         var selectNames = [];
         var selectPrices = [];
         $(document).on("click", ".multiple-choice-table tbody tr", function () {
-            if ($(this).attr('class').indexOf('selected')>-1) {
+            if ($(this).attr('class').indexOf('selected') > -1) {
                 $(this).removeClass('selected');
                 // Remove id
                 var idTemp = $(this).find("td:first input").val();
@@ -305,7 +298,12 @@
                 }
             });
         });
+
         function show_list_product() {
+            selectIds = [];
+            selectNames = [];
+            selectPrices = [];
+
             $.ajax({
                 url: "@(Url.Action("GetListOfProductToAdd", "Order"))",
                 method: "POST",
@@ -323,95 +321,126 @@
                     $('#myStandardModal').modal('show');
                 },
                 fail: function (e) {
-                    alert("Have error" + e.toString());
+                    noty({
+                        text: 'Đã có lỗi xảy ra.',
+                        type: 'danger',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
                 }
             });
         }
 
         function fnselect() {
+            if (selectIds.length === 0) {
+                noty({
+                    text: 'Vui lòng chọn 1 sản phẩm.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else {
+                $.ajax({
+                    "url": "@Url.Action("RemoveProductInProductListForAdd", "Order")",
+                    "method": "POST",
+                    "data": JSON.stringify({ "productId": selectIds }),
+                    "dataType": 'json',
+                    "contentType": 'application/json',
+                    "success": function (data) {
+                        if (data === 1) {
+                            $('#myStandardModal').modal('hide');
+                            for (i = 0; i < selectIds.length; i++) {
+                                var price = selectPrices[i].split(".").join("");
+                                var productRow = $("<tr>", {
+                                    "html": [
+                                        $("<td>", {
+                                            "style": "vertical-align: middle;",
+                                            "html": [
+                                                selectNames[i],
+                                                $("<input>", {
+                                                    "type": "hidden",
+                                                    "name": "productId",
+                                                    "value": selectIds[i]
+                                                })
+                                            ]
+                                        }),
+                                        $("<td>", {
+                                            "style": "vertical-align: middle;",
+                                            "html": $("<input>", {
+                                                "type": "number",
+                                                "name": "productPrice",
+                                                "data-role": "price",
+                                                "step": "100",
+                                                "value": price,
+                                                "min": 1000,
+                                                "style": "text-align: right;",
+                                                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57"
 
-            $.ajax({
-                "url": "@Url.Action("RemoveProductInProductListForAdd", "Order")",
-                "method": "POST",
-                "data": JSON.stringify({ "productId": selectIds }),
-                "dataType": 'json',
-                "contentType": 'application/json',
-                "success": function (data) {
-                    if (data === 1) {
-                        $('#myStandardModal').modal('hide');
-                        for (i = 0; i < selectIds.length; i++) {
-                            var price = selectPrices[i].split(".").join("");
-                            var productRow = $("<tr>", {
-                                "html": [
-                                    $("<td>", {
-                                        "style": "vertical-align: middle;",
-                                        "html": [
-                                            selectNames[i],
-                                            $("<input>", {
-                                                "type": "hidden",
-                                                "name": "productId",
-                                                "value": selectIds[i]
                                             })
-                                        ]
-                                    }),
-                                    $("<td>", {
-                                        "style": "vertical-align: middle;",
-                                        "html": $("<input>", {
-                                            "type": "number",
-                                            "name": "productPrice",
-                                            "data-role":"price",
-                                            "step":"100",
-                                            "value": price,
-                                            "min":1000,
-                                            "style":"text-align: right;",
-                                            "onkeypress":"return event.charCode >= 48 && event.charCode <= 57"
-
+                                        }),
+                                        $("<td>", {
+                                            "style": "vertical-align: middle;",
+                                            "html": $("<input>", {
+                                                "type": "number",
+                                                "name": "productQuantity",
+                                                "data-role": "quantity",
+                                                "value": "1",
+                                                "min": "1",
+                                                style: "text-align: right;",
+                                                onkeypress: "return event.charCode >= 48 && event.charCode <= 57"
+                                            })
+                                        }),
+                                        $("<td>", {
+                                            "style": "text-align: right; vertical-align: middle;",
+                                            "html": $("<span>", {
+                                                id: "orderItemAmount",
+                                                "html": formatCurrency(selectPrices[i])
+                                            })
+                                        }),
+                                        $("<td>", {
+                                            "style": "text-align: center; vertical-align: middle;",
+                                            "html": $("<a>", {
+                                                "class": "btn btn-warning",
+                                                "data-role": "remove-row-btn",
+                                                "html": "Hủy"
+                                            })
                                         })
-                                    }),
-                                    $("<td>", {
-                                        "style": "vertical-align: middle;",
-                                        "html": $("<input>", {
-                                            "type": "number",
-                                            "name": "productQuantity",
-                                            "data-role":"quantity",
-                                            "value": "1",
-                                            "min": "1",
-                                            style:"text-align: right;",
-                                            onkeypress:"return event.charCode >= 48 && event.charCode <= 57"
-                                        })
-                                    }),
-                                    $("<td>", {
-                                        "style": "text-align: right; vertical-align: middle;",
-                                        "html": $("<span>", {
-                                            id: "orderItemAmount",
-                                            "html": formatCurrency(selectPrices[i])
-                                        })
-                                    }),
-                                    $("<td>", {
-                                        "style": "text-align: center; vertical-align: middle;",
-                                        "html": $("<a>", {
-                                            "class": "btn btn-warning",
-                                            "data-role": "remove-row-btn",
-                                            "html": "Hủy"
-                                        })
-                                    })
-                                ]
+                                    ]
+                                });
+                                $("#product-table tbody").append(productRow);
+                            }
+                            $("#product-info").show();
+                            // Clear array
+                            selectIds = [];
+                            selectNames = [];
+                            selectPrices = [];
+                        } else {
+                            noty({
+                                text: 'Không thể thêm sản phẩm.',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 1000
                             });
-                            $("#product-table tbody").append(productRow);
                         }
-                        $("#product-info").show();
-                        // Clear array
-                        selectIds = [];
-                        selectNames = [];
-                        selectPrices = [];
-                    } else {
-                        alert("Không thể thêm sản phẩm");
+                    },
+                    "fail": function (e) {
+                        noty({
+                            text: 'Đã có lỗi xảy ra.',
+                            type: 'danger',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
                     }
-                },
-                "fail": function (e) {
-                    alert("Have error" + e.toString());
-                }
-            });
+                });
+            }
         }
     </script>
 }

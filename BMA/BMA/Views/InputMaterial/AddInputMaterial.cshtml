@@ -218,6 +218,7 @@
                             var txtImportDate = $("#txtImportDate").val();
                             var txtInputMaterialExpiryDate = $("#txtInputMaterialExpiryDate").val();
                             var inputBillCode = $("#inputBillCode").val();
+                            var unitPrice = $("#txtUnitPrice").val();
 
                             if (productMaterialName.trim() === '') {
                                 noty({
@@ -300,7 +301,7 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
-                            } else if (txtInputMaterialPrice < txtImportQuantity) {
+                            } else if (unitPrice<0) {
                                 noty({
                                     text: 'Số lượng nguyên liệu nhập vào không được lớn hơn tổng giá nguyên liệu.',
                                     type: 'warning',

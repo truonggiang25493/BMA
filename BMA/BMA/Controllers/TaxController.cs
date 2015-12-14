@@ -7,12 +7,9 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
-using System.Web.WebSockets;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using BMA.Business;
-using BMA.Common;
 using BMA.Models;
 using BMA.Models.ViewModel;
 
@@ -27,16 +24,18 @@ namespace BMA.Controllers
             ViewBag.TreeView = "report";
             ViewBag.TreeViewMenu = "taxRepory";
             TaxBusiness taxBusiness = new TaxBusiness();
-            List<TaxRate> taxRateList = taxBusiness.GetCurrentTaxRate();
-            return View(taxRateList);
+            TaxRateViewModel taxRate = taxBusiness.GetTaxRate();
+            return View(taxRate);
         }
+
+        #region VAT Tax
 
         // Change VAT
         [HttpPost]
         public int ChangeVat(FormCollection form)
         {
             string vatRateString = form["vatRate"];
-            string beginDateString = form["beginDate"];
+            string beginDateString = form["vatBeginDate"];
             if (!(vatRateString.IsEmpty() || beginDateString.IsEmpty()))
             {
                 int vatRate;
@@ -57,8 +56,6 @@ namespace BMA.Controllers
             }
             return 0;
         }
-
-        #region VAT Tax report
 
         public ActionResult OutputVatList()
         {
@@ -1814,9 +1811,43 @@ namespace BMA.Controllers
 
             #endregion
         }
+
+        public int CancelVatTaxDeclaration(int quarter, int year)
+        {
+            TaxBusiness business = new TaxBusiness();
+            return (business.CancelVatTaxDeclaration(quarter, year) ? 1 : 0);
+        }
+
         #endregion
 
-        #region TNDN Tax report
+        #region TNDN Tax
+
+        // Change TNDN
+        [HttpPost]
+        public int ChangeTndn(FormCollection form)
+        {
+            string tndnRateString = form["tndnRate"];
+            string beginDateString = form["tndnBeginDate"];
+            if (!(tndnRateString.IsEmpty() || beginDateString.IsEmpty()))
+            {
+                int tndnRate;
+
+                if (!(int.TryParse(tndnRateString, out tndnRate)))
+                {
+                    return 0;
+                }
+                DateTime beginDate;
+                DateTime.TryParse(beginDateString, out beginDate);
+                if (!(DateTime.TryParse(beginDateString, out beginDate)))
+                {
+                    return 0;
+                }
+                TaxBusiness taxBusiness = new TaxBusiness();
+                bool rs = taxBusiness.ChangeTndn(tndnRate, beginDate);
+                return rs ? 1 : 0;
+            }
+            return 0;
+        }
 
         public ActionResult TndnTaxDeclaration(int year)
         {

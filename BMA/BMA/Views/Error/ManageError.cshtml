@@ -3,13 +3,16 @@
     Layout = "~/Views/Layout/ManageLayout.cshtml";
 }
 
-<section class="border-top">
-    <div align="center"><h3>Đã có lỗi xảy ra</h3></div>
-    <div align="center" style="margin-top: 5%"><img src="~/content/images/errorimages/error.png" /></div>
-    <div style="margin-left: 5%">
-        <a class="btn btn-danger" href="@(Url.Action("Index","Manage"))">
-            <i class="fa fa-backward" style="margin-left: 3px; margin-right: 3px"></i>Quay lại trang quản lí
-            
-        </a>
-    </div>
+<section class="content">
+    <div class="error-page">
+        <h2 class="headline text-yellow">
+            <i class="fa fa-warning text-yellow"></i>
+        </h2>
+        <div class="error-content" style="padding-top: 20px">
+            <h3>
+                <b>Rất tiếc đã có lỗi xảy ra !</b><br />
+                Bấm vào <a href="@(Url.Action("Index", "StoreInfor"))">đây</a> để trở về trang quản lý.
+            </h3>
+        </div>
+    </div><!-- /.error-page -->
 </section>
