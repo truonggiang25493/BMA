@@ -6,19 +6,19 @@
 }
 
 @*<div id="loading-background" style="display:none;"></div>
-<img src="~/Content/Images/ajax-loader.gif" id="loading-indicator" style="display:none" />
+    <img src="~/Content/Images/ajax-loader.gif" id="loading-indicator" style="display:none" />
 
-<script type="text/javascript">
-    $(document).ajaxSend(function (event, request, settings) {
-        $('#loading-indicator').show();
-        $('#loading-background').show();
-    });
+    <script type="text/javascript">
+        $(document).ajaxSend(function (event, request, settings) {
+            $('#loading-indicator').show();
+            $('#loading-background').show();
+        });
 
-    $(document).ajaxComplete(function (event, request, settings) {
-        $('#loading-indicator').hide();
-        $('#loading-background').hide();
-    });
-</script>*@
+        $(document).ajaxComplete(function (event, request, settings) {
+            $('#loading-indicator').hide();
+            $('#loading-background').hide();
+        });
+    </script>*@
 
 <section class="content-header">
     <h1>Danh sách nguyên liệu đầu vào</h1>
@@ -89,9 +89,12 @@
                                     <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Xem">
                                         <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                     </a>
-                                    <button class="btn btn-link btn-xs" onclick="open_container(@(inputMaterial.InputMaterialId), @(inputMaterial.ProductMaterialId), @(inputMaterial.RemainQuantity));" data-toggle="tooltip" data-placement="top" title="Hủy nguyên liệu">
-                                        <i class="fa fa-times" style="margin-right: 3px"></i>
-                                    </button>
+                                    @if ((int)Session["UserRole"] == 2)
+                                    {
+                                        <button class="btn btn-link btn-xs" onclick="open_container(@(inputMaterial.InputMaterialId), @(inputMaterial.ProductMaterialId), @(inputMaterial.RemainQuantity));" data-toggle="tooltip" data-placement="top" title="Hủy nguyên liệu">
+                                            <i class="fa fa-times" style="margin-right: 3px"></i>
+                                        </button>
+                                    }
                                 </td>
                             }
                             else
@@ -103,13 +106,16 @@
                                     <a class="btn btn-link btn-xs" href="@(Url.Action("InputMaterialDetail", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Xem">
                                         <i class="fa fa-navicon" style="margin-right: 3px"></i>
                                     </a>
-                                    <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputMaterial", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Sửa">
-                                        <i class="fa fa-edit" style="margin-right: 3px"></i>
-                                    </a>
-                                    <button class="btn btn-link btn-xs" onclick="open_container(@(inputMaterial.InputMaterialId), @(inputMaterial.ProductMaterialId), @(inputMaterial.RemainQuantity))" data-toggle="tooltip" data-placement="top" title="Hủy nguyên liệu">
-                                        <i class="fa fa-times" style="margin-right: 3px"></i>
+                                    @if ((int)Session["UserRole"] == 2)
+                                    {
+                                        <a class="btn btn-link btn-xs" href="@(Url.Action("EditInputMaterial", "InputMaterial", new {id = inputMaterial.InputMaterialId}))" data-toggle="tooltip" data-placement="top" title="Sửa">
+                                            <i class="fa fa-edit" style="margin-right: 3px"></i>
+                                        </a>
+                                        <button class="btn btn-link btn-xs" onclick="open_container(@(inputMaterial.InputMaterialId), @(inputMaterial.ProductMaterialId), @(inputMaterial.RemainQuantity))" data-toggle="tooltip" data-placement="top" title="Hủy nguyên liệu">
+                                            <i class="fa fa-times" style="margin-right: 3px"></i>
 
-                                    </button>
+                                        </button>
+                                    }
                                 </td>
                             }
                         </tr>
