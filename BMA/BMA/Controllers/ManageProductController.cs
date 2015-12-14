@@ -141,50 +141,65 @@ namespace BMA.Controllers
 
         public string CreateProductCode(string productName)
         {
-            var lstProductCode = db.Products.Select(n => n.ProductCode).ToList();
-            string[] productCodeArray = productName.Split(' ');
-            string productWord = "";
-            string productNumber = "001";
-            string productCode = "";
-            string upperLetter = "";
-            for (int i = 0; i < productCodeArray.Length; i++)
+            try
             {
-                upperLetter = productCodeArray[i].Substring(0, 1).ToUpper();
-                productWord += upperLetter;
-            }
-            if (productWord.Length < 4)
-            {
-                for (int j = productWord.Length; j < 4; j++)
+                var lstProductCode = db.Products.Select(n => n.ProductCode).ToList();
+                string[] productCodeArray = productName.Split(' ');
+                string productWord = "";
+                string productNumber = "001";
+                string productCode = "";
+                string upperLetter = "";
+                try
                 {
-                    productWord += "X";
-                }
-            }
-            if (productWord.Length > 4)
-            {
-                productWord = productWord.Substring(0, 4);
-            }
-            for (int i = 0; i < lstProductCode.Count; i++)
-            {
-                if (productWord.Equals(lstProductCode[i].Substring(0, 4)))
-                {
-                    int subNumber = Convert.ToInt32(lstProductCode[i].Substring(4, 3));
-                    productNumber = (subNumber + 1).ToString();
-                    if (productNumber.Length < 3)
+                    for (int i = 0; i < productCodeArray.Length; i++)
                     {
-                        if (productNumber.Length < 2)
+                        upperLetter = productCodeArray[i].Substring(0, 1).ToUpper();
+                        productWord += upperLetter;
+                    }
+                }
+                catch
+                {
+                    productWord = "APEA";
+                }
+
+                if (productWord.Length < 4)
+                {
+                    for (int j = productWord.Length; j < 4; j++)
+                    {
+                        productWord += "X";
+                    }
+                }
+                if (productWord.Length > 4)
+                {
+                    productWord = productWord.Substring(0, 4);
+                }
+                for (int i = 0; i < lstProductCode.Count; i++)
+                {
+                    if (productWord.Equals(lstProductCode[i].Substring(0, 4)))
+                    {
+                        int subNumber = Convert.ToInt32(lstProductCode[i].Substring(4, 3));
+                        productNumber = (subNumber + 1).ToString();
+                        if (productNumber.Length < 3)
                         {
-                            productNumber = string.Format("{0}{1}{2}", "0", "0", productNumber);
-                        }
-                        else
-                        {
-                            productNumber = string.Format("{0}{1}", "0", productNumber);
+                            if (productNumber.Length < 2)
+                            {
+                                productNumber = string.Format("{0}{1}{2}", "0", "0", productNumber);
+                            }
+                            else
+                            {
+                                productNumber = string.Format("{0}{1}", "0", productNumber);
+                            }
                         }
                     }
                 }
-            }
-            productCode = string.Format("{0}{1}", productWord, productNumber);
+                productCode = string.Format("{0}{1}", productWord, productNumber);
 
-            return productCode;
+                return productCode;
+            }
+            catch
+            {
+                return "Error";
+            }
         }
 
         [HttpPost]
@@ -487,19 +502,26 @@ namespace BMA.Controllers
         public int RemoveMaterialFromListToAdd(int[] materialId)
         {
             List<ProductMaterial> lstMaterial = Session["MaterialListToAdd"] as List<ProductMaterial>;
-            if (materialId.Length > 0)
+            if (materialId != null)
             {
-                foreach (int index in materialId)
+                if (materialId.Length > 0)
                 {
-                    if (lstMaterial != null && lstMaterial.Count > 0)
+                    foreach (int index in materialId)
                     {
-                        lstMaterial.Remove(lstMaterial.SingleOrDefault(n => n.ProductMaterialId == index));
+                        if (lstMaterial != null && lstMaterial.Count > 0)
+                        {
+                            lstMaterial.Remove(lstMaterial.SingleOrDefault(n => n.ProductMaterialId == index));
+                        }
                     }
+                    Session["MaterialListToAdd"] = lstMaterial;
+                    return 1;
                 }
-                Session["MaterialListToAdd"] = lstMaterial;
-                return 1;
+                return 0;
             }
-            return 0;
+            else
+            {
+                return -1;
+            }
         }
 
         public int AddMaterialInMaterialListToAdd(int materialId)
@@ -533,19 +555,26 @@ namespace BMA.Controllers
         public int RemoveMaterialInProductList(int[] materialId)
         {
             List<ProductMaterial> materialList = Session["MaterialList"] as List<ProductMaterial>;
-            if (materialId.Length > 0)
+            if (materialId != null)
             {
-                foreach (int index in materialId)
+                if (materialId.Length > 0)
                 {
-                    if (materialList != null && materialList.Count > 0)
+                    foreach (int index in materialId)
                     {
-                        materialList.Remove(materialList.FirstOrDefault(m => m.ProductMaterialId == index));
+                        if (materialList != null && materialList.Count > 0)
+                        {
+                            materialList.Remove(materialList.FirstOrDefault(m => m.ProductMaterialId == index));
+                        }
                     }
+                    Session["MaterialList"] = materialList;
+                    return 1;
                 }
-                Session["MaterialList"] = materialList;
-                return 1;
+                return 0;
             }
-            return 0;
+            else
+            {
+                return -1;
+            }
         }
 
         [HttpPost]

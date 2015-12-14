@@ -1482,18 +1482,18 @@ namespace BMA.Business
             foreach (Order order in orderList)
             {
                 OrderViewModel orderViewModel = new OrderViewModel { Order = order };
-                if (order.GuestInfo != null)
-                {
-                    orderViewModel.OrderPersonName = order.GuestInfo.GuestInfoName;
-                }
-                else
-                {
-                    orderViewModel.OrderPersonName = order.User.Fullname;
-                }
-                if (order.OrderStatus == 0)
-                {
-                    orderViewModel.IsEnoughMaterial = IsEnoughMaterialForOrder(order);
-                }
+            //    if (order.GuestInfo != null)
+            //    {
+            //        orderViewModel.OrderPersonName = order.GuestInfo.GuestInfoName;
+            //    }
+            //    else
+            //    {
+            //        orderViewModel.OrderPersonName = order.User.Fullname;
+            //    }
+            //    if (order.OrderStatus == 0)
+            //    {
+            //        orderViewModel.IsEnoughMaterial = IsEnoughMaterialForOrder(order);
+            //    }
                 orderViewModelList.Add(orderViewModel);
             }
             return orderViewModelList;

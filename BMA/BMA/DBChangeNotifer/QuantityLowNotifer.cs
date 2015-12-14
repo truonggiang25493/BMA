@@ -54,8 +54,15 @@ namespace BMA.DBChangesNotifer
 
             if (this.con != null)
             {
-                this.con.Close();
-                this.con = null;
+                try
+                {
+                    this.con.Close();
+                    this.con = null;
+                }
+                catch
+                {
+                    this.con = null;
+                }
             }
 
             if (this.dependency != null)

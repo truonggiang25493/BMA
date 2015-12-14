@@ -5653,35 +5653,46 @@ div.quickview {
 .reviewtitle {
 }
 
-.btn-detail:hover{
-    background-color:#2ecc71;
+.btn-detail:hover {
+    background-color: #2ecc71;
 }
-.btn-delete:hover{
-    background-color:#d9534f;
+
+.btn-delete:hover {
+    background-color: #d9534f;
 }
-.btn-edit:hover{
-    background-color:#5bc0de;
+
+.btn-edit:hover {
+    background-color: #5bc0de;
 }
-.btn-deleteChange:hover{
-    background-color:#f39c12;
+
+.btn-deleteChange:hover {
+    background-color: #f39c12;
 }
 
 #loading-indicator {
-  position: absolute;
-  left: 630px;
-  top: 280px;
-  width:60px;
-  height:60px;
-  z-index:9999999;
+    position: absolute;
+    left: 630px;
+    top: 280px;
+    width: 60px;
+    height: 60px;
+    z-index: 9999999;
 }
 
 
-#loading-background{
-    position:absolute;
-    width:1349px;
-    height:668px;
-    opacity:0.3;
-    color:black;
-    background-color:black;
-    z-index:1;
+#loading-background {
+    position: absolute;
+    width: 1349px;
+    height: 668px;
+    opacity: 0.3;
+    color: black;
+    background-color: black;
+    z-index: 1;
+}
+
+.notiBell:hover {
+    background-color: #2ecc71;
+}
+
+#notiBell:active{
+     background-color: #2ecc71;
 }

@@ -95,6 +95,10 @@ namespace BMA.Business
         {
             DbContextTransaction contextTransaction = db.Database.BeginTransaction();
             Order order = db.Orders.Find(orderId);
+            if (order == null)
+            {
+                return false;
+            }
             order.PlanDeliveryTime = planDeliveryDate;
             order.Amount = Amount;
             order.TaxAmount = taxAmount;

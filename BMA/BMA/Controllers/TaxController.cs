@@ -206,13 +206,13 @@ namespace BMA.Controllers
             taxDeclaration.TaxAgentName = vatAgentName;
             taxDeclaration.TaxAgentNo = vatAgentNo;
 
-            taxDeclaration.CreateLocation = createLocation;
-            taxDeclaration.CreateDate = DateTime.ParseExact(createDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            taxDeclaration.SignName = signName;
-            taxDeclaration.Value20No = value20No;
-            taxDeclaration.Value20Date = DateTime.ParseExact(value20Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            //taxDeclaration.CreateLocation = createLocation;
+            //taxDeclaration.CreateDate = DateTime.ParseExact(createDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            //taxDeclaration.SignName = signName;
+            //taxDeclaration.Value20No = value20No;
+            //taxDeclaration.Value20Date = DateTime.ParseExact(value20Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-            taxDeclaration.Value21 = Convert.ToInt32(value21);
+            //taxDeclaration.Value21 = Convert.ToInt32(value21);
             taxDeclaration.Value22 = Convert.ToInt32(value22);
             taxDeclaration.Value25 = Convert.ToInt32(value25);
             taxDeclaration.Value36 = Convert.ToInt32(value36);

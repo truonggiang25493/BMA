@@ -10,6 +10,7 @@
     BMA.Models.DiscountByQuantity dbq = ViewBag.Discount;
 }
 
+<link href="~/Content/timeslider.css" rel="stylesheet" />
 <div class="container main-container headerOffset">
     <div class="row">
         <div class="breadcrumbDiv col-lg-12">
@@ -34,6 +35,15 @@
         <div class="col-lg-9 col-md-9 col-sm-7">
             <h1 class="section-title-inner"><span><i class="fa fa-list-alt"></i> Chi tiết đơn hàng </span></h1>
             <div class="row userInfo">
+                @if (Model.OrderStatus != 6)
+                {
+                    <div class="col-lg-12">
+                        <h2 class="block-title-2"> Trạng thái đơn hàng của bạn </h2>
+                    </div>
+                    <div id="timeslide" style="margin-bottom:70px;margin-left:10px;">
+
+                    </div>
+                }
                 <div class="col-lg-12">
                     <h2 class="block-title-2"> Chi tiết đơn hàng của bạn </h2>
                 </div>
@@ -147,9 +157,13 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <ul class="previous pull-right">
-                        <li style="display:inline;"><a data-target="#deleteAllConfirm" data-toggle="modal" class="btn btn-delete btn-sm" style="border: 1px solid black;"><i class="fa fa-close"></i> Hủy đơn hàng</a></li>
-                    </ul>
+                    @if (Model.OrderStatus != 5 || Model.OrderStatus != 6)
+                    {
+                        <ul class="previous pull-right">
+                            <li style="display:inline;"><a data-target="#deleteAllConfirm" data-toggle="modal" class="btn btn-delete btn-sm" style="border: 1px solid black;"><i class="fa fa-close"></i> Hủy đơn hàng</a></li>
+                        </ul>
+                    }
+
                 </div>
                 <div class="col-lg-12 clearfix">
                     <ul class="pager">
@@ -205,7 +219,7 @@
                         } else if (data === "-1") {
                             noty({
                                 text: 'Có lỗi xảy ra, vui lòng thử lại',
-                                type: 'success',
+                                type: 'warning',
                                 dismissQueue: false,
                                 layout: 'topCenter',
                                 theme: 'defaultTheme',
@@ -225,7 +239,60 @@
                     }
                 })
             }
+        </script>
 
+        @{
+            string timeslideData = "";
+            if (Model.OrderStatus != 6)
+            {
+                if (Model.OrderStatus >= 0)
+                {
+                    timeslideData += "<b>Tạo</b><br/>" + Model.CreateTime.ToString("dd/MM/yyyy HH:mm");
+                }
+                if (Model.OrderStatus == 1)
+                {
+
+                    timeslideData += ";<b>Chờ xác nhận </b>";
+                }
+                if (Model.OrderStatus >= 2)
+                {
+                    if (Model.ConfirmTime != null)
+                    {
+                        timeslideData += ";<b>Xác nhận</b></br>" + ((DateTime)Model.ConfirmTime).ToString("dd/MM/yyyy HH:mm");
+                    }
+                    else
+                    {
+                        timeslideData += ";<b>Duyệt</b><br/>" + ((DateTime)Model.ApproveTime).ToString("dd/MM/yyyy HH:mm");
+                    }
+
+                }
+                if (Model.OrderStatus >= 3)
+                {
+                    timeslideData += ";<b>Sản xuất</b><br/>" + ((DateTime)Model.StartProduceTime).ToString("dd/MM/yyyy HH:mm");
+                }
+                if (Model.OrderStatus >= 4)
+                {
+                    timeslideData += ";<b>Giao hàng</b><br/>" + ((DateTime)Model.DeliveryTime).ToString("dd/MM/yyyy HH:mm");
+                }
+                if (Model.OrderStatus == 5)
+                {
+                    timeslideData += ";<b>Hoàn thành</b><br/>" + ((DateTime)Model.FinishTime).ToString("dd/MM/yyyy HH:mm");
+                }
+            }
+        }
+        <script src="~/Scripts/timeslider.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var data = "@(Html.Raw(timeslideData))".split(";");
+
+                $("#timeslide").timeslide({
+                    number: 5,
+                    completed: (data.length),
+                    renderLabel: function (i) {
+                        return data[i];
+                    }
+                });
+            });
         </script>
     </div>
 

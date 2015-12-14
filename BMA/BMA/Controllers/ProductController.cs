@@ -26,17 +26,17 @@ namespace BMA.Controllers
                 ProductBusiness pb = new ProductBusiness();
                 List<CustomerCartViewModel> lstProductCart = Session["Cart"] as List<CustomerCartViewModel>;
                 ViewBag.lstProductCart = lstProductCart;
-                var lstProduct = pb.GetProduct().ToPagedList(pageNumber, pageSize);
+                var lstProduct = pb.GetProduct().OrderByDescending(n => n.ProductId).ToPagedList(pageNumber, pageSize);
                 ViewBag.ProductTitle = "Tất cả sản phẩm";
                 if (categoryId != null)
                 {
-                    lstProduct = pb.GetProductByCategory(categoryId).ToPagedList(pageNumber, pageSize);
+                    lstProduct = pb.GetProductByCategory(categoryId).OrderByDescending(n=>n.ProductId).ToPagedList(pageNumber, pageSize);
                     var category = db.Categories.SingleOrDefault(n => n.CategoryId == categoryId);
                     ViewBag.ProductTitle = category.CategoryName;
                 }
                 if (!String.IsNullOrEmpty(f["txtSearch"]))
                 {
-                    lstProduct = pb.SearchProduct(f["txtSearch"]).ToPagedList(pageNumber, pageSize);
+                    lstProduct = pb.SearchProduct(f["txtSearch"]).OrderByDescending(n => n.ProductId).ToPagedList(pageNumber, pageSize);
                 }
                 return View(lstProduct);
             }

@@ -47,6 +47,7 @@ namespace BMA.Controllers
                     Session["CusUserId"] = endUser.Customers.ElementAt(0).CustomerId;
                     Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber;
                     string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId=", endUser.UserId);
+                    Session["CheckToNotify"] = endUser.UserId;
                     MvcApplication.changeStatusNotifer.Start("BMAChangeDB", dependencyCheckSql);
                     MvcApplication.changeStatusNotifer.Change += this.OnChange3;
                     return 1;

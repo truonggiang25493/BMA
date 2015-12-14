@@ -41,7 +41,7 @@ namespace BMA.Controllers
         public ActionResult ChangeInformation(int UserId)
         {
             AccountBusiness ab = new AccountBusiness();
-            if (Session["User"] == null)
+            if (Session["User"] == null || ((int)Session["UserId"] != UserId))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -78,7 +78,7 @@ namespace BMA.Controllers
         public ActionResult ChangePassword(int UserId)
         {
             AccountBusiness ab = new AccountBusiness();
-            if (Session["User"] == null)
+            if (Session["User"] == null || ((int)Session["UserId"] != UserId))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -112,18 +112,36 @@ namespace BMA.Controllers
             return 1;
         }
 
-        public ActionResult OrderList(int? page)
+        public ActionResult OrderList(int? page, string orderStatus, string fromDate, string toDate)
         {
-            CusManageBusiness cmb = new CusManageBusiness();
             try
             {
+                MvcApplication.cancelOrderNotifier.Dispose();
+                MvcApplication.lowQuantityNotifer.Dispose();
+                MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                CusManageBusiness cmb = new CusManageBusiness();
+                //string orderStatus = f["searchStatus"];
+                //string fromDate = f["searchFromDate"];
+                //string toDate = f["searchToDate"];
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
                 if (Session["User"] != null)
                 {
                     int cusId = Convert.ToInt32(Session["UserId"]);
                     List<OrderItem> orderItemList = new List<OrderItem>();
-                    var orderList = cmb.GetOrder(cusId).ToPagedList(pageNumber, pageSize);
+                    var orderList = cmb.GetOrder(cusId).OrderBy(n => n.OrderStatus).ToPagedList(pageNumber, pageSize);
+                    if (fromDate != null & toDate != null)
+                    {
+                        //orderStatus = orderStatus.Value;
+                        //fromDate = fromDate.Value;
+                        //toDate = toDate.Value;
+                        orderList = cmb.SearchOrder(cusId, orderStatus, fromDate, toDate).OrderBy(n => n.OrderStatus).ToPagedList(pageNumber, pageSize);
+                        ViewBag.FromDate = fromDate;
+                        ViewBag.ToDate = toDate;
+                        ViewBag.Status = orderStatus;
+                        TempData["Search"] = 1;
+                    }
                     foreach (var item in orderList)
                     {
                         orderItemList = orderItemList.Union(cmb.GetOrderItem(item.OrderId)).ToList();
@@ -140,12 +158,16 @@ namespace BMA.Controllers
 
         }
 
-        public ActionResult ConfirmList(int? page)
+        public ActionResult ConfirmList(int? page, string fromDate, string toDate)
         {
-            MvcApplication.changeToConfirmNotifier.Dispose();
-            CusManageBusiness cmb = new CusManageBusiness();
             try
             {
+                MvcApplication.changeToConfirmNotifier.Dispose();
+                MvcApplication.cancelOrderNotifier.Dispose();
+                MvcApplication.lowQuantityNotifer.Dispose();
+                MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                CusManageBusiness cmb = new CusManageBusiness();
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
                 if (Session["User"] != null)
@@ -153,6 +175,13 @@ namespace BMA.Controllers
                     int cusUserId = Convert.ToInt32(Session["UserId"]);
                     List<OrderItem> orderItemList = new List<OrderItem>();
                     var confirmOrderList = cmb.GetConfirmOrder(cusUserId).ToPagedList(pageNumber, pageSize);
+                    if (fromDate != null & toDate != null)
+                    {
+                        confirmOrderList = cmb.SearchConfirmOrder(cusUserId, fromDate, toDate).OrderBy(n => n.OrderStatus).ToPagedList(pageNumber, pageSize);
+                        ViewBag.FromDate = fromDate;
+                        ViewBag.ToDate = toDate;
+                        TempData["Search"] = 1;
+                    }
                     foreach (var item in confirmOrderList)
                     {
                         orderItemList = orderItemList.Union(cmb.GetOrderItem(item.OrderId)).ToList();
@@ -240,6 +269,13 @@ namespace BMA.Controllers
                 }
                 OrderBusiness ob = new OrderBusiness();
                 int userId = Convert.ToInt32(Session["UserId"]);
+                if (orderCheck.OrderStatus != 0)
+                {
+                    string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderId FROM dbo.[Orders] WHERE CustomerUserId = ", userId);
+                    MvcApplication.lowQuantityNotifer.Dispose();
+                    MvcApplication.cancelOrderNotifier.Start("BMAChangeDB", dependencyCheckSql);
+                    MvcApplication.cancelOrderNotifier.Change += this.CancelOnChange;
+                }
                 ob.Cancel(orderId, 0, 0, userId);
             }
             catch (DataException)
@@ -247,6 +283,12 @@ namespace BMA.Controllers
                 return RedirectToAction("Index");
             }
             return Redirect(strURL);
+        }
+
+        private void OnChange2(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange2(e.Info, e.Source, e.Type);
         }
 
         #region ConfirmOrder
@@ -329,7 +371,18 @@ namespace BMA.Controllers
                 {
                     return -2;
                 }
-                cmb.CancelEditedOrder(orderId);
+                OrderBusiness ob = new OrderBusiness();
+                int userId = Convert.ToInt32(Session["UserId"]);
+                if (orderCheck.OrderStatus != 0)
+                {
+                    string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderId FROM dbo.[Orders] WHERE CustomerUserId = ", userId);
+                    MvcApplication.lowQuantityNotifer.Dispose();
+                    MvcApplication.cancelOrderNotifier.Start("BMAChangeDB", dependencyCheckSql);
+                    MvcApplication.cancelOrderNotifier.Change += this.CancelOnChange;
+                }
+                cmb.CancelEditedOrder(orderId, userId);
+                //MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                //MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
                 return 1;
             }
             catch (Exception)
@@ -350,13 +403,28 @@ namespace BMA.Controllers
                 }
                 OrderBusiness ob = new OrderBusiness();
                 int userId = Convert.ToInt32(Session["UserId"]);
+                if (orderCheck.OrderStatus != 0)
+                {
+                    string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderId FROM dbo.[Orders] WHERE CustomerUserId = ", userId);
+                    MvcApplication.lowQuantityNotifer.Dispose();
+                    MvcApplication.cancelOrderNotifier.Start("BMAChangeDB", dependencyCheckSql);
+                    MvcApplication.cancelOrderNotifier.Change += this.CancelOnChange;
+                }
                 ob.Cancel(orderId, 0, 0, userId);
+                //MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                //MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
                 return 1;
             }
             catch (DataException)
             {
                 return -1;
             }
+        }
+
+        private void CancelOnChange(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange5(e.Info, e.Source, e.Type);
         }
 
         //public ActionResult CancelBothOrderConfirm(int orderId, int oldOrderId)

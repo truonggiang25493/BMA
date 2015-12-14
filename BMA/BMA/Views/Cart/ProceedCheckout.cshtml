@@ -178,7 +178,17 @@
                         }, 500);
                     } if (data === "-2") {
                         noty({
-                            text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng',
+                            text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 3000
+                        });
+                    }
+                    if (data === "-3") {
+                        noty({
+                            text: 'Đơn hàng đã bị hủy, không thể chỉnh sửa.',
                             type: 'warning',
                             dismissQueue: false,
                             layout: 'topCenter',

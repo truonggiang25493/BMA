@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using BMA.Models;
 using System.Data.Entity;
+using System.Globalization;
 
 namespace BMA.Business
 {
@@ -18,6 +19,14 @@ namespace BMA.Business
         public List<Order> GetOrder(int cusId)
         {
             List<Order> orderToCheck = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != 1).ToList();
+            List<Order> orderCancelConfirm = db.Orders.Where(n => n.PreviousOrderId != null).ToList();
+            if (orderCancelConfirm != null)
+            {
+                for (int i = 0; i < orderCancelConfirm.Count; i++)
+                {
+                    orderToCheck.Remove(orderCancelConfirm.ElementAt(i));
+                }
+            }
             var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList();
             List<int> checkId = new List<int> { };
             for (int i = 0; i < confirmOrderList.Count; i++)
@@ -31,13 +40,58 @@ namespace BMA.Business
                     }
                 }
             }
-            var orderList = orderToCheck.OrderByDescending(n => n.CreateTime).ToList();
-            return orderList;
+            return orderToCheck;
         }
 
+        public List<Order> SearchOrder(int cusId, string orderStatus, string fromDate, string toDate)
+        {
+            List<Order> orderToCheck = db.Orders.ToList();
+            int orderStatusInt = Convert.ToInt32(orderStatus);
+            DateTime compareFromDate = DateTime.ParseExact(fromDate.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime compareToDate = DateTime.ParseExact(toDate.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            if (orderStatusInt.CompareTo(7) != 0)
+            {
+                orderToCheck = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != 1 && n.OrderStatus == orderStatusInt && n.CreateTime > compareFromDate && n.CreateTime < compareToDate).ToList();
+            }
+            else
+            {
+                orderToCheck = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != 1 && n.CreateTime > compareFromDate && n.CreateTime < compareToDate).ToList();
+            }
+            List<Order> orderCancelConfirm = db.Orders.Where(n => n.PreviousOrderId != null).ToList();
+            if (orderCancelConfirm != null)
+            {
+                for (int i = 0; i < orderCancelConfirm.Count; i++)
+                {
+                    orderToCheck.Remove(orderCancelConfirm.ElementAt(i));
+                }
+            }
+            var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList();
+            List<int> checkId = new List<int> { };
+            for (int i = 0; i < confirmOrderList.Count; i++)
+            {
+                checkId.Insert(i, (int)confirmOrderList[i].PreviousOrderId);
+                for (int j = 0; j < orderToCheck.Count; j++)
+                {
+                    if (orderToCheck[j].OrderId == checkId[i])
+                    {
+                        orderToCheck.RemoveAt(j);
+                    }
+                }
+            }
+            return orderToCheck;
+
+        }
         public List<Order> GetConfirmOrder(int cusId)
         {
             var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == 1).OrderBy(n => n.CreateTime).ToList();
+            return confirmOrderList;
+        }
+
+        public List<Order> SearchConfirmOrder(int cusId, string fromDate, string toDate)
+        {    
+            DateTime compareFromDate = DateTime.ParseExact(fromDate.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime compareToDate = DateTime.ParseExact(toDate.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var confirmOrderList = db.Orders.Where(x => x.CustomerUserId == cusId && x.OrderStatus == 1 && x.CreateTime > compareFromDate && x.CreateTime < compareToDate).OrderBy(n => n.CreateTime).ToList();  
             return confirmOrderList;
         }
 
@@ -103,10 +157,13 @@ namespace BMA.Business
             return true;
         }
 
-        public bool CancelEditedOrder(int orderId)
+        public bool CancelEditedOrder(int orderId, int userId)
         {
             Order order = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
             DbContextTransaction contextTransaction = db.Database.BeginTransaction();
+            int? previousId = order.PreviousOrderId;
+            Order previousOrder = db.Orders.FirstOrDefault(n => n.OrderId == previousId);
+            previousOrder.IsStaffEdit = false;
             foreach (OrderItem orderItem in order.OrderItems)
             {
                 foreach (OutputMaterial outputMaterial in orderItem.OutputMaterials)
@@ -142,9 +199,10 @@ namespace BMA.Business
             order.ReturnDeposit = 0;
             // Change order status become "Hủy"
             order.OrderStatus = 6;
+            order.PreviousOrderId = null;
             order.CancelTime = DateTime.Now;
             //Temp Bug
-            order.CancelUserId = 2;
+            order.CancelUserId = userId;
 
             db.SaveChanges();
             // Commit transaction

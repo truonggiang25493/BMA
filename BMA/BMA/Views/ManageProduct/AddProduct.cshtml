@@ -259,28 +259,7 @@
                         @*<a class="btn btn-primary" onclick="document.getElementById('updateCartForm').submit();"><i class="fa fa-refresh" style="margin-right: 3px"></i>Cập nhật</a>*@
                         <a class="btn btn-success" onclick="show_ListMaterial()"><i class="fa fa-plus" style="margin-right: 3px"></i>Thêm nguyên liệu</a>
                         <script type="text/javascript">
-                            function show_ListMaterial() {
-                                $.ajax({
-                                    url: "@(Url.Action("GetListMaterialToAdd", "ManageProduct"))",
-                                    method: "POST",
-                                    success: function (data) {
-                                        document.getElementById('standard-popup-title').innerHTML = "Chọn nguyên liệu";
-                                        document.getElementById('standard-popup-body').innerHTML = data;
-                                        $('#myStandardModal').modal('show');
-                                        $('#example2').DataTable({
-                                            "paging": true,
-                                            "lengthChange": false,
-                                            "searching": true,
-                                            "ordering": true,
-                                            "info": true,
-                                            "autoWidth": false
-                                        });
-                                    },
-                                    fail: function (e) {
-                                        alert("Have error" + e.toString());
-                                    }
-                                });
-                            }
+
 
                         </script>
 
@@ -704,7 +683,7 @@
         var selectedUnit = [];
 
         $(document).on("click", ".multiple-choice-table tbody tr", function () {
-            if ($(this).attr('class') === 'selected') {
+            if ($(this).attr('class').indexOf('selected') > -1) {
                 $(this).removeClass('selected');
 
                 // Remove id
@@ -762,6 +741,31 @@
             });
         });
 
+        function show_ListMaterial() {
+            selectedIds = [];
+            selectedName = [];
+            selectedUnit = [];
+            $.ajax({
+                url: "@(Url.Action("GetListMaterialToAdd", "ManageProduct"))",
+                method: "POST",
+                success: function (data) {
+                    document.getElementById('standard-popup-title').innerHTML = "Chọn nguyên liệu";
+                    document.getElementById('standard-popup-body').innerHTML = data;
+                    $('#myStandardModal').modal('show');
+                    $('#example2').DataTable({
+                        "paging": true,
+                        "lengthChange": false,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": false
+                    });
+                },
+                fail: function (e) {
+                    alert("Have error" + e.toString());
+                }
+            });
+        }
 
         function fnselect() {
             $.ajax({
@@ -819,8 +823,24 @@
                         selectedIds = [];
                         selectedName = [];
                         selectedUnit = [];
+                    } else if(data === -1){
+                        noty({
+                            text: 'Hãy chọn ít nhất một nguyên liệu.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
                     } else {
-                        alert("Không thể thêm nguyên liệu");
+                        noty({
+                            text: 'Không thể thêm nguyên liệu.',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
                     }
                 },
                 "fail": function (e) {

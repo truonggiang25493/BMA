@@ -71,7 +71,7 @@
     function confirmOnChange(info, source, type) {
         if (info == 2) {
             noty({
-                text: 'Có một đơn hàng vừa được chuyển sang trạng thái <b>Đã duyệt</b>.',
+                text: 'Có một đơn hàng sang trạng thái <b>Đã duyệt</b>.',
                 type: 'success',
                 dismissQueue: false,
                 layout: 'topCenter',
@@ -84,7 +84,7 @@
                 $("#hiddenNumberOfNoti").attr('value', 1);
                 $("#hiddenConfirmOrderCount").attr('value', 1)
                 $("#numberOfNoti").text(1);
-                $("[data-role='numberOfNewOrder']").text(1);
+                $("[data-role='numberOfConfirmOrder']").text(1);
             }
             else {
                 numberOfNoti = parseInt(numberOfNoti) + 1;
@@ -102,12 +102,46 @@
         }
     }
 
+    function cancelOnChange(info, source, type) {
+        if (info == 2) {
+            noty({
+                text: 'Có một đơn hàng vừa bị chuyển sang trạng thái <b>Đã hủy</b>.',
+                type: 'success',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: false
+            });
+            var numberOfNoti = $("#hiddenNumberOfNoti").val();
+            var numberOfCancelOrder = $("#hiddenCancelOrderCount").val();
+            if (numberOfNoti == "") {
+                $("#hiddenNumberOfNoti").attr('value', 1);
+                $("#hiddenCancelOrderCount").attr('value', 1)
+                $("#numberOfNoti").text(1);
+                $("[data-role='numberOfCancelOrder']").text(1);
+            }
+            else {
+                numberOfNoti = parseInt(numberOfNoti) + 1;
+                $("#hiddenNumberOfNoti").attr('value', numberOfNoti);
+                if (numberOfCancelOrder == "") {
+                    $("#hiddenCancelOrderCount").attr('value', 1)
+                }
+                else {
+                    numberOfCancelOrder = parseInt(numberOfCancelOrder) + 1;
+                    $("#hiddenCancelOrderCount").attr('value', numberOfCancelOrder)
+                }
+                $("#numberOfNoti").text(numberOfNoti);
+                $("[data-role='numberOfCancelOrder']").text(numberOfCancelOrder);
+            }
+        }
+    }
 
     window.addEventListener('load', function () {
         var notifier = $.connection.realtimeNotifierHub;
         notifier.client.onChange2 = quantityLowThanStandard;
         notifier.client.onChange = onChange;
         notifier.client.onChange4 = confirmOnChange;
+        notifier.client.onChange5 = cancelOnChange;
         $.connection.hub.start();
     });
 </script>
@@ -133,6 +167,7 @@
     <input type="hidden" value="@ViewBag.notificatePartialCount" id="hiddenNumberOfNoti" name="hiddenNumberOfNoti" />
     <input type="hidden" value="@ViewBag.newOrderCountPartial" id="hiddenOrderCount" name="hiddenOrderCount" />
     <input type="hidden" value="@ViewBag.confirmOrderCountPartial" id="hiddenConfirmOrderCount" name="hiddenConfirmOrderCount" />
+    <input type="hidden" value="@ViewBag.cancelOrderCountPartial" id="hiddenCancelOrderCount" name="hiddenConfirmOrderCount" />
     <input type="hidden" value="@ViewBag.lowMaterialCountPartial" id="hiddenMaterialCount" name="hiddenMaterialCount" />
 </form>
 
@@ -164,7 +199,21 @@
                     {
                         <span id="numberOfConfirmOrder" data-role="numberOfConfirmOrder">@ViewBag.confirmOrderCountPartial</span>
                     }
-                    đơn hàng vừa chuyển sang trại thái Đã duyệt
+                    đơn hàng chuyển sang <b>Đã duyệt</b>
+                </a>
+            </li>
+            <li>
+                <a onclick="RemoveCancelStatusNoty('http://localhost:2072/Order/Index')" style="cursor:pointer">
+                    <i class="fa fa-shopping-cart text-green"></i> Có
+                    @if (ViewBag.confirmOrderCountPartial == 0)
+                    {
+                        <span id="numberOfCancelOrder" data-role="numberOfCancelOrder">0</span>
+                    }
+                    else
+                    {
+                        <span id="numberOfCancelOrder" data-role="numberOfCancelOrder">@ViewBag.cancelOrderCountPartial</span>
+                    }
+                    đơn hàng chuyển sang <b>Đã hủy</b>
                 </a>
             </li>
             <li>
