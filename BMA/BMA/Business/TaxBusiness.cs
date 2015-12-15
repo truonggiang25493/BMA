@@ -227,7 +227,7 @@ namespace BMA.Business
 
                 result.Value25 = result.InputTotalTaxAmount;
 
-                result.Value36 = result.OutputTotalAmount - result.Value25;
+                result.Value36 = result.OutputTotalTaxAmount - result.Value25;
                 if (result.Value36 >= 0)
                 {
                     result.Value40A = result.Value36;
