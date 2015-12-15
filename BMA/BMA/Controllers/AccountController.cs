@@ -60,6 +60,14 @@ namespace BMA.Controllers
                         {
                             return -2;
                         }
+
+                        MvcApplication.notifier.Dispose();
+                        MvcApplication.notifier.Start("BMAChangeDB", "SELECT OrderId FROM dbo.[Orders]");
+                        MvcApplication.notifier.Change += this.OnChange;
+
+                        MvcApplication.notifier.Dispose();
+                        MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                        MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
                     }
                     Session["User"] = endUser;
                     Session["UserId"] = endUser.UserId;
@@ -71,6 +79,18 @@ namespace BMA.Controllers
             {
                 return -1;
             }
+        }
+
+        private void OnChange(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange(e.Info, e.Source, e.Type);
+        }
+
+        private void OnChange2(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange2(e.Info, e.Source, e.Type);
         }
 
         private void OnChange3(object sender, ChangeEventArgs e)

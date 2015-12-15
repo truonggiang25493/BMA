@@ -190,7 +190,7 @@
             </li>
             <li>
                 <a onclick="RemoveConfirmStatusNoty('http://localhost:2072/Order/Index')" style="cursor:pointer">
-                    <i class="fa fa-shopping-cart text-green"></i> Có
+                    <i class="fa fa-check text-green"></i> Có
                     @if (ViewBag.confirmOrderCountPartial == 0)
                     {
                         <span id="numberOfConfirmOrder" data-role="numberOfConfirmOrder">0</span>
@@ -204,7 +204,7 @@
             </li>
             <li>
                 <a onclick="RemoveCancelStatusNoty('http://localhost:2072/Order/Index')" style="cursor:pointer">
-                    <i class="fa fa-shopping-cart text-green"></i> Có
+                    <i class="fa fa-times text-red"></i> Có
                     @if (ViewBag.confirmOrderCountPartial == 0)
                     {
                         <span id="numberOfCancelOrder" data-role="numberOfCancelOrder">0</span>
