@@ -83,8 +83,8 @@
                                                 var strURL = window.location.href;
                                                 var deleteLink;
                                                 function openPopup(orderId) {
-                                                    deleteLink = "/CusManage/CancelOrderConfirm?orderId=" + orderId + "&strURL=" + strURL;
-                                                    $('#product-details-modal #deleteRequest').attr("href", deleteLink);
+                                                    deleteLink = "return cancelOrder(" + orderId + ")";
+                                                    $('#product-details-modal #deleteRequest').attr("onclick", deleteLink);
                                                 }
                                             </script>
 
@@ -111,7 +111,7 @@
                                 <li> <span class="address-line1"> Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc. Quý khách có muốn hủy đơn hàng này không ? </span></li>
                             </ul>
                         </div>
-                        <div class="panel-footer panel-footer-address" style="padding-left:270px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="deleteRequest"> Đồng ý </a> </div>
+                        <div class="panel-footer panel-footer-address" style="padding-left:270px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return cancelOrder()" id="deleteRequest"> Đồng ý </a> </div>
                     </div>
                 </div>
 
@@ -121,6 +121,48 @@
                         <li class="next pull-left"><a href="@Url.Action("Index","CusManage")"> &larr; Quay lai trang quản lý</a></li>
                     </ul>
                 </div>
+                <script type="text/javascript">
+                    function cancelOrder(orderId) {
+                        $.ajax({
+                            url: "/CusManage/CancelBothOrder?orderId=" + orderId,
+                            data: "/CusManage/CancelBothOrder?orderId=" + orderId,
+                            success: function (data) {
+                                if (data === "1") {
+                                    window.setTimeout(function () {
+                                        window.location.replace("@(Url.Action("OrderList", "CusManage"))");
+                                    }, 1500);
+                                    noty({
+                                        text: 'Hủy đơn hàng thành công',
+                                        type: 'success',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (data === "-1") {
+                                    noty({
+                                        text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                }
+                            },
+                            fail: function () {
+                                noty({
+                                    text: 'Đã có lỗi xảy ra',
+                                    type: 'error',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            }
+                        })
+                    }
+                </script>
             </div>
 
         </div>

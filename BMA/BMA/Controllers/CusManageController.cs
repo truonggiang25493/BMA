@@ -277,12 +277,12 @@ namespace BMA.Controllers
                     MvcApplication.cancelOrderNotifier.Change += this.CancelOnChange;
                 }
                 ob.Cancel(orderId, 0, 0, userId);
+                return Redirect(strURL);
             }
             catch (DataException)
             {
                 return RedirectToAction("Index");
             }
-            return Redirect(strURL);
         }
 
         private void OnChange2(object sender, ChangeEventArgs e)

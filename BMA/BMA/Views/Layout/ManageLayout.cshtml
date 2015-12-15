@@ -621,6 +621,22 @@
     @RenderSection("OrderIndexScript", false)
     <script>
         $(function () {
+            $('#example4').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": false,
+                "info": true,
+                "autoWidth": false
+            });
+            $('#example3').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": false,
+                "info": true,
+                "autoWidth": false
+            });
             $('#example2').DataTable({
                 "paging": true,
                 "lengthChange": false,
