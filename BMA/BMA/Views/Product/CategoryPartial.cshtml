@@ -2,19 +2,55 @@
 <ul class="dropdown-menu">
     <li class="megamenu-content ">
         <ul class="col-lg-3  col-sm-3 col-md-3  col-xs-4">
-            <li> <a class="newProductMenuBlock" href="@Url.Action("Index","Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/Pudding.jpg" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Tất cả sản phẩm </span> </a> </li>
+            @if (Session["User"] != null)
+            {
+                if (Session["UserRole"] == null)
+                {
+                    <li> <a class="newProductMenuBlock" onclick="NotificatePartialLink('http://localhost:2072/Product/Index')"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/Pudding.jpg" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Tất cả sản phẩm </span> </a> </li>
+                }
+                else
+                {
+                    <li> <a class="newProductMenuBlock" href="@Url.Action("Index","Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/Pudding.jpg" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Tất cả sản phẩm </span> </a> </li>
+                }
+            }
+            else
+            {
+                <li> <a class="newProductMenuBlock" href="@Url.Action("Index","Product")"> <img class="img-responsive" src="/Content/CustomerLayout/site/promo/Pudding.jpg" alt="product"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> Tất cả sản phẩm </span> </a> </li>
+            }
         </ul>
         @foreach (var item in ViewBag.lstCategory)
         {
+            var link = string.Format("{0}{1}{2}{3}", "'http://", "localhost:2072/Product/Index?categoryId=", item.CategoryId, "'");
             var image = "No-image.jpg";
-            foreach(var item2 in ViewBag.lstProduct){
-                if(item2.CategoryId == item.CategoryId){
+            foreach (var item2 in ViewBag.lstProduct)
+            {
+                if (item2.CategoryId == item.CategoryId)
+                {
                     image = item2.ProductImage;
                 }
             }
-            <ul class="col-lg-3  col-sm-3 col-md-3 col-xs-4">
-                <li> <a class="newProductMenuBlock" href="@Url.Action("Index", "Product", new { categoryId = item.CategoryId })"> <img class="img-responsive" src="@Url.Content("~/Content/Images/BakeryImages/" + image)" alt="product" style="width:247px;height:206px;"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> @item.CategoryName </span> </a> </li>
-            </ul>
+
+            if (Session["User"] != null)
+            {
+                if (Session["UserRole"] == null)
+                {
+                    <ul class="col-lg-3  col-sm-3 col-md-3 col-xs-4">
+                        <li> <a class="newProductMenuBlock" onclick="NotificatePartialLink(@link)"> <img class="img-responsive" src="@Url.Content("~/Content/Images/BakeryImages/" + image)" alt="product" style="width:247px;height:206px;"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> @item.CategoryName </span> </a> </li>
+                    </ul>
+                }
+                else
+                {
+                    <ul class="col-lg-3  col-sm-3 col-md-3 col-xs-4">
+                        <li> <a class="newProductMenuBlock" href="@Url.Action("Index", "Product", new { categoryId = item.CategoryId })"> <img class="img-responsive" src="@Url.Content("~/Content/Images/BakeryImages/" + image)" alt="product" style="width:247px;height:206px;"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> @item.CategoryName </span> </a> </li>
+                    </ul>
+                }
+            }
+            else
+            {
+                <ul class="col-lg-3  col-sm-3 col-md-3 col-xs-4">
+                    <li> <a class="newProductMenuBlock" href="@Url.Action("Index", "Product", new { categoryId = item.CategoryId })"> <img class="img-responsive" src="@Url.Content("~/Content/Images/BakeryImages/" + image)" alt="product" style="width:247px;height:206px;"> <span class="ProductMenuCaption"> <i class="fa fa-caret-right"> </i> @item.CategoryName </span> </a> </li>
+                </ul>
+            }
         }
     </li>
 </ul>

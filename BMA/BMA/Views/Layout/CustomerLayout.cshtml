@@ -105,28 +105,6 @@
     </style>
 </head>
 <body>
-    <script>
-        function onChangeStatus(info, source, type) {
-            setTimeout(function () {
-                if (info == 2) {
-                    noty({
-                        text: 'Có một đơn hàng vừa được thay đổi trạng thái',
-                        type: 'success',
-                        dismissQueue: false,
-                        layout: 'topCenter',
-                        theme: 'defaultTheme',
-                        timeout: false
-                    });
-                }
-            }, 1000);
-        }
-
-        window.addEventListener('load', function () {
-            var notifier = $.connection.realtimeNotifierHub;
-            notifier.client.onChange3 = onChangeStatus
-            $.connection.hub.start();
-        });
-    </script>
     <div class="modal signUpContent fade" id="ModalLogin" tabindex="-1" role="dialog" style="margin-top:50px;">
         <div class="modal-dialog ">
             <div class="modal-content" style="width:400px;margin-left:40px;">
@@ -255,11 +233,11 @@
                                 <ul class="userMenu">
                                     @if (Session["UserRole"] != null)
                                     {
-                                        <li> <a href="#" style="cursor:default"><span class="hidden-xs" style="text-transform: none"><i class="fa fa-street-view"></i> @((Session["User"] as User).Username)</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                        <li> <a href="@Url.Action("Index", "StoreInfor")"><span class="hidden-xs"><i class="fa fa-street-view"></i><span style="text-transform:none;">@((Session["User"] as User).Username)</span> - Quản lý</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
                                     }
                                     else
                                     {
-                                        <li> <a href="@Url.Action("Index", "CusManage")"><span class="hidden-xs"><i class="fa fa-street-view"></i><span style="text-transform:none;">@((Session["User"] as User).Username)</span> - Quản lý</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                        <li> <a onclick="NotificatePartialLink('http://localhost:2072/CusManage/Index')"><span class="hidden-xs"><i class="fa fa-street-view"></i><span style="text-transform:none;">@((Session["User"] as User).Username)</span> - Quản lý</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
                                     }
                                     <li> <a href="@Url.Action("Logout", "Account")"><span class="hidden-xs"><i class="fa fa-sign-out"></i> Đăng xuất </span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
                                 </ul>
@@ -292,20 +270,55 @@
 
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li id="home"> <a href="@Url.Action("Index", "Home")"> Trang chủ </a> </li>
+                    @if (Session["User"] != null)
+                    {
+                        if (Session["UserRole"] == null)
+                        {
+                            <li id="home"> <a onclick="NotificatePartialLink('http://localhost:2072/Home/Index')"> Trang chủ </a> </li>
+                        }
+                        else
+                        {
+                            <li id="home"> <a href="@Url.Action("Index","Home")"> Trang chủ </a> </li>
+                        }
+                    }
+                    else
+                    {
+                        <li id="home"> <a href="@Url.Action("Index","Home")"> Trang chủ </a> </li>
+                    }
                     <li class="dropdown megamenu-fullwidth" id="product">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#"> Sản phẩm <b class="caret"> </b> </a>
                         @Html.Action("CategoryPartial", "Product")
                     </li>
-                    <li class="" id="procedure"> <a href="@Url.Action("Index", "Procedure")"> Quy trình đặt hàng </a> </li>
+                    @if (Session["User"] != null)
+                    {
+                        if (Session["UserRole"] == null)
+                        {
+                            <li class="" id="procedure"> <a onclick="NotificatePartialLink('http://localhost:2072/Procedure/Index')"> Quy trình đặt hàng </a> </li>
+                        }
+                        else
+                        {
+                            <li class="" id="procedure"> <a href="@Url.Action("Index","Procedure")"> Quy trình đặt hàng </a> </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="" id="procedure"> <a onclick="NotificatePartialLink('http://localhost:2072/Procedure/Index')"> Quy trình đặt hàng </a> </li>
+                    }
                 </ul>
-
                 <div class="nav navbar-nav navbar-right hidden-xs">
                     <div class="dropdown  cartMenu">
                         <a class=" dropdown-toggle" data-toggle="dropdown" style="padding-right: 5px; padding-left: 5px;cursor:default;"> <i class="fa fa-shopping-cart"> </i> <span class="cartRespons">@Html.Action("CartPartial", "Cart") </span></a>
                     </div>
                 </div>
-
+                @if (Session["User"] != null)
+                {
+                    if (Session["UserRole"] == null)
+                    {
+                        <div class="nav navbar-nav navbar-right hidden-xs">
+                            @Html.Action("NotificatePartial", "Home")
+                        </div>
+                    }
+                }
             </div>
 
         </div>
@@ -320,8 +333,6 @@
         </div>
     </footer>
 
-
-
     <script src="/Content/CustomerLayout/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/Content/CustomerLayout/assets/js/footable.js"></script>
     <script src="~/Content/CustomerLayout/assets/js/footable.sortable.js"></script>
@@ -333,6 +344,212 @@
 
     <script src="/Content/CustomerLayout/assets/js/idangerous.swiper-2.1.min.js"></script>
     <script>
+        $(document).keydown(function (e) {
+            if (e.keyCode == 116 && e.ctrlKey || e.keyCode == 116) {
+                NotificatePartialLink(window.location.href);
+            }
+        });
+
+        $(document).click(function (e) {
+            if(document.getElementById('notiBell2')) {
+                document.getElementById('notiBell2').style.backgroundColor = '#2d3e50';
+                document.getElementById('notiBell2').id = 'notiBell';
+            }
+        });
+
+        function NotificatePartialLink(strURL) {
+            var txtHiddenNoti = $("#hiddenNumberOfNoti").val();
+            var txtHiddenNewOrder = $("#hiddenNewOrderCount").val();
+            var txtHiddenEditOrder = $("#hiddenEditOrderCount").val();
+            var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
+
+            $.ajax({
+                "url": "@(Url.Action("NotificatePartialLink", "Home"))",
+                "method": "POST",
+                "data": JSON.stringify({
+                    "count": txtHiddenNoti,
+                    "newOrderCount": txtHiddenNewOrder,
+                    "editOrderCount": txtHiddenEditOrder,
+                    "confirmOrderCount": txtHiddenConfirmOrder,
+                }),
+                "dataType": "json",
+                "contentType": 'application/json',
+                "success": function (data) {
+                    if (data === 1) {
+                        window.setTimeout(function () {
+                            window.location.replace(strURL);
+                        });
+                    } else {
+                        noty({
+                            text: 'Có lỗi xảy ra, vui lòng thử lại',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    }
+                },
+                "fail": function () {
+                    noty({
+                        text: 'Đã có lỗi xảy ra',
+                        type: 'error',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                    window.setTimeout(function () {
+                        window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                    }, 3000)
+                }
+            })
+        }
+
+        function RemoveNewOrderNoty(strURL) {
+            if ($("[data-role='numberOfNewOrder']").text() == 0) {
+
+            } else {
+                var txtHiddenEditOrder = $("#hiddenEditOrderCount").val();
+                var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
+                $.ajax({
+                    "url": "@(Url.Action("RemoveNewOrderNoty", "Home"))",
+                    "method": "POST",
+                    "data": JSON.stringify({
+                        "editOrderCount": txtHiddenEditOrder,
+                        "confirmOrderCount": txtHiddenConfirmOrder
+                    }),
+                    "dataType": "json",
+                    "contentType": 'application/json',
+                    "success": function (data) {
+                        if (data === 1) {
+                            window.setTimeout(function () {
+                                window.location.replace(strURL);
+                            });
+                        } else {
+                            noty({
+                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    "fail": function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "Product"))");
+                        }, 3000)
+                    }
+                })
+            }
+        }
+
+        function RemoveEditOrderNoty(strURL) {
+            if ($("[data-role='numberOfEditOrder']").text() == 0) {
+
+            } else {
+                var txtHiddenNewOrder = $("#hiddenNewOrderCount").val();
+                var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
+                $.ajax({
+                    "url": "@(Url.Action("RemoveEditOrderNoty", "Home"))",
+                    "method": "POST",
+                    "data": JSON.stringify({
+                        "newOrderCount": txtHiddenNewOrder,
+                        "confirmOrderCount": txtHiddenConfirmOrder
+                    }),
+                    "dataType": "json",
+                    "contentType": 'application/json',
+                    "success": function (data) {
+                        if (data === 1) {
+                            window.setTimeout(function () {
+                                window.location.replace(strURL);
+                            });
+                        } else {
+                            noty({
+                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    "fail": function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "Product"))");
+                        }, 3000)
+                    }
+                })
+            }
+        }
+
+        function RemoveConfirmOrderNoty(strURL) {
+            if ($("[data-role='numberOfConfirmOrder']").text() == 0) {
+
+            } else {
+                var txtHiddenNewOrder = $("#hiddenNewOrderCount").val();
+                var txtHiddenEditOrder = $("#hiddenEditOrderCount").val();
+                $.ajax({
+                    "url": "@(Url.Action("RemoveConfirmOrderNoty", "Home"))",
+                    "method": "POST",
+                    "data": JSON.stringify({
+                        "newOrderCount": txtHiddenNewOrder,
+                        "editOrderCount": txtHiddenEditOrder
+                    }),
+                    "dataType": "json",
+                    "contentType": 'application/json',
+                    "success": function (data) {
+                        if (data === 1) {
+                            window.setTimeout(function () {
+                                window.location.replace(strURL);
+                            });
+                        } else {
+                            noty({
+                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    "fail": function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "Product"))");
+                        }, 3000)
+                    }
+                })
+            }
+        }
+
         var mySwiper = new Swiper('.swiper-container', {
             pagination: '.box-pagination',
             keyboardControl: true,

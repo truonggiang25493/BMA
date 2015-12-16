@@ -301,6 +301,9 @@ namespace BMA.Controllers
                 int confirmOrderCount = 0;
                 ViewBag.confirmOrderCountPartial = confirmOrderCount;
                 Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+                int cancelOrderCount = 0;
+                ViewBag.cancelOrderCountPartial = cancelOrderCount;
+                Session["CancelOrderCountPartial"] = cancelOrderCount;
                 int lowMaterialCount = 0;
                 ViewBag.lowMaterialCountPartial = lowMaterialCount;
                 Session["LowMaterialCountPartial"] = lowMaterialCount;
@@ -313,13 +316,15 @@ namespace BMA.Controllers
                 ViewBag.newOrderCountPartial = newOrderCount;
                 int confirmOrderCount = Convert.ToInt32(Session["ConfirmOrderCountPartial"]);
                 ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                int cancelOrderCount = Convert.ToInt32(Session["CancelOrderCountPartial"]);
+                ViewBag.cancelOrderCountPartial = cancelOrderCount;
                 int lowMaterialCount = Convert.ToInt32(Session["LowMaterialCountPartial"]);
                 ViewBag.lowMaterialCountPartial = lowMaterialCount;
             }
             return PartialView();
         }
 
-        public int NotificatePartialLink(int count, int newOrderCount, int confirmOrderCount,int lowMaterialCount)
+        public int NotificatePartialLink(int count, int newOrderCount, int confirmOrderCount, int cancelOrderCount,int lowMaterialCount)
         {
             ViewBag.notificatePartialCount = count;
             Session["NotificateCount"] = count;
@@ -327,12 +332,14 @@ namespace BMA.Controllers
             Session["NewOrderCountPartial"] = newOrderCount;
             ViewBag.confirmOrderCountPartial = confirmOrderCount;
             Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+            ViewBag.cancelOrderCountPartial = cancelOrderCount;
+            Session["CancelOrderCountPartial"] = cancelOrderCount;
             ViewBag.lowMaterialCountPartial = lowMaterialCount;
             Session["LowMaterialCountPartial"] = lowMaterialCount;
             return 1;
         }
 
-        public int RemoveOrderNoty(int lowMaterialCount, int confirmOrderCount)
+        public int RemoveOrderNoty(int lowMaterialCount, int confirmOrderCount, int cancelOrderCount)
         {
             ViewBag.notificatePartialCount = lowMaterialCount + confirmOrderCount;
             Session["NotificateCount"] = lowMaterialCount + confirmOrderCount;
@@ -341,12 +348,14 @@ namespace BMA.Controllers
             Session["NewOrderCountPartial"] = newOrderCount;
             ViewBag.confirmOrderCountPartial = confirmOrderCount;
             Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+            ViewBag.cancelOrderCountPartial = cancelOrderCount;
+            Session["CancelOrderCountPartial"] = cancelOrderCount;
             ViewBag.lowMaterialCountPartial = lowMaterialCount;
             Session["LowMaterialCountPartial"] = lowMaterialCount;
             return 1;
         }
 
-        public int RemoveConfirmStatusNoty(int newOrderCount, int lowMaterialCount)
+        public int RemoveConfirmStatusNoty(int newOrderCount, int lowMaterialCount, int cancelOrderCount)
         {
             ViewBag.notificatePartialCount = lowMaterialCount + newOrderCount;
             Session["NotificateCount"] = lowMaterialCount + newOrderCount;
@@ -355,11 +364,30 @@ namespace BMA.Controllers
             Session["NewOrderCountPartial"] = newOrderCount;
             ViewBag.confirmOrderCountPartial = confirmOrderCount;
             Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+            ViewBag.cancelOrderCountPartial = cancelOrderCount;
+            Session["CancelOrderCountPartial"] = cancelOrderCount;
             ViewBag.lowMaterialCountPartial = lowMaterialCount;
             Session["LowMaterialCountPartial"] = lowMaterialCount;
             return 1;
         }
-        public int RemoveMaterialNoty(int newOrderCount, int confirmOrderCount)
+
+        public int RemoveCancelStatusNoty(int newOrderCount, int lowMaterialCount, int confirmOrderCount)
+        {
+            ViewBag.notificatePartialCount = lowMaterialCount + newOrderCount;
+            Session["NotificateCount"] = lowMaterialCount + newOrderCount;
+            int cancelOrderCount = 0;
+            ViewBag.newOrderCountPartial = newOrderCount;
+            Session["NewOrderCountPartial"] = newOrderCount;
+            ViewBag.confirmOrderCountPartial = confirmOrderCount;
+            Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+            ViewBag.cancelOrderCountPartial = cancelOrderCount;
+            Session["CancelOrderCountPartial"] = cancelOrderCount;
+            ViewBag.lowMaterialCountPartial = lowMaterialCount;
+            Session["LowMaterialCountPartial"] = lowMaterialCount;
+            return 1;
+        }
+
+        public int RemoveMaterialNoty(int newOrderCount, int confirmOrderCount, int cancelOrderCount)
         {
             ViewBag.notificatePartialCount = newOrderCount + confirmOrderCount;
             Session["NotificateCount"] = newOrderCount + confirmOrderCount;
@@ -368,6 +396,8 @@ namespace BMA.Controllers
             Session["NewOrderCountPartial"] = newOrderCount;
             ViewBag.confirmOrderCountPartial = confirmOrderCount;
             Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+            ViewBag.cancelOrderCountPartial = cancelOrderCount;
+            Session["CancelOrderCountPartial"] = cancelOrderCount;
             ViewBag.lowMaterialCountPartial = lowMaterialCount;
             Session["LowMaterialCountPartial"] = lowMaterialCount;
             return 1;

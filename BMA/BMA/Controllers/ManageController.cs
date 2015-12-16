@@ -18,6 +18,10 @@ namespace BMA.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
+                if ((int)Session["UserId"] != userId)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
                 AccountBusiness ab = new AccountBusiness();
                 var user = ab.GetUser(userId);
                 return View(user);

@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Security.Permissions;
-
+using System.Web;
 
 namespace BMA.DBChangesNotifer
 {
-    public class QuantityLowNotifer
+    public class ConfirmToCustomerNotifier
     {
         private SqlConnection con;
         private SqlCommand cmd;
@@ -14,7 +16,7 @@ namespace BMA.DBChangesNotifer
         private String connectionString;
         private String dependencyCheckSql;
 
-        ~QuantityLowNotifer()
+        ~ConfirmToCustomerNotifier()
         {
             this.Dispose();
         }
@@ -54,15 +56,8 @@ namespace BMA.DBChangesNotifer
 
             if (this.con != null)
             {
-                try
-                {
-                    this.con.Close();
-                    this.con = null;
-                }
-                catch
-                {
-                    this.con = null;
-                }
+                this.con.Close();
+                this.con = null;
             }
 
             if (this.dependency != null)

@@ -34,63 +34,71 @@
                 <div class="col-xs-12 col-sm-12">
                     @if (Model.Count == 0)
                     {
-                        <h2 style="color:red">Hiện không có đơn hàng nào cần xác nhận.</h2>
+                        if (TempData["Search"] != null)
+                        {
+                            <h2 style="color:red">Không tìm thấy đơn hàng yêu cầu.</h2>
+                        }
+                        else
+                        {
+                            <h2 style="color:red">Hiện không có đơn hàng nào cần xác nhận.</h2>
+                        }
+
                     }
                     else
                     {
                         <table class="footable">
-                        <thead>
-                            <tr>
-                                <th data-class="expand" data-sort-initial="true"> <span title="table sorted by this column on load">Mã đơn hàng</span> </th>
-                                <th data-hide="phone,tablet" data-sort-ignore="true">Số loại sản phẩm</th>
-                                <th data-hide="phone,tablet" data-sort-ignore="true">Thành tiền</th>
-                                <th data-hide="phone,tablet"><strong></strong></th>
-                                <th data-hide="default"> Ngày tạo </th>
-                                <th data-hide="default" data-type="numeric"> Ngày giao hàng (dự kiến) </th>
-                                <th data-hide="phone" data-type="numeric"> Trạng thái  </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                int count = 0;
+                            <thead>
                                 <tr>
-                                    <td>@item.OrderCode</td>
-                                    @for (int i = 0; i < oi.Count(); i++)
-                                    {
-                                        if (oi.ElementAt(i).OrderId == item.OrderId)
-                                        {
-                                            count++;
-                                        }
-                                    }
-                                    <td>@count <small> sản phẩm</small></td>
-                                    <td><a href="#" target="_blank">@((item.Amount + item.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</a></td>
-                                    <td>
-                                        <ul>
-                                            <li style="display:inline;"><a href="@Url.Action("OrderDetail", "CusManage", new { @orderId = item.OrderId})" class="btn btn-detail btn-sm" style="border:1px solid black"><i class="fa fa-navicon"></i> Chi tiết</a> </li>
-                                            <li style="display:inline;"><a href="@Url.Action("ConfirmOrder", "CusManage", new { @orderId = item.OrderId })" class="btn btn-edit btn-sm" style="border:1px solid black"><i class="fa fa-cog"></i> Xác nhận</a></li>
-                                            <li style="display:inline;"><a data-target="#product-details-modal" data-toggle="modal" onclick="return openPopup(@item.OrderId)" class="btn btn-delete btn-sm" style="border:1px solid black"><i class="fa fa-close"></i> Hủy</a></li>
-                                        </ul>
-                                        <script type="text/javascript">
-                                            var strURL = window.location.href;
-                                            var deleteLink;
-                                            function openPopup(orderId) {
-                                                deleteLink = "/CusManage/CancelOrderConfirm?orderId=" + orderId + "&strURL=" + strURL;
-                                                $('#product-details-modal #deleteRequest').attr("href", deleteLink);
-                                            }
-                                        </script>
-
-                                    </td>
-                                    <td>@item.CreateTime.ToString("dd/MM/yyyy HH:mm")</td>
-                                    <td data-value="78025368997">@item.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
-                                    <td data-value="3">
-                                        <span class="label label-danger">@CommonData.Status[item.OrderStatus]</span>
-                                    </td>
+                                    <th data-class="expand" data-sort-initial="true"> <span title="table sorted by this column on load">Mã đơn hàng</span> </th>
+                                    <th data-hide="phone,tablet" data-sort-ignore="true">Số loại sản phẩm</th>
+                                    <th data-hide="phone,tablet" data-sort-ignore="true">Thành tiền</th>
+                                    <th data-hide="phone,tablet"><strong></strong></th>
+                                    <th data-hide="default"> Ngày tạo </th>
+                                    <th data-hide="default" data-type="numeric"> Ngày giao hàng (dự kiến) </th>
+                                    <th data-hide="phone" data-type="numeric"> Trạng thái  </th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                    }                    
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    int count = 0;
+                                    <tr>
+                                        <td>@item.OrderCode</td>
+                                        @for (int i = 0; i < oi.Count(); i++)
+                                        {
+                                            if (oi.ElementAt(i).OrderId == item.OrderId)
+                                            {
+                                                count++;
+                                            }
+                                        }
+                                        <td>@count <small> sản phẩm</small></td>
+                                        <td><a href="#" target="_blank">@((item.Amount + item.TaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</a></td>
+                                        <td>
+                                            <ul>
+                                                <li style="display:inline;"><a href="@Url.Action("OrderDetail", "CusManage", new { @orderId = item.OrderId})" class="btn btn-detail btn-sm" style="border:1px solid black"><i class="fa fa-navicon"></i> Chi tiết</a> </li>
+                                                <li style="display:inline;"><a href="@Url.Action("ConfirmOrder", "CusManage", new { @orderId = item.OrderId })" class="btn btn-edit btn-sm" style="border:1px solid black"><i class="fa fa-cog"></i> Xác nhận</a></li>
+                                                <li style="display:inline;"><a data-target="#product-details-modal" data-toggle="modal" onclick="return openPopup(@item.OrderId)" class="btn btn-delete btn-sm" style="border:1px solid black"><i class="fa fa-close"></i> Hủy</a></li>
+                                            </ul>
+                                            <script type="text/javascript">
+                                                var strURL = window.location.href;
+                                                var deleteLink;
+                                                function openPopup(orderId) {
+                                                    deleteLink = "return cancelOrder(" + orderId + ")";
+                                                    $('#product-details-modal #deleteRequest').attr("onclick", deleteLink);
+                                                }
+                                            </script>
+
+                                        </td>
+                                        <td>@item.CreateTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td data-value="78025368997">@item.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td data-value="3">
+                                            <span class="label label-danger">@CommonData.Status[item.OrderStatus]</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
                 </div>
 
                 <div class="modal fade col-md-4 col-center" id="product-details-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:70px">
@@ -103,7 +111,7 @@
                                 <li> <span class="address-line1"> Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc. Quý khách có muốn hủy đơn hàng này không ? </span></li>
                             </ul>
                         </div>
-                        <div class="panel-footer panel-footer-address" style="padding-left:270px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="deleteRequest"> Đồng ý </a> </div>
+                        <div class="panel-footer panel-footer-address" style="padding-left:270px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return cancelOrder()" id="deleteRequest"> Đồng ý </a> </div>
                     </div>
                 </div>
 
@@ -113,13 +121,105 @@
                         <li class="next pull-left"><a href="@Url.Action("Index","CusManage")"> &larr; Quay lai trang quản lý</a></li>
                     </ul>
                 </div>
+                <script type="text/javascript">
+                    function cancelOrder(orderId) {
+                        $.ajax({
+                            url: "/CusManage/CancelBothOrder?orderId=" + orderId,
+                            data: "/CusManage/CancelBothOrder?orderId=" + orderId,
+                            success: function (data) {
+                                if (data === "1") {
+                                    window.setTimeout(function () {
+                                        window.location.replace("@(Url.Action("OrderList", "CusManage"))");
+                                    }, 1500);
+                                    noty({
+                                        text: 'Hủy đơn hàng thành công',
+                                        type: 'success',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (data === "-1") {
+                                    noty({
+                                        text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                }
+                            },
+                            fail: function () {
+                                noty({
+                                    text: 'Đã có lỗi xảy ra',
+                                    type: 'error',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            }
+                        })
+                    }
+                </script>
             </div>
 
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-5"> </div>
+        <div class="col-lg-3 col-md-3 col-sm-5">
+            <h1 class="section-title-inner"><span style="color:white"> Tìm kiếm </span></h1>
+            <div class="row userInfo">
+                <div class="col-lg-12">
+                    <h2 class="block-title-2" style="color:white"> Tìm kiếm  </h2>
+                </div>
+            </div>
+            <div class="panel panel-default ">
+                <div class="panel-heading">
+                    <h4 class="panel-title"> <a data-toggle="collapse" href="#collapse4" class="collapseWill"> Tìm kiếm <span class="pull-left"> <i class="fa fa-caret-right"></i></span> </a> </h4>
+                </div>
+                <div id="collapse4" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <fieldset style="margin-top:-10px;">
+                            <div class="form-group">
+                                <label class="col-md-12 control-label" style="margin-left:145px;" for="selectbasic">Ngày tạo</label>
+                                <div class="col-md-12">
+                                    <label> Từ</label>
+                                    <div class='input-group date' id='datetimepickerFrom'>
+                                        <input type="text" name="searchFromDate" id="searchFromDate" class="form-control" readonly />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <label> Đến</label>
+                                    <div class='input-group date' id='datetimepickerTo'>
+                                        <input type="text" name="searchToDate" id="searchToDate" class="form-control" readonly />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="return beginSearch()" class="btn btn-edit btn-sm pull-right" style="border:1px solid black; margin-right:15px;margin-top:15px;"><i class="fa fa-search"></i> Tìm kiếm</button>
+                            <button onclick="return showAll()" class="btn btn-detail btn-sm pull-right" style="border:1px solid black; margin-right:25px;margin-top:15px;"><i class="fa fa-th-large"></i> Hiện tất cả</button>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="w100 categoryFooter">
-            <div class="pagination pull-left no-margin-top" style="margin-left:390px;margin-top:-70px;">
-                @Html.PagedListPager(Model, page => Url.Action("OrderList", new { page = page }))
+            <div class="w100 categoryFooter">
+                <div class="pagination pull-left no-margin-top" style="margin-left:390px;margin-top:-70px;">
+                    @if (ViewBag.FromDate != null && ViewBag.ToDate != null && ViewBag.Status != null)
+                    {
+                        @Html.PagedListPager(Model, page => Url.Action("OrderList", new { page = page, fromDate = ViewBag.FromDate, toDate = ViewBag.ToDate }))
+
+                    }
+                    else
+                    {
+                        @Html.PagedListPager(Model, page => Url.Action("OrderList", new { page = page }))
+
+                    }
+                </div>
             </div>
         </div>
     </div>
@@ -128,3 +228,71 @@
 </div>
 
 <div class="gap"> </div>
+<script type="text/javascript">
+    function showAll() {
+        window.location.replace("@(Url.Action("ConfirmList", "CusManage"))");
+    }
+
+    function beginSearch() {
+        var fromDate = $("#searchFromDate").val();
+        var toDate = $("#searchToDate").val();
+        window.location.replace("@(Url.Action("ConfirmList", "CusManage"))" + "?fromDate=" + fromDate + "&toDate=" + toDate);
+    }
+
+    $(document).ready(function () {
+        if ("@(ViewBag.FromDate ?? "")".trim().length !== 0) {
+            $('#datetimepickerFrom').datetimepicker({
+                ignoreReadonly: true,
+                format: 'L',
+                locale: 'vi',
+                maxDate: moment(),
+                defaultDate: moment("@(ViewBag.FromDate)", "DD/MM/YYYY")
+            });
+        } else {
+            $('#datetimepickerFrom').datetimepicker({
+                ignoreReadonly: true,
+                format: 'L',
+                locale: 'vi',
+                maxDate: moment(),
+                defaultDate: "@(DateTime.Now.AddDays(-7).ToString("MM/dd/yyyy HH:mm"))"
+            });
+        }
+        if ("@(ViewBag.ToDate ?? "")".trim().length !== 0) {
+            $('#datetimepickerTo').datetimepicker({
+                ignoreReadonly: true,
+                format: 'L',
+                locale: 'vi',
+                maxDate: moment(),
+                defaultDate: moment("@(ViewBag.ToDate)", "DD/MM/YYYY"),
+                useCurrent: false
+            });
+        } else {
+            $('#datetimepickerTo').datetimepicker({
+                ignoreReadonly: true,
+                format: 'L',
+                locale: 'vi',
+                maxDate: moment(),
+                defaultDate: "@(DateTime.Now.ToString("MM/dd/yyyy HH:mm"))",
+                useCurrent: false
+            });
+        }
+
+        $("#datetimepickerFrom").on("dp.change", function (e) {
+            var toDate = $("#searchToDate").val();
+            if (toDate.trim().length === 0) {
+                $('#datetimepickerTo').data("DateTimePicker").minDate(e.date).date(e.date);
+            } else {
+                $('#datetimepickerTo').data("DateTimePicker").minDate(e.date);
+            }
+        });
+
+        $("#datetimepickerTo").on("dp.change", function (e) {
+            var fromDate = $("#searchFromDate").val();
+            if (fromDate.trim().length === 0) {
+                $('#datetimepickerFrom').data("DateTimePicker").maxDate(e.date).date(e.date);
+            } else {
+                $('#datetimepickerFrom').data("DateTimePicker").maxDate(e.date);
+            }
+        });
+    });
+</script>

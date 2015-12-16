@@ -8,6 +8,9 @@ using System.Web.WebPages;
 using BMA.Business;
 using BMA.Models;
 using BMA.Models.ViewModel;
+using Microsoft.AspNet.SignalR;
+using BMA.DBChangesNotifer;
+using BMA.Hubs;
 
 namespace BMA.Controllers
 {
@@ -21,6 +24,18 @@ namespace BMA.Controllers
         {
             try
             {
+                // Dispose notificate and reinitial
+                if (Session["TempCusUserId"] != null)
+                {
+                    int userId = (int)Session["TempCusUserId"];
+                    MvcApplication.changeStatusNotifer.Dispose();
+                    MvcApplication.confirmToCustomerNotifer.Dispose();
+                    string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId=", userId);
+                    Session["CheckToNotify"] = userId;
+                    MvcApplication.changeStatusNotifer.Start("BMAChangeDB", dependencyCheckSql);
+                    MvcApplication.changeStatusNotifer.Change += this.OnChange3;
+                    Session["TempCusUserId"] = null;
+                }
                 // Check autherization
                 User staffUser = Session["User"] as User;
                 if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
@@ -191,6 +206,17 @@ namespace BMA.Controllers
                 int orderId = Convert.ToInt32(orderIdString);
                 int depositAmount = Convert.ToInt32(depositAmountString);
                 DateTime deliveryDate = DateTime.ParseExact(deliveryDateString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+
+                //Manh code them
+                Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                int cusUserId = order.CustomerUserId.Value;
+                Session["TempCusUserId"] = cusUserId;
+                MvcApplication.changeStatusNotifer.Dispose();
+                string dependencyCheckSql = string.Format("{0}{1}{2}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId = ", cusUserId, " AND OrderStatus = 1");
+                MvcApplication.confirmToCustomerNotifer.Start("BMAChangeDB", dependencyCheckSql);
+                MvcApplication.confirmToCustomerNotifer.Change += this.OnChange6;
+                //het
+
                 bool rs = true;
                 rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate, staffUser.UserId);
                 if (rs)
@@ -201,9 +227,17 @@ namespace BMA.Controllers
 
                 return 0;
             }
+        }
 
-
-
+        private void OnChange3(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange3(e.Info, e.Source, e.Type);
+        }
+        private void OnChange6(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange6(e.Info, e.Source, e.Type);
         }
 
         [HttpPost]
@@ -601,7 +635,7 @@ namespace BMA.Controllers
         public int RemoveProductInProductListForAdd(int[] productId)
         {
             List<Product> productList = Session["ProductListForAdd"] as List<Product>;
-            if (productId.Length > 0)
+            if (productId!=null && productId.Length > 0)
             {
                 foreach (int index in productId)
                 {

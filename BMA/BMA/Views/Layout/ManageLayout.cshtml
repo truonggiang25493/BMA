@@ -48,6 +48,7 @@
             var txtHiddenNoti = $("#hiddenNumberOfNoti").val();
             var txtHiddenOrder = $("#hiddenOrderCount").val();
             var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
+            var txtHiddenCancelOrder = $("#hiddenCancelOrderCount").val();
             var txtHiddenMaterial = $("#hiddenMaterialCount").val();
             $.ajax({
                 "url": "@(Url.Action("NotificatePartialLink", "StoreInfor"))",
@@ -56,6 +57,7 @@
                     "count": txtHiddenNoti,
                     "newOrderCount": txtHiddenOrder,
                     "confirmOrderCount": txtHiddenConfirmOrder,
+                    "cancelOrderCount": txtHiddenCancelOrder,
                     "lowMaterialCount": txtHiddenMaterial
                 }),
                 "dataType": "json",
@@ -98,12 +100,14 @@
             } else {
                 var txtHiddenMaterial = $("#hiddenMaterialCount").val();
                 var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
+                var txtHiddenCancelOrder = $("#hiddenCancelOrderCount").val();
                 $.ajax({
                     "url": "@(Url.Action("RemoveOrderNoty", "StoreInfor"))",
                     "method": "POST",
                     "data": JSON.stringify({
                         "lowMaterialCount": txtHiddenMaterial,
-                        "confirmOrderCount": txtHiddenConfirmOrder
+                        "confirmOrderCount": txtHiddenConfirmOrder,
+                        "cancelOrderCount": txtHiddenCancelOrder
                     }),
                     "dataType": "json",
                     "contentType": 'application/json',
@@ -147,12 +151,66 @@
             } else {
                 var txtHiddenOrder = $("#hiddenOrderCount").val();
                 var txtHiddenMaterial = $("#hiddenMaterialCount").val();
+                var txtHiddenCancelOrder = $("#hiddenCancelOrderCount").val();
+
                 $.ajax({
                     "url": "@(Url.Action("RemoveConfirmStatusNoty", "StoreInfor"))",
                     "method": "POST",
                     "data": JSON.stringify({
                         "newOrderCount": txtHiddenOrder,
-                        "lowMaterialCount": txtHiddenMaterial
+                        "lowMaterialCount": txtHiddenMaterial,
+                        "cancelOrderCount": txtHiddenCancelOrder
+                    }),
+                    "dataType": "json",
+                    "contentType": 'application/json',
+                    "success": function (data) {
+                        if (data === 1) {
+                            window.setTimeout(function () {
+                                window.location.replace(strURL);
+                            });
+                        } else {
+                            noty({
+                                text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    "fail": function () {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                        window.setTimeout(function () {
+                            window.location.replace("@(Url.Action("Index", "StoreInfor"))");
+                        }, 3000)
+                    }
+                })
+            }
+        }
+
+        function RemoveCancelStatusNoty(strURL) {
+            if ($("[data-role='numberOfConfirmOrder']").text() == 0) {
+
+            } else {
+                var txtHiddenOrder = $("#hiddenOrderCount").val();
+                var txtHiddenMaterial = $("#hiddenMaterialCount").val();
+                var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
+
+                $.ajax({
+                    "url": "@(Url.Action("RemoveConfirmStatusNoty", "StoreInfor"))",
+                    "method": "POST",
+                    "data": JSON.stringify({
+                        "newOrderCount": txtHiddenOrder,
+                        "lowMaterialCount": txtHiddenMaterial,
+                        "confirmOrderCount": txtHiddenConfirmOrder
                     }),
                     "dataType": "json",
                     "contentType": 'application/json',
@@ -195,12 +253,15 @@
             } else {
                 var txtHiddenOrder = $("#hiddenOrderCount").val();
                 var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
+                var txtHiddenCancelOrder = $("#hiddenCancelOrderCount").val();
+
                 $.ajax({
                     "url": "@(Url.Action("RemoveMaterialNoty", "StoreInfor"))",
                     "method": "POST",
                     "data": JSON.stringify({
                         "newOrderCount": txtHiddenOrder,
-                        "confirmOrderCount": txtHiddenConfirmOrder
+                        "confirmOrderCount": txtHiddenConfirmOrder,
+                        "cancelOrderCount": txtHiddenCancelOrder
                     }),
                     "dataType": "json",
                     "contentType": 'application/json',
@@ -415,7 +476,7 @@
                             </a>
                             <ul class="treeview-menu">
 
-                                <li id="orderList"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Index')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
+                                <li id="orderList"><a onclick="NotificatePartialLink('@(Url.Action("Index", "Order") + "?fromDate=" + DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy") + "&toDate=" + DateTime.Now.ToString("dd/MM/yyyy"))')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
                                 <li id="addOrder"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Add')" style="cursor: pointer"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
                             </ul>
                         </li>
@@ -448,8 +509,8 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li id="customerRevenue"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenuePerCustomer')" style="cursor: pointer"><i class="fa fa-usd"></i>Doanh thu theo khách hàng</a></li>
-                                <li id="incomeProduct"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenueByProduct')" style="cursor: pointer"><i class="fa fa-usd"></i>Lợi nhuận theo sản phẩm</a></li>
-                                <li id="incomeReport"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewIncomeByTime')" style="cursor: pointer"><i class="fa fa-usd"></i>Lợi nhuận theo thời gian</a></li>
+                                <li id="incomeProduct"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenueByProduct')" style="cursor: pointer"><i class="fa fa-usd"></i>Thu nhập theo sản phẩm</a></li>
+                                <li id="incomeReport"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewIncomeByTime')" style="cursor: pointer"><i class="fa fa-usd"></i>Thu nhập theo thời gian</a></li>
                                 <li id="taxReport"><a onclick="NotificatePartialLink('http://localhost:2072/Tax/Index')" style="cursor: pointer"><i class=" fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                             </ul>
                         </li>
@@ -555,12 +616,19 @@
     @RenderSection("ReviewIncomeByProductScript", false)
     @RenderSection("EditInputBillScript", false)
     @RenderSection("TaxIndexScript", false)
-    @RenderSection("CustomerIndexScript",false)
-    @RenderSection("SupplierIndexScript",false)
-    @RenderSection("StaffIndexScript", false)
+    @RenderSection("CustomerIndexScript", false)
+    @RenderSection("SupplierIndexScript", false)
     @RenderSection("OrderIndexScript", false)
     <script>
         $(function () {
+            $('#example4').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": false,
+                "info": true,
+                "autoWidth": false
+            });
             $('#example3').DataTable({
                 "paging": true,
                 "lengthChange": false,

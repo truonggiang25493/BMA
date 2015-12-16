@@ -7,6 +7,9 @@ using BMA.Models;
 using BMA.Models.ViewModel;
 using BMA.Business;
 using System.Globalization;
+using BMA.DBChangesNotifer;
+using Microsoft.AspNet.SignalR;
+using BMA.Hubs;
 
 namespace BMA.Controllers
 {
@@ -127,6 +130,13 @@ namespace BMA.Controllers
         {
             try
             {
+                if (Session["BeEdited"] != null)
+                {
+                    MvcApplication.changeStatusNotifer.Dispose();
+                    string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId=", (int)Session["UserId"]);
+                    MvcApplication.changeStatusNotifer.Start("BMAChangeDB", dependencyCheckSql);
+                    MvcApplication.changeStatusNotifer.Change += this.OnChange3;
+                }
                 CustomerOrderBusiness cob = new CustomerOrderBusiness();
                 int quantity = 0;
                 if (Session["Cart"] == null || Session["UserRole"] != null)
@@ -162,6 +172,11 @@ namespace BMA.Controllers
             }
         }
 
+        private void OnChange3(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange3(e.Info, e.Source, e.Type);
+        }
         private int SumQuantity()
         {
             int sumQuantity = 0;
@@ -206,6 +221,7 @@ namespace BMA.Controllers
         {
             try
             {
+                MvcApplication.changeStatusNotifer.Dispose();
                 CusManageBusiness cmb = new CusManageBusiness();
                 var order = cmb.GetOrderDetail(orderId);
                 if (order.CustomerUserId != Convert.ToInt32(Session["UserId"]))
@@ -261,6 +277,12 @@ namespace BMA.Controllers
             else
             {
                 RedirectToAction("Index", "Product");
+            }
+            bool checkEditError = cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
+            if (!checkEditError)
+            {
+                Session["Cart"] = null;
+                return -3;
             }
             cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
             cob.TurnFlagOff(orderId);

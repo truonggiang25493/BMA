@@ -1,0 +1,232 @@
+﻿@if (Session["UserId"] != null)
+{
+    if (Session["TempCusUserId"] != null)
+    {
+        if ((int)Session["UserId"] == (int)Session["TempCusUserId"])
+        {
+            <input type="hidden" value="1" id="checkToNotifyConfirm" />
+        }
+    }
+}
+
+@if (Session["UserId"] != null)
+{
+    if (Session["CheckToNotify"] != null)
+    {
+        if ((int)Session["UserId"] == (int)Session["CheckToNotify"])
+        {
+            <input type="hidden" value="1" id="checkToNotify" />
+        }
+    }
+}
+<script>
+    function onChangeStatus(info, source, type) {
+        var checkToNotify = $("#checkToNotify").val();
+        setTimeout(function () {
+            if (info == 2 && checkToNotify != null) {
+                noty({
+                    text: 'Có một đơn hàng vừa được thay đổi trạng thái',
+                    type: 'success',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: false
+                });
+
+                var numberOfNoti = $("#hiddenNumberOfNoti").val();
+                var numberOfEditOrder = $("#hiddenEditOrderCount").val();
+                if (numberOfNoti == "") {
+                    $("#hiddenNumberOfNoti").attr('value', 1);
+                    $("#hiddenEditOrderCount").attr('value', 1);
+                    $("#numberOfEditOrder").text(1);
+                    $("[data-role='numberOfEditOrder']").text(1);
+                }
+                else {
+                    numberOfNoti = parseInt(numberOfNoti) + 1;
+                    $("#hiddenNumberOfNoti").attr('value', numberOfNoti);
+                    if (numberOfEditOrder == "") {
+                        $("#hiddenEditOrderCount").attr('value', 1);
+                    } else {
+                        numberOfEditOrder = parseInt(numberOfEditOrder) + 1;
+                        $("#hiddenEditOrderCount").attr('value', numberOfEditOrder);
+                    }
+                    $("#numberOfNoti").text(numberOfNoti);
+
+                    $("[data-role='numberOfEditOrder']").text(numberOfEditOrder);
+                }
+            } else if (info == 1 && checkToNotify != null) {
+                noty({
+                    text: 'Có một đơn hàng vừa được nhân viên thêm mới',
+                    type: 'success',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: false
+                });
+
+                var numberOfNoti = $("#hiddenNumberOfNoti").val();
+                var numberOfNewOrder = $("#hiddenNewOrderCount").val();
+                if (numberOfNoti == "") {
+                    $("#hiddenNumberOfNoti").attr('value', 1);
+                    $("#hiddenNewOrderCount").attr('value', 1);
+                    $("#numberOfNewOrder").text(1);
+                    $("[data-role='numberOfNewOrder']").text(1);
+                }
+                else {
+                    numberOfNoti = parseInt(numberOfNoti) + 1;
+                    $("#hiddenNumberOfNoti").attr('value', numberOfNoti);
+                    if (numberOfNewOrder == "") {
+                        $("#hiddenNewOrderCount").attr('value', 1);
+                    } else {
+                        numberOfNewOrder = parseInt(numberOfNewOrder) + 1;
+                        $("#hiddenNewOrderCount").attr('value', numberOfNewOrder);
+                    }
+                    $("#numberOfNoti").text(numberOfNoti);
+
+                    $("[data-role='numberOfNewOrder']").text(numberOfNewOrder);
+                }
+            }
+        }, 2000);
+    }
+
+    function onChangeConfirmStatus(info, source, type) {
+
+        setTimeout(function () {
+
+            noty({
+                text: 'Có một đơn hàng cần được xác nhận',
+                type: 'success',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: false
+            });
+
+            var numberOfNoti = $("#hiddenNumberOfNoti").val();
+            var numberOfConfirmOrder = $("#hiddenConfirmOrderCount").val();
+            if (numberOfNoti == "") {
+                $("#hiddenNumberOfNoti").attr('value', 1);
+                $("#hiddenConfirmOrderCount").attr('value', 1);
+                $("#numberOfConfirmOrder").text(1);
+                $("[data-role='numberOfConfirmOrder']").text(1);
+            }
+            else {
+                numberOfNoti = parseInt(numberOfNoti) + 1;
+                $("#hiddenNumberOfNoti").attr('value', numberOfNoti);
+                if (numberOfConfirmOrder == "") {
+                    $("#hiddenConfirmOrderCount").attr('value', 1);
+                } else {
+                    numberOfConfirmOrder = parseInt(numberOfConfirmOrder) + 1;
+                    $("#hiddenConfirmOrderCount").attr('value', numberOfConfirmOrder);
+                }
+                $("#numberOfNoti").text(numberOfNoti);
+
+                $("[data-role='numberOfConfirmOrder']").text(numberOfConfirmOrder);
+            }
+
+        }, 2000);
+    }
+
+    window.addEventListener('load', function () {
+        var notifier = $.connection.realtimeNotifierHub;
+        notifier.client.onChange3 = onChangeStatus;
+        notifier.client.onChange6 = onChangeConfirmStatus;
+        $.connection.hub.start();
+    });
+</script>
+
+@{
+    @*<a class="dropdown cartMenu">*@
+    <a class=" dropdown-toggle" data-toggle="dropdown" style="cursor:default;" onclick="resetNumberOfNoti()">
+        <div style="color: white; padding:14px;" class="notiBell" id="notiBell" onclick="return changeCss()">
+            <i class="fa fa-bell-o"></i>
+        </div>
+
+        @if (ViewBag.notificatePartialCount == 0)
+        {
+            <span class="label label-danger" style="position:absolute;bottom:30px;right:112px;width:15px;height:14px;" id="numberOfNoti"></span>
+        }
+        else
+        {
+            <span class="label label-danger" style="position:absolute;bottom:30px;right:112px;width:13px;height:13px;" id="numberOfNoti"><span style="position: absolute;margin-left:-3px;">@ViewBag.notificatePartialCount</span></span>
+        }
+        <ul class="dropdown-menu" style="margin-right:103px; padding-top:-695px;margin-top:-2px;">
+            <li>
+                <a onclick="RemoveNewOrderNoty('http://localhost:2072/CusManage/OrderList')" style="color: black; text-transform: none; margin-left: 18px; cursor: pointer">
+                    <i class="fa fa-shopping-cart" style="margin-left:-20px;margin-right:10px;color:green"></i> Có
+                    @if (ViewBag.newOrderCountPartial == 0)
+                    {
+                        <span id="numberOfNewOrder" data-role="numberOfNewOrder">
+                            0
+                        </span>
+                    }
+                    else
+                    {
+                        <span id="numberOfNewOrder" data-role="numberOfNewOrder">
+                            @ViewBag.newOrderCountPartial
+                        </span>
+                    }
+                    đơn hàng được nhân viên thêm mới.
+                </a>
+            </li>
+            <li>
+                <a onclick="RemoveEditOrderNoty('http://localhost:2072/CusManage/OrderList')" style="color: black; text-transform: none; margin-left: 18px; cursor: pointer">
+                    <i class="fa fa-shopping-cart" style="margin-left:-20px;margin-right:10px;"></i> Có
+                    @if (ViewBag.editOrderCountPartial == 0)
+                    {
+                        <span id="numberOfEditOrder" data-role="numberOfEditOrder">
+                            0
+                        </span>
+                    }
+                    else
+                    {
+                        <span id="numberOfEditOrder" data-role="numberOfEditOrder">
+                            @ViewBag.editOrderCountPartial
+                        </span>
+                    }
+                    đơn hàng được thay đổi trạng thái.
+                </a>
+            </li>
+            <li>
+                <a onclick="RemoveConfirmOrderNoty('http://localhost:2072/CusManage/ConfirmList')" style="color: black; text-transform: none; margin-left: 18px; cursor: pointer">
+                    <i class="fa fa-shopping-cart" style="margin-left:-20px;margin-right:10px;color:red"></i> Có
+                    @if (ViewBag.confirmOrderCountPartial == 0)
+                    {
+                        <span id="numberOfConfirmOrder" data-role="numberOfConfirmOrder">
+                            0
+                        </span>
+                    }
+                    else
+                    {
+                        <span id="numberOfConfirmOrder" data-role="numberOfConfirmOrder">
+                            @ViewBag.confirmOrderCountPartial
+                        </span>
+                    }
+                    đơn hàng cần được xác nhận
+                </a>
+            </li>
+        </ul>
+    </a>
+
+}
+
+<script type="text/javascript">
+    function resetNumberOfNoti() {
+        $("#hiddenNumberOfNoti").attr('value', 0);
+        $("#numberOfNoti").text('');
+    }
+
+    function changeCss() {
+        if (document.getElementById('notiBell')) {
+            document.getElementById('notiBell').style.backgroundColor = '#2ecc71';
+            document.getElementById('notiBell').id = 'notiBell2';
+        }
+    }
+</script>
+
+<form action="/Home/NotificatePartialLink" method="post" role="form" id="notificateForm">
+    <input type="hidden" value="@ViewBag.notificatePartialCount" id="hiddenNumberOfNoti" name="hiddenNumberOfNoti" />
+    <input type="hidden" value="@ViewBag.newOrderCountPartial" id="hiddenNewOrderCount" name="hiddenNewOrderCount" />
+    <input type="hidden" value="@ViewBag.editOrderCountPartial" id="hiddenEditOrderCount" name="hiddenEditOrderCount" />
+    <input type="hidden" value="@ViewBag.confirmOrderCountPartial" id="hiddenConfirmOrderCount" name="hiddenConfirmOrderCount" />
+</form>

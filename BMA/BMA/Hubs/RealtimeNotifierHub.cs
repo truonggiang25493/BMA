@@ -28,6 +28,7 @@ namespace BMA.Hubs
             }
         }
 
+        //Change status notifier
         public void OnChange3(Int32 info, Int32 source, Int32 type)
         {
             this.Clients.All.onChange3(info, source, type);
@@ -36,6 +37,18 @@ namespace BMA.Hubs
         public void OnChange4(Int32 info, Int32 source, Int32 type)
         {
             this.Clients.All.onChange4(info, source, type);
+        }
+
+        public void OnChange5(Int32 info, Int32 source, Int32 type)
+        {
+            this.Clients.All.onChange5(info, source, type);
+        }
+        
+
+        //Confirm order
+        public void OnChange6(Int32 info, Int32 source, Int32 type)
+        {
+            this.Clients.All.onChange6(info, source, type);
         }
     }
 }

@@ -21,19 +21,43 @@ namespace BMA.Business
         #region Get current tax rates
 
 
-        public List<TaxRate> GetCurrentTaxRate()
+        public TaxRateViewModel GetTaxRate()
         {
-            List<TaxRate> result = new List<TaxRate>();
+            TaxRateViewModel taxRate = new TaxRateViewModel();
+
+            #region Current tax rate
+
+            List<TaxRate> cuurentTaxRate = new List<TaxRate>();
+
             // Get current VAT
             TaxRate vatTaxRate = db.TaxRates.FirstOrDefault(m => m.TaxType.Abbreviation.Equals("GTGT") && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
-            result.Add(vatTaxRate);
+            cuurentTaxRate.Add(vatTaxRate);
 
             // Get current TNDN
-            // Temp income
+            TaxRate tndnTaxRate = db.TaxRates.FirstOrDefault(m => m.TaxType.Abbreviation.Equals("TNDN") && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
+            cuurentTaxRate.Add(tndnTaxRate);
 
-            List<TaxRate> tndnTaxRateList = db.TaxRates.Where(m => DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate).ToList();
-            //result.Add(tndnTaxRate);
-            return result;
+            taxRate.CurrentTaxList = cuurentTaxRate;
+
+            #endregion
+
+            #region Vat tax rate
+
+            List<TaxRate> vatTaxRateList = db.TaxRates.Where(m => m.TaxType.Abbreviation.Equals("GTGT")).ToList();
+
+            taxRate.VatTaxList = vatTaxRateList;
+
+            #endregion
+
+            #region Excise tax rate
+
+            List<TaxRate> exciseTaxRateList = db.TaxRates.Where(m => m.TaxType.Abbreviation.Equals("TNDN")).ToList();
+
+            taxRate.ExciseTaxList = exciseTaxRateList;
+
+            #endregion
+
+            return taxRate;
         }
         #endregion
 
@@ -44,7 +68,7 @@ namespace BMA.Business
             TaxRate currentVatTaxRate =
                 db.TaxRates.FirstOrDefault(
                     m => m.TaxTypeId == 1 && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
-            if (currentVatTaxRate == null)
+            if (currentVatTaxRate == null || currentVatTaxRate.TaxRateValue == vatRate)
             {
                 return false;
             }
@@ -203,7 +227,7 @@ namespace BMA.Business
 
                 result.Value25 = result.InputTotalTaxAmount;
 
-                result.Value36 = result.OutputTotalAmount - result.Value25;
+                result.Value36 = result.OutputTotalTaxAmount - result.Value25;
                 if (result.Value36 >= 0)
                 {
                     result.Value40A = result.Value36;
@@ -228,27 +252,27 @@ namespace BMA.Business
             }
             else
             {
-                result.Quarter = quarter;
-                result.Year = year;
-                if (vatTaxDeclaration.CreateDate == null)
-                {
-                    result.CreateDate = new DateTime(year, quarter * 3, 1).AddMonths(1).AddDays(-1);
-                }
-                else
-                {
-                    result.CreateDate = vatTaxDeclaration.CreateDate;
-                }
+                //result.Quarter = quarter;
+                //result.Year = year;
+                //if (vatTaxDeclaration.CreateDate == null)
+                //{
+                //    result.CreateDate = new DateTime(year, quarter * 3, 1).AddMonths(1).AddDays(-1);
+                //}
+                //else
+                //{
+                //    result.CreateDate = vatTaxDeclaration.CreateDate;
+                //}
 
-                if (vatTaxDeclaration.Value20Date == null)
-                {
-                    result.Value20Date = new DateTime(2013, 1, 1);
-                }
-                else
-                {
-                    result.Value20Date = vatTaxDeclaration.Value20Date.Value;
-                }
+                //if (vatTaxDeclaration.Value20Date == null)
+                //{
+                //    result.Value20Date = new DateTime(2013, 1, 1);
+                //}
+                //else
+                //{
+                //    result.Value20Date = vatTaxDeclaration.Value20Date.Value;
+                //}
 
-                result.Value20No = vatTaxDeclaration.Value20No;
+                //result.Value20No = vatTaxDeclaration.Value20No;
 
                 // Get StoreInfo
                 StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
@@ -361,7 +385,7 @@ namespace BMA.Business
                 result.VatAgentFax = vatTaxDeclaration.TaxAgentFax;
                 result.VatAgentEmail = vatTaxDeclaration.TaxAgentEmail;
 
-                result.Value21 = (vatTaxDeclaration.Value21 == 1);
+                //result.Value21 = (vatTaxDeclaration.Value21 == 1);
                 result.Value22 = vatTaxDeclaration.Value22.Value;
                 result.Value25 = vatTaxDeclaration.Value25.Value;
                 result.Value36 = vatTaxDeclaration.Value36.Value;
@@ -613,7 +637,36 @@ namespace BMA.Business
 
         #region TNDN
 
+        public bool ChangeTndn(int tndnRate, DateTime beginDate)
+        {
+            TaxRate currentTndnTaxRate =
+                db.TaxRates.FirstOrDefault(
+                    m => m.TaxTypeId == 2 && DateTime.Now >= m.BeginDate && DateTime.Now <= m.EndDate);
+            if (currentTndnTaxRate == null || currentTndnTaxRate.TaxRateValue == tndnRate)
+            {
+                return false;
+            }
 
+            currentTndnTaxRate.EndDate = beginDate.AddDays(-1);
+            TaxRate taxRate = new TaxRate();
+            taxRate.TaxTypeId = 2;
+            taxRate.TaxRateValue = tndnRate;
+            taxRate.BeginDate = beginDate;
+            taxRate.EndDate = new DateTime(9999, 12, 31);
+
+            db.TaxRates.Add(taxRate);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         public TndnTaxDeclaration GeTndnTaxDeclaration(int year)
         {

@@ -27,7 +27,15 @@
     </div>
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-7">
-            <h1 class="section-title-inner"><span><i class="glyphicon glyphicon-shopping-cart"></i> Giỏ hàng </span></h1>
+            @if (Session["BeEdited"] != null)
+            {
+                <h1 class="section-title-inner"><span><i class="glyphicon glyphicon-shopping-cart"></i> Đơn hàng </span></h1>
+            }
+            else
+            {
+                <h1 class="section-title-inner"><span><i class="glyphicon glyphicon-shopping-cart"></i> Giỏ hàng </span></h1>
+            }
+
         </div>
         <div class="col-lg-3 col-md-3 col-sm-5 rightSidebar">
             <h4 class="caps"><a href="@Url.Action("Index","Product")"><i class="fa fa-chevron-left"></i> Tiếp tục mua sắm </a></h4>
@@ -57,7 +65,8 @@
                                                     <div class="price"> <span>@item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</span></div>
                                                 </div>
                                             </td>
-                                            <td class="delete"><a href="@Url.Action("DeleteCart", "Cart", new { @ProductId = item.ProductId})" title="Delete"> <i class="glyphicon glyphicon-trash fa-2x"></i></a></td>
+                                            <td class="delete"><a data-target="#removeProductConfirm" data-toggle="modal" onclick="return openPopup(@item.ProductId)" title="Delete"> <i class="glyphicon glyphicon-trash fa-2x"></i></a></td>
+                                            @*<td class="delete"><a data-target="#removeProductConfirm" data-toggle="modal" onclick="return openPopup(@item.ProductId)" class="btn btn-delete btn-sm" style="border:1px solid black"><i class="fa fa-close"></i> Hủy</a></td>*@
                                             <td><input class="quanitySniper" id="quanitySniper" maxlength="5" type="text" value="@item.Quantity" name="quanitySniper" data-role="totalQuantityCheck"></td>
                                             <td class="price" style="text-align:right">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                         </tr>
@@ -67,7 +76,13 @@
                             </table>
                         </form>
                     </div>
-
+                    <script type="text/javascript">
+                        var deleteLink;
+                        function openPopup(productId) {
+                            deleteLink = "/Cart/DeleteCart?ProductId=" + productId;
+                            $('#removeProductConfirm #deleteChangeRequest').attr("href", deleteLink);
+                        }
+                    </script>
 
                     @if (dbq != null)
                     {
@@ -89,16 +104,25 @@
                     <div class="cartFooter w100">
                         <div class="box-footer">
                             <div class="pull-left"> <a href="@Url.Action("Index","Product")" class="btn btn-success"> <i class="fa fa-arrow-left"></i> &nbsp; Tiếp tục mua sắm </a> </div>
-                            <div class="pull-right">
-                                <button type="submit" onclick="return validateInput()" id="Update" class="btn btn-info"> <i class="fa fa-undo"></i> &nbsp; Cập nhật giỏ hàng </button>
-                            </div>
+                            @if (Session["BeEdited"] != null)
+                            {
+                                <div class="pull-right">
+                                    <button type="submit" onclick="return validateInput()" id="Update" class="btn btn-info"> <i class="fa fa-undo"></i> &nbsp; Cập nhật đơn hàng </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="pull-right">
+                                    <button type="submit" onclick="return validateInput()" id="Update" class="btn btn-info"> <i class="fa fa-undo"></i> &nbsp; Cập nhật giỏ hàng </button>
+                                </div>
+                            }
                             @if (Session["BeEdited"] != null)
                             {
                                 <div class="pull-right" style="margin-right:10px;"> <a href="#" data-toggle="modal" data-target="#cancelOrderConfirm" class="btn btn-danger"> <i class="fa fa-times"></i> &nbsp; Hủy đơn hàng </a> </div>
                             }
                             else
                             {
-                                <div class="pull-right" style="margin-right:10px;"> <a href="@Url.Action("DeleteAll", "Cart")" class="btn btn-danger"> <i class="fa fa-times"></i> &nbsp; Hủy đơn hàng </a> </div>
+                                <div class="pull-right" style="margin-right:10px;"> <a href="@Url.Action("DeleteAll", "Cart")" class="btn btn-danger"> <i class="fa fa-times"></i> &nbsp; Hủy giỏ hàng </a> </div>
                             }
                         </div>
                     </div>
@@ -143,7 +167,7 @@
                     <div class="table-block" id="order-detail-content">
                         @if (Session["BeEdited"] != null)
                         {
-                            <a class="btn btn-primary btn-lg btn-block " title="checkout" onclick="checkTotalQuantity()" style="margin-bottom:20px"> Chỉnh sửa đơn hàng &nbsp; <i class="fa fa-arrow-right"></i> </a>
+                            <a class="btn btn-primary btn-lg btn-block " title="checkout" onclick="checkTotalQuantity()" style="margin-bottom:20px"> Xác nhận &nbsp; <i class="fa fa-arrow-right"></i> </a>
                         }
                         else
                         {
@@ -278,6 +302,21 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade col-md-4 col-center" id="removeProductConfirm" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:70px">
+            <div class="modal-dialog panel panel-default" style="width:438px;">
+                <div class=" panel-heading">
+                    <h3 class="panel-title"><strong>Xác nhận</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li> <span class="address-line1"> Quý khách muốn hủy sản phẩm này khỏi đơn hàng ? </span></li>
+                    </ul>
+                </div>
+                <div class="panel-footer panel-footer-address" style="padding-left:275px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="deleteChangeRequest"> Đồng ý </a> </div>
             </div>
         </div>
 
