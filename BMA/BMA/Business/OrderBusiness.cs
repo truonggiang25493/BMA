@@ -662,7 +662,6 @@ namespace BMA.Business
             order.ApproveTime = now;
             order.CreateTime = now;
             order.OrderStatus = 2;
-            order.DeliveryTime = deliveryDate;
             order.PlanDeliveryTime = deliveryDate;
             order.DepositAmount = deposit;
             order.StaffApproveUserId = staffUserId;
@@ -1131,6 +1130,7 @@ namespace BMA.Business
             previousOrder.IsStaffEdit = true;
             order.PreviousOrderId = previousOrder.OrderId;
             order.IsStaffEdit = false;
+            order.StaffEditTime = DateTime.Now;
 
             //Add OrderItem and OutputMaterial 
             #region Add OrderItem, OutputMaterial, ExportFrom, InputMaterial

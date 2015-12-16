@@ -15,18 +15,6 @@ namespace BMA.Business
         {
             db = new BMAEntities();
         }
-        //public User checkLogin(string account, string password)
-        //{
-        //    User endUser = db.Users.SingleOrDefault(n => n.Username == account);
-        //    if (endUser != null)
-        //    {
-        //        if (endUser.Password == CreatePasswordHash(password, endUser.Salt))
-        //        {
-        //            return endUser;
-        //        }
-        //    }
-        //    return null;
-        //}
 
         public User checkLogin(string account, string password)
         {
@@ -41,6 +29,208 @@ namespace BMA.Business
                 }
             }
             return null;
+        }
+
+        public bool SetLogoutTime(int userId)
+        {
+            User user = db.Users.SingleOrDefault(n => n.UserId == userId);
+            user.LogoutTime = DateTime.Now;
+            db.SaveChanges();
+            return true;
+        }
+
+        public List<Order> CustomerOffNewOrderNoty(int userId)
+        {
+            User user = db.Users.SingleOrDefault(n => n.UserId == userId);
+            List<Order> lstNotyOrder = new List<Order>();
+            if (user.LogoutTime != null)
+            {
+                DateTime logoutTime = user.LogoutTime.Value;
+                List<Order> lstOrder = db.Orders.Where(n => n.CustomerUserId == userId).ToList();
+                for (int i = 0; i < lstOrder.Count; i++)
+                {
+                    int orderId = lstOrder[i].OrderId;
+                    Order orderNoty = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                    if (orderNoty != null && orderNoty.CreateTime != null)
+                    {
+                        if (orderNoty.CreateTime > logoutTime)
+                        {
+                            lstNotyOrder.Add(orderNoty);
+                        }
+                    }
+                }
+            }
+            return lstNotyOrder;
+        }
+
+        public List<Order> CustomerOffEditedOrderNoty(int userId)
+        {
+            User user = db.Users.SingleOrDefault(n => n.UserId == userId);
+            List<Order> lstNotyOrder = new List<Order>();
+            if (user.LogoutTime != null)
+            {
+                DateTime logoutTime = user.LogoutTime.Value;
+                List<Order> lstOrder = db.Orders.Where(n => n.CustomerUserId == userId).ToList();
+                for (int i = 0; i < lstOrder.Count; i++)
+                {
+                    int orderId = lstOrder[i].OrderId;
+                    Order orderNoty = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                    if (orderNoty != null && orderNoty.CreateTime != null)
+                    {
+                        if (orderNoty.CreateTime > logoutTime)
+                        {
+
+                        }
+                        else
+                        {
+                            if (orderNoty != null && orderNoty.ApproveTime != null)
+                            {
+                                if (orderNoty.ApproveTime > logoutTime)
+                                {
+                                    lstNotyOrder.Add(orderNoty);
+                                }
+                            }
+                        }
+                    }
+
+                    if (orderNoty != null && orderNoty.StartProduceTime != null)
+                    {
+                        if (orderNoty.StartProduceTime > logoutTime)
+                        {
+                            lstNotyOrder.Add(orderNoty);
+                        }
+                    }
+
+                    if (orderNoty != null && orderNoty.DeliveryTime != null)
+                    {
+                        if (orderNoty.DeliveryTime > logoutTime)
+                        {
+                            lstNotyOrder.Add(orderNoty);
+                        }
+                    }
+
+                    if (orderNoty != null && orderNoty.FinishTime != null)
+                    {
+                        if (orderNoty.FinishTime > logoutTime)
+                        {
+                            lstNotyOrder.Add(orderNoty);
+                        }
+                    }
+
+                    if (orderNoty != null && orderNoty.CancelTime != null)
+                    {
+                        if (orderNoty.CancelTime > logoutTime)
+                        {
+                            lstNotyOrder.Add(orderNoty);
+                        }
+                    }
+                }
+            }
+            return lstNotyOrder;
+        }
+
+        public List<Order> CustomerOffConfirmOrderNoty(int userId)
+        {
+
+            User user = db.Users.SingleOrDefault(n => n.UserId == userId);
+            List<Order> lstNotyOrder = new List<Order>();
+            if (user.LogoutTime != null)
+            {
+                DateTime logoutTime = user.LogoutTime.Value;
+                List<Order> lstOrder = db.Orders.Where(n => n.CustomerUserId == userId).ToList();
+                for (int i = 0; i < lstOrder.Count; i++)
+                {
+                    int orderId = lstOrder[i].OrderId;
+                    Order orderNoty = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                    if (orderNoty != null && orderNoty.CreateTime != null)
+                    {
+                        if (orderNoty != null && orderNoty.StaffEditTime != null)
+                        {
+                            if (orderNoty.StaffEditTime > logoutTime)
+                            {
+                                lstNotyOrder.Add(orderNoty);
+                            }
+                        }
+                    }
+                }
+            }
+            return lstNotyOrder;
+        }
+
+        public List<Order> StaffOffNewOrderNoty()
+        {
+            //List<Order> lstNotyOrder = new List<Order>();
+            List<User> lstUser = db.Users.Where(n => n.RoleId == 2).ToList();
+            foreach (var item in lstUser)
+            {
+                if (item.LogoutTime == null)
+                {
+                    item.LogoutTime = new DateTime(1, 1, 1);
+                }
+            }
+            DateTime logoutTime = lstUser[0].LogoutTime.Value;
+            for (int i = 0; i < lstUser.Count; i++)
+            {
+                if (lstUser[i].LogoutTime > lstUser[i + 1].LogoutTime)
+                {
+                    logoutTime = lstUser[i].LogoutTime.Value;
+                }
+            }
+
+            List<Order> lstOrder = db.Orders.Where(n => n.CreateTime > logoutTime).ToList();
+            return lstOrder;
+        }
+
+        public List<Order> StaffOffConfirmOrderNoty()
+        {
+            List<User> lstUser = db.Users.Where(n => n.RoleId == 2).ToList();
+            foreach (var item in lstUser)
+            {
+                if (item.LogoutTime == null)
+                {
+                    item.LogoutTime = new DateTime(1, 1, 1);
+                }
+            }
+            DateTime logoutTime = lstUser[0].LogoutTime.Value;
+            for (int i = 0; i < lstUser.Count; i++)
+            {
+                if (lstUser[i].LogoutTime > lstUser[i + 1].LogoutTime)
+                {
+                    logoutTime = lstUser[i].LogoutTime.Value;
+                }
+            }
+
+            List<Order> lstOrder = db.Orders.Where(n => n.ApproveTime > logoutTime).ToList();
+            return lstOrder;
+        }
+
+        public List<Order> StaffOffCancelOrderNoty()
+        {
+            List<User> lstUser = db.Users.Where(n => n.RoleId == 2).ToList();
+            foreach (var item in lstUser)
+            {
+                if (item.LogoutTime == null)
+                {
+                    item.LogoutTime = new DateTime(1, 1, 1);
+                }
+            }
+            DateTime logoutTime = lstUser[0].LogoutTime.Value;
+            for (int i = 0; i < lstUser.Count; i++)
+            {
+                if (lstUser[i].LogoutTime > lstUser[i + 1].LogoutTime)
+                {
+                    logoutTime = lstUser[i].LogoutTime.Value;
+                }
+            }
+
+            List<Order> lstOrder = db.Orders.Where(n => n.CancelTime > logoutTime).ToList();
+            return lstOrder;
+        }
+
+        public List<ProductMaterial> StaffOffLowQuantityNoty()
+        {
+            List<ProductMaterial> lstPM = db.ProductMaterials.Where(n => n.CurrentQuantity < n.StandardQuantity).ToList();
+            return lstPM;
         }
 
         public bool ConfirmAccount(int userId)

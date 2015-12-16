@@ -28,6 +28,11 @@ namespace BMA.Controllers
         {
             try
             {
+                if (!MvcApplication.lowQuantityNotifer.CheckConnection())
+                {
+                    MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                    MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                }
                 User staffUser = Session["User"] as User;
                 if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
                 {
@@ -165,13 +170,15 @@ namespace BMA.Controllers
                 {
                     return -1;
                 }
-                //Close connection with hub
-                MvcApplication.lowQuantityNotifer.Dispose();
-                bool result = InputMaterialBusiness.AddInputMaterial(productMaterialId, inputMaterial, importQuantity);
 
-                //Connection with hub
-                MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
-                MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                //M code them 
+                if (!InputMaterialBusiness.CheckProductMaterial(productMaterialId, importQuantity, 0))
+                {
+                    MvcApplication.lowQuantityNotifer.Dispose();
+                }
+                //
+
+                bool result = InputMaterialBusiness.AddInputMaterial(productMaterialId, inputMaterial, importQuantity);
                 if (result)
                 {
                     return 1;
@@ -285,15 +292,16 @@ namespace BMA.Controllers
                             DateTime inputMaterialExpiryDate = DateTime.ParseExact(inputMaterialExpiryDateString,
                                 "dd/MM/yyyy", CultureInfo.InvariantCulture);
                             int inputBillId = Convert.ToInt32(inputBillIdString);
-                            //Close connection with hub
-                            MvcApplication.lowQuantityNotifer.Dispose();
+
+                            //M code them
+                            if (!InputMaterialBusiness.CheckProductMaterial(productMaterialId, importQuantity, inputMaterialId))
+                            {
+                                MvcApplication.lowQuantityNotifer.Dispose();
+                            }
                             bool result = InputMaterialBusiness.EditInputMaterial(inputMaterialId, importQuantity,
                                 productMaterialId, inputMaterialPrice, importDate, inputMaterialExpiryDate, inputBillId,
                                 inputMaterialNote);
-                            //Connection with hub
-                            MvcApplication.lowQuantityNotifer.Start("BMAChangeDB",
-                                "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
-                            MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                           
                             return result ? 1 : 0;
                         }
                         catch (Exception)

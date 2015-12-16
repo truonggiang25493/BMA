@@ -543,137 +543,137 @@
             });
             if (totalQuantity < parseInt("@(ViewBag.MinQuantity)")) {
                 noty({
-                text: 'Tổng số lượng phải lớn hơn @(ViewBag.MinQuantity)',
-                type: 'warning',
-                dismissQueue: false,
-                layout: 'topCenter',
-                theme: 'defaultTheme',
-                timeout: 1000
-            });
-        } else
-        {
-        var loyalCustControl = $("<div>", {
-            "class": "form-group",
-            "html": [
-                "<label>Có nhận tiền cọc không ?</label>",
-                $("<input>", {
-                    "type": "radio",
-                    "name": "isDeposit",
-                    "value": "yes",
-                    "style": "margin-left: 10px",
-                    "data-role": "radio-is-deposit"
-                }),
-                "Có ",
-                $("<input>", {
-                    "type": "radio",
-                    "name": "isDeposit",
-                    "checked":"checked",
-                    "value": "no",
-                    "selected":"selected",
-                    "style": "margin-left: 10px",
-                    "data-role": "radio-is-deposit"
-                }),
-                "Không"
-            ]
-        });
-        $(document).on("change", "[data-role=radio-is-deposit]", function() {
-            if ($(this).val() === "yes") {
-                $('#deposit').show();
-                $('#deposit-amount').attr("min", materialCost);
-                $('#deposit-amount').val(materialCost);
-            } else {
-                $('#deposit').hide();
-                $('#deposit-amount').attr("min", 0);
-                $('#deposit-amount').val(0);
-            }
-        });
-        var contentControl = $("<form>", {
-            "id": "form-update",
-            "html": [
-                @(Model.IsLoyal ? "loyalCustControl" : ""),
-                $("<div>", {
+                    text: 'Tổng số lượng phải lớn hơn @(ViewBag.MinQuantity)',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else
+            {
+                var loyalCustControl = $("<div>", {
                     "class": "form-group",
-                    "id": "deposit",
-                    "style": "@(Model.IsLoyal ? "display:none;" : "")",
                     "html": [
-                        "<label>Tiền cọc</label>",
+                        "<label>Có nhận tiền cọc không ?</label>",
                         $("<input>", {
-                            "type": "number",
-                            "min": materialCost,
-                            "class": "form-control",
-                            "id": "deposit-amount",
-                            "name": "deposit",
-                            "value": materialCost
+                            "type": "radio",
+                            "name": "isDeposit",
+                            "value": "yes",
+                            "style": "margin-left: 10px",
+                            "data-role": "radio-is-deposit"
+                        }),
+                        "Có ",
+                        $("<input>", {
+                            "type": "radio",
+                            "name": "isDeposit",
+                            "checked":"checked",
+                            "value": "no",
+                            "selected":"selected",
+                            "style": "margin-left: 10px",
+                            "data-role": "radio-is-deposit"
+                        }),
+                        "Không"
+                    ]
+                });
+                $(document).on("change", "[data-role=radio-is-deposit]", function() {
+                    if ($(this).val() === "yes") {
+                        $('#deposit').show();
+                        $('#deposit-amount').attr("min", materialCost);
+                        $('#deposit-amount').val(materialCost);
+                    } else {
+                        $('#deposit').hide();
+                        $('#deposit-amount').attr("min", 0);
+                        $('#deposit-amount').val(0);
+                    }
+                });
+                var contentControl = $("<form>", {
+                    "id": "form-update",
+                    "html": [
+                        @(Model.IsLoyal ? "loyalCustControl" : ""),
+                        $("<div>", {
+                            "class": "form-group",
+                            "id": "deposit",
+                            "style": "@(Model.IsLoyal ? "display:none;" : "")",
+                            "html": [
+                                "<label>Tiền cọc</label>",
+                                $("<input>", {
+                                    "type": "number",
+                                    "min": materialCost,
+                                    "class": "form-control",
+                                    "id": "deposit-amount",
+                                    "name": "deposit",
+                                    "value": materialCost
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class": "form-group",
+                            "html": [
+                                    "<label>Thời gian giao hàng</label>",
+                                    $("<div>", {
+                                        "class": "input-group date",
+                                        "id": "datetimepicker",
+                                        "html": [
+                                            $("<input>", {
+                                                "type": "text",
+                                                "id":"deliveryDateTime",
+                                                "readonly": "readonly",
+                                                "data-format":"dd/MM/yyyy HH:mm",
+                                                "class": "form-control",
+                                                "name": "deliveryDate"
+                                            }),
+                                            $("<span>", {
+                                                "class": "input-group-addon",
+                                                "html" : "<span class='glyphicon glyphicon-calendar'></span>"
+                                            })
+                                        ]
+                                    }),
+
+                                    $("<input>", {
+                                        "type": "hidden",
+                                        "name": "orderId",
+                                        "value": "@Model.Order.OrderId"
+                                    })
+                            ]
                         })
                     ]
-                }),
-                $("<div>", {
-                    "class": "form-group",
+                });
+                var title = 'Xác nhận duyệt đơn hàng';
+                var footer = $("<div>", {
+                    "class": "row",
+                    "style": "padding-bottom: 20px;",
                     "html": [
-                            "<label>Thời gian giao hàng</label>",
-                            $("<div>", {
-                                "class": "input-group date",
-                                "id": "datetimepicker",
-                                "html": [
-                                    $("<input>", {
-                                        "type": "text",
-                                        "id":"deliveryDateTime",
-                                        "readonly": "readonly",
-                                        "data-format":"dd/MM/yyyy HH:mm",
-                                        "class": "form-control",
-                                        "name": "deliveryDate"
-                                    }),
-                                    $("<span>", {
-                                        "class": "input-group-addon",
-                                        "html" : "<span class='glyphicon glyphicon-calendar'></span>"
-                                    })
-                                ]
-                            }),
+                        $("<button>", {
+                            "class": "btn btn-success pull-right",
+                            "style": "margin-right: 10px;",
+                            "onclick": "update_order()",
+                            "html": [
+                                "Đồng ý"
+                            ]
+                        }),
+                        $("<button>", {
+                            "class": "btn btn-danger",
+                            "style": "margin-right: 10px;",
+                            "data-dismiss": "modal",
+                            "html": [
+                                "Hủy"
+                            ]
+                        })
+                    ]
+                });
 
-                            $("<input>", {
-                                "type": "hidden",
-                                "name": "orderId",
-                                "value": "@Model.Order.OrderId"
-                            })
-                    ]
-                })
-            ]
-        });
-        var title = 'Xác nhận duyệt đơn hàng';
-        var footer = $("<div>", {
-            "class": "row",
-            "style": "padding-bottom: 20px;",
-            "html": [
-                $("<button>", {
-                    "class": "btn btn-success pull-right",
-                    "style": "margin-right: 10px;",
-                    "onclick": "update_order()",
-                    "html": [
-                        "Đồng ý"
-                    ]
-                }),
-                $("<button>", {
-                    "class": "btn btn-danger",
-                    "style": "margin-right: 10px;",
-                    "data-dismiss": "modal",
-                    "html": [
-                        "Hủy"
-                    ]
-                })
-            ]
-        });
-
-        document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
-        document.getElementById('popup-title').innerHTML = title;
-        document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
-        $('#datetimepicker').datetimepicker({
-            locale: 'vi',
-            ignoreReadonly: true,
-            defaultDate: "@(Model.Order.PlanDeliveryTime >= DateTime.Now.AddDays(1) ? Model.Order.PlanDeliveryTime.ToString("MM/dd/yyyy HH:mm") : DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",
-            minDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))"
-        });
-        $('#myModal').modal('show');
-        }
+                document.getElementById('popup-body').innerHTML = contentControl[0].outerHTML;
+                document.getElementById('popup-title').innerHTML = title;
+                document.getElementById('popup-footer').innerHTML = footer[0].outerHTML;
+                $('#datetimepicker').datetimepicker({
+                    locale: 'vi',
+                    ignoreReadonly: true,
+                    defaultDate: "@(Model.Order.PlanDeliveryTime >= DateTime.Now.AddDays(1) ? Model.Order.PlanDeliveryTime.ToString("MM/dd/yyyy HH:mm") : DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))",
+                    minDate: "@(DateTime.Now.AddDays(1).ToString("MM/dd/yyyy HH:mm"))"
+                });
+                $('#myModal').modal('show');
+            }
         }
 
         function update_order() {
@@ -752,8 +752,8 @@
                             timeout: 1000
                         });
                         window.setTimeout(function() {
-                            window.location.replace("@(Url.Action("Index", "Order"))");
-                        }, 4000);
+                            return NotificatePartialLink('@(Url.Action("Index", "Order"))')
+                        }, 3000);
                     }
                 }
             });

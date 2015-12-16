@@ -195,7 +195,7 @@
                             pointColor: colorString,
                             pointStrokeColor: "#fff",
                             data: data,
-                            title: $(row).find("td:first").html()
+                            title: $(row).find("td:nth-child(2)").html()
                         };
 
                         linedata.datasets.push(dataset);
@@ -210,6 +210,7 @@
                         yAxisUnit: "đồng",
                         yAxisLabel: "Thu nhập",
                         thousandSeparator: ".",
+                        decimalSeparator:",",
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
                         annotateDisplay: true,
@@ -316,7 +317,7 @@
                             pointColor: colorString,
                             pointStrokeColor: "#fff",
                             data: data,
-                            title: $(row).find("td:first").html()
+                            title: $(row).find("td:nth-child(2)").html()
                         };
 
                         linedata.datasets.push(dataset);
@@ -331,6 +332,7 @@
                         yAxisUnit: "đồng",
                         yAxisLabel: "Thu nhập",
                         thousandSeparator: ".",
+                        decimalSeparator: ",",
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
                         annotateDisplay: true,

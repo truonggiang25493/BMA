@@ -351,11 +351,11 @@
                                                 dismissQueue: false,
                                                 layout: 'topCenter',
                                                 theme: 'defaultTheme',
-                                                timeout: 1500
+                                                timeout: 1000
                                             });
                                             window.setTimeout(function () {
-                                                window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
-                                            }, 4000);
+                                                return NotificatePartialLink('@(Url.Action("InputMaterialIndex", "InputMaterial"))')
+                                            }, 3000);
                                         }
                                         else if (data === "-1") {
                                             noty({

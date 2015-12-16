@@ -46,6 +46,7 @@ namespace BMA.Models
         public int Amount { get; set; }
         public int TaxAmount { get; set; }
         public int DiscountAmount { get; set; }
+        public Nullable<System.DateTime> StaffEditTime { get; set; }
     
         public virtual GuestInfo GuestInfo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

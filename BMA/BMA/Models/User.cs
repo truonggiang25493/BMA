@@ -31,6 +31,7 @@ namespace BMA.Models
         public string Fullname { get; set; }
         public string Email { get; set; }
         public bool IsConfirmed { get; set; }
+        public Nullable<System.DateTime> LogoutTime { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Customer> Customers { get; set; }

@@ -46,6 +46,54 @@ namespace BMA.Controllers
                     Session["UserId"] = endUser.UserId;
                     Session["CusUserId"] = endUser.Customers.ElementAt(0).CustomerId;
                     Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber;
+
+                    //Check customer off notifier
+                    List<Order> lstNewOrderNoty = ab.CustomerOffNewOrderNoty((int)Session["UserId"]);
+                    List<Order> lstEditedOrderNoty = ab.CustomerOffEditedOrderNoty((int)Session["UserId"]);
+                    List<Order> lstConfirmOrderNoty = ab.CustomerOffConfirmOrderNoty((int)Session["UserId"]);
+                    if (lstNewOrderNoty != null)
+                    {
+                        Session["CusNewOrderCountPartial"] = Session["CusNotificateCount"] = lstNewOrderNoty.Count;
+                        if (lstEditedOrderNoty != null)
+                        {
+                            Session["CusEditOrderCountPartial"] = lstEditedOrderNoty.Count;
+                            Session["CusNotificateCount"] = lstNewOrderNoty.Count + lstEditedOrderNoty.Count;
+                            if (lstConfirmOrderNoty != null)
+                            {
+                                Session["CusConfirmOrderCountPartial"] = lstConfirmOrderNoty.Count;
+                                Session["CusNotificateCount"] = lstNewOrderNoty.Count + lstEditedOrderNoty.Count + lstConfirmOrderNoty.Count;
+                            }
+                        }
+                        else
+                        {
+                            if (lstConfirmOrderNoty != null)
+                            {
+                                Session["CusConfirmOrderCountPartial"] = lstConfirmOrderNoty.Count;
+                                Session["CusNotificateCount"] = lstNewOrderNoty.Count + lstConfirmOrderNoty.Count;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (lstEditedOrderNoty != null)
+                        {
+                            Session["CusEditOrderCountPartial"] = Session["CusNotificateCount"] = lstEditedOrderNoty.Count;
+                            if (lstConfirmOrderNoty != null)
+                            {
+                                Session["CusConfirmOrderCountPartial"] = lstConfirmOrderNoty.Count;
+                                Session["CusNotificateCount"] = lstEditedOrderNoty.Count + lstConfirmOrderNoty.Count;
+                            }
+                        }
+                        else
+                        {
+                            if (lstConfirmOrderNoty != null)
+                            {
+                                Session["CusConfirmOrderCountPartial"] = Session["CusNotificateCount"] = lstConfirmOrderNoty.Count;
+                            }
+                        }
+                    }
+
+                    //Open connection with this Customer
                     string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId=", endUser.UserId);
                     Session["CheckToNotify"] = endUser.UserId;
                     MvcApplication.changeStatusNotifer.Start("BMAChangeDB", dependencyCheckSql);
@@ -68,6 +116,94 @@ namespace BMA.Controllers
                         MvcApplication.lowQuantityNotifer.Dispose();
                         MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
                         MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+
+                        //Check staff off notifier
+                        List<Order> lstNewOrderNoty = ab.StaffOffNewOrderNoty();
+                        List<Order> lstConfirmOrderNoty = ab.StaffOffConfirmOrderNoty();
+                        List<Order> lstCancelOrderNoty = ab.StaffOffCancelOrderNoty();
+                        List<ProductMaterial> lstLowQuantityNoty = ab.StaffOffLowQuantityNoty();
+
+                        if (lstNewOrderNoty != null)
+                        {
+                            Session["NewOrderCountPartial"] = Session["NotificateCount"] = lstNewOrderNoty.Count;
+                            if (lstConfirmOrderNoty != null)
+                            {
+                                Session["ConfirmOrderCountPartial"] = lstConfirmOrderNoty.Count;
+                                Session["NotificateCount"] = lstConfirmOrderNoty.Count + lstNewOrderNoty.Count;
+                                if (lstCancelOrderNoty != null)
+                                {
+                                    Session["CancelOrderCountPartial"] = lstCancelOrderNoty.Count;
+                                    Session["NotificateCount"] = lstCancelOrderNoty.Count + lstConfirmOrderNoty.Count + lstNewOrderNoty.Count;
+                                    if (lstLowQuantityNoty != null)
+                                    {
+                                        Session["LowMaterialCountPartial"] = lstLowQuantityNoty.Count;
+                                        Session["NotificateCount"] = lstLowQuantityNoty.Count + lstCancelOrderNoty.Count + lstConfirmOrderNoty.Count + lstNewOrderNoty.Count;
+                                    }
+                                }
+                                else
+                                {
+                                    if (lstLowQuantityNoty != null)
+                                    {
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (lstCancelOrderNoty != null)
+                                {
+                                    if (lstLowQuantityNoty != null)
+                                    {
+
+                                    }
+                                }
+                                else
+                                {
+                                    if (lstLowQuantityNoty != null)
+                                    {
+
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (lstConfirmOrderNoty != null)
+                            {
+                                if (lstCancelOrderNoty != null)
+                                {
+                                    if (lstLowQuantityNoty != null)
+                                    {
+
+                                    }
+                                }
+                                else
+                                {
+                                    if (lstLowQuantityNoty != null)
+                                    {
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (lstCancelOrderNoty != null)
+                                {
+                                    if (lstLowQuantityNoty != null)
+                                    {
+
+                                    }
+                                }
+                                else
+                                {
+                                    if (lstLowQuantityNoty != null)
+                                    {
+
+                                    }
+                                }
+                            }
+                        }
+                            
                     }
                     Session["User"] = endUser;
                     Session["UserId"] = endUser.UserId;
@@ -102,7 +238,9 @@ namespace BMA.Controllers
         {
             if (Session["CusUserId"] != null)
             {
+                AccountBusiness ab = new AccountBusiness();
                 MvcApplication.changeStatusNotifer.Dispose();
+                ab.SetLogoutTime((int)Session["UserId"]);
             }
             Session["User"] = null;
             Session["BeEdited"] = null;
