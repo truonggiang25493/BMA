@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BMA.Business;
+using BMA.Models;
 
 namespace BMA.Controllers
 {
     public class HomeController : Controller
     {
+        AccountBusiness ab = new AccountBusiness();
         //
         // GET: /Home/
         public ActionResult Index()

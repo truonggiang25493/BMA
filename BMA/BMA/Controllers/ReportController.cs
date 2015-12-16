@@ -89,7 +89,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "StoreInfor");
             }
-            ViewBag.Title = "Thống kê chi tiết từ " + startDate.ToString("dd/MM/yyyy") + " đến " + endDate.ToString("dd/MM/yyyy");
+            ViewBag.Title = "Lợi nhuận từ " + startDate.ToString("dd/MM/yyyy") + " đến " + endDate.ToString("dd/MM/yyyy");
             ViewBag.TreeView = "report";
             ViewBag.TreeViewMenu = "incomeReport";
             ReportBusiness reportBusiness = new ReportBusiness();
@@ -108,7 +108,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "StoreInfor");
             }
-            ViewBag.Title = "Thống kê chi tiết tháng " + month + "/" + year;
+            ViewBag.Title = "Lợi nhuận tháng " + month + "/" + year;
             ViewBag.TreeView = "report";
             ViewBag.TreeViewMenu = "incomeReport";
             ReportBusiness reportBusiness = new ReportBusiness();
@@ -126,7 +126,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "StoreInfor");
             }
-            ViewBag.Title = "Thống kê chi tiết năm " + year;
+            ViewBag.Title = "Lợi nhuận năm " + year;
             ViewBag.TreeView = "report";
             ViewBag.TreeViewMenu = "incomeReport";
             ReportBusiness reportBusiness = new ReportBusiness();
@@ -199,7 +199,7 @@ namespace BMA.Controllers
         {
             if (!query.IsEmpty())
             {
-                ViewBag.Title = "Chi tiết thu nhập từ sản phẩm";
+                ViewBag.Title = "Chi tiết lợi nhuận từ sản phẩm";
                 string[] tempStrings = query.Split(';');
 
                 int id = Convert.ToInt32(tempStrings[0].Trim());

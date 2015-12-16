@@ -99,8 +99,8 @@
                                                     } else {
                                                         $('#product-details-modal #confirmRequest').text('Nếu quý khách hủy đơn hàng thì sẽ bị mất tiền cọc. Quý khách có muốn hủy đơn hàng này không ? ');
                                                     }
-                                                    deleteLink = "/CusManage/CancelOrderConfirm?orderId=" + orderId + "&strURL=" + strURL;
-                                                    $('#product-details-modal #deleteRequest').attr("href", deleteLink);
+                                                    deleteLink = "return cancelOrder(" + orderId + ")";
+                                                    $('#product-details-modal #deleteRequest').attr("onclick", deleteLink);
                                                 }
                                             </script>
                                         </td>
@@ -144,10 +144,51 @@
                                 <li><span class="address-line1" id="confirmRequest"></span></li>
                             </ul>
                         </div>
-                        <div class="panel-footer panel-footer-address" style="padding-left:270px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" href="" id="deleteRequest"> Đồng ý </a> </div>
+                        <div class="panel-footer panel-footer-address" style="padding-left:270px;"><a aria-hidden="true" data-dismiss="modal" class="btn btn-sm btn-primary">Đóng </a> <a class="btn btn-sm btn-danger" onclick="return cancelOrder()" id="deleteRequest"> Đồng ý </a> </div>
                     </div>
                 </div>
-
+                <script type="text/javascript">
+                    function cancelOrder(orderId) {
+                        $.ajax({
+                            url: "/CusManage/CancelBothOrder?orderId=" + orderId,
+                            data: "/CusManage/CancelBothOrder?orderId=" + orderId,
+                            success: function (data) {
+                                if (data === "1") {
+                                    window.setTimeout(function () {
+                                        window.location.replace("@(Url.Action("OrderList", "CusManage"))");
+                                    }, 1500);
+                                    noty({
+                                        text: 'Hủy đơn hàng thành công',
+                                        type: 'success',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                } else if (data === "-1") {
+                                    noty({
+                                        text: 'Có lỗi xảy ra, vui lòng thử lại',
+                                        type: 'warning',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 2000
+                                    });
+                                }
+                            },
+                            fail: function () {
+                                noty({
+                                    text: 'Đã có lỗi xảy ra',
+                                    type: 'error',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
+                            }
+                        })
+                    }
+                </script>
                 <div class="col-md-12 clearfix">
                     <ul class="pager">
                         <li class="previous pull-right"><a href="@Url.Action("Index","Product")"> <i class="fa fa-home"></i> Tới cửa hàng </a></li>
@@ -293,7 +334,7 @@
             <div class="pagination pull-left no-margin-top" style="margin-left:390px;margin-top:-70px;">
                 @if (ViewBag.FromDate != null && ViewBag.ToDate != null && ViewBag.Status != null)
                 {
-                    @Html.PagedListPager(Model, page => Url.Action("OrderList", new { page = page, orderStatus = ViewBag.Status, fromDate = ViewBag.FromDate, toDate = ViewBag.ToDate}))
+                    @Html.PagedListPager(Model, page => Url.Action("OrderList", new { page = page, orderStatus = ViewBag.Status, fromDate = ViewBag.FromDate, toDate = ViewBag.ToDate }))
 
                 }
                 else

@@ -350,6 +350,13 @@
             }
         });
 
+        $(document).click(function (e) {
+            if(document.getElementById('notiBell2')) {
+                document.getElementById('notiBell2').style.backgroundColor = '#2d3e50';
+                document.getElementById('notiBell2').id = 'notiBell';
+            }
+        });
+
         function NotificatePartialLink(strURL) {
             var txtHiddenNoti = $("#hiddenNumberOfNoti").val();
             var txtHiddenNewOrder = $("#hiddenNewOrderCount").val();

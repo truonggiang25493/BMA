@@ -335,6 +335,12 @@
     <Compile Include="Models\sp_GetTopCustomerWithRevenue_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagrams_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Staff.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -1521,6 +1527,7 @@
     <Content Include="Views\Supplier\InputBillBySupplier.cshtml" />
     <Content Include="Views\Error\ManageError.cshtml" />
     <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
+    <Content Include="Views\Home\NotificatePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

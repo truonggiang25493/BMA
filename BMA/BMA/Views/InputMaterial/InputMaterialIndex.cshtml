@@ -278,9 +278,8 @@
                             });
                             $('#myModal').modal('hide');
                             window.setTimeout(function () {
-                                window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
-                            }, 4000);
-                            @*window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial")");*@
+                                return NotificatePartialLink('@(Url.Action("InputMaterialIndex", "InputMaterial"))')
+                            }, 3000);
                         } else {
                             noty({
                                 text: 'Không thể hủy nguyên liệu đầu vào',

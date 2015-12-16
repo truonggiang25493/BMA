@@ -68,10 +68,6 @@
                     <div>
                         Thành viên:
                         <b style="font-size: 17px;">@Model.OrderPersonName</b>
-                        @if (Model.IsLoyal)
-                        {
-                            <span><img src="~/Content/AdminLayout/dist/img/VipIcon.gif" /></span>
-                        }
                     </div>
                     <div>
                         <b>Địa chỉ: </b>
@@ -474,7 +470,7 @@
                         <!--Update order-->
                         @if (Model.IsEnoughMaterial)
                         {
-                            <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container(@(Model.MaterialCost))">
+                            <button class="btn btn-success pull-right" id="btn-updated" onclick="open_update_container(@Model.MaterialCost)">
                                 <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>Cập nhật
                             </button>
                         }
@@ -526,15 +522,8 @@
         </script>
         ViewBag.ShortageOfMaterial = null;
     }
-    <script src="~/Scripts/numeral.js"></script>
-    <script type="text/javascript">
 
-        $(document).on('input', "[data-role='number']", function () {
-            var data = $(this).val();
-            data = data.split(".").join("");
-            data = numeral(data).format('0,0').split(",").join(".");
-            $(this).val(data);
-        });
+    <script type="text/javascript">
         function open_update_container(materialCost) {
             var totalQuantity = 0;
             $("#product-table tbody tr").each(function(index, element) {
@@ -580,6 +569,7 @@
                             "name": "isDeposit",
                             "checked":"checked",
                             "value": "no",
+                            "selected":"selected",
                             "style": "margin-left: 10px",
                             "data-role": "radio-is-deposit"
                         }),
@@ -589,9 +579,11 @@
                 $(document).on("change", "[data-role=radio-is-deposit]", function() {
                     if ($(this).val() === "yes") {
                         $('#deposit').show();
-                        $('#deposit-amount').val(numeral(materialCost).format('0,0').split(",").join("."));
+                        $('#deposit-amount').attr("min", materialCost);
+                        $('#deposit-amount').val(materialCost);
                     } else {
                         $('#deposit').hide();
+                        $('#deposit-amount').attr("min", 0);
                         $('#deposit-amount').val(0);
                     }
                 });
@@ -599,54 +591,52 @@
                     "id": "form-update",
                     "html": [
                         @(Model.IsLoyal ? "loyalCustControl" : ""),
-                    $("<div>", {
-                        "class": "form-group",
-                        "id": "deposit",
-                        "style": "@(Model.IsLoyal ? "display:none;" : "")",
-                        "html": [
-                            "<label>Tiền cọc</label>",
-                            $("<input>", {
-                                "type": "text",
-                                "class": "form-control",
-                                "id": "deposit-amount",
-                                "name": "deposit",
-                                "style": "text-align: right",
-                                "data-role": "number",
-                                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
-                                "value": parseInt("@(Model.IsLoyal?1:0)") === 1 ? 0 : numeral(materialCost).format('0,0').split(",").join(".")
-                            })
-                        ]
-                    }),
-                    $("<div>", {
-                        "class": "form-group",
-                        "html": [
-                            "<label>Thời gian giao hàng</label>",
-                            $("<div>", {
-                                "class": "input-group date",
-                                "id": "datetimepicker",
-                                "html": [
-                                    $("<input>", {
-                                        "type": "text",
-                                        "readonly": "readonly",
-                                        "data-format":"dd/MM/yyyy HH:mm",
-                                        "class": "form-control",
-                                        "id":"deliveryDateTime",
-                                        "name": "deliveryDate"
+                        $("<div>", {
+                            "class": "form-group",
+                            "id": "deposit",
+                            "style": "@(Model.IsLoyal ? "display:none;" : "")",
+                            "html": [
+                                "<label>Tiền cọc</label>",
+                                $("<input>", {
+                                    "type": "number",
+                                    "min": materialCost,
+                                    "class": "form-control",
+                                    "id": "deposit-amount",
+                                    "name": "deposit",
+                                    "value": materialCost
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class": "form-group",
+                            "html": [
+                                    "<label>Thời gian giao hàng</label>",
+                                    $("<div>", {
+                                        "class": "input-group date",
+                                        "id": "datetimepicker",
+                                        "html": [
+                                            $("<input>", {
+                                                "type": "text",
+                                                "id":"deliveryDateTime",
+                                                "readonly": "readonly",
+                                                "data-format":"dd/MM/yyyy HH:mm",
+                                                "class": "form-control",
+                                                "name": "deliveryDate"
+                                            }),
+                                            $("<span>", {
+                                                "class": "input-group-addon",
+                                                "html" : "<span class='glyphicon glyphicon-calendar'></span>"
+                                            })
+                                        ]
                                     }),
-                                    $("<span>", {
-                                        "class": "input-group-addon",
-                                        "html" : "<span class='glyphicon glyphicon-calendar'></span>"
-                                    })
-                                ]
-                            }),
 
-                            $("<input>", {
-                                "type": "hidden",
-                                "name": "orderId",
-                                "value": "@Model.Order.OrderId"
-                            })
-                        ]
-                    })
+                                    $("<input>", {
+                                        "type": "hidden",
+                                        "name": "orderId",
+                                        "value": "@Model.Order.OrderId"
+                                    })
+                            ]
+                        })
                     ]
                 });
                 var title = 'Xác nhận duyệt đơn hàng';
@@ -657,7 +647,7 @@
                         $("<button>", {
                             "class": "btn btn-success pull-right",
                             "style": "margin-right: 10px;",
-                            "onclick": "update_order("+materialCost+")",
+                            "onclick": "update_order()",
                             "html": [
                                 "Đồng ý"
                             ]
@@ -686,126 +676,87 @@
             }
         }
 
-        function update_order(materialCost) {
-            var deposit = parseInt($("#deposit-amount").val().split(".").join(""));
-            var isDeposit = $("#deposit").attr('style').split(" ").join("").indexOf("display:none");
-            if (isDeposit === -1 && deposit < materialCost) {
-                noty({
-                    text: 'Tiền cọc không được nhỏ hơn '+materialCost+'.',
-                    type: 'warning',
-                    dismissQueue: false,
-                    layout: 'topCenter',
-                    theme: 'defaultTheme',
-                    timeout: 2000
-                });
-                $(this).focus();
-            } else {
-                var depositAmount = $("#deposit-amount").val();
-                var deliveryDate = $("#deliveryDateTime").val();
-                var depositAmountControl = $("<input>", {
-                    type: "hidden",
-                    name: "depositAmount",
-                    value: depositAmount
-                });
-                var deliveryDateControl = $("<input>", {
-                    type: "hidden",
-                    name: "deliveryDate",
-                    value: deliveryDate
-                });
-                $("#update-product-list").append(depositAmountControl);
-                $("#update-product-list").append(deliveryDateControl);
+        function update_order() {
+            var depositAmount = $("#deposit-amount").val();
+            var deliveryDate = $("#deliveryDateTime").val();
+            var depositAmountControl = $("<input>", {
+                type: "hidden",
+                name: "depositAmount",
+                value: depositAmount
+            });
+            var deliveryDateControl = $("<input>", {
+                type: "hidden",
+                name: "deliveryDate",
+                value: deliveryDate
+            });
+            $("#update-product-list").append(depositAmountControl);
+            $("#update-product-list").append(deliveryDateControl);
+            $.ajax({
+                url: "@(Url.Action("Edit", "Order"))",
+                method: "POST",
+                data: $("#update-product-list").serialize(),
+                success: function(data) {
+                    if (data === "-1") {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Tổng lượng phải lớn hơn 0',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    }else if (data === "-2") {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Tổng lượng phải lớn hơn @(ViewBag.MinQuantity)',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
 
-                $.ajax({
-                    url: "@(Url.Action("Edit", "Order"))",
-                    method: "POST",
-                    data: $("#update-product-list").serialize(),
-                    success: function(data) {
-                        if (data === "-1") {
-                            var index1 = $("#update-product-list").indexOf(depositAmountControl);
-                            if (index1 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
-                            var index2 = $("#update-product-list").indexOf(deliveryDateControl);
-                            if (index2 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
-                            $('#myModal').modal('hide');
-                            noty({
-                                text: 'Tổng lượng phải lớn hơn 0',
-                                type: 'warning',
-                                dismissQueue: false,
-                                layout: 'topCenter',
-                                theme: 'defaultTheme',
-                                timeout: 1000
-                            });
-                        }else if (data === "-2") {
-                            var index1 = $("#update-product-list").indexOf(depositAmountControl);
-                            if (index1 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
-                            var index2 = $("#update-product-list").indexOf(deliveryDateControl);
-                            if (index2 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
-                            $('#myModal').modal('hide');
-                            noty({
-                                text: 'Tổng lượng phải lớn hơn @(ViewBag.MinQuantity)',
-                                type: 'warning',
-                                dismissQueue: false,
-                                layout: 'topCenter',
-                                theme: 'defaultTheme',
-                                timeout: 1000
-                            });
+                    } else if (data === "0") {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Không thể chỉnh sửa',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
 
-                        } else if (data === "0") {
-                            var index1 = $("#update-product-list").indexOf(depositAmountControl);
-                            if (index1 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
-                            var index2 = $("#update-product-list").indexOf(deliveryDateControl);
-                            if (index2 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
-                            $('#myModal').modal('hide');
-                            noty({
-                                text: 'Không thể chỉnh sửa',
-                                type: 'warning',
-                                dismissQueue: false,
-                                layout: 'topCenter',
-                                theme: 'defaultTheme',
-                                timeout: 1000
-                            });
-                        }else if (data === "-7") {
-                            $('#myModal').modal('hide');
-                            noty({
-                                text: 'Vui lòng đăng nhập với tài khoản nhân viên',
-                                type: 'warning',
-                                dismissQueue: false,
-                                layout: 'topCenter',
-                                theme: 'defaultTheme',
-                                timeout: 3000
-                            });
-                            window.setTimeout(function() {
-                                window.location.replace("@(Url.Action("Index", "Home"))");
-                            }, 4000);
-                        } else {
-                            $('#myModal').modal('hide');
-                            noty({
-                                text: 'Chỉnh sửa đơn hàng thành công. Đơn hàng chuyển sang trạng thái <b>Chờ xác nhận</b>',
-                                type: 'success',
-                                dismissQueue: false,
-                                layout: 'topCenter',
-                                theme: 'defaultTheme',
-                                timeout: 1000
-                            });
-                            window.setTimeout(function() {
-                                return NotificatePartialLink('@(Url.Action("Index", "Order"))')
-                            }, 4000);
-                        }
+                    }else if (data === "-7") {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Vui lòng đăng nhập với tài khoản nhân viên',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 3000
+                        });
+                        window.setTimeout(function() {
+                            window.location.replace("@(Url.Action("Index", "Home"))");
+                        }, 4000);
+                    } else {
+                        $('#myModal').modal('hide');
+                        noty({
+                            text: 'Chỉnh sửa đơn hàng thành công. Đơn hàng chuyển sang trạng thái <b>Chờ xác nhận</b>',
+                            type: 'success',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                        window.setTimeout(function() {
+                            return NotificatePartialLink('@(Url.Action("Index", "Order"))')
+                        }, 3000);
                     }
-                });
-            }
-
+                }
+            });
         }
 
         // Add More product
@@ -999,66 +950,35 @@
 
         $(document).on("click", "[data-role=remove-row-btn]", function () {
             var productId = $(this).parent().parent().find("td:first input").val();
-            var productName = $(this).parent().parent().find("td:first").html();
-            var removeRow = $(this).parent().parent();
-            noty({
-                text: 'Bạn chắc chắn hủy sản phẩm '+productName+' không ?',
-                buttons:[
-                    {
-                        addClass: 'btn btn-danger btn-xs',
-                        text: 'Không',
-                        onClick: function ($noty) {
-                            $noty.close();
-                        }
-                    },
-                    {
-                        addClass: 'btn btn-primary btn-xs pull-right',
-                        text: 'Có',
-                        onClick: function($noty) {
-                            $noty.close();
-                            $.ajax({
-                                "url": "@(Url.Action("AddProductInProductList", "Order"))",
-                                "method": "POST",
-                                "data": {
-                                    "productId": productId
-                                },
-                                "success": function (data) {
-                                    if (data === "0") {
-                                        noty({
-                                            text: 'Không thể hủy sản phẩm khỏi đơn hàng',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                    } else {
-                                        removeRow.remove();
-                                        $("#updateInfo").show();
-                                        $("#material-info").hide();
-                                    }
-
-                                },
-                                "fail": function (e) {
-                                    noty({
-                                        text: 'Đã có lỗi xảy ra.',
-                                        type: 'danger',
-                                        dismissQueue: false,
-                                        layout: 'topCenter',
-                                        theme: 'defaultTheme',
-                                        timeout: 1000
-                                    });
-                                }
-                            });
-                        }
+            $(this).parent().parent().remove();
+            $.ajax({
+                "url": "@(Url.Action("AddProductInProductList", "Order"))",
+                "method": "POST",
+                "data": {
+                    "productId": productId
+                },
+                "success": function (data) {
+                    if (data === "0") {
+                        noty({
+                            text: 'Không hủy sản phẩm khỏi đơn hàng',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
+                    } else {
+                        $("#updateInfo").show();
+                        $("#material-info").hide();
                     }
-                ],
-                type: 'success',
-                dismissQueue: false,
-                layout: 'topCenter',
-                theme: 'defaultTheme'
+
+                },
+                "fail": function (e) {
+                    alert("Have error" + e.toString());
+                }
             });
         });
+
     </script>
 }
 <!-- Main content -->
