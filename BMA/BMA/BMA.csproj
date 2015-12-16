@@ -1522,6 +1522,7 @@
     <Content Include="Views\Error\ManageError.cshtml" />
     <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
     <Content Include="Views\Home\NotificatePartial.cshtml" />
+    <Content Include="Views\Account\ManageUserLoginPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
