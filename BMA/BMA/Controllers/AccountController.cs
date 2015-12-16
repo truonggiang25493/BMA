@@ -144,7 +144,8 @@ namespace BMA.Controllers
                                 {
                                     if (lstLowQuantityNoty != null)
                                     {
-
+                                        Session["LowMaterialCountPartial"] = lstLowQuantityNoty.Count;
+                                        Session["NotificateCount"] = lstLowQuantityNoty.Count + lstConfirmOrderNoty.Count + lstNewOrderNoty.Count;
                                     }
                                 }
                             }
@@ -152,16 +153,20 @@ namespace BMA.Controllers
                             {
                                 if (lstCancelOrderNoty != null)
                                 {
+                                    Session["CancelOrderCountPartial"] = lstCancelOrderNoty.Count;
+                                    Session["NotificateCount"] = lstCancelOrderNoty.Count + lstNewOrderNoty.Count;
                                     if (lstLowQuantityNoty != null)
                                     {
-
+                                        Session["LowMaterialCountPartial"] = lstLowQuantityNoty.Count;
+                                        Session["NotificateCount"] = lstLowQuantityNoty.Count + lstCancelOrderNoty.Count + lstNewOrderNoty.Count;
                                     }
                                 }
                                 else
                                 {
                                     if (lstLowQuantityNoty != null)
                                     {
-
+                                        Session["LowMaterialCountPartial"] = lstLowQuantityNoty.Count;
+                                        Session["NotificateCount"] = lstLowQuantityNoty.Count + lstNewOrderNoty.Count;
                                     }
                                 }
                             }
@@ -170,18 +175,23 @@ namespace BMA.Controllers
                         {
                             if (lstConfirmOrderNoty != null)
                             {
+                                Session["ConfirmOrderCountPartial"] = Session["NotificateCount"] = lstConfirmOrderNoty.Count;
                                 if (lstCancelOrderNoty != null)
                                 {
+                                    Session["CancelOrderCountPartial"] = lstCancelOrderNoty.Count;
+                                    Session["NotificateCount"] = lstCancelOrderNoty.Count + lstConfirmOrderNoty.Count;
                                     if (lstLowQuantityNoty != null)
                                     {
-
+                                        Session["LowMaterialCountPartial"] = lstLowQuantityNoty.Count;
+                                        Session["NotificateCount"] = lstLowQuantityNoty.Count + lstCancelOrderNoty.Count + lstConfirmOrderNoty.Count;
                                     }
                                 }
                                 else
                                 {
                                     if (lstLowQuantityNoty != null)
                                     {
-
+                                        Session["LowMaterialCountPartial"] = lstLowQuantityNoty.Count;
+                                        Session["NotificateCount"] = lstLowQuantityNoty.Count + lstConfirmOrderNoty.Count;
                                     }
                                 }
                             }
@@ -189,21 +199,23 @@ namespace BMA.Controllers
                             {
                                 if (lstCancelOrderNoty != null)
                                 {
+                                    Session["CancelOrderCountPartial"] = Session["NotificateCount"] = lstCancelOrderNoty.Count;
                                     if (lstLowQuantityNoty != null)
                                     {
-
+                                        Session["LowMaterialCountPartial"] = lstLowQuantityNoty.Count;
+                                        Session["NotificateCount"] = lstLowQuantityNoty.Count + lstCancelOrderNoty.Count;
                                     }
                                 }
                                 else
                                 {
                                     if (lstLowQuantityNoty != null)
                                     {
-
+                                        Session["LowMaterialCountPartial"] = Session["NotificateCount"] = lstLowQuantityNoty.Count;
                                     }
                                 }
                             }
                         }
-                            
+
                     }
                     Session["User"] = endUser;
                     Session["UserId"] = endUser.UserId;
@@ -236,11 +248,18 @@ namespace BMA.Controllers
         }
         public ActionResult Logout()
         {
+            AccountBusiness ab = new AccountBusiness();
             if (Session["CusUserId"] != null)
             {
-                AccountBusiness ab = new AccountBusiness();
                 MvcApplication.changeStatusNotifer.Dispose();
                 ab.SetLogoutTime((int)Session["UserId"]);
+            }
+            if (Session["UserRole"] != null)
+            {
+                if ((int)Session["UserRole"] == 2)
+                {
+                    ab.SetLogoutTime((int)Session["UserId"]);
+                }
             }
             Session["User"] = null;
             Session["BeEdited"] = null;

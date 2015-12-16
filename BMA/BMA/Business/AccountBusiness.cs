@@ -169,13 +169,20 @@ namespace BMA.Business
                 }
             }
             DateTime logoutTime = lstUser[0].LogoutTime.Value;
-            for (int i = 0; i < lstUser.Count; i++)
+            foreach (var item in lstUser)
             {
-                if (lstUser[i].LogoutTime > lstUser[i + 1].LogoutTime)
+                if (item.LogoutTime > logoutTime)
                 {
-                    logoutTime = lstUser[i].LogoutTime.Value;
+                    logoutTime = item.LogoutTime.Value;
                 }
             }
+            //for (int i = 0; i < lstUser.Count; i++)
+            //{
+            //    if (lstUser[i].LogoutTime > lstUser[i + 1].LogoutTime)
+            //    {
+            //        logoutTime = lstUser[i].LogoutTime.Value;
+            //    }
+            //}
 
             List<Order> lstOrder = db.Orders.Where(n => n.CreateTime > logoutTime).ToList();
             return lstOrder;
@@ -192,15 +199,15 @@ namespace BMA.Business
                 }
             }
             DateTime logoutTime = lstUser[0].LogoutTime.Value;
-            for (int i = 0; i < lstUser.Count; i++)
+            foreach (var item in lstUser)
             {
-                if (lstUser[i].LogoutTime > lstUser[i + 1].LogoutTime)
+                if (item.LogoutTime > logoutTime)
                 {
-                    logoutTime = lstUser[i].LogoutTime.Value;
+                    logoutTime = item.LogoutTime.Value;
                 }
             }
 
-            List<Order> lstOrder = db.Orders.Where(n => n.ApproveTime > logoutTime).ToList();
+            List<Order> lstOrder = db.Orders.Where(n => n.ConfirmTime > logoutTime).ToList();
             return lstOrder;
         }
 
@@ -215,11 +222,11 @@ namespace BMA.Business
                 }
             }
             DateTime logoutTime = lstUser[0].LogoutTime.Value;
-            for (int i = 0; i < lstUser.Count; i++)
+            foreach (var item in lstUser)
             {
-                if (lstUser[i].LogoutTime > lstUser[i + 1].LogoutTime)
+                if (item.LogoutTime > logoutTime)
                 {
-                    logoutTime = lstUser[i].LogoutTime.Value;
+                    logoutTime = item.LogoutTime.Value;
                 }
             }
 
@@ -229,7 +236,7 @@ namespace BMA.Business
 
         public List<ProductMaterial> StaffOffLowQuantityNoty()
         {
-            List<ProductMaterial> lstPM = db.ProductMaterials.Where(n => n.CurrentQuantity < n.StandardQuantity).ToList();
+            List<ProductMaterial> lstPM = db.ProductMaterials.Where(n => n.CurrentQuantity < n.StandardQuantity && n.IsActive).ToList();
             return lstPM;
         }
 
