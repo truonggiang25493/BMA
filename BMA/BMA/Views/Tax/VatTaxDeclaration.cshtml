@@ -4548,6 +4548,41 @@
         $('#agentNo1').val(data);
     });
 
+        function removeAgentTaxCodeInvalidClass() {
+            $('#agentTaxCodeLetter0_1').removeClass('invalid');
+            $('#agentTaxCodeLetter1_1').removeClass('invalid');
+            $('#agentTaxCodeLetter2_1').removeClass('invalid');
+            $('#agentTaxCodeLetter3_1').removeClass('invalid');
+            $('#agentTaxCodeLetter4_1').removeClass('invalid');
+            $('#agentTaxCodeLetter5_1').removeClass('invalid');
+            $('#agentTaxCodeLetter6_1').removeClass('invalid');
+            $('#agentTaxCodeLetter7_1').removeClass('invalid');
+            $('#agentTaxCodeLetter8_1').removeClass('invalid');
+            $('#agentTaxCodeLetter9_1').removeClass('invalid');
+
+            $('#agentTaxCodeLetter0_2').removeClass('invalid');
+            $('#agentTaxCodeLetter1_2').removeClass('invalid');
+            $('#agentTaxCodeLetter2_2').removeClass('invalid');
+            $('#agentTaxCodeLetter3_2').removeClass('invalid');
+            $('#agentTaxCodeLetter4_2').removeClass('invalid');
+            $('#agentTaxCodeLetter5_2').removeClass('invalid');
+            $('#agentTaxCodeLetter6_2').removeClass('invalid');
+            $('#agentTaxCodeLetter7_2').removeClass('invalid');
+            $('#agentTaxCodeLetter8_2').removeClass('invalid');
+            $('#agentTaxCodeLetter9_2').removeClass('invalid');
+
+            $('#agentTaxCodeLetter0_3').removeClass('invalid');
+            $('#agentTaxCodeLetter1_3').removeClass('invalid');
+            $('#agentTaxCodeLetter2_3').removeClass('invalid');
+            $('#agentTaxCodeLetter3_3').removeClass('invalid');
+            $('#agentTaxCodeLetter4_3').removeClass('invalid');
+            $('#agentTaxCodeLetter5_3').removeClass('invalid');
+            $('#agentTaxCodeLetter6_3').removeClass('invalid');
+            $('#agentTaxCodeLetter7_3').removeClass('invalid');
+            $('#agentTaxCodeLetter8_3').removeClass('invalid');
+            $('#agentTaxCodeLetter9_3').removeClass('invalid');
+        }
+
     $('#agentTaxCodeLetter0_1').on('input', function () {
         var data = $(this).val();
         $('#agentTaxCodeLetter0_2').val(data);
@@ -4576,19 +4611,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#agentTaxCodeLetter0_2').addClass('invalid');
+            $('#agentTaxCodeLetter0_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#agentTaxCodeLetter1_1').removeClass('invalid');
-            $('#agentTaxCodeLetter2_1').removeClass('invalid');
-            $('#agentTaxCodeLetter3_1').removeClass('invalid');
-            $('#agentTaxCodeLetter4_1').removeClass('invalid');
-            $('#agentTaxCodeLetter5_1').removeClass('invalid');
-            $('#agentTaxCodeLetter6_1').removeClass('invalid');
-            $('#agentTaxCodeLetter7_1').removeClass('invalid');
-            $('#agentTaxCodeLetter8_1').removeClass('invalid');
-            $('#agentTaxCodeLetter9_1').removeClass('invalid');
+            removeAgentTaxCodeInvalidClass();
         }
     });
 
@@ -4606,7 +4633,7 @@
         $("#agentTaxCodeLetter0_1").trigger('input');
     });
 
-    $('#agentTaxCodeLetter1_1').on('input', function () {
+    $('#agentTaxCodeLetter1_1').on('input', function() {
         var data = $(this).val();
         $('#agentTaxCodeLetter1_2').val(data);
         $('#agentTaxCodeLetter1_3').val(data);
@@ -4634,19 +4661,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#agentTaxCodeLetter1_2').addClass('invalid');
+            $('#agentTaxCodeLetter1_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#agentTaxCodeLetter0_1').removeClass('invalid');
-            $('#agentTaxCodeLetter2_1').removeClass('invalid');
-            $('#agentTaxCodeLetter3_1').removeClass('invalid');
-            $('#agentTaxCodeLetter4_1').removeClass('invalid');
-            $('#agentTaxCodeLetter5_1').removeClass('invalid');
-            $('#agentTaxCodeLetter6_1').removeClass('invalid');
-            $('#agentTaxCodeLetter7_1').removeClass('invalid');
-            $('#agentTaxCodeLetter8_1').removeClass('invalid');
-            $('#agentTaxCodeLetter9_1').removeClass('invalid');
+            removeAgentTaxCodeInvalidClass();
         }
     });
 
@@ -4664,7 +4683,7 @@
         $("#agentTaxCodeLetter1_1").trigger('input');
     });
 
-    $('#agentTaxCodeLetter2_1').on('input', function () {
+    $('#agentTaxCodeLetter2_1').on('input', function() {
         var data = $(this).val();
         $('#agentTaxCodeLetter2_2').val(data);
         $('#agentTaxCodeLetter2_3').val(data);
@@ -4692,19 +4711,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#agentTaxCodeLetter2_2').addClass('invalid');
+            $('#agentTaxCodeLetter2_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#agentTaxCodeLetter1_1').removeClass('invalid');
-            $('#agentTaxCodeLetter0_1').removeClass('invalid');
-            $('#agentTaxCodeLetter3_1').removeClass('invalid');
-            $('#agentTaxCodeLetter4_1').removeClass('invalid');
-            $('#agentTaxCodeLetter5_1').removeClass('invalid');
-            $('#agentTaxCodeLetter6_1').removeClass('invalid');
-            $('#agentTaxCodeLetter7_1').removeClass('invalid');
-            $('#agentTaxCodeLetter8_1').removeClass('invalid');
-            $('#agentTaxCodeLetter9_1').removeClass('invalid');
+            removeAgentTaxCodeInvalidClass();
         }
     });
 
@@ -4750,19 +4761,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#agentTaxCodeLetter3_2').addClass('invalid');
+            $('#agentTaxCodeLetter3_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#agentTaxCodeLetter1_1').removeClass('invalid');
-            $('#agentTaxCodeLetter2_1').removeClass('invalid');
-            $('#agentTaxCodeLetter0_1').removeClass('invalid');
-            $('#agentTaxCodeLetter4_1').removeClass('invalid');
-            $('#agentTaxCodeLetter5_1').removeClass('invalid');
-            $('#agentTaxCodeLetter6_1').removeClass('invalid');
-            $('#agentTaxCodeLetter7_1').removeClass('invalid');
-            $('#agentTaxCodeLetter8_1').removeClass('invalid');
-            $('#agentTaxCodeLetter9_1').removeClass('invalid');
+            removeAgentTaxCodeInvalidClass();
         }
     });
 
@@ -4808,19 +4811,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#agentTaxCodeLetter4_2').addClass('invalid');
+            $('#agentTaxCodeLetter4_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#agentTaxCodeLetter1_1').removeClass('invalid');
-            $('#agentTaxCodeLetter2_1').removeClass('invalid');
-            $('#agentTaxCodeLetter3_1').removeClass('invalid');
-            $('#agentTaxCodeLetter0_1').removeClass('invalid');
-            $('#agentTaxCodeLetter5_1').removeClass('invalid');
-            $('#agentTaxCodeLetter6_1').removeClass('invalid');
-            $('#agentTaxCodeLetter7_1').removeClass('invalid');
-            $('#agentTaxCodeLetter8_1').removeClass('invalid');
-            $('#agentTaxCodeLetter9_1').removeClass('invalid');
+            removeAgentTaxCodeInvalidClass();
         }
     });
 
@@ -4866,19 +4861,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#agentTaxCodeLetter5_2').addClass('invalid');
+            $('#agentTaxCodeLetter5_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#agentTaxCodeLetter1_1').removeClass('invalid');
-            $('#agentTaxCodeLetter2_1').removeClass('invalid');
-            $('#agentTaxCodeLetter3_1').removeClass('invalid');
-            $('#agentTaxCodeLetter4_1').removeClass('invalid');
-            $('#agentTaxCodeLetter0_1').removeClass('invalid');
-            $('#agentTaxCodeLetter6_1').removeClass('invalid');
-            $('#agentTaxCodeLetter7_1').removeClass('invalid');
-            $('#agentTaxCodeLetter8_1').removeClass('invalid');
-            $('#agentTaxCodeLetter9_1').removeClass('invalid');
+            removeAgentTaxCodeInvalidClass();
         }
     });
 
@@ -4924,19 +4911,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#agentTaxCodeLetter6_2').addClass('invalid');
+            $('#agentTaxCodeLetter6_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#agentTaxCodeLetter1_1').removeClass('invalid');
-            $('#agentTaxCodeLetter2_1').removeClass('invalid');
-            $('#agentTaxCodeLetter3_1').removeClass('invalid');
-            $('#agentTaxCodeLetter4_1').removeClass('invalid');
-            $('#agentTaxCodeLetter5_1').removeClass('invalid');
-            $('#agentTaxCodeLetter0_1').removeClass('invalid');
-            $('#agentTaxCodeLetter7_1').removeClass('invalid');
-            $('#agentTaxCodeLetter8_1').removeClass('invalid');
-            $('#agentTaxCodeLetter9_1').removeClass('invalid');
+            removeAgentTaxCodeInvalidClass();
         }
     });
 
@@ -4982,19 +4961,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#agentTaxCodeLetter7_2').addClass('invalid');
+            $('#agentTaxCodeLetter7_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#agentTaxCodeLetter1_1').removeClass('invalid');
-            $('#agentTaxCodeLetter2_1').removeClass('invalid');
-            $('#agentTaxCodeLetter3_1').removeClass('invalid');
-            $('#agentTaxCodeLetter4_1').removeClass('invalid');
-            $('#agentTaxCodeLetter5_1').removeClass('invalid');
-            $('#agentTaxCodeLetter6_1').removeClass('invalid');
-            $('#agentTaxCodeLetter0_1').removeClass('invalid');
-            $('#agentTaxCodeLetter8_1').removeClass('invalid');
-            $('#agentTaxCodeLetter9_1').removeClass('invalid');
+            removeAgentTaxCodeInvalidClass();
         }
     });
 
@@ -5040,19 +5011,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#agentTaxCodeLetter8_2').addClass('invalid');
+            $('#agentTaxCodeLetter8_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#agentTaxCodeLetter1_1').removeClass('invalid');
-            $('#agentTaxCodeLetter2_1').removeClass('invalid');
-            $('#agentTaxCodeLetter3_1').removeClass('invalid');
-            $('#agentTaxCodeLetter4_1').removeClass('invalid');
-            $('#agentTaxCodeLetter5_1').removeClass('invalid');
-            $('#agentTaxCodeLetter6_1').removeClass('invalid');
-            $('#agentTaxCodeLetter7_1').removeClass('invalid');
-            $('#agentTaxCodeLetter0_1').removeClass('invalid');
-            $('#agentTaxCodeLetter9_1').removeClass('invalid');
+            removeAgentTaxCodeInvalidClass();
         }
     });
 
@@ -5098,19 +5061,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#agentTaxCodeLetter9_2').addClass('invalid');
+            $('#agentTaxCodeLetter9_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#agentTaxCodeLetter1_1').removeClass('invalid');
-            $('#agentTaxCodeLetter2_1').removeClass('invalid');
-            $('#agentTaxCodeLetter3_1').removeClass('invalid');
-            $('#agentTaxCodeLetter4_1').removeClass('invalid');
-            $('#agentTaxCodeLetter5_1').removeClass('invalid');
-            $('#agentTaxCodeLetter6_1').removeClass('invalid');
-            $('#agentTaxCodeLetter7_1').removeClass('invalid');
-            $('#agentTaxCodeLetter8_1').removeClass('invalid');
-            $('#agentTaxCodeLetter0_1').removeClass('invalid');
+            removeAgentTaxCodeInvalidClass();
         }
     });
 
@@ -5139,10 +5094,14 @@
             var check = 1;
             if (value12.trim() === "") {
                 $('#agentTaxCodeLetter11_1').addClass('invalid');
+                $('#agentTaxCodeLetter11_2').addClass('invalid');
+                $('#agentTaxCodeLetter11_3').addClass('invalid');
                 check = 0;
             }
             if (value13.trim() === "") {
                 $('#agentTaxCodeLetter12_1').addClass('invalid');
+                $('#agentTaxCodeLetter12_2').addClass('invalid');
+                $('#agentTaxCodeLetter12_3').addClass('invalid');
                 check = 0;
             }
             if (check === 0) {
@@ -5156,14 +5115,26 @@
                 });
             } else {
                 $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter10_3').removeClass('invalid');
                 $('#agentTaxCodeLetter12_1').removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_3').removeClass('invalid');
                 $('#agentTaxCodeLetter11_1').removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_3').removeClass('invalid');
             }
         } else {
             if (value12.trim() === "" && value13.trim() === "") {
-                $('#agentTaxCodeLetter11_1').removeClass('invalid');
-                $('#agentTaxCodeLetter12_1').removeClass('invalid');
                 $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter10_3').removeClass('invalid');
+                $('#agentTaxCodeLetter12_1').removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_3').removeClass('invalid');
+                $('#agentTaxCodeLetter11_1').removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_3').removeClass('invalid');
             } else {
                 noty({
                     text: 'Hãy nhập mã số thuế đúng.',
@@ -5174,6 +5145,8 @@
                     timeout: 1000
                 });
                 $(this).addClass('invalid');
+                $('#agentTaxCodeLetter10_2').addClass('invalid');
+                $('#agentTaxCodeLetter10_3').addClass('invalid');
             }
         }
     });
@@ -5203,10 +5176,14 @@
             var check = 1;
             if (value11.trim() === "") {
                 $('#agentTaxCodeLetter10_1').addClass('invalid');
+                $('#agentTaxCodeLetter10_2').addClass('invalid');
+                $('#agentTaxCodeLetter10_3').addClass('invalid');
                 check = 0;
             }
             if (value13.trim() === "") {
                 $('#agentTaxCodeLetter12_1').addClass('invalid');
+                $('#agentTaxCodeLetter12_2').addClass('invalid');
+                $('#agentTaxCodeLetter12_3').addClass('invalid');
                 check = 0;
             }
             if (check === 0) {
@@ -5220,14 +5197,26 @@
                 });
             } else {
                 $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_3').removeClass('invalid');
                 $('#agentTaxCodeLetter10_1').removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter10_3').removeClass('invalid');
                 $('#agentTaxCodeLetter12_1').removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_3').removeClass('invalid');
             }
         } else {
             if (value11.trim() === "" && value13.trim() === "") {
-                $('#agentTaxCodeLetter10_1').removeClass('invalid');
-                $('#agentTaxCodeLetter12_1').removeClass('invalid');
                 $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_3').removeClass('invalid');
+                $('#agentTaxCodeLetter10_1').removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter10_3').removeClass('invalid');
+                $('#agentTaxCodeLetter12_1').removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_3').removeClass('invalid');
             } else {
                 noty({
                     text: 'Hãy nhập mã số thuế đúng.',
@@ -5238,6 +5227,8 @@
                     timeout: 1000
                 });
                 $(this).addClass('invalid');
+                $('#agentTaxCodeLetter11_2').addClass('invalid');
+                $('#agentTaxCodeLetter11_3').addClass('invalid');
             }
         }
     });
@@ -5259,7 +5250,7 @@
     $('#agentTaxCodeLetter12_1').on('input', function () {
         var data = $(this).val();
         $('#agentTaxCodeLetter12_2').val(data);
-        $('agentTaxCodeLetter12_3').val(data);
+        $('#agentTaxCodeLetter12_3').val(data);
 
         var value11 = $('#agentTaxCodeLetter10_1').val();
         var value12 = $('#agentTaxCodeLetter11_1').val();
@@ -5267,10 +5258,14 @@
             var check = 1;
             if (value11.trim() === "") {
                 $('#agentTaxCodeLetter10_1').addClass('invalid');
+                $('#agentTaxCodeLetter10_2').addClass('invalid');
+                $('#agentTaxCodeLetter10_3').addClass('invalid');
                 check = 0;
             }
             if (value12.trim() === "") {
                 $('#agentTaxCodeLetter11_1').addClass('invalid');
+                $('#agentTaxCodeLetter11_2').addClass('invalid');
+                $('#agentTaxCodeLetter11_3').addClass('invalid');
                 check = 0;
             }
             if (check === 0) {
@@ -5284,14 +5279,26 @@
                 });
             } else {
                 $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_3').removeClass('invalid');
                 $('#agentTaxCodeLetter10_1').removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter10_3').removeClass('invalid');
                 $('#agentTaxCodeLetter11_1').removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_3').removeClass('invalid');
             }
         } else {
             if (value11.trim() === "" && value12.trim() === "") {
-                $('#agentTaxCodeLetter10_1').removeClass('invalid');
-                $('#agentTaxCodeLetter11_1').removeClass('invalid');
                 $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_3').removeClass('invalid');
+                $('#agentTaxCodeLetter10_1').removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter10_3').removeClass('invalid');
+                $('#agentTaxCodeLetter11_1').removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_3').removeClass('invalid');
             } else {
                 noty({
                     text: 'Hãy nhập mã số thuế đúng.',
@@ -5302,6 +5309,8 @@
                     timeout: 1000
                 });
                 $(this).addClass('invalid');
+                $('#agentTaxCodeLetter12_2').addClass('invalid');
+                $('#agentTaxCodeLetter12_3').addClass('invalid');
             }
         }
     });
@@ -5319,6 +5328,43 @@
         $('#agentTaxCodeLetter12_1').val(data);
         $("#agentTaxCodeLetter12_1").trigger('input');
     });
+
+        function removeStoreTaxCodeInvalidClass() {
+
+            $('#storeTaxcodeLetter0_1').removeClass('invalid');
+            $('#storeTaxcodeLetter0_2').removeClass('invalid');
+            $('#storeTaxcodeLetter0_3').removeClass('invalid');
+
+            $('#storeTaxcodeLetter1_1').removeClass('invalid');
+            $('#storeTaxcodeLetter2_1').removeClass('invalid');
+            $('#storeTaxcodeLetter3_1').removeClass('invalid');
+            $('#storeTaxcodeLetter4_1').removeClass('invalid');
+            $('#storeTaxcodeLetter5_1').removeClass('invalid');
+            $('#storeTaxcodeLetter6_1').removeClass('invalid');
+            $('#storeTaxcodeLetter7_1').removeClass('invalid');
+            $('#storeTaxcodeLetter8_1').removeClass('invalid');
+            $('#storeTaxcodeLetter9_1').removeClass('invalid');
+
+            $('#storeTaxcodeLetter1_2').removeClass('invalid');
+            $('#storeTaxcodeLetter2_2').removeClass('invalid');
+            $('#storeTaxcodeLetter3_2').removeClass('invalid');
+            $('#storeTaxcodeLetter4_2').removeClass('invalid');
+            $('#storeTaxcodeLetter5_2').removeClass('invalid');
+            $('#storeTaxcodeLetter6_2').removeClass('invalid');
+            $('#storeTaxcodeLetter7_2').removeClass('invalid');
+            $('#storeTaxcodeLetter8_2').removeClass('invalid');
+            $('#storeTaxcodeLetter9_2').removeClass('invalid');
+
+            $('#storeTaxcodeLetter1_3').removeClass('invalid');
+            $('#storeTaxcodeLetter2_3').removeClass('invalid');
+            $('#storeTaxcodeLetter3_3').removeClass('invalid');
+            $('#storeTaxcodeLetter4_3').removeClass('invalid');
+            $('#storeTaxcodeLetter5_3').removeClass('invalid');
+            $('#storeTaxcodeLetter6_3').removeClass('invalid');
+            $('#storeTaxcodeLetter7_3').removeClass('invalid');
+            $('#storeTaxcodeLetter8_3').removeClass('invalid');
+            $('#storeTaxcodeLetter9_3').removeClass('invalid');
+        }
 
     $('#storeTaxcodeLetter0_1').on('input', function () {
         var data = $(this).val();
@@ -5348,19 +5394,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#storeTaxcodeLetter0_2').addClass('invalid');
+            $('#storeTaxcodeLetter0_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#storeTaxcodeLetter1_1').removeClass('invalid');
-            $('#storeTaxcodeLetter2_1').removeClass('invalid');
-            $('#storeTaxcodeLetter3_1').removeClass('invalid');
-            $('#storeTaxcodeLetter4_1').removeClass('invalid');
-            $('#storeTaxcodeLetter5_1').removeClass('invalid');
-            $('#storeTaxcodeLetter6_1').removeClass('invalid');
-            $('#storeTaxcodeLetter7_1').removeClass('invalid');
-            $('#storeTaxcodeLetter8_1').removeClass('invalid');
-            $('#storeTaxcodeLetter9_1').removeClass('invalid');
+            removeStoreTaxCodeInvalidClass();
         }
     });
 
@@ -5406,19 +5444,12 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
+            
             $(this).addClass('invalid');
+            $('#storeTaxcodeLetter1_2').addClass('invalid');
+            $('#storeTaxcodeLetter1_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#storeTaxcodeLetter0_1').removeClass('invalid');
-            $('#storeTaxcodeLetter2_1').removeClass('invalid');
-            $('#storeTaxcodeLetter3_1').removeClass('invalid');
-            $('#storeTaxcodeLetter4_1').removeClass('invalid');
-            $('#storeTaxcodeLetter5_1').removeClass('invalid');
-            $('#storeTaxcodeLetter6_1').removeClass('invalid');
-            $('#storeTaxcodeLetter7_1').removeClass('invalid');
-            $('#storeTaxcodeLetter8_1').removeClass('invalid');
-            $('#storeTaxcodeLetter9_1').removeClass('invalid');
+            removeStoreTaxCodeInvalidClass();
         }
     });
 
@@ -5464,19 +5495,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#storeTaxcodeLetter2_2').addClass('invalid');
+            $('#storeTaxcodeLetter2_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#storeTaxcodeLetter1_1').removeClass('invalid');
-            $('#storeTaxcodeLetter0_1').removeClass('invalid');
-            $('#storeTaxcodeLetter3_1').removeClass('invalid');
-            $('#storeTaxcodeLetter4_1').removeClass('invalid');
-            $('#storeTaxcodeLetter5_1').removeClass('invalid');
-            $('#storeTaxcodeLetter6_1').removeClass('invalid');
-            $('#storeTaxcodeLetter7_1').removeClass('invalid');
-            $('#storeTaxcodeLetter8_1').removeClass('invalid');
-            $('#storeTaxcodeLetter9_1').removeClass('invalid');
+            removeStoreTaxCodeInvalidClass();
         }
     });
 
@@ -5522,19 +5545,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#storeTaxcodeLetter3_2').addClass('invalid');
+            $('#storeTaxcodeLetter3_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#storeTaxcodeLetter1_1').removeClass('invalid');
-            $('#storeTaxcodeLetter2_1').removeClass('invalid');
-            $('#storeTaxcodeLetter0_1').removeClass('invalid');
-            $('#storeTaxcodeLetter4_1').removeClass('invalid');
-            $('#storeTaxcodeLetter5_1').removeClass('invalid');
-            $('#storeTaxcodeLetter6_1').removeClass('invalid');
-            $('#storeTaxcodeLetter7_1').removeClass('invalid');
-            $('#storeTaxcodeLetter8_1').removeClass('invalid');
-            $('#storeTaxcodeLetter9_1').removeClass('invalid');
+            removeStoreTaxCodeInvalidClass();
         }
     });
 
@@ -5582,17 +5597,10 @@
             });
             $(this).focus();
             $(this).addClass('invalid');
+            $('#storeTaxcodeLetter4_2').addClass('invalid');
+            $('#storeTaxcodeLetter4_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#storeTaxcodeLetter1_1').removeClass('invalid');
-            $('#storeTaxcodeLetter2_1').removeClass('invalid');
-            $('#storeTaxcodeLetter0_1').removeClass('invalid');
-            $('#storeTaxcodeLetter3_1').removeClass('invalid');
-            $('#storeTaxcodeLetter5_1').removeClass('invalid');
-            $('#storeTaxcodeLetter6_1').removeClass('invalid');
-            $('#storeTaxcodeLetter7_1').removeClass('invalid');
-            $('#storeTaxcodeLetter8_1').removeClass('invalid');
-            $('#storeTaxcodeLetter9_1').removeClass('invalid');
+            removeStoreTaxCodeInvalidClass();
         }
     });
 
@@ -5638,19 +5646,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#storeTaxcodeLetter5_2').addClass('invalid');
+            $('#storeTaxcodeLetter5_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#storeTaxcodeLetter1_1').removeClass('invalid');
-            $('#storeTaxcodeLetter2_1').removeClass('invalid');
-            $('#storeTaxcodeLetter0_1').removeClass('invalid');
-            $('#storeTaxcodeLetter3_1').removeClass('invalid');
-            $('#storeTaxcodeLetter4_1').removeClass('invalid');
-            $('#storeTaxcodeLetter6_1').removeClass('invalid');
-            $('#storeTaxcodeLetter7_1').removeClass('invalid');
-            $('#storeTaxcodeLetter8_1').removeClass('invalid');
-            $('#storeTaxcodeLetter9_1').removeClass('invalid');
+            removeStoreTaxCodeInvalidClass();
         }
     });
 
@@ -5696,19 +5696,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#storeTaxcodeLetter5_2').addClass('invalid');
+            $('#storeTaxcodeLetter5_1').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#storeTaxcodeLetter1_1').removeClass('invalid');
-            $('#storeTaxcodeLetter2_1').removeClass('invalid');
-            $('#storeTaxcodeLetter0_1').removeClass('invalid');
-            $('#storeTaxcodeLetter3_1').removeClass('invalid');
-            $('#storeTaxcodeLetter5_1').removeClass('invalid');
-            $('#storeTaxcodeLetter4_1').removeClass('invalid');
-            $('#storeTaxcodeLetter7_1').removeClass('invalid');
-            $('#storeTaxcodeLetter8_1').removeClass('invalid');
-            $('#storeTaxcodeLetter9_1').removeClass('invalid');
+            removeStoreTaxCodeInvalidClass();
         }
     });
 
@@ -5754,19 +5746,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#storeTaxcodeLetter7_2').addClass('invalid');;
+            $('#storeTaxcodeLetter7_3').addClass('invalid');;
         } else {
-            $(this).removeClass('invalid');
-            $('#storeTaxcodeLetter1_1').removeClass('invalid');
-            $('#storeTaxcodeLetter2_1').removeClass('invalid');
-            $('#storeTaxcodeLetter0_1').removeClass('invalid');
-            $('#storeTaxcodeLetter3_1').removeClass('invalid');
-            $('#storeTaxcodeLetter5_1').removeClass('invalid');
-            $('#storeTaxcodeLetter6_1').removeClass('invalid');
-            $('#storeTaxcodeLetter4_1').removeClass('invalid');
-            $('#storeTaxcodeLetter8_1').removeClass('invalid');
-            $('#storeTaxcodeLetter9_1').removeClass('invalid');
+            removeStoreTaxCodeInvalidClass();
         }
     });
 
@@ -5812,19 +5796,11 @@
                 theme: 'defaultTheme',
                 timeout: 1000
             });
-            $(this).focus();
             $(this).addClass('invalid');
+            $('#storeTaxcodeLetter8_2').addClass('invalid');
+            $('#storeTaxcodeLetter8_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#storeTaxcodeLetter1_1').removeClass('invalid');
-            $('#storeTaxcodeLetter2_1').removeClass('invalid');
-            $('#storeTaxcodeLetter0_1').removeClass('invalid');
-            $('#storeTaxcodeLetter3_1').removeClass('invalid');
-            $('#storeTaxcodeLetter5_1').removeClass('invalid');
-            $('#storeTaxcodeLetter6_1').removeClass('invalid');
-            $('#storeTaxcodeLetter7_1').removeClass('invalid');
-            $('#storeTaxcodeLetter4_1').removeClass('invalid');
-            $('#storeTaxcodeLetter9_1').removeClass('invalid');
+            removeStoreTaxCodeInvalidClass();
         }
     });
 
@@ -5872,17 +5848,10 @@
             });
             $(this).focus();
             $(this).addClass('invalid');
+            $('#storeTaxcodeLetter9_2').addClass('invalid');
+            $('#storeTaxcodeLetter9_3').addClass('invalid');
         } else {
-            $(this).removeClass('invalid');
-            $('#storeTaxcodeLetter1_1').removeClass('invalid');
-            $('#storeTaxcodeLetter2_1').removeClass('invalid');
-            $('#storeTaxcodeLetter0_1').removeClass('invalid');
-            $('#storeTaxcodeLetter3_1').removeClass('invalid');
-            $('#storeTaxcodeLetter5_1').removeClass('invalid');
-            $('#storeTaxcodeLetter6_1').removeClass('invalid');
-            $('#storeTaxcodeLetter7_1').removeClass('invalid');
-            $('#storeTaxcodeLetter8_1').removeClass('invalid');
-            $('#storeTaxcodeLetter4_1').removeClass('invalid');
+            removeStoreTaxCodeInvalidClass();
         }
     });
 
@@ -5911,10 +5880,14 @@
             var check = 1;
             if (value12.trim() === "") {
                 $('#storeTaxcodeLetter11_1').addClass('invalid');
+                $('#storeTaxcodeLetter11_2').addClass('invalid');
+                $('#storeTaxcodeLetter11_3').addClass('invalid');
                 check = 0;
             }
             if (value13.trim() === "") {
                 $('#storeTaxcodeLetter12_1').addClass('invalid');
+                $('#storeTaxcodeLetter12_2').addClass('invalid');
+                $('#storeTaxcodeLetter12_3').addClass('invalid');
                 check = 0;
             }
             if (check === 0) {
@@ -5928,14 +5901,26 @@
                 });
             } else {
                 $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter10_3').removeClass('invalid');
                 $('#storeTaxcodeLetter12_1').removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_3').removeClass('invalid');
                 $('#storeTaxcodeLetter11_1').removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_3').removeClass('invalid');
             }
         }else {
             if (value12.trim() === "" && value13.trim() === "") {
-                $('#storeTaxcodeLetter11_1').removeClass('invalid');
-                $('#storeTaxcodeLetter12_1').removeClass('invalid');
                 $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter10_3').removeClass('invalid');
+                $('#storeTaxcodeLetter12_1').removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_3').removeClass('invalid');
+                $('#storeTaxcodeLetter11_1').removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_3').removeClass('invalid');
             }else {
                 noty({
                     text: 'Hãy nhập mã số thuế đúng.',
@@ -5946,6 +5931,8 @@
                     timeout: 1000
                 });
                 $(this).addClass('invalid');
+                $('#storeTaxcodeLetter10_2').addClass('invalid');
+                $('#storeTaxcodeLetter10_3').addClass('invalid');
             }
         }
     });
@@ -5992,14 +5979,26 @@
                 });
             } else {
                 $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_3').removeClass('invalid');
                 $('#storeTaxcodeLetter10_1').removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter10_3').removeClass('invalid');
                 $('#storeTaxcodeLetter12_1').removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_3').removeClass('invalid');
             }
         } else {
             if (value11.trim() === "" && value13.trim() === "") {
-                $('#storeTaxcodeLetter10_1').removeClass('invalid');
-                $('#storeTaxcodeLetter12_1').removeClass('invalid');
                 $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_3').removeClass('invalid');
+                $('#storeTaxcodeLetter10_1').removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter10_3').removeClass('invalid');
+                $('#storeTaxcodeLetter12_1').removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_3').removeClass('invalid');
             } else {
                 noty({
                     text: 'Hãy nhập mã số thuế đúng.',
@@ -6010,6 +6009,8 @@
                     timeout: 1000
                 });
                 $(this).addClass('invalid');
+                $('#storeTaxcodeLetter11_2').addClass('invalid');
+                $('#storeTaxcodeLetter11_3').addClass('invalid');
             }
         }
     });
@@ -6031,7 +6032,7 @@
     $('#storeTaxcodeLetter12_1').on('input', function () {
         var data = $(this).val();
         $('#storeTaxcodeLetter12_2').val(data);
-        $('storeTaxcodeLetter12_3').val(data);
+        $('#storeTaxcodeLetter12_3').val(data);
 
         var value11 = $('#storeTaxcodeLetter10_1').val();
         var value12 = $('#storeTaxcodeLetter11_1').val();
@@ -6056,14 +6057,26 @@
                 });
             } else {
                 $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_3').removeClass('invalid');
                 $('#storeTaxcodeLetter10_1').removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter10_3').removeClass('invalid');
                 $('#storeTaxcodeLetter11_1').removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_3').removeClass('invalid');
             }
         } else {
             if (value11.trim() === "" && value12.trim() === "") {
-                $('#storeTaxcodeLetter10_1').removeClass('invalid');
-                $('#storeTaxcodeLetter11_1').removeClass('invalid');
                 $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_3').removeClass('invalid');
+                $('#storeTaxcodeLetter10_1').removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter10_3').removeClass('invalid');
+                $('#storeTaxcodeLetter11_1').removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_3').removeClass('invalid');
             } else {
                 noty({
                     text: 'Hãy nhập mã số thuế đúng.',
@@ -6074,6 +6087,8 @@
                     timeout: 1000
                 });
                 $(this).addClass('invalid');
+                $('#storeTaxcodeLetter12_2').addClass('invalid');
+                $('#storeTaxcodeLetter12_3').addClass('invalid');
             }
         }
     });
@@ -6562,7 +6577,7 @@
 
         $("#value24").html(numeral(data).format('0,0').split(",").join("."));
         $("#value24").trigger('input');
-        $("#value25").html(numeral(data).format('0,0').split(",").join("."));
+        $("#value25").val(numeral(data).format('0,0').split(",").join("."));
         $("#value25").trigger('input');
     });
 

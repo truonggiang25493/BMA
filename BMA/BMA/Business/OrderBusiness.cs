@@ -1733,7 +1733,29 @@ namespace BMA.Business
 
             return true;
         }
-
+        /// <summary>
+        /// Remove Order with OrderStatus = 0 and PlanDeliveryDate > DateTime.Now
+        /// </summary>
+        public void AutoRemoveWaitingOrder()
+        {
+            List<Order> waitingOrder = db.Orders.Where(m => m.OrderStatus == 0).ToList();
+            if (waitingOrder.Count > 0)
+            {
+                List<Order> removeOrderList = new List<Order>();
+                foreach (Order order in waitingOrder)
+                {
+                    if (order.OrderStatus == 0 && (order.PlanDeliveryTime - DateTime.Now).TotalDays < 0)
+                    {
+                        removeOrderList.Add(order);
+                    }
+                }
+                if (removeOrderList.Count > 0)
+                {
+                    db.Orders.RemoveRange(removeOrderList);
+                    db.SaveChanges();
+                }
+            }
+        }
     }
 
 }

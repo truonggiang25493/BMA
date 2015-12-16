@@ -378,12 +378,12 @@ namespace BMA.Controllers
             }
         }
 
-        public ActionResult ManageUserLogin()
+        public ActionResult ManageUserLoginPartialView()
         {
             try
             {
                 User staffUser = Session["User"] as User;
-                if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] == 3)
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -393,7 +393,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "Error");
             }
-           
+
         }
     }
 }

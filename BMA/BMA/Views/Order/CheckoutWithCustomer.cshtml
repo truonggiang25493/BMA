@@ -250,7 +250,7 @@
                                                 "style": "text-align: right",
                                                 "data-role": "number",
                                                 "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
-                                                "value": "@(((Model.MaterialCost / 1000) * 1000).ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN")))"
+                                                "value": "@(Model.IsLoyal ? "0": ((Model.MaterialCost / 1000) * 1000).ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN")))"
                                             })
                                         ]
                                     }),
@@ -331,13 +331,12 @@
 
                         function hide_deposit() {
                             $('#deposit').hide();
-                            $('#deposit-amount').attr("min", 0);
                             $('#deposit-amount').val(0);
                         }
 
                         function addOrder() {
                             var deposit = parseInt($("#deposit-amount").val().split(".").join(""));
-                            var isDeposit = $("#deposit").attr('style').indexOf("display: none");
+                            var isDeposit = $("#deposit").attr('style').split(" ").join("").indexOf("display:none");
                             if (isDeposit === -1 && deposit < parseInt("@((Model.MaterialCost/1000)*1000)")) {
                                 noty({
                                     text: 'Tiền cọc không được nhỏ hơn @(((Model.MaterialCost/1000)*1000).ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN"))).',
