@@ -271,32 +271,66 @@
 
         $(document).on("click", "[data-role=remove-row-btn]", function () {
             var productId = $(this).parent().parent().find("td:first input").val();
+            var productName = $(this).parent().parent().find("td:first").html();
             var removeRow = $(this).parent().parent();
-            $.ajax({
-                "url": "@(Url.Action("AddProductInProductListForAdd", "Order"))",
-                "method": "POST",
-                "data": {
-                    "productId": productId
-                },
-                "success": function (data) {
-                    if (data === '0') {
-                        noty({
-                            text: 'Không hủy sản phẩm khỏi đơn hàng',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 1000
-                        });
+            noty({
+                text: 'Bạn chắc chắn hủy sản phẩm '+productName+' không ?',
+                buttons: [
+                    {
+                        addClass: 'btn btn-danger btn-xs',
+                        text: 'Không',
+                        onClick: function ($noty) {
+                            $noty.close();
+                        }
+                    },
+                    {
+                        addClass: 'btn btn-primary btn-xs pull-right',
+                        text: 'Có',
+                        onClick: function ($noty) {
+                            $noty.close();
+                            $.ajax({
+                                "url": "@(Url.Action("AddProductInProductListForAdd", "Order"))",
+                                "method": "POST",
+                                "data": {
+                                    "productId": productId
+                                },
+                                "success": function (data) {
+                                    if (data === '0') {
+                                        noty({
+                                            text: 'Không hủy sản phẩm khỏi đơn hàng',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
+                                    if (data === '1') {
+                                        removeRow.remove();
+                                    }
+                                },
+                                "fail": function (e) {
+                                    noty({
+                                        text: 'Đã có lỗi xảy ra.',
+                                        type: 'danger',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 1000
+                                    });
+                                }
+                            });
+                        }
                     }
-                    if (data === '1') {
-                        removeRow.remove();
-                    }
-                },
-                "fail": function (e) {
-                    alert("Have error" + e.toString());
-                }
+                ],
+                type: 'success',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme'
             });
+
+
+
         });
 
         function show_list_product() {

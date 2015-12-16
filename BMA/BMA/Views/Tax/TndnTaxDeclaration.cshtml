@@ -20,6 +20,9 @@
             margin-top: 30px;
             margin-bottom: 30px;
         }
+        .invalid {
+            background-color: yellow;
+        }
     </style>
 </head>
 <body>
@@ -61,7 +64,7 @@
                                 <h4 style="font-weight: bold">Tên người nộp thuế :</h4>
                             </div>
                             <div class="col-md-5" style="padding-top: 6px">
-                                <p style="font-weight: bold; font-size: 18px">@(Model.StoreOwnerName)</p>
+                                <input type="text" style="font-weight: bold;width: 100%; font-size: 18px" value="@(Model.StoreOwnerName)" id="storeOwnerName1" name="storeOwnerName">
                             </div>
                             <div class="col-md-2"></div>
                         </div>
@@ -76,54 +79,132 @@
                                         <tr>
                                             @if (Model.StoreTaxCode != null && !Model.StoreTaxCode.IsEmpty() && Model.StoreTaxCode.Trim().Length == 13)
                                             {
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(0))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(1))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(2))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(3))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(4))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(5))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(6))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(7))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(8))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(9))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(10))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(11))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(12))</td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(0))" id="storeTaxcodeLetter0_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(1))" id="storeTaxcodeLetter1_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(2))" id="storeTaxcodeLetter2_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(3))" id="storeTaxcodeLetter3_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(4))" id="storeTaxcodeLetter4_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(5))" id="storeTaxcodeLetter5_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(6))" id="storeTaxcodeLetter6_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(7))" id="storeTaxcodeLetter7_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(8))" id="storeTaxcodeLetter8_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(9))" id="storeTaxcodeLetter9_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(10))" id="storeTaxcodeLetter10_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(11))" id="storeTaxcodeLetter11_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(12))" id="storeTaxcodeLetter12_1" name="storeTaxcode" />
+                                                </td>
                                             }
                                             else if (Model.StoreTaxCode != null && !Model.StoreTaxCode.IsEmpty() && Model.StoreTaxCode.Trim().Length == 10)
                                             {
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(0))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(1))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(2))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(3))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(4))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(5))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(6))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(7))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(8))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(9))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(0))" id="storeTaxcodeLetter0_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(1))" id="storeTaxcodeLetter1_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(2))" id="storeTaxcodeLetter2_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(3))" id="storeTaxcodeLetter3_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(4))" id="storeTaxcodeLetter4_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(5))" id="storeTaxcodeLetter5_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(6))" id="storeTaxcodeLetter6_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(7))" id="storeTaxcodeLetter7_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(8))" id="storeTaxcodeLetter8_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(9))" id="storeTaxcodeLetter9_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter10_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter11_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter12_1" name="storeTaxcode" />
+                                                </td>
                                             }
                                             else
                                             {
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter0_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter1_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter2_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter3_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter4_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter5_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter6_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter7_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter8_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter9_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter10_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter11_1" name="storeTaxcode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter12_1" name="storeTaxcode" />
+                                                </td>
                                             }
                                         </tr>
                                     </tbody>
@@ -151,131 +232,134 @@
                                 <table style="margin: 0">
                                     <tbody>
                                         <tr>
-                                            @if (Model.TaxAgentTaxCode != null && !Model.TaxAgentTaxCode.IsEmpty() && Model.TaxAgentTaxCode.Trim().Length == 13)
+                                            @if (Model.TaxAgentTaxCode != null && !Model.TaxAgentTaxCode.IsEmpty() && Model.TaxAgentTaxCode.Length == 13)
                                             {
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(0))" name="agentTaxCode" id="agentTaxCodeLetter0_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(1))" name="agentTaxCode" id="agentTaxCodeLetter1_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(2))" name="agentTaxCode" id="agentTaxCodeLetter2_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(3))" name="agentTaxCode" id="agentTaxCodeLetter3_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(4))" name="agentTaxCode" id="agentTaxCodeLetter4_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(5))" name="agentTaxCode" id="agentTaxCodeLetter5_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(6))" name="agentTaxCode" id="agentTaxCodeLetter6_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(7))" name="agentTaxCode" id="agentTaxCodeLetter7_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(8))" name="agentTaxCode" id="agentTaxCodeLetter8_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(9))" name="agentTaxCode" id="agentTaxCodeLetter9_1" />
-                                            </td>
-
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
-
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(10))" name="agentTaxCode" id="agentTaxCodeLetter10_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(11))" name="agentTaxCode" id="agentTaxCodeLetter11_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(12))" name="agentTaxCode" id="agentTaxCodeLetter12_1" />
-                                            </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(0))" id="agentTaxCodeLetter0_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(1))" id="agentTaxCodeLetter1_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(2))" id="agentTaxCodeLetter2_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(3))" id="agentTaxCodeLetter3_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(4))" id="agentTaxCodeLetter4_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(5))" id="agentTaxCodeLetter5_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(6))" id="agentTaxCodeLetter6_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(7))" id="agentTaxCodeLetter7_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(8))" id="agentTaxCodeLetter8_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(9))" id="agentTaxCodeLetter9_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(10))" id="agentTaxCodeLetter10_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(11))" id="agentTaxCodeLetter11_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(12))" id="agentTaxCodeLetter12_1" name="agentTaxCode" />
+                                                </td>
                                             }
                                             else if (Model.TaxAgentTaxCode != null && !Model.TaxAgentTaxCode.IsEmpty() && Model.TaxAgentTaxCode.Trim().Length == 10)
                                             {
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(0))" name="agentTaxCode" id="agentTaxCodeLetter0_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(1))" name="agentTaxCode" id="agentTaxCodeLetter1_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(2))" name="agentTaxCode" id="agentTaxCodeLetter2_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(3))" name="agentTaxCode" id="agentTaxCodeLetter3_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(4))" name="agentTaxCode" id="agentTaxCodeLetter4_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(5))" name="agentTaxCode" id="agentTaxCodeLetter5_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(6))" name="agentTaxCode" id="agentTaxCodeLetter6_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(7))" name="agentTaxCode" id="agentTaxCodeLetter7_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(8))" name="agentTaxCode" id="agentTaxCodeLetter8_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(9))" name="agentTaxCode" id="agentTaxCodeLetter9_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
-
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(0))" id="agentTaxCodeLetter0_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(1))" id="agentTaxCodeLetter1_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(2))" id="agentTaxCodeLetter2_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(3))" id="agentTaxCodeLetter3_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(4))" id="agentTaxCodeLetter4_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(5))" id="agentTaxCodeLetter5_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(6))" id="agentTaxCodeLetter6_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(7))" id="agentTaxCodeLetter7_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(8))" id="agentTaxCodeLetter8_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentTaxCode.Trim().ElementAt(9))" id="agentTaxCodeLetter9_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter10_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter11_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter12_1" name="agentTaxCode" />
+                                                </td>
                                             }
                                             else
                                             {
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter0_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter1_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter2_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter3_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter4_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter5_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter6_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter7_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter8_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter9_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter10_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter11_1" />
-                                            </td>
-                                            <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
-                                                <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="agentTaxCode" id="agentTaxCodeLetter12_1" />
-                                            </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter0_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter1_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter2_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter3_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter4_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter5_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter6_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter7_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter8_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter9_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter10_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter11_1" name="agentTaxCode" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black;">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="agentTaxCodeLetter12_1" name="agentTaxCode" />
+                                                </td>
                                             }
                                         </tr>
                                     </tbody>
@@ -655,7 +739,7 @@
                             <h4 style="font-weight: bold; margin: 0">
                                 [01]&nbsp;Kỳ tính thuế @(Model.Year) từ @(new DateTime(Model.Year, 1, 1).ToString("dd/MM/yyyy")) đến @(new DateTime(Model.Year, 1, 1).AddYears(1).AddDays(-1).ToString("dd/MM/yyyy"))
                             </h4>
-                            <input type="hidden" name="taxYear" value="@(Model.Year)" />
+                            <input type="number" name="taxYear" value="@(Model.Year)" />
                         </div>
                         <!--Subtitle-->
                         <div class="row" style="text-align: center; margin-top: 10px">
@@ -680,7 +764,7 @@
                                 <h4 style="font-weight: bold">[06] Tên người nộp thuế :</h4>
                             </div>
                             <div class="col-md-5" style="padding-top: 6px">
-                                <p style="font-weight: bold; font-size: 18px">@(Model.StoreOwnerName)</p>
+                                <input type="text" style="font-weight: bold;width: 100%; font-size: 18px" value="@(Model.StoreOwnerName)" id="storeOwnerName2">
                             </div>
                             <div class="col-md-2"></div>
                         </div>
@@ -695,54 +779,132 @@
                                         <tr>
                                             @if (Model.StoreTaxCode != null && !Model.StoreTaxCode.IsEmpty() && Model.StoreTaxCode.Trim().Length == 13)
                                             {
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(0))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(1))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(2))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(3))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(4))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(5))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(6))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(7))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(8))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(9))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(10))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(11))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(12))</td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(0))" id="storeTaxcodeLetter0_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(1))" id="storeTaxcodeLetter1_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(2))" id="storeTaxcodeLetter2_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(3))" id="storeTaxcodeLetter3_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(4))" id="storeTaxcodeLetter4_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(5))" id="storeTaxcodeLetter5_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(6))" id="storeTaxcodeLetter6_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(7))" id="storeTaxcodeLetter7_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(8))" id="storeTaxcodeLetter8_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(9))" id="storeTaxcodeLetter9_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(10))" id="storeTaxcodeLetter10_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(11))" id="storeTaxcodeLetter11_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(12))" id="storeTaxcodeLetter12_2" />
+                                                </td>
                                             }
                                             else if (Model.StoreTaxCode != null && !Model.StoreTaxCode.IsEmpty() && Model.StoreTaxCode.Trim().Length == 10)
                                             {
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(0))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(1))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(2))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(3))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(4))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(5))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(6))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(7))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(8))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black; text-align: center">@(Model.StoreTaxCode.Trim().ElementAt(9))</td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(0))" id="storeTaxcodeLetter0_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(1))" id="storeTaxcodeLetter1_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(2))" id="storeTaxcodeLetter2_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(3))" id="storeTaxcodeLetter3_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(4))" id="storeTaxcodeLetter4_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(5))" id="storeTaxcodeLetter5_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(6))" id="storeTaxcodeLetter6_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(7))" id="storeTaxcodeLetter7_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(8))" id="storeTaxcodeLetter8_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreTaxCode.Trim().ElementAt(9))" id="storeTaxcodeLetter9_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter10_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter11_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter12_2" />
+                                                </td>
                                             }
                                             else
                                             {
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
-                                            <td style="width: 25px; height: 25px; margin: 0; padding: 0; border: 1px solid black;"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter0_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter1_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter2_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter3_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter4_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter5_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter6_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter7_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter8_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter9_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0"></td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter10_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter11_2" />
+                                                </td>
+                                                <td style="width: 29px; height: 29px; margin: 0; padding: 0; border: 1px solid black; text-align: center">
+                                                    <input style="width: 27px; height: 27px; padding: 0; border: 0; text-align: center" type="text" maxlength="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="storeTaxcodeLetter12_2" />
+                                                </td>
                                             }
                                         </tr>
                                     </tbody>
@@ -756,7 +918,7 @@
                                 <h4 style="font-weight: bold">[08] Địa chỉ: </h4>
                             </div>
                             <div class="col-md-5" style="padding-top: 6px">
-                                <p style="font-size: 18px">@(Model.StoreAddress)</p>
+                                <input type="text" style="font-size: 18px; width: 100%" name="storeAddress" value="@(Model.StoreAddress)" />
                             </div>
                             <div class="col-md-2"></div>
                         </div>
@@ -768,7 +930,7 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <p style="font-size: 18px">@(Model.StoreDistrict)</p>
+                                <input type="text" style="font-size: 18px; width: 100%" name="storeDistrict" value="@(Model.StoreDistrict)" />
                             </div>
                             <div class="col-md-2">
                                 <p style="font-size: 18px">
@@ -776,7 +938,7 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <p style="font-size: 18px">@(Model.StoreProvince)</p>
+                                <input type="text" style="font-size: 18px; width: 100%" name="storeProvince" value="@(Model.StoreProvince)" />
                             </div>
                             <div class="col-md-2"></div>
                         </div>
@@ -788,7 +950,7 @@
                                 </p>
                             </div>
                             <div class="col-md-1" style="margin-right:25px">
-                                <p style="font-size: 18px">@(Model.StorePhone)</p>
+                                <input type="text" name="storePhone" style="width: 160%; font-size: 18px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StorePhone)" />
                             </div>
                             <div class="col-md-1">
                                 <p style="font-size: 18px;">
@@ -796,7 +958,7 @@
                                 </p>
                             </div>
                             <div class="col-md-1" style="margin-right: 25px">
-                                <p style="font-size: 18px">@(Model.StoreFax)</p>
+                                <input type="text" name="storeFax" style="width: 160%; font-size: 18px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.StoreFax)" />
                             </div>
                             <div class="col-md-1" style="padding-right: 0">
                                 <p style="font-size: 18px;">
@@ -804,7 +966,7 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <p style="font-size: 18px">@(Model.StoreEmail)</p>
+                                <input type="text" name="storeEmail" style="width: 100%; font-size: 18px" value="@(Model.StoreEmail)" />
                             </div>
                         </div>
 
@@ -1657,7 +1819,7 @@
                             </div>
                             <div class="col-md-2"></div>
                             </div>*@
-                        
+
                         <div class="row" style="font-size: 18px">
                             <div class="col-md-3"></div>
                             <div class="col-md-7">
@@ -1753,8 +1915,8 @@
                 <span class="glyphicon glyphicon-export" aria-hidden="true"></span> Xuất XML
             </button>
             @*<button class="btn btn-danger btn-sm">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Hủy
-            </button>*@
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Hủy
+                </button>*@
             <button class="btn btn-primary btn-sm" onclick="back()">
                 <i class="fa fa-arrow-left" style="margin-right: 3px"></i>Quay lại
             </button>
@@ -1766,9 +1928,9 @@
     <script src="~/Scripts/numeral.js"></script>
     <script src="~/Scripts/moment.min.js"></script>
     <script src="~/Scripts/jquery.noty.packaged.min.js"></script>
-<script type="text/javascript">
+    <script type="text/javascript">
     function back() {
-         window.close();
+        window.close();
     }
     $("[data-role='number']").on('input', function () {
         var data = $(this).val();
@@ -2497,7 +2659,19 @@
     });
 
     function exportXmlTndnTaxDeclaration() {
-        $("#tndnTaxDeclaration").submit();
+        if ($(".invalid").length === 0) {
+            $("#tndnTaxDeclaration").submit();
+        } else {
+            noty({
+                text: 'Dữ liệu nhập vào không đúng. Vui lòng xem lại',
+                type: 'danger',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 2000
+            });
+        }
+        
     }
 
     $("[name='value04']").on('input', function () {
@@ -2788,23 +2962,36 @@
     });
 
     function saveTndnTaxDeclaration() {
-        $.ajax({
-            url: "@(Url.Action("SaveTndnTaxTndnTaxDeclaration","Tax"))",
-            method: "POST",
-            data: $("#tndnTaxDeclaration").serialize(),
-            success: function (data) {
-                if (data === "1") {
+        if ($(".invalid").length === 0) {
+            $.ajax({
+                url: "@(Url.Action("SaveTndnTaxTndnTaxDeclaration","Tax"))",
+                method: "POST",
+                data: $("#tndnTaxDeclaration").serialize(),
+                success: function (data) {
+                    if (data === "1") {
+                        noty({
+                            text: 'Lưu thành công',
+                            type: 'success',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    } else {
+                        noty({
+                            text: 'Lưu thất bại. Vui lòng thử lại.',
+                            type: 'danger',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    }
+
+                },
+                fail: function (e) {
                     noty({
-                        text: 'Lưu thành công',
-                        type: 'success',
-                        dismissQueue: false,
-                        layout: 'topCenter',
-                        theme: 'defaultTheme',
-                        timeout: 2000
-                    });
-                } else {
-                    noty({
-                        text: 'Lưu thất bại. Vui lòng thử lại.',
+                        text: 'Không thể lưu. Vui lòng thử lại.',
                         type: 'danger',
                         dismissQueue: false,
                         layout: 'topCenter',
@@ -2812,21 +2999,1275 @@
                         timeout: 2000
                     });
                 }
+            });
+        } else {
+            noty({
+                text: 'Dữ liệu nhập vào không đúng. Vui lòng xem lại',
+                type: 'danger',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 2000
+            });
+        }
+    }
 
-            },
-            fail: function (e) {
+    $('#storeOwnerName1').on('input', function () {
+        var data = $(this).val();
+        $('#storeOwnerName2').val(data);
+    });
+
+    $('#storeOwnerName2').on('input', function () {
+        var data = $(this).val();
+        $('#storeOwnerName1').val(data);
+    });
+
+    function removeStoreTaxCodeInvalidClass() {
+
+        $('#storeTaxcodeLetter0_1').removeClass('invalid');
+        $('#storeTaxcodeLetter0_2').removeClass('invalid');
+
+        $('#storeTaxcodeLetter1_1').removeClass('invalid');
+        $('#storeTaxcodeLetter2_1').removeClass('invalid');
+        $('#storeTaxcodeLetter3_1').removeClass('invalid');
+        $('#storeTaxcodeLetter4_1').removeClass('invalid');
+        $('#storeTaxcodeLetter5_1').removeClass('invalid');
+        $('#storeTaxcodeLetter6_1').removeClass('invalid');
+        $('#storeTaxcodeLetter7_1').removeClass('invalid');
+        $('#storeTaxcodeLetter8_1').removeClass('invalid');
+        $('#storeTaxcodeLetter9_1').removeClass('invalid');
+
+        $('#storeTaxcodeLetter1_2').removeClass('invalid');
+        $('#storeTaxcodeLetter2_2').removeClass('invalid');
+        $('#storeTaxcodeLetter3_2').removeClass('invalid');
+        $('#storeTaxcodeLetter4_2').removeClass('invalid');
+        $('#storeTaxcodeLetter5_2').removeClass('invalid');
+        $('#storeTaxcodeLetter6_2').removeClass('invalid');
+        $('#storeTaxcodeLetter7_2').removeClass('invalid');
+        $('#storeTaxcodeLetter8_2').removeClass('invalid');
+    }
+
+    $('#storeTaxcodeLetter0_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter0_2').val(data);
+
+        var value1 = parseInt(data);
+        var value2 = parseInt($('#storeTaxcodeLetter1_1').val());
+        var value3 = parseInt($('#storeTaxcodeLetter2_1').val());
+        var value4 = parseInt($('#storeTaxcodeLetter3_1').val());
+        var value5 = parseInt($('#storeTaxcodeLetter4_1').val());
+        var value6 = parseInt($('#storeTaxcodeLetter5_1').val());
+        var value7 = parseInt($('#storeTaxcodeLetter6_1').val());
+        var value8 = parseInt($('#storeTaxcodeLetter7_1').val());
+        var value9 = parseInt($('#storeTaxcodeLetter8_1').val());
+        var value10 = parseInt($('#storeTaxcodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $('#storeTaxcodeLetter0_2').addClass('invalid');
+            $(this).addClass('invalid');
+        } else {
+            removeStoreTaxCodeInvalidClass();
+        }
+    });
+
+    $('#storeTaxcodeLetter0_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter0_1').val(data);
+        $("#storeTaxcodeLetter0_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter1_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter1_2').val(data);
+
+        var value2 = parseInt(data);
+        var value1 = parseInt($('#storeTaxcodeLetter0_1').val());
+        var value3 = parseInt($('#storeTaxcodeLetter2_1').val());
+        var value4 = parseInt($('#storeTaxcodeLetter3_1').val());
+        var value5 = parseInt($('#storeTaxcodeLetter4_1').val());
+        var value6 = parseInt($('#storeTaxcodeLetter5_1').val());
+        var value7 = parseInt($('#storeTaxcodeLetter6_1').val());
+        var value8 = parseInt($('#storeTaxcodeLetter7_1').val());
+        var value9 = parseInt($('#storeTaxcodeLetter8_1').val());
+        var value10 = parseInt($('#storeTaxcodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $('#storeTaxcodeLetter1_2').addClass('invalid');
+            $(this).addClass('invalid');
+        } else {
+            removeStoreTaxCodeInvalidClass();
+        }
+    });
+
+    $('#storeTaxcodeLetter1_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter1_1').val(data);
+        $("#storeTaxcodeLetter1_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter2_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter2_2').val(data);
+
+        var value3 = parseInt(data);
+        var value2 = parseInt($('#storeTaxcodeLetter1_1').val());
+        var value1 = parseInt($('#storeTaxcodeLetter0_1').val());
+        var value4 = parseInt($('#storeTaxcodeLetter3_1').val());
+        var value5 = parseInt($('#storeTaxcodeLetter4_1').val());
+        var value6 = parseInt($('#storeTaxcodeLetter5_1').val());
+        var value7 = parseInt($('#storeTaxcodeLetter6_1').val());
+        var value8 = parseInt($('#storeTaxcodeLetter7_1').val());
+        var value9 = parseInt($('#storeTaxcodeLetter8_1').val());
+        var value10 = parseInt($('#storeTaxcodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $('#storeTaxcodeLetter2_2').addClass('invalid');
+            $(this).addClass('invalid');
+        } else {
+            removeStoreTaxCodeInvalidClass();
+        }
+    });
+
+    $('#storeTaxcodeLetter2_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter2_1').val(data);
+        $("#storeTaxcodeLetter2_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter3_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter3_2').val(data);
+
+        var value4 = parseInt(data);
+        var value2 = parseInt($('#storeTaxcodeLetter1_1').val());
+        var value3 = parseInt($('#storeTaxcodeLetter2_1').val());
+        var value1 = parseInt($('#storeTaxcodeLetter0_1').val());
+        var value5 = parseInt($('#storeTaxcodeLetter4_1').val());
+        var value6 = parseInt($('#storeTaxcodeLetter5_1').val());
+        var value7 = parseInt($('#storeTaxcodeLetter6_1').val());
+        var value8 = parseInt($('#storeTaxcodeLetter7_1').val());
+        var value9 = parseInt($('#storeTaxcodeLetter8_1').val());
+        var value10 = parseInt($('#storeTaxcodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $('#storeTaxcodeLetter3_2').addClass('invalid');
+            $(this).addClass('invalid');
+        } else {
+            removeStoreTaxCodeInvalidClass();
+        }
+    });
+
+    $('#storeTaxcodeLetter3_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter3_1').val(data);
+        $("#storeTaxcodeLetter3_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter4_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter4_2').val(data);
+
+        var value5 = parseInt(data);
+        var value2 = parseInt($('#storeTaxcodeLetter1_1').val());
+        var value3 = parseInt($('#storeTaxcodeLetter2_1').val());
+        var value1 = parseInt($('#storeTaxcodeLetter0_1').val());
+        var value4 = parseInt($('#storeTaxcodeLetter3_1').val());
+        var value6 = parseInt($('#storeTaxcodeLetter5_1').val());
+        var value7 = parseInt($('#storeTaxcodeLetter6_1').val());
+        var value8 = parseInt($('#storeTaxcodeLetter7_1').val());
+        var value9 = parseInt($('#storeTaxcodeLetter8_1').val());
+        var value10 = parseInt($('#storeTaxcodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $('#storeTaxcodeLetter4_2').addClass('invalid');
+            $(this).addClass('invalid');
+        } else {
+            removeStoreTaxCodeInvalidClass();
+        }
+    });
+
+    $('#storeTaxcodeLetter4_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter4_1').val(data);
+        $("#storeTaxcodeLetter4_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter5_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter5_2').val(data);
+
+        var value6 = parseInt(data);
+        var value2 = parseInt($('#storeTaxcodeLetter1_1').val());
+        var value3 = parseInt($('#storeTaxcodeLetter2_1').val());
+        var value1 = parseInt($('#storeTaxcodeLetter0_1').val());
+        var value4 = parseInt($('#storeTaxcodeLetter3_1').val());
+        var value5 = parseInt($('#storeTaxcodeLetter4_1').val());
+        var value7 = parseInt($('#storeTaxcodeLetter6_1').val());
+        var value8 = parseInt($('#storeTaxcodeLetter7_1').val());
+        var value9 = parseInt($('#storeTaxcodeLetter8_1').val());
+        var value10 = parseInt($('#storeTaxcodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $('#storeTaxcodeLetter5_2').addClass('invalid');
+            $(this).addClass('invalid');
+        } else {
+            removeStoreTaxCodeInvalidClass();
+        }
+    });
+
+    $('#storeTaxcodeLetter5_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter5_1').val(data);
+        $("#storeTaxcodeLetter5_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter6_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter6_2').val(data);
+
+        var value7 = parseInt(data);
+        var value2 = parseInt($('#storeTaxcodeLetter1_1').val());
+        var value3 = parseInt($('#storeTaxcodeLetter2_1').val());
+        var value1 = parseInt($('#storeTaxcodeLetter0_1').val());
+        var value4 = parseInt($('#storeTaxcodeLetter3_1').val());
+        var value6 = parseInt($('#storeTaxcodeLetter5_1').val());
+        var value5 = parseInt($('#storeTaxcodeLetter4_1').val());
+        var value8 = parseInt($('#storeTaxcodeLetter7_1').val());
+        var value9 = parseInt($('#storeTaxcodeLetter8_1').val());
+        var value10 = parseInt($('#storeTaxcodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $('#storeTaxcodeLetter6_2').addClass('invalid');
+            $(this).addClass('invalid');
+        } else {
+            removeStoreTaxCodeInvalidClass();
+        }
+    });
+
+    $('#storeTaxcodeLetter6_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter6_1').val(data);
+        $("#storeTaxcodeLetter6_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter7_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter7_2').val(data);
+
+        var value8 = parseInt(data);
+        var value2 = parseInt($('#storeTaxcodeLetter1_1').val());
+        var value3 = parseInt($('#storeTaxcodeLetter2_1').val());
+        var value1 = parseInt($('#storeTaxcodeLetter0_1').val());
+        var value4 = parseInt($('#storeTaxcodeLetter3_1').val());
+        var value6 = parseInt($('#storeTaxcodeLetter5_1').val());
+        var value7 = parseInt($('#storeTaxcodeLetter6_1').val());
+        var value5 = parseInt($('#storeTaxcodeLetter4_1').val());
+        var value9 = parseInt($('#storeTaxcodeLetter8_1').val());
+        var value10 = parseInt($('#storeTaxcodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $('#storeTaxcodeLetter7_2').addClass('invalid');
+            $(this).addClass('invalid');
+        } else {
+            removeStoreTaxCodeInvalidClass();
+        }
+    });
+
+    $('#storeTaxcodeLetter7_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter7_1').val(data);
+        $("#storeTaxcodeLetter7_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter8_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter8_2').val(data);
+
+        var value9 = parseInt(data);
+        var value2 = parseInt($('#storeTaxcodeLetter1_1').val());
+        var value3 = parseInt($('#storeTaxcodeLetter2_1').val());
+        var value1 = parseInt($('#storeTaxcodeLetter0_1').val());
+        var value4 = parseInt($('#storeTaxcodeLetter3_1').val());
+        var value6 = parseInt($('#storeTaxcodeLetter5_1').val());
+        var value7 = parseInt($('#storeTaxcodeLetter6_1').val());
+        var value8 = parseInt($('#storeTaxcodeLetter7_1').val());
+        var value5 = parseInt($('#storeTaxcodeLetter4_1').val());
+        var value10 = parseInt($('#storeTaxcodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $('#storeTaxcodeLetter8_2').addClass('invalid');
+            $(this).addClass('invalid');
+        } else {
+            removeStoreTaxCodeInvalidClass();
+        }
+    });
+
+    $('#storeTaxcodeLetter8_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter8_1').val(data);
+        $("#storeTaxcodeLetter8_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter9_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter9_2').val(data);
+
+        var value10 = parseInt(data);
+        var value2 = parseInt($('#storeTaxcodeLetter1_1').val());
+        var value3 = parseInt($('#storeTaxcodeLetter2_1').val());
+        var value1 = parseInt($('#storeTaxcodeLetter0_1').val());
+        var value4 = parseInt($('#storeTaxcodeLetter3_1').val());
+        var value6 = parseInt($('#storeTaxcodeLetter5_1').val());
+        var value7 = parseInt($('#storeTaxcodeLetter6_1').val());
+        var value8 = parseInt($('#storeTaxcodeLetter7_1').val());
+        var value9 = parseInt($('#storeTaxcodeLetter8_1').val());
+        var value5 = parseInt($('#storeTaxcodeLetter4_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $('#storeTaxcodeLetter9_2').addClass('invalid');
+            $(this).addClass('invalid');
+        } else {
+            removeStoreTaxCodeInvalidClass();
+        }
+    });
+
+    $('#storeTaxcodeLetter9_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter9_1').val(data);
+        $("#storeTaxcodeLetter9_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter10_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter10_2').val(data);
+
+        var value12 = $('#storeTaxcodeLetter11_1').val();
+        var value13 = $('#storeTaxcodeLetter12_1').val();
+        if (data.trim() !== "") {
+            var check = 1;
+            if (value12.trim() === "") {
+                $('#storeTaxcodeLetter11_1').addClass('invalid');
+                $('#storeTaxcodeLetter11_2').addClass('invalid');
+                check = 0;
+            }
+            if (value13.trim() === "") {
+                $('#storeTaxcodeLetter12_1').addClass('invalid');
+                $('#storeTaxcodeLetter12_2').addClass('invalid');
+                check = 0;
+            }
+            if (check === 0) {
                 noty({
-                    text: 'Không thể lưu. Vui lòng thử lại.',
-                    type: 'danger',
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
                     dismissQueue: false,
                     layout: 'topCenter',
                     theme: 'defaultTheme',
-                    timeout: 2000
+                    timeout: 1000
                 });
+            } else {
+                $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_1').removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_1').removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
             }
-        });
+        } else {
+            if (value12.trim() === "" && value13.trim() === "") {
+                $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_1').removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_1').removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+            } else {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+                $(this).addClass('invalid');
+                $('#storeTaxcodeLetter10_2').addClass('invalid');
+            }
+        }
+    });
+
+    $('#storeTaxcodeLetter10_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter10_1').val(data);
+        $('#storeTaxcodeLetter10_3').val(data);
+        $("#storeTaxcodeLetter10_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter11_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter11_2').val(data);
+
+        var value11 = $('#storeTaxcodeLetter10_1').val();
+        var value13 = $('#storeTaxcodeLetter12_1').val();
+        if (data.trim() !== "") {
+            var check = 1;
+            if (value11.trim() === "") {
+                $('#storeTaxcodeLetter10_1').addClass('invalid');
+                $('#storeTaxcodeLetter10_2').addClass('invalid');
+                check = 0;
+            }
+            if (value13.trim() === "") {
+                $('#storeTaxcodeLetter12_1').addClass('invalid');
+                $('#storeTaxcodeLetter12_2').addClass('invalid');
+                check = 0;
+            }
+            if (check === 0) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else {
+                $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+                $('#storeTaxcodeLetter10_1').removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_1').removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+            }
+        } else {
+            if (value11.trim() === "" && value13.trim() === "") {
+                $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+                $('#storeTaxcodeLetter10_1').removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_1').removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+            } else {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+                $(this).addClass('invalid');
+                $('#storeTaxcodeLetter11_2').addClass('invalid');
+            }
+        }
+    });
+
+    $('#storeTaxcodeLetter11_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter11_1').val(data);
+        $("#storeTaxcodeLetter11_1").trigger('input');
+    });
+
+    $('#storeTaxcodeLetter12_1').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter12_2').val(data);
+
+        var value11 = $('#storeTaxcodeLetter10_1').val();
+        var value12 = $('#storeTaxcodeLetter11_1').val();
+        if (data.trim() !== "") {
+            var check = 1;
+            if (value11.trim() === "") {
+                $('#storeTaxcodeLetter10_1').addClass('invalid');
+                $('#storeTaxcodeLetter10_2').addClass('invalid');
+                check = 0;
+            }
+            if (value12.trim() === "") {
+                $('#storeTaxcodeLetter11_1').addClass('invalid');
+                $('#storeTaxcodeLetter11_2').addClass('invalid');
+                check = 0;
+            }
+            if (check === 0) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else {
+                $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+                $('#storeTaxcodeLetter10_1').removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_1').removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+            }
+        } else {
+            if (value11.trim() === "" && value12.trim() === "") {
+                $(this).removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+                $('#storeTaxcodeLetter10_1').removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_1').removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+            } else {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+                $(this).addClass('invalid');
+                $('#storeTaxcodeLetter12_2').addClass('invalid');
+            }
+        }
+    });
+
+    $('#storeTaxcodeLetter12_2').on('input', function () {
+        var data = $(this).val();
+        $('#storeTaxcodeLetter12_1').val(data);
+        $("#storeTaxcodeLetter12_1").trigger('input');
+    });
+
+
+    function removeAgentTaxCodeInvalidClass() {
+        $('#agentTaxCodeLetter0_1').removeClass('invalid');
+        $('#agentTaxCodeLetter1_1').removeClass('invalid');
+        $('#agentTaxCodeLetter2_1').removeClass('invalid');
+        $('#agentTaxCodeLetter3_1').removeClass('invalid');
+        $('#agentTaxCodeLetter4_1').removeClass('invalid');
+        $('#agentTaxCodeLetter5_1').removeClass('invalid');
+        $('#agentTaxCodeLetter6_1').removeClass('invalid');
+        $('#agentTaxCodeLetter7_1').removeClass('invalid');
+        $('#agentTaxCodeLetter8_1').removeClass('invalid');
+        $('#agentTaxCodeLetter9_1').removeClass('invalid');
+
+        $('#agentTaxCodeLetter0_2').removeClass('invalid');
+        $('#agentTaxCodeLetter1_2').removeClass('invalid');
+        $('#agentTaxCodeLetter2_2').removeClass('invalid');
+        $('#agentTaxCodeLetter3_2').removeClass('invalid');
+        $('#agentTaxCodeLetter4_2').removeClass('invalid');
+        $('#agentTaxCodeLetter5_2').removeClass('invalid');
+        $('#agentTaxCodeLetter6_2').removeClass('invalid');
+        $('#agentTaxCodeLetter7_2').removeClass('invalid');
+        $('#agentTaxCodeLetter8_2').removeClass('invalid');
+        $('#agentTaxCodeLetter9_2').removeClass('invalid');
     }
-</script>
+
+    $('#agentTaxCodeLetter0_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter0_2').val(data);
+
+        var value1 = parseInt(data);
+        var value2 = parseInt($('#agentTaxCodeLetter1_1').val());
+        var value3 = parseInt($('#agentTaxCodeLetter2_1').val());
+        var value4 = parseInt($('#agentTaxCodeLetter3_1').val());
+        var value5 = parseInt($('#agentTaxCodeLetter4_1').val());
+        var value6 = parseInt($('#agentTaxCodeLetter5_1').val());
+        var value7 = parseInt($('#agentTaxCodeLetter6_1').val());
+        var value8 = parseInt($('#agentTaxCodeLetter7_1').val());
+        var value9 = parseInt($('#agentTaxCodeLetter8_1').val());
+        var value10 = parseInt($('#agentTaxCodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $(this).addClass('invalid');
+            $('#agentTaxCodeLetter0_2').addClass('invalid');
+        } else {
+            removeAgentTaxCodeInvalidClass();
+        }
+    });
+
+    $('#agentTaxCodeLetter0_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter0_1').val(data);
+        $("#agentTaxCodeLetter0_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter1_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter1_2').val(data);
+
+        var value2 = parseInt(data);
+        var value1 = parseInt($('#agentTaxCodeLetter0_1').val());
+        var value3 = parseInt($('#agentTaxCodeLetter2_1').val());
+        var value4 = parseInt($('#agentTaxCodeLetter3_1').val());
+        var value5 = parseInt($('#agentTaxCodeLetter4_1').val());
+        var value6 = parseInt($('#agentTaxCodeLetter5_1').val());
+        var value7 = parseInt($('#agentTaxCodeLetter6_1').val());
+        var value8 = parseInt($('#agentTaxCodeLetter7_1').val());
+        var value9 = parseInt($('#agentTaxCodeLetter8_1').val());
+        var value10 = parseInt($('#agentTaxCodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $(this).addClass('invalid');
+            $('#agentTaxCodeLetter1_2').addClass('invalid');
+        } else {
+            removeAgentTaxCodeInvalidClass();
+        }
+    });
+
+    $('#agentTaxCodeLetter1_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter1_1').val(data);
+        $("#agentTaxCodeLetter1_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter2_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter2_2').val(data);
+
+        var value3 = parseInt(data);
+        var value2 = parseInt($('#agentTaxCodeLetter1_1').val());
+        var value1 = parseInt($('#agentTaxCodeLetter0_1').val());
+        var value4 = parseInt($('#agentTaxCodeLetter3_1').val());
+        var value5 = parseInt($('#agentTaxCodeLetter4_1').val());
+        var value6 = parseInt($('#agentTaxCodeLetter5_1').val());
+        var value7 = parseInt($('#agentTaxCodeLetter6_1').val());
+        var value8 = parseInt($('#agentTaxCodeLetter7_1').val());
+        var value9 = parseInt($('#agentTaxCodeLetter8_1').val());
+        var value10 = parseInt($('#agentTaxCodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $(this).addClass('invalid');
+            $('#agentTaxCodeLetter2_2').addClass('invalid');
+        } else {
+            removeAgentTaxCodeInvalidClass();
+        }
+    });
+
+    $('#agentTaxCodeLetter2_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter2_1').val(data);
+        $('#agentTaxCodeLetter2_3').val(data);
+        $("#agentTaxCodeLetter2_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter3_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter3_2').val(data);
+
+        var value4 = parseInt(data);
+        var value2 = parseInt($('#agentTaxCodeLetter1_1').val());
+        var value3 = parseInt($('#agentTaxCodeLetter2_1').val());
+        var value1 = parseInt($('#agentTaxCodeLetter0_1').val());
+        var value5 = parseInt($('#agentTaxCodeLetter4_1').val());
+        var value6 = parseInt($('#agentTaxCodeLetter5_1').val());
+        var value7 = parseInt($('#agentTaxCodeLetter6_1').val());
+        var value8 = parseInt($('#agentTaxCodeLetter7_1').val());
+        var value9 = parseInt($('#agentTaxCodeLetter8_1').val());
+        var value10 = parseInt($('#agentTaxCodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $(this).addClass('invalid');
+            $('#agentTaxCodeLetter3_2').addClass('invalid');
+        } else {
+            removeAgentTaxCodeInvalidClass();
+        }
+    });
+
+    $('#agentTaxCodeLetter3_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter3_1').val(data);
+        $('#agentTaxCodeLetter3_3').val(data);
+        $("#agentTaxCodeLetter3_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter4_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter4_2').val(data);
+
+        var value5 = parseInt(data);
+        var value2 = parseInt($('#agentTaxCodeLetter1_1').val());
+        var value3 = parseInt($('#agentTaxCodeLetter2_1').val());
+        var value4 = parseInt($('#agentTaxCodeLetter3_1').val());
+        var value1 = parseInt($('#agentTaxCodeLetter0_1').val());
+        var value6 = parseInt($('#agentTaxCodeLetter5_1').val());
+        var value7 = parseInt($('#agentTaxCodeLetter6_1').val());
+        var value8 = parseInt($('#agentTaxCodeLetter7_1').val());
+        var value9 = parseInt($('#agentTaxCodeLetter8_1').val());
+        var value10 = parseInt($('#agentTaxCodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $(this).addClass('invalid');
+            $('#agentTaxCodeLetter4_2').addClass('invalid');
+        } else {
+            removeAgentTaxCodeInvalidClass();
+        }
+    });
+
+    $('#agentTaxCodeLetter4_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter4_1').val(data);
+        $('#agentTaxCodeLetter4_3').val(data);
+        $("#agentTaxCodeLetter4_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter5_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter5_2').val(data);
+
+        var value6 = parseInt(data);
+        var value2 = parseInt($('#agentTaxCodeLetter1_1').val());
+        var value3 = parseInt($('#agentTaxCodeLetter2_1').val());
+        var value4 = parseInt($('#agentTaxCodeLetter3_1').val());
+        var value5 = parseInt($('#agentTaxCodeLetter4_1').val());
+        var value1 = parseInt($('#agentTaxCodeLetter0_1').val());
+        var value7 = parseInt($('#agentTaxCodeLetter6_1').val());
+        var value8 = parseInt($('#agentTaxCodeLetter7_1').val());
+        var value9 = parseInt($('#agentTaxCodeLetter8_1').val());
+        var value10 = parseInt($('#agentTaxCodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $(this).addClass('invalid');
+            $('#agentTaxCodeLetter5_2').addClass('invalid');
+        } else {
+            removeAgentTaxCodeInvalidClass();
+        }
+    });
+
+    $('#agentTaxCodeLetter5_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter5_1').val(data);
+        $('#agentTaxCodeLetter5_3').val(data);
+        $("#agentTaxCodeLetter5_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter6_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter6_2').val(data);
+
+        var value7 = parseInt(data);
+        var value2 = parseInt($('#agentTaxCodeLetter1_1').val());
+        var value3 = parseInt($('#agentTaxCodeLetter2_1').val());
+        var value4 = parseInt($('#agentTaxCodeLetter3_1').val());
+        var value5 = parseInt($('#agentTaxCodeLetter4_1').val());
+        var value6 = parseInt($('#agentTaxCodeLetter5_1').val());
+        var value1 = parseInt($('#agentTaxCodeLetter0_1').val());
+        var value8 = parseInt($('#agentTaxCodeLetter7_1').val());
+        var value9 = parseInt($('#agentTaxCodeLetter8_1').val());
+        var value10 = parseInt($('#agentTaxCodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $(this).addClass('invalid');
+            $('#agentTaxCodeLetter6_2').addClass('invalid');
+        } else {
+            removeAgentTaxCodeInvalidClass();
+        }
+    });
+
+    $('#agentTaxCodeLetter6_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter6_1').val(data);
+        $('#agentTaxCodeLetter6_3').val(data);
+        $("#agentTaxCodeLetter6_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter7_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter7_2').val(data);
+
+        var value8 = parseInt(data);
+        var value2 = parseInt($('#agentTaxCodeLetter1_1').val());
+        var value3 = parseInt($('#agentTaxCodeLetter2_1').val());
+        var value4 = parseInt($('#agentTaxCodeLetter3_1').val());
+        var value5 = parseInt($('#agentTaxCodeLetter4_1').val());
+        var value6 = parseInt($('#agentTaxCodeLetter5_1').val());
+        var value7 = parseInt($('#agentTaxCodeLetter6_1').val());
+        var value1 = parseInt($('#agentTaxCodeLetter0_1').val());
+        var value9 = parseInt($('#agentTaxCodeLetter8_1').val());
+        var value10 = parseInt($('#agentTaxCodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $(this).addClass('invalid');
+            $('#agentTaxCodeLetter7_2').addClass('invalid');
+        } else {
+            removeAgentTaxCodeInvalidClass();
+        }
+    });
+
+    $('#agentTaxCodeLetter7_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter7_1').val(data);
+        $('#agentTaxCodeLetter7_3').val(data);
+        $("#agentTaxCodeLetter7_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter8_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter8_2').val(data);
+
+        var value9 = parseInt(data);
+        var value2 = parseInt($('#agentTaxCodeLetter1_1').val());
+        var value3 = parseInt($('#agentTaxCodeLetter2_1').val());
+        var value4 = parseInt($('#agentTaxCodeLetter3_1').val());
+        var value5 = parseInt($('#agentTaxCodeLetter4_1').val());
+        var value6 = parseInt($('#agentTaxCodeLetter5_1').val());
+        var value7 = parseInt($('#agentTaxCodeLetter6_1').val());
+        var value8 = parseInt($('#agentTaxCodeLetter7_1').val());
+        var value1 = parseInt($('#agentTaxCodeLetter0_1').val());
+        var value10 = parseInt($('#agentTaxCodeLetter9_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $(this).addClass('invalid');
+            $('#agentTaxCodeLetter8_2').addClass('invalid');
+        } else {
+            removeAgentTaxCodeInvalidClass();
+        }
+    });
+
+    $('#agentTaxCodeLetter8_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter8_1').val(data);
+        $('#agentTaxCodeLetter8_3').val(data);
+        $("#agentTaxCodeLetter8_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter9_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter9_2').val(data);
+
+        var value10 = parseInt(data);
+        var value2 = parseInt($('#agentTaxCodeLetter1_1').val());
+        var value3 = parseInt($('#agentTaxCodeLetter2_1').val());
+        var value4 = parseInt($('#agentTaxCodeLetter3_1').val());
+        var value5 = parseInt($('#agentTaxCodeLetter4_1').val());
+        var value6 = parseInt($('#agentTaxCodeLetter5_1').val());
+        var value7 = parseInt($('#agentTaxCodeLetter6_1').val());
+        var value8 = parseInt($('#agentTaxCodeLetter7_1').val());
+        var value9 = parseInt($('#agentTaxCodeLetter8_1').val());
+        var value1 = parseInt($('#agentTaxCodeLetter0_1').val());
+
+        var sum = (value1 * 31 + value2 * 29 + value3 * 23 + value4 * 19 + value5 * 17 + value6 * 13 + value7 * 7 + value8 * 5 + value9 * 3);
+        var mod11 = sum % 11;
+        var result = 10 - mod11;
+        if (result !== value10) {
+            noty({
+                text: 'Hãy nhập mã số thuế đúng.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 1000
+            });
+            $(this).addClass('invalid');
+            $('#agentTaxCodeLetter9_2').addClass('invalid');
+        } else {
+            removeAgentTaxCodeInvalidClass();
+        }
+    });
+
+    $('#agentTaxCodeLetter9_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter9_1').val(data);
+        $('#agentTaxCodeLetter9_3').val(data);
+        $("#agentTaxCodeLetter9_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter10_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter10_2').val(data);
+
+        var value12 = $('#agentTaxCodeLetter11_1').val();
+        var value13 = $('#agentTaxCodeLetter12_1').val();
+        if (data.trim() !== "") {
+            var check = 1;
+            if (value12.trim() === "") {
+                $('#agentTaxCodeLetter11_1').addClass('invalid');
+                $('#agentTaxCodeLetter11_2').addClass('invalid');
+                check = 0;
+            }
+            if (value13.trim() === "") {
+                $('#agentTaxCodeLetter12_1').addClass('invalid');
+                $('#agentTaxCodeLetter12_2').addClass('invalid');
+                check = 0;
+            }
+            if (check === 0) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else {
+                $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_1').removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_1').removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+            }
+        } else {
+            if (value12.trim() === "" && value13.trim() === "") {
+                $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_1').removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_1').removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+            } else {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+                $(this).addClass('invalid');
+                $('#agentTaxCodeLetter10_2').addClass('invalid');
+            }
+        }
+    });
+
+    $('#agentTaxCodeLetter10_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter10_1').val(data);
+        $('#agentTaxCodeLetter10_3').val(data);
+        $("#agentTaxCodeLetter10_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter11_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter11_2').val(data);
+
+        var value11 = $('#agentTaxCodeLetter10_1').val();
+        var value13 = $('#agentTaxCodeLetter12_1').val();
+        if (data.trim() !== "") {
+            var check = 1;
+            if (value11.trim() === "") {
+                $('#agentTaxCodeLetter10_1').addClass('invalid');
+                $('#agentTaxCodeLetter10_2').addClass('invalid');
+                check = 0;
+            }
+            if (value13.trim() === "") {
+                $('#agentTaxCodeLetter12_1').addClass('invalid');
+                $('#agentTaxCodeLetter12_2').addClass('invalid');
+                check = 0;
+            }
+            if (check === 0) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else {
+                $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+                $('#agentTaxCodeLetter10_1').removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_1').removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+            }
+        } else {
+            if (value11.trim() === "" && value13.trim() === "") {
+                $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+                $('#agentTaxCodeLetter10_1').removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_1').removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+            } else {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+                $(this).addClass('invalid');
+                $('#agentTaxCodeLetter11_2').addClass('invalid');
+            }
+        }
+    });
+
+    $('#agentTaxCodeLetter11_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter11_1').val(data);
+        $('#agentTaxCodeLetter11_3').val(data);
+        $("#agentTaxCodeLetter11_1").trigger('input');
+    });
+
+    $('#agentTaxCodeLetter12_1').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter12_2').val(data);
+
+        var value11 = $('#agentTaxCodeLetter10_1').val();
+        var value12 = $('#agentTaxCodeLetter11_1').val();
+        if (data.trim() !== "") {
+            var check = 1;
+            if (value11.trim() === "") {
+                $('#agentTaxCodeLetter10_1').addClass('invalid');
+                $('#agentTaxCodeLetter10_2').addClass('invalid');
+                check = 0;
+            }
+            if (value12.trim() === "") {
+                $('#agentTaxCodeLetter11_1').addClass('invalid');
+                $('#agentTaxCodeLetter11_2').addClass('invalid');
+                check = 0;
+            }
+            if (check === 0) {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else {
+                $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+                $('#agentTaxCodeLetter10_1').removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_1').removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+            }
+        } else {
+            if (value11.trim() === "" && value12.trim() === "") {
+                $(this).removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+                $('#agentTaxCodeLetter10_1').removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_1').removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+            } else {
+                noty({
+                    text: 'Hãy nhập mã số thuế đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+                $(this).addClass('invalid');
+                $('#agentTaxCodeLetter12_2').addClass('invalid');
+            }
+        }
+    });
+
+    $('#agentTaxCodeLetter12_2').on('input', function () {
+        var data = $(this).val();
+        $('#agentTaxCodeLetter12_1').val(data);
+        $('#agentTaxCodeLetter12_3').val(data);
+        $("#agentTaxCodeLetter12_1").trigger('input');
+    });
+    </script>
 </body>
 
 

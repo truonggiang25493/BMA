@@ -162,71 +162,79 @@ namespace BMA.Controllers
         [HttpPost]
         public int Edit(FormCollection form)
         {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return -7;
-            }
-            else
-            {
-                string orderIdString = form["orderId"];
-                string[] productIdString = Regex.Split(form["productId"], ",");
-                string[] priceString = Regex.Split(form["productPrice"], ",");
-                string[] quantityString = Regex.Split(form["productQuantity"], ",");
-                string depositAmountString = form["depositAmount"];
-                string deliveryDateString = form["deliveryDate"];
-
-                List<CartViewModel> cartList = new List<CartViewModel>();
-                int totalQuantity = 0;
-                if (productIdString.Length == priceString.Length && priceString.Length == quantityString.Length)
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
                 {
-                    for (int i = 0; i < productIdString.Length; i++)
+                    return -7;
+                }
+                else
+                {
+                    string orderIdString = form["orderId"];
+                    string[] productIdString = Regex.Split(form["productId"], ",");
+                    string[] priceString = Regex.Split(form["productPrice"], ",");
+                    string[] quantityString = Regex.Split(form["productQuantity"], ",");
+                    string depositAmountString = form["depositAmount"];
+                    string deliveryDateString = form["deliveryDate"];
+
+                    List<CartViewModel> cartList = new List<CartViewModel>();
+                    int totalQuantity = 0;
+                    if (productIdString.Length == priceString.Length && priceString.Length == quantityString.Length)
                     {
-                        CartViewModel cartViewModel = new CartViewModel();
-                        cartViewModel.ProductId = Convert.ToInt32(productIdString[i]);
-                        cartViewModel.RealPrice = Convert.ToInt32(priceString[i]);
-                        int quantity = Convert.ToInt32(quantityString[i]);
-                        cartViewModel.Quantity = quantity;
-                        totalQuantity += quantity;
-                        cartList.Add(cartViewModel);
+                        for (int i = 0; i < productIdString.Length; i++)
+                        {
+                            CartViewModel cartViewModel = new CartViewModel();
+                            cartViewModel.ProductId = Convert.ToInt32(productIdString[i]);
+                            cartViewModel.RealPrice = Convert.ToInt32(priceString[i]);
+                            int quantity = Convert.ToInt32(quantityString[i]);
+                            cartViewModel.Quantity = quantity;
+                            totalQuantity += quantity;
+                            cartList.Add(cartViewModel);
+                        }
                     }
-                }
-                if (totalQuantity == 0)
-                {
-                    return -1;
-                }
-                OrderBusiness orderBusiness = new OrderBusiness(); ;
-                int minQuantity = orderBusiness.GetMinQuantity();
-                if (totalQuantity < minQuantity)
-                {
-                    ViewBag.MinQuantity = minQuantity;
-                    return -2;
-                }
-                int orderId = Convert.ToInt32(orderIdString);
-                int depositAmount = Convert.ToInt32(depositAmountString);
-                DateTime deliveryDate = DateTime.ParseExact(deliveryDateString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                    if (totalQuantity == 0)
+                    {
+                        return -1;
+                    }
+                    OrderBusiness orderBusiness = new OrderBusiness(); ;
+                    int minQuantity = orderBusiness.GetMinQuantity();
+                    if (totalQuantity < minQuantity)
+                    {
+                        ViewBag.MinQuantity = minQuantity;
+                        return -2;
+                    }
+                    int orderId = Convert.ToInt32(orderIdString);
+                    int depositAmount = Convert.ToInt32(depositAmountString.Replace(".", ""));
+                    DateTime deliveryDate = DateTime.ParseExact(deliveryDateString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
 
-                //Manh code them
-                Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
-                int cusUserId = order.CustomerUserId.Value;
-                Session["TempCusUserId"] = cusUserId;
-                MvcApplication.changeStatusNotifer.Dispose();
-                string dependencyCheckSql = string.Format("{0}{1}{2}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId = ", cusUserId, " AND OrderStatus = 1");
-                MvcApplication.confirmToCustomerNotifer.Start("BMAChangeDB", dependencyCheckSql);
-                MvcApplication.confirmToCustomerNotifer.Change += this.OnChange6;
-                //het
+                    //Manh code them
+                    Order order = db.Orders.SingleOrDefault(n => n.OrderId == orderId);
+                    int cusUserId = order.CustomerUserId.Value;
+                    Session["TempCusUserId"] = cusUserId;
+                    MvcApplication.changeStatusNotifer.Dispose();
+                    string dependencyCheckSql = string.Format("{0}{1}{2}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId = ", cusUserId, " AND OrderStatus = 1");
+                    MvcApplication.confirmToCustomerNotifer.Start("BMAChangeDB", dependencyCheckSql);
+                    MvcApplication.confirmToCustomerNotifer.Change += this.OnChange6;
+                    //het
 
-                bool rs = true;
-                rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate, staffUser.UserId);
-                if (rs)
-                {
-                    Session["ProductList"] = null;
-                    return 1;
+                    bool rs = true;
+                    rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate, staffUser.UserId);
+                    if (rs)
+                    {
+                        Session["ProductList"] = null;
+                        return 1;
+                    }
+
+                    return 0;
                 }
-
+            }
+            catch (Exception)
+            {
                 return 0;
             }
+            
         }
 
         private void OnChange3(object sender, ChangeEventArgs e)

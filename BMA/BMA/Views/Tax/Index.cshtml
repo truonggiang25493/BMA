@@ -180,12 +180,12 @@
                                             <tbody>
                                                 @for (int i = 0; i < Model.VatTaxList.Count; i++)
                                                 {
-                                                <tr>
-                                                    <td>@(i + 1)</td>
-                                                    <td>@(Model.VatTaxList.ElementAt(i).TaxRateValue) %</td>
-                                                    <td>@(Model.VatTaxList.ElementAt(i).BeginDate.ToString("dd/MM/yyyy"))</td>
-                                                    <td>@(Model.VatTaxList.ElementAt(i).EndDate.Value.Year == 9999 ? "Chưa xác định" : Model.VatTaxList.ElementAt(0).EndDate.Value.ToString("dd/MM/yyyy"))</td>
-                                                </tr>
+                                                    <tr>
+                                                        <td>@(i + 1)</td>
+                                                        <td>@(Model.VatTaxList.ElementAt(i).TaxRateValue) %</td>
+                                                        <td>@(Model.VatTaxList.ElementAt(i).BeginDate.ToString("dd/MM/yyyy"))</td>
+                                                        <td>@(Model.VatTaxList.ElementAt(i).EndDate.Value.Year == 9999 ? "Chưa xác định" : Model.VatTaxList.ElementAt(0).EndDate.Value.ToString("dd/MM/yyyy"))</td>
+                                                    </tr>
                                                 }
                                             </tbody>
                                         </table>
@@ -202,39 +202,49 @@
                             </div>
                             <div class="box-body">
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="quarter">Quý</label>
-                                            <select class="form-control" id="quarter" name="quarter">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                            </select>
-                                        </div>
+                                    <div class="col-md-12">
+                                        <span style="margin-right: 10px;"><b>Quý</b></span>
+                                        <select id="vatQuarter">
+                                            <option value="1" @((DateTime.Now.Month / 4 + 1) == 1 ? "selected='selected'" : "")>1</option>
+                                            <option value="2" @((DateTime.Now.Month / 4 + 1) == 2 ? "selected='selected'" : "")>2</option>
+                                            <option value="3" @((DateTime.Now.Month / 4 + 1) == 3 ? "selected='selected'" : "")>3</option>
+                                            <option value="4" @((DateTime.Now.Month / 4 + 1) == 4 ? "selected='selected'" : "")>4</option>
+                                        </select>
+                                        <span style="margin-right: 10px; margin-left: 10px;"><b>Năm</b>&nbsp;</span>
+                                        <input type="number" id="vatYear" min="2015" max="@(DateTime.Now.Year)" value="@(DateTime.Now.Year)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        <button style="margin-left: 10px" class="btn btn-info btn-xs" onclick="getTaxDeclaration()">
+                                            <i class=" fa fa-file-text-o" style="margin-right: 3px"></i>Kê khai
+                                            <script type="text/javascript">
+                                                function getTaxDeclaration() {
+                                                    var year = $("#vatYear").val();
+                                                    var quarter = $("#vatQuarter").val();
+                                                    if (year < 2015 || year > parseInt("@(DateTime.Now.Year)")) {
+                                                        if (parseInt("@(DateTime.Now.Year)") === 2015) {
+                                                            noty({
+                                                                text: 'Chỉ có thể khai báo thuế năm 2015',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 2000
+                                                            });
+                                                        } else {
+                                                            noty({
+                                                                text: 'Chỉ có thể khai báo thuế từ năm 2015 đến ' + '@(DateTime.Now.Year)',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 2000
+                                                            });
+                                                        }
+                                                    } else {
+                                                        window.open('@(Url.Action("VatTaxDeclaration", "Tax"))' + "?year=" + year + "&quarter=" + quarter, '_blank');
+                                                    }
+                                                }
+                                            </script>
+                                        </button>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="datetimepicker">Năm</label>
-                                            <div class="input-group date" id='datetimepicker'>
-                                                <input type="text" readonly="readonly" class="form-control" id="year" />
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button class="btn btn-primary" onclick="getTaxDeclaration()">Kê khai</button>
-                                        <script type="text/javascript">
-                                            function getTaxDeclaration() {
-                                                var year = $("#year").val();
-                                                var quarter = $("#quarter").val();
-                                                window.open('@(Url.Action("VatTaxDeclaration", "Tax"))' + "?year=" + year + "&quarter=" + quarter, '_blank');
-                                            }
-                                        </script>
-                                    </div>
-                                    <div class="col-md-5"></div>
                                 </div>
                             </div>
                         </div>
@@ -415,25 +425,46 @@
                         <div class="box">
                             <div class="box-header">
                                 <div class="box-title">
-                                    Hỗ trợ kê khai thuế TNDN
+                                    Quyết toán thuế TNDN
                                 </div>
                             </div>
                             <div class="box-body">
                                 <!--Option-->
                                 <div class="row">
                                     <div class="col-md-12" style="vertical-align: middle; ">
-                                        <span style="margin-right: 10px;">Kê khai TỜ KHAI QUYẾT TOÁN THUẾ THU NHẬP DOANH NGHIỆP năm</span>
-                                        <input type="number" id="tndnYear" min="1990" max="@(DateTime.Now.Year)" value="@(DateTime.Now.Year - 1)" />
-                                        <button class="btn btn-primary btn-xs" style="margin-left: 10px" onclick="getTndnTaxDeclaration()">
-                                            <i class="fa fa-bar-chart" style="margin-right: 3px"></i>
+                                        <span style="margin-right: 10px;"><b>Năm</b></span>
+                                        <input type="number" id="tndnYear" min="2015" max="@(DateTime.Now.Year)" value="@(DateTime.Now.Year)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        <button class="btn btn-info btn-xs" style="margin-left: 10px" onclick="getTndnTaxDeclaration()">
+                                            <i class="fa fa-file-text-o" style="margin-right: 3px"></i>
                                             Kê khai
                                             <script type="text/javascript">
                                                 function getTndnTaxDeclaration() {
                                                     var year = $("#tndnYear").val();
-                                                    window.open('@(Url.Action("TndnTaxDeclaration", "Tax"))' + "?year=" + year, '_blank');
+                                                    if (year < 2015 || year > parseInt("@(DateTime.Now.Year)")) {
+                                                        if (parseInt("@(DateTime.Now.Year)") === 2015) {
+                                                            noty({
+                                                                text: 'Chỉ có thể khai báo thuế năm 2015',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1000
+                                                            });
+                                                        } else {
+                                                            noty({
+                                                                text: 'Chỉ có thể khai báo thuế từ năm 2015 đến ' + '@(DateTime.Now.Year)',
+                                                                type: 'warning',
+                                                                dismissQueue: false,
+                                                                layout: 'topCenter',
+                                                                theme: 'defaultTheme',
+                                                                timeout: 1000
+                                                            });
+                                                        }
+                                                    } else {
+                                                        window.open('@(Url.Action("TndnTaxDeclaration", "Tax"))' + "?year=" + year, '_blank');
+                                                    }
                                                 }
                                             </script>
-
                                         </button>
                                     </div>
                                 </div>
@@ -458,6 +489,54 @@
                 minDate: moment("1990", "YYYY").startOf('year').format('MM/DD/YYYY'),
                 defaultDate: moment().startOf('year').format('MM/DD/YYYY')
             });
+        });
+        $("#vatYear").on('input', function () {
+            var value = $(this).val();
+            if (value < 2015 || value > parseInt("@(DateTime.Now.Year)")) {
+                if (parseInt("@(DateTime.Now.Year)") === 2015) {
+                    noty({
+                        text: 'Chỉ có thể khai báo thuế năm 2015',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                } else {
+                    noty({
+                        text: 'Chỉ có thể khai báo thuế từ năm 2015 đến ' + '@(DateTime.Now.Year)',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            }
+        });
+        $("#tndnYear").on('input', function () {
+            var value = $(this).val();
+            if (value < 2015 || value > parseInt("@(DateTime.Now.Year)")) {
+                if (parseInt("@(DateTime.Now.Year)") === 2015) {
+                    noty({
+                        text: 'Chỉ có thể khai báo thuế năm 2015',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                } else {
+                    noty({
+                        text: 'Chỉ có thể khai báo thuế từ năm 2015 đến ' + '@(DateTime.Now.Year)',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            }
         });
     </script>
 }
