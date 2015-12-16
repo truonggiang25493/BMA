@@ -41,6 +41,18 @@ namespace BMA.DBChangesNotifer
             return (result);
         }
 
+        public bool CheckConnection()
+        {
+            if (this.cmd != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public Boolean Stop()
         {
             var result = false;

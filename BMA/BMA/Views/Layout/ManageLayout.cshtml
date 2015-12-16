@@ -197,7 +197,7 @@
         }
 
         function RemoveCancelStatusNoty(strURL) {
-            if ($("[data-role='numberOfConfirmOrder']").text() == 0) {
+            if ($("[data-role='numberOfCancelOrder']").text() == 0) {
 
             } else {
                 var txtHiddenOrder = $("#hiddenOrderCount").val();
@@ -205,7 +205,7 @@
                 var txtHiddenConfirmOrder = $("#hiddenConfirmOrderCount").val();
 
                 $.ajax({
-                    "url": "@(Url.Action("RemoveConfirmStatusNoty", "StoreInfor"))",
+                    "url": "@(Url.Action("RemoveCancelStatusNoty", "StoreInfor"))",
                     "method": "POST",
                     "data": JSON.stringify({
                         "newOrderCount": txtHiddenOrder,
@@ -487,8 +487,8 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li id="customerRevenue"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenuePerCustomer')" style="cursor: pointer"><i class="fa fa-usd"></i>Doanh thu theo khách hàng</a></li>
-                                <li id="incomeProduct"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenueByProduct')" style="cursor: pointer"><i class="fa fa-usd"></i>Thu nhập theo sản phẩm</a></li>
-                                <li id="incomeReport"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewIncomeByTime')" style="cursor: pointer"><i class="fa fa-usd"></i>Thu nhập theo thời gian</a></li>
+                                <li id="incomeProduct"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewRevenueByProduct')" style="cursor: pointer"><i class="fa fa-usd"></i>Lợi nhuận theo sản phẩm</a></li>
+                                <li id="incomeReport"><a onclick="NotificatePartialLink('http://localhost:2072/Report/ReviewIncomeByTime')" style="cursor: pointer"><i class="fa fa-usd"></i>Lợi nhuận theo thời gian</a></li>
                                 <li id="taxReport"><a onclick="NotificatePartialLink('http://localhost:2072/Tax/Index')" style="cursor: pointer"><i class=" fa fa-file-text-o"></i>Báo cáo thuế</a></li>
                             </ul>
                         </li>

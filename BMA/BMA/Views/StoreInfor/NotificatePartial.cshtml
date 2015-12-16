@@ -1,6 +1,16 @@
-﻿<script type="text/javascript">
+﻿
+@if (Session["UserRole"] != null)
+{
+    if ((int)Session["UserRole"] == 2)
+    {
+           <input type="hidden" value="1" id="checkToNotify" />
+    }
+}
+
+<script type="text/javascript">
+    var checkToNotify = $("#checkToNotify").val();
     function quantityLowThanStandard(info, source, type) {
-        if (info == 2) {
+        if (info == 2 && checkToNotify != null) {
             noty({
                 text: 'Có nguyên liệu số lượng quá thấp, vui lòng kiểm tra',
                 type: 'error',
@@ -35,7 +45,7 @@
     }
 
     function onChange(info, source, type) {
-        if (info == 1) {
+        if (info == 1 && checkToNotify != null) {
             noty({
                 text: 'Có một đơn hàng vừa được thêm mới.',
                 type: 'success',
@@ -69,7 +79,7 @@
     }
 
     function confirmOnChange(info, source, type) {
-        if (info == 2) {
+        if (info == 2 && checkToNotify != null) {
             noty({
                 text: 'Có một đơn hàng sang trạng thái <b>Đã duyệt</b>.',
                 type: 'success',
@@ -103,7 +113,7 @@
     }
 
     function cancelOnChange(info, source, type) {
-        if (info == 2) {
+        if (info == 2 && checkToNotify != null) {
             noty({
                 text: 'Có một đơn hàng vừa bị chuyển sang trạng thái <b>Đã hủy</b>.',
                 type: 'success',
@@ -146,17 +156,24 @@
     });
 </script>
 
-<a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick="resetNumberOfNoti()">
-    <i class="fa fa-bell-o"></i>
-    @if (ViewBag.notificatePartialCount == 0)
+@if (Session["User"] != null)
+{
+    if ((int)Session["UserRole"] == 2)
     {
-        <span class="label label-warning" id="numberOfNoti"></span>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick="resetNumberOfNoti()">
+            <i class="fa fa-bell-o"></i>
+            @if (ViewBag.notificatePartialCount == 0)
+            {
+                <span class="label label-warning" id="numberOfNoti"></span>
+            }
+            else
+            {
+                <span class="label label-warning" id="numberOfNoti">@ViewBag.notificatePartialCount</span>
+            }
+        </a>
     }
-    else
-    {
-        <span class="label label-warning" id="numberOfNoti">@ViewBag.notificatePartialCount</span>
-    }
-</a>
+}
+
 <script type="text/javascript">
     function resetNumberOfNoti() {
         $("#hiddenNumberOfNoti").attr('value', 0);
@@ -205,7 +222,7 @@
             <li>
                 <a onclick="RemoveCancelStatusNoty('http://localhost:2072/Order/Index')" style="cursor:pointer">
                     <i class="fa fa-times text-red"></i> Có
-                    @if (ViewBag.confirmOrderCountPartial == 0)
+                    @if (ViewBag.cancelOrderCountPartial == 0)
                     {
                         <span id="numberOfCancelOrder" data-role="numberOfCancelOrder">0</span>
                     }

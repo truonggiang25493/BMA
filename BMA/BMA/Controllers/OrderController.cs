@@ -28,12 +28,15 @@ namespace BMA.Controllers
                 if (Session["TempCusUserId"] != null)
                 {
                     int userId = (int)Session["TempCusUserId"];
-                    MvcApplication.changeStatusNotifer.Dispose();
-                    MvcApplication.confirmToCustomerNotifer.Dispose();
-                    string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId=", userId);
-                    Session["CheckToNotify"] = userId;
-                    MvcApplication.changeStatusNotifer.Start("BMAChangeDB", dependencyCheckSql);
-                    MvcApplication.changeStatusNotifer.Change += this.OnChange3;
+                    if (!MvcApplication.changeStatusNotifer.CheckConnection())
+                    {
+                        string dependencyCheckSql = string.Format("{0}{1}", "SELECT OrderStatus FROM dbo.[Orders] WHERE CustomerUserId=", userId);
+                        Session["CheckToNotify"] = userId;
+                        MvcApplication.changeStatusNotifer.Start("BMAChangeDB", dependencyCheckSql);
+                        MvcApplication.changeStatusNotifer.Change += this.OnChange3;
+                    }
+
+                    MvcApplication.confirmToCustomerNotifer.Dispose();              
                     Session["TempCusUserId"] = null;
                 }
                 // Check autherization

@@ -464,7 +464,7 @@
             </div>
         </div>
     }
-    else 
+    else
     {
 
 
@@ -524,7 +524,7 @@
                                             <button class="btn btn-primary btn-xs pull-right" onclick="exportMaterialPopup(@(orderItem.OutputMaterials.ElementAt(0).OutputMaterialId),@(orderItem.OutputMaterials.ElementAt(0).ProductMaterialId),'@Html.Raw(orderItem.OutputMaterials.ElementAt(0).ProductMaterial.ProductMaterialName)',@(orderItem.OutputMaterials.ElementAt(0).ProductMaterial.CurrentQuantity),'@Html.Raw(orderItem.Product.ProductName)')">Xuất thêm nguyên liệu</button>
                                         </td>
                                     }
-                                    
+
                                 </tr>
                                 for (int i = 1; i < orderItem.OutputMaterials.Count; i++)
                                 {
@@ -1048,7 +1048,9 @@
                                                         timeout: 3000
                                                     });
                                                     window.setTimeout(function () {
-                                                        window.location.replace("@(Url.Action("Index", "Order"))");
+                                                        window.setTimeout(function () {
+                                                            return NotificatePartialLink('@(Url.Action("Index", "Order"))')
+                                                        }, 4000);
                                                     }, 4000);
 
                                                 } else if (data === '-7') {
@@ -1511,6 +1513,7 @@
                     type: 'warning',
                     dismissQueue: false,
                     layout: 'topCenter',
+                    timeout: 500,
                     theme: 'defaultTheme'
                 });
             };
@@ -1677,11 +1680,11 @@
                                 dismissQueue: false,
                                 layout: 'topCenter',
                                 theme: 'defaultTheme',
-                                timeout: 3000
+                                timeout: 1500
                             });
                             window.setTimeout(function () {
-                                location.reload();
-                            }, 4000);
+                                return NotificatePartialLink('@(Url.Action("Detail", "Order", new { id = Model.Order.OrderId }))')
+                            }, 3000);
                         }
                         if (data === "0") {
                             $('#myModal').modal('hide');

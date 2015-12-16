@@ -16,7 +16,7 @@ namespace BMA.Controllers
         public ActionResult Index()
         {
             ManageMaterialBusiness mmb = new ManageMaterialBusiness();
-            var material = mmb.GetMaterial();
+            var material = mmb.GetMaterial().OrderByDescending(n => n.IsActive).ThenByDescending(n => n.CurrentQuantity < n.StandardQuantity).ToList();
             return View(material);
         }
 
@@ -95,8 +95,8 @@ namespace BMA.Controllers
                     {
                         mmb.ChangeStatus(materialId, radioButton);
                         return 1;
-                    }                   
-                }               
+                    }
+                }
             }
             catch
             {

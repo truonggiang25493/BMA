@@ -18,10 +18,30 @@ namespace BMA.Business
             db = new BMAEntities();
         }
 
+        public static bool CheckProductMaterial(int productMaterialId, int importQuantity, int inputMaterialId)
+        {
+            ProductMaterial productMaterial = new ProductMaterial();
+            if (inputMaterialId == 0)
+            {
+                productMaterial = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == productMaterialId && (n.CurrentQuantity + importQuantity) < n.StandardQuantity);
+            }
+            else
+            {
+                InputMaterial inputMaterialDetail = db.InputMaterials.SingleOrDefault(n => n.InputMaterialId == inputMaterialId);
+                int changeInputMaterialQuantity = importQuantity - inputMaterialDetail.RemainQuantity;
+                productMaterial = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == productMaterialId && (n.CurrentQuantity + changeInputMaterialQuantity) < n.StandardQuantity);
+            }
+            if (productMaterial != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         #region Get Input Material List
         public static List<InputMaterial> GetInputMaterialList()
         {
-            List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderByDescending(n => n.ImportDate).ThenByDescending(n=>n.IsActive).ToList();
+            List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderByDescending(n => n.ImportDate).ThenByDescending(n => n.IsActive).ToList();
             return inputMaterialslList;
         }
         #endregion
@@ -142,10 +162,6 @@ namespace BMA.Business
             {
                 string s = e.ToString();
                 return false;
-            }
-            finally
-            {
-                db.Dispose();
             }
             return true;
         }

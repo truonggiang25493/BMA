@@ -130,6 +130,7 @@
           <Property Name="Amount" Type="int" Nullable="false" />
           <Property Name="TaxAmount" Type="int" Nullable="false" />
           <Property Name="DiscountAmount" Type="int" Nullable="false" />
+          <Property Name="StaffEditTime" Type="datetime" />
         </EntityType>
         <EntityType Name="OtherExpense">
           <Key>
@@ -398,6 +399,7 @@
           <Property Name="Fullname" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="varchar" MaxLength="250" />
           <Property Name="IsConfirmed" Type="bit" Nullable="false" />
+          <Property Name="LogoutTime" Type="datetime" />
         </EntityType>
         <EntityType Name="VatTaxDeclaration">
           <Key>
@@ -1389,6 +1391,7 @@
           <Property Name="Amount" Type="Int32" Nullable="false" />
           <Property Name="TaxAmount" Type="Int32" Nullable="false" />
           <Property Name="DiscountAmount" Type="Int32" Nullable="false" />
+          <Property Name="StaffEditTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="GuestInfo" Relationship="BMAModel.FK_Orders_GuestInfo" FromRole="Order" ToRole="GuestInfo" />
           <NavigationProperty Name="OrderItems" Relationship="BMAModel.FK_OrderItem_Orders_OrderId" FromRole="Order" ToRole="OrderItem" />
           <NavigationProperty Name="Orders1" Relationship="BMAModel.FK__Orders_Orders_OrderId" FromRole="Order" ToRole="Order1" />
@@ -1682,6 +1685,7 @@
           <Property Name="Fullname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="LogoutTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Customers" Relationship="BMAModel.FK_Customer_User" FromRole="User" ToRole="Customer" />
           <NavigationProperty Name="Orders" Relationship="BMAModel.FK_Orders_User" FromRole="User" ToRole="Order" />
           <NavigationProperty Name="Orders1" Relationship="BMAModel.FK_Orders_User1" FromRole="User" ToRole="Order" />
@@ -2307,6 +2311,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="BMAModel.Order">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="StaffEditTime" ColumnName="StaffEditTime" />
                 <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
                 <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
@@ -2607,6 +2612,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="BMAModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="LogoutTime" ColumnName="LogoutTime" />
                 <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Fullname" ColumnName="Fullname" />

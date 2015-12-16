@@ -117,9 +117,11 @@ namespace BMA.Controllers
             try
             {
                 MvcApplication.cancelOrderNotifier.Dispose();
-                MvcApplication.lowQuantityNotifer.Dispose();
-                MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
-                MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                if (!MvcApplication.lowQuantityNotifer.CheckConnection())
+                {
+                    MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                    MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                }
                 CusManageBusiness cmb = new CusManageBusiness();
                 //string orderStatus = f["searchStatus"];
                 //string fromDate = f["searchFromDate"];
@@ -164,9 +166,11 @@ namespace BMA.Controllers
             {
                 MvcApplication.changeToConfirmNotifier.Dispose();
                 MvcApplication.cancelOrderNotifier.Dispose();
-                MvcApplication.lowQuantityNotifer.Dispose();
-                MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
-                MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                if (!MvcApplication.lowQuantityNotifer.CheckConnection())
+                {
+                    MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                    MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                }
                 CusManageBusiness cmb = new CusManageBusiness();
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);

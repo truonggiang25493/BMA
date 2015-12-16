@@ -344,8 +344,8 @@
                                                         timeout: 1500
                                                     });
                                                     window.setTimeout(function () {
-                                                        window.location.replace("@(Url.Action("InputMaterialIndex", "InputMaterial"))");
-                                                    }, 2000);
+                                                        return NotificatePartialLink('@(Url.Action("InputMaterialIndex", "InputMaterial"))')
+                                                    }, 3000);
                                                 } else if (data === "-1") {
                                                     noty({
                                                         text: 'Ngày hết hạn phải lớn hơn ngày nhập.',
@@ -408,7 +408,7 @@
     </script>
 </section>
 @section EditInputMaterialScript{
-<script src="~/Scripts/numeral.js"></script>
+    <script src="~/Scripts/numeral.js"></script>
     <script type="text/javascript">
         $(function () {
             $('#datetimepicker6').datetimepicker({
@@ -454,7 +454,7 @@
     </script>
 
     <script type="text/javascript">
-        $(document).on("keyup", "#txtImportQuantity", function() {
+        $(document).on("keyup", "#txtImportQuantity", function () {
             var importQuantity = $("#txtImportQuantity").val();
             var inputMaterialPrice = $("#txtInputMaterialPrice").val();
             var unitPrice = Math.ceil(inputMaterialPrice / importQuantity);

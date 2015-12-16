@@ -213,7 +213,9 @@
                                                                     timeout: 1500
                                                                 });
                                                                 $('#myModal').modal('hide');
-                                                                window.location.replace("@Url.Action("InputMaterialIndex", "InputMaterial")");
+                                                                window.setTimeout(function () {
+                                                                    return NotificatePartialLink('@(Url.Action("InputMaterialIndex", "InputMaterial"))')
+                                                                }, 3000);
                                                             } else {
                                                                 noty({
                                                                     text: 'Không thể hủy nguyên liệu đầu vào',
@@ -301,17 +303,17 @@
         <div class="row">
             <div class="col-xs-12">
                 @if (Model.RemainQuantity > 0 && (DateTime.Compare(@Model.InputMaterialExpiryDate, DateTime.Today) >= 1) && (Model.RemainQuantity == Model.ImportQuantity))
-            {
+                {
                 <!-- Edit button -->
-            <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputMaterial()">
-                <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
-                <script type="text/javascript">
-                        function editInputMaterial() {
-                            window.location.replace("@(Url.Action("EditInputMaterial", "InputMaterial", new {@id = Model.InputMaterialId}))");
-                        }
-                </script>
-            </button>
-            }
+                    <button class="btn btn-primary pull-right" style="margin-right: 25px;" onclick="editInputMaterial()">
+                        <i class="fa fa-edit" style="margin-right: 3px;"></i>Chỉnh sửa
+                        <script type="text/javascript">
+                            function editInputMaterial() {
+                                window.location.replace("@(Url.Action("EditInputMaterial", "InputMaterial", new {@id = Model.InputMaterialId}))");
+                            }
+                        </script>
+                    </button>
+                }
             </div>
         </div>
     }
