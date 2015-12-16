@@ -319,31 +319,9 @@
                         <li class="dropdown notifications-menu">
                             @Html.Action("NotificatePartial", "StoreInfor")
                         </li>
-                        <!-- User Account: style can be found in dropdown.less -->
+                        <!-- Manager user login -->
                         <li class="dropdown user user-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="user-image" alt="User Image">
-                                <span class="hidden-xs">@(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "")</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <!-- User image -->
-                                <li class="user-header">
-                                    <img src="/Content/AdminLayout/dist/img/Admin 128x128.png" class="img-circle" alt="User Image">
-                                    <p>
-                                        @(Session["User"] != null ? (Session["User"] as BMA.Models.User).Username : "") - @((Session["UserRole"]) == null ? "" : (((int)Session["UserRole"]) == 1 ? "Quản lý" : (((int)Session["UserRole"]) == 2 ? "Nhân viên" : "")))
-                                        <small></small>
-                                    </p>
-                                </li>
-                                <!-- Menu Footer-->
-                                <li class="user-footer">
-                                    <div class="pull-left">
-                                        <a href="@Url.Action("Index", "Manage", new { userId = (Session["User"] as BMA.Models.User).UserId })" class="btn btn-default btn-flat">Thông tin cá nhân</a>
-                                    </div>
-                                    <div class="pull-right">
-                                        <a href="@Url.Action("Logout", "Account")" class="btn btn-default btn-flat">Đăng xuất</a>
-                                    </div>
-                                </li>
-                            </ul>
+                           @Html.Action("ManageUserLogin", "Account")
                         </li>
                     </ul>
                 </div>
