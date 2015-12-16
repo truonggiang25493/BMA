@@ -34,27 +34,35 @@ namespace BMA.Controllers
         [HttpPost]
         public int ChangeVat(FormCollection form)
         {
-            string vatRateString = form["vatRate"];
-            string beginDateString = form["vatBeginDate"];
-            if (!(vatRateString.IsEmpty() || beginDateString.IsEmpty()))
+            try
             {
-                int vatRate;
+                string vatRateString = form["vatRate"];
+                string beginDateString = form["vatBeginDate"];
+                if (!(vatRateString.IsEmpty() || beginDateString.IsEmpty()))
+                {
+                    int vatRate;
 
-                if (!(int.TryParse(vatRateString, out vatRate)))
-                {
-                    return 0;
+                    if (!(int.TryParse(vatRateString, out vatRate)))
+                    {
+                        return 0;
+                    }
+                    DateTime beginDate;
+                    DateTime.TryParse(beginDateString, out beginDate);
+                    if (!(DateTime.TryParse(beginDateString, out beginDate)))
+                    {
+                        return 0;
+                    }
+                    TaxBusiness taxBusiness = new TaxBusiness();
+                    bool rs = taxBusiness.ChangeVat(vatRate, beginDate);
+                    return rs ? 1 : 0;
                 }
-                DateTime beginDate;
-                DateTime.TryParse(beginDateString, out beginDate);
-                if (!(DateTime.TryParse(beginDateString, out beginDate)))
-                {
-                    return 0;
-                }
-                TaxBusiness taxBusiness = new TaxBusiness();
-                bool rs = taxBusiness.ChangeVat(vatRate, beginDate);
-                return rs ? 1 : 0;
+                return 0;
             }
-            return 0;
+            catch (Exception)
+            {
+                return 0;
+            }
+
         }
 
         public ActionResult OutputVatList()
@@ -63,1759 +71,1791 @@ namespace BMA.Controllers
         }
         public ActionResult VatTaxDeclaration(int quarter, int year)
         {
-            TaxBusiness business = new TaxBusiness();
-            DeclarationVatForm result = business.GetVatTaxDeclaration(quarter, year);
+            try
+            {
+                TaxBusiness business = new TaxBusiness();
+                DeclarationVatForm result = business.GetVatTaxDeclaration(quarter, year);
 
-            return View(result);
+                return View(result);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+
         }
 
         public int SaveVatTaxDeclaration(FormCollection form)
         {
-
-            #region Get data from Form
-
-            string taxQuarter = form["taxQuarter"];
-            string taxYear = form["taxYear"];
-
-            string storeOwnerName = form["storeOwnerName"];
-            string storeTaxcode = form["storeTaxcode"].Replace(",", "");
-            string storeAddress = form["storeAddress"];
-            string storeDistrict = form["storeDistrict"];
-            string storeProvince = form["storeProvince"];
-            string storePhone = form["storePhone"];
-            string storeFax = form["storeFax"];
-            string storeEmail = form["storeEmail"];
-
-            string vatAgentOwnerName = form["vatAgentOwnerName"];
-            string vatAgentName = form["agentName"];
-            string vatAgentTaxCode = form["agentTaxCode"].Replace(",", "");
-            string vatAgentNo = form["agentNo"];
-            string vatAgentAddress = form["vatAgentAddress"];
-            string vatAgentDistrict = form["vatAgentDistrict"];
-            string vatAgentProvince = form["vatAgentProvince"];
-            string vatAgentPhone = form["vatAgentPhone"];
-            string vatAgentFax = form["vatAgentFax"];
-            string vatAgentEmail = form["vatAgentEmail"];
-
-            string value20No = form["value20No"];
-            string value20Date = form["value20Date"];
-            string value21 = form["value21"];
-            string value22 = form["value22"].Replace(".", "");
-            string value25 = form["value25"].Replace(".", "");
-            string value36 = form["value36"].Replace(".", "");
-            string value37 = form["value37"].Replace(".", "");
-            string value38 = form["value38"].Replace(".", "");
-            string value39 = form["value39"].Replace(".", "");
-            string value40a = form["value40a"].Replace(".", "");
-            string value40b = form["value40b"].Replace(".", "");
-            string value40 = form["value40"].Replace(".", "");
-            string value41 = form["value41"].Replace(".", "");
-            string value42 = form["value42"].Replace(".", "");
-            string value43 = form["value43"].Replace(".", "");
-
-
-            string signName = form["signName"];
-            string createDate = form["createDate"];
-            string createLocation = form["createLocation"];
-
-            string outputCategory1Column2 = form["output_category1_column2"];
-            string outputCategory1Column3 = form["output_category1_column3"];
-            string outputCategory1Column4 = form["output_category1_column4"];
-            string outputCategory1Column5 = form["output_category1_column5"];
-            string outputCategory1Column6 = form["output_category1_column6"];
-            string outputCategory1Column7 = form["output_category1_column7"];
-            string outputCategory1Column8 = form["output_category1_column8"];
-
-            string outputCategory2Column2 = form["output_category2_column2"];
-            string outputCategory2Column3 = form["output_category2_column3"];
-            string outputCategory2Column4 = form["output_category2_column4"];
-            string outputCategory2Column5 = form["output_category2_column5"];
-            string outputCategory2Column6 = form["output_category2_column6"];
-            string outputCategory2Column7 = form["output_category2_column7"];
-            string outputCategory2Column8 = form["output_category2_column8"];
-
-            string outputCategory3Column2 = form["output_category3_column2"];
-            string outputCategory3Column3 = form["output_category3_column3"];
-            string outputCategory3Column4 = form["output_category3_column4"];
-            string outputCategory3Column5 = form["output_category3_column5"];
-            string outputCategory3Column6 = form["output_category3_column6"];
-            string outputCategory3Column7 = form["output_category3_column7"];
-            string outputCategory3Column8 = form["output_category3_column8"];
-
-            string outputCategory4Column2 = form["output_category4_column2"];
-            string outputCategory4Column3 = form["output_category4_column3"];
-            string outputCategory4Column4 = form["output_category4_column4"];
-            string outputCategory4Column5 = form["output_category4_column5"];
-            string outputCategory4Column6 = form["output_category4_column6"];
-            string outputCategory4Column7 = form["output_category4_column7"];
-            string outputCategory4Column8 = form["output_category4_column8"];
-
-            string inputCategory1Column2 = form["input_category1_column2"];
-            string inputCategory1Column3 = form["input_category1_column3"];
-            string inputCategory1Column4 = form["input_category1_column4"];
-            string inputCategory1Column5 = form["input_category1_column5"];
-            string inputCategory1Column6 = form["input_category1_column6"];
-            string inputCategory1Column7 = form["input_category1_column7"];
-            string inputCategory1Column8 = form["input_category1_column8"];
-
-            string inputCategory2Column2 = form["input_category2_column2"];
-            string inputCategory2Column3 = form["input_category2_column3"];
-            string inputCategory2Column4 = form["input_category2_column4"];
-            string inputCategory2Column5 = form["input_category2_column5"];
-            string inputCategory2Column6 = form["input_category2_column6"];
-            string inputCategory2Column7 = form["input_category2_column7"];
-            string inputCategory2Column8 = form["input_category2_column8"];
-
-            string inputCategory3Column2 = form["input_category3_column2"];
-            string inputCategory3Column3 = form["input_category3_column3"];
-            string inputCategory3Column4 = form["input_category3_column4"];
-            string inputCategory3Column5 = form["input_category3_column5"];
-            string inputCategory3Column6 = form["input_category3_column6"];
-            string inputCategory3Column7 = form["input_category3_column7"];
-            string inputCategory3Column8 = form["input_category3_column8"];
-
-            #endregion
-
-            #region ProcessData
-
-            Models.VatTaxDeclaration taxDeclaration = new VatTaxDeclaration();
-
-            taxDeclaration.Quarter = Convert.ToInt32(taxQuarter);
-            taxDeclaration.Year = Convert.ToInt32(taxYear);
-
-            taxDeclaration.StoreOwnerName = storeOwnerName;
-            taxDeclaration.StoreTaxCode = storeTaxcode;
-            taxDeclaration.StoreAddress = storeAddress;
-            taxDeclaration.StoreDistrict = storeDistrict;
-            taxDeclaration.StoreProvince = storeProvince;
-            taxDeclaration.StorePhone = storePhone;
-            taxDeclaration.StoreEmail = storeEmail;
-            taxDeclaration.StoreFax = storeFax;
-
-            taxDeclaration.TaxAgentOwnerName = vatAgentOwnerName;
-            taxDeclaration.TaxAgentTaxCode = vatAgentTaxCode;
-            taxDeclaration.TaxAgentAddress = vatAgentAddress;
-            taxDeclaration.TaxAgentDistrict = vatAgentDistrict;
-            taxDeclaration.TaxAgentProvince = vatAgentProvince;
-            taxDeclaration.TaxAgentPhone = vatAgentPhone;
-            taxDeclaration.TaxAgentEmail = vatAgentEmail;
-            taxDeclaration.TaxAgentFax = vatAgentFax;
-            taxDeclaration.TaxAgentName = vatAgentName;
-            taxDeclaration.TaxAgentNo = vatAgentNo;
-
-            //taxDeclaration.CreateLocation = createLocation;
-            //taxDeclaration.CreateDate = DateTime.ParseExact(createDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            //taxDeclaration.SignName = signName;
-            //taxDeclaration.Value20No = value20No;
-            //taxDeclaration.Value20Date = DateTime.ParseExact(value20Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-
-            //taxDeclaration.Value21 = Convert.ToInt32(value21);
-            taxDeclaration.Value22 = Convert.ToInt32(value22);
-            taxDeclaration.Value25 = Convert.ToInt32(value25);
-            taxDeclaration.Value36 = Convert.ToInt32(value36);
-            taxDeclaration.Value37 = Convert.ToInt32(value37);
-            taxDeclaration.Value38 = Convert.ToInt32(value38);
-            taxDeclaration.Value39 = Convert.ToInt32(value39);
-            taxDeclaration.Value40 = Convert.ToInt32(value40);
-            taxDeclaration.Value40a = Convert.ToInt32(value40a);
-            taxDeclaration.Value40b = Convert.ToInt32(value40b);
-            taxDeclaration.Value41 = Convert.ToInt32(value41);
-            taxDeclaration.Value42 = Convert.ToInt32(value42);
-            taxDeclaration.Value43 = Convert.ToInt32(value43);
-
-            #region Output
-
-            int totalOutputAmount = 0;
-            int haveTaxTotalOutputAmount = 0;
-            int totalTaxOutputAmount = 0;
-
-            #region OutputCategory1
-
-            string outputCategory1 = "";
-
-            if (outputCategory1Column4 != null)
+            try
             {
-                string[] outputCategory1Column2Array = outputCategory1Column2.Split(',');
-                string[] outputCategory1Column3Array = outputCategory1Column3.Split(',');
-                string[] outputCategory1Column4Array = outputCategory1Column4.Split(',');
-                string[] outputCategory1Column5Array = outputCategory1Column5.Split(',');
-                string[] outputCategory1Column6Array = outputCategory1Column6.Split(',');
-                string[] outputCategory1Column7Array = outputCategory1Column7.Split(',');
-                string[] outputCategory1Column8Array = outputCategory1Column8.Split(',');
 
-                int totalOutputCategory1 = 0;
+                #region Get data from Form
 
-                for (int i = 0; i < outputCategory1Column4Array.Length; i++)
+                string taxQuarter = form["taxQuarter"];
+                string taxYear = form["taxYear"];
+
+                string storeOwnerName = form["storeOwnerName"];
+                string storeTaxcode = form["storeTaxcode"].Replace(",", "");
+                string storeAddress = form["storeAddress"];
+                string storeDistrict = form["storeDistrict"];
+                string storeProvince = form["storeProvince"];
+                string storePhone = form["storePhone"];
+                string storeFax = form["storeFax"];
+                string storeEmail = form["storeEmail"];
+
+                string vatAgentOwnerName = form["vatAgentOwnerName"];
+                string vatAgentName = form["agentName"];
+                string vatAgentTaxCode = form["agentTaxCode"].Replace(",", "");
+                string vatAgentNo = form["agentNo"];
+                string vatAgentAddress = form["vatAgentAddress"];
+                string vatAgentDistrict = form["vatAgentDistrict"];
+                string vatAgentProvince = form["vatAgentProvince"];
+                string vatAgentPhone = form["vatAgentPhone"];
+                string vatAgentFax = form["vatAgentFax"];
+                string vatAgentEmail = form["vatAgentEmail"];
+
+                string value20No = form["value20No"];
+                string value20Date = form["value20Date"];
+                string value21 = form["value21"];
+                string value22 = form["value22"].Replace(".", "");
+                string value25 = form["value25"].Replace(".", "");
+                string value36 = form["value36"].Replace(".", "");
+                string value37 = form["value37"].Replace(".", "");
+                string value38 = form["value38"].Replace(".", "");
+                string value39 = form["value39"].Replace(".", "");
+                string value40a = form["value40a"].Replace(".", "");
+                string value40b = form["value40b"].Replace(".", "");
+                string value40 = form["value40"].Replace(".", "");
+                string value41 = form["value41"].Replace(".", "");
+                string value42 = form["value42"].Replace(".", "");
+                string value43 = form["value43"].Replace(".", "");
+
+
+                string signName = form["signName"];
+                string createDate = form["createDate"];
+                string createLocation = form["createLocation"];
+
+                string outputCategory1Column2 = form["output_category1_column2"];
+                string outputCategory1Column3 = form["output_category1_column3"];
+                string outputCategory1Column4 = form["output_category1_column4"];
+                string outputCategory1Column5 = form["output_category1_column5"];
+                string outputCategory1Column6 = form["output_category1_column6"];
+                string outputCategory1Column7 = form["output_category1_column7"];
+                string outputCategory1Column8 = form["output_category1_column8"];
+
+                string outputCategory2Column2 = form["output_category2_column2"];
+                string outputCategory2Column3 = form["output_category2_column3"];
+                string outputCategory2Column4 = form["output_category2_column4"];
+                string outputCategory2Column5 = form["output_category2_column5"];
+                string outputCategory2Column6 = form["output_category2_column6"];
+                string outputCategory2Column7 = form["output_category2_column7"];
+                string outputCategory2Column8 = form["output_category2_column8"];
+
+                string outputCategory3Column2 = form["output_category3_column2"];
+                string outputCategory3Column3 = form["output_category3_column3"];
+                string outputCategory3Column4 = form["output_category3_column4"];
+                string outputCategory3Column5 = form["output_category3_column5"];
+                string outputCategory3Column6 = form["output_category3_column6"];
+                string outputCategory3Column7 = form["output_category3_column7"];
+                string outputCategory3Column8 = form["output_category3_column8"];
+
+                string outputCategory4Column2 = form["output_category4_column2"];
+                string outputCategory4Column3 = form["output_category4_column3"];
+                string outputCategory4Column4 = form["output_category4_column4"];
+                string outputCategory4Column5 = form["output_category4_column5"];
+                string outputCategory4Column6 = form["output_category4_column6"];
+                string outputCategory4Column7 = form["output_category4_column7"];
+                string outputCategory4Column8 = form["output_category4_column8"];
+
+                string inputCategory1Column2 = form["input_category1_column2"];
+                string inputCategory1Column3 = form["input_category1_column3"];
+                string inputCategory1Column4 = form["input_category1_column4"];
+                string inputCategory1Column5 = form["input_category1_column5"];
+                string inputCategory1Column6 = form["input_category1_column6"];
+                string inputCategory1Column7 = form["input_category1_column7"];
+                string inputCategory1Column8 = form["input_category1_column8"];
+
+                string inputCategory2Column2 = form["input_category2_column2"];
+                string inputCategory2Column3 = form["input_category2_column3"];
+                string inputCategory2Column4 = form["input_category2_column4"];
+                string inputCategory2Column5 = form["input_category2_column5"];
+                string inputCategory2Column6 = form["input_category2_column6"];
+                string inputCategory2Column7 = form["input_category2_column7"];
+                string inputCategory2Column8 = form["input_category2_column8"];
+
+                string inputCategory3Column2 = form["input_category3_column2"];
+                string inputCategory3Column3 = form["input_category3_column3"];
+                string inputCategory3Column4 = form["input_category3_column4"];
+                string inputCategory3Column5 = form["input_category3_column5"];
+                string inputCategory3Column6 = form["input_category3_column6"];
+                string inputCategory3Column7 = form["input_category3_column7"];
+                string inputCategory3Column8 = form["input_category3_column8"];
+
+                #endregion
+
+                #region ProcessData
+
+                Models.VatTaxDeclaration taxDeclaration = new VatTaxDeclaration();
+
+                taxDeclaration.Quarter = Convert.ToInt32(taxQuarter);
+                taxDeclaration.Year = Convert.ToInt32(taxYear);
+
+                taxDeclaration.StoreOwnerName = storeOwnerName;
+                taxDeclaration.StoreTaxCode = storeTaxcode;
+                taxDeclaration.StoreAddress = storeAddress;
+                taxDeclaration.StoreDistrict = storeDistrict;
+                taxDeclaration.StoreProvince = storeProvince;
+                taxDeclaration.StorePhone = storePhone;
+                taxDeclaration.StoreEmail = storeEmail;
+                taxDeclaration.StoreFax = storeFax;
+
+                taxDeclaration.TaxAgentOwnerName = vatAgentOwnerName;
+                taxDeclaration.TaxAgentTaxCode = vatAgentTaxCode;
+                taxDeclaration.TaxAgentAddress = vatAgentAddress;
+                taxDeclaration.TaxAgentDistrict = vatAgentDistrict;
+                taxDeclaration.TaxAgentProvince = vatAgentProvince;
+                taxDeclaration.TaxAgentPhone = vatAgentPhone;
+                taxDeclaration.TaxAgentEmail = vatAgentEmail;
+                taxDeclaration.TaxAgentFax = vatAgentFax;
+                taxDeclaration.TaxAgentName = vatAgentName;
+                taxDeclaration.TaxAgentNo = vatAgentNo;
+
+                //taxDeclaration.CreateLocation = createLocation;
+                //taxDeclaration.CreateDate = DateTime.ParseExact(createDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //taxDeclaration.SignName = signName;
+                //taxDeclaration.Value20No = value20No;
+                //taxDeclaration.Value20Date = DateTime.ParseExact(value20Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                //taxDeclaration.Value21 = Convert.ToInt32(value21);
+                taxDeclaration.Value22 = Convert.ToInt32(value22);
+                taxDeclaration.Value25 = Convert.ToInt32(value25);
+                taxDeclaration.Value36 = Convert.ToInt32(value36);
+                taxDeclaration.Value37 = Convert.ToInt32(value37);
+                taxDeclaration.Value38 = Convert.ToInt32(value38);
+                taxDeclaration.Value39 = Convert.ToInt32(value39);
+                taxDeclaration.Value40 = Convert.ToInt32(value40);
+                taxDeclaration.Value40a = Convert.ToInt32(value40a);
+                taxDeclaration.Value40b = Convert.ToInt32(value40b);
+                taxDeclaration.Value41 = Convert.ToInt32(value41);
+                taxDeclaration.Value42 = Convert.ToInt32(value42);
+                taxDeclaration.Value43 = Convert.ToInt32(value43);
+
+                #region Output
+
+                int totalOutputAmount = 0;
+                int haveTaxTotalOutputAmount = 0;
+                int totalTaxOutputAmount = 0;
+
+                #region OutputCategory1
+
+                string outputCategory1 = "";
+
+                if (outputCategory1Column4 != null)
                 {
-                    string eachOutputCategory1 = "";
+                    string[] outputCategory1Column2Array = outputCategory1Column2.Split(',');
+                    string[] outputCategory1Column3Array = outputCategory1Column3.Split(',');
+                    string[] outputCategory1Column4Array = outputCategory1Column4.Split(',');
+                    string[] outputCategory1Column5Array = outputCategory1Column5.Split(',');
+                    string[] outputCategory1Column6Array = outputCategory1Column6.Split(',');
+                    string[] outputCategory1Column7Array = outputCategory1Column7.Split(',');
+                    string[] outputCategory1Column8Array = outputCategory1Column8.Split(',');
 
-                    eachOutputCategory1 += outputCategory1Column2Array[i] + ",";
-                    eachOutputCategory1 += outputCategory1Column3Array[i] + ",";
-                    eachOutputCategory1 += outputCategory1Column4Array[i] + ",";
-                    eachOutputCategory1 += outputCategory1Column5Array[i] + ",";
-                    eachOutputCategory1 += outputCategory1Column6Array[i].Replace(".", "") + ",";
-                    eachOutputCategory1 += outputCategory1Column7Array[i].Replace(".", "") + ",";
-                    eachOutputCategory1 += outputCategory1Column8Array[i];
+                    int totalOutputCategory1 = 0;
 
-                    int categoryColumn6Number = Convert.ToInt32(outputCategory1Column6Array[i].Replace(".", ""));
-                    totalOutputCategory1 += categoryColumn6Number;
+                    for (int i = 0; i < outputCategory1Column4Array.Length; i++)
+                    {
+                        string eachOutputCategory1 = "";
+
+                        eachOutputCategory1 += outputCategory1Column2Array[i] + ",";
+                        eachOutputCategory1 += outputCategory1Column3Array[i] + ",";
+                        eachOutputCategory1 += outputCategory1Column4Array[i] + ",";
+                        eachOutputCategory1 += outputCategory1Column5Array[i] + ",";
+                        eachOutputCategory1 += outputCategory1Column6Array[i].Replace(".", "") + ",";
+                        eachOutputCategory1 += outputCategory1Column7Array[i].Replace(".", "") + ",";
+                        eachOutputCategory1 += outputCategory1Column8Array[i];
+
+                        int categoryColumn6Number = Convert.ToInt32(outputCategory1Column6Array[i].Replace(".", ""));
+                        totalOutputCategory1 += categoryColumn6Number;
 
 
-                    outputCategory1 += eachOutputCategory1 + ";";
+                        outputCategory1 += eachOutputCategory1 + ";";
+                    }
+
+                    taxDeclaration.OutputCategory1TotalAmountValue26 = totalOutputCategory1;
+
+                    totalOutputAmount += totalOutputCategory1;
                 }
 
-                taxDeclaration.OutputCategory1TotalAmountValue26 = totalOutputCategory1;
+                taxDeclaration.OutputCategory1 = outputCategory1;
 
-                totalOutputAmount += totalOutputCategory1;
-            }
+                #endregion
 
-            taxDeclaration.OutputCategory1 = outputCategory1;
+                #region OutputCategory2
 
-            #endregion
+                string outputCategory2 = "";
 
-            #region OutputCategory2
-
-            string outputCategory2 = "";
-
-            if (outputCategory2Column4 != null)
-            {
-                string[] outputCategory2Column2Array = outputCategory2Column2.Split(',');
-                string[] outputCategory2Column3Array = outputCategory2Column3.Split(',');
-                string[] outputCategory2Column4Array = outputCategory2Column4.Split(',');
-                string[] outputCategory2Column5Array = outputCategory2Column5.Split(',');
-                string[] outputCategory2Column6Array = outputCategory2Column6.Split(',');
-                string[] outputCategory2Column7Array = outputCategory2Column7.Split(',');
-                string[] outputCategory2Column8Array = outputCategory2Column8.Split(',');
-
-                int totalOutputCategory2 = 0;
-
-                for (int i = 0; i < outputCategory2Column4Array.Length; i++)
+                if (outputCategory2Column4 != null)
                 {
-                    string eachOutputCategory2 = "";
+                    string[] outputCategory2Column2Array = outputCategory2Column2.Split(',');
+                    string[] outputCategory2Column3Array = outputCategory2Column3.Split(',');
+                    string[] outputCategory2Column4Array = outputCategory2Column4.Split(',');
+                    string[] outputCategory2Column5Array = outputCategory2Column5.Split(',');
+                    string[] outputCategory2Column6Array = outputCategory2Column6.Split(',');
+                    string[] outputCategory2Column7Array = outputCategory2Column7.Split(',');
+                    string[] outputCategory2Column8Array = outputCategory2Column8.Split(',');
 
-                    eachOutputCategory2 += outputCategory2Column2Array[i] + ",";
-                    eachOutputCategory2 += outputCategory2Column3Array[i] + ",";
-                    eachOutputCategory2 += outputCategory2Column4Array[i] + ",";
-                    eachOutputCategory2 += outputCategory2Column5Array[i] + ",";
-                    eachOutputCategory2 += outputCategory2Column6Array[i].Replace(".", "") + ",";
-                    eachOutputCategory2 += outputCategory2Column7Array[i].Replace(".", "") + ",";
-                    eachOutputCategory2 += outputCategory2Column8Array[i];
+                    int totalOutputCategory2 = 0;
 
-                    int categoryColumn6Number = Convert.ToInt32(outputCategory2Column6Array[i].Replace(".", ""));
-                    totalOutputCategory2 += categoryColumn6Number;
+                    for (int i = 0; i < outputCategory2Column4Array.Length; i++)
+                    {
+                        string eachOutputCategory2 = "";
 
-                    outputCategory2 += eachOutputCategory2 + ";";
+                        eachOutputCategory2 += outputCategory2Column2Array[i] + ",";
+                        eachOutputCategory2 += outputCategory2Column3Array[i] + ",";
+                        eachOutputCategory2 += outputCategory2Column4Array[i] + ",";
+                        eachOutputCategory2 += outputCategory2Column5Array[i] + ",";
+                        eachOutputCategory2 += outputCategory2Column6Array[i].Replace(".", "") + ",";
+                        eachOutputCategory2 += outputCategory2Column7Array[i].Replace(".", "") + ",";
+                        eachOutputCategory2 += outputCategory2Column8Array[i];
+
+                        int categoryColumn6Number = Convert.ToInt32(outputCategory2Column6Array[i].Replace(".", ""));
+                        totalOutputCategory2 += categoryColumn6Number;
+
+                        outputCategory2 += eachOutputCategory2 + ";";
+                    }
+
+                    taxDeclaration.OutputCategory2TotalAmountValue29 = totalOutputCategory2;
+
+                    haveTaxTotalOutputAmount += totalOutputCategory2;
+                    totalOutputAmount += totalOutputCategory2;
                 }
 
-                taxDeclaration.OutputCategory2TotalAmountValue29 = totalOutputCategory2;
+                taxDeclaration.OutputCategory2 = outputCategory2;
 
-                haveTaxTotalOutputAmount += totalOutputCategory2;
-                totalOutputAmount += totalOutputCategory2;
-            }
+                #endregion
 
-            taxDeclaration.OutputCategory2 = outputCategory2;
+                #region OutputCategory3
 
-            #endregion
+                string outputCategory3List = "";
 
-            #region OutputCategory3
-
-            string outputCategory3List = "";
-
-            if (outputCategory3Column4 != null)
-            {
-                string[] outputCategory3Column2Array = outputCategory3Column2.Split(',');
-                string[] outputCategory3Column3Array = outputCategory3Column3.Split(',');
-                string[] outputCategory3Column4Array = outputCategory3Column4.Split(',');
-                string[] outputCategory3Column5Array = outputCategory3Column5.Split(',');
-                string[] outputCategory3Column6Array = outputCategory3Column6.Split(',');
-                string[] outputCategory3Column7Array = outputCategory3Column7.Split(',');
-                string[] outputCategory3Column8Array = outputCategory3Column8.Split(',');
-
-
-                int totalOutputCategory3 = 0;
-                int totalTaxOutputCategory3 = 0;
-
-                for (int i = 0; i < outputCategory3Column4Array.Length; i++)
+                if (outputCategory3Column4 != null)
                 {
-                    string outputCategory3 = "";
-
-                    outputCategory3 += outputCategory3Column2Array[i] + ",";
-                    outputCategory3 += outputCategory3Column3Array[i] + ",";
-                    outputCategory3 += outputCategory3Column4Array[i] + ",";
-                    outputCategory3 += outputCategory3Column5Array[i] + ",";
-                    outputCategory3 += outputCategory3Column6Array[i].Replace(".", "") + ",";
-                    outputCategory3 += outputCategory3Column7Array[i].Replace(".", "") + ",";
-                    outputCategory3 += outputCategory3Column8Array[i];
-
-                    int categoryColumn6Number = Convert.ToInt32(outputCategory3Column6Array[i].Replace(".", ""));
-                    totalOutputCategory3 += categoryColumn6Number;
+                    string[] outputCategory3Column2Array = outputCategory3Column2.Split(',');
+                    string[] outputCategory3Column3Array = outputCategory3Column3.Split(',');
+                    string[] outputCategory3Column4Array = outputCategory3Column4.Split(',');
+                    string[] outputCategory3Column5Array = outputCategory3Column5.Split(',');
+                    string[] outputCategory3Column6Array = outputCategory3Column6.Split(',');
+                    string[] outputCategory3Column7Array = outputCategory3Column7.Split(',');
+                    string[] outputCategory3Column8Array = outputCategory3Column8.Split(',');
 
 
-                    int categoryColumn7Number = Convert.ToInt32(outputCategory3Column7Array[i].Replace(".", ""));
-                    totalTaxOutputCategory3 += categoryColumn7Number;
+                    int totalOutputCategory3 = 0;
+                    int totalTaxOutputCategory3 = 0;
 
-                    outputCategory3List += outputCategory3 + ";";
+                    for (int i = 0; i < outputCategory3Column4Array.Length; i++)
+                    {
+                        string outputCategory3 = "";
+
+                        outputCategory3 += outputCategory3Column2Array[i] + ",";
+                        outputCategory3 += outputCategory3Column3Array[i] + ",";
+                        outputCategory3 += outputCategory3Column4Array[i] + ",";
+                        outputCategory3 += outputCategory3Column5Array[i] + ",";
+                        outputCategory3 += outputCategory3Column6Array[i].Replace(".", "") + ",";
+                        outputCategory3 += outputCategory3Column7Array[i].Replace(".", "") + ",";
+                        outputCategory3 += outputCategory3Column8Array[i];
+
+                        int categoryColumn6Number = Convert.ToInt32(outputCategory3Column6Array[i].Replace(".", ""));
+                        totalOutputCategory3 += categoryColumn6Number;
+
+
+                        int categoryColumn7Number = Convert.ToInt32(outputCategory3Column7Array[i].Replace(".", ""));
+                        totalTaxOutputCategory3 += categoryColumn7Number;
+
+                        outputCategory3List += outputCategory3 + ";";
+                    }
+
+                    taxDeclaration.OutputCategory3TotalAmountValue30 = totalOutputCategory3;
+                    taxDeclaration.OutputCategory3TotalTaxAmountValue31 = totalTaxOutputCategory3;
+
+                    totalOutputAmount += totalOutputCategory3;
+                    haveTaxTotalOutputAmount += totalOutputCategory3;
+                    totalTaxOutputAmount += totalTaxOutputCategory3;
                 }
 
-                taxDeclaration.OutputCategory3TotalAmountValue30 = totalOutputCategory3;
-                taxDeclaration.OutputCategory3TotalTaxAmountValue31 = totalTaxOutputCategory3;
+                taxDeclaration.OutputCategory3 = outputCategory3List;
 
-                totalOutputAmount += totalOutputCategory3;
-                haveTaxTotalOutputAmount += totalOutputCategory3;
-                totalTaxOutputAmount += totalTaxOutputCategory3;
-            }
+                #endregion
 
-            taxDeclaration.OutputCategory3 = outputCategory3List;
+                #region OutputCategory4
 
-            #endregion
+                string outputCategory4List = "";
 
-            #region OutputCategory4
-
-            string outputCategory4List = "";
-
-            if (outputCategory4Column4 != null)
-            {
-                string[] outputCategory4Column2Array = outputCategory4Column2.Split(',');
-                string[] outputCategory4Column3Array = outputCategory4Column3.Split(',');
-                string[] outputCategory4Column4Array = outputCategory4Column4.Split(',');
-                string[] outputCategory4Column5Array = outputCategory4Column5.Split(',');
-                string[] outputCategory4Column6Array = outputCategory4Column6.Split(',');
-                string[] outputCategory4Column7Array = outputCategory4Column7.Split(',');
-                string[] outputCategory4Column8Array = outputCategory4Column8.Split(',');
-
-                int totalOutputCategory4 = 0;
-                int totalTaxOutputCategory4 = 0;
-
-                for (int i = 0; i < outputCategory4Column4Array.Length; i++)
+                if (outputCategory4Column4 != null)
                 {
-                    string outputCategory4 = "";
+                    string[] outputCategory4Column2Array = outputCategory4Column2.Split(',');
+                    string[] outputCategory4Column3Array = outputCategory4Column3.Split(',');
+                    string[] outputCategory4Column4Array = outputCategory4Column4.Split(',');
+                    string[] outputCategory4Column5Array = outputCategory4Column5.Split(',');
+                    string[] outputCategory4Column6Array = outputCategory4Column6.Split(',');
+                    string[] outputCategory4Column7Array = outputCategory4Column7.Split(',');
+                    string[] outputCategory4Column8Array = outputCategory4Column8.Split(',');
 
-                    outputCategory4 += outputCategory4Column2Array[i] + ",";
-                    outputCategory4 += outputCategory4Column3Array[i] + ",";
-                    outputCategory4 += outputCategory4Column4Array[i] + ",";
-                    outputCategory4 += outputCategory4Column5Array[i] + ",";
-                    outputCategory4 += outputCategory4Column6Array[i].Replace(".", "") + ",";
-                    outputCategory4 += outputCategory4Column7Array[i].Replace(".", "") + ",";
-                    outputCategory4 += outputCategory4Column8Array[i];
+                    int totalOutputCategory4 = 0;
+                    int totalTaxOutputCategory4 = 0;
 
-                    int categoryColumn6Number = Convert.ToInt32(outputCategory4Column6Array[i].Replace(".", ""));
-                    totalOutputCategory4 += categoryColumn6Number;
+                    for (int i = 0; i < outputCategory4Column4Array.Length; i++)
+                    {
+                        string outputCategory4 = "";
 
-                    int categoryColumn7Number = Convert.ToInt32(outputCategory4Column7Array[i].Replace(".", ""));
-                    totalTaxOutputCategory4 += categoryColumn7Number;
+                        outputCategory4 += outputCategory4Column2Array[i] + ",";
+                        outputCategory4 += outputCategory4Column3Array[i] + ",";
+                        outputCategory4 += outputCategory4Column4Array[i] + ",";
+                        outputCategory4 += outputCategory4Column5Array[i] + ",";
+                        outputCategory4 += outputCategory4Column6Array[i].Replace(".", "") + ",";
+                        outputCategory4 += outputCategory4Column7Array[i].Replace(".", "") + ",";
+                        outputCategory4 += outputCategory4Column8Array[i];
 
-                    outputCategory4List += outputCategory4 + ";";
+                        int categoryColumn6Number = Convert.ToInt32(outputCategory4Column6Array[i].Replace(".", ""));
+                        totalOutputCategory4 += categoryColumn6Number;
+
+                        int categoryColumn7Number = Convert.ToInt32(outputCategory4Column7Array[i].Replace(".", ""));
+                        totalTaxOutputCategory4 += categoryColumn7Number;
+
+                        outputCategory4List += outputCategory4 + ";";
+                    }
+
+                    taxDeclaration.OutputCategory4TotalAmountValue32 = totalOutputCategory4;
+                    taxDeclaration.OutputCategory4TotalTaxAmountValue33 = totalTaxOutputCategory4;
+
+                    totalOutputAmount += totalOutputCategory4;
+                    haveTaxTotalOutputAmount += totalOutputCategory4;
+                    totalTaxOutputAmount += totalTaxOutputCategory4;
                 }
 
-                taxDeclaration.OutputCategory4TotalAmountValue32 = totalOutputCategory4;
-                taxDeclaration.OutputCategory4TotalTaxAmountValue33 = totalTaxOutputCategory4;
+                taxDeclaration.OutputCategory4 = outputCategory4List;
 
-                totalOutputAmount += totalOutputCategory4;
-                haveTaxTotalOutputAmount += totalOutputCategory4;
-                totalTaxOutputAmount += totalTaxOutputCategory4;
-            }
-
-            taxDeclaration.OutputCategory4 = outputCategory4List;
-
-            #endregion
+                #endregion
 
 
-            taxDeclaration.OutputTotalAmountValue34 = totalOutputAmount;
-            taxDeclaration.OutputTotalTaxAmountValue28 = totalTaxOutputAmount;
-            taxDeclaration.HaveTaxOutputTotalAmountValue27 = haveTaxTotalOutputAmount;
+                taxDeclaration.OutputTotalAmountValue34 = totalOutputAmount;
+                taxDeclaration.OutputTotalTaxAmountValue28 = totalTaxOutputAmount;
+                taxDeclaration.HaveTaxOutputTotalAmountValue27 = haveTaxTotalOutputAmount;
 
-            #endregion
+                #endregion
 
-            #region Input
+                #region Input
 
-            int totalInputAmount = 0;
-            int totalTaxInputAmount = 0;
+                int totalInputAmount = 0;
+                int totalTaxInputAmount = 0;
 
-            #region InputCategory1
+                #region InputCategory1
 
-            string inputCategory1List = "";
+                string inputCategory1List = "";
 
-            if (inputCategory1Column4 != null)
-            {
-                string[] inputCategory1Column2Array = inputCategory1Column2.Split(',');
-                string[] inputCategory1Column3Array = inputCategory1Column3.Split(',');
-                string[] inputCategory1Column4Array = inputCategory1Column4.Split(',');
-                string[] inputCategory1Column5Array = inputCategory1Column5.Split(',');
-                string[] inputCategory1Column6Array = inputCategory1Column6.Split(',');
-                string[] inputCategory1Column7Array = inputCategory1Column7.Split(',');
-                string[] inputCategory1Column8Array = inputCategory1Column8.Split(',');
-
-                int totalInputCategory1 = 0;
-                int totalTaxInputCategory1 = 0;
-
-                for (int i = 0; i < inputCategory1Column4Array.Length; i++)
+                if (inputCategory1Column4 != null)
                 {
-                    string inputCategory1 = "";
+                    string[] inputCategory1Column2Array = inputCategory1Column2.Split(',');
+                    string[] inputCategory1Column3Array = inputCategory1Column3.Split(',');
+                    string[] inputCategory1Column4Array = inputCategory1Column4.Split(',');
+                    string[] inputCategory1Column5Array = inputCategory1Column5.Split(',');
+                    string[] inputCategory1Column6Array = inputCategory1Column6.Split(',');
+                    string[] inputCategory1Column7Array = inputCategory1Column7.Split(',');
+                    string[] inputCategory1Column8Array = inputCategory1Column8.Split(',');
 
-                    inputCategory1 += inputCategory1Column2Array[i] + ",";
-                    inputCategory1 += inputCategory1Column3Array[i] + ",";
-                    inputCategory1 += inputCategory1Column4Array[i] + ",";
-                    inputCategory1 += inputCategory1Column5Array[i] + ",";
-                    inputCategory1 += inputCategory1Column6Array[i].Replace(".", "") + ",";
-                    inputCategory1 += inputCategory1Column7Array[i].Replace(".", "") + ",";
-                    inputCategory1 += inputCategory1Column8Array[i];
+                    int totalInputCategory1 = 0;
+                    int totalTaxInputCategory1 = 0;
 
-                    int categoryColumn6Number = Convert.ToInt32(inputCategory1Column6Array[i].Replace(".", ""));
-                    totalInputCategory1 += categoryColumn6Number;
+                    for (int i = 0; i < inputCategory1Column4Array.Length; i++)
+                    {
+                        string inputCategory1 = "";
 
-                    int categoryColumn7Number = Convert.ToInt32(inputCategory1Column7Array[i].Replace(".", ""));
-                    totalTaxInputCategory1 += categoryColumn7Number;
+                        inputCategory1 += inputCategory1Column2Array[i] + ",";
+                        inputCategory1 += inputCategory1Column3Array[i] + ",";
+                        inputCategory1 += inputCategory1Column4Array[i] + ",";
+                        inputCategory1 += inputCategory1Column5Array[i] + ",";
+                        inputCategory1 += inputCategory1Column6Array[i].Replace(".", "") + ",";
+                        inputCategory1 += inputCategory1Column7Array[i].Replace(".", "") + ",";
+                        inputCategory1 += inputCategory1Column8Array[i];
 
-                    inputCategory1List += inputCategory1 + ";";
+                        int categoryColumn6Number = Convert.ToInt32(inputCategory1Column6Array[i].Replace(".", ""));
+                        totalInputCategory1 += categoryColumn6Number;
+
+                        int categoryColumn7Number = Convert.ToInt32(inputCategory1Column7Array[i].Replace(".", ""));
+                        totalTaxInputCategory1 += categoryColumn7Number;
+
+                        inputCategory1List += inputCategory1 + ";";
+                    }
+
+                    taxDeclaration.InputCategory1TotalAmount = totalInputCategory1;
+                    taxDeclaration.InputCategory1TotalTaxAmount = totalTaxInputCategory1;
+
+                    totalInputAmount += totalInputCategory1;
+                    totalTaxInputAmount += totalTaxInputCategory1;
                 }
 
-                taxDeclaration.InputCategory1TotalAmount = totalInputCategory1;
-                taxDeclaration.InputCategory1TotalTaxAmount = totalTaxInputCategory1;
+                taxDeclaration.InputCategory1 = inputCategory1List;
 
-                totalInputAmount += totalInputCategory1;
-                totalTaxInputAmount += totalTaxInputCategory1;
-            }
+                #endregion
 
-            taxDeclaration.InputCategory1 = inputCategory1List;
+                #region InputCategory2
 
-            #endregion
+                string inputCategory2List = "";
 
-            #region InputCategory2
-
-            string inputCategory2List = "";
-
-            if (inputCategory2Column4 != null)
-            {
-                string[] inputCategory2Column2Array = inputCategory2Column2.Split(',');
-                string[] inputCategory2Column3Array = inputCategory2Column3.Split(',');
-                string[] inputCategory2Column4Array = inputCategory2Column4.Split(',');
-                string[] inputCategory2Column5Array = inputCategory2Column5.Split(',');
-                string[] inputCategory2Column6Array = inputCategory2Column6.Split(',');
-                string[] inputCategory2Column7Array = inputCategory2Column7.Split(',');
-                string[] inputCategory2Column8Array = inputCategory2Column8.Split(',');
-
-                int totalInputCategory2 = 0;
-                int totalTaxInputCategory2 = 0;
-
-                for (int i = 0; i < inputCategory2Column4Array.Length; i++)
+                if (inputCategory2Column4 != null)
                 {
-                    string inputCategory2 = "";
+                    string[] inputCategory2Column2Array = inputCategory2Column2.Split(',');
+                    string[] inputCategory2Column3Array = inputCategory2Column3.Split(',');
+                    string[] inputCategory2Column4Array = inputCategory2Column4.Split(',');
+                    string[] inputCategory2Column5Array = inputCategory2Column5.Split(',');
+                    string[] inputCategory2Column6Array = inputCategory2Column6.Split(',');
+                    string[] inputCategory2Column7Array = inputCategory2Column7.Split(',');
+                    string[] inputCategory2Column8Array = inputCategory2Column8.Split(',');
 
-                    inputCategory2 += inputCategory2Column2Array[i] + ",";
-                    inputCategory2 += inputCategory2Column3Array[i] + ",";
-                    inputCategory2 += inputCategory2Column4Array[i] + ",";
-                    inputCategory2 += inputCategory2Column5Array[i] + ",";
-                    inputCategory2 += inputCategory2Column6Array[i].Replace(".", "") + ",";
-                    inputCategory2 += inputCategory2Column7Array[i].Replace(".", "") + ",";
-                    inputCategory2 += inputCategory2Column8Array[i];
+                    int totalInputCategory2 = 0;
+                    int totalTaxInputCategory2 = 0;
 
-                    int categoryColumn6Number = Convert.ToInt32(inputCategory2Column6Array[i].Replace(".", ""));
-                    totalInputCategory2 += categoryColumn6Number;
+                    for (int i = 0; i < inputCategory2Column4Array.Length; i++)
+                    {
+                        string inputCategory2 = "";
 
-                    int categoryColumn7Number = Convert.ToInt32(inputCategory2Column7Array[i].Replace(".", ""));
-                    totalTaxInputCategory2 += categoryColumn7Number;
+                        inputCategory2 += inputCategory2Column2Array[i] + ",";
+                        inputCategory2 += inputCategory2Column3Array[i] + ",";
+                        inputCategory2 += inputCategory2Column4Array[i] + ",";
+                        inputCategory2 += inputCategory2Column5Array[i] + ",";
+                        inputCategory2 += inputCategory2Column6Array[i].Replace(".", "") + ",";
+                        inputCategory2 += inputCategory2Column7Array[i].Replace(".", "") + ",";
+                        inputCategory2 += inputCategory2Column8Array[i];
 
-                    inputCategory2List += inputCategory2 + ";";
+                        int categoryColumn6Number = Convert.ToInt32(inputCategory2Column6Array[i].Replace(".", ""));
+                        totalInputCategory2 += categoryColumn6Number;
+
+                        int categoryColumn7Number = Convert.ToInt32(inputCategory2Column7Array[i].Replace(".", ""));
+                        totalTaxInputCategory2 += categoryColumn7Number;
+
+                        inputCategory2List += inputCategory2 + ";";
+                    }
+
+                    taxDeclaration.InputCategory2TotalAmount = totalInputCategory2;
+                    taxDeclaration.InputCategory2TotalTaxAmount = totalTaxInputCategory2;
+
+                    totalInputAmount += totalInputCategory2;
+                    totalTaxInputAmount += totalTaxInputCategory2;
                 }
 
-                taxDeclaration.InputCategory2TotalAmount = totalInputCategory2;
-                taxDeclaration.InputCategory2TotalTaxAmount = totalTaxInputCategory2;
+                taxDeclaration.InputCategory2 = inputCategory2List;
 
-                totalInputAmount += totalInputCategory2;
-                totalTaxInputAmount += totalTaxInputCategory2;
-            }
+                #endregion
 
-            taxDeclaration.InputCategory2 = inputCategory2List;
+                #region InputCategory3
 
-            #endregion
+                string inputCategory3List = "";
 
-            #region InputCategory3
-
-            string inputCategory3List = "";
-
-            if (inputCategory3Column4 != null)
-            {
-                string[] inputCategory3Column2Array = inputCategory3Column2.Split(',');
-                string[] inputCategory3Column3Array = inputCategory3Column3.Split(',');
-                string[] inputCategory3Column4Array = inputCategory3Column4.Split(',');
-                string[] inputCategory3Column5Array = inputCategory3Column5.Split(',');
-                string[] inputCategory3Column6Array = inputCategory3Column6.Split(',');
-                string[] inputCategory3Column7Array = inputCategory3Column7.Split(',');
-                string[] inputCategory3Column8Array = inputCategory3Column8.Split(',');
-
-
-                int totalInputCategory3 = 0;
-                int totalTaxInputCategory3 = 0;
-
-                for (int i = 0; i < inputCategory3Column4Array.Length; i++)
+                if (inputCategory3Column4 != null)
                 {
-                    string inputCategory3 = "";
+                    string[] inputCategory3Column2Array = inputCategory3Column2.Split(',');
+                    string[] inputCategory3Column3Array = inputCategory3Column3.Split(',');
+                    string[] inputCategory3Column4Array = inputCategory3Column4.Split(',');
+                    string[] inputCategory3Column5Array = inputCategory3Column5.Split(',');
+                    string[] inputCategory3Column6Array = inputCategory3Column6.Split(',');
+                    string[] inputCategory3Column7Array = inputCategory3Column7.Split(',');
+                    string[] inputCategory3Column8Array = inputCategory3Column8.Split(',');
 
-                    inputCategory3 += inputCategory3Column2Array[i] + ",";
-                    inputCategory3 += inputCategory3Column3Array[i] + ",";
-                    inputCategory3 += inputCategory3Column4Array[i] + ",";
-                    inputCategory3 += inputCategory3Column5Array[i] + ",";
-                    inputCategory3 += inputCategory3Column6Array[i].Replace(".", "") + ",";
-                    inputCategory3 += inputCategory3Column7Array[i].Replace(".", "") + ",";
-                    inputCategory3 += inputCategory3Column8Array[i];
 
-                    int categoryColumn6Number = Convert.ToInt32(inputCategory3Column6Array[i].Replace(".", ""));
-                    totalInputCategory3 += categoryColumn6Number;
+                    int totalInputCategory3 = 0;
+                    int totalTaxInputCategory3 = 0;
 
-                    int categoryColumn7Number = Convert.ToInt32(inputCategory3Column7Array[i].Replace(".", ""));
-                    totalTaxInputCategory3 += categoryColumn7Number;
+                    for (int i = 0; i < inputCategory3Column4Array.Length; i++)
+                    {
+                        string inputCategory3 = "";
 
-                    inputCategory3List += inputCategory3 + ";";
+                        inputCategory3 += inputCategory3Column2Array[i] + ",";
+                        inputCategory3 += inputCategory3Column3Array[i] + ",";
+                        inputCategory3 += inputCategory3Column4Array[i] + ",";
+                        inputCategory3 += inputCategory3Column5Array[i] + ",";
+                        inputCategory3 += inputCategory3Column6Array[i].Replace(".", "") + ",";
+                        inputCategory3 += inputCategory3Column7Array[i].Replace(".", "") + ",";
+                        inputCategory3 += inputCategory3Column8Array[i];
+
+                        int categoryColumn6Number = Convert.ToInt32(inputCategory3Column6Array[i].Replace(".", ""));
+                        totalInputCategory3 += categoryColumn6Number;
+
+                        int categoryColumn7Number = Convert.ToInt32(inputCategory3Column7Array[i].Replace(".", ""));
+                        totalTaxInputCategory3 += categoryColumn7Number;
+
+                        inputCategory3List += inputCategory3 + ";";
+                    }
+
+                    taxDeclaration.InputCategory3TotalAmount = totalInputCategory3;
+                    taxDeclaration.InputCategory3TotalTaxAmount = totalTaxInputCategory3;
+
                 }
 
-                taxDeclaration.InputCategory3TotalAmount = totalInputCategory3;
-                taxDeclaration.InputCategory3TotalTaxAmount = totalTaxInputCategory3;
+                taxDeclaration.InputCategory3 = inputCategory3List;
 
+                #endregion
+
+                taxDeclaration.InputTotalAmountValue23 = totalInputAmount;
+                taxDeclaration.InputTotalTaxAmountValue24 = totalTaxInputAmount;
+
+                #endregion
+
+                #endregion
+
+                TaxBusiness business = new TaxBusiness();
+                return business.SaveVatTaxDeclaration(taxDeclaration) ? 1 : 0;
+            }
+            catch (Exception)
+            {
+                return 0;
             }
 
-            taxDeclaration.InputCategory3 = inputCategory3List;
-
-            #endregion
-
-            taxDeclaration.InputTotalAmountValue23 = totalInputAmount;
-            taxDeclaration.InputTotalTaxAmountValue24 = totalTaxInputAmount;
-
-            #endregion
-
-            #endregion
-
-            TaxBusiness business = new TaxBusiness();
-            return business.SaveVatTaxDeclaration(taxDeclaration) ? 1 : 0;
         }
 
         public ActionResult ExportVatTaxDeclaration(FormCollection form)
         {
-            #region Get data from Form
-            string taxQuarter = form["taxQuarter"];
-            string taxYear = form["taxYear"];
-
-            string storeOwnerName = form["storeOwnerName"];
-            string storeTaxcode = form["storeTaxcode"].Replace(",", "");
-            string storeAddress = form["storeAddress"];
-            string storeDistrict = form["storeDistrict"];
-            string storeProvince = form["storeProvince"];
-            string storePhone = form["storePhone"];
-            string storeFax = form["storeFax"];
-            string storeEmail = form["storeEmail"];
-
-            string vatAgentOwnerName = form["vatAgentOwnerName"];
-            string vatAgentName = form["agentName"];
-            string vatAgentTaxCode = form["agentTaxCode"].Replace(",", "");
-            string vatAgentNo = form["agentNo"];
-            string vatAgentAddress = form["vatAgentAddress"];
-            string vatAgentDistrict = form["vatAgentDistrict"];
-            string vatAgentProvince = form["vatAgentProvince"];
-            string vatAgentPhone = form["vatAgentPhone"];
-            string vatAgentFax = form["vatAgentFax"];
-            string vatAgentEmail = form["vatAgentEmail"];
-
-            string value20No = form["value20No"];
-            string value20Date = form["value20Date"];
-            string value21 = form["value21"];
-            string value22 = form["value22"].Replace(".", "");
-            string value25 = form["value25"].Replace(".", "");
-            string value36 = form["value36"].Replace(".", "");
-            string value37 = form["value37"].Replace(".", "");
-            string value38 = form["value38"].Replace(".", "");
-            string value39 = form["value39"].Replace(".", "");
-            string value40a = form["value40a"].Replace(".", "");
-            string value40b = form["value40b"].Replace(".", "");
-            string value40 = form["value40"].Replace(".", "");
-            string value41 = form["value41"].Replace(".", "");
-            string value42 = form["value42"].Replace(".", "");
-            string value43 = form["value43"].Replace(".", "");
-
-
-            string signName = form["signName"];
-            string createDate = form["createDate"];
-            string createLocation = form["createLocation"];
-
-            string outputCategory1Column2 = form["output_category1_column2"];
-            string outputCategory1Column3 = form["output_category1_column3"];
-            string outputCategory1Column4 = form["output_category1_column4"];
-            string outputCategory1Column5 = form["output_category1_column5"];
-            string outputCategory1Column6 = form["output_category1_column6"];
-            string outputCategory1Column7 = form["output_category1_column7"];
-            string outputCategory1Column8 = form["output_category1_column8"];
-
-            string outputCategory2Column2 = form["output_category2_column2"];
-            string outputCategory2Column3 = form["output_category2_column3"];
-            string outputCategory2Column4 = form["output_category2_column4"];
-            string outputCategory2Column5 = form["output_category2_column5"];
-            string outputCategory2Column6 = form["output_category2_column6"];
-            string outputCategory2Column7 = form["output_category2_column7"];
-            string outputCategory2Column8 = form["output_category2_column8"];
-
-            string outputCategory3Column2 = form["output_category3_column2"];
-            string outputCategory3Column3 = form["output_category3_column3"];
-            string outputCategory3Column4 = form["output_category3_column4"];
-            string outputCategory3Column5 = form["output_category3_column5"];
-            string outputCategory3Column6 = form["output_category3_column6"];
-            string outputCategory3Column7 = form["output_category3_column7"];
-            string outputCategory3Column8 = form["output_category3_column8"];
-
-            string outputCategory4Column2 = form["output_category4_column2"];
-            string outputCategory4Column3 = form["output_category4_column3"];
-            string outputCategory4Column4 = form["output_category4_column4"];
-            string outputCategory4Column5 = form["output_category4_column5"];
-            string outputCategory4Column6 = form["output_category4_column6"];
-            string outputCategory4Column7 = form["output_category4_column7"];
-            string outputCategory4Column8 = form["output_category4_column8"];
-
-            string inputCategory1Column2 = form["input_category1_column2"];
-            string inputCategory1Column3 = form["input_category1_column3"];
-            string inputCategory1Column4 = form["input_category1_column4"];
-            string inputCategory1Column5 = form["input_category1_column5"];
-            string inputCategory1Column6 = form["input_category1_column6"];
-            string inputCategory1Column7 = form["input_category1_column7"];
-            string inputCategory1Column8 = form["input_category1_column8"];
-
-            string inputCategory2Column2 = form["input_category2_column2"];
-            string inputCategory2Column3 = form["input_category2_column3"];
-            string inputCategory2Column4 = form["input_category2_column4"];
-            string inputCategory2Column5 = form["input_category2_column5"];
-            string inputCategory2Column6 = form["input_category2_column6"];
-            string inputCategory2Column7 = form["input_category2_column7"];
-            string inputCategory2Column8 = form["input_category2_column8"];
-
-            string inputCategory3Column2 = form["input_category3_column2"];
-            string inputCategory3Column3 = form["input_category3_column3"];
-            string inputCategory3Column4 = form["input_category3_column4"];
-            string inputCategory3Column5 = form["input_category3_column5"];
-            string inputCategory3Column6 = form["input_category3_column6"];
-            string inputCategory3Column7 = form["input_category3_column7"];
-            string inputCategory3Column8 = form["input_category3_column8"];
-
-
-
-            #endregion
-
-            #region Process Data
-
-            DeclarationVatForm vatForm = new DeclarationVatForm();
-
-            #region Output
-
-            int totalOutputAmount = 0;
-            int haveTaxTotalOutputAmount = 0;
-            int totalTaxOutputAmount = 0;
-
-            #region OutputCategory1
-
-            List<DeclarationVatCategory> outputCategory1List = new List<DeclarationVatCategory>();
-
-            if (outputCategory1Column4 != null)
+            try
             {
-                string[] outputCategory1Column2Array = outputCategory1Column2.Split(',');
-                string[] outputCategory1Column3Array = outputCategory1Column3.Split(',');
-                string[] outputCategory1Column4Array = outputCategory1Column4.Split(',');
-                string[] outputCategory1Column5Array = outputCategory1Column5.Split(',');
-                string[] outputCategory1Column6Array = outputCategory1Column6.Split(',');
-                string[] outputCategory1Column7Array = outputCategory1Column7.Split(',');
-                string[] outputCategory1Column8Array = outputCategory1Column8.Split(',');
 
-                int totalOutputCategory1 = 0;
+                #region Get data from Form
+                string taxQuarter = form["taxQuarter"];
+                string taxYear = form["taxYear"];
 
-                for (int i = 0; i < outputCategory1Column4Array.Length; i++)
+                string storeOwnerName = form["storeOwnerName"];
+                string storeTaxcode = form["storeTaxcode"].Replace(",", "");
+                string storeAddress = form["storeAddress"];
+                string storeDistrict = form["storeDistrict"];
+                string storeProvince = form["storeProvince"];
+                string storePhone = form["storePhone"];
+                string storeFax = form["storeFax"];
+                string storeEmail = form["storeEmail"];
+
+                string vatAgentOwnerName = form["vatAgentOwnerName"];
+                string vatAgentName = form["agentName"];
+                string vatAgentTaxCode = form["agentTaxCode"].Replace(",", "");
+                string vatAgentNo = form["agentNo"];
+                string vatAgentAddress = form["vatAgentAddress"];
+                string vatAgentDistrict = form["vatAgentDistrict"];
+                string vatAgentProvince = form["vatAgentProvince"];
+                string vatAgentPhone = form["vatAgentPhone"];
+                string vatAgentFax = form["vatAgentFax"];
+                string vatAgentEmail = form["vatAgentEmail"];
+
+                string value20No = form["value20No"];
+                string value20Date = form["value20Date"];
+                string value21 = form["value21"];
+                string value22 = form["value22"].Replace(".", "");
+                string value25 = form["value25"].Replace(".", "");
+                string value36 = form["value36"].Replace(".", "");
+                string value37 = form["value37"].Replace(".", "");
+                string value38 = form["value38"].Replace(".", "");
+                string value39 = form["value39"].Replace(".", "");
+                string value40a = form["value40a"].Replace(".", "");
+                string value40b = form["value40b"].Replace(".", "");
+                string value40 = form["value40"].Replace(".", "");
+                string value41 = form["value41"].Replace(".", "");
+                string value42 = form["value42"].Replace(".", "");
+                string value43 = form["value43"].Replace(".", "");
+
+
+                string signName = form["signName"];
+                string createDate = form["createDate"];
+                string createLocation = form["createLocation"];
+
+                string outputCategory1Column2 = form["output_category1_column2"];
+                string outputCategory1Column3 = form["output_category1_column3"];
+                string outputCategory1Column4 = form["output_category1_column4"];
+                string outputCategory1Column5 = form["output_category1_column5"];
+                string outputCategory1Column6 = form["output_category1_column6"];
+                string outputCategory1Column7 = form["output_category1_column7"];
+                string outputCategory1Column8 = form["output_category1_column8"];
+
+                string outputCategory2Column2 = form["output_category2_column2"];
+                string outputCategory2Column3 = form["output_category2_column3"];
+                string outputCategory2Column4 = form["output_category2_column4"];
+                string outputCategory2Column5 = form["output_category2_column5"];
+                string outputCategory2Column6 = form["output_category2_column6"];
+                string outputCategory2Column7 = form["output_category2_column7"];
+                string outputCategory2Column8 = form["output_category2_column8"];
+
+                string outputCategory3Column2 = form["output_category3_column2"];
+                string outputCategory3Column3 = form["output_category3_column3"];
+                string outputCategory3Column4 = form["output_category3_column4"];
+                string outputCategory3Column5 = form["output_category3_column5"];
+                string outputCategory3Column6 = form["output_category3_column6"];
+                string outputCategory3Column7 = form["output_category3_column7"];
+                string outputCategory3Column8 = form["output_category3_column8"];
+
+                string outputCategory4Column2 = form["output_category4_column2"];
+                string outputCategory4Column3 = form["output_category4_column3"];
+                string outputCategory4Column4 = form["output_category4_column4"];
+                string outputCategory4Column5 = form["output_category4_column5"];
+                string outputCategory4Column6 = form["output_category4_column6"];
+                string outputCategory4Column7 = form["output_category4_column7"];
+                string outputCategory4Column8 = form["output_category4_column8"];
+
+                string inputCategory1Column2 = form["input_category1_column2"];
+                string inputCategory1Column3 = form["input_category1_column3"];
+                string inputCategory1Column4 = form["input_category1_column4"];
+                string inputCategory1Column5 = form["input_category1_column5"];
+                string inputCategory1Column6 = form["input_category1_column6"];
+                string inputCategory1Column7 = form["input_category1_column7"];
+                string inputCategory1Column8 = form["input_category1_column8"];
+
+                string inputCategory2Column2 = form["input_category2_column2"];
+                string inputCategory2Column3 = form["input_category2_column3"];
+                string inputCategory2Column4 = form["input_category2_column4"];
+                string inputCategory2Column5 = form["input_category2_column5"];
+                string inputCategory2Column6 = form["input_category2_column6"];
+                string inputCategory2Column7 = form["input_category2_column7"];
+                string inputCategory2Column8 = form["input_category2_column8"];
+
+                string inputCategory3Column2 = form["input_category3_column2"];
+                string inputCategory3Column3 = form["input_category3_column3"];
+                string inputCategory3Column4 = form["input_category3_column4"];
+                string inputCategory3Column5 = form["input_category3_column5"];
+                string inputCategory3Column6 = form["input_category3_column6"];
+                string inputCategory3Column7 = form["input_category3_column7"];
+                string inputCategory3Column8 = form["input_category3_column8"];
+
+
+
+                #endregion
+
+                #region Process Data
+
+                DeclarationVatForm vatForm = new DeclarationVatForm();
+
+                #region Output
+
+                int totalOutputAmount = 0;
+                int haveTaxTotalOutputAmount = 0;
+                int totalTaxOutputAmount = 0;
+
+                #region OutputCategory1
+
+                List<DeclarationVatCategory> outputCategory1List = new List<DeclarationVatCategory>();
+
+                if (outputCategory1Column4 != null)
                 {
-                    DeclarationVatCategory outputCategory1 = new DeclarationVatCategory();
+                    string[] outputCategory1Column2Array = outputCategory1Column2.Split(',');
+                    string[] outputCategory1Column3Array = outputCategory1Column3.Split(',');
+                    string[] outputCategory1Column4Array = outputCategory1Column4.Split(',');
+                    string[] outputCategory1Column5Array = outputCategory1Column5.Split(',');
+                    string[] outputCategory1Column6Array = outputCategory1Column6.Split(',');
+                    string[] outputCategory1Column7Array = outputCategory1Column7.Split(',');
+                    string[] outputCategory1Column8Array = outputCategory1Column8.Split(',');
 
-                    outputCategory1.Column2 = outputCategory1Column2Array[i];
-                    outputCategory1.Column3 = DateTime.ParseExact(outputCategory1Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    outputCategory1.Column4 = outputCategory1Column4Array[i];
-                    outputCategory1.Column5 = outputCategory1Column5Array[i];
-                    outputCategory1.Column6 = Convert.ToInt32(outputCategory1Column6Array[i].Replace(".", ""));
-                    outputCategory1.Column7 = Convert.ToInt32(outputCategory1Column7Array[i].Replace(".", ""));
-                    outputCategory1.Column8 = outputCategory1Column8Array[i];
+                    int totalOutputCategory1 = 0;
 
-                    int categoryColumn6Number = Convert.ToInt32(outputCategory1Column6Array[i].Replace(".", ""));
-                    totalOutputCategory1 += categoryColumn6Number;
+                    for (int i = 0; i < outputCategory1Column4Array.Length; i++)
+                    {
+                        DeclarationVatCategory outputCategory1 = new DeclarationVatCategory();
+
+                        outputCategory1.Column2 = outputCategory1Column2Array[i];
+                        outputCategory1.Column3 = DateTime.ParseExact(outputCategory1Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        outputCategory1.Column4 = outputCategory1Column4Array[i];
+                        outputCategory1.Column5 = outputCategory1Column5Array[i];
+                        outputCategory1.Column6 = Convert.ToInt32(outputCategory1Column6Array[i].Replace(".", ""));
+                        outputCategory1.Column7 = Convert.ToInt32(outputCategory1Column7Array[i].Replace(".", ""));
+                        outputCategory1.Column8 = outputCategory1Column8Array[i];
+
+                        int categoryColumn6Number = Convert.ToInt32(outputCategory1Column6Array[i].Replace(".", ""));
+                        totalOutputCategory1 += categoryColumn6Number;
 
 
-                    outputCategory1List.Add(outputCategory1);
+                        outputCategory1List.Add(outputCategory1);
+                    }
+
+                    vatForm.OutputCategories1TotalAmount = totalOutputCategory1;
+
+                    totalOutputAmount += totalOutputCategory1;
                 }
 
-                vatForm.OutputCategories1TotalAmount = totalOutputCategory1;
+                vatForm.OutputCategories1 = outputCategory1List;
 
-                totalOutputAmount += totalOutputCategory1;
-            }
+                #endregion
 
-            vatForm.OutputCategories1 = outputCategory1List;
+                #region OutputCategory2
 
-            #endregion
+                List<DeclarationVatCategory> outputCategory2List = new List<DeclarationVatCategory>();
 
-            #region OutputCategory2
-
-            List<DeclarationVatCategory> outputCategory2List = new List<DeclarationVatCategory>();
-
-            if (outputCategory2Column4 != null)
-            {
-                string[] outputCategory2Column2Array = outputCategory2Column2.Split(',');
-                string[] outputCategory2Column3Array = outputCategory2Column3.Split(',');
-                string[] outputCategory2Column4Array = outputCategory2Column4.Split(',');
-                string[] outputCategory2Column5Array = outputCategory2Column5.Split(',');
-                string[] outputCategory2Column6Array = outputCategory2Column6.Split(',');
-                string[] outputCategory2Column7Array = outputCategory2Column7.Split(',');
-                string[] outputCategory2Column8Array = outputCategory2Column8.Split(',');
-
-                int totalOutputCategory2 = 0;
-
-                for (int i = 0; i < outputCategory2Column4Array.Length; i++)
+                if (outputCategory2Column4 != null)
                 {
-                    DeclarationVatCategory outputCategory2 = new DeclarationVatCategory();
+                    string[] outputCategory2Column2Array = outputCategory2Column2.Split(',');
+                    string[] outputCategory2Column3Array = outputCategory2Column3.Split(',');
+                    string[] outputCategory2Column4Array = outputCategory2Column4.Split(',');
+                    string[] outputCategory2Column5Array = outputCategory2Column5.Split(',');
+                    string[] outputCategory2Column6Array = outputCategory2Column6.Split(',');
+                    string[] outputCategory2Column7Array = outputCategory2Column7.Split(',');
+                    string[] outputCategory2Column8Array = outputCategory2Column8.Split(',');
 
-                    outputCategory2.Column2 = outputCategory2Column2Array[i];
-                    outputCategory2.Column3 = DateTime.ParseExact(outputCategory2Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    outputCategory2.Column4 = outputCategory2Column4Array[i];
-                    outputCategory2.Column5 = outputCategory2Column5Array[i];
-                    outputCategory2.Column6 = Convert.ToInt32(outputCategory2Column6Array[i].Replace(".", ""));
-                    outputCategory2.Column7 = Convert.ToInt32(outputCategory2Column7Array[i].Replace(".", ""));
-                    outputCategory2.Column8 = outputCategory2Column8Array[i];
+                    int totalOutputCategory2 = 0;
 
-                    int categoryColumn6Number = Convert.ToInt32(outputCategory2Column6Array[i].Replace(".", ""));
-                    totalOutputCategory2 += categoryColumn6Number;
+                    for (int i = 0; i < outputCategory2Column4Array.Length; i++)
+                    {
+                        DeclarationVatCategory outputCategory2 = new DeclarationVatCategory();
 
-                    outputCategory2List.Add(outputCategory2);
+                        outputCategory2.Column2 = outputCategory2Column2Array[i];
+                        outputCategory2.Column3 = DateTime.ParseExact(outputCategory2Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        outputCategory2.Column4 = outputCategory2Column4Array[i];
+                        outputCategory2.Column5 = outputCategory2Column5Array[i];
+                        outputCategory2.Column6 = Convert.ToInt32(outputCategory2Column6Array[i].Replace(".", ""));
+                        outputCategory2.Column7 = Convert.ToInt32(outputCategory2Column7Array[i].Replace(".", ""));
+                        outputCategory2.Column8 = outputCategory2Column8Array[i];
+
+                        int categoryColumn6Number = Convert.ToInt32(outputCategory2Column6Array[i].Replace(".", ""));
+                        totalOutputCategory2 += categoryColumn6Number;
+
+                        outputCategory2List.Add(outputCategory2);
+                    }
+
+                    vatForm.OutputCategories2TotalAmount = totalOutputCategory2;
+
+                    haveTaxTotalOutputAmount += totalOutputCategory2;
+                    totalOutputAmount += totalOutputCategory2;
                 }
 
-                vatForm.OutputCategories2TotalAmount = totalOutputCategory2;
+                vatForm.OutputCategories2 = outputCategory2List;
 
-                haveTaxTotalOutputAmount += totalOutputCategory2;
-                totalOutputAmount += totalOutputCategory2;
-            }
+                #endregion
 
-            vatForm.OutputCategories2 = outputCategory2List;
+                #region OutputCategory3
 
-            #endregion
+                List<DeclarationVatCategory> outputCategory3List = new List<DeclarationVatCategory>();
 
-            #region OutputCategory3
-
-            List<DeclarationVatCategory> outputCategory3List = new List<DeclarationVatCategory>();
-
-            if (outputCategory3Column4 != null)
-            {
-                string[] outputCategory3Column2Array = outputCategory3Column2.Split(',');
-                string[] outputCategory3Column3Array = outputCategory3Column3.Split(',');
-                string[] outputCategory3Column4Array = outputCategory3Column4.Split(',');
-                string[] outputCategory3Column5Array = outputCategory3Column5.Split(',');
-                string[] outputCategory3Column6Array = outputCategory3Column6.Split(',');
-                string[] outputCategory3Column7Array = outputCategory3Column7.Split(',');
-                string[] outputCategory3Column8Array = outputCategory3Column8.Split(',');
-
-
-                int totalOutputCategory3 = 0;
-                int totalTaxOutputCategory3 = 0;
-
-                for (int i = 0; i < outputCategory3Column4Array.Length; i++)
+                if (outputCategory3Column4 != null)
                 {
-                    DeclarationVatCategory outputCategory3 = new DeclarationVatCategory();
-
-                    outputCategory3.Column2 = outputCategory3Column2Array[i];
-                    outputCategory3.Column3 = DateTime.ParseExact(outputCategory3Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    outputCategory3.Column4 = outputCategory3Column4Array[i];
-                    outputCategory3.Column5 = outputCategory3Column5Array[i];
-                    outputCategory3.Column6 = Convert.ToInt32(outputCategory3Column6Array[i].Replace(".", ""));
-                    outputCategory3.Column7 = Convert.ToInt32(outputCategory3Column7Array[i].Replace(".", ""));
-                    outputCategory3.Column8 = outputCategory3Column8Array[i];
-
-                    int categoryColumn6Number = Convert.ToInt32(outputCategory3Column6Array[i].Replace(".", ""));
-                    totalOutputCategory3 += categoryColumn6Number;
+                    string[] outputCategory3Column2Array = outputCategory3Column2.Split(',');
+                    string[] outputCategory3Column3Array = outputCategory3Column3.Split(',');
+                    string[] outputCategory3Column4Array = outputCategory3Column4.Split(',');
+                    string[] outputCategory3Column5Array = outputCategory3Column5.Split(',');
+                    string[] outputCategory3Column6Array = outputCategory3Column6.Split(',');
+                    string[] outputCategory3Column7Array = outputCategory3Column7.Split(',');
+                    string[] outputCategory3Column8Array = outputCategory3Column8.Split(',');
 
 
-                    int categoryColumn7Number = Convert.ToInt32(outputCategory3Column7Array[i].Replace(".", ""));
-                    totalTaxOutputCategory3 += categoryColumn7Number;
+                    int totalOutputCategory3 = 0;
+                    int totalTaxOutputCategory3 = 0;
 
-                    outputCategory3List.Add(outputCategory3);
+                    for (int i = 0; i < outputCategory3Column4Array.Length; i++)
+                    {
+                        DeclarationVatCategory outputCategory3 = new DeclarationVatCategory();
+
+                        outputCategory3.Column2 = outputCategory3Column2Array[i];
+                        outputCategory3.Column3 = DateTime.ParseExact(outputCategory3Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        outputCategory3.Column4 = outputCategory3Column4Array[i];
+                        outputCategory3.Column5 = outputCategory3Column5Array[i];
+                        outputCategory3.Column6 = Convert.ToInt32(outputCategory3Column6Array[i].Replace(".", ""));
+                        outputCategory3.Column7 = Convert.ToInt32(outputCategory3Column7Array[i].Replace(".", ""));
+                        outputCategory3.Column8 = outputCategory3Column8Array[i];
+
+                        int categoryColumn6Number = Convert.ToInt32(outputCategory3Column6Array[i].Replace(".", ""));
+                        totalOutputCategory3 += categoryColumn6Number;
+
+
+                        int categoryColumn7Number = Convert.ToInt32(outputCategory3Column7Array[i].Replace(".", ""));
+                        totalTaxOutputCategory3 += categoryColumn7Number;
+
+                        outputCategory3List.Add(outputCategory3);
+                    }
+
+                    vatForm.OutputCategories3TotalAmount = totalOutputCategory3;
+                    vatForm.OutputCategories3TotalTaxAmount = totalTaxOutputCategory3;
+
+                    totalOutputAmount += totalOutputCategory3;
+                    haveTaxTotalOutputAmount += totalOutputCategory3;
+                    totalTaxOutputAmount += totalTaxOutputCategory3;
                 }
 
-                vatForm.OutputCategories3TotalAmount = totalOutputCategory3;
-                vatForm.OutputCategories3TotalTaxAmount = totalTaxOutputCategory3;
+                vatForm.OutputCategories3 = outputCategory3List;
 
-                totalOutputAmount += totalOutputCategory3;
-                haveTaxTotalOutputAmount += totalOutputCategory3;
-                totalTaxOutputAmount += totalTaxOutputCategory3;
-            }
+                #endregion
 
-            vatForm.OutputCategories3 = outputCategory3List;
+                #region OutputCategory4
 
-            #endregion
+                List<DeclarationVatCategory> outputCategory4List = new List<DeclarationVatCategory>();
 
-            #region OutputCategory4
-
-            List<DeclarationVatCategory> outputCategory4List = new List<DeclarationVatCategory>();
-
-            if (outputCategory4Column4 != null)
-            {
-                string[] outputCategory4Column2Array = outputCategory4Column2.Split(',');
-                string[] outputCategory4Column3Array = outputCategory4Column3.Split(',');
-                string[] outputCategory4Column4Array = outputCategory4Column4.Split(',');
-                string[] outputCategory4Column5Array = outputCategory4Column5.Split(',');
-                string[] outputCategory4Column6Array = outputCategory4Column6.Split(',');
-                string[] outputCategory4Column7Array = outputCategory4Column7.Split(',');
-                string[] outputCategory4Column8Array = outputCategory4Column8.Split(',');
-
-                int totalOutputCategory4 = 0;
-                int totalTaxOutputCategory4 = 0;
-
-                for (int i = 0; i < outputCategory4Column4Array.Length; i++)
+                if (outputCategory4Column4 != null)
                 {
-                    DeclarationVatCategory outputCategory4 = new DeclarationVatCategory();
+                    string[] outputCategory4Column2Array = outputCategory4Column2.Split(',');
+                    string[] outputCategory4Column3Array = outputCategory4Column3.Split(',');
+                    string[] outputCategory4Column4Array = outputCategory4Column4.Split(',');
+                    string[] outputCategory4Column5Array = outputCategory4Column5.Split(',');
+                    string[] outputCategory4Column6Array = outputCategory4Column6.Split(',');
+                    string[] outputCategory4Column7Array = outputCategory4Column7.Split(',');
+                    string[] outputCategory4Column8Array = outputCategory4Column8.Split(',');
 
-                    outputCategory4.Column2 = outputCategory4Column2Array[i];
-                    outputCategory4.Column3 = DateTime.ParseExact(outputCategory4Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    outputCategory4.Column4 = outputCategory4Column4Array[i];
-                    outputCategory4.Column5 = outputCategory4Column5Array[i];
-                    outputCategory4.Column6 = Convert.ToInt32(outputCategory4Column6Array[i].Replace(".", ""));
-                    outputCategory4.Column7 = Convert.ToInt32(outputCategory4Column7Array[i].Replace(".", ""));
-                    outputCategory4.Column8 = outputCategory4Column8Array[i];
+                    int totalOutputCategory4 = 0;
+                    int totalTaxOutputCategory4 = 0;
 
-                    int categoryColumn6Number = Convert.ToInt32(outputCategory4Column6Array[i].Replace(".", ""));
-                    totalOutputCategory4 += categoryColumn6Number;
+                    for (int i = 0; i < outputCategory4Column4Array.Length; i++)
+                    {
+                        DeclarationVatCategory outputCategory4 = new DeclarationVatCategory();
 
-                    int categoryColumn7Number = Convert.ToInt32(outputCategory4Column7Array[i].Replace(".", ""));
-                    totalTaxOutputCategory4 += categoryColumn7Number;
+                        outputCategory4.Column2 = outputCategory4Column2Array[i];
+                        outputCategory4.Column3 = DateTime.ParseExact(outputCategory4Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        outputCategory4.Column4 = outputCategory4Column4Array[i];
+                        outputCategory4.Column5 = outputCategory4Column5Array[i];
+                        outputCategory4.Column6 = Convert.ToInt32(outputCategory4Column6Array[i].Replace(".", ""));
+                        outputCategory4.Column7 = Convert.ToInt32(outputCategory4Column7Array[i].Replace(".", ""));
+                        outputCategory4.Column8 = outputCategory4Column8Array[i];
 
-                    outputCategory4List.Add(outputCategory4);
+                        int categoryColumn6Number = Convert.ToInt32(outputCategory4Column6Array[i].Replace(".", ""));
+                        totalOutputCategory4 += categoryColumn6Number;
+
+                        int categoryColumn7Number = Convert.ToInt32(outputCategory4Column7Array[i].Replace(".", ""));
+                        totalTaxOutputCategory4 += categoryColumn7Number;
+
+                        outputCategory4List.Add(outputCategory4);
+                    }
+
+                    vatForm.OutputCategories4TotalAmount = totalOutputCategory4;
+                    vatForm.OutputCategories4TotalTaxAmount = totalTaxOutputCategory4;
+
+                    totalOutputAmount += totalOutputCategory4;
+                    haveTaxTotalOutputAmount += totalOutputCategory4;
+                    totalTaxOutputAmount += totalTaxOutputCategory4;
                 }
 
-                vatForm.OutputCategories4TotalAmount = totalOutputCategory4;
-                vatForm.OutputCategories4TotalTaxAmount = totalTaxOutputCategory4;
+                vatForm.OutputCategories4 = outputCategory4List;
 
-                totalOutputAmount += totalOutputCategory4;
-                haveTaxTotalOutputAmount += totalOutputCategory4;
-                totalTaxOutputAmount += totalTaxOutputCategory4;
-            }
-
-            vatForm.OutputCategories4 = outputCategory4List;
-
-            #endregion
+                #endregion
 
 
-            vatForm.OutputTotalAmount = totalOutputAmount;
-            vatForm.OutputTotalTaxAmount = totalTaxOutputAmount;
-            vatForm.HaveTaxOutputAmount = haveTaxTotalOutputAmount;
+                vatForm.OutputTotalAmount = totalOutputAmount;
+                vatForm.OutputTotalTaxAmount = totalTaxOutputAmount;
+                vatForm.HaveTaxOutputAmount = haveTaxTotalOutputAmount;
 
-            #endregion
+                #endregion
 
-            #region Input
+                #region Input
 
-            int totalInputAmount = 0;
-            int totalTaxInputAmount = 0;
+                int totalInputAmount = 0;
+                int totalTaxInputAmount = 0;
 
-            #region InputCategory1
+                #region InputCategory1
 
-            List<DeclarationVatCategory> inputCategory1List = new List<DeclarationVatCategory>();
+                List<DeclarationVatCategory> inputCategory1List = new List<DeclarationVatCategory>();
 
-            if (inputCategory1Column4 != null)
-            {
-                string[] inputCategory1Column2Array = inputCategory1Column2.Split(',');
-                string[] inputCategory1Column3Array = inputCategory1Column3.Split(',');
-                string[] inputCategory1Column4Array = inputCategory1Column4.Split(',');
-                string[] inputCategory1Column5Array = inputCategory1Column5.Split(',');
-                string[] inputCategory1Column6Array = inputCategory1Column6.Split(',');
-                string[] inputCategory1Column7Array = inputCategory1Column7.Split(',');
-                string[] inputCategory1Column8Array = inputCategory1Column8.Split(',');
-
-                int totalInputCategory1 = 0;
-                int totalTaxInputCategory1 = 0;
-
-                for (int i = 0; i < inputCategory1Column4Array.Length; i++)
+                if (inputCategory1Column4 != null)
                 {
-                    DeclarationVatCategory inputCategory1 = new DeclarationVatCategory();
+                    string[] inputCategory1Column2Array = inputCategory1Column2.Split(',');
+                    string[] inputCategory1Column3Array = inputCategory1Column3.Split(',');
+                    string[] inputCategory1Column4Array = inputCategory1Column4.Split(',');
+                    string[] inputCategory1Column5Array = inputCategory1Column5.Split(',');
+                    string[] inputCategory1Column6Array = inputCategory1Column6.Split(',');
+                    string[] inputCategory1Column7Array = inputCategory1Column7.Split(',');
+                    string[] inputCategory1Column8Array = inputCategory1Column8.Split(',');
 
-                    inputCategory1.Column2 = inputCategory1Column2Array[i];
-                    inputCategory1.Column3 = DateTime.ParseExact(inputCategory1Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    inputCategory1.Column4 = inputCategory1Column4Array[i];
-                    inputCategory1.Column5 = inputCategory1Column5Array[i];
-                    inputCategory1.Column6 = Convert.ToInt32(inputCategory1Column6Array[i].Replace(".", ""));
-                    inputCategory1.Column7 = Convert.ToInt32(inputCategory1Column7Array[i].Replace(".", ""));
-                    inputCategory1.Column8 = inputCategory1Column8Array[i];
+                    int totalInputCategory1 = 0;
+                    int totalTaxInputCategory1 = 0;
 
-                    int categoryColumn6Number = Convert.ToInt32(inputCategory1Column6Array[i].Replace(".", ""));
-                    totalInputCategory1 += categoryColumn6Number;
+                    for (int i = 0; i < inputCategory1Column4Array.Length; i++)
+                    {
+                        DeclarationVatCategory inputCategory1 = new DeclarationVatCategory();
 
-                    int categoryColumn7Number = Convert.ToInt32(inputCategory1Column7Array[i].Replace(".", ""));
-                    totalTaxInputCategory1 += categoryColumn7Number;
+                        inputCategory1.Column2 = inputCategory1Column2Array[i];
+                        inputCategory1.Column3 = DateTime.ParseExact(inputCategory1Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        inputCategory1.Column4 = inputCategory1Column4Array[i];
+                        inputCategory1.Column5 = inputCategory1Column5Array[i];
+                        inputCategory1.Column6 = Convert.ToInt32(inputCategory1Column6Array[i].Replace(".", ""));
+                        inputCategory1.Column7 = Convert.ToInt32(inputCategory1Column7Array[i].Replace(".", ""));
+                        inputCategory1.Column8 = inputCategory1Column8Array[i];
 
-                    inputCategory1List.Add(inputCategory1);
+                        int categoryColumn6Number = Convert.ToInt32(inputCategory1Column6Array[i].Replace(".", ""));
+                        totalInputCategory1 += categoryColumn6Number;
+
+                        int categoryColumn7Number = Convert.ToInt32(inputCategory1Column7Array[i].Replace(".", ""));
+                        totalTaxInputCategory1 += categoryColumn7Number;
+
+                        inputCategory1List.Add(inputCategory1);
+                    }
+
+                    vatForm.InputCategories1TotalAmount = totalInputCategory1;
+                    vatForm.InputCategories1TotalTaxAmount = totalTaxInputCategory1;
+
+                    totalInputAmount += totalInputCategory1;
+                    totalTaxInputAmount += totalTaxInputCategory1;
                 }
 
-                vatForm.InputCategories1TotalAmount = totalInputCategory1;
-                vatForm.InputCategories1TotalTaxAmount = totalTaxInputCategory1;
+                vatForm.InputCategories1 = inputCategory1List;
 
-                totalInputAmount += totalInputCategory1;
-                totalTaxInputAmount += totalTaxInputCategory1;
-            }
+                #endregion
 
-            vatForm.InputCategories1 = inputCategory1List;
+                #region InputCategory2
 
-            #endregion
+                List<DeclarationVatCategory> inputCategory2List = new List<DeclarationVatCategory>();
 
-            #region InputCategory2
-
-            List<DeclarationVatCategory> inputCategory2List = new List<DeclarationVatCategory>();
-
-            if (inputCategory2Column4 != null)
-            {
-                string[] inputCategory2Column2Array = inputCategory2Column2.Split(',');
-                string[] inputCategory2Column3Array = inputCategory2Column3.Split(',');
-                string[] inputCategory2Column4Array = inputCategory2Column4.Split(',');
-                string[] inputCategory2Column5Array = inputCategory2Column5.Split(',');
-                string[] inputCategory2Column6Array = inputCategory2Column6.Split(',');
-                string[] inputCategory2Column7Array = inputCategory2Column7.Split(',');
-                string[] inputCategory2Column8Array = inputCategory2Column8.Split(',');
-
-                int totalInputCategory2 = 0;
-                int totalTaxInputCategory2 = 0;
-
-                for (int i = 0; i < inputCategory2Column4Array.Length; i++)
+                if (inputCategory2Column4 != null)
                 {
-                    DeclarationVatCategory inputCategory2 = new DeclarationVatCategory();
+                    string[] inputCategory2Column2Array = inputCategory2Column2.Split(',');
+                    string[] inputCategory2Column3Array = inputCategory2Column3.Split(',');
+                    string[] inputCategory2Column4Array = inputCategory2Column4.Split(',');
+                    string[] inputCategory2Column5Array = inputCategory2Column5.Split(',');
+                    string[] inputCategory2Column6Array = inputCategory2Column6.Split(',');
+                    string[] inputCategory2Column7Array = inputCategory2Column7.Split(',');
+                    string[] inputCategory2Column8Array = inputCategory2Column8.Split(',');
 
-                    inputCategory2.Column2 = inputCategory2Column2Array[i];
-                    inputCategory2.Column3 = DateTime.ParseExact(inputCategory2Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    inputCategory2.Column4 = inputCategory2Column4Array[i];
-                    inputCategory2.Column5 = inputCategory2Column5Array[i];
-                    inputCategory2.Column6 = Convert.ToInt32(inputCategory2Column6Array[i].Replace(".", ""));
-                    inputCategory2.Column7 = Convert.ToInt32(inputCategory2Column7Array[i].Replace(".", ""));
-                    inputCategory2.Column8 = inputCategory2Column8Array[i];
+                    int totalInputCategory2 = 0;
+                    int totalTaxInputCategory2 = 0;
 
-                    int categoryColumn6Number = Convert.ToInt32(inputCategory2Column6Array[i].Replace(".", ""));
-                    totalInputCategory2 += categoryColumn6Number;
+                    for (int i = 0; i < inputCategory2Column4Array.Length; i++)
+                    {
+                        DeclarationVatCategory inputCategory2 = new DeclarationVatCategory();
 
-                    int categoryColumn7Number = Convert.ToInt32(inputCategory2Column7Array[i].Replace(".", ""));
-                    totalTaxInputCategory2 += categoryColumn7Number;
+                        inputCategory2.Column2 = inputCategory2Column2Array[i];
+                        inputCategory2.Column3 = DateTime.ParseExact(inputCategory2Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        inputCategory2.Column4 = inputCategory2Column4Array[i];
+                        inputCategory2.Column5 = inputCategory2Column5Array[i];
+                        inputCategory2.Column6 = Convert.ToInt32(inputCategory2Column6Array[i].Replace(".", ""));
+                        inputCategory2.Column7 = Convert.ToInt32(inputCategory2Column7Array[i].Replace(".", ""));
+                        inputCategory2.Column8 = inputCategory2Column8Array[i];
 
-                    inputCategory2List.Add(inputCategory2);
+                        int categoryColumn6Number = Convert.ToInt32(inputCategory2Column6Array[i].Replace(".", ""));
+                        totalInputCategory2 += categoryColumn6Number;
+
+                        int categoryColumn7Number = Convert.ToInt32(inputCategory2Column7Array[i].Replace(".", ""));
+                        totalTaxInputCategory2 += categoryColumn7Number;
+
+                        inputCategory2List.Add(inputCategory2);
+                    }
+
+                    vatForm.InputCategories2TotalAmount = totalInputCategory2;
+                    vatForm.InputCategories2TotalTaxAmount = totalTaxInputCategory2;
+
+                    totalInputAmount += totalInputCategory2;
+                    totalTaxInputAmount += totalTaxInputCategory2;
                 }
 
-                vatForm.InputCategories2TotalAmount = totalInputCategory2;
-                vatForm.InputCategories2TotalTaxAmount = totalTaxInputCategory2;
+                vatForm.InputCategories2 = inputCategory2List;
 
-                totalInputAmount += totalInputCategory2;
-                totalTaxInputAmount += totalTaxInputCategory2;
-            }
+                #endregion
 
-            vatForm.InputCategories2 = inputCategory2List;
+                #region InputCategory3
 
-            #endregion
+                List<DeclarationVatCategory> inputCategory3List = new List<DeclarationVatCategory>();
 
-            #region InputCategory3
-
-            List<DeclarationVatCategory> inputCategory3List = new List<DeclarationVatCategory>();
-
-            if (inputCategory3Column4 != null)
-            {
-                string[] inputCategory3Column2Array = inputCategory3Column2.Split(',');
-                string[] inputCategory3Column3Array = inputCategory3Column3.Split(',');
-                string[] inputCategory3Column4Array = inputCategory3Column4.Split(',');
-                string[] inputCategory3Column5Array = inputCategory3Column5.Split(',');
-                string[] inputCategory3Column6Array = inputCategory3Column6.Split(',');
-                string[] inputCategory3Column7Array = inputCategory3Column7.Split(',');
-                string[] inputCategory3Column8Array = inputCategory3Column8.Split(',');
-
-
-                int totalInputCategory3 = 0;
-                int totalTaxInputCategory3 = 0;
-
-                for (int i = 0; i < inputCategory3Column4Array.Length; i++)
+                if (inputCategory3Column4 != null)
                 {
-                    DeclarationVatCategory inputCategory3 = new DeclarationVatCategory();
+                    string[] inputCategory3Column2Array = inputCategory3Column2.Split(',');
+                    string[] inputCategory3Column3Array = inputCategory3Column3.Split(',');
+                    string[] inputCategory3Column4Array = inputCategory3Column4.Split(',');
+                    string[] inputCategory3Column5Array = inputCategory3Column5.Split(',');
+                    string[] inputCategory3Column6Array = inputCategory3Column6.Split(',');
+                    string[] inputCategory3Column7Array = inputCategory3Column7.Split(',');
+                    string[] inputCategory3Column8Array = inputCategory3Column8.Split(',');
 
-                    inputCategory3.Column2 = inputCategory3Column2Array[i];
-                    inputCategory3.Column3 = DateTime.ParseExact(inputCategory3Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    inputCategory3.Column4 = inputCategory3Column4Array[i];
-                    inputCategory3.Column5 = inputCategory3Column5Array[i];
-                    inputCategory3.Column6 = Convert.ToInt32(inputCategory3Column6Array[i].Replace(".", ""));
-                    inputCategory3.Column7 = Convert.ToInt32(inputCategory3Column7Array[i].Replace(".", ""));
-                    inputCategory3.Column8 = inputCategory3Column8Array[i];
 
-                    int categoryColumn6Number = Convert.ToInt32(inputCategory3Column6Array[i].Replace(".", ""));
-                    totalInputCategory3 += categoryColumn6Number;
+                    int totalInputCategory3 = 0;
+                    int totalTaxInputCategory3 = 0;
 
-                    int categoryColumn7Number = Convert.ToInt32(inputCategory3Column7Array[i].Replace(".", ""));
-                    totalTaxInputCategory3 += categoryColumn7Number;
+                    for (int i = 0; i < inputCategory3Column4Array.Length; i++)
+                    {
+                        DeclarationVatCategory inputCategory3 = new DeclarationVatCategory();
 
-                    inputCategory3List.Add(inputCategory3);
+                        inputCategory3.Column2 = inputCategory3Column2Array[i];
+                        inputCategory3.Column3 = DateTime.ParseExact(inputCategory3Column3Array[i], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        inputCategory3.Column4 = inputCategory3Column4Array[i];
+                        inputCategory3.Column5 = inputCategory3Column5Array[i];
+                        inputCategory3.Column6 = Convert.ToInt32(inputCategory3Column6Array[i].Replace(".", ""));
+                        inputCategory3.Column7 = Convert.ToInt32(inputCategory3Column7Array[i].Replace(".", ""));
+                        inputCategory3.Column8 = inputCategory3Column8Array[i];
+
+                        int categoryColumn6Number = Convert.ToInt32(inputCategory3Column6Array[i].Replace(".", ""));
+                        totalInputCategory3 += categoryColumn6Number;
+
+                        int categoryColumn7Number = Convert.ToInt32(inputCategory3Column7Array[i].Replace(".", ""));
+                        totalTaxInputCategory3 += categoryColumn7Number;
+
+                        inputCategory3List.Add(inputCategory3);
+                    }
+
+                    vatForm.InputCategories3TotalAmount = totalInputCategory3;
+                    vatForm.InputCategories3TotalTaxAmount = totalTaxInputCategory3;
+
                 }
 
-                vatForm.InputCategories3TotalAmount = totalInputCategory3;
-                vatForm.InputCategories3TotalTaxAmount = totalTaxInputCategory3;
+                vatForm.InputCategories3 = inputCategory3List;
 
-            }
+                #endregion
 
-            vatForm.InputCategories3 = inputCategory3List;
+                vatForm.InputTotalAmount = totalInputAmount;
+                vatForm.InputTotalTaxAmount = totalTaxInputAmount;
 
-            #endregion
+                #endregion
 
-            vatForm.InputTotalAmount = totalInputAmount;
-            vatForm.InputTotalTaxAmount = totalTaxInputAmount;
+                #endregion
 
-            #endregion
+                #region Create XML File
 
-            #endregion
+                XElement root = new XElement("HSoThueDTu");
 
-            #region Create XML File
+                XElement HSoKhaiThue = new XElement("HSoKhaiThue");
+                HSoKhaiThue.Add(new XAttribute("id", "ID_18"));
 
-            XElement root = new XElement("HSoThueDTu");
+                XElement TTinChung = new XElement("TTinChung");
 
-            XElement HSoKhaiThue = new XElement("HSoKhaiThue");
-            HSoKhaiThue.Add(new XAttribute("id", "ID_18"));
+                XElement TTinDVu = new XElement("TTinDVu");
 
-            XElement TTinChung = new XElement("TTinChung");
+                XElement maDVu = new XElement("maDVu", "HTKK");
+                TTinDVu.Add(maDVu);
+                XElement tenDVu = new XElement("tenDVu", "HTKK");
+                TTinDVu.Add(tenDVu);
+                XElement pbanDVu = new XElement("pbanDVu", "3.3.4");
+                TTinDVu.Add(pbanDVu);
 
-            XElement TTinDVu = new XElement("TTinDVu");
+                TTinChung.Add(TTinDVu);
 
-            XElement maDVu = new XElement("maDVu", "HTKK");
-            TTinDVu.Add(maDVu);
-            XElement tenDVu = new XElement("tenDVu", "HTKK");
-            TTinDVu.Add(tenDVu);
-            XElement pbanDVu = new XElement("pbanDVu", "3.3.4");
-            TTinDVu.Add(pbanDVu);
+                XElement TTinTKhaiThue = new XElement("TTinTKhaiThue");
 
-            TTinChung.Add(TTinDVu);
+                XElement TKhaiThue = new XElement("TKhaiThue");
 
-            XElement TTinTKhaiThue = new XElement("TTinTKhaiThue");
+                XElement maTKhai = new XElement("maTKhai", "01");
+                TKhaiThue.Add(maTKhai);
 
-            XElement TKhaiThue = new XElement("TKhaiThue");
+                XElement tenTKhai = new XElement("tenTKhai", "TỜ KHAI THUẾ GIÁ TRỊ GIA TĂNG (Mẫu số 01/GTGT)");
+                TKhaiThue.Add(tenTKhai);
 
-            XElement maTKhai = new XElement("maTKhai", "01");
-            TKhaiThue.Add(maTKhai);
+                XElement moTaBMau = new XElement("moTaBMau", "(Ban hành kèm theo Thông tư số 119/2014/TT-BTC ngày 25/8/2014 của Bộ Tài chính)");
+                TKhaiThue.Add(moTaBMau);
 
-            XElement tenTKhai = new XElement("tenTKhai", "TỜ KHAI THUẾ GIÁ TRỊ GIA TĂNG (Mẫu số 01/GTGT)");
-            TKhaiThue.Add(tenTKhai);
+                XElement pbanTKhaiXML = new XElement("pbanTKhaiXML", "2.0.7");
+                TKhaiThue.Add(pbanTKhaiXML);
 
-            XElement moTaBMau = new XElement("moTaBMau", "(Ban hành kèm theo Thông tư số 119/2014/TT-BTC ngày 25/8/2014 của Bộ Tài chính)");
-            TKhaiThue.Add(moTaBMau);
+                XElement loaiTKhai = new XElement("loaiTKhai", "C");
+                TKhaiThue.Add(loaiTKhai);
 
-            XElement pbanTKhaiXML = new XElement("pbanTKhaiXML", "2.0.7");
-            TKhaiThue.Add(pbanTKhaiXML);
+                XElement soLan = new XElement("soLan", "0");
+                TKhaiThue.Add(soLan);
 
-            XElement loaiTKhai = new XElement("loaiTKhai", "C");
-            TKhaiThue.Add(loaiTKhai);
+                XElement KyKKhaiThue = new XElement("KyKKhaiThue");
 
-            XElement soLan = new XElement("soLan", "0");
-            TKhaiThue.Add(soLan);
+                XElement kieuKy = new XElement("kieuKy", "Q");
+                KyKKhaiThue.Add(kieuKy);
 
-            XElement KyKKhaiThue = new XElement("KyKKhaiThue");
+                XElement kyKKhai = new XElement("kyKKhai", taxQuarter + "/" + taxYear);
+                KyKKhaiThue.Add(kyKKhai);
 
-            XElement kieuKy = new XElement("kieuKy", "Q");
-            KyKKhaiThue.Add(kieuKy);
+                XElement kyKKhaiTuNgay = new XElement("kyKKhaiTuNgay", "01/" + (Convert.ToInt32(taxQuarter) * 3 - 2) + "/" + taxYear);
+                KyKKhaiThue.Add(kyKKhaiTuNgay);
 
-            XElement kyKKhai = new XElement("kyKKhai", taxQuarter + "/" + taxYear);
-            KyKKhaiThue.Add(kyKKhai);
+                XElement kyKKhaiDenNgay = new XElement("kyKKhaiDenNgay", new DateTime(Convert.ToInt32(taxYear), (Convert.ToInt32(taxQuarter) * 3), 1).AddMonths(1).AddDays(-1).ToString("dd/MM/yyyy"));
+                KyKKhaiThue.Add(kyKKhaiDenNgay);
 
-            XElement kyKKhaiTuNgay = new XElement("kyKKhaiTuNgay", "01/" + (Convert.ToInt32(taxQuarter) * 3 - 2) + "/" + taxYear);
-            KyKKhaiThue.Add(kyKKhaiTuNgay);
+                XElement kyKKhaiTuThang = new XElement("kyKKhaiTuThang");
+                KyKKhaiThue.Add(kyKKhaiTuThang);
 
-            XElement kyKKhaiDenNgay = new XElement("kyKKhaiDenNgay", new DateTime(Convert.ToInt32(taxYear), (Convert.ToInt32(taxQuarter) * 3), 1).AddMonths(1).AddDays(-1).ToString("dd/MM/yyyy"));
-            KyKKhaiThue.Add(kyKKhaiDenNgay);
+                XElement kyKKhaiDenThang = new XElement("kyKKhaiDenThang");
+                KyKKhaiThue.Add(kyKKhaiDenThang);
 
-            XElement kyKKhaiTuThang = new XElement("kyKKhaiTuThang");
-            KyKKhaiThue.Add(kyKKhaiTuThang);
 
-            XElement kyKKhaiDenThang = new XElement("kyKKhaiDenThang");
-            KyKKhaiThue.Add(kyKKhaiDenThang);
+                TKhaiThue.Add(KyKKhaiThue);
 
+                XElement maCQTNoiNop = new XElement("maCQTNoiNop");
+                TKhaiThue.Add(maCQTNoiNop);
 
-            TKhaiThue.Add(KyKKhaiThue);
+                XElement tenCQTNoiNop = new XElement("tenCQTNoiNop", "Chi cục Thuế Quận 12");
+                TKhaiThue.Add(tenCQTNoiNop);
 
-            XElement maCQTNoiNop = new XElement("maCQTNoiNop");
-            TKhaiThue.Add(maCQTNoiNop);
+                XElement ngayLapTKhai = new XElement("ngayLapTKhai", createDate);
+                TKhaiThue.Add(ngayLapTKhai);
 
-            XElement tenCQTNoiNop = new XElement("tenCQTNoiNop", "Chi cục Thuế Quận 12");
-            TKhaiThue.Add(tenCQTNoiNop);
+                XElement GiaHan = new XElement("GiaHan");
 
-            XElement ngayLapTKhai = new XElement("ngayLapTKhai", createDate);
-            TKhaiThue.Add(ngayLapTKhai);
+                XElement maLyDoGiaHan = new XElement("maLyDoGiaHan");
+                GiaHan.Add(maLyDoGiaHan);
 
-            XElement GiaHan = new XElement("GiaHan");
+                XElement lyDoGiaHan = new XElement("lyDoGiaHan");
+                GiaHan.Add(lyDoGiaHan);
 
-            XElement maLyDoGiaHan = new XElement("maLyDoGiaHan");
-            GiaHan.Add(maLyDoGiaHan);
+                TKhaiThue.Add(GiaHan);
 
-            XElement lyDoGiaHan = new XElement("lyDoGiaHan");
-            GiaHan.Add(lyDoGiaHan);
+                XElement nguoiKy = new XElement("nguoiKy", signName);
+                TKhaiThue.Add(nguoiKy);
 
-            TKhaiThue.Add(GiaHan);
+                XElement ngayKy = new XElement("ngayKy", createDate);
+                TKhaiThue.Add(ngayKy);
 
-            XElement nguoiKy = new XElement("nguoiKy", signName);
-            TKhaiThue.Add(nguoiKy);
+                XElement nganhNgheKD = new XElement("nganhNgheKD");
+                TKhaiThue.Add(nganhNgheKD);
 
-            XElement ngayKy = new XElement("ngayKy", createDate);
-            TKhaiThue.Add(ngayKy);
 
-            XElement nganhNgheKD = new XElement("nganhNgheKD");
-            TKhaiThue.Add(nganhNgheKD);
+                TTinTKhaiThue.Add(TKhaiThue);
 
+                XElement NNT = new XElement("NNT");
 
-            TTinTKhaiThue.Add(TKhaiThue);
+                XElement mst = new XElement("mst", storeTaxcode);
+                NNT.Add(mst);
 
-            XElement NNT = new XElement("NNT");
+                XElement tenNNT = new XElement("tenNNT", storeOwnerName);
+                NNT.Add(tenNNT);
 
-            XElement mst = new XElement("mst", storeTaxcode);
-            NNT.Add(mst);
+                XElement dchiNNT = new XElement("dchiNNT", storeAddress);
+                NNT.Add(dchiNNT);
 
-            XElement tenNNT = new XElement("tenNNT", storeOwnerName);
-            NNT.Add(tenNNT);
+                XElement phuongXa = new XElement("phuongXa");
+                NNT.Add(phuongXa);
 
-            XElement dchiNNT = new XElement("dchiNNT", storeAddress);
-            NNT.Add(dchiNNT);
+                XElement maHuyenNNT = new XElement("maHuyenNNT");
+                NNT.Add(maHuyenNNT);
 
-            XElement phuongXa = new XElement("phuongXa");
-            NNT.Add(phuongXa);
+                XElement tenHuyenNNT = new XElement("tenHuyenNNT", storeDistrict);
+                NNT.Add(tenHuyenNNT);
 
-            XElement maHuyenNNT = new XElement("maHuyenNNT");
-            NNT.Add(maHuyenNNT);
+                XElement maTinhNNT = new XElement("maTinhNNT");
+                NNT.Add(maTinhNNT);
 
-            XElement tenHuyenNNT = new XElement("tenHuyenNNT", storeDistrict);
-            NNT.Add(tenHuyenNNT);
+                XElement tenTinhNNT = new XElement("tenTinhNNT", storeProvince);
+                NNT.Add(tenTinhNNT);
 
-            XElement maTinhNNT = new XElement("maTinhNNT");
-            NNT.Add(maTinhNNT);
+                XElement dthoaiNNT = new XElement("dthoaiNNT", storePhone);
+                NNT.Add(dthoaiNNT);
 
-            XElement tenTinhNNT = new XElement("tenTinhNNT", storeProvince);
-            NNT.Add(tenTinhNNT);
+                XElement faxNNT = new XElement("faxNNT", storeFax);
+                NNT.Add(faxNNT);
 
-            XElement dthoaiNNT = new XElement("dthoaiNNT", storePhone);
-            NNT.Add(dthoaiNNT);
+                XElement emailNNT = new XElement("emailNNT", storeEmail);
+                NNT.Add(emailNNT);
 
-            XElement faxNNT = new XElement("faxNNT", storeFax);
-            NNT.Add(faxNNT);
+                TTinTKhaiThue.Add(NNT);
 
-            XElement emailNNT = new XElement("emailNNT", storeEmail);
-            NNT.Add(emailNNT);
+                XElement DLyThue = new XElement("DLyThue");
 
-            TTinTKhaiThue.Add(NNT);
+                XElement mstDLyThue = new XElement("mstDLyThue", vatAgentTaxCode);
+                DLyThue.Add(mstDLyThue);
 
-            XElement DLyThue = new XElement("DLyThue");
+                XElement tenDLyThue = new XElement("tenDLyThue", vatAgentOwnerName);
+                DLyThue.Add(tenDLyThue);
 
-            XElement mstDLyThue = new XElement("mstDLyThue", vatAgentTaxCode);
-            DLyThue.Add(mstDLyThue);
+                XElement dchiDLyThue = new XElement("dchiDLyThue", vatAgentAddress);
+                DLyThue.Add(dchiDLyThue);
 
-            XElement tenDLyThue = new XElement("tenDLyThue", vatAgentOwnerName);
-            DLyThue.Add(tenDLyThue);
+                XElement maHuyenDLyThue = new XElement("maHuyenDLyThue");
+                DLyThue.Add(maHuyenDLyThue);
 
-            XElement dchiDLyThue = new XElement("dchiDLyThue", vatAgentAddress);
-            DLyThue.Add(dchiDLyThue);
+                XElement tenHuyenDLyThue = new XElement("tenHuyenDLyThue", vatAgentDistrict);
+                DLyThue.Add(tenHuyenDLyThue);
 
-            XElement maHuyenDLyThue = new XElement("maHuyenDLyThue");
-            DLyThue.Add(maHuyenDLyThue);
+                XElement maTinhDLyThue = new XElement("maTinhDLyThue");
+                DLyThue.Add(maTinhDLyThue);
 
-            XElement tenHuyenDLyThue = new XElement("tenHuyenDLyThue", vatAgentDistrict);
-            DLyThue.Add(tenHuyenDLyThue);
+                XElement tenTinhDLyThue = new XElement("tenTinhDLyThue", vatAgentProvince);
+                DLyThue.Add(tenTinhDLyThue);
 
-            XElement maTinhDLyThue = new XElement("maTinhDLyThue");
-            DLyThue.Add(maTinhDLyThue);
+                XElement dthoaiDLyThue = new XElement("dthoaiDLyThue", vatAgentPhone);
+                DLyThue.Add(dthoaiDLyThue);
 
-            XElement tenTinhDLyThue = new XElement("tenTinhDLyThue", vatAgentProvince);
-            DLyThue.Add(tenTinhDLyThue);
+                XElement faxDLyThue = new XElement("faxDLyThue", vatAgentFax);
+                DLyThue.Add(faxDLyThue);
 
-            XElement dthoaiDLyThue = new XElement("dthoaiDLyThue", vatAgentPhone);
-            DLyThue.Add(dthoaiDLyThue);
+                XElement emailDLyThue = new XElement("emailDLyThue", vatAgentEmail);
+                DLyThue.Add(emailDLyThue);
 
-            XElement faxDLyThue = new XElement("faxDLyThue", vatAgentFax);
-            DLyThue.Add(faxDLyThue);
+                XElement soHDongDLyThue = new XElement("soHDongDLyThue", value20No);
+                DLyThue.Add(soHDongDLyThue);
 
-            XElement emailDLyThue = new XElement("emailDLyThue", vatAgentEmail);
-            DLyThue.Add(emailDLyThue);
+                XElement ngayKyHDDLyThue = new XElement("ngayKyHDDLyThue", value20Date);
+                DLyThue.Add(ngayKyHDDLyThue);
 
-            XElement soHDongDLyThue = new XElement("soHDongDLyThue", value20No);
-            DLyThue.Add(soHDongDLyThue);
+                XElement NVienDLy = new XElement("NVienDLy");
 
-            XElement ngayKyHDDLyThue = new XElement("ngayKyHDDLyThue", value20Date);
-            DLyThue.Add(ngayKyHDDLyThue);
+                XElement tenNVienDLyThue = new XElement("tenNVienDLyThue", vatAgentName);
+                NVienDLy.Add(tenNVienDLyThue);
 
-            XElement NVienDLy = new XElement("NVienDLy");
+                XElement cchiHNghe = new XElement("cchiHNghe", vatAgentNo);
+                NVienDLy.Add(cchiHNghe);
 
-            XElement tenNVienDLyThue = new XElement("tenNVienDLyThue", vatAgentName);
-            NVienDLy.Add(tenNVienDLyThue);
 
-            XElement cchiHNghe = new XElement("cchiHNghe", vatAgentNo);
-            NVienDLy.Add(cchiHNghe);
+                DLyThue.Add(NVienDLy);
 
+                TTinTKhaiThue.Add(DLyThue);
 
-            DLyThue.Add(NVienDLy);
+                TTinChung.Add(TTinTKhaiThue);
 
-            TTinTKhaiThue.Add(DLyThue);
+                HSoKhaiThue.Add(TTinChung);
 
-            TTinChung.Add(TTinTKhaiThue);
+                XElement CTieuTKhaiChinh = new XElement("CTieuTKhaiChinh");
 
-            HSoKhaiThue.Add(TTinChung);
+                XElement tieuMucHachToan = new XElement("tieuMucHachToan", "1701");
+                CTieuTKhaiChinh.Add(tieuMucHachToan);
 
-            XElement CTieuTKhaiChinh = new XElement("CTieuTKhaiChinh");
+                XElement ct21 = new XElement("ct21", value21);
+                CTieuTKhaiChinh.Add(ct21);
 
-            XElement tieuMucHachToan = new XElement("tieuMucHachToan", "1701");
-            CTieuTKhaiChinh.Add(tieuMucHachToan);
+                XElement ct22 = new XElement("ct22", value22);
+                CTieuTKhaiChinh.Add(ct22);
 
-            XElement ct21 = new XElement("ct21", value21);
-            CTieuTKhaiChinh.Add(ct21);
+                XElement GiaTriVaThueGTGTHHDVMuaVao = new XElement("GiaTriVaThueGTGTHHDVMuaVao");
 
-            XElement ct22 = new XElement("ct22", value22);
-            CTieuTKhaiChinh.Add(ct22);
 
-            XElement GiaTriVaThueGTGTHHDVMuaVao = new XElement("GiaTriVaThueGTGTHHDVMuaVao");
+                XElement ct23 = new XElement("ct23", vatForm.InputTotalAmount);
+                GiaTriVaThueGTGTHHDVMuaVao.Add(ct23);
 
+                XElement ct24 = new XElement("ct24", vatForm.InputTotalTaxAmount);
+                GiaTriVaThueGTGTHHDVMuaVao.Add(ct24);
 
-            XElement ct23 = new XElement("ct23", vatForm.InputTotalAmount);
-            GiaTriVaThueGTGTHHDVMuaVao.Add(ct23);
 
-            XElement ct24 = new XElement("ct24", vatForm.InputTotalTaxAmount);
-            GiaTriVaThueGTGTHHDVMuaVao.Add(ct24);
+                CTieuTKhaiChinh.Add(GiaTriVaThueGTGTHHDVMuaVao);
 
+                XElement ct25 = new XElement("ct25", value25);
+                CTieuTKhaiChinh.Add(ct25);
 
-            CTieuTKhaiChinh.Add(GiaTriVaThueGTGTHHDVMuaVao);
+                XElement ct26 = new XElement("ct26", vatForm.OutputCategories1TotalAmount);
+                CTieuTKhaiChinh.Add(ct26);
 
-            XElement ct25 = new XElement("ct25", value25);
-            CTieuTKhaiChinh.Add(ct25);
+                XElement HHDVBRaChiuThueGTGT = new XElement("HHDVBRaChiuThueGTGT");
 
-            XElement ct26 = new XElement("ct26", vatForm.OutputCategories1TotalAmount);
-            CTieuTKhaiChinh.Add(ct26);
+                XElement ct27 = new XElement("ct27", vatForm.HaveTaxOutputAmount);
+                HHDVBRaChiuThueGTGT.Add(ct27);
 
-            XElement HHDVBRaChiuThueGTGT = new XElement("HHDVBRaChiuThueGTGT");
+                XElement ct28 = new XElement("ct28", vatForm.OutputTotalTaxAmount);
+                HHDVBRaChiuThueGTGT.Add(ct28);
 
-            XElement ct27 = new XElement("ct27", vatForm.HaveTaxOutputAmount);
-            HHDVBRaChiuThueGTGT.Add(ct27);
+                CTieuTKhaiChinh.Add(HHDVBRaChiuThueGTGT);
 
-            XElement ct28 = new XElement("ct28", vatForm.OutputTotalTaxAmount);
-            HHDVBRaChiuThueGTGT.Add(ct28);
+                XElement ct29 = new XElement("ct29", vatForm.OutputCategories2TotalAmount);
+                CTieuTKhaiChinh.Add(ct29);
 
-            CTieuTKhaiChinh.Add(HHDVBRaChiuThueGTGT);
+                XElement HHDVBRaChiuTSuat5 = new XElement("HHDVBRaChiuTSuat5");
 
-            XElement ct29 = new XElement("ct29", vatForm.OutputCategories2TotalAmount);
-            CTieuTKhaiChinh.Add(ct29);
+                XElement ct30 = new XElement("ct30", vatForm.OutputCategories3TotalTaxAmount);
+                HHDVBRaChiuTSuat5.Add(ct30);
 
-            XElement HHDVBRaChiuTSuat5 = new XElement("HHDVBRaChiuTSuat5");
+                XElement ct31 = new XElement("ct31", vatForm.OutputCategories3TotalTaxAmount);
+                HHDVBRaChiuTSuat5.Add(ct31);
 
-            XElement ct30 = new XElement("ct30", vatForm.OutputCategories3TotalTaxAmount);
-            HHDVBRaChiuTSuat5.Add(ct30);
+                CTieuTKhaiChinh.Add(HHDVBRaChiuTSuat5);
 
-            XElement ct31 = new XElement("ct31", vatForm.OutputCategories3TotalTaxAmount);
-            HHDVBRaChiuTSuat5.Add(ct31);
+                XElement HHDVBRaChiuTSuat10 = new XElement("HHDVBRaChiuTSuat10");
 
-            CTieuTKhaiChinh.Add(HHDVBRaChiuTSuat5);
+                XElement ct32 = new XElement("ct32", vatForm.OutputCategories4TotalAmount);
+                HHDVBRaChiuTSuat10.Add(ct32);
 
-            XElement HHDVBRaChiuTSuat10 = new XElement("HHDVBRaChiuTSuat10");
+                XElement ct33 = new XElement("ct33", vatForm.OutputCategories4TotalTaxAmount);
+                HHDVBRaChiuTSuat10.Add(ct33);
 
-            XElement ct32 = new XElement("ct32", vatForm.OutputCategories4TotalAmount);
-            HHDVBRaChiuTSuat10.Add(ct32);
+                CTieuTKhaiChinh.Add(HHDVBRaChiuTSuat10);
 
-            XElement ct33 = new XElement("ct33", vatForm.OutputCategories4TotalTaxAmount);
-            HHDVBRaChiuTSuat10.Add(ct33);
+                XElement TongDThuVaThueGTGTHHDVBRa = new XElement("TongDThuVaThueGTGTHHDVBRa");
 
-            CTieuTKhaiChinh.Add(HHDVBRaChiuTSuat10);
+                XElement ct34 = new XElement("ct34", vatForm.OutputTotalAmount);
+                TongDThuVaThueGTGTHHDVBRa.Add(ct34);
 
-            XElement TongDThuVaThueGTGTHHDVBRa = new XElement("TongDThuVaThueGTGTHHDVBRa");
+                XElement ct35 = new XElement("ct35", vatForm.OutputTotalTaxAmount);
+                TongDThuVaThueGTGTHHDVBRa.Add(ct35);
 
-            XElement ct34 = new XElement("ct34", vatForm.OutputTotalAmount);
-            TongDThuVaThueGTGTHHDVBRa.Add(ct34);
+                CTieuTKhaiChinh.Add(TongDThuVaThueGTGTHHDVBRa);
 
-            XElement ct35 = new XElement("ct35", vatForm.OutputTotalTaxAmount);
-            TongDThuVaThueGTGTHHDVBRa.Add(ct35);
+                XElement ct36 = new XElement("ct36", value36);
+                CTieuTKhaiChinh.Add(ct36);
 
-            CTieuTKhaiChinh.Add(TongDThuVaThueGTGTHHDVBRa);
+                XElement ct37 = new XElement("ct37", value37);
+                CTieuTKhaiChinh.Add(ct37);
 
-            XElement ct36 = new XElement("ct36", value36);
-            CTieuTKhaiChinh.Add(ct36);
+                XElement ct38 = new XElement("ct38", value38);
+                CTieuTKhaiChinh.Add(ct38);
 
-            XElement ct37 = new XElement("ct37", value37);
-            CTieuTKhaiChinh.Add(ct37);
+                XElement ct39 = new XElement("ct39", value39);
+                CTieuTKhaiChinh.Add(ct39);
 
-            XElement ct38 = new XElement("ct38", value38);
-            CTieuTKhaiChinh.Add(ct38);
+                XElement ct40 = new XElement("ct40", value40);
+                CTieuTKhaiChinh.Add(ct40);
 
-            XElement ct39 = new XElement("ct39", value39);
-            CTieuTKhaiChinh.Add(ct39);
+                XElement ct40a = new XElement("ct40a", value40a);
+                CTieuTKhaiChinh.Add(ct40a);
 
-            XElement ct40 = new XElement("ct40", value40);
-            CTieuTKhaiChinh.Add(ct40);
+                XElement ct40b = new XElement("ct40b", value40b);
+                CTieuTKhaiChinh.Add(ct40b);
 
-            XElement ct40a = new XElement("ct40a", value40a);
-            CTieuTKhaiChinh.Add(ct40a);
+                XElement ct41 = new XElement("ct41", value41);
+                CTieuTKhaiChinh.Add(ct41);
 
-            XElement ct40b = new XElement("ct40b", value40b);
-            CTieuTKhaiChinh.Add(ct40b);
+                XElement ct42 = new XElement("ct42", value42);
+                CTieuTKhaiChinh.Add(ct42);
 
-            XElement ct41 = new XElement("ct41", value41);
-            CTieuTKhaiChinh.Add(ct41);
+                XElement ct43 = new XElement("ct43", value43);
+                CTieuTKhaiChinh.Add(ct43);
 
-            XElement ct42 = new XElement("ct42", value42);
-            CTieuTKhaiChinh.Add(ct42);
+                HSoKhaiThue.Add(CTieuTKhaiChinh);
 
-            XElement ct43 = new XElement("ct43", value43);
-            CTieuTKhaiChinh.Add(ct43);
+                XElement PLuc = new XElement("PLuc");
 
-            HSoKhaiThue.Add(CTieuTKhaiChinh);
+                #region PL01_1_GTGT
+                XElement PL01_1_GTGT = new XElement("PL01_1_GTGT");
 
-            XElement PLuc = new XElement("PLuc");
+                XElement HHDVKChiuThue = new XElement("HHDVKChiuThue");
 
-            #region PL01_1_GTGT
-            XElement PL01_1_GTGT = new XElement("PL01_1_GTGT");
-
-            XElement HHDVKChiuThue = new XElement("HHDVKChiuThue");
-
-            XElement ChiTietHHDVKChiuThue = new XElement("ChiTietHHDVKChiuThue");
-            if (vatForm.OutputCategories1 != null && vatForm.OutputCategories1.Count > 0)
-            {
-                for (int i = 0; i < vatForm.OutputCategories1.Count; i++)
+                XElement ChiTietHHDVKChiuThue = new XElement("ChiTietHHDVKChiuThue");
+                if (vatForm.OutputCategories1 != null && vatForm.OutputCategories1.Count > 0)
                 {
-                    XElement HDonBRa = new XElement("HDonBRa");
-                    HDonBRa.Add(new XAttribute("id", "ID_" + (i + 1)));
+                    for (int i = 0; i < vatForm.OutputCategories1.Count; i++)
+                    {
+                        XElement HDonBRa = new XElement("HDonBRa");
+                        HDonBRa.Add(new XAttribute("id", "ID_" + (i + 1)));
 
-                    XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
-                    HDonBRa.Add(kyHieuMauHDon);
+                        XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
+                        HDonBRa.Add(kyHieuMauHDon);
 
-                    XElement kyHieuHDon = new XElement("kyHieuHDon");
-                    HDonBRa.Add(kyHieuHDon);
+                        XElement kyHieuHDon = new XElement("kyHieuHDon");
+                        HDonBRa.Add(kyHieuHDon);
 
-                    XElement soHDon = new XElement("soHDon", vatForm.OutputCategories1.ElementAt(i).Column2);
-                    HDonBRa.Add(soHDon);
+                        XElement soHDon = new XElement("soHDon", vatForm.OutputCategories1.ElementAt(i).Column2);
+                        HDonBRa.Add(soHDon);
 
-                    XElement ngayPHanh = new XElement("ngayPHanh", vatForm.OutputCategories1.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
-                    HDonBRa.Add(ngayPHanh);
+                        XElement ngayPHanh = new XElement("ngayPHanh", vatForm.OutputCategories1.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
+                        HDonBRa.Add(ngayPHanh);
 
-                    XElement tenNMUA = new XElement("tenNMUA", vatForm.OutputCategories1.ElementAt(i).Column4);
-                    HDonBRa.Add(tenNMUA);
+                        XElement tenNMUA = new XElement("tenNMUA", vatForm.OutputCategories1.ElementAt(i).Column4);
+                        HDonBRa.Add(tenNMUA);
 
-                    XElement mstNMUA = new XElement("mstNMUA", vatForm.OutputCategories1.ElementAt(i).Column5);
-                    HDonBRa.Add(mstNMUA);
+                        XElement mstNMUA = new XElement("mstNMUA", vatForm.OutputCategories1.ElementAt(i).Column5);
+                        HDonBRa.Add(mstNMUA);
 
-                    XElement matHang = new XElement("matHang");
-                    HDonBRa.Add(matHang);
+                        XElement matHang = new XElement("matHang");
+                        HDonBRa.Add(matHang);
 
-                    XElement dsoBanChuaThue = new XElement("dsoBanChuaThue", vatForm.OutputCategories1.ElementAt(i).Column6);
-                    HDonBRa.Add(dsoBanChuaThue);
+                        XElement dsoBanChuaThue = new XElement("dsoBanChuaThue", vatForm.OutputCategories1.ElementAt(i).Column6);
+                        HDonBRa.Add(dsoBanChuaThue);
 
-                    XElement thueGTGT = new XElement("thueGTGT", vatForm.OutputCategories1.ElementAt(i).Column7);
-                    HDonBRa.Add(thueGTGT);
+                        XElement thueGTGT = new XElement("thueGTGT", vatForm.OutputCategories1.ElementAt(i).Column7);
+                        HDonBRa.Add(thueGTGT);
 
-                    XElement ghiChu = new XElement("ghiChu", vatForm.OutputCategories1.ElementAt(i).Column8);
+                        XElement ghiChu = new XElement("ghiChu", vatForm.OutputCategories1.ElementAt(i).Column8);
 
-                    ChiTietHHDVKChiuThue.Add(HDonBRa);
+                        ChiTietHHDVKChiuThue.Add(HDonBRa);
+                    }
                 }
-            }
 
 
-            HHDVKChiuThue.Add(ChiTietHHDVKChiuThue);
+                HHDVKChiuThue.Add(ChiTietHHDVKChiuThue);
 
-            XElement tongDThuBRaKChiuThue = new XElement("tongDThuBRaKChiuThue", vatForm.OutputCategories1TotalAmount);
-            HHDVKChiuThue.Add(tongDThuBRaKChiuThue);
+                XElement tongDThuBRaKChiuThue = new XElement("tongDThuBRaKChiuThue", vatForm.OutputCategories1TotalAmount);
+                HHDVKChiuThue.Add(tongDThuBRaKChiuThue);
 
-            PL01_1_GTGT.Add(HHDVKChiuThue);
+                PL01_1_GTGT.Add(HHDVKChiuThue);
 
-            #region 0%
+                #region 0%
 
-            XElement HHDVThue0 = new XElement("HHDVThue0");
+                XElement HHDVThue0 = new XElement("HHDVThue0");
 
-            XElement ChiTietHHDVThue0 = new XElement("ChiTietHHDVThue0");
-            if (vatForm.OutputCategories2 != null && vatForm.OutputCategories2.Count > 0)
-            {
-                for (int i = 0; i < vatForm.OutputCategories2.Count; i++)
+                XElement ChiTietHHDVThue0 = new XElement("ChiTietHHDVThue0");
+                if (vatForm.OutputCategories2 != null && vatForm.OutputCategories2.Count > 0)
                 {
-                    XElement HDonBRa = new XElement("HDonBRa");
-                    HDonBRa.Add(new XAttribute("id", "ID_" + (i + 1)));
+                    for (int i = 0; i < vatForm.OutputCategories2.Count; i++)
+                    {
+                        XElement HDonBRa = new XElement("HDonBRa");
+                        HDonBRa.Add(new XAttribute("id", "ID_" + (i + 1)));
 
-                    XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
-                    HDonBRa.Add(kyHieuMauHDon);
+                        XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
+                        HDonBRa.Add(kyHieuMauHDon);
 
-                    XElement kyHieuHDon = new XElement("kyHieuHDon");
-                    HDonBRa.Add(kyHieuHDon);
+                        XElement kyHieuHDon = new XElement("kyHieuHDon");
+                        HDonBRa.Add(kyHieuHDon);
 
-                    XElement soHDon = new XElement("soHDon", vatForm.OutputCategories2.ElementAt(i).Column2);
-                    HDonBRa.Add(soHDon);
+                        XElement soHDon = new XElement("soHDon", vatForm.OutputCategories2.ElementAt(i).Column2);
+                        HDonBRa.Add(soHDon);
 
-                    XElement ngayPHanh = new XElement("ngayPHanh", vatForm.OutputCategories2.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
-                    HDonBRa.Add(ngayPHanh);
+                        XElement ngayPHanh = new XElement("ngayPHanh", vatForm.OutputCategories2.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
+                        HDonBRa.Add(ngayPHanh);
 
-                    XElement tenNMUA = new XElement("tenNMUA", vatForm.OutputCategories2.ElementAt(i).Column4);
-                    HDonBRa.Add(tenNMUA);
+                        XElement tenNMUA = new XElement("tenNMUA", vatForm.OutputCategories2.ElementAt(i).Column4);
+                        HDonBRa.Add(tenNMUA);
 
-                    XElement mstNMUA = new XElement("mstNMUA", vatForm.OutputCategories2.ElementAt(i).Column5);
-                    HDonBRa.Add(mstNMUA);
+                        XElement mstNMUA = new XElement("mstNMUA", vatForm.OutputCategories2.ElementAt(i).Column5);
+                        HDonBRa.Add(mstNMUA);
 
-                    XElement matHang = new XElement("matHang");
-                    HDonBRa.Add(matHang);
+                        XElement matHang = new XElement("matHang");
+                        HDonBRa.Add(matHang);
 
-                    XElement dsoBanChuaThue = new XElement("dsoBanChuaThue", vatForm.OutputCategories2.ElementAt(i).Column6);
-                    HDonBRa.Add(dsoBanChuaThue);
+                        XElement dsoBanChuaThue = new XElement("dsoBanChuaThue", vatForm.OutputCategories2.ElementAt(i).Column6);
+                        HDonBRa.Add(dsoBanChuaThue);
 
-                    XElement thueGTGT = new XElement("thueGTGT", vatForm.OutputCategories2.ElementAt(i).Column7);
-                    HDonBRa.Add(thueGTGT);
+                        XElement thueGTGT = new XElement("thueGTGT", vatForm.OutputCategories2.ElementAt(i).Column7);
+                        HDonBRa.Add(thueGTGT);
 
-                    XElement ghiChu = new XElement("ghiChu", vatForm.OutputCategories2.ElementAt(i).Column8);
+                        XElement ghiChu = new XElement("ghiChu", vatForm.OutputCategories2.ElementAt(i).Column8);
 
-                    ChiTietHHDVThue0.Add(HDonBRa);
+                        ChiTietHHDVThue0.Add(HDonBRa);
+                    }
                 }
-            }
 
 
-            HHDVThue0.Add(ChiTietHHDVThue0);
+                HHDVThue0.Add(ChiTietHHDVThue0);
 
-            XElement tongDThuBRaThue0 = new XElement("tongDThuBRaKChiuThue", vatForm.OutputCategories1TotalAmount);
-            HHDVThue0.Add(tongDThuBRaThue0);
+                XElement tongDThuBRaThue0 = new XElement("tongDThuBRaKChiuThue", vatForm.OutputCategories1TotalAmount);
+                HHDVThue0.Add(tongDThuBRaThue0);
 
-            XElement tongThueBRaThue0 = new XElement("tongThueBRaThue0", "0");
-            HHDVThue0.Add(tongThueBRaThue0);
+                XElement tongThueBRaThue0 = new XElement("tongThueBRaThue0", "0");
+                HHDVThue0.Add(tongThueBRaThue0);
 
-            PL01_1_GTGT.Add(HHDVThue0);
+                PL01_1_GTGT.Add(HHDVThue0);
 
-            #endregion
+                #endregion
 
 
-            #region 5%
+                #region 5%
 
-            XElement HHDVThue5 = new XElement("HHDVThue5");
+                XElement HHDVThue5 = new XElement("HHDVThue5");
 
-            XElement ChiTietHHDVThue5 = new XElement("ChiTietHHDVThue5");
-            if (vatForm.OutputCategories3 != null && vatForm.OutputCategories3.Count > 0)
-            {
-                for (int i = 0; i < vatForm.OutputCategories3.Count; i++)
+                XElement ChiTietHHDVThue5 = new XElement("ChiTietHHDVThue5");
+                if (vatForm.OutputCategories3 != null && vatForm.OutputCategories3.Count > 0)
                 {
-                    XElement HDonBRa = new XElement("HDonBRa");
-                    HDonBRa.Add(new XAttribute("id", "ID_" + (i + 1)));
+                    for (int i = 0; i < vatForm.OutputCategories3.Count; i++)
+                    {
+                        XElement HDonBRa = new XElement("HDonBRa");
+                        HDonBRa.Add(new XAttribute("id", "ID_" + (i + 1)));
 
-                    XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
-                    HDonBRa.Add(kyHieuMauHDon);
+                        XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
+                        HDonBRa.Add(kyHieuMauHDon);
 
-                    XElement kyHieuHDon = new XElement("kyHieuHDon");
-                    HDonBRa.Add(kyHieuHDon);
+                        XElement kyHieuHDon = new XElement("kyHieuHDon");
+                        HDonBRa.Add(kyHieuHDon);
 
-                    XElement soHDon = new XElement("soHDon", vatForm.OutputCategories3.ElementAt(i).Column2);
-                    HDonBRa.Add(soHDon);
+                        XElement soHDon = new XElement("soHDon", vatForm.OutputCategories3.ElementAt(i).Column2);
+                        HDonBRa.Add(soHDon);
 
-                    XElement ngayPHanh = new XElement("ngayPHanh", vatForm.OutputCategories3.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
-                    HDonBRa.Add(ngayPHanh);
+                        XElement ngayPHanh = new XElement("ngayPHanh", vatForm.OutputCategories3.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
+                        HDonBRa.Add(ngayPHanh);
 
-                    XElement tenNMUA = new XElement("tenNMUA", vatForm.OutputCategories3.ElementAt(i).Column4);
-                    HDonBRa.Add(tenNMUA);
+                        XElement tenNMUA = new XElement("tenNMUA", vatForm.OutputCategories3.ElementAt(i).Column4);
+                        HDonBRa.Add(tenNMUA);
 
-                    XElement mstNMUA = new XElement("mstNMUA", vatForm.OutputCategories3.ElementAt(i).Column5);
-                    HDonBRa.Add(mstNMUA);
+                        XElement mstNMUA = new XElement("mstNMUA", vatForm.OutputCategories3.ElementAt(i).Column5);
+                        HDonBRa.Add(mstNMUA);
 
-                    XElement matHang = new XElement("matHang");
-                    HDonBRa.Add(matHang);
+                        XElement matHang = new XElement("matHang");
+                        HDonBRa.Add(matHang);
 
-                    XElement dsoBanChuaThue = new XElement("dsoBanChuaThue", vatForm.OutputCategories3.ElementAt(i).Column6);
-                    HDonBRa.Add(dsoBanChuaThue);
+                        XElement dsoBanChuaThue = new XElement("dsoBanChuaThue", vatForm.OutputCategories3.ElementAt(i).Column6);
+                        HDonBRa.Add(dsoBanChuaThue);
 
-                    XElement thueGTGT = new XElement("thueGTGT", vatForm.OutputCategories3.ElementAt(i).Column7);
-                    HDonBRa.Add(thueGTGT);
+                        XElement thueGTGT = new XElement("thueGTGT", vatForm.OutputCategories3.ElementAt(i).Column7);
+                        HDonBRa.Add(thueGTGT);
 
-                    XElement ghiChu = new XElement("ghiChu", vatForm.OutputCategories3.ElementAt(i).Column8);
+                        XElement ghiChu = new XElement("ghiChu", vatForm.OutputCategories3.ElementAt(i).Column8);
 
-                    ChiTietHHDVThue5.Add(HDonBRa);
+                        ChiTietHHDVThue5.Add(HDonBRa);
+                    }
                 }
-            }
 
 
-            HHDVThue5.Add(ChiTietHHDVThue5);
+                HHDVThue5.Add(ChiTietHHDVThue5);
 
-            XElement tongDThuBRaThue5 = new XElement("tongDThuBRaThue5", vatForm.OutputCategories3TotalAmount);
-            HHDVThue5.Add(tongDThuBRaThue5);
+                XElement tongDThuBRaThue5 = new XElement("tongDThuBRaThue5", vatForm.OutputCategories3TotalAmount);
+                HHDVThue5.Add(tongDThuBRaThue5);
 
-            XElement tongThueBRaThue5 = new XElement("tongThueBRaThue5", vatForm.OutputCategories3TotalTaxAmount);
-            HHDVThue5.Add(tongThueBRaThue5);
+                XElement tongThueBRaThue5 = new XElement("tongThueBRaThue5", vatForm.OutputCategories3TotalTaxAmount);
+                HHDVThue5.Add(tongThueBRaThue5);
 
-            PL01_1_GTGT.Add(HHDVThue5);
+                PL01_1_GTGT.Add(HHDVThue5);
 
-            #endregion
+                #endregion
 
 
-            #region 10%
+                #region 10%
 
-            XElement HHDVThue10 = new XElement("HHDVThue10");
+                XElement HHDVThue10 = new XElement("HHDVThue10");
 
-            XElement ChiTietHHDVThue10 = new XElement("ChiTietHHDVThue10");
-            if (vatForm.OutputCategories4 != null && vatForm.OutputCategories4.Count > 0)
-            {
-                for (int i = 0; i < vatForm.OutputCategories4.Count; i++)
+                XElement ChiTietHHDVThue10 = new XElement("ChiTietHHDVThue10");
+                if (vatForm.OutputCategories4 != null && vatForm.OutputCategories4.Count > 0)
                 {
-                    XElement HDonBRa = new XElement("HDonBRa");
-                    HDonBRa.Add(new XAttribute("id", "ID_" + (i + 1)));
+                    for (int i = 0; i < vatForm.OutputCategories4.Count; i++)
+                    {
+                        XElement HDonBRa = new XElement("HDonBRa");
+                        HDonBRa.Add(new XAttribute("id", "ID_" + (i + 1)));
 
-                    XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
-                    HDonBRa.Add(kyHieuMauHDon);
+                        XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
+                        HDonBRa.Add(kyHieuMauHDon);
 
-                    XElement kyHieuHDon = new XElement("kyHieuHDon");
-                    HDonBRa.Add(kyHieuHDon);
+                        XElement kyHieuHDon = new XElement("kyHieuHDon");
+                        HDonBRa.Add(kyHieuHDon);
 
-                    XElement soHDon = new XElement("soHDon", vatForm.OutputCategories4.ElementAt(i).Column2);
-                    HDonBRa.Add(soHDon);
+                        XElement soHDon = new XElement("soHDon", vatForm.OutputCategories4.ElementAt(i).Column2);
+                        HDonBRa.Add(soHDon);
 
-                    XElement ngayPHanh = new XElement("ngayPHanh", vatForm.OutputCategories4.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
-                    HDonBRa.Add(ngayPHanh);
+                        XElement ngayPHanh = new XElement("ngayPHanh", vatForm.OutputCategories4.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
+                        HDonBRa.Add(ngayPHanh);
 
-                    XElement tenNMUA = new XElement("tenNMUA", vatForm.OutputCategories4.ElementAt(i).Column4);
-                    HDonBRa.Add(tenNMUA);
+                        XElement tenNMUA = new XElement("tenNMUA", vatForm.OutputCategories4.ElementAt(i).Column4);
+                        HDonBRa.Add(tenNMUA);
 
-                    XElement mstNMUA = new XElement("mstNMUA", vatForm.OutputCategories4.ElementAt(i).Column5);
-                    HDonBRa.Add(mstNMUA);
+                        XElement mstNMUA = new XElement("mstNMUA", vatForm.OutputCategories4.ElementAt(i).Column5);
+                        HDonBRa.Add(mstNMUA);
 
-                    XElement matHang = new XElement("matHang");
-                    HDonBRa.Add(matHang);
+                        XElement matHang = new XElement("matHang");
+                        HDonBRa.Add(matHang);
 
-                    XElement dsoBanChuaThue = new XElement("dsoBanChuaThue", vatForm.OutputCategories4.ElementAt(i).Column6);
-                    HDonBRa.Add(dsoBanChuaThue);
+                        XElement dsoBanChuaThue = new XElement("dsoBanChuaThue", vatForm.OutputCategories4.ElementAt(i).Column6);
+                        HDonBRa.Add(dsoBanChuaThue);
 
-                    XElement thueGTGT = new XElement("thueGTGT", vatForm.OutputCategories4.ElementAt(i).Column7);
-                    HDonBRa.Add(thueGTGT);
+                        XElement thueGTGT = new XElement("thueGTGT", vatForm.OutputCategories4.ElementAt(i).Column7);
+                        HDonBRa.Add(thueGTGT);
 
-                    XElement ghiChu = new XElement("ghiChu", vatForm.OutputCategories4.ElementAt(i).Column8);
+                        XElement ghiChu = new XElement("ghiChu", vatForm.OutputCategories4.ElementAt(i).Column8);
 
-                    ChiTietHHDVThue10.Add(HDonBRa);
+                        ChiTietHHDVThue10.Add(HDonBRa);
+                    }
                 }
-            }
 
 
-            HHDVThue10.Add(ChiTietHHDVThue10);
+                HHDVThue10.Add(ChiTietHHDVThue10);
 
-            XElement tongDThuBRaThue10 = new XElement("tongDThuBRaThue10", vatForm.OutputCategories4TotalAmount);
-            HHDVThue10.Add(tongDThuBRaThue10);
+                XElement tongDThuBRaThue10 = new XElement("tongDThuBRaThue10", vatForm.OutputCategories4TotalAmount);
+                HHDVThue10.Add(tongDThuBRaThue10);
 
-            XElement tongThueBRaThue10 = new XElement("tongThueBRaThue10", vatForm.OutputCategories4TotalTaxAmount);
-            HHDVThue10.Add(tongThueBRaThue10);
+                XElement tongThueBRaThue10 = new XElement("tongThueBRaThue10", vatForm.OutputCategories4TotalTaxAmount);
+                HHDVThue10.Add(tongThueBRaThue10);
 
-            PL01_1_GTGT.Add(HHDVThue10);
+                PL01_1_GTGT.Add(HHDVThue10);
 
-            #endregion
+                #endregion
 
-            XElement HHDVBRaKhongTHop = new XElement("HHDVBRaKhongTHop");
+                XElement HHDVBRaKhongTHop = new XElement("HHDVBRaKhongTHop");
 
-            XElement ChiTietHHDVBRaKhongTHop = new XElement("ChiTietHHDVBRaKhongTHop");
-            HHDVBRaKhongTHop.Add(ChiTietHHDVBRaKhongTHop);
+                XElement ChiTietHHDVBRaKhongTHop = new XElement("ChiTietHHDVBRaKhongTHop");
+                HHDVBRaKhongTHop.Add(ChiTietHHDVBRaKhongTHop);
 
-            XElement tongDThuBRaKoKKhai = new XElement("tongDThuBRaKoKKhai", "0");
-            HHDVBRaKhongTHop.Add(tongDThuBRaKoKKhai);
+                XElement tongDThuBRaKoKKhai = new XElement("tongDThuBRaKoKKhai", "0");
+                HHDVBRaKhongTHop.Add(tongDThuBRaKoKKhai);
 
-            XElement tongThueBRaKoKKhai = new XElement("tongThueBRaKoKKhai", "0");
-            HHDVBRaKhongTHop.Add(HHDVBRaKhongTHop);
+                XElement tongThueBRaKoKKhai = new XElement("tongThueBRaKoKKhai", "0");
+                HHDVBRaKhongTHop.Add(HHDVBRaKhongTHop);
 
-            PL01_1_GTGT.Add(HHDVBRaKhongTHop);
+                PL01_1_GTGT.Add(HHDVBRaKhongTHop);
 
-            XElement tongDThuBRa = new XElement("tongDThuBRa", vatForm.OutputTotalAmount);
-            PL01_1_GTGT.Add(tongDThuBRa);
+                XElement tongDThuBRa = new XElement("tongDThuBRa", vatForm.OutputTotalAmount);
+                PL01_1_GTGT.Add(tongDThuBRa);
 
-            XElement tongDThuBRaChiuThue = new XElement("tongDThuBRaChiuThue", vatForm.HaveTaxOutputAmount);
-            PL01_1_GTGT.Add(tongDThuBRaChiuThue);
+                XElement tongDThuBRaChiuThue = new XElement("tongDThuBRaChiuThue", vatForm.HaveTaxOutputAmount);
+                PL01_1_GTGT.Add(tongDThuBRaChiuThue);
 
-            XElement tongThueBRa = new XElement("tongThueBRa", vatForm.OutputTotalTaxAmount);
-            PL01_1_GTGT.Add(tongThueBRa);
+                XElement tongThueBRa = new XElement("tongThueBRa", vatForm.OutputTotalTaxAmount);
+                PL01_1_GTGT.Add(tongThueBRa);
 
-            PLuc.Add(PL01_1_GTGT);
-            #endregion
-
-
-            #region PL01_2_GTGT
-            XElement PL01_2_GTGT = new XElement("PL01_2_GTGT");
-            #region HHDVDRieng
+                PLuc.Add(PL01_1_GTGT);
+                #endregion
 
 
-            XElement HHDVDRieng = new XElement("HHDVDRieng");
+                #region PL01_2_GTGT
+                XElement PL01_2_GTGT = new XElement("PL01_2_GTGT");
+                #region HHDVDRieng
 
-            XElement ChiTietHHDVDRieng = new XElement("ChiTietHHDVDRieng");
-            if (vatForm.InputCategories1 != null && vatForm.InputCategories1.Count > 0)
-            {
-                for (int i = 0; i < vatForm.InputCategories1.Count; i++)
+
+                XElement HHDVDRieng = new XElement("HHDVDRieng");
+
+                XElement ChiTietHHDVDRieng = new XElement("ChiTietHHDVDRieng");
+                if (vatForm.InputCategories1 != null && vatForm.InputCategories1.Count > 0)
                 {
-                    XElement HDonMVao = new XElement("HDonMVao");
-                    HDonMVao.Add(new XAttribute("id", "ID_" + (i + 1)));
+                    for (int i = 0; i < vatForm.InputCategories1.Count; i++)
+                    {
+                        XElement HDonMVao = new XElement("HDonMVao");
+                        HDonMVao.Add(new XAttribute("id", "ID_" + (i + 1)));
 
-                    XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
-                    HDonMVao.Add(kyHieuMauHDon);
+                        XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
+                        HDonMVao.Add(kyHieuMauHDon);
 
-                    XElement kyHieuHDon = new XElement("kyHieuHDon");
-                    HDonMVao.Add(kyHieuHDon);
+                        XElement kyHieuHDon = new XElement("kyHieuHDon");
+                        HDonMVao.Add(kyHieuHDon);
 
-                    XElement soHDon = new XElement("soHDon", vatForm.InputCategories1.ElementAt(i).Column2);
-                    HDonMVao.Add(soHDon);
+                        XElement soHDon = new XElement("soHDon", vatForm.InputCategories1.ElementAt(i).Column2);
+                        HDonMVao.Add(soHDon);
 
-                    XElement ngayPHanh = new XElement("ngayPHanh", vatForm.InputCategories1.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
-                    HDonMVao.Add(ngayPHanh);
+                        XElement ngayPHanh = new XElement("ngayPHanh", vatForm.InputCategories1.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
+                        HDonMVao.Add(ngayPHanh);
 
-                    XElement tenNBAN = new XElement("tenNBAN", vatForm.InputCategories1.ElementAt(i).Column4);
-                    HDonMVao.Add(tenNBAN);
+                        XElement tenNBAN = new XElement("tenNBAN", vatForm.InputCategories1.ElementAt(i).Column4);
+                        HDonMVao.Add(tenNBAN);
 
-                    XElement mstNBAN = new XElement("mstNBAN", vatForm.InputCategories1.ElementAt(i).Column5);
-                    HDonMVao.Add(mstNBAN);
+                        XElement mstNBAN = new XElement("mstNBAN", vatForm.InputCategories1.ElementAt(i).Column5);
+                        HDonMVao.Add(mstNBAN);
 
-                    XElement matHang = new XElement("matHang");
-                    HDonMVao.Add(matHang);
+                        XElement matHang = new XElement("matHang");
+                        HDonMVao.Add(matHang);
 
-                    XElement thueSuat = new XElement("thueSuat", "0");
-                    HDonMVao.Add(thueSuat);
+                        XElement thueSuat = new XElement("thueSuat", "0");
+                        HDonMVao.Add(thueSuat);
 
-                    XElement dsoMuaChuaThue = new XElement("dsoMuaChuaThue", vatForm.InputCategories1.ElementAt(i).Column6);
-                    HDonMVao.Add(dsoMuaChuaThue);
+                        XElement dsoMuaChuaThue = new XElement("dsoMuaChuaThue", vatForm.InputCategories1.ElementAt(i).Column6);
+                        HDonMVao.Add(dsoMuaChuaThue);
 
-                    XElement thueGTGT = new XElement("thueGTGT", vatForm.InputCategories1.ElementAt(i).Column7);
-                    HDonMVao.Add(thueGTGT);
+                        XElement thueGTGT = new XElement("thueGTGT", vatForm.InputCategories1.ElementAt(i).Column7);
+                        HDonMVao.Add(thueGTGT);
 
-                    XElement ghiChu = new XElement("ghiChu", vatForm.InputCategories1.ElementAt(i).Column8);
+                        XElement ghiChu = new XElement("ghiChu", vatForm.InputCategories1.ElementAt(i).Column8);
 
-                    ChiTietHHDVDRieng.Add(HDonMVao);
+                        ChiTietHHDVDRieng.Add(HDonMVao);
+                    }
                 }
-            }
 
 
-            HHDVDRieng.Add(ChiTietHHDVDRieng);
+                HHDVDRieng.Add(ChiTietHHDVDRieng);
 
-            XElement tongGTriMVao = new XElement("tongGTriMVao", vatForm.InputCategories1TotalAmount);
-            HHDVDRieng.Add(tongGTriMVao);
+                XElement tongGTriMVao = new XElement("tongGTriMVao", vatForm.InputCategories1TotalAmount);
+                HHDVDRieng.Add(tongGTriMVao);
 
-            XElement tongThueMVao = new XElement("tongThueMVao", vatForm.InputCategories1TotalTaxAmount);
-            HHDVDRieng.Add(tongThueMVao);
+                XElement tongThueMVao = new XElement("tongThueMVao", vatForm.InputCategories1TotalTaxAmount);
+                HHDVDRieng.Add(tongThueMVao);
 
-            PL01_2_GTGT.Add(HHDVDRieng);
-            #endregion
+                PL01_2_GTGT.Add(HHDVDRieng);
+                #endregion
 
-            #region HHDVKhongKTru
+                #region HHDVKhongKTru
 
-            XElement HHDVKhongKTru = new XElement("HHDVKhongKTru");
+                XElement HHDVKhongKTru = new XElement("HHDVKhongKTru");
 
-            XElement ChiTietHHDVKhongKTru = new XElement("ChiTietHHDVKhongKTru");
-            HHDVKhongKTru.Add(HHDVKhongKTru);
+                XElement ChiTietHHDVKhongKTru = new XElement("ChiTietHHDVKhongKTru");
+                HHDVKhongKTru.Add(HHDVKhongKTru);
 
-            XElement tongGTriMVao1 = new XElement("tongGTriMVao", "0");
-            HHDVKhongKTru.Add(tongGTriMVao1);
+                XElement tongGTriMVao1 = new XElement("tongGTriMVao", "0");
+                HHDVKhongKTru.Add(tongGTriMVao1);
 
-            XElement tongThueMVao1 = new XElement("tongThueMVao", "0");
-            HHDVKhongKTru.Add(tongThueMVao1);
+                XElement tongThueMVao1 = new XElement("tongThueMVao", "0");
+                HHDVKhongKTru.Add(tongThueMVao1);
 
-            PL01_2_GTGT.Add(HHDVKhongKTru);
+                PL01_2_GTGT.Add(HHDVKhongKTru);
 
-            #endregion
+                #endregion
 
-            #region HHDVDChung
+                #region HHDVDChung
 
 
-            XElement HHDVDChung = new XElement("HHDVDChung");
+                XElement HHDVDChung = new XElement("HHDVDChung");
 
-            XElement ChiTietHHDVDChung = new XElement("ChiTietHHDVDChung");
-            if (vatForm.InputCategories2 != null && vatForm.InputCategories2.Count > 0)
-            {
-                for (int i = 0; i < vatForm.InputCategories2.Count; i++)
+                XElement ChiTietHHDVDChung = new XElement("ChiTietHHDVDChung");
+                if (vatForm.InputCategories2 != null && vatForm.InputCategories2.Count > 0)
                 {
-                    XElement HDonMVao = new XElement("HDonMVao");
-                    HDonMVao.Add(new XAttribute("id", "ID_" + (i + 1)));
+                    for (int i = 0; i < vatForm.InputCategories2.Count; i++)
+                    {
+                        XElement HDonMVao = new XElement("HDonMVao");
+                        HDonMVao.Add(new XAttribute("id", "ID_" + (i + 1)));
 
-                    XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
-                    HDonMVao.Add(kyHieuMauHDon);
+                        XElement kyHieuMauHDon = new XElement("kyHieuMauHDon");
+                        HDonMVao.Add(kyHieuMauHDon);
 
-                    XElement kyHieuHDon = new XElement("kyHieuHDon");
-                    HDonMVao.Add(kyHieuHDon);
+                        XElement kyHieuHDon = new XElement("kyHieuHDon");
+                        HDonMVao.Add(kyHieuHDon);
 
-                    XElement soHDon = new XElement("soHDon", vatForm.InputCategories2.ElementAt(i).Column2);
-                    HDonMVao.Add(soHDon);
+                        XElement soHDon = new XElement("soHDon", vatForm.InputCategories2.ElementAt(i).Column2);
+                        HDonMVao.Add(soHDon);
 
-                    XElement ngayPHanh = new XElement("ngayPHanh", vatForm.InputCategories2.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
-                    HDonMVao.Add(ngayPHanh);
+                        XElement ngayPHanh = new XElement("ngayPHanh", vatForm.InputCategories2.ElementAt(i).Column3.ToString("yyyy-MM-dd"));
+                        HDonMVao.Add(ngayPHanh);
 
-                    XElement tenNBAN = new XElement("tenNBAN", vatForm.InputCategories2.ElementAt(i).Column4);
-                    HDonMVao.Add(tenNBAN);
+                        XElement tenNBAN = new XElement("tenNBAN", vatForm.InputCategories2.ElementAt(i).Column4);
+                        HDonMVao.Add(tenNBAN);
 
-                    XElement mstNBAN = new XElement("mstNBAN", vatForm.InputCategories2.ElementAt(i).Column5);
-                    HDonMVao.Add(mstNBAN);
+                        XElement mstNBAN = new XElement("mstNBAN", vatForm.InputCategories2.ElementAt(i).Column5);
+                        HDonMVao.Add(mstNBAN);
 
-                    XElement matHang = new XElement("matHang");
-                    HDonMVao.Add(matHang);
+                        XElement matHang = new XElement("matHang");
+                        HDonMVao.Add(matHang);
 
-                    XElement thueSuat = new XElement("thueSuat", "0");
-                    HDonMVao.Add(thueSuat);
+                        XElement thueSuat = new XElement("thueSuat", "0");
+                        HDonMVao.Add(thueSuat);
 
-                    XElement dsoMuaChuaThue = new XElement("dsoMuaChuaThue", vatForm.InputCategories2.ElementAt(i).Column6);
-                    HDonMVao.Add(dsoMuaChuaThue);
+                        XElement dsoMuaChuaThue = new XElement("dsoMuaChuaThue", vatForm.InputCategories2.ElementAt(i).Column6);
+                        HDonMVao.Add(dsoMuaChuaThue);
 
-                    XElement thueGTGT = new XElement("thueGTGT", vatForm.InputCategories2.ElementAt(i).Column7);
-                    HDonMVao.Add(thueGTGT);
+                        XElement thueGTGT = new XElement("thueGTGT", vatForm.InputCategories2.ElementAt(i).Column7);
+                        HDonMVao.Add(thueGTGT);
 
-                    XElement ghiChu = new XElement("ghiChu", vatForm.InputCategories2.ElementAt(i).Column8);
+                        XElement ghiChu = new XElement("ghiChu", vatForm.InputCategories2.ElementAt(i).Column8);
 
-                    ChiTietHHDVDChung.Add(HDonMVao);
+                        ChiTietHHDVDChung.Add(HDonMVao);
+                    }
                 }
+
+
+                HHDVDChung.Add(ChiTietHHDVDChung);
+
+                XElement tongGTriMVao3 = new XElement("tongGTriMVao", vatForm.InputCategories2TotalAmount);
+                HHDVDChung.Add(tongGTriMVao3);
+
+                XElement tongThueMVao3 = new XElement("tongThueMVao", vatForm.InputCategories2TotalTaxAmount);
+                HHDVDChung.Add(tongThueMVao3);
+
+                PL01_2_GTGT.Add(HHDVDChung);
+                #endregion
+
+                #region HHDVKTru
+
+                XElement HHDVKTru = new XElement("HHDVKTru");
+
+                XElement ChiTietHHDVKTru = new XElement("ChiTietHHDVKTru");
+                HHDVKTru.Add(ChiTietHHDVKTru);
+
+                XElement tongGTriMVao2 = new XElement("tongGTriMVao", "0");
+                HHDVKTru.Add(tongGTriMVao2);
+
+                XElement tongThueMVao2 = new XElement("tongThueMVao", "0");
+                HHDVKTru.Add(tongThueMVao2);
+
+                PL01_2_GTGT.Add(HHDVKTru);
+
+                #endregion
+
+                #region HHDVMVaoKhongTHop
+
+                XElement HHDVMVaoKhongTHop = new XElement("HHDVMVaoKhongTHop");
+
+                XElement ChiTietHHDVMVaoKhongTHop = new XElement("ChiTietHHDVMVaoKhongTHop");
+                HHDVMVaoKhongTHop.Add(ChiTietHHDVKTru);
+
+                XElement tongGTriMVao4 = new XElement("tongGTriMVao", "0");
+                HHDVMVaoKhongTHop.Add(tongGTriMVao4);
+
+                XElement tongThueMVao4 = new XElement("tongThueMVao", "0");
+                HHDVMVaoKhongTHop.Add(tongThueMVao4);
+
+                PL01_2_GTGT.Add(HHDVMVaoKhongTHop);
+
+                #endregion
+
+
+                XElement tongGTriMVao5 = new XElement("tongGTriMVao", vatForm.InputTotalAmount);
+                PL01_2_GTGT.Add(tongGTriMVao5);
+
+
+                XElement tongThueMVao5 = new XElement("tongThueMVao", vatForm.InputTotalTaxAmount);
+                PL01_2_GTGT.Add(tongThueMVao5);
+
+                PLuc.Add(PL01_2_GTGT);
+                #endregion
+
+
+                HSoKhaiThue.Add(PLuc);
+
+                root.Add(HSoKhaiThue);
+
+                var xs = new XmlSerializer(root.GetType());
+                var stream = new MemoryStream();
+                var streamWriter = new StreamWriter(stream, System.Text.Encoding.UTF8);
+
+                xs.Serialize(streamWriter, root);
+                stream.Position = 0;
+                return File(stream, "application/xml", "VAT_Quy" + taxQuarter + "_" + taxYear + ".xml");
+
+                #endregion
             }
-
-
-            HHDVDChung.Add(ChiTietHHDVDChung);
-
-            XElement tongGTriMVao3 = new XElement("tongGTriMVao", vatForm.InputCategories2TotalAmount);
-            HHDVDChung.Add(tongGTriMVao3);
-
-            XElement tongThueMVao3 = new XElement("tongThueMVao", vatForm.InputCategories2TotalTaxAmount);
-            HHDVDChung.Add(tongThueMVao3);
-
-            PL01_2_GTGT.Add(HHDVDChung);
-            #endregion
-
-            #region HHDVKTru
-
-            XElement HHDVKTru = new XElement("HHDVKTru");
-
-            XElement ChiTietHHDVKTru = new XElement("ChiTietHHDVKTru");
-            HHDVKTru.Add(ChiTietHHDVKTru);
-
-            XElement tongGTriMVao2 = new XElement("tongGTriMVao", "0");
-            HHDVKTru.Add(tongGTriMVao2);
-
-            XElement tongThueMVao2 = new XElement("tongThueMVao", "0");
-            HHDVKTru.Add(tongThueMVao2);
-
-            PL01_2_GTGT.Add(HHDVKTru);
-
-            #endregion
-
-            #region HHDVMVaoKhongTHop
-
-            XElement HHDVMVaoKhongTHop = new XElement("HHDVMVaoKhongTHop");
-
-            XElement ChiTietHHDVMVaoKhongTHop = new XElement("ChiTietHHDVMVaoKhongTHop");
-            HHDVMVaoKhongTHop.Add(ChiTietHHDVKTru);
-
-            XElement tongGTriMVao4 = new XElement("tongGTriMVao", "0");
-            HHDVMVaoKhongTHop.Add(tongGTriMVao4);
-
-            XElement tongThueMVao4 = new XElement("tongThueMVao", "0");
-            HHDVMVaoKhongTHop.Add(tongThueMVao4);
-
-            PL01_2_GTGT.Add(HHDVMVaoKhongTHop);
-
-            #endregion
-
-
-            XElement tongGTriMVao5 = new XElement("tongGTriMVao", vatForm.InputTotalAmount);
-            PL01_2_GTGT.Add(tongGTriMVao5);
-
-
-            XElement tongThueMVao5 = new XElement("tongThueMVao", vatForm.InputTotalTaxAmount);
-            PL01_2_GTGT.Add(tongThueMVao5);
-
-            PLuc.Add(PL01_2_GTGT);
-            #endregion
-
-
-            HSoKhaiThue.Add(PLuc);
-
-            root.Add(HSoKhaiThue);
-
-            var xs = new XmlSerializer(root.GetType());
-            var stream = new MemoryStream();
-            var streamWriter = new StreamWriter(stream, System.Text.Encoding.UTF8);
-
-            xs.Serialize(streamWriter, root);
-            stream.Position = 0;
-            return File(stream, "application/xml", "VAT_Quy" + taxQuarter + "_" + taxYear + ".xml");
-
-            #endregion
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
         }
 
         public int CancelVatTaxDeclaration(int quarter, int year)
         {
-            TaxBusiness business = new TaxBusiness();
-            return (business.CancelVatTaxDeclaration(quarter, year) ? 1 : 0);
+            try
+            {
+                TaxBusiness business = new TaxBusiness();
+                return (business.CancelVatTaxDeclaration(quarter, year) ? 1 : 0);
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+
         }
 
         #endregion
@@ -1826,316 +1866,341 @@ namespace BMA.Controllers
         [HttpPost]
         public int ChangeTndn(FormCollection form)
         {
-            string tndnRateString = form["tndnRate"];
-            string beginDateString = form["tndnBeginDate"];
-            if (!(tndnRateString.IsEmpty() || beginDateString.IsEmpty()))
+            try
             {
-                int tndnRate;
+                string tndnRateString = form["tndnRate"];
+                string beginDateString = form["tndnBeginDate"];
+                if (!(tndnRateString.IsEmpty() || beginDateString.IsEmpty()))
+                {
+                    int tndnRate;
 
-                if (!(int.TryParse(tndnRateString, out tndnRate)))
-                {
-                    return 0;
+                    if (!(int.TryParse(tndnRateString, out tndnRate)))
+                    {
+                        return 0;
+                    }
+                    DateTime beginDate;
+                    DateTime.TryParse(beginDateString, out beginDate);
+                    if (!(DateTime.TryParse(beginDateString, out beginDate)))
+                    {
+                        return 0;
+                    }
+                    TaxBusiness taxBusiness = new TaxBusiness();
+                    bool rs = taxBusiness.ChangeTndn(tndnRate, beginDate);
+                    return rs ? 1 : 0;
                 }
-                DateTime beginDate;
-                DateTime.TryParse(beginDateString, out beginDate);
-                if (!(DateTime.TryParse(beginDateString, out beginDate)))
-                {
-                    return 0;
-                }
-                TaxBusiness taxBusiness = new TaxBusiness();
-                bool rs = taxBusiness.ChangeTndn(tndnRate, beginDate);
-                return rs ? 1 : 0;
+                return 0;
             }
-            return 0;
+            catch (Exception)
+            {
+                return 0;
+            }
+
         }
 
         public ActionResult TndnTaxDeclaration(int year)
         {
-            TaxBusiness business = new TaxBusiness();
-            TndnTaxDeclaration result = business.GeTndnTaxDeclaration(year);
+            try
+            {
+                TaxBusiness business = new TaxBusiness();
+                TndnTaxDeclaration result = business.GeTndnTaxDeclaration(year);
 
+                return View(result);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
 
-            return View(result);
         }
 
         [HttpPost]
         public int SaveTndnTaxTndnTaxDeclaration(FormCollection form)
         {
-            #region Get Data from Form
-            string taxYear = form["taxYear"];
-
-            //Store Info Not get from form; Get from DB
-            BMAEntities db = new BMAEntities();
-
-            StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
-
-            string createDate = form["createDate"];
-            string vatAgentOwnerName = form["vatAgentOwnerName"];
-            string vatAgentName = form["agentName"];
-            string vatAgentTaxCodeString = form["agentTaxCode"];
-            string vatAgentTaxCode = "";
-            if (vatAgentTaxCodeString != null)
+            try
             {
-                vatAgentTaxCode = vatAgentTaxCodeString.Replace(",", "");
+                #region Get Data from Form
+                string taxYear = form["taxYear"];
+
+                //Store Info Not get from form; Get from DB
+                BMAEntities db = new BMAEntities();
+
+                StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
+
+                string createDate = form["createDate"];
+                string vatAgentOwnerName = form["vatAgentOwnerName"];
+                string vatAgentName = form["agentName"];
+                string vatAgentTaxCodeString = form["agentTaxCode"];
+                string vatAgentTaxCode = "";
+                if (vatAgentTaxCodeString != null)
+                {
+                    vatAgentTaxCode = vatAgentTaxCodeString.Replace(",", "");
+                }
+                string vatAgentNo = form["agentNo"];
+                string vatAgentAddress = form["vatAgentAddress"];
+                string vatAgentDistrict = form["vatAgentDistrict"];
+                string vatAgentProvince = form["vatAgentProvince"];
+                string vatAgentPhone = form["vatAgentPhone"];
+                string vatAgentFax = form["vatAgentFax"];
+                string vatAgentEmail = form["vatAgentEmail"];
+                string signName = form["signName"];
+                string maxRevenueRatio = form["maxRevenueRatio"];
+
+
+                string value22No = form["value22No"];
+                string value22Date = form["value22Date"];
+
+                string valueA1 = form["valueA1"].Replace(".", "");
+
+                string valueB1 = form["valueB1"].Replace(".", "");
+                string valueB2 = form["valueB2"].Replace(".", "");
+                string valueB3 = form["valueB3"].Replace(".", "");
+                string valueB4 = form["valueB4"].Replace(".", "");
+                string valueB5 = form["valueB5"].Replace(".", "");
+                string valueB6 = form["valueB6"].Replace(".", "");
+                string valueB7 = form["valueB7"].Replace(".", "");
+                string valueB8 = form["valueB8"].Replace(".", "");
+                string valueB9 = form["valueB9"].Replace(".", "");
+                string valueB10 = form["valueB10"].Replace(".", "");
+                string valueB11 = form["valueB11"].Replace(".", "");
+                string valueB12 = form["valueB12"].Replace(".", "");
+                string valueB13 = form["valueB13"].Replace(".", "");
+                string valueB14 = form["valueB14"].Replace(".", "");
+
+                string valueC1 = form["valueC1"].Replace(".", "");
+                string valueC2 = form["valueC2"].Replace(".", "");
+                string valueC3 = form["valueC3"].Replace(".", "");
+                string valueC3a = form["valueC3a"].Replace(".", "");
+                string valueC3b = form["valueC3b"].Replace(".", "");
+                string valueC4 = form["valueC4"].Replace(".", "");
+                string valueC5 = form["valueC5"].Replace(".", "");
+                string valueC6 = form["valueC6"].Replace(".", "");
+                string valueC7 = form["valueC7"].Replace(".", "");
+                string valueC8 = form["valueC8"].Replace(".", "");
+                string valueC9 = form["valueC9"].Replace(".", "");
+                string valueC9a = form["valueC9a"].Replace(".", "");
+                string valueC10 = form["valueC10"].Replace(".", "");
+                string valueC11 = form["valueC11"].Replace(".", "");
+                string valueC12 = form["valueC12"].Replace(".", "");
+                string valueC13 = form["valueC13"].Replace(".", "");
+                string valueC14 = form["valueC14"].Replace(".", "");
+                string valueC15 = form["valueC15"].Replace(".", "");
+                string valueC16 = form["valueC16"].Replace(".", "");
+
+                string valueD = form["valueD"].Replace(".", "");
+                string valueD1 = form["valueD1"].Replace(".", "");
+                string valueD2 = form["valueD2"].Replace(".", "");
+                string valueD3 = form["valueD3"].Replace(".", "");
+
+                string valueE = form["valueE"].Replace(".", "");
+                string valueE1 = form["valueE1"].Replace(".", "");
+                string valueE2 = form["valueE2"].Replace(".", "");
+                string valueE3 = form["valueE3"].Replace(".", "");
+
+                string valueG = form["valueG"].Replace(".", "");
+                string valueG1 = form["valueG1"].Replace(".", "");
+                string valueG2 = form["valueG2"].Replace(".", "");
+                string valueG3 = form["valueG3"].Replace(".", "");
+
+                string valueH = form["valueH"].Replace(".", "");
+                string valueI = form["valueI"].Replace(".", "");
+
+                string valueL1 = form["valueL1"];
+                string valueL2Code = form["valueL2Code"];
+                string valueL3 = form["valueL3"];
+                string valueL4 = form["valueL4"].Replace(".", "");
+                string valueL5 = form["valueL5"].Replace(".", "");
+
+                string valueM1DayQuantity = form["valueM1DayQuantity"];
+                string valueM1FromDate = form["valueM1FromDate"];
+                string valueM1ToDate = form["valueM1ToDate"];
+                string valueM2 = form["valueM2"].Replace(".", "");
+
+                string value1 = form["value01"].Replace(".", "");
+                string value2 = form["value02"].Replace(".", "");
+                string value3 = form["value03"].Replace(".", "");
+                string value4 = form["value04"].Replace(".", "");
+                string value5 = form["value05"].Replace(".", "");
+                string value6 = form["value06"].Replace(".", "");
+                string value7 = form["value07"].Replace(".", "");
+                string value8 = form["value08"].Replace(".", "");
+                string value9 = form["value09"].Replace(".", "");
+                string value10 = form["value10"].Replace(".", "");
+                string value11 = form["value11"].Replace(".", "");
+                string value12 = form["value12"].Replace(".", "");
+                string value13 = form["value13"].Replace(".", "");
+                string value14 = form["value14"].Replace(".", "");
+                string value15 = form["value15"].Replace(".", "");
+                string value16 = form["value16"].Replace(".", "");
+                string value17 = form["value17"].Replace(".", "");
+                string value18 = form["value18"].Replace(".", "");
+                string value19 = form["value19"].Replace(".", "");
+                #endregion
+
+                #region Create TndnTaxDeclaration Model and Save
+
+                TndnTaxDeclaration tndn = new TndnTaxDeclaration();
+
+                tndn.Year = Convert.ToInt32(taxYear.Trim());
+                if (maxRevenueRatio.Trim().Length > 0)
+                {
+                    tndn.MaxRevenueRatio = Convert.ToInt32(maxRevenueRatio.Trim());
+                }
+                else
+                {
+                    tndn.MaxRevenueRatio = 0;
+                }
+
+                tndn.StoreOwnerName = storeInfo.OwnerName;
+                tndn.StoreTaxCode = storeInfo.TaxCode;
+                tndn.StoreAddress = storeInfo.Address;
+                tndn.StoreDistrict = storeInfo.District;
+                tndn.StoreProvince = storeInfo.Province;
+                tndn.StorePhone = storeInfo.Phonenumber;
+                tndn.StoreFax = storeInfo.Fax;
+                tndn.StoreEmail = storeInfo.Email;
+
+                tndn.TaxAgentTaxCode = vatAgentTaxCode;
+                tndn.TaxAgentName = vatAgentName;
+                tndn.TaxAgentOwnerName = vatAgentOwnerName;
+                tndn.TaxAgentNo = vatAgentNo;
+                tndn.TaxAgentAddress = vatAgentAddress;
+                tndn.TaxAgentDistrict = vatAgentDistrict;
+                tndn.TaxAgentProvince = vatAgentProvince;
+                tndn.TaxAgentPhone = vatAgentPhone;
+                tndn.TaxAgentFax = vatAgentFax;
+                tndn.TaxAgentEmail = vatAgentEmail;
+                tndn.SignName = signName;
+                if (createDate != null)
+                {
+                    tndn.CreateDate = DateTime.ParseExact(createDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                }
+
+
+                if (value22No.Trim().Length > 0)
+                {
+                    tndn.Value22No = Convert.ToInt32(value22No);
+                }
+
+                tndn.Value22Date = DateTime.ParseExact(value22Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                tndn.ValueA1 = Convert.ToInt32(valueA1);
+                tndn.ValueB1 = Convert.ToInt32(valueB1);
+                tndn.ValueB2 = Convert.ToInt32(valueB2);
+                tndn.ValueB3 = Convert.ToInt32(valueB3);
+                tndn.ValueB4 = Convert.ToInt32(valueB4);
+                tndn.ValueB5 = Convert.ToInt32(valueB5);
+                tndn.ValueB6 = Convert.ToInt32(valueB6);
+                tndn.ValueB7 = Convert.ToInt32(valueB7);
+                tndn.ValueB8 = Convert.ToInt32(valueB8);
+                tndn.ValueB9 = Convert.ToInt32(valueB9);
+                tndn.ValueB10 = Convert.ToInt32(valueB10);
+                tndn.ValueB11 = Convert.ToInt32(valueB11);
+                tndn.ValueB12 = Convert.ToInt32(valueB12);
+                tndn.ValueB13 = Convert.ToInt32(valueB13);
+                tndn.ValueB14 = Convert.ToInt32(valueB14);
+
+                tndn.ValueC1 = Convert.ToInt32(valueC1);
+                tndn.ValueC2 = Convert.ToInt32(valueC2);
+                tndn.ValueC3 = Convert.ToInt32(valueC3);
+                tndn.ValueC3a = Convert.ToInt32(valueC3a);
+                tndn.ValueC3b = Convert.ToInt32(valueC3b);
+                tndn.ValueC4 = Convert.ToInt32(valueC4);
+                tndn.ValueC5 = Convert.ToInt32(valueC5);
+                tndn.ValueC6 = Convert.ToInt32(valueC6);
+                tndn.ValueC7 = Convert.ToInt32(valueC7);
+                tndn.ValueC8 = Convert.ToInt32(valueC8);
+                tndn.ValueC9 = Convert.ToInt32(valueC9);
+                tndn.ValueC9a = Convert.ToInt32(valueC9a);
+                tndn.ValueC10 = Convert.ToInt32(valueC10);
+                tndn.ValueC11 = Convert.ToInt32(valueC11);
+                tndn.ValueC12 = Convert.ToInt32(valueC12);
+                tndn.ValueC13 = Convert.ToInt32(valueC13);
+                tndn.ValueC14 = Convert.ToInt32(valueC14);
+                tndn.ValueC15 = Convert.ToInt32(valueC15);
+                tndn.ValueC16 = Convert.ToInt32(valueC16);
+
+                tndn.ValueD = Convert.ToInt32(valueD);
+                tndn.ValueD1 = Convert.ToInt32(valueD1);
+                tndn.ValueD2 = Convert.ToInt32(valueD2);
+                tndn.ValueD3 = Convert.ToInt32(valueD3);
+
+                tndn.ValueE = Convert.ToInt32(valueE);
+                tndn.ValueE1 = Convert.ToInt32(valueE1);
+                tndn.ValueE2 = Convert.ToInt32(valueE2);
+                tndn.ValueE3 = Convert.ToInt32(valueE3);
+
+                tndn.ValueG = Convert.ToInt32(valueG);
+                tndn.ValueG1 = Convert.ToInt32(valueG1);
+                tndn.ValueG2 = Convert.ToInt32(valueG2);
+                tndn.ValueG3 = Convert.ToInt32(valueG3);
+
+                tndn.ValueH = Convert.ToInt32(valueH);
+                tndn.ValueI = Convert.ToInt32(valueI);
+
+                if (valueL1 != null && valueL1.Equals("on"))
+                {
+                    tndn.ValueL1 = true;
+                    tndn.ValueL2No = Convert.ToInt32(valueL2Code);
+                    tndn.ValueL3 = DateTime.ParseExact(valueL3, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    tndn.ValueL4 = Convert.ToInt32(valueL4);
+                    tndn.ValueL5 = Convert.ToInt32(valueL5);
+                }
+                else
+                {
+                    tndn.ValueL1 = false;
+                }
+
+                if (!valueM1FromDate.IsEmpty())
+                {
+                    tndn.ValueM1FromDate = DateTime.ParseExact(valueM1FromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                }
+
+                if (!valueM1ToDate.IsEmpty())
+                {
+                    tndn.ValueM1ToDate = DateTime.ParseExact(valueM1FromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                }
+
+                tndn.ValueM2 = Convert.ToInt32(valueM2);
+
+                tndn.Value1 = Convert.ToInt32(value1);
+                tndn.Value2 = Convert.ToInt32(value2);
+                tndn.Value3 = Convert.ToInt32(value3);
+                tndn.Value4 = Convert.ToInt32(value4);
+                tndn.Value5 = Convert.ToInt32(value5);
+                tndn.Value6 = Convert.ToInt32(value6);
+                tndn.Value7 = Convert.ToInt32(value7);
+                tndn.Value8 = Convert.ToInt32(value8);
+                tndn.Value9 = Convert.ToInt32(value9);
+                tndn.Value10 = Convert.ToInt32(value10);
+                tndn.Value11 = Convert.ToInt32(value11);
+                tndn.Value12 = Convert.ToInt32(value12);
+                tndn.Value13 = Convert.ToInt32(value13);
+                tndn.Value14 = Convert.ToInt32(value14);
+                tndn.Value15 = Convert.ToInt32(value15);
+                tndn.Value16 = Convert.ToInt32(value16);
+                tndn.Value17 = Convert.ToInt32(value17);
+                tndn.Value18 = Convert.ToInt32(value18);
+                tndn.Value19 = Convert.ToInt32(value19);
+
+                TaxBusiness business = new TaxBusiness();
+                return business.SaveTndnTaxDeclaration(tndn) ? 1 : 0;
+
+                #endregion
             }
-            string vatAgentNo = form["agentNo"];
-            string vatAgentAddress = form["vatAgentAddress"];
-            string vatAgentDistrict = form["vatAgentDistrict"];
-            string vatAgentProvince = form["vatAgentProvince"];
-            string vatAgentPhone = form["vatAgentPhone"];
-            string vatAgentFax = form["vatAgentFax"];
-            string vatAgentEmail = form["vatAgentEmail"];
-            string signName = form["signName"];
-            string maxRevenueRatio = form["maxRevenueRatio"];
-
-
-            string value22No = form["value22No"];
-            string value22Date = form["value22Date"];
-
-            string valueA1 = form["valueA1"].Replace(".", "");
-
-            string valueB1 = form["valueB1"].Replace(".", "");
-            string valueB2 = form["valueB2"].Replace(".", "");
-            string valueB3 = form["valueB3"].Replace(".", "");
-            string valueB4 = form["valueB4"].Replace(".", "");
-            string valueB5 = form["valueB5"].Replace(".", "");
-            string valueB6 = form["valueB6"].Replace(".", "");
-            string valueB7 = form["valueB7"].Replace(".", "");
-            string valueB8 = form["valueB8"].Replace(".", "");
-            string valueB9 = form["valueB9"].Replace(".", "");
-            string valueB10 = form["valueB10"].Replace(".", "");
-            string valueB11 = form["valueB11"].Replace(".", "");
-            string valueB12 = form["valueB12"].Replace(".", "");
-            string valueB13 = form["valueB13"].Replace(".", "");
-            string valueB14 = form["valueB14"].Replace(".", "");
-
-            string valueC1 = form["valueC1"].Replace(".", "");
-            string valueC2 = form["valueC2"].Replace(".", "");
-            string valueC3 = form["valueC3"].Replace(".", "");
-            string valueC3a = form["valueC3a"].Replace(".", "");
-            string valueC3b = form["valueC3b"].Replace(".", "");
-            string valueC4 = form["valueC4"].Replace(".", "");
-            string valueC5 = form["valueC5"].Replace(".", "");
-            string valueC6 = form["valueC6"].Replace(".", "");
-            string valueC7 = form["valueC7"].Replace(".", "");
-            string valueC8 = form["valueC8"].Replace(".", "");
-            string valueC9 = form["valueC9"].Replace(".", "");
-            string valueC9a = form["valueC9a"].Replace(".", "");
-            string valueC10 = form["valueC10"].Replace(".", "");
-            string valueC11 = form["valueC11"].Replace(".", "");
-            string valueC12 = form["valueC12"].Replace(".", "");
-            string valueC13 = form["valueC13"].Replace(".", "");
-            string valueC14 = form["valueC14"].Replace(".", "");
-            string valueC15 = form["valueC15"].Replace(".", "");
-            string valueC16 = form["valueC16"].Replace(".", "");
-
-            string valueD = form["valueD"].Replace(".", "");
-            string valueD1 = form["valueD1"].Replace(".", "");
-            string valueD2 = form["valueD2"].Replace(".", "");
-            string valueD3 = form["valueD3"].Replace(".", "");
-
-            string valueE = form["valueE"].Replace(".", "");
-            string valueE1 = form["valueE1"].Replace(".", "");
-            string valueE2 = form["valueE2"].Replace(".", "");
-            string valueE3 = form["valueE3"].Replace(".", "");
-
-            string valueG = form["valueG"].Replace(".", "");
-            string valueG1 = form["valueG1"].Replace(".", "");
-            string valueG2 = form["valueG2"].Replace(".", "");
-            string valueG3 = form["valueG3"].Replace(".", "");
-
-            string valueH = form["valueH"].Replace(".", "");
-            string valueI = form["valueI"].Replace(".", "");
-
-            string valueL1 = form["valueL1"];
-            string valueL2Code = form["valueL2Code"];
-            string valueL3 = form["valueL3"];
-            string valueL4 = form["valueL4"].Replace(".", "");
-            string valueL5 = form["valueL5"].Replace(".", "");
-
-            string valueM1DayQuantity = form["valueM1DayQuantity"];
-            string valueM1FromDate = form["valueM1FromDate"];
-            string valueM1ToDate = form["valueM1ToDate"];
-            string valueM2 = form["valueM2"].Replace(".", "");
-
-            string value1 = form["value01"].Replace(".", "");
-            string value2 = form["value02"].Replace(".", "");
-            string value3 = form["value03"].Replace(".", "");
-            string value4 = form["value04"].Replace(".", "");
-            string value5 = form["value05"].Replace(".", "");
-            string value6 = form["value06"].Replace(".", "");
-            string value7 = form["value07"].Replace(".", "");
-            string value8 = form["value08"].Replace(".", "");
-            string value9 = form["value09"].Replace(".", "");
-            string value10 = form["value10"].Replace(".", "");
-            string value11 = form["value11"].Replace(".", "");
-            string value12 = form["value12"].Replace(".", "");
-            string value13 = form["value13"].Replace(".", "");
-            string value14 = form["value14"].Replace(".", "");
-            string value15 = form["value15"].Replace(".", "");
-            string value16 = form["value16"].Replace(".", "");
-            string value17 = form["value17"].Replace(".", "");
-            string value18 = form["value18"].Replace(".", "");
-            string value19 = form["value19"].Replace(".", "");
-            #endregion
-
-            #region Create TndnTaxDeclaration Model and Save
-
-            TndnTaxDeclaration tndn = new TndnTaxDeclaration();
-
-            tndn.Year = Convert.ToInt32(taxYear.Trim());
-            if (maxRevenueRatio.Trim().Length > 0)
+            catch (Exception)
             {
-                tndn.MaxRevenueRatio = Convert.ToInt32(maxRevenueRatio.Trim());
-            }
-            else
-            {
-                tndn.MaxRevenueRatio = 0;
+                return 0;
             }
 
-            tndn.StoreOwnerName = storeInfo.OwnerName;
-            tndn.StoreTaxCode = storeInfo.TaxCode;
-            tndn.StoreAddress = storeInfo.Address;
-            tndn.StoreDistrict = storeInfo.District;
-            tndn.StoreProvince = storeInfo.Province;
-            tndn.StorePhone = storeInfo.Phonenumber;
-            tndn.StoreFax = storeInfo.Fax;
-            tndn.StoreEmail = storeInfo.Email;
-
-            tndn.TaxAgentTaxCode = vatAgentTaxCode;
-            tndn.TaxAgentName = vatAgentName;
-            tndn.TaxAgentOwnerName = vatAgentOwnerName;
-            tndn.TaxAgentNo = vatAgentNo;
-            tndn.TaxAgentAddress = vatAgentAddress;
-            tndn.TaxAgentDistrict = vatAgentDistrict;
-            tndn.TaxAgentProvince = vatAgentProvince;
-            tndn.TaxAgentPhone = vatAgentPhone;
-            tndn.TaxAgentFax = vatAgentFax;
-            tndn.TaxAgentEmail = vatAgentEmail;
-            tndn.SignName = signName;
-            if (createDate != null)
-            {
-                tndn.CreateDate = DateTime.ParseExact(createDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            }
-
-
-            if (value22No.Trim().Length > 0)
-            {
-                tndn.Value22No = Convert.ToInt32(value22No);
-            }
-
-            tndn.Value22Date = DateTime.ParseExact(value22Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-
-            tndn.ValueA1 = Convert.ToInt32(valueA1);
-            tndn.ValueB1 = Convert.ToInt32(valueB1);
-            tndn.ValueB2 = Convert.ToInt32(valueB2);
-            tndn.ValueB3 = Convert.ToInt32(valueB3);
-            tndn.ValueB4 = Convert.ToInt32(valueB4);
-            tndn.ValueB5 = Convert.ToInt32(valueB5);
-            tndn.ValueB6 = Convert.ToInt32(valueB6);
-            tndn.ValueB7 = Convert.ToInt32(valueB7);
-            tndn.ValueB8 = Convert.ToInt32(valueB8);
-            tndn.ValueB9 = Convert.ToInt32(valueB9);
-            tndn.ValueB10 = Convert.ToInt32(valueB10);
-            tndn.ValueB11 = Convert.ToInt32(valueB11);
-            tndn.ValueB12 = Convert.ToInt32(valueB12);
-            tndn.ValueB13 = Convert.ToInt32(valueB13);
-            tndn.ValueB14 = Convert.ToInt32(valueB14);
-
-            tndn.ValueC1 = Convert.ToInt32(valueC1);
-            tndn.ValueC2 = Convert.ToInt32(valueC2);
-            tndn.ValueC3 = Convert.ToInt32(valueC3);
-            tndn.ValueC3a = Convert.ToInt32(valueC3a);
-            tndn.ValueC3b = Convert.ToInt32(valueC3b);
-            tndn.ValueC4 = Convert.ToInt32(valueC4);
-            tndn.ValueC5 = Convert.ToInt32(valueC5);
-            tndn.ValueC6 = Convert.ToInt32(valueC6);
-            tndn.ValueC7 = Convert.ToInt32(valueC7);
-            tndn.ValueC8 = Convert.ToInt32(valueC8);
-            tndn.ValueC9 = Convert.ToInt32(valueC9);
-            tndn.ValueC9a = Convert.ToInt32(valueC9a);
-            tndn.ValueC10 = Convert.ToInt32(valueC10);
-            tndn.ValueC11 = Convert.ToInt32(valueC11);
-            tndn.ValueC12 = Convert.ToInt32(valueC12);
-            tndn.ValueC13 = Convert.ToInt32(valueC13);
-            tndn.ValueC14 = Convert.ToInt32(valueC14);
-            tndn.ValueC15 = Convert.ToInt32(valueC15);
-            tndn.ValueC16 = Convert.ToInt32(valueC16);
-
-            tndn.ValueD = Convert.ToInt32(valueD);
-            tndn.ValueD1 = Convert.ToInt32(valueD1);
-            tndn.ValueD2 = Convert.ToInt32(valueD2);
-            tndn.ValueD3 = Convert.ToInt32(valueD3);
-
-            tndn.ValueE = Convert.ToInt32(valueE);
-            tndn.ValueE1 = Convert.ToInt32(valueE1);
-            tndn.ValueE2 = Convert.ToInt32(valueE2);
-            tndn.ValueE3 = Convert.ToInt32(valueE3);
-
-            tndn.ValueG = Convert.ToInt32(valueG);
-            tndn.ValueG1 = Convert.ToInt32(valueG1);
-            tndn.ValueG2 = Convert.ToInt32(valueG2);
-            tndn.ValueG3 = Convert.ToInt32(valueG3);
-
-            tndn.ValueH = Convert.ToInt32(valueH);
-            tndn.ValueI = Convert.ToInt32(valueI);
-
-            if (valueL1 != null && valueL1.Equals("on"))
-            {
-                tndn.ValueL1 = true;
-                tndn.ValueL2No = Convert.ToInt32(valueL2Code);
-                tndn.ValueL3 = DateTime.ParseExact(valueL3, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                tndn.ValueL4 = Convert.ToInt32(valueL4);
-                tndn.ValueL5 = Convert.ToInt32(valueL5);
-            }
-            else
-            {
-                tndn.ValueL1 = false;
-            }
-
-            if (!valueM1FromDate.IsEmpty())
-            {
-                tndn.ValueM1FromDate = DateTime.ParseExact(valueM1FromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            }
-
-            if (!valueM1ToDate.IsEmpty())
-            {
-                tndn.ValueM1ToDate = DateTime.ParseExact(valueM1FromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            }
-
-            tndn.ValueM2 = Convert.ToInt32(valueM2);
-
-            tndn.Value1 = Convert.ToInt32(value1);
-            tndn.Value2 = Convert.ToInt32(value2);
-            tndn.Value3 = Convert.ToInt32(value3);
-            tndn.Value4 = Convert.ToInt32(value4);
-            tndn.Value5 = Convert.ToInt32(value5);
-            tndn.Value6 = Convert.ToInt32(value6);
-            tndn.Value7 = Convert.ToInt32(value7);
-            tndn.Value8 = Convert.ToInt32(value8);
-            tndn.Value9 = Convert.ToInt32(value9);
-            tndn.Value10 = Convert.ToInt32(value10);
-            tndn.Value11 = Convert.ToInt32(value11);
-            tndn.Value12 = Convert.ToInt32(value12);
-            tndn.Value13 = Convert.ToInt32(value13);
-            tndn.Value14 = Convert.ToInt32(value14);
-            tndn.Value15 = Convert.ToInt32(value15);
-            tndn.Value16 = Convert.ToInt32(value16);
-            tndn.Value17 = Convert.ToInt32(value17);
-            tndn.Value18 = Convert.ToInt32(value18);
-            tndn.Value19 = Convert.ToInt32(value19);
-
-            TaxBusiness business = new TaxBusiness();
-            return business.SaveTndnTaxDeclaration(tndn) ? 1 : 0;
-
-            #endregion
 
         }
 
         [HttpPost]
         public ActionResult ExportXmlTndnTaxDeclaration(FormCollection form)
         {
-            #region Get Data from Form
+            try
+            {
+#region Get Data from Form
             string taxYear = form["taxYear"];
 
             //Store Info Not get from form; Get from DB
@@ -2911,6 +2976,12 @@ namespace BMA.Controllers
             return File(stream, "application/xml", "TNDN" + taxYear + ".xml");
 
             #endregion
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+            
         }
 
         #endregion

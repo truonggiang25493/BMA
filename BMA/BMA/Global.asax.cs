@@ -39,6 +39,9 @@ namespace BMA
         {
             InputMaterialBusiness business = new InputMaterialBusiness();
             business.CheckInputMaterialListStartup();
+            // Auto remove order if delivery date < Today
+            OrderBusiness orderBusiness = new OrderBusiness();
+            orderBusiness.AutoRemoveWaitingOrder();
         }
 
     }
