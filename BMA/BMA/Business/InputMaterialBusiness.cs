@@ -21,7 +21,7 @@ namespace BMA.Business
         #region Get Input Material List
         public static List<InputMaterial> GetInputMaterialList()
         {
-            List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderByDescending(n => n.InputMaterialId).ToList();
+            List<InputMaterial> inputMaterialslList = db.InputMaterials.OrderByDescending(n => n.ImportDate).ThenByDescending(n=>n.IsActive).ToList();
             return inputMaterialslList;
         }
         #endregion
