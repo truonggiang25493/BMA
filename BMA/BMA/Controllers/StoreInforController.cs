@@ -14,22 +14,30 @@ namespace BMA.Controllers
         BMAEntities db = new BMAEntities();
         public ActionResult Index()
         {
-            if (Session["User"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                if (Session["User"] == null || Session["UserRole"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                ViewBag.TreeView = "storeInfor";
+                ViewBag.TreeViewMenu = "storeInforList";
+                AccountBusiness ab = new AccountBusiness();
+                StoreInfo storeInfo = db.StoreInfoes.SingleOrDefault();
+                List<Product> lstNewProduct = db.Products.OrderByDescending(n => n.ProductId).Take(4).ToList();
+                ViewBag.lstProduct = lstNewProduct;
+                List<Order> lstOrder = db.Orders.Where(n => n.OrderStatus == 0).ToList();
+                ViewBag.orderWaiting = lstOrder.Count;
+                List<Customer> lstCustomer = db.Customers.ToList();
+                ViewBag.customer = lstCustomer.Count;
+                List<ProductMaterial> lstLowQuantity = ab.StaffOffLowQuantityNoty();
+                ViewBag.lowQuantity = lstLowQuantity.Count;
+                return View(storeInfo);
             }
-            if ((int)Session["UserRole"] == 3)
+            catch
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("ManageError", "Error");
             }
-            StoreInfo storeInfo = db.StoreInfoes.SingleOrDefault();
-            List<Product> lstNewProduct = db.Products.OrderByDescending(n => n.ProductId).Take(4).ToList();
-            ViewBag.lstProduct = lstNewProduct;
-            List<Order> lstOrder = db.Orders.Where(n => n.OrderStatus == 0).ToList();
-            ViewBag.orderWaiting = lstOrder.Count;
-            List<Customer> lstCustomer = db.Customers.ToList();
-            ViewBag.customer = lstCustomer.Count;
-            return View(storeInfo);
         }
 
         public int EditImage(HttpPostedFileBase file)
@@ -81,7 +89,7 @@ namespace BMA.Controllers
         {
             try
             {
-                if (Session["User"] == null || Session["UserId"] == null)
+                if (Session["User"] == null || Session["UserId"] == null || Session["UserRole"] == null)
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -115,35 +123,48 @@ namespace BMA.Controllers
 
         public ActionResult ConfigIndex()
         {
-            if (Session["User"] == null || Session["UserRole"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                if (Session["User"] == null || Session["UserRole"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] == 2)
+                {
+                    return RedirectToAction("Index");
+                }
+                ViewBag.TreeView = "storeInfor";
+                ViewBag.TreeViewMenu = "configStoreInfor";
+                AccountBusiness ab = new AccountBusiness();
+                List<Product> lstNewProduct = db.Products.OrderBy(n => n.ProductId).Take(4).ToList();
+                ViewBag.lstProduct = lstNewProduct;
+                List<Order> lstOrder = db.Orders.Where(n => n.OrderStatus == 0).ToList();
+                ViewBag.orderWaiting = lstOrder.Count;
+                List<Customer> lstCustomer = db.Customers.ToList();
+                ViewBag.customer = lstCustomer.Count;
+                List<ProductMaterial> lstLowQuantity = ab.StaffOffLowQuantityNoty();
+                ViewBag.lowQuantity = lstLowQuantity.Count;
+
+                Policy policy = db.Policies.SingleOrDefault(n => n.PolicyId == 1);
+                ViewBag.minQuantity = policy;
+                Policy policy2 = db.Policies.SingleOrDefault(n => n.PolicyId == 2);
+                ViewBag.maxPrice = policy2;
+                List<DiscountByQuantity> discountByQuantity = db.DiscountByQuantities.ToList();
+                ViewBag.discountByQuantity = discountByQuantity;
+                var quantityFrom = db.DiscountByQuantities.Select(n => n.QuantityFrom).ToList();
+                var quantityTo = db.DiscountByQuantities.Select(n => n.QuantityTo).ToList();
+                var discountRate = db.DiscountByQuantities.Select(n => n.DiscountValue).ToList();
+                ViewBag.QuantityFrom = quantityFrom;
+                ViewBag.quantityTo = quantityTo;
+                ViewBag.DiscountValue = discountRate;
+                List<Category> category = db.Categories.Where(n => n.CategoryName != "Bánh").ToList();
+                ViewBag.category = category;
+                return View();
             }
-            if ((int)Session["UserRole"] == 2)
+            catch
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("ManageError", "Error");
             }
-            List<Product> lstNewProduct = db.Products.OrderBy(n => n.ProductId).Take(4).ToList();
-            ViewBag.lstProduct = lstNewProduct;
-            List<Order> lstOrder = db.Orders.Where(n => n.OrderStatus == 0).ToList();
-            ViewBag.orderWaiting = lstOrder.Count;
-            List<Customer> lstCustomer = db.Customers.ToList();
-            ViewBag.customer = lstCustomer.Count;
-            Policy policy = db.Policies.SingleOrDefault(n => n.PolicyId == 1);
-            ViewBag.minQuantity = policy;
-            Policy policy2 = db.Policies.SingleOrDefault(n => n.PolicyId == 2);
-            ViewBag.maxPrice = policy2;
-            List<DiscountByQuantity> discountByQuantity = db.DiscountByQuantities.ToList();
-            ViewBag.discountByQuantity = discountByQuantity;
-            var quantityFrom = db.DiscountByQuantities.Select(n => n.QuantityFrom).ToList();
-            var quantityTo = db.DiscountByQuantities.Select(n => n.QuantityTo).ToList();
-            var discountRate = db.DiscountByQuantities.Select(n => n.DiscountValue).ToList();
-            ViewBag.QuantityFrom = quantityFrom;
-            ViewBag.quantityTo = quantityTo;
-            ViewBag.DiscountValue = discountRate;
-            List<Category> category = db.Categories.Where(n => n.CategoryName != "Bánh").ToList();
-            ViewBag.category = category;
-            return View();
         }
 
         [HttpPost]
@@ -164,14 +185,14 @@ namespace BMA.Controllers
         [HttpPost]
         public int changeDiscountQuantity(int[] quantityFrom, int[] quantityTo, int[] discountRate, string beUsing)
         {
-            StoreInforBusiness sib = new StoreInforBusiness();
-            bool boolUsing = false;
-            if (beUsing == "1")
-            {
-                boolUsing = true;
-            }
             try
             {
+                StoreInforBusiness sib = new StoreInforBusiness();
+                bool boolUsing = false;
+                if (beUsing == "1")
+                {
+                    boolUsing = true;
+                }
                 sib.changeDiscountQuantity(quantityFrom, quantityTo, discountRate, boolUsing);
                 return 1;
             }
@@ -184,14 +205,15 @@ namespace BMA.Controllers
         [HttpPost]
         public int changeMaxPrice(int maxPrice)
         {
-            StoreInforBusiness sib = new StoreInforBusiness();
-            var nowMaxPriceProduct = db.Products.OrderByDescending(i => i.ProductStandardPrice).Select(n => n.ProductStandardPrice).FirstOrDefault();
-            if (maxPrice < nowMaxPriceProduct)
-            {
-                return -1;
-            }
             try
             {
+                StoreInforBusiness sib = new StoreInforBusiness();
+                var nowMaxPriceProduct = db.Products.OrderByDescending(i => i.ProductStandardPrice).Select(n => n.ProductStandardPrice).FirstOrDefault();
+                if (maxPrice < nowMaxPriceProduct)
+                {
+                    return -1;
+                }
+
                 maxPrice = Convert.ToInt32(maxPrice.ToString().Replace(".", ""));
                 sib.changeMaxPrice(maxPrice);
                 return 1;
@@ -205,27 +227,28 @@ namespace BMA.Controllers
         [HttpPost]
         public int ChangeCategory(string[] categoryName)
         {
-            StoreInforBusiness sib = new StoreInforBusiness();
-            for (int i = 0; i < categoryName.Length; i++)
+            try
             {
-                if ((i + 1) != categoryName.Length)
+                StoreInforBusiness sib = new StoreInforBusiness();
+                for (int i = 0; i < categoryName.Length; i++)
                 {
-                    if (StringComparer.CurrentCultureIgnoreCase.Equals(categoryName[i], categoryName[i + 1]))
+                    if ((i + 1) != categoryName.Length)
                     {
-                        return -2;
+                        if (StringComparer.CurrentCultureIgnoreCase.Equals(categoryName[i], categoryName[i + 1]))
+                        {
+                            return -2;
+                        }
+                    }
+
+                    if (i > 0)
+                    {
+                        if (StringComparer.CurrentCultureIgnoreCase.Equals(categoryName[i], categoryName[i - 1]))
+                        {
+                            return -2;
+                        }
                     }
                 }
 
-                if (i > 0)
-                {
-                    if (StringComparer.CurrentCultureIgnoreCase.Equals(categoryName[i], categoryName[i - 1]))
-                    {
-                        return -2;
-                    }
-                }
-            }
-            try
-            {
                 sib.changeCategory(categoryName);
                 return 1;
             }
@@ -238,17 +261,18 @@ namespace BMA.Controllers
         [HttpPost]
         public int DeleteCategory(int categoryId)
         {
-            StoreInforBusiness sib = new StoreInforBusiness();
-            List<Product> lstProduct = db.Products.ToList();
-            for (int i = 0; i < lstProduct.Count; i++)
-            {
-                if (lstProduct[i].CategoryId == categoryId)
-                {
-                    return -1;
-                }
-            }
             try
             {
+                StoreInforBusiness sib = new StoreInforBusiness();
+                List<Product> lstProduct = db.Products.ToList();
+                for (int i = 0; i < lstProduct.Count; i++)
+                {
+                    if (lstProduct[i].CategoryId == categoryId)
+                    {
+                        return -1;
+                    }
+                }
+
                 sib.deleteCategory(categoryId);
                 return 1;
             }
@@ -261,17 +285,18 @@ namespace BMA.Controllers
         [HttpPost]
         public int AddCategory(string categoryName)
         {
-            StoreInforBusiness sib = new StoreInforBusiness();
-            var categoryList = db.Categories.ToList();
-            for (int i = 0; i < categoryList.Count; i++)
-            {
-                if (StringComparer.CurrentCultureIgnoreCase.Equals(categoryName, categoryList[i].CategoryName))
-                {
-                    return -2;
-                }
-            }
             try
             {
+                StoreInforBusiness sib = new StoreInforBusiness();
+                var categoryList = db.Categories.ToList();
+                for (int i = 0; i < categoryList.Count; i++)
+                {
+                    if (StringComparer.CurrentCultureIgnoreCase.Equals(categoryName, categoryList[i].CategoryName))
+                    {
+                        return -2;
+                    }
+                }
+
                 sib.addCategory(categoryName);
                 return 1;
             }
@@ -283,48 +308,62 @@ namespace BMA.Controllers
 
         public ActionResult LogoPartial()
         {
-            StoreInfo storeInfo = db.StoreInfoes.SingleOrDefault();
-            ViewBag.storeInfo = storeInfo;
-            return PartialView();
+            try
+            {
+                StoreInfo storeInfo = db.StoreInfoes.SingleOrDefault();
+                ViewBag.storeInfo = storeInfo;
+                return PartialView();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public ActionResult NotificatePartial()
         {
-            if (Session["NotificateCount"] == null)
+            try
             {
-                int count = 0;
-                ViewBag.notificatePartialCount = count;
-                Session["NotificateCount"] = count;
-                int newOrderCount = 0;
-                ViewBag.newOrderCountPartial = newOrderCount;
-                Session["NewOrderCountPartial"] = newOrderCount;
-                int confirmOrderCount = 0;
-                ViewBag.confirmOrderCountPartial = confirmOrderCount;
-                Session["ConfirmOrderCountPartial"] = confirmOrderCount;
-                int cancelOrderCount = 0;
-                ViewBag.cancelOrderCountPartial = cancelOrderCount;
-                Session["CancelOrderCountPartial"] = cancelOrderCount;
-                int lowMaterialCount = 0;
-                ViewBag.lowMaterialCountPartial = lowMaterialCount;
-                Session["LowMaterialCountPartial"] = lowMaterialCount;
+                if (Session["NotificateCount"] == null)
+                {
+                    int count = 0;
+                    ViewBag.notificatePartialCount = count;
+                    Session["NotificateCount"] = count;
+                    int newOrderCount = 0;
+                    ViewBag.newOrderCountPartial = newOrderCount;
+                    Session["NewOrderCountPartial"] = newOrderCount;
+                    int confirmOrderCount = 0;
+                    ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                    Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+                    int cancelOrderCount = 0;
+                    ViewBag.cancelOrderCountPartial = cancelOrderCount;
+                    Session["CancelOrderCountPartial"] = cancelOrderCount;
+                    int lowMaterialCount = 0;
+                    ViewBag.lowMaterialCountPartial = lowMaterialCount;
+                    Session["LowMaterialCountPartial"] = lowMaterialCount;
+                }
+                else
+                {
+                    int count = Convert.ToInt32(Session["NotificateCount"]);
+                    ViewBag.notificatePartialCount = count;
+                    int newOrderCount = Convert.ToInt32(Session["NewOrderCountPartial"]);
+                    ViewBag.newOrderCountPartial = newOrderCount;
+                    int confirmOrderCount = Convert.ToInt32(Session["ConfirmOrderCountPartial"]);
+                    ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                    int cancelOrderCount = Convert.ToInt32(Session["CancelOrderCountPartial"]);
+                    ViewBag.cancelOrderCountPartial = cancelOrderCount;
+                    int lowMaterialCount = Convert.ToInt32(Session["LowMaterialCountPartial"]);
+                    ViewBag.lowMaterialCountPartial = lowMaterialCount;
+                }
+                return PartialView();
             }
-            else
+            catch
             {
-                int count = Convert.ToInt32(Session["NotificateCount"]);
-                ViewBag.notificatePartialCount = count;
-                int newOrderCount = Convert.ToInt32(Session["NewOrderCountPartial"]);
-                ViewBag.newOrderCountPartial = newOrderCount;
-                int confirmOrderCount = Convert.ToInt32(Session["ConfirmOrderCountPartial"]);
-                ViewBag.confirmOrderCountPartial = confirmOrderCount;
-                int cancelOrderCount = Convert.ToInt32(Session["CancelOrderCountPartial"]);
-                ViewBag.cancelOrderCountPartial = cancelOrderCount;
-                int lowMaterialCount = Convert.ToInt32(Session["LowMaterialCountPartial"]);
-                ViewBag.lowMaterialCountPartial = lowMaterialCount;
+                return null;
             }
-            return PartialView();
         }
 
-        public int NotificatePartialLink(int count, int newOrderCount, int confirmOrderCount, int cancelOrderCount,int lowMaterialCount)
+        public int NotificatePartialLink(int count, int newOrderCount, int confirmOrderCount, int cancelOrderCount, int lowMaterialCount)
         {
             ViewBag.notificatePartialCount = count;
             Session["NotificateCount"] = count;

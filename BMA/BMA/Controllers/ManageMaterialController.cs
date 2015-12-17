@@ -5,6 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using BMA.Models;
 using BMA.Business;
+using BMA.DBChangesNotifer;
+using Microsoft.AspNet.SignalR;
+using BMA.Hubs;
 
 namespace BMA.Controllers
 {
@@ -15,26 +18,71 @@ namespace BMA.Controllers
         // GET: /ManageMaterial/
         public ActionResult Index()
         {
-            ManageMaterialBusiness mmb = new ManageMaterialBusiness();
-            var material = mmb.GetMaterial().OrderByDescending(n => n.IsActive).ThenByDescending(n => n.CurrentQuantity < n.StandardQuantity).ToList();
-            return View(material);
+            try
+            {
+                if (!MvcApplication.lowQuantityNotifer.CheckConnection())
+                {
+                    MvcApplication.lowQuantityNotifer.Start("BMAChangeDB", "SELECT ProductMaterialId,CurrentQuantity,StandardQuantity FROM dbo.[ProductMaterial] WHERE (CurrentQuantity < StandardQuantity AND IsActive = 'True')");
+                    MvcApplication.lowQuantityNotifer.Change += this.OnChange2;
+                }
+                if (Session["User"] == null || Session["UserRole"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                ViewBag.TreeView = "productMaterial";
+                ViewBag.TreeViewMenu = "productMaterialList";
+                ManageMaterialBusiness mmb = new ManageMaterialBusiness();
+                var material = mmb.GetMaterial().OrderByDescending(n => n.IsActive).ThenByDescending(n => n.CurrentQuantity < n.StandardQuantity).ToList();
+                return View(material);
+            }
+            catch
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
         }
 
         public ActionResult Detail(int materialId)
         {
-            ManageMaterialBusiness mmb = new ManageMaterialBusiness();
-            var material = mmb.GetMaterialDetail(materialId);
-            var product = mmb.GetListProduct(materialId);
-            ViewBag.ProductUse = product;
-            return View(material);
+            try
+            {
+                if (Session["User"] == null || Session["UserRole"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                ViewBag.TreeView = "productMaterial";
+                ViewBag.TreeViewMenu = "productMaterialList";
+                ManageMaterialBusiness mmb = new ManageMaterialBusiness();
+                var material = mmb.GetMaterialDetail(materialId);
+                var product = mmb.GetListProduct(materialId);
+                ViewBag.ProductUse = product;
+                return View(material);
+            }
+            catch
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+
         }
 
         [HttpGet]
         public ActionResult Edit(int materialId)
         {
-            ManageMaterialBusiness mmb = new ManageMaterialBusiness();
-            var material = mmb.GetMaterialDetail(materialId);
-            return View(material);
+            try
+            {
+                if (Session["User"] == null || Session["UserRole"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                ViewBag.TreeView = "productMaterial";
+                ViewBag.TreeViewMenu = "productMaterialList";
+                ManageMaterialBusiness mmb = new ManageMaterialBusiness();
+                var material = mmb.GetMaterialDetail(materialId);
+                return View(material);
+            }
+            catch
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
         }
 
         [HttpPost, ActionName("Edit")]
@@ -52,10 +100,13 @@ namespace BMA.Controllers
                 {
                     if (materialName == materialList[i].ProductMaterialName)
                     {
-                        //TempData["Error"] = String.Format("{0}{1}", materialName, " đã tồn tại");
                         return -2;
                     }
                 }
+            }
+            if (!mmb.CheckProductMaterial(materialId, materialSQuantity))
+            {
+                MvcApplication.lowQuantityNotifer.Dispose();
             }
             if (ModelState.IsValid)
             {
@@ -107,8 +158,17 @@ namespace BMA.Controllers
         [HttpGet]
         public ActionResult AddMaterial(string strURL)
         {
-            ViewBag.previousURL = strURL;
-            return View();
+            try
+            {
+                ViewBag.TreeView = "productMaterial";
+                ViewBag.TreeViewMenu = "addProductMaterial";
+                ViewBag.previousURL = strURL;
+                return View();
+            }
+            catch
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
         }
 
         [HttpPost]
@@ -143,5 +203,12 @@ namespace BMA.Controllers
             var material = mmb.MaterialPartial(productId);
             return PartialView("ListPartial", material);
         }
+
+        private void OnChange2(object sender, ChangeEventArgs e)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealtimeNotifierHub>();
+            context.Clients.All.OnChange2(e.Info, e.Source, e.Type);
+        }
+
     }
 }

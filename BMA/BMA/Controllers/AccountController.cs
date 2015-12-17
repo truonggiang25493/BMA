@@ -377,5 +377,27 @@ namespace BMA.Controllers
                 return -1;
             }
         }
+
+        public ActionResult ManageUserLoginPartialView()
+        {
+            try
+            {
+                if (Session["User"] != null)
+                {
+                    User staffUser = Session["User"] as User;
+                    if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+                    {
+                        return null;
+                    }
+                    return PartialView();
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
     }
 }

@@ -59,13 +59,13 @@
             <!-- small box -->
             <div class="small-box bg-red">
                 <div class="inner">
-                    <h3 style="height:41px;"></h3>
-                    <p>Đơn hàng thiếu nguyên liệu</p>
+                    <h3 style="height:41px;">@ViewBag.lowQuantity</h3>
+                    <p>Nguyên liệu bị thiếu</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-android-hand"></i>
                 </div>
-                <a href="#" class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/ManageMaterial/Index" class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div><!-- ./col -->
     </div><!-- /.row -->
@@ -376,14 +376,14 @@
                                             <tr>
                                                 <td>
                                                     <label style="margin-top:10px;margin-left:10px;">@(++count)</label>
+                                                    <input type="hidden" value="@category.ElementAt(i).CategoryId" id="hiddenCategoryId" data-role="hiddenCategoryId" />
                                                 </td>
                                                 <td>
                                                     <input type="text" maxlength="50" class="form-control" style="width:138px;" value="@category.ElementAt(i).CategoryName" id="categoryName" data-role="categoryName" readonly />
                                                     <input type="hidden" value="@category.ElementAt(i).CategoryName" id="hiddenCategoryName" data-role="hiddenCategoryName" />
-                                                    <input type="hidden" value="@category.ElementAt(i).CategoryId" id="hiddenCategoryId" data-role="hiddenCategoryId" />
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-sm btn-flat btn-warning" onclick="return removeCategory(@category.ElementAt(i).CategoryId)">Hủy</a>
+                                                    <a class="btn btn-sm btn-flat btn-warning" data-role="remove-row-btn">Hủy</a>
                                                 </td>
                                             </tr>
                                         }
@@ -633,52 +633,77 @@
                             $("#categoryTable tbody tr input").removeAttr("readonly");
                         }
 
-                        function removeCategory(categoryId) {
-                            $.ajax({
-                                "url": "@(Url.Action("DeleteCategory", "StoreInfor"))",
-                                "method": "POST",
-                                "data": {
-                                    "categoryId": categoryId
-                                },
-                                "success": function (data) {
-                                    if (data === "1") {
-                                        noty({
-                                            text: 'Hủy loại bánh thành công.',
-                                            type: 'success',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                        window.setTimeout(function () {
-                                            window.location.replace("@(Url.Action("ConfigIndex", "StoreInfor"))");
-                                        }, 2500);
-                                    } else if (data === "-1") {
-                                        noty({
-                                            text: 'Loại bánh này đang được sử dụng, vui lòng thay đổi và thử lại.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1500
-                                        });
+                        $(document).on("click", "[data-role=remove-row-btn]", function () {
+                            var categoryId = $(this).parent().parent().find("td:first input").val();
+                            var categoryName = $(this).parent().parent().find("td:nth-child(2) input").val();
+                            noty({
+                                text: 'Bạn chắc chắn hủy loại bánh :  ' + categoryName + ' không ?',
+                                buttons: [
+                                    {
+                                        addClass: 'btn btn-danger btn-xs',
+                                        text: 'Không',
+                                        onClick: function ($noty) {
+                                            $noty.close();
+                                        }
+                                    },
+                                    {
+                                        addClass: 'btn btn-primary btn-xs pull-right',
+                                        text: 'Có',
+                                        onClick: function ($noty) {
+                                            $noty.close();
+                                            $.ajax({
+                                                "url": "@(Url.Action("DeleteCategory", "StoreInfor"))",
+                                                "method": "POST",
+                                                "data": {
+                                                    "categoryId": categoryId
+                                                },
+                                                "success": function (data) {
+                                                    if (data === "1") {
+                                                        noty({
+                                                            text: 'Hủy loại bánh thành công.',
+                                                            type: 'success',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                        window.setTimeout(function () {
+                                                            window.location.replace("@(Url.Action("ConfigIndex", "StoreInfor"))");
+                                                        }, 2500);
+                                                    } else if (data === "-1") {
+                                                        noty({
+                                                            text: 'Loại bánh này đang được sử dụng, vui lòng thay đổi và thử lại.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1500
+                                                        });
+                                                    }
+                                                    else if (data === "-2") {
+                                                        noty({
+                                                            text: 'Có lỗi xảy ra, vui lòng thay đổi và thử lại.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1000
+                                                        });
+                                                    }
+                                                },
+                                                "fail": function (e) {
+                                                    alert("Have error" + e.toString());
+                                                }
+                                            });
+                                        }
                                     }
-                                    else if (data === "-2") {
-                                        noty({
-                                            text: 'Có lỗi xảy ra, vui lòng thay đổi và thử lại.',
-                                            type: 'warning',
-                                            dismissQueue: false,
-                                            layout: 'topCenter',
-                                            theme: 'defaultTheme',
-                                            timeout: 1000
-                                        });
-                                    }
-                                },
-                                "fail": function (e) {
-                                    alert("Have error" + e.toString());
-                                }
+                                ],
+                                type: 'success',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme'
                             });
-                        }
+                        });
 
                         function changeCateToReadOnly() {
                             $("[data-role='hiddenCategoryName']").each(function (index) {

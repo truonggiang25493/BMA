@@ -17,31 +17,54 @@ namespace BMA.Controllers
         BMAEntities db = new BMAEntities();
         public ActionResult Index()
         {
-            ManageProductBusiness mpb = new ManageProductBusiness();
-            var product = mpb.GetProduct();
-            return View(product);
+            try
+            {
+                if (Session["User"] == null || Session["UserRole"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                ViewBag.TreeView = "product";
+                ViewBag.TreeViewMenu = "productList";
+                ManageProductBusiness mpb = new ManageProductBusiness();
+                var product = mpb.GetProduct();
+                return View(product);
+            }
+            catch
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
         }
 
         [HttpGet]
         public ActionResult AddProduct()
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] == 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+                ViewBag.TreeView = "product";
+                ViewBag.TreeViewMenu = "addProduct";
+                ManageProductBusiness mpb = new ManageProductBusiness();
+                Policy maxPricePolicy = db.Policies.SingleOrDefault(n => n.PolicyId == 2);
+                int maxPrice = maxPricePolicy.PolicyBound;
+                ViewBag.maxPrice = maxPrice;
+                var category = mpb.GetCategory();
+                ViewBag.category = category;
+                InitiateMaterialList(null);
+                return View();
             }
-            if ((int)Session["UserRole"] == 1)
+            catch
             {
-                return RedirectToAction("Index", "StoreInfor");
+                return RedirectToAction("ManageError", "Error");
             }
-            ManageProductBusiness mpb = new ManageProductBusiness();
-            Policy maxPricePolicy = db.Policies.SingleOrDefault(n => n.PolicyId == 2);
-            int maxPrice = maxPricePolicy.PolicyBound;
-            ViewBag.maxPrice = maxPrice;
-            var category = mpb.GetCategory();
-            ViewBag.category = category;
-            InitiateMaterialList(null);
-            return View();
+
         }
 
         [HttpPost]
@@ -233,11 +256,24 @@ namespace BMA.Controllers
         }
         public ActionResult Detail(int productId)
         {
-            ManageProductBusiness mpb = new ManageProductBusiness();
-            var product = mpb.GetProductDetail(productId);
-            var productMaterial = mpb.GetListMaterial(productId);
-            ViewBag.ProductMaterial = productMaterial;
-            return View(product);
+            try
+            {
+                if (Session["User"] == null || Session["UserRole"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                ViewBag.TreeView = "product";
+                ViewBag.TreeViewMenu = "productList";
+                ManageProductBusiness mpb = new ManageProductBusiness();
+                var product = mpb.GetProductDetail(productId);
+                var productMaterial = mpb.GetListMaterial(productId);
+                ViewBag.ProductMaterial = productMaterial;
+                return View(product);
+            }
+            catch
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
         }
 
         public ActionResult Edit(int productId)
@@ -253,6 +289,8 @@ namespace BMA.Controllers
                 {
                     return RedirectToAction("Index", "StoreInfor");
                 }
+                ViewBag.TreeView = "product";
+                ViewBag.TreeViewMenu = "productList";
                 ManageProductBusiness mpb = new ManageProductBusiness();
                 var product = mpb.GetProductDetail(productId);
                 var materialList = mpb.GetListMaterial(productId);
