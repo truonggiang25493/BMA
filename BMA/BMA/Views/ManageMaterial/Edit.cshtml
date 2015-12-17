@@ -110,10 +110,10 @@
                                                 dismissQueue: false,
                                                 layout: 'topCenter',
                                                 theme: 'defaultTheme',
-                                                timeout: 2000
+                                                timeout: 500
                                             });
                                             window.setTimeout(function () {
-                                                window.location.replace("@(Url.Action("Index", "ManageMaterial"))");
+                                                return NotificatePartialLink('@(Url.Action("Index", "ManageMaterial"))')
                                             }, 3000);
                                         } else if (data === "-1") {
                                             noty({
@@ -145,7 +145,7 @@
                                             timeout: 1000
                                         });
                                         window.setTimeout(function () {
-                                            window.location.replace("@(Url.Action("Index", "ManageProduct"))");
+                                            window.location.replace("@(Url.Action("Index", "ManageMaterial"))");
                                         }, 3000)
                                     }
                                 })

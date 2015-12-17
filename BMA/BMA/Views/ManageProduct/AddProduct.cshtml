@@ -716,28 +716,62 @@
         });
         $(document).on("click", "[data-role=remove-row-btn]", function () {
             var materialId = $(this).parent().parent().find("td:first input").val();
-            $(this).parent().parent().remove();
-            $.ajax({
-                "url": "@(Url.Action("AddMaterialInMaterialListToAdd", "ManageProduct"))",
-                "method": "POST",
-                "data": {
-                    "materialId": materialId
-                },
-                "success": function (data) {
-                    if (data === "0") {
-                        noty({
-                            text: 'Không thể hủy nguyên liệu.',
-                            type: 'warning',
-                            dismissQueue: false,
-                            layout: 'topCenter',
-                            theme: 'defaultTheme',
-                            timeout: 1000
-                        });
+            var materialName = $(this).parent().parent().find("td:first").html();
+            var removeRow = $(this).parent().parent();
+            noty({
+                text: 'Bạn chắc chắn hủy nguyên liệu ' + materialName + ' không ?',
+                buttons: [
+                    {
+                        addClass: 'btn btn-danger btn-xs',
+                        text: 'Không',
+                        onClick: function ($noty) {
+                            $noty.close();
+                        }
+                    },
+                    {
+                        addClass: 'btn btn-primary btn-xs pull-right',
+                        text: 'Có',
+                        onClick: function ($noty) {
+                            $noty.close();
+                            $.ajax({
+                                "url": "@(Url.Action("AddMaterialInMaterialListToAdd", "ManageProduct"))",
+                                "method": "POST",
+                                "data": {
+                                    "materialId": materialId
+                                },
+                                "success": function (data) {
+                                    if (data === "0") {
+                                        noty({
+                                            text: 'Không thể hủy nguyên liệu.',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 1000
+                                        });
+                                    }
+                                    if (data === '1') {
+                                        removeRow.remove();
+                                    }
+                                },
+                                "fail": function (e) {
+                                    noty({
+                                        text: 'Đã có lỗi xảy ra.',
+                                        type: 'danger',
+                                        dismissQueue: false,
+                                        layout: 'topCenter',
+                                        theme: 'defaultTheme',
+                                        timeout: 1000
+                                    });
+                                }
+                            });
+                        }
                     }
-                },
-                "fail": function (e) {
-                    alert("Have error" + e.toString());
-                }
+                ],
+                type: 'success',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme'
             });
         });
 
@@ -823,7 +857,7 @@
                         selectedIds = [];
                         selectedName = [];
                         selectedUnit = [];
-                    } else if(data === -1){
+                    } else if (data === -1) {
                         noty({
                             text: 'Hãy chọn ít nhất một nguyên liệu.',
                             type: 'warning',

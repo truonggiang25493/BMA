@@ -335,6 +335,12 @@
     <Compile Include="Models\sp_GetTopCustomerWithRevenue_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagrams_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Staff.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -1436,7 +1442,6 @@
     <Content Include="Views\ManageProduct\Detail.cshtml" />
     <Content Include="Views\Order\Add.cshtml" />
     <Content Include="Views\Order\AddCustomerToOrder.cshtml" />
-    <Content Include="Views\Order\Checkout.cshtml" />
     <Content Include="Views\Order\CheckoutWithCustomer.cshtml" />
     <Content Include="Views\ManageProduct\Edit.cshtml" />
     <Content Include="Views\ManageProduct\ProductMaterial.cshtml" />
@@ -1523,6 +1528,8 @@
     <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
     <Content Include="Views\Home\NotificatePartial.cshtml" />
     <Content Include="Views\Account\ManageUserLoginPartialView.cshtml" />
+    <Content Include="Views\ManageMaterial\Detail.cshtml" />
+    <Content Include="Views\ManageMaterial\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

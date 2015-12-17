@@ -382,16 +382,20 @@ namespace BMA.Controllers
         {
             try
             {
-                User staffUser = Session["User"] as User;
-                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+                if (Session["User"] != null)
                 {
-                    return RedirectToAction("Index", "Home");
+                    User staffUser = Session["User"] as User;
+                    if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+                    {
+                        return null;
+                    }
+                    return PartialView();
                 }
-                return PartialView();
+                return null;
             }
             catch (Exception)
             {
-                return RedirectToAction("Index", "Error");
+                return null;
             }
 
         }

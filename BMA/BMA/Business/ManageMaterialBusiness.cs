@@ -39,6 +39,15 @@ namespace BMA.Business
             return true;
         }
 
+        public bool CheckProductMaterial(int productMaterialId, int standardQuantity)
+        {
+            ProductMaterial productMaterial = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == productMaterialId);
+            if (productMaterial.CurrentQuantity < standardQuantity)
+            {
+                return true;
+            }
+            return false;
+        }
         public bool EditMaterial(int materialId, string materialName, string materialUnit, int materialSQuantity)
         {
             ProductMaterial productMaterial = db.ProductMaterials.SingleOrDefault(n => n.ProductMaterialId == materialId);
