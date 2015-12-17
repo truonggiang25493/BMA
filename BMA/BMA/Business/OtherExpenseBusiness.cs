@@ -26,7 +26,7 @@ namespace BMA.Business
 
         #region Edit other expense
 
-        public bool EditOtherExpense(int id, string name, int amount, int month, int year)
+        public bool EditOtherExpense(int id, string name, int amount, int month, int year, int type)
         {
             OtherExpense otherExpense = db.OtherExpenses.FirstOrDefault(m => m.OtherExpenseId == id);
             if (otherExpense == null)
@@ -39,6 +39,7 @@ namespace BMA.Business
                 otherExpense.OtherExpenseAmount = amount;
                 otherExpense.OtherExpenseMonthTime = month;
                 otherExpense.OtherExpenseYearTime = year;
+                otherExpense.Type = type;
                 try
                 {
                     db.SaveChanges();
@@ -58,7 +59,7 @@ namespace BMA.Business
 
         #region Add other expense
 
-        public bool AddOtherExpense(string name, int amount, int timeType, int? month, int? year, DateTime? fromTime, DateTime? toTime)
+        public bool AddOtherExpense(string name, int amount, int timeType, int? month, int? year, DateTime? fromTime, DateTime? toTime, int type)
         {
             if (timeType == 1)
             {
@@ -67,7 +68,8 @@ namespace BMA.Business
                     OtherExpenseName = name,
                     OtherExpenseAmount = amount,
                     OtherExpenseMonthTime = month,
-                    OtherExpenseYearTime = year
+                    OtherExpenseYearTime = year,
+                    Type = type
                 };
 
                 db.OtherExpenses.Add(otherExpense);
@@ -93,7 +95,8 @@ namespace BMA.Business
                     {
                         OtherExpenseName = name,
                         OtherExpenseMonthTime = tempTime.Month,
-                        OtherExpenseYearTime = tempTime.Year
+                        OtherExpenseYearTime = tempTime.Year,
+                        Type = type
                     };
                     otherExpenseList.Add(otherExpense);
                 }

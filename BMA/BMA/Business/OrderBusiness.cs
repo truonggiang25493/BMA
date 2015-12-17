@@ -647,7 +647,7 @@ namespace BMA.Business
         /// <param name="deposit">Deposit</param>
         /// <param name="deliveryDate">Delivery Date</param>
         /// <returns></returns>
-        public bool AddOrder(List<CartViewModel> cartList, int? customerUserId, CustomerViewModel inputCustomer, int staffUserId, int deposit, DateTime deliveryDate)
+        public bool AddOrder(List<CartViewModel> cartList, int? customerUserId, CustomerViewModel inputCustomer, int staffUserId, int deposit, DateTime deliveryDate, string orderNote)
         {
             OrderViewModel orderViewModel = MakeOrderViewModel(cartList, customerUserId, null);
             if (orderViewModel == null)
@@ -665,6 +665,7 @@ namespace BMA.Business
             order.PlanDeliveryTime = deliveryDate;
             order.DepositAmount = deposit;
             order.StaffApproveUserId = staffUserId;
+            order.OrderNote = orderNote;
 
             // Get current identity of Order table
             var currentOrderId = db.Database.SqlQuery<decimal>("SELECT IDENT_CURRENT('Orders')").FirstOrDefault();
@@ -1099,7 +1100,7 @@ namespace BMA.Business
         }
 
         public bool UpdateOrder(List<CartViewModel> cartList, int orderId, int depositAmount,
-            DateTime deliveryDate, int staffUserId)
+            DateTime deliveryDate, int staffUserId, string orderNote)
         {
 
             Order previousOrder = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
@@ -1120,6 +1121,7 @@ namespace BMA.Business
             order.Amount = orderViewModel.Order.Amount;
             order.TaxAmount = orderViewModel.Order.TaxAmount;
             order.StaffApproveUserId = staffUserId;
+            order.OrderNote = orderNote;
             // Get current identity of Order table
             order.OrderCode = previousOrder.OrderCode;
 

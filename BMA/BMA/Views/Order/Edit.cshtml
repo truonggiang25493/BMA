@@ -646,6 +646,19 @@
                                 "value": "@Model.Order.OrderId"
                             })
                         ]
+                    }),
+                    $("<div>", {
+                        "class": "form-group",
+                        "id": "deposit",
+                        "html": [
+                            "<label>Ghi chú</label>",
+                            $("<textarea>", {
+                                "id":"orderNote",
+                                "name": "orderNote",
+                                "class": "form-control",
+                                "style": "vertical-align: middle;"
+                            })
+                        ]
                     })
                     ]
                 });
@@ -702,6 +715,7 @@
             } else {
                 var depositAmount = $("#deposit-amount").val();
                 var deliveryDate = $("#deliveryDateTime").val();
+                var orderNote = $("#orderNote").val();
                 var depositAmountControl = $("<input>", {
                     type: "hidden",
                     name: "depositAmount",
@@ -712,8 +726,14 @@
                     name: "deliveryDate",
                     value: deliveryDate
                 });
+                var orderNoteControl = $("<input>", {
+                    type: "hidden",
+                    name: "orderNote",
+                    value: orderNote
+                });
                 $("#update-product-list").append(depositAmountControl);
                 $("#update-product-list").append(deliveryDateControl);
+                $("#update-product-list").append(orderNoteControl);
 
                 $.ajax({
                     url: "@(Url.Action("Edit", "Order"))",

@@ -14,43 +14,60 @@ namespace BMA.Controllers
         // GET: OtherExpense
         public ActionResult Index()
         {
-            // Check autherization
-            if (Session["User"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+                ViewBag.Title = "Quản lý chi phí khác";
+                OtherExpenseBusiness business = new OtherExpenseBusiness();
+                List<OtherExpense> resultList = business.GetOtherExpenseList();
+                return View(resultList);
             }
-            if ((int)Session["UserRole"] != 1)
+            catch (Exception)
             {
-                return RedirectToAction("Index", "StoreInfor");
+                return RedirectToAction("ManageError", "Error");
             }
-            ViewBag.Title = "Quản lý chi phí khác";
-            OtherExpenseBusiness business = new OtherExpenseBusiness();
-            List<OtherExpense> resultList = business.GetOtherExpenseList();
-            return View(resultList);
+
         }
 
         // POST
         [HttpPost]
         public int Edit(FormCollection form)
         {
-            string idString = form["otherExpenseId"];
-            string name = form["otherExpenseName"];
-            string amountString = form["otherExpenseAmount"];
-            string editTimeString = form["editTime"];
             try
             {
-                int amount = Convert.ToInt32(amountString);
-                int month = DateTime.ParseExact(editTimeString, "MM/yyyy", CultureInfo.InvariantCulture).Month;
-                int year = DateTime.ParseExact(editTimeString, "MM/yyyy", CultureInfo.InvariantCulture).Year;
-                int id = Convert.ToInt32(idString);
+                string idString = form["otherExpenseId"];
+                string name = form["otherExpenseName"];
+                string amountString = form["otherExpenseAmount"];
+                string editTimeString = form["editTime"];
+                int otherExpenseType = Convert.ToInt32(form["otherExpenseType"].Trim());
+                try
+                {
+                    int amount = Convert.ToInt32(amountString);
+                    int month = DateTime.ParseExact(editTimeString, "MM/yyyy", CultureInfo.InvariantCulture).Month;
+                    int year = DateTime.ParseExact(editTimeString, "MM/yyyy", CultureInfo.InvariantCulture).Year;
+                    int id = Convert.ToInt32(idString);
 
-                OtherExpenseBusiness business = new OtherExpenseBusiness();
-                return (business.EditOtherExpense(id, name, amount, month, year) ? 1 : 0);
+                    OtherExpenseBusiness business = new OtherExpenseBusiness();
+                    return (business.EditOtherExpense(id, name, amount, month, year, otherExpenseType) ? 1 : 0);
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
             }
             catch (Exception)
             {
                 return 0;
             }
+
         }
 
         // Add Other Expense
@@ -63,6 +80,7 @@ namespace BMA.Controllers
             string timePointString = form["timePoint"];
             string fromTimeString = form["fromTime"];
             string toTimeString = form["toTime"];
+            int otherExpenseType = Convert.ToInt32(form["otherExpenseType"].Trim());
 
             if (timeType.Equals("1"))
             {
@@ -73,7 +91,7 @@ namespace BMA.Controllers
                     int amount = Convert.ToInt32(amountString);
 
                     OtherExpenseBusiness business = new OtherExpenseBusiness();
-                    return (business.AddOtherExpense(name, amount, 1, month, year, null, null) ? 1 : 0);
+                    return (business.AddOtherExpense(name, amount, 1, month, year, null, null, otherExpenseType) ? 1 : 0);
                 }
                 catch (Exception)
                 {
@@ -89,7 +107,7 @@ namespace BMA.Controllers
                     int amount = Convert.ToInt32(amountString);
 
                     OtherExpenseBusiness business = new OtherExpenseBusiness();
-                    return (business.AddOtherExpense(name, amount, 2, null, null, fromTime, toTime) ? 1 : 0);
+                    return (business.AddOtherExpense(name, amount, 2, null, null, fromTime, toTime, otherExpenseType) ? 1 : 0);
                 }
                 catch (Exception)
                 {
@@ -101,8 +119,17 @@ namespace BMA.Controllers
         [HttpPost]
         public int DeleteOtherExpense(int id)
         {
-            OtherExpenseBusiness business = new OtherExpenseBusiness();
-            return (business.DeleteOtherExpense(id) ? 1 : 0);
+            try
+            {
+                OtherExpenseBusiness business = new OtherExpenseBusiness();
+                return (business.DeleteOtherExpense(id) ? 1 : 0);
+            }
+            catch (Exception)
+            {
+
+                return 0;
+            }
+
         }
     }
 }

@@ -181,6 +181,7 @@ namespace BMA.Controllers
                     string[] quantityString = Regex.Split(form["productQuantity"], ",");
                     string depositAmountString = form["depositAmount"];
                     string deliveryDateString = form["deliveryDate"];
+                    string orderNote = form["orderNote"];
 
                     List<CartViewModel> cartList = new List<CartViewModel>();
                     int totalQuantity = 0;
@@ -223,7 +224,7 @@ namespace BMA.Controllers
                     //het
 
                     bool rs = true;
-                    rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate, staffUser.UserId);
+                    rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate, staffUser.UserId, orderNote);
                     if (rs)
                     {
                         Session["ProductList"] = null;
@@ -436,50 +437,58 @@ namespace BMA.Controllers
         [HttpPost]
         public int AddOrderForCustomer(FormCollection form)
         {
-            int deposit = Convert.ToInt32(form["deposit"].Replace(".", ""));
-            string deliveryDate = form["deliveryDate"];
-            int customerId = Convert.ToInt32(form["customerId"]);
-
-            //Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return -7;
-            }
-            else
-            {
-                int rs = 0;
-                List<CartViewModel> cart = Session["Cart"] as List<CartViewModel>;
-
-                DateTime deliveryDate1 = DateTime.ParseExact(deliveryDate, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-
-                if (customerId == 0)
+                int deposit = Convert.ToInt32(form["deposit"].Replace(".", ""));
+                string deliveryDate = form["deliveryDate"];
+                int customerId = Convert.ToInt32(form["customerId"]);
+                string orderNote = form["orderNote"];
+                //Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
                 {
-                    CustomerViewModel customer = Session["NewCustomer"] as CustomerViewModel;
-                    OrderBusiness orderBusiness = new OrderBusiness();
-                    bool check = orderBusiness.AddOrder(cart, null, customer, staffUser.UserId, deposit, deliveryDate1);
-                    if (check)
-                    {
-                        rs = 1;
-                    }
+                    return -7;
                 }
                 else
                 {
-                    OrderBusiness orderBusiness = new OrderBusiness();
-                    bool check = orderBusiness.AddOrder(cart, customerId, null, staffUser.UserId, deposit, deliveryDate1);
-                    if (check)
+                    int rs = 0;
+                    List<CartViewModel> cart = Session["Cart"] as List<CartViewModel>;
+
+                    DateTime deliveryDate1 = DateTime.ParseExact(deliveryDate, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+
+                    if (customerId == 0)
                     {
-                        rs = 1;
+                        CustomerViewModel customer = Session["NewCustomer"] as CustomerViewModel;
+                        OrderBusiness orderBusiness = new OrderBusiness();
+                        bool check = orderBusiness.AddOrder(cart, null, customer, staffUser.UserId, deposit, deliveryDate1, orderNote);
+                        if (check)
+                        {
+                            rs = 1;
+                        }
                     }
+                    else
+                    {
+                        OrderBusiness orderBusiness = new OrderBusiness();
+                        bool check = orderBusiness.AddOrder(cart, customerId, null, staffUser.UserId, deposit, deliveryDate1, orderNote);
+                        if (check)
+                        {
+                            rs = 1;
+                        }
+                    }
+                    if (rs == 1)
+                    {
+                        Session["CustomerId"] = null;
+                        Session["NewCustomer"] = null;
+                        Session["Cart"] = null;
+                    }
+                    return rs;
                 }
-                if (rs == 1)
-                {
-                    Session["CustomerId"] = null;
-                    Session["NewCustomer"] = null;
-                    Session["Cart"] = null;
-                }
-                return rs;
             }
+            catch (Exception)
+            {
+                return 0;
+            }
+            
         }
 
         public ActionResult CancelAddOrder()
@@ -776,33 +785,49 @@ namespace BMA.Controllers
 
         public ActionResult ExportBill(int orderId)
         {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    OrderBusiness orderBusiness = new OrderBusiness();
+                    Order order = orderBusiness.GetOrder(orderId);
+                    // Get tax rate
+                    TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.EndDate >= order.CreateTime && m.BeginDate <= order.CreateTime);
+                    if (taxRate != null)
+                    {
+                        ViewBag.TaxRate = taxRate.TaxRateValue;
+                    }
+
+                    // Get store info
+
+                    StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
+                    if (storeInfo != null)
+                    {
+                        ViewBag.StoreInfo = storeInfo;
+                    }
+
+                    // Get Manager Name
+                    User user = db.Users.FirstOrDefault(m => m.Role.Name.Contains("Manager"));
+                    if (user != null)
+                    {
+                        ViewBag.ManagerName = user.Fullname;
+                    }
+
+                    // Bug check order is null or not.
+                    return View(order);
+                }
             }
-            else
+            catch (Exception)
             {
-                OrderBusiness orderBusiness = new OrderBusiness();
-                Order order = orderBusiness.GetOrder(orderId);
-                // Get tax rate
-                TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.EndDate >= order.CreateTime && m.BeginDate <= order.CreateTime);
-                if (taxRate != null)
-                {
-                    ViewBag.TaxRate = taxRate.TaxRateValue;
-                }
-
-                // Get Manager Name
-                User user = db.Users.FirstOrDefault(m => m.Role.Name.Contains("Manager"));
-                if (user != null)
-                {
-                    ViewBag.ManagerName = user.Fullname;
-                }
-
-                // Bug check order is null or not.
-                return View(order);
+                return RedirectToAction("ManageError", "Error");
             }
+            
 
         }
 

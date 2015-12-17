@@ -21,6 +21,7 @@
                 <thead>
                     <tr>
                         <th>Khoản chi</th>
+                        <th>Loại</th>
                         <th>Chi phí</th>
                         <th>Thời gian</th>
                         <th></th>
@@ -31,10 +32,13 @@
                     {
                         <tr>
                             <td>@(otherExpense.OtherExpenseName)</td>
+                            <td>
+                                @(otherExpense.Type == 11 ? "Chi phí bán hàng" : "Chi phí quản lý doanh nghiệp")
+                            </td>
                             <td>@(otherExpense.OtherExpenseAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                             <td>@(otherExpense.OtherExpenseMonthTime)/@(otherExpense.OtherExpenseYearTime)</td>
                             <td>
-                                <button class="btn btn-link btn-xs" onclick="openEditPopup(@(otherExpense.OtherExpenseId),'@(otherExpense.OtherExpenseName)',@(otherExpense.OtherExpenseAmount),@(otherExpense.OtherExpenseMonthTime),@(otherExpense.OtherExpenseYearTime))">
+                                <button class="btn btn-link btn-xs" onclick="openEditPopup(@(otherExpense.OtherExpenseId),'@(otherExpense.OtherExpenseName)',@(otherExpense.OtherExpenseAmount),@(otherExpense.OtherExpenseMonthTime),@(otherExpense.OtherExpenseYearTime),@(otherExpense.Type))">
                                     <i class="fa fa-edit" style="margin-right: 3px"></i>
                                     Sửa
                                 </button>
@@ -58,76 +62,200 @@
 
 </section>
 @section OtherExpenseIndexScript{
+    <script src="~/Scripts/numeral.js"></script>
     <script type="text/javascript">
-        function openEditPopup(id, name, amount, month, year) {
-            var bodyContent = $("<form>", {
-                "id": "editOtherExpense",
-                "html": [
-                    $("<div>", {
-                        "class": "form-group",
-                        "html": [
-                            "<label for='otherExpenseName'>Khoản chi(*):  </label>",
-                            $("<input>", {
-                                "type": "hidden",
-                                "name": "otherExpenseId",
-                                "value": id
-                            }),
-                            $("<input>", {
-                                "type": "text",
-                                "class": "form-control",
-                                "name": "otherExpenseName",
-                                "id": "otherExpenseName",
-                                "value": name
-                            })
-                        ]
-                    }),
-                    $("<div>", {
-                        "class": "form-group",
-                        "html": [
-                            "<label for='otherExpenseAmount'>Chi phí(*): </label>",
-                            $("<input>", {
-                                "type": "number",
-                                "class": "form-control",
-                                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
-                                "name": "otherExpenseAmount",
-                                "id": "otherExpenseAmount",
-                                "value": amount,
-                                "step": "1000",
-                                "min": "50000"
-                            })
-                        ]
-                    }),
-                    $("<div>", {
-                        "class": "form-group",
-                        "style": "margin-bottom: 0px;",
-                        "html": [
-                            "<label>Thời gian</label>",
-                            $("<div>", {
-                                "class": "input-group date",
-                                "id": "datetimepicker1",
-                                "html": [
-                                    $("<input>", {
-                                        "type": "text",
-                                        "readonly": "readonly",
-                                        "data-format": "MM/yyyy",
-                                        "class": "form-control",
-                                        "name": "editTime"
-                                    }),
-                                    $("<span>", {
-                                        "class": "input-group-addon",
-                                        "html": "<span class='glyphicon glyphicon-calendar'></span>"
-                                    })
-                                ]
-                            })
-                        ]
-                    }),
-                    $("<div>", {
-                        "class": "form-group",
-                        "html":
-                            "<label>(*): Bắt buộc phải nhập</label>"
-                    })
-                ]
-            });
+        $(document).on('input', "[data-role='number']", function () {
+            var data = $(this).val();
+            data = data.split(".").join("");
+            data = numeral(data).format('0,0').split(",").join(".");
+            $(this).val(data);
+        });
+        function openEditPopup(id, name, amount, month, year, type) {
+            var bodyContent;
+            if (type === 11) {
+                bodyContent = $("<form>", {
+                    "id": "editOtherExpense",
+                    "html": [
+                        $("<div>", {
+                            "class": "form-group",
+                            "html": [
+                                "<label for='otherExpenseName'>Khoản chi(*):  </label>",
+                                $("<input>", {
+                                    "type": "hidden",
+                                    "name": "otherExpenseId",
+                                    "value": id
+                                }),
+                                $("<input>", {
+                                    "type": "text",
+                                    "class": "form-control",
+                                    "name": "otherExpenseName",
+                                    "id": "otherExpenseName",
+                                    "value": name
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class": "form-group",
+                            "html": [
+                                "<label for='otherExpenseType'>Loại(*): </label>",
+                                $("<select>", {
+                                    "class": "form-control",
+                                    "name": "otherExpenseType",
+                                    "id": "otherExpenseType",
+                                    "html": [
+                                        $("<option>", {
+                                            "value": "11",
+                                            "html": "Chi phí bán hàng",
+                                            "selected": "selected"
+                                        }),
+                                        $("<option>", {
+                                            "value": "12",
+                                            "html": "Chi phí quản lý doanh nghiệp"
+                                        })
+                                    ]
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class": "form-group",
+                            "html": [
+                                "<label for='otherExpenseAmount'>Chi phí(*): </label>",
+                                $("<input>", {
+                                    "type": "number",
+                                    "class": "form-control",
+                                    "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                                    "name": "otherExpenseAmount",
+                                    "id": "otherExpenseAmount",
+                                    "value": amount,
+                                    "step": "1000",
+                                    "min": "50000"
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class": "form-group",
+                            "style": "margin-bottom: 0px;",
+                            "html": [
+                                "<label>Thời gian</label>",
+                                $("<div>", {
+                                    "class": "input-group date",
+                                    "id": "datetimepicker1",
+                                    "html": [
+                                        $("<input>", {
+                                            "type": "text",
+                                            "readonly": "readonly",
+                                            "data-format": "MM/yyyy",
+                                            "class": "form-control",
+                                            "name": "editTime"
+                                        }),
+                                        $("<span>", {
+                                            "class": "input-group-addon",
+                                            "html": "<span class='glyphicon glyphicon-calendar'></span>"
+                                        })
+                                    ]
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class": "form-group",
+                            "html":
+                                "<label>(*): Bắt buộc phải nhập</label>"
+                        })
+                    ]
+                });
+            } else {
+                bodyContent = $("<form>", {
+                    "id": "editOtherExpense",
+                    "html": [
+                        $("<div>", {
+                            "class": "form-group",
+                            "html": [
+                                "<label for='otherExpenseName'>Khoản chi(*):  </label>",
+                                $("<input>", {
+                                    "type": "hidden",
+                                    "name": "otherExpenseId",
+                                    "value": id
+                                }),
+                                $("<input>", {
+                                    "type": "text",
+                                    "class": "form-control",
+                                    "name": "otherExpenseName",
+                                    "id": "otherExpenseName",
+                                    "value": name
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class": "form-group",
+                            "html": [
+                                "<label for='otherExpenseType'>Loại(*): </label>",
+                                $("<select>", {
+                                    "class": "form-control",
+                                    "name": "otherExpenseType",
+                                    "id": "otherExpenseType",
+                                    "html": [
+                                        $("<option>", {
+                                            "value": "11",
+                                            "html": "Chi phí bán hàng"
+                                        }),
+                                        $("<option>", {
+                                            "value": "12",
+                                            "html": "Chi phí quản lý doanh nghiệp",
+                                            "selected": "selected"
+                                        })
+                                    ]
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class": "form-group",
+                            "html": [
+                                "<label for='otherExpenseAmount'>Chi phí(*): </label>",
+                                $("<input>", {
+                                    "type": "number",
+                                    "class": "form-control",
+                                    "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                                    "name": "otherExpenseAmount",
+                                    "id": "otherExpenseAmount",
+                                    "value": amount,
+                                    "step": "1000",
+                                    "min": "50000"
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class": "form-group",
+                            "style": "margin-bottom: 0px;",
+                            "html": [
+                                "<label>Thời gian</label>",
+                                $("<div>", {
+                                    "class": "input-group date",
+                                    "id": "datetimepicker1",
+                                    "html": [
+                                        $("<input>", {
+                                            "type": "text",
+                                            "readonly": "readonly",
+                                            "data-format": "MM/yyyy",
+                                            "class": "form-control",
+                                            "name": "editTime"
+                                        }),
+                                        $("<span>", {
+                                            "class": "input-group-addon",
+                                            "html": "<span class='glyphicon glyphicon-calendar'></span>"
+                                        })
+                                    ]
+                                })
+                            ]
+                        }),
+                        $("<div>", {
+                            "class": "form-group",
+                            "html":
+                                "<label>(*): Bắt buộc phải nhập</label>"
+                        })
+                    ]
+                });
+            }
+            
 
             var buttonContent = $("<div>", {
                 "class": "form-group",
@@ -258,6 +386,28 @@
                                 "class": "form-control",
                                 "name": "otherExpenseName",
                                 "id": "otherExpenseName"
+                            })
+                        ]
+                    }), ,
+                    $("<div>", {
+                        "class": "form-group",
+                        "html": [
+                            "<label for='otherExpenseType'>Loại(*): </label>",
+                            $("<select>", {
+                                "class": "form-control",
+                                "name": "otherExpenseType",
+                                "id": "otherExpenseType",
+                                "html": [
+                                    $("<option>", {
+                                        "value": "11",
+                                        "html": "Chi phí bán hàng",
+                                        "selected": "selected"
+                                    }),
+                                    $("<option>", {
+                                        "value": "12",
+                                        "html": "Chi phí quản lý doanh nghiệp"
+                                    })
+                                ]
                             })
                         ]
                     }),
@@ -578,7 +728,7 @@
                     $("<button>", {
                         "class": "btn btn-success pull-right",
                         "style": "margin-right: 10px;",
-                        "onclick": "deleteOtherExpense("+id+")",
+                        "onclick": "deleteOtherExpense(" + id + ")",
                         "html": [
                             "Có"
                         ]
@@ -597,9 +747,9 @@
                 "url": "@(Url.Action("DeleteOtherExpense","OtherExpense"))",
                 "method": "POST",
                 "data": {
-                    "id":id
+                    "id": id
                 },
-                "success":function(data) {
+                "success": function (data) {
                     if (data === "1") {
                         $('#myModal').modal('hide');
                         noty({
@@ -625,7 +775,7 @@
                         });
                     }
                 },
-                "fail": function(e) {
+                "fail": function (e) {
                     $('#myModal').modal('hide');
                     noty({
                         text: 'Đã có lỗi xảy ra.',

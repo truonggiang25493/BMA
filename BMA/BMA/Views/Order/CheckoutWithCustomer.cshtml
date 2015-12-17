@@ -286,6 +286,18 @@
                                                 "value": "@(HttpContext.Current.Session["CustomerId"])"
                                             })
                                         ]
+                                    }),
+                                    $("<div>", {
+                                        "class": "form-group",
+                                        "id": "deposit",
+                                        "html": [
+                                            "<label>Ghi chú</label>",
+                                             $("<textarea>", {
+                                                 "name": "orderNote",
+                                                 "class": "form-control",
+                                                 "style": "vertical-align: middle;"
+                                             })
+                                        ]
                                     })
                                 ]
                             });
