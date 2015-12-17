@@ -576,7 +576,7 @@
                 $(document).on("change", "[data-role=radio-is-deposit]", function() {
                     if ($(this).val() === "yes") {
                         $('#deposit').show();
-                        $('#deposit-amount').val(numeral(Math.floor(materialCost/1000) * 1000).format('0,0').split(",").join("."));
+                        $('#deposit-amount').val(numeral(materialCost).format('0,0').split(",").join("."));
                     } else {
                         $('#deposit').hide();
                         $('#deposit-amount').val(0);
@@ -600,7 +600,7 @@
                                 "style": "text-align: right",
                                 "data-role": "number",
                                 "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
-                                "value": parseInt("@(Model.IsLoyal?1:0)") === 1 ? 0 : numeral(Math.floor(materialCost/1000) * 1000).format('0,0').split(",").join(".")
+                                "value": parseInt("@(Model.IsLoyal?1:0)") === 1 ? 0 : numeral(materialCost).format('0,0').split(",").join(".")
                             })
                         ]
                     }),
@@ -676,9 +676,9 @@
         function update_order(materialCost) {
             var deposit = parseInt($("#deposit-amount").val().split(".").join(""));
             var isDeposit = $("#deposit").attr('style').split(" ").join("").indexOf("display:none");
-            if (isDeposit === -1 && deposit < Math.floor(materialCost/1000) * 1000) {
+            if (isDeposit === -1 && deposit < materialCost) {
                 noty({
-                    text: 'Tiền cọc không được nhỏ hơn '+(Math.floor(materialCost/1000) * 1000)+'.',
+                    text: 'Tiền cọc không được nhỏ hơn '+materialCost+'.',
                     type: 'warning',
                     dismissQueue: false,
                     layout: 'topCenter',

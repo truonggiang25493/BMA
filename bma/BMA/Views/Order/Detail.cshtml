@@ -235,6 +235,7 @@
                                         }
                                         if (orderStatus === 3) {
                                             $("#changeOrderStatus").attr("onclick", "");
+
                                             var n = noty({
                                                 text: 'Bạn có muốn xuất hóa đơn không ?',
                                                 buttons: [
@@ -1019,7 +1020,7 @@
                             function approveOrder(isGuest) {
                                 if (isGuest === 0) {
                                     var deposit = parseInt($("#deposit-amount").val().split(".").join(""));
-                                    var isDeposit = $("#deposit").attr('style').indexOf("display: none");
+                                    var isDeposit = $("#deposit").attr('style').split(" ").join("").indexOf("display:none");
                                     if (isDeposit === -1 && deposit < parseInt(@((Model.MaterialCost/1000)*1000))) {
                                         noty({
                                             text: 'Tiền cọc không được nhỏ hơn @(((Model.MaterialCost/1000)*1000).ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))).',
@@ -1104,7 +1105,7 @@
                                                         dismissQueue: false,
                                                         layout: 'topCenter',
                                                         theme: 'defaultTheme',
-                                                        timeout: 2000
+                                                        timeout: 500
                                                     });
                                                 } else if (data === "-5") {
                                                     $('#myModal').modal('hide');
@@ -1124,7 +1125,7 @@
                                                         dismissQueue: false,
                                                         layout: 'topCenter',
                                                         theme: 'defaultTheme',
-                                                        timeout: 2000
+                                                        timeout: 500
                                                     });
                                                 } else {
                                                     $('#myModal').modal('hide');
@@ -1379,7 +1380,7 @@
                                                             dismissQueue: false,
                                                             layout: 'topCenter',
                                                             theme: 'defaultTheme',
-                                                            timeout: 2000
+                                                            timeout: 500
                                                         });
                                                     } else if (data === "0") {
                                                         $('#myModal').modal('hide');
