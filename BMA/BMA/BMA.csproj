@@ -302,6 +302,24 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Security\BMARoleProvider.cs" />
+    <Compile Include="Models\sp_GetAllCustomerRevenueMonthly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetAllCustomerRevenueWeekly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetAllCustomerRevenueYearly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetAllProductIncomeMonthly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetAllProductIncomeWeekly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetAllProductIncomeYearly_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_GetIncomeMonthly_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -333,6 +351,12 @@
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_GetTopCustomerWithRevenue_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>BMA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagrams_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Staff.cs">
@@ -1523,8 +1547,12 @@
     <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
     <Content Include="Views\Home\NotificatePartial.cshtml" />
     <Content Include="Views\Account\ManageUserLogin.cshtml" />
-    <Content Include="Views\ManageMaterial\Detail.cshtml" />
-    <Content Include="Views\ManageMaterial\Edit.cshtml" />
+    <Content Include="Views\Report\GetAllProductIncomeWeekly.cshtml" />
+    <Content Include="Views\Report\GetAllProductIncomeMonthly.cshtml" />
+    <Content Include="Views\Report\GetAllProductIncomeYearly.cshtml" />
+    <Content Include="Views\Report\GetAllCustomerRevenueWeekly.cshtml" />
+    <Content Include="Views\Report\GetAllCustomerRevenueMonthly.cshtml" />
+    <Content Include="Views\Report\GetAllCustomerRevenueYearly.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -252,27 +252,27 @@ namespace BMA.Business
             }
             else
             {
-                //result.Quarter = quarter;
-                //result.Year = year;
-                //if (vatTaxDeclaration.CreateDate == null)
-                //{
-                //    result.CreateDate = new DateTime(year, quarter * 3, 1).AddMonths(1).AddDays(-1);
-                //}
-                //else
-                //{
-                //    result.CreateDate = vatTaxDeclaration.CreateDate;
-                //}
+                result.Quarter = quarter;
+                result.Year = year;
+                if (vatTaxDeclaration.CreateDate == null)
+                {
+                    result.CreateDate = new DateTime(year, quarter * 3, 1).AddMonths(1).AddDays(-1);
+                }
+                else
+                {
+                    result.CreateDate = vatTaxDeclaration.CreateDate;
+                }
 
-                //if (vatTaxDeclaration.Value20Date == null)
-                //{
-                //    result.Value20Date = new DateTime(2013, 1, 1);
-                //}
-                //else
-                //{
-                //    result.Value20Date = vatTaxDeclaration.Value20Date.Value;
-                //}
+                if (vatTaxDeclaration.Value20Date == null)
+                {
+                    result.Value20Date = new DateTime(2013, 1, 1);
+                }
+                else
+                {
+                    result.Value20Date = vatTaxDeclaration.Value20Date.Value;
+                }
 
-                //result.Value20No = vatTaxDeclaration.Value20No;
+                result.Value20No = vatTaxDeclaration.Value20No;
 
                 // Get StoreInfo
                 StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
@@ -385,7 +385,7 @@ namespace BMA.Business
                 result.VatAgentFax = vatTaxDeclaration.TaxAgentFax;
                 result.VatAgentEmail = vatTaxDeclaration.TaxAgentEmail;
 
-                //result.Value21 = (vatTaxDeclaration.Value21 == 1);
+                result.Value21 = (vatTaxDeclaration.Value21 == 1);
                 result.Value22 = vatTaxDeclaration.Value22.Value;
                 result.Value25 = vatTaxDeclaration.Value25.Value;
                 result.Value36 = vatTaxDeclaration.Value36.Value;
@@ -627,8 +627,11 @@ namespace BMA.Business
             }
             catch (Exception)
             {
+
                 return false;
             }
+
+
 
             return true;
         }
@@ -855,6 +858,30 @@ namespace BMA.Business
             }
 
             return true;
+        }
+
+
+        public bool CancelTndnTaxDeclaration(int year)
+        {
+            TndnTaxDeclaration tndnDeclaration =
+                 db.TndnTaxDeclarations.FirstOrDefault(m => m.Year == year);
+            if (tndnDeclaration != null)
+            {
+                db.TndnTaxDeclarations.Remove(tndnDeclaration);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         #endregion

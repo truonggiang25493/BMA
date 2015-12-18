@@ -1,0 +1,139 @@
+﻿@using System.Globalization
+@using BMA.Models
+@model List<BMA.Models.sp_GetAllProductIncomeMonthly_Result>
+
+@{
+    ViewBag.Title = "GetAllProductIncomeMonthly";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+<div class="box">
+    <div class="box-header">
+        <div class="box-title">
+            @if (Model.ElementAt(0).MonthNo == Model.ElementAt(Model.Count - 1).MonthNo && Model.ElementAt(0).YearNo == Model.ElementAt(Model.Count - 1).YearNo)
+            {
+                <h3 class="box-title">Lợi nhuận tất cả các sản phẩm tháng @(Model.ElementAt(0).MonthNo)/@(Model.ElementAt(0).YearNo)</h3>
+            }
+            else
+            {
+                <h3 class="box-title">Lợi nhuận tất cả các sản phẩm theo tháng từ tháng @(Model.ElementAt(0).MonthNo)/@(Model.ElementAt(0).YearNo) đến @(Model.ElementAt(Model.Count - 1).MonthNo)/@(Model.ElementAt(Model.Count - 1).YearNo)</h3>
+            }
+        </div>
+    </div>
+    <div class="box-body">
+        @{
+            List<string> productCode = new List<string>();
+            List<string> productName = new List<string>();
+            List<String> timeList = new List<string>();
+            foreach (sp_GetAllProductIncomeMonthly_Result result in Model)
+            {
+                if (productCode.Count == 0)
+                {
+                    productCode.Add(result.ProductCode);
+                    productName.Add(result.ProductName);
+                    timeList.Add((result.MonthNo + "/" + result.YearNo));
+                }
+                else
+                {
+                    bool nameCheck = true;
+                    foreach (string s in productCode)
+                    {
+                        if (s.Equals(result.ProductCode))
+                        {
+                            nameCheck = false;
+                        }
+
+                    }
+                    if (nameCheck)
+                    {
+                        productCode.Add(result.ProductCode);
+                        productName.Add(result.ProductName);
+                    }
+
+                    bool timeCheck = true;
+                    foreach (string s in timeList)
+                    {
+                        string temp = (result.MonthNo + "/" + result.YearNo);
+                        if (s.Equals(temp))
+                        {
+                            timeCheck = false;
+                        }
+                    }
+                    if (timeCheck)
+                    {
+                        timeList.Add((result.MonthNo + "/" + result.YearNo));
+                    }
+                }
+            }
+        }
+        <!--Table-->
+        <table class="table" id="example3">
+            <thead>
+                <tr>
+                    <th>Mã sản phẩm</th>
+                    <th>Sản phẩm</th>
+                    @foreach (string time in timeList)
+                    {
+                        <th style="text-align: center">@time</th>
+                    }
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < productCode.Count; i++)
+                {
+                    <tr>
+                        <td>@(productCode.ElementAt(i))</td>
+                        <td>@(productName.ElementAt(i))</td>
+                        @foreach (string time in timeList)
+                        {
+                            foreach (sp_GetAllProductIncomeMonthly_Result incomeMonthly in Model)
+                            {
+                                if (incomeMonthly.ProductCode.Equals(productCode.ElementAt(i)) && (incomeMonthly.MonthNo + "/" + incomeMonthly.YearNo).Equals(time))
+                                {
+                                    <td style="text-align: right">@incomeMonthly.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                }
+                            }
+                        }
+                        @{
+                        int id = 0;
+                        while (id == 0)
+                        {
+                            foreach (sp_GetAllProductIncomeMonthly_Result result in Model)
+                            {
+                                if (result.ProductCode.Equals(productCode.ElementAt(i)))
+                                {
+                                    id = result.ProductId.Value;
+                                }
+                            }
+                        }
+                        string queryString = "";
+                        if (timeList.First().Length == 7 && timeList.Last().Length == 7)
+                        {
+                            queryString = id + ";" + timeList.First() + " - " + timeList.Last();
+                        }
+                        else if (timeList.First().Length == 6 && timeList.Last().Length == 7)
+                        {
+                            queryString = id + ";" + "0" + timeList.First() + " - " + timeList.Last();
+                        }
+                        else if (timeList.First().Length == 7 && timeList.Last().Length == 6)
+                        {
+                            queryString = id + ";" + timeList.First() + " - " + "0" + timeList.Last();
+                        }
+                        else
+                        {
+                            queryString = id + ";" + "0" + timeList.First() + " - " + "0" + timeList.Last();
+                        }
+                        }
+
+                        <td>
+                            <button onclick="window.open('@(Html.Raw(Url.Action("Top10ProductIncomeDetail", "Report", new { query = queryString })))', '_blank')" class="btn btn-info btn-xs">
+                                <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

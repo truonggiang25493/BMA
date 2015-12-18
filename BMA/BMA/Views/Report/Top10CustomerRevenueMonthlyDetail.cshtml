@@ -8,17 +8,14 @@
         <div class="box">
             <!-- Content Header (Page header) -->
             <div class="box-header">
-                <div class="box-title">
-                    @if (Model.StartMonth == Model.EndMonth && Model.StartYear == Model.EndYear)
-                    {
-                        <h3>Doanh thu từ khách hàng @(Model.Fullname) tháng @(Model.StartMonth)/@(Model.StartYear)</h3>
-                    }
-                    else
-                    {
-                        <h3>Doanh thu từ khách hàng @(Model.Fullname) từ tháng @(Model.StartMonth)/@(Model.StartYear) đến tháng @(Model.EndMonth)/@(Model.EndYear)</h3>
-                    }
-
-                </div>
+                @if (Model.StartMonth == Model.EndMonth && Model.StartYear == Model.EndYear)
+                {
+                    <h2 class="box-title">Doanh thu từ khách hàng @(Model.Fullname) tháng @(Model.StartMonth)/@(Model.StartYear)</h2>
+                }
+                else
+                {
+                    <h2 class="box-title">Doanh thu từ khách hàng @(Model.Fullname) từ tháng @(Model.StartMonth)/@(Model.StartYear) đến tháng @(Model.EndMonth)/@(Model.EndYear)</h2>
+                }
             </div>
             <!-- Content Body -->
             <div class="box-body">

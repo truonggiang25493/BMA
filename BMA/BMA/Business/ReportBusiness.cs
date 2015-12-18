@@ -1449,6 +1449,33 @@ namespace BMA.Business
 
             return result;
         }
+
+        public List<sp_GetAllProductIncomeWeekly_Result> GetAllProductIncomeWeekly(DateTime startDate, DateTime endDate)
+        {
+            return db.sp_GetAllProductIncomeWeekly(startDate, endDate).ToList();
+        }
+        public List<sp_GetAllProductIncomeMonthly_Result> GetAllProductIncomeMonthly(DateTime startDate, DateTime endDate)
+        {
+            return db.sp_GetAllProductIncomeMonthly(startDate, endDate).ToList();
+        }
+        public List<sp_GetAllProductIncomeYearly_Result> GetAllProductIncomeYearly(DateTime startDate, DateTime endDate)
+        {
+            return db.sp_GetAllProductIncomeYearly(startDate, endDate).ToList();
+        }
+        public List<sp_GetAllCustomerRevenueWeekly_Result> GetAllCustomerRevenueWeekly(DateTime startDate, DateTime endDate)
+        {
+            return db.sp_GetAllCustomerRevenueWeekly(startDate, endDate).ToList();
+        }
+        public List<sp_GetAllCustomerRevenueMonthly_Result> GetAllCustomerRevenueMonthly(DateTime startDate, DateTime endDate)
+        {
+            return db.sp_GetAllCustomerRevenueMonthly(startDate, endDate).ToList();
+        }
+        public List<sp_GetAllCustomerRevenueYearly_Result> GetAllCustomerRevenueYearly(DateTime startDate, DateTime endDate)
+        {
+            return db.sp_GetAllCustomerRevenueYearly(startDate, endDate).ToList();
+        }
+
+
     }
 
 

@@ -135,7 +135,7 @@
                                 }
                                 }
                                 <td>
-                                    <button onclick="window.open('@(Html.Raw(Url.Action("Top10CustomerRevenueDetail", "Report", new { query = queryString })))', '_blank')" class="btn btn-info btn-xs">
+                                    <button onclick="window.open('@(Html.Raw(Url.Action("Top10CustomerRevenueDetail", "Report", new {query = queryString})))', '_blank')" class="btn btn-info btn-xs">
                                         <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
                                     </button>
                                 </td>
@@ -147,3 +147,11 @@
         </div>
     </div>
 </div>
+@if (customerName.Count == 10)
+{
+    <div class="row">
+        <button class="btn btn-danger pull-right" onclick="window.open('@(Html.Raw(Url.Action("GetAllCustomerRevenueMonthly", "Report", new { startMonth = Model.ElementAt(0).MonthNo, startYear = Model.ElementAt(0).YearNo, endMonth = Model.ElementAt(Model.Count - 1).MonthNo, endYear = Model.ElementAt(Model.Count - 1).YearNo })))', '_blank')">
+            <i class="fa fa-list" style="margin-right: 3px"></i>Xem toàn bộ
+        </button>
+    </div>
+}
