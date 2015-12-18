@@ -295,6 +295,9 @@ namespace BMA.Controllers
                         ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, startDate, endDate, null, null,
                             null, null);
 
+                        ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                        ViewBag.TreeViewMenu = "incomeProduct";
+                        ViewBag.TreeView = "report";
                         return View("Top10ProductIncomeWeeklyDetail", result);
                     }
                     else if (tempStrings[1].Length == 17)
@@ -309,6 +312,9 @@ namespace BMA.Controllers
                         ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, null, null, startDate.Month,
                             startDate.Year, endDate.Month, endDate.Year);
 
+                        ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                        ViewBag.TreeViewMenu = "incomeProduct";
+                        ViewBag.TreeView = "report";
                         return View("Top10ProductIncomeMonthlyDetail", result);
 
                     }
@@ -322,6 +328,9 @@ namespace BMA.Controllers
                         ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, null, null, null, startYear,
                             null, endYear);
 
+                        ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                        ViewBag.TreeViewMenu = "incomeProduct";
+                        ViewBag.TreeView = "report";
                         return View("Top10ProductIncomeYearlyDetail", result);
 
                     }
@@ -354,6 +363,9 @@ namespace BMA.Controllers
 
                 if (result.Count > 10)
                 {
+                    ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                    ViewBag.TreeViewMenu = "incomeProduct";
+                    ViewBag.TreeView = "report";
                     return View(result);
                 }
                 else
@@ -388,6 +400,9 @@ namespace BMA.Controllers
 
                 if (result.Count > 10)
                 {
+                    ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                    ViewBag.TreeViewMenu = "incomeProduct";
+                    ViewBag.TreeView = "report";
                     return View(result);
                 }
                 else
@@ -425,6 +440,9 @@ namespace BMA.Controllers
 
                 if (result.Count > 10)
                 {
+                    ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                    ViewBag.TreeViewMenu = "incomeProduct";
+                    ViewBag.TreeView = "report";
                     return View(result);
                 }
                 else
@@ -497,7 +515,6 @@ namespace BMA.Controllers
                         endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     }
 
-
                     List<sp_GetTop10CustomerRevenueWeekly_Result> result = business.GetTop10CustomerRevenueWeekly(startDate, endDate);
                     return PartialView("Top10CustomerRevenueWeeklyPartialView", result);
                 }
@@ -563,6 +580,9 @@ namespace BMA.Controllers
                         CustomerRevenueReport result = business.GetCustomerRevenueReport(id, startDate, endDate, null, null,
                             null, null);
 
+                        ViewBag.Title = "Doanh thu theo khách hàng";
+                        ViewBag.TreeView = "report";
+                        ViewBag.TreeViewMenu = "customerRevenue";
                         return View("Top10CustomerRevenueWeeklyDetail", result);
                     }
                     else if (tempStrings[1].Length == 17)
@@ -577,6 +597,9 @@ namespace BMA.Controllers
                         CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, startDate.Month,
                             startDate.Year, endDate.Month, endDate.Year);
 
+                        ViewBag.Title = "Doanh thu theo khách hàng";
+                        ViewBag.TreeView = "report";
+                        ViewBag.TreeViewMenu = "customerRevenue";
                         return View("Top10CustomerRevenueMonthlyDetail", result);
 
                     }
@@ -590,6 +613,9 @@ namespace BMA.Controllers
                         CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, null, startYear,
                             null, endYear);
 
+                        ViewBag.Title = "Doanh thu theo khách hàng";
+                        ViewBag.TreeView = "report";
+                        ViewBag.TreeViewMenu = "customerRevenue";
                         return View("Top10CustomerRevenueYearlyDetail", result);
 
                     }
@@ -623,6 +649,9 @@ namespace BMA.Controllers
 
                 if (result.Count > 10)
                 {
+                    ViewBag.Title = "Doanh thu theo khách hàng";
+                    ViewBag.TreeView = "report";
+                    ViewBag.TreeViewMenu = "customerRevenue";
                     return View(result);
                 }
                 else
@@ -660,6 +689,9 @@ namespace BMA.Controllers
 
                 if (result.Count > 10)
                 {
+                    ViewBag.Title = "Doanh thu theo khách hàng";
+                    ViewBag.TreeView = "report";
+                    ViewBag.TreeViewMenu = "customerRevenue";
                     return View(result);
                 }
                 else
@@ -694,6 +726,9 @@ namespace BMA.Controllers
 
                 if (result.Count > 10)
                 {
+                    ViewBag.Title = "Doanh thu theo khách hàng";
+                    ViewBag.TreeView = "report";
+                    ViewBag.TreeViewMenu = "customerRevenue";
                     return View(result);
                 }
                 else
