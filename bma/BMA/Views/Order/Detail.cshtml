@@ -41,17 +41,6 @@
             <div class="row" style="margin-left: 1px; margin-bottom: 10px">
                 Mã đơn hàng: <b style="font-size: 17px;">@Model.Order.OrderCode</b>
             </div>
-
-
-
-            @if (Model.Order.OrderStatus != 0 && Model.Order.OrderStatus != 1)
-            {
-
-                <div class="row" style="margin-left: 1px;">
-                    <b>Tiền cọc: </b>
-                    @(Model.Order.DepositAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
-                </div>
-            }
             @if (Model.Order.OrderStatus != 4 && Model.Order.OrderStatus != 5 && Model.Order.OrderStatus != 6)
             {
 
@@ -74,12 +63,9 @@
                     @(Model.Order.OrderNote)
                 </div>
             }
+
             @if (Model.Order.OrderStatus == 6)
             {
-                <div class="row" style="margin-left: 1px;">
-                    <b>Tiền cọc hoàn trả: </b>
-                    @(Model.Order.ReturnDeposit.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
-                </div>
                 <div class="row" style="margin-left: 1px;">
                     <b>Người hủy: </b>
                     @(Model.Order.User2.Fullname)
@@ -227,7 +213,7 @@
                                                 dismissQueue: false,
                                                 layout: 'topCenter',
                                                 theme: 'defaultTheme',
-                                                timeout: 3000
+                                                timeout: 1500
                                             });
                                             window.setTimeout(function () {
                                                 location.reload();
@@ -293,6 +279,42 @@
                     </script>
                 }
             </div>
+
+            <!--All about money-->
+            @if (Model.Order.OrderStatus != 0 && Model.Order.OrderStatus != 1)
+            {
+                <div class="row" style="margin-left: 1px; margin-top: 10px">
+                    <div class="col-md-3" style="padding-left: 0">
+                        <b>Tiền cọc: </b>
+                    </div>
+                    <div class="col-md-3" style="text-align: right">
+                        @(Model.Order.DepositAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                    </div>
+                </div>
+            }
+            <!--Money left-->
+            @if (Model.Order.OrderStatus == 2 || Model.Order.OrderStatus == 3 || Model.Order.OrderStatus == 4)
+            {
+                <div class="row" style="margin-left: 1px;">
+                    <div class="col-md-3" style="padding-left: 0">
+                        <b>Số tiền còn lại: </b>
+                    </div>
+                    <div class="col-md-3" style="text-align: right">
+                        @((Model.Order.Amount + Model.Order.TaxAmount - Model.Order.DiscountAmount - Model.Order.DepositAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                    </div>
+                </div>
+            }
+            @if (Model.Order.OrderStatus == 6)
+            {
+                <div class="row" style="margin-left: 1px;">
+                    <div class="col-md-3" style="padding-left: 0">
+                        <b>Tiền cọc hoàn trả: </b>
+                    </div>
+                    <div class="col-md-3" style="text-align: right">
+                        @(Model.Order.ReturnDeposit.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                    </div>
+                </div>
+            }
         </div>
         <div class="col-md-6 invoice-col">
             @if (!Model.IsGuest)
@@ -380,7 +402,11 @@
                         <td style="text-align: right">@Model.Order.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                     </tr>
                     <tr>
-                        <th>Thuế(VAT) @(ViewBag.TaxRate)%: </th>
+                        <th>Sau giảm giá: </th>
+                        <td style="text-align: right">@((Model.Order.Amount - Model.Order.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                    </tr>
+                    <tr>
+                        <th>Thuế(GTGT) @(ViewBag.TaxRate)%: </th>
                         <td style="text-align: right">@Model.Order.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                     </tr>
 

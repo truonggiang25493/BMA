@@ -353,12 +353,6 @@
     <Compile Include="Models\sp_GetTopCustomerWithRevenue_Result.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_helpdiagrams_Result.cs">
-      <DependentUpon>BMA.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Staff.cs">
       <DependentUpon>BMA.tt</DependentUpon>
     </Compile>
@@ -516,6 +510,7 @@
     <Content Include="Content\Images\BakeryImages\BanhGai.jpg" />
     <Content Include="Content\Images\ErrorIcon.png" />
     <Content Include="Content\Images\InputBillImages\InputBillDemo.jpg" />
+    <Content Include="Content\Images\InputBillImages\InputBillDemo02.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\PagedList.css" />

@@ -14,7 +14,6 @@ namespace BMA.Models
     
     public partial class TaxType
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TaxType()
         {
             this.TaxRates = new HashSet<TaxRate>();
@@ -24,7 +23,6 @@ namespace BMA.Models
         public string TaxTypeName { get; set; }
         public string Abbreviation { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TaxRate> TaxRates { get; set; }
     }
 }

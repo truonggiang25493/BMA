@@ -22,7 +22,7 @@
             {
                 <tr class="row">
                     <td class="col-md-3">
-                        <span>@(inputMaterial.ProductMaterial.ProductMaterialName)</span>
+                        <span>@(inputMaterial.ProductMaterial.ProductMaterialName.Length <= 30 ? inputMaterial.ProductMaterial.ProductMaterialName : inputMaterial.ProductMaterial.ProductMaterialName.Substring(0, 26) + "...")</span>
                         <input type="hidden" name="txtInputMaterialId" value="@inputMaterial.InputMaterialId" />
                     </td>
                     <td style="text-align: right" class="col-md-2">

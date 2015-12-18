@@ -22,7 +22,7 @@
                         <input type="hidden" name="txtInputBillId" value="@inputBill.InputBillId" />
                     </td>
                     <td>
-                        @(inputBill.Supplier.SupplierName)
+                        @(inputBill.Supplier.SupplierName.Length <= 30 ? inputBill.Supplier.SupplierName : inputBill.Supplier.SupplierName.Substring(0, 26) + "...")
                     </td>
                     <td>
                         @(inputBill.ImportDate.ToString("dd/MM/yyyy"))

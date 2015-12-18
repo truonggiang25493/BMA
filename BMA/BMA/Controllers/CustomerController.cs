@@ -168,7 +168,7 @@ namespace BMA.Controllers
 
         public ActionResult GetOrderByCustomerTable(int id)
         {
-            List<Order> orderByCustomerList =db.Orders.Where(n => n.CustomerUserId == id).ToList();
+            List<Order> orderByCustomerList =db.Orders.Where(n => n.CustomerUserId == id).OrderByDescending(n=>n.DeliveryTime).ToList();
             return PartialView("OrderedByCustomerPartialView", orderByCustomerList);
         }
 
