@@ -368,61 +368,74 @@ namespace BMA.Controllers
         }
         public ActionResult GetAllProductIncomeMonthly(int startMonth, int startYear, int endMonth, int endYear)
         {
-            // Check autherization
-            if (Session["User"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+
+                DateTime startDate = new DateTime(startYear, startMonth, 1);
+                DateTime endDate = new DateTime(endYear, endMonth, 1);
+
+                ReportBusiness business = new ReportBusiness();
+                List<sp_GetAllProductIncomeMonthly_Result> result = business.GetAllProductIncomeMonthly(startDate, endDate);
+
+                if (result.Count > 10)
+                {
+                    return View(result);
+                }
+                else
+                {
+                    return RedirectToAction("ReviewRevenueByProduct", "Report");
+                }
             }
-            if ((int)Session["UserRole"] != 1)
+            catch (Exception)
             {
-                return RedirectToAction("Index", "StoreInfor");
+                return RedirectToAction("ManageError", "Error");
             }
 
-            DateTime startDate = new DateTime(startYear, startMonth, 1);
-            DateTime endDate = new DateTime(endYear, endMonth, 1);
-
-            ReportBusiness business = new ReportBusiness();
-            List<sp_GetAllProductIncomeMonthly_Result> result = business.GetAllProductIncomeMonthly(startDate, endDate);
-
-            if (result.Count > 10)
-            {
-                return View(result);
-            }
-            else
-            {
-                return RedirectToAction("ReviewRevenueByProduct", "Report");
-            }
 
 
         }
         public ActionResult GetAllProductIncomeYearly(int startYear, int endYear)
         {
-            // Check autherization
-            if (Session["User"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+
+                DateTime startDate = new DateTime(startYear, 1, 1);
+                DateTime endDate = new DateTime(endYear, 1, 1);
+
+                ReportBusiness business = new ReportBusiness();
+                List<sp_GetAllProductIncomeYearly_Result> result = business.GetAllProductIncomeYearly(startDate, endDate);
+
+                if (result.Count > 10)
+                {
+                    return View(result);
+                }
+                else
+                {
+                    return RedirectToAction("ReviewRevenueByProduct", "Report");
+                }
             }
-            if ((int)Session["UserRole"] != 1)
+            catch (Exception)
             {
-                return RedirectToAction("Index", "StoreInfor");
+                return RedirectToAction("ManageError", "Error");
             }
-
-            DateTime startDate = new DateTime(startYear, 1, 1);
-            DateTime endDate = new DateTime(endYear, 1, 1);
-
-            ReportBusiness business = new ReportBusiness();
-            List<sp_GetAllProductIncomeYearly_Result> result = business.GetAllProductIncomeYearly(startDate, endDate);
-
-            if (result.Count > 10)
-            {
-                return View(result);
-            }
-            else
-            {
-                return RedirectToAction("ReviewRevenueByProduct", "Report");
-            }
-
-
         }
 
         #endregion
@@ -621,7 +634,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("ManageError", "Error");
             }
-            
+
 
 
         }
