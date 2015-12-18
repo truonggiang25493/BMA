@@ -142,10 +142,18 @@
             </tr>
             <tr>
                 <td colspan="4" style="width: 410px; text-align: right; padding-right: 10px;" class="table-cell">
-                    <b>THÀNH TIỀN</b>
+                    <b>TIỀN CỌC: </b>
                 </td>
                 <td style="width: 140px; text-align: right; padding-right: 10px;" class="table-cell">
-                    @((Model.Amount + Model.TaxAmount - Model.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                    @(Model.DepositAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="width: 410px; text-align: right; padding-right: 10px;" class="table-cell">
+                    <b>CÒN LẠI</b>
+                </td>
+                <td style="width: 140px; text-align: right; padding-right: 10px;" class="table-cell">
+                    @((Model.Amount + Model.TaxAmount - Model.DiscountAmount - Model.DepositAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))
                 </td>
             </tr>
         </tbody>
