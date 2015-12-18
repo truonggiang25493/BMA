@@ -133,6 +133,15 @@
                                                 theme: 'defaultTheme',
                                                 timeout: 2000
                                             });
+                                        } else {
+                                            noty({
+                                                text: 'Đã có lỗi xảy ra. Vui lòng thử lại',
+                                                type: 'error',
+                                                dismissQueue: false,
+                                                layout: 'topCenter',
+                                                theme: 'defaultTheme',
+                                                timeout: 2000
+                                            });
                                         }
                                     },
                                     "fail": function () {

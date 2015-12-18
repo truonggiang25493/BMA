@@ -109,9 +109,9 @@ namespace BMA.Controllers
         [HttpPost, ActionName("EditStoreInfo")]
         public int EditStoreInfoConfirm(string storeName, string ownerName, string Email, string address, string Province, string District, string phoneNumber, string Fax, string taxCode, string fileName)
         {
-            StoreInforBusiness sib = new StoreInforBusiness();
             try
             {
+                StoreInforBusiness sib = new StoreInforBusiness();
                 sib.EditStoreInfo(storeName, ownerName, Email, address, Province, District, phoneNumber, Fax, taxCode, fileName);
                 return 2;
             }
@@ -365,81 +365,117 @@ namespace BMA.Controllers
 
         public int NotificatePartialLink(int count, int newOrderCount, int confirmOrderCount, int cancelOrderCount, int lowMaterialCount)
         {
-            ViewBag.notificatePartialCount = count;
-            Session["NotificateCount"] = count;
-            ViewBag.newOrderCountPartial = newOrderCount;
-            Session["NewOrderCountPartial"] = newOrderCount;
-            ViewBag.confirmOrderCountPartial = confirmOrderCount;
-            Session["ConfirmOrderCountPartial"] = confirmOrderCount;
-            ViewBag.cancelOrderCountPartial = cancelOrderCount;
-            Session["CancelOrderCountPartial"] = cancelOrderCount;
-            ViewBag.lowMaterialCountPartial = lowMaterialCount;
-            Session["LowMaterialCountPartial"] = lowMaterialCount;
-            return 1;
+            try
+            {
+                ViewBag.notificatePartialCount = count;
+                Session["NotificateCount"] = count;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["NewOrderCountPartial"] = newOrderCount;
+                ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+                ViewBag.cancelOrderCountPartial = cancelOrderCount;
+                Session["CancelOrderCountPartial"] = cancelOrderCount;
+                ViewBag.lowMaterialCountPartial = lowMaterialCount;
+                Session["LowMaterialCountPartial"] = lowMaterialCount;
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+           
         }
 
         public int RemoveOrderNoty(int lowMaterialCount, int confirmOrderCount, int cancelOrderCount)
         {
-            ViewBag.notificatePartialCount = lowMaterialCount + confirmOrderCount + cancelOrderCount;
-            Session["NotificateCount"] = lowMaterialCount + confirmOrderCount + cancelOrderCount;
-            int newOrderCount = 0;
-            ViewBag.newOrderCountPartial = newOrderCount;
-            Session["NewOrderCountPartial"] = newOrderCount;
-            ViewBag.confirmOrderCountPartial = confirmOrderCount;
-            Session["ConfirmOrderCountPartial"] = confirmOrderCount;
-            ViewBag.cancelOrderCountPartial = cancelOrderCount;
-            Session["CancelOrderCountPartial"] = cancelOrderCount;
-            ViewBag.lowMaterialCountPartial = lowMaterialCount;
-            Session["LowMaterialCountPartial"] = lowMaterialCount;
-            return 1;
+            try
+            {
+                ViewBag.notificatePartialCount = lowMaterialCount + confirmOrderCount + cancelOrderCount;
+                Session["NotificateCount"] = lowMaterialCount + confirmOrderCount + cancelOrderCount;
+                int newOrderCount = 0;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["NewOrderCountPartial"] = newOrderCount;
+                ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+                ViewBag.cancelOrderCountPartial = cancelOrderCount;
+                Session["CancelOrderCountPartial"] = cancelOrderCount;
+                ViewBag.lowMaterialCountPartial = lowMaterialCount;
+                Session["LowMaterialCountPartial"] = lowMaterialCount;
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
 
         public int RemoveConfirmStatusNoty(int newOrderCount, int lowMaterialCount, int cancelOrderCount)
         {
-            ViewBag.notificatePartialCount = lowMaterialCount + newOrderCount + cancelOrderCount;
-            Session["NotificateCount"] = lowMaterialCount + newOrderCount + cancelOrderCount;
-            int confirmOrderCount = 0;
-            ViewBag.newOrderCountPartial = newOrderCount;
-            Session["NewOrderCountPartial"] = newOrderCount;
-            ViewBag.confirmOrderCountPartial = confirmOrderCount;
-            Session["ConfirmOrderCountPartial"] = confirmOrderCount;
-            ViewBag.cancelOrderCountPartial = cancelOrderCount;
-            Session["CancelOrderCountPartial"] = cancelOrderCount;
-            ViewBag.lowMaterialCountPartial = lowMaterialCount;
-            Session["LowMaterialCountPartial"] = lowMaterialCount;
-            return 1;
+            try
+            {
+                ViewBag.notificatePartialCount = lowMaterialCount + newOrderCount + cancelOrderCount;
+                Session["NotificateCount"] = lowMaterialCount + newOrderCount + cancelOrderCount;
+                int confirmOrderCount = 0;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["NewOrderCountPartial"] = newOrderCount;
+                ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+                ViewBag.cancelOrderCountPartial = cancelOrderCount;
+                Session["CancelOrderCountPartial"] = cancelOrderCount;
+                ViewBag.lowMaterialCountPartial = lowMaterialCount;
+                Session["LowMaterialCountPartial"] = lowMaterialCount;
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
 
         public int RemoveCancelStatusNoty(int newOrderCount, int lowMaterialCount, int confirmOrderCount)
         {
-            ViewBag.notificatePartialCount = lowMaterialCount + newOrderCount + confirmOrderCount;
-            Session["NotificateCount"] = lowMaterialCount + newOrderCount + confirmOrderCount;
-            int cancelOrderCount = 0;
-            ViewBag.newOrderCountPartial = newOrderCount;
-            Session["NewOrderCountPartial"] = newOrderCount;
-            ViewBag.confirmOrderCountPartial = confirmOrderCount;
-            Session["ConfirmOrderCountPartial"] = confirmOrderCount;
-            ViewBag.cancelOrderCountPartial = cancelOrderCount;
-            Session["CancelOrderCountPartial"] = cancelOrderCount;
-            ViewBag.lowMaterialCountPartial = lowMaterialCount;
-            Session["LowMaterialCountPartial"] = lowMaterialCount;
-            return 1;
+            try
+            {
+                ViewBag.notificatePartialCount = lowMaterialCount + newOrderCount + confirmOrderCount;
+                Session["NotificateCount"] = lowMaterialCount + newOrderCount + confirmOrderCount;
+                int cancelOrderCount = 0;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["NewOrderCountPartial"] = newOrderCount;
+                ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+                ViewBag.cancelOrderCountPartial = cancelOrderCount;
+                Session["CancelOrderCountPartial"] = cancelOrderCount;
+                ViewBag.lowMaterialCountPartial = lowMaterialCount;
+                Session["LowMaterialCountPartial"] = lowMaterialCount;
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
 
         public int RemoveMaterialNoty(int newOrderCount, int confirmOrderCount, int cancelOrderCount)
         {
-            ViewBag.notificatePartialCount = newOrderCount + confirmOrderCount + cancelOrderCount;
-            Session["NotificateCount"] = newOrderCount + confirmOrderCount + cancelOrderCount;
-            int lowMaterialCount = 0;
-            ViewBag.newOrderCountPartial = newOrderCount;
-            Session["NewOrderCountPartial"] = newOrderCount;
-            ViewBag.confirmOrderCountPartial = confirmOrderCount;
-            Session["ConfirmOrderCountPartial"] = confirmOrderCount;
-            ViewBag.cancelOrderCountPartial = cancelOrderCount;
-            Session["CancelOrderCountPartial"] = cancelOrderCount;
-            ViewBag.lowMaterialCountPartial = lowMaterialCount;
-            Session["LowMaterialCountPartial"] = lowMaterialCount;
-            return 1;
+            try
+            {
+                ViewBag.notificatePartialCount = newOrderCount + confirmOrderCount + cancelOrderCount;
+                Session["NotificateCount"] = newOrderCount + confirmOrderCount + cancelOrderCount;
+                int lowMaterialCount = 0;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["NewOrderCountPartial"] = newOrderCount;
+                ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                Session["ConfirmOrderCountPartial"] = confirmOrderCount;
+                ViewBag.cancelOrderCountPartial = cancelOrderCount;
+                Session["CancelOrderCountPartial"] = cancelOrderCount;
+                ViewBag.lowMaterialCountPartial = lowMaterialCount;
+                Session["LowMaterialCountPartial"] = lowMaterialCount;
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
     }
 }

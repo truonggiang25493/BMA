@@ -88,32 +88,39 @@ namespace BMA.Controllers
         [HttpPost, ActionName("Edit")]
         public int EditConfirm(int materialId, FormCollection f)
         {
-            ManageMaterialBusiness mmb = new ManageMaterialBusiness();
-            var materialToUpdate = mmb.GetMaterialDetail(materialId);
-            string materialName = f["txtName"].ToString();
-            string materialUnit = f.Get("txtUnit").ToString();
-            int materialSQuantity = Convert.ToInt32(f["txtSQuantity"]);
-            var materialList = mmb.GetMaterial();
-            if (materialName != materialToUpdate.ProductMaterialName)
+            try
             {
-                for (int i = 0; i < materialList.Count; i++)
+                ManageMaterialBusiness mmb = new ManageMaterialBusiness();
+                var materialToUpdate = mmb.GetMaterialDetail(materialId);
+                string materialName = f["txtName"].ToString();
+                string materialUnit = f.Get("txtUnit").ToString();
+                int materialSQuantity = Convert.ToInt32(f["txtSQuantity"]);
+                var materialList = mmb.GetMaterial();
+                if (materialName != materialToUpdate.ProductMaterialName)
                 {
-                    if (materialName == materialList[i].ProductMaterialName)
+                    for (int i = 0; i < materialList.Count; i++)
                     {
-                        return -2;
+                        if (materialName == materialList[i].ProductMaterialName)
+                        {
+                            return -2;
+                        }
                     }
                 }
+                if (!mmb.CheckProductMaterial(materialId, materialSQuantity))
+                {
+                    MvcApplication.lowQuantityNotifer.Dispose();
+                }
+                if (ModelState.IsValid)
+                {
+                    mmb.EditMaterial(materialId, materialName, materialUnit, materialSQuantity);
+                    return 1;
+                }
+                return -1;
             }
-            if (!mmb.CheckProductMaterial(materialId, materialSQuantity))
+            catch
             {
-                MvcApplication.lowQuantityNotifer.Dispose();
+                return -3;
             }
-            if (ModelState.IsValid)
-            {
-                mmb.EditMaterial(materialId, materialName, materialUnit, materialSQuantity);
-                return 1;
-            }
-            return -1;
         }
         public int ChangeStatus(int materialId, bool status, string strURL)
         {
@@ -174,34 +181,48 @@ namespace BMA.Controllers
         [HttpPost]
         public int AddMaterial(FormCollection f)
         {
-            ManageMaterialBusiness mmb = new ManageMaterialBusiness();
-            string materialName = f["txtName"].ToString();
-            string materialUnit = f.Get("txtUnit").ToString();
-            int materialSQuantity = Convert.ToInt32(f["txtSQuantity"]);
-            var materialList = mmb.GetMaterial();
-            for (int i = 0; i < materialList.Count; i++)
+            try
             {
-                if (StringComparer.CurrentCultureIgnoreCase.Equals(materialName, materialList[i].ProductMaterialName))
+                ManageMaterialBusiness mmb = new ManageMaterialBusiness();
+                string materialName = f["txtName"].ToString();
+                string materialUnit = f.Get("txtUnit").ToString();
+                int materialSQuantity = Convert.ToInt32(f["txtSQuantity"]);
+                var materialList = mmb.GetMaterial();
+                for (int i = 0; i < materialList.Count; i++)
                 {
-                    //TempData["Error"] = String.Format("{0}{1}", materialName, " đã tồn tại");
-                    return -2;
+                    if (StringComparer.CurrentCultureIgnoreCase.Equals(materialName, materialList[i].ProductMaterialName))
+                    {
+                        //TempData["Error"] = String.Format("{0}{1}", materialName, " đã tồn tại");
+                        return -2;
+                    }
                 }
+                if (ModelState.IsValid)
+                {
+                    mmb.AddMaterial(materialName, materialUnit, materialSQuantity);
+                    return 1;
+                }
+                return -1;
             }
-            if (ModelState.IsValid)
+            catch
             {
-                mmb.AddMaterial(materialName, materialUnit, materialSQuantity);
-                return 1;
+                return -3;
             }
-            return -1;
         }
 
         [HttpPost]
         public ActionResult ListMaterial(int productId)
         {
-            ManageMaterialBusiness mmb = new ManageMaterialBusiness();
-            ViewBag.productId = productId;
-            var material = mmb.MaterialPartial(productId);
-            return PartialView("ListPartial", material);
+            try
+            {
+                ManageMaterialBusiness mmb = new ManageMaterialBusiness();
+                ViewBag.productId = productId;
+                var material = mmb.MaterialPartial(productId);
+                return PartialView("ListPartial", material);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private void OnChange2(object sender, ChangeEventArgs e)

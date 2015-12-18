@@ -21,88 +21,123 @@ namespace BMA.Controllers
 
         public ActionResult NotificatePartial()
         {
-            if (Session["CusNotificateCount"] == null)
+            try
             {
-                int count = 0;
-                ViewBag.notificatePartialCount = count;
-                Session["CusNotificateCount"] = count;
-                int newOrderCount = 0;
-                ViewBag.newOrderCountPartial = newOrderCount;
-                Session["CusNewOrderCountPartial"] = newOrderCount;
-                int editOrderCount = 0;
-                ViewBag.editOrderCountPartial = editOrderCount;
-                Session["CusEditOrderCountPartial"] = editOrderCount;
-                int confirmOrderCount = 0;
-                ViewBag.confirmOrderCountPartial = confirmOrderCount;
-                Session["CusConfirmOrderCountPartial"] = confirmOrderCount;
+                if (Session["CusNotificateCount"] == null)
+                {
+                    int count = 0;
+                    ViewBag.notificatePartialCount = count;
+                    Session["CusNotificateCount"] = count;
+                    int newOrderCount = 0;
+                    ViewBag.newOrderCountPartial = newOrderCount;
+                    Session["CusNewOrderCountPartial"] = newOrderCount;
+                    int editOrderCount = 0;
+                    ViewBag.editOrderCountPartial = editOrderCount;
+                    Session["CusEditOrderCountPartial"] = editOrderCount;
+                    int confirmOrderCount = 0;
+                    ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                    Session["CusConfirmOrderCountPartial"] = confirmOrderCount;
+                }
+                else
+                {
+                    int count = Convert.ToInt32(Session["CusNotificateCount"]);
+                    ViewBag.notificatePartialCount = count;
+                    int newOrderCount = Convert.ToInt32(Session["CusNewOrderCountPartial"]);
+                    ViewBag.newOrderCountPartial = newOrderCount;
+                    int editOrderCount = Convert.ToInt32(Session["CusEditOrderCountPartial"]);
+                    ViewBag.editOrderCountPartial = editOrderCount;
+                    int confirmOrderCount = Convert.ToInt32(Session["CusConfirmOrderCountPartial"]);
+                    ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                }
+                return PartialView();
             }
-            else
+            catch
             {
-                int count = Convert.ToInt32(Session["CusNotificateCount"]);
-                ViewBag.notificatePartialCount = count;
-                int newOrderCount = Convert.ToInt32(Session["CusNewOrderCountPartial"]);
-                ViewBag.newOrderCountPartial = newOrderCount;
-                int editOrderCount = Convert.ToInt32(Session["CusEditOrderCountPartial"]);
-                ViewBag.editOrderCountPartial = editOrderCount;
-                int confirmOrderCount = Convert.ToInt32(Session["CusConfirmOrderCountPartial"]);
-                ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                return null;
             }
-            return PartialView();
         }
 
         public int NotificatePartialLink(int count, int newOrderCount, int editOrderCount, int confirmOrderCount)
         {
-            ViewBag.notificatePartialCount = count;
-            Session["CusNotificateCount"] = count;
-            ViewBag.newOrderCountPartial = newOrderCount;
-            Session["CusNewOrderCountPartial"] = newOrderCount;
-            ViewBag.editOrderCountPartial = editOrderCount;
-            Session["CusEditOrderCountPartial"] = editOrderCount;
-            ViewBag.confirmOrderCountPartial = confirmOrderCount;
-            Session["CusConfirmOrderCountPartial"] = confirmOrderCount;
-            return 1;
+            try
+            {
+                ViewBag.notificatePartialCount = count;
+                Session["CusNotificateCount"] = count;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["CusNewOrderCountPartial"] = newOrderCount;
+                ViewBag.editOrderCountPartial = editOrderCount;
+                Session["CusEditOrderCountPartial"] = editOrderCount;
+                ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                Session["CusConfirmOrderCountPartial"] = confirmOrderCount;
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
 
         public int RemoveNewOrderNoty(int editOrderCount, int confirmOrderCount)
         {
-            ViewBag.notificatePartialCount = editOrderCount + confirmOrderCount;
-            Session["CusNotificateCount"] = editOrderCount + confirmOrderCount;
-            int newOrderCount = 0;
-            ViewBag.newOrderCountPartial = newOrderCount;
-            Session["CusNewOrderCountPartial"] = newOrderCount;
-            ViewBag.editOrderCountPartial = editOrderCount;
-            Session["CusEditOrderCountPartial"] = editOrderCount;
-            ViewBag.confirmOrderCountPartial = confirmOrderCount;
-            Session["CusConfirmOrderCountPartial"] = confirmOrderCount;
-            return 1;
+            try
+            {
+                ViewBag.notificatePartialCount = editOrderCount + confirmOrderCount;
+                Session["CusNotificateCount"] = editOrderCount + confirmOrderCount;
+                int newOrderCount = 0;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["CusNewOrderCountPartial"] = newOrderCount;
+                ViewBag.editOrderCountPartial = editOrderCount;
+                Session["CusEditOrderCountPartial"] = editOrderCount;
+                ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                Session["CusConfirmOrderCountPartial"] = confirmOrderCount;
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
 
         public int RemoveEditOrderNoty(int newOrderCount, int confirmOrderCount)
         {
-            ViewBag.notificatePartialCount = newOrderCount + confirmOrderCount;
-            Session["CusNotificateCount"] = newOrderCount + confirmOrderCount;
-            int editOrderCount = 0;
-            ViewBag.newOrderCountPartial = newOrderCount;
-            Session["CusNewOrderCountPartial"] = newOrderCount;
-            ViewBag.editOrderCountPartial = editOrderCount;
-            Session["CusEditOrderCountPartial"] = editOrderCount;
-            ViewBag.confirmOrderCountPartial = confirmOrderCount;
-            Session["CusConfirmOrderCountPartial"] = confirmOrderCount;
-            return 1;
+            try
+            {
+                ViewBag.notificatePartialCount = newOrderCount + confirmOrderCount;
+                Session["CusNotificateCount"] = newOrderCount + confirmOrderCount;
+                int editOrderCount = 0;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["CusNewOrderCountPartial"] = newOrderCount;
+                ViewBag.editOrderCountPartial = editOrderCount;
+                Session["CusEditOrderCountPartial"] = editOrderCount;
+                ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                Session["CusConfirmOrderCountPartial"] = confirmOrderCount;
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
 
         public int RemoveConfirmOrderNoty(int newOrderCount, int editOrderCount)
         {
-            ViewBag.notificatePartialCount = editOrderCount + newOrderCount;
-            Session["CusNotificateCount"] = editOrderCount + newOrderCount;
-            int confirmOrderCount = 0;
-            ViewBag.newOrderCountPartial = newOrderCount;
-            Session["CusNewOrderCountPartial"] = newOrderCount;
-            ViewBag.editOrderCountPartial = editOrderCount;
-            Session["CusEditOrderCountPartial"] = editOrderCount;
-            ViewBag.confirmOrderCountPartial = confirmOrderCount;
-            Session["CusConfirmOrderCountPartial"] = confirmOrderCount;
-            return 1;
+            try
+            {
+                ViewBag.notificatePartialCount = editOrderCount + newOrderCount;
+                Session["CusNotificateCount"] = editOrderCount + newOrderCount;
+                int confirmOrderCount = 0;
+                ViewBag.newOrderCountPartial = newOrderCount;
+                Session["CusNewOrderCountPartial"] = newOrderCount;
+                ViewBag.editOrderCountPartial = editOrderCount;
+                Session["CusEditOrderCountPartial"] = editOrderCount;
+                ViewBag.confirmOrderCountPartial = confirmOrderCount;
+                Session["CusConfirmOrderCountPartial"] = confirmOrderCount;
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
     }
 }

@@ -1523,6 +1523,8 @@
     <Content Include="Views\StoreInfor\NotificatePartial.cshtml" />
     <Content Include="Views\Home\NotificatePartial.cshtml" />
     <Content Include="Views\Account\ManageUserLogin.cshtml" />
+    <Content Include="Views\ManageMaterial\Detail.cshtml" />
+    <Content Include="Views\ManageMaterial\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

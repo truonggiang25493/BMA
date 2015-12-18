@@ -26,7 +26,7 @@ namespace BMA.Controllers
                 ViewBag.TreeView = "product";
                 ViewBag.TreeViewMenu = "productList";
                 ManageProductBusiness mpb = new ManageProductBusiness();
-                var product = mpb.GetProduct();
+                var product = mpb.GetProduct().OrderByDescending(n => n.IsActive).ToList();
                 return View(product);
             }
             catch
@@ -228,21 +228,21 @@ namespace BMA.Controllers
         [HttpPost]
         public int AddProduct(string productName, string productUnit, double productWeight, string productDes, string productNote, int productPrice, int dropCate, string fileName, int[] materialId, int[] materialQuantity)
         {
-            ManageProductBusiness mpb = new ManageProductBusiness();
-            //Check that product name had existed
-            var productList = mpb.GetActiveProduct();
-            string productCode = CreateProductCode(productName);
-            for (int i = 0; i < productList.Count; i++)
-            {
-                if (StringComparer.CurrentCultureIgnoreCase.Equals(productName, productList[i].ProductName))
-                {
-                    //string strURL = Request.UrlReferrer.AbsolutePath;
-                    //TempData["Error"] = String.Format("{0}{1}", productName, " đã tồn tại");
-                    return -4;
-                }
-            }
             try
             {
+                ManageProductBusiness mpb = new ManageProductBusiness();
+                //Check that product name had existed
+                var productList = mpb.GetActiveProduct();
+                string productCode = CreateProductCode(productName);
+                for (int i = 0; i < productList.Count; i++)
+                {
+                    if (StringComparer.CurrentCultureIgnoreCase.Equals(productName, productList[i].ProductName))
+                    {
+                        //string strURL = Request.UrlReferrer.AbsolutePath;
+                        //TempData["Error"] = String.Format("{0}{1}", productName, " đã tồn tại");
+                        return -4;
+                    }
+                }
                 productPrice = Convert.ToInt32(productPrice.ToString().Replace(".", ""));
                 mpb.AddProduct(productName, productUnit, productWeight, productDes, productNote, productPrice, dropCate, productCode, fileName, materialId, materialQuantity);
                 Session["ProductInfor"] = null;

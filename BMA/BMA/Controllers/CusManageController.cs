@@ -23,93 +23,127 @@ namespace BMA.Controllers
         //[Authorize(Roles = "Customer")]
         public ActionResult Index()
         {
-            if (Session["User"] == null || Session["UserRole"] != null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                if (Session["User"] == null || Session["UserRole"] != null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                int userId = Convert.ToInt32(Session["UserId"]);
+                List<Order> lstOrder = db.Orders.Where(n => n.CustomerUserId == userId && n.OrderStatus == 1).ToList();
+                if (lstOrder.Count > 0)
+                {
+                    ViewBag.lstOrderConfirm = lstOrder;
+                }
+                return View();
             }
-            int userId = Convert.ToInt32(Session["UserId"]);
-            List<Order> lstOrder = db.Orders.Where(n => n.CustomerUserId == userId && n.OrderStatus == 1).ToList();
-            if (lstOrder.Count > 0)
+            catch
             {
-                ViewBag.lstOrderConfirm = lstOrder;
+                return RedirectToAction("Index", "Error");
             }
-
-            return View();
         }
 
         [HttpGet]
         public ActionResult ChangeInformation(int UserId)
         {
-            AccountBusiness ab = new AccountBusiness();
-            if (Session["User"] == null || ((int)Session["UserId"] != UserId))
+            try
             {
-                return RedirectToAction("Index", "Home");
+                AccountBusiness ab = new AccountBusiness();
+                if (Session["User"] == null || ((int)Session["UserId"] != UserId))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                var user = ab.GetUser(UserId);
+                return View(user);
             }
-            var user = ab.GetUser(UserId);
-            return View(user);
+            catch
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
         [HttpPost, ActionName("ChangeInformation")]
         public int ChangeInformationConfirm(FormCollection f)
         {
-            AccountBusiness ab = new AccountBusiness();
-            int cusUserId = Convert.ToInt32(Session["UserId"]);
-            string sName = f["txtName"];
-            string sAddress = f["txtAdress"];
-            string sEmail = f["txtEmail"];
-            string sTaxCode = f["txtTaxCode"];
-            string sPhone = f["txtPhone"];
-            if (ab.checkEmailExisted(cusUserId, sEmail))
+            try
             {
-                return -1;
+                AccountBusiness ab = new AccountBusiness();
+                int cusUserId = Convert.ToInt32(Session["UserId"]);
+                string sName = f["txtName"];
+                string sAddress = f["txtAdress"];
+                string sEmail = f["txtEmail"];
+                string sTaxCode = f["txtTaxCode"];
+                string sPhone = f["txtPhone"];
+                if (ab.checkEmailExisted(cusUserId, sEmail))
+                {
+                    return -1;
+                }
+                if (ab.checkPhoneExisted(cusUserId, sPhone))
+                {
+                    return -2;
+                }
+                if (ab.checkTaxCodeExisted(cusUserId, sTaxCode))
+                {
+                    return -3;
+                }
+                ab.ChangeInformation(cusUserId, sName, sEmail, sAddress, sTaxCode, sPhone);
+                return 1;
             }
-            if (ab.checkPhoneExisted(cusUserId, sPhone))
+            catch
             {
-                return -2;
+                return -4;
             }
-            if (ab.checkTaxCodeExisted(cusUserId, sTaxCode))
-            {
-                return -3;
-            }
-            ab.ChangeInformation(cusUserId, sName, sEmail, sAddress, sTaxCode, sPhone);
-            return 1;
         }
 
         [HttpGet]
         public ActionResult ChangePassword(int UserId)
         {
-            AccountBusiness ab = new AccountBusiness();
-            if (Session["User"] == null || ((int)Session["UserId"] != UserId))
+            try
             {
-                return RedirectToAction("Index", "Home");
+                AccountBusiness ab = new AccountBusiness();
+                if (Session["User"] == null || ((int)Session["UserId"] != UserId))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                var user = ab.GetUser(UserId);
+                return View(user);
             }
-            var user = ab.GetUser(UserId);
-            return View(user);
+            catch
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
         [HttpPost, ActionName("ChangePassword")]
         public int ChangePasswordConfirm(FormCollection f)
         {
-            AccountBusiness ab = new AccountBusiness();
-            int cusUserId = Convert.ToInt32(Session["UserId"]);
-            string sOldPass = f["txtOldPass"];
-            string sNewPass = f["txtNewPass"];
-            string sNewPassConfirm = f["txtNewPassConfirm"];
-            if (!ab.checkPass(cusUserId, sOldPass))
+            try
             {
-                TempData["checkOldPass"] = "Mật khẩu không đúng! Vui lòng thử lại.";
-                return -1;
+                AccountBusiness ab = new AccountBusiness();
+                int cusUserId = Convert.ToInt32(Session["UserId"]);
+                string sOldPass = f["txtOldPass"];
+                string sNewPass = f["txtNewPass"];
+                string sNewPassConfirm = f["txtNewPassConfirm"];
+                if (!ab.checkPass(cusUserId, sOldPass))
+                {
+                    TempData["checkOldPass"] = "Mật khẩu không đúng! Vui lòng thử lại.";
+                    return -1;
+                }
+                if (sOldPass == sNewPass)
+                {
+                    TempData["checkUnchange"] = "Mật khẩu mới và mật khẩu cũ giống nhau! Vui lòng thử lại.";
+                    return -2;
+                }
+                if (sNewPass != sNewPassConfirm)
+                {
+                    TempData["checkConfirmPass"] = "Mật khẩu và mật khẩu xác nhận không trùng khớp.";
+                    return -3;
+                }
+                ab.ChangePassword(cusUserId, sNewPass);
+                return 1;
             }
-            if (sOldPass == sNewPass)
+            catch
             {
-                TempData["checkUnchange"] = "Mật khẩu mới và mật khẩu cũ giống nhau! Vui lòng thử lại.";
-                return -2;
+                return -4;
             }
-            if (sNewPass != sNewPassConfirm)
-            {
-                TempData["checkConfirmPass"] = "Mật khẩu và mật khẩu xác nhận không trùng khớp.";
-                return -3;
-            }
-            ab.ChangePassword(cusUserId, sNewPass);
-            return 1;
         }
 
         public ActionResult OrderList(int? page, string orderStatus, string fromDate, string toDate)
@@ -204,10 +238,10 @@ namespace BMA.Controllers
         }
         public ActionResult OrderDetail(int orderId)
         {
-            CusManageBusiness cmb = new CusManageBusiness();
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
             try
             {
+                CusManageBusiness cmb = new CusManageBusiness();
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
                 int quantity = 0;
                 var order = cmb.GetOrderDetail(orderId);
                 if (order.CustomerUserId != Convert.ToInt32(Session["UserId"]))
@@ -298,12 +332,12 @@ namespace BMA.Controllers
         #region ConfirmOrder
         public ActionResult ConfirmOrder(int orderId)
         {
-            CusManageBusiness cmb = new CusManageBusiness();
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            int quantityConfirm = 0;
-            int quantityOld = 0;
             try
             {
+                CusManageBusiness cmb = new CusManageBusiness();
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                int quantityConfirm = 0;
+                int quantityOld = 0;
                 var orderCheck = cmb.GetOrderDetail(orderId);
                 if (orderCheck.CustomerUserId != Convert.ToInt32(Session["UserId"]))
                 {

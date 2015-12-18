@@ -248,23 +248,30 @@ namespace BMA.Controllers
         }
         public ActionResult Logout()
         {
-            AccountBusiness ab = new AccountBusiness();
-            if (Session["CusUserId"] != null)
+            try
             {
-                MvcApplication.changeStatusNotifer.Dispose();
-                ab.SetLogoutTime((int)Session["UserId"]);
-            }
-            if (Session["UserRole"] != null)
-            {
-                if ((int)Session["UserRole"] == 2)
+                AccountBusiness ab = new AccountBusiness();
+                if (Session["CusUserId"] != null)
                 {
+                    MvcApplication.changeStatusNotifer.Dispose();
                     ab.SetLogoutTime((int)Session["UserId"]);
                 }
+                if (Session["UserRole"] != null)
+                {
+                    if ((int)Session["UserRole"] == 2)
+                    {
+                        ab.SetLogoutTime((int)Session["UserId"]);
+                    }
+                }
+                Session["User"] = null;
+                Session["BeEdited"] = null;
+                Session.Clear();
+                return RedirectToAction("Index", "Home");
             }
-            Session["User"] = null;
-            Session["BeEdited"] = null;
-            Session.Clear();
-            return RedirectToAction("Index", "Home");
+            catch
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
 
         [HttpGet]
@@ -332,30 +339,37 @@ namespace BMA.Controllers
         [HttpGet]
         public ActionResult CreateNewPassword(string strUserId, DateTime timeSend)
         {
-            DateTime activeTimeCheck = DateTime.Now;
-            AccountBusiness ab = new AccountBusiness();
-            int userId = 0;
-            string salt = strUserId.Substring(strUserId.Length - 88);
-            List<User> lstUser = db.Users.ToList();
-            foreach (var item in lstUser)
+            try
             {
-                if (ab.CreateIdHash(item.UserId, salt) == strUserId)
+                DateTime activeTimeCheck = DateTime.Now;
+                AccountBusiness ab = new AccountBusiness();
+                int userId = 0;
+                string salt = strUserId.Substring(strUserId.Length - 88);
+                List<User> lstUser = db.Users.ToList();
+                foreach (var item in lstUser)
                 {
-                    userId = item.UserId;
+                    if (ab.CreateIdHash(item.UserId, salt) == strUserId)
+                    {
+                        userId = item.UserId;
+                    }
+                }
+                double check = (activeTimeCheck - timeSend).TotalMinutes;
+                if (check > 1440)
+                {
+                    ViewBag.outOfTime = "";
+                }
+
+                if (userId != 0)
+                {
+                    ViewBag.userId = userId;
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Error");
                 }
             }
-            double check = (activeTimeCheck - timeSend).TotalMinutes;
-            if (check > 1440)
-            {
-                ViewBag.outOfTime = "";
-            }
-
-            if (userId != 0)
-            {
-                ViewBag.userId = userId;
-                return View();
-            }
-            else
+            catch
             {
                 return RedirectToAction("Index", "Error");
             }
@@ -364,11 +378,11 @@ namespace BMA.Controllers
         [HttpPost]
         public int CreateNewPassword(FormCollection f)
         {
-            AccountBusiness ab = new AccountBusiness();
-            int userId = Convert.ToInt32(f["userId"]);
-            string newPassword = f["txtPass"];
             try
             {
+                AccountBusiness ab = new AccountBusiness();
+                int userId = Convert.ToInt32(f["userId"]);
+                string newPassword = f["txtPass"];
                 ab.ChangePassword(userId, newPassword);
                 return 1;
             }
