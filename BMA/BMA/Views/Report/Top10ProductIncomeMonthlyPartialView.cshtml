@@ -8,7 +8,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Biểu đồ thống kê 10 sản phẩm thu nhập cao nhất
+                    Biểu đồ thống kê 10 sản phẩm lợi nhuận cao nhất
                 </h3>
                 <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -102,34 +102,34 @@
                                     }
                                 }
                                 @{
-                                    int id = 0;
-                                    while (id == 0)
+                                int id = 0;
+                                while (id == 0)
+                                {
+                                    foreach (sp_GetTop10IncomeOfProductMonthly_Result result in Model)
                                     {
-                                        foreach (sp_GetTop10IncomeOfProductMonthly_Result result in Model)
+                                        if (result.ProductCode.Equals(productCode.ElementAt(i)))
                                         {
-                                            if (result.ProductCode.Equals(productCode.ElementAt(i)))
-                                            {
-                                                id = result.ProductId.Value;
-                                            }
+                                            id = result.ProductId.Value;
                                         }
                                     }
-                                    string queryString = "";
-                                    if (timeList.First().Length == 7 && timeList.Last().Length == 7)
-                                    {
-                                        queryString = id + ";" + timeList.First() + " - " + timeList.Last();
-                                    }
-                                    else if (timeList.First().Length == 6 && timeList.Last().Length == 7)
-                                    {
-                                        queryString = id + ";" + "0" + timeList.First() + " - " + timeList.Last();
-                                    }
-                                    else if (timeList.First().Length == 7 && timeList.Last().Length == 6)
-                                    {
-                                        queryString = id + ";" + timeList.First() + " - " + "0" + timeList.Last();
-                                    }
-                                    else
-                                    {
-                                        queryString = id + ";" + "0" + timeList.First() + " - " + "0" + timeList.Last();
-                                    }
+                                }
+                                string queryString = "";
+                                if (timeList.First().Length == 7 && timeList.Last().Length == 7)
+                                {
+                                    queryString = id + ";" + timeList.First() + " - " + timeList.Last();
+                                }
+                                else if (timeList.First().Length == 6 && timeList.Last().Length == 7)
+                                {
+                                    queryString = id + ";" + "0" + timeList.First() + " - " + timeList.Last();
+                                }
+                                else if (timeList.First().Length == 7 && timeList.Last().Length == 6)
+                                {
+                                    queryString = id + ";" + timeList.First() + " - " + "0" + timeList.Last();
+                                }
+                                else
+                                {
+                                    queryString = id + ";" + "0" + timeList.First() + " - " + "0" + timeList.Last();
+                                }
                                 }
 
                                 <td>
@@ -145,3 +145,11 @@
         </div>
     </div>
 </div>
+@if (productCode.Count == 10)
+{
+    <div class="row">
+        <button class="btn btn-danger pull-right" onclick="window.open('@(Html.Raw(Url.Action("GetAllProductIncomeMonthly", "Report", new { startMonth = Model.ElementAt(0).MonthNo, startYear = Model.ElementAt(0).YearNo, endMonth = Model.ElementAt(Model.Count - 1).MonthNo, endYear = Model.ElementAt(Model.Count - 1).YearNo })))', '_blank')">
+            <i class="fa fa-list" style="margin-right: 3px"></i>Xem toàn bộ
+        </button>
+    </div>
+}

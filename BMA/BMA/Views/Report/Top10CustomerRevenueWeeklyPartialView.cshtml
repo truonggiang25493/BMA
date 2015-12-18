@@ -130,8 +130,12 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <button class="btn btn-danger pull-right">
-        <i class="fa fa-list" style="margin-right: 3px"></i>Xem toàn bộ
-    </button>
-</div>
+@if (customerName.Count == 10)
+{
+    <div class="row">
+        <button class="btn btn-danger pull-right" onclick="window.open('@(Html.Raw(Url.Action("GetAllCustomerRevenueWeekly", "Report", new { startDate = Model.ElementAt(0).StartDate.Value.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture), endDate = Model.ElementAt(Model.Count - 1).EndDate.Value.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)})))', '_blank')">
+            <i class="fa fa-list" style="margin-right: 3px"></i>Xem toàn bộ
+        </button>
+    </div>
+}
+

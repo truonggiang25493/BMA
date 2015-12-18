@@ -8,22 +8,19 @@
         <div class="box">
             <!-- Content Header (Page header) -->
             <div class="box-header">
-                <div class="box-title">
-                    @if (Model.StartMonth == Model.EndMonth && Model.StartYear == Model.EndYear)
-                    {
-                        <h3>Thu nhập từ sản phẩm @(Model.ProductName) năm @(Model.StartYear)</h3>
-                    }
-                    else
-                    {
-                        <h3>Thu nhập từ sản phẩm @(Model.ProductName) từ @(Model.StartYear) đến @(Model.EndYear)</h3>
-                    }
-
-                </div>
+                @if (Model.StartYear == Model.EndYear)
+                {
+                    <h2 class="box-title">Lợi nhuận từ sản phẩm @(Model.ProductName) năm @(Model.StartYear)</h2>
+                }
+                else
+                {
+                    <h2 class="box-title">Lợi nhuận từ sản phẩm @(Model.ProductName) từ @(Model.StartYear) đến @(Model.EndYear)</h2>
+                }
             </div>
             <!-- Content Body -->
             <div class="box-body">
                 <h3>
-                    Tổng thu nhập: <b>@Model.TotalIncome.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</b>
+                    Tổng lợi nhuận: <b>@Model.TotalIncome.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</b>
                 </h3>
                 @for (int i = 0; i < Model.ReportProductIncomePeriodList.Count; i++)
                 {
@@ -36,7 +33,7 @@
                                     Năm @(Model.ReportProductIncomePeriodList.ElementAt(i).Year)
                                     <br />
                                     <br />
-                                    Thu nhập: <b>@(Model.ReportProductIncomePeriodList.ElementAt(i).Income.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b> gồm
+                                    Lợi nhuận: <b>@(Model.ReportProductIncomePeriodList.ElementAt(i).Income.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b> gồm
                                 </h3>
                                 @if (Model.ReportProductIncomePeriodList.ElementAt(i).Income != 0)
                                 {
@@ -137,7 +134,7 @@
                                 <h3 class="box-title">
                                     Năm @(Model.ReportProductIncomePeriodList.ElementAt(i).Year)                                    <br />
                                     <br />
-                                    Thu nhập: <b>@(Model.ReportProductIncomePeriodList.ElementAt(i).Income.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b> gồm
+                                    Lợi nhuận: <b>@(Model.ReportProductIncomePeriodList.ElementAt(i).Income.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</b> gồm
                                 </h3>
                                 @if (Model.ReportProductIncomePeriodList.ElementAt(i).Income != 0)
                                 {

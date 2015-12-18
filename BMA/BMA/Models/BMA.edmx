@@ -762,6 +762,30 @@
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_id" Type="int" Mode="In" />
         </Function>
+        <Function Name="sp_GetAllCustomerRevenueMonthly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetAllCustomerRevenueWeekly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetAllCustomerRevenueYearly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetAllProductIncomeMonthly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetAllProductIncomeWeekly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_GetAllProductIncomeYearly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="sp_GetIncomeMonthly" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="startMonth" Type="int" Mode="In" />
           <Parameter Name="startYear" Type="int" Mode="In" />
@@ -1054,7 +1078,6 @@
           <EntitySet Name="TaxTypes" EntityType="BMAModel.TaxType" />
           <EntitySet Name="TndnTaxDeclarations" EntityType="BMAModel.TndnTaxDeclaration" />
           <EntitySet Name="Users" EntityType="BMAModel.User" />
-          <EntitySet Name="VatTaxDeclarations" EntityType="BMAModel.VatTaxDeclaration" />
           <AssociationSet Name="FK_Product_Category_CategoryId" Association="BMAModel.FK_Product_Category_CategoryId">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Product" EntitySet="Products" />
@@ -1147,6 +1170,31 @@
             <End Role="TaxType" EntitySet="TaxTypes" />
             <End Role="TaxRate" EntitySet="TaxRates" />
           </AssociationSet>
+          <EntitySet Name="VatTaxDeclarations" EntityType="BMAModel.VatTaxDeclaration" />
+          <FunctionImport Name="sp_GetAllCustomerRevenueMonthly" ReturnType="Collection(BMAModel.sp_GetAllCustomerRevenueMonthly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetAllCustomerRevenueWeekly" ReturnType="Collection(BMAModel.sp_GetAllCustomerRevenueWeekly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetAllCustomerRevenueYearly" ReturnType="Collection(BMAModel.sp_GetAllCustomerRevenueYearly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetAllProductIncomeMonthly" ReturnType="Collection(BMAModel.sp_GetAllProductIncomeMonthly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetAllProductIncomeWeekly" ReturnType="Collection(BMAModel.sp_GetAllProductIncomeWeekly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetAllProductIncomeYearly" ReturnType="Collection(BMAModel.sp_GetAllProductIncomeYearly_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="sp_GetIncomeMonthly_Result">
           <Property Type="Int32" Name="MonthNo" Nullable="true" />
@@ -1693,74 +1741,6 @@
           <NavigationProperty Name="Role" Relationship="BMAModel.FK_User_Role" FromRole="User" ToRole="Role" />
           <NavigationProperty Name="Staffs" Relationship="BMAModel.FK_Staff_User" FromRole="User" ToRole="Staff" />
         </EntityType>
-        <EntityType Name="VatTaxDeclaration">
-          <Key>
-            <PropertyRef Name="VatTaxDeclarationId" />
-          </Key>
-          <Property Name="VatTaxDeclarationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Quarter" Type="Int32" Nullable="false" />
-          <Property Name="Year" Type="Int32" Nullable="false" />
-          <Property Name="TaxAgentOwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentTaxCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAgentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="InputCategory1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InputCategory1TotalAmount" Type="Int32" />
-          <Property Name="InputCategory1TotalTaxAmount" Type="Int32" />
-          <Property Name="InputCategory2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InputCategory2TotalAmount" Type="Int32" />
-          <Property Name="InputCategory2TotalTaxAmount" Type="Int32" />
-          <Property Name="InputCategory3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InputCategory3TotalAmount" Type="Int32" />
-          <Property Name="InputCategory3TotalTaxAmount" Type="Int32" />
-          <Property Name="InputTotalAmountValue23" Type="Int32" Nullable="false" />
-          <Property Name="InputTotalTaxAmountValue24" Type="Int32" Nullable="false" />
-          <Property Name="CreateLocation" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="SignName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OutputCategory1TotalAmountValue26" Type="Int32" />
-          <Property Name="OutputCategory2TotalAmountValue29" Type="Int32" />
-          <Property Name="OutputCategory3TotalAmountValue30" Type="Int32" />
-          <Property Name="OutputCategory4TotalAmountValue32" Type="Int32" />
-          <Property Name="OutputCategory3TotalTaxAmountValue31" Type="Int32" />
-          <Property Name="OutputCategory4TotalTaxAmountValue33" Type="Int32" />
-          <Property Name="OutputTotalAmountValue34" Type="Int32" Nullable="false" />
-          <Property Name="HaveTaxOutputTotalAmountValue27" Type="Int32" Nullable="false" />
-          <Property Name="OutputTotalTaxAmountValue28" Type="Int32" Nullable="false" />
-          <Property Name="Value20No" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Value20Date" Type="DateTime" Precision="0" />
-          <Property Name="Value21" Type="Int32" />
-          <Property Name="Value22" Type="Int32" />
-          <Property Name="Value25" Type="Int32" />
-          <Property Name="Value36" Type="Int32" />
-          <Property Name="Value37" Type="Int32" />
-          <Property Name="Value38" Type="Int32" />
-          <Property Name="Value39" Type="Int32" />
-          <Property Name="Value40a" Type="Int32" />
-          <Property Name="Value40b" Type="Int32" />
-          <Property Name="Value41" Type="Int32" />
-          <Property Name="Value43" Type="Int32" />
-          <Property Name="TaxAgentAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentDistrict" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentProvince" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TaxAgentPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAgentFax" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAgentEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Value40" Type="Int32" />
-          <Property Name="Value42" Type="Int32" />
-          <Property Name="StoreOwnerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StoreTaxCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="StoreAddress" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="StoreDistrict" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StoreProvince" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StorePhone" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="StoreFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="StoreEmail" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-        </EntityType>
         <Association Name="FK_Product_Category_CategoryId">
           <End Type="BMAModel.Category" Role="Category" Multiplicity="0..1" />
           <End Type="BMAModel.Product" Role="Product" Multiplicity="*" />
@@ -2037,6 +2017,129 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="VatTaxDeclaration">
+          <Key>
+            <PropertyRef Name="VatTaxDeclarationId" />
+          </Key>
+          <Property Name="VatTaxDeclarationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Quarter" Type="Int32" Nullable="false" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="TaxAgentOwnerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentTaxCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TaxAgentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="InputCategory1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InputCategory1TotalAmount" Type="Int32" />
+          <Property Name="InputCategory1TotalTaxAmount" Type="Int32" />
+          <Property Name="InputCategory2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InputCategory2TotalAmount" Type="Int32" />
+          <Property Name="InputCategory2TotalTaxAmount" Type="Int32" />
+          <Property Name="InputCategory3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InputCategory3TotalAmount" Type="Int32" />
+          <Property Name="InputCategory3TotalTaxAmount" Type="Int32" />
+          <Property Name="InputTotalAmountValue23" Type="Int32" Nullable="false" />
+          <Property Name="InputTotalTaxAmountValue24" Type="Int32" Nullable="false" />
+          <Property Name="CreateLocation" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SignName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OutputCategory1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OutputCategory2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OutputCategory3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OutputCategory4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OutputCategory1TotalAmountValue26" Type="Int32" />
+          <Property Name="OutputCategory2TotalAmountValue29" Type="Int32" />
+          <Property Name="OutputCategory3TotalAmountValue30" Type="Int32" />
+          <Property Name="OutputCategory4TotalAmountValue32" Type="Int32" />
+          <Property Name="OutputCategory3TotalTaxAmountValue31" Type="Int32" />
+          <Property Name="OutputCategory4TotalTaxAmountValue33" Type="Int32" />
+          <Property Name="OutputTotalAmountValue34" Type="Int32" Nullable="false" />
+          <Property Name="HaveTaxOutputTotalAmountValue27" Type="Int32" Nullable="false" />
+          <Property Name="OutputTotalTaxAmountValue28" Type="Int32" Nullable="false" />
+          <Property Name="Value20No" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Value20Date" Type="DateTime" Precision="0" />
+          <Property Name="Value21" Type="Int32" />
+          <Property Name="Value22" Type="Int32" />
+          <Property Name="Value25" Type="Int32" />
+          <Property Name="Value36" Type="Int32" />
+          <Property Name="Value37" Type="Int32" />
+          <Property Name="Value38" Type="Int32" />
+          <Property Name="Value39" Type="Int32" />
+          <Property Name="Value40a" Type="Int32" />
+          <Property Name="Value40b" Type="Int32" />
+          <Property Name="Value41" Type="Int32" />
+          <Property Name="Value43" Type="Int32" />
+          <Property Name="TaxAgentAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentDistrict" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentProvince" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxAgentPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TaxAgentFax" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TaxAgentEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Value40" Type="Int32" />
+          <Property Name="Value42" Type="Int32" />
+          <Property Name="StoreOwnerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StoreTaxCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="StoreAddress" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="StoreDistrict" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StoreProvince" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StorePhone" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="StoreFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="StoreEmail" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="sp_GetAllCustomerRevenueMonthly_Result">
+          <Property Type="Int32" Name="CustomerUserId" Nullable="true" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Fullname" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="MonthNo" Nullable="true" />
+          <Property Type="Int32" Name="YearNo" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetAllCustomerRevenueWeekly_Result">
+          <Property Type="Int32" Name="CustomerUserId" Nullable="true" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Fullname" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="StartDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetAllCustomerRevenueYearly_Result">
+          <Property Type="Int32" Name="CustomerUserId" Nullable="true" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Fullname" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="YearNo" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetAllProductIncomeMonthly_Result">
+          <Property Type="Int32" Name="ProductId" Nullable="true" />
+          <Property Type="String" Name="ProductCode" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="MonthNo" Nullable="true" />
+          <Property Type="Int32" Name="YearNo" Nullable="true" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
+          <Property Type="Int32" Name="Income" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetAllProductIncomeWeekly_Result">
+          <Property Type="Int32" Name="ProductId" Nullable="true" />
+          <Property Type="String" Name="ProductCode" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="StartDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
+          <Property Type="Int32" Name="Income" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetAllProductIncomeYearly_Result">
+          <Property Type="Int32" Name="ProductId" Nullable="true" />
+          <Property Type="String" Name="ProductCode" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="YearNo" Nullable="true" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="Revenue" Nullable="true" />
+          <Property Type="Int32" Name="MaterialExpense" Nullable="true" />
+          <Property Type="Int32" Name="Income" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2692,6 +2795,85 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetAllCustomerRevenueMonthly" FunctionName="BMAModel.Store.sp_GetAllCustomerRevenueMonthly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetAllCustomerRevenueMonthly_Result">
+                <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="MonthNo" ColumnName="MonthNo" />
+                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetAllCustomerRevenueWeekly" FunctionName="BMAModel.Store.sp_GetAllCustomerRevenueWeekly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetAllCustomerRevenueWeekly_Result">
+                <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetAllCustomerRevenueYearly" FunctionName="BMAModel.Store.sp_GetAllCustomerRevenueYearly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetAllCustomerRevenueYearly_Result">
+                <ScalarProperty Name="CustomerUserId" ColumnName="CustomerUserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetAllProductIncomeMonthly" FunctionName="BMAModel.Store.sp_GetAllProductIncomeMonthly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetAllProductIncomeMonthly_Result">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="MonthNo" ColumnName="MonthNo" />
+                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
+                <ScalarProperty Name="Income" ColumnName="Income" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetAllProductIncomeWeekly" FunctionName="BMAModel.Store.sp_GetAllProductIncomeWeekly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetAllProductIncomeWeekly_Result">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
+                <ScalarProperty Name="Income" ColumnName="Income" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetAllProductIncomeYearly" FunctionName="BMAModel.Store.sp_GetAllProductIncomeYearly">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BMAModel.sp_GetAllProductIncomeYearly_Result">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="YearNo" ColumnName="YearNo" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="MaterialExpense" ColumnName="MaterialExpense" />
+                <ScalarProperty Name="Income" ColumnName="Income" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

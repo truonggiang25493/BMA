@@ -8,7 +8,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Biểu đồ thống kê 10 sản phẩm thu nhập cao nhất
+                    Biểu đồ thống kê 10 sản phẩm lợi nhuận cao nhất
                 </h3>
                 <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -75,33 +75,33 @@
             <div class="box-body">
                 <table class="table" id="revenue-table">
                     <thead>
-                    <tr>                        
-                        <th>Mã sản phẩm</th>
-                        <th>Sản phẩm</th>
-                        @foreach (string time in timeList)
-                        {
-                            <th style="text-align: center">@time</th>
-                        }
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @for (int i = 0; i < productCode.Count; i++)
-                    {
                         <tr>
-                            <td>@(productCode.ElementAt(i))</td>
-                            <td>@(productName.ElementAt(i))</td>
+                            <th>Mã sản phẩm</th>
+                            <th>Sản phẩm</th>
                             @foreach (string time in timeList)
                             {
-                                foreach (sp_GetTop10IncomeOfProductWeekly_Result incomeWeekly in Model)
+                                <th style="text-align: center">@time</th>
+                            }
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < productCode.Count; i++)
+                        {
+                            <tr>
+                                <td>@(productCode.ElementAt(i))</td>
+                                <td>@(productName.ElementAt(i))</td>
+                                @foreach (string time in timeList)
                                 {
-                                    if (incomeWeekly.ProductCode.Equals(productCode.ElementAt(i)) && incomeWeekly.StartDate.Value.ToString("dd/MM/yyyy").Equals(time.Substring(0, 10)))
+                                    foreach (sp_GetTop10IncomeOfProductWeekly_Result incomeWeekly in Model)
                                     {
-                                        <td style="text-align: right">@incomeWeekly.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        if (incomeWeekly.ProductCode.Equals(productCode.ElementAt(i)) && incomeWeekly.StartDate.Value.ToString("dd/MM/yyyy").Equals(time.Substring(0, 10)))
+                                        {
+                                            <td style="text-align: right">@incomeWeekly.Income.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                        }
                                     }
                                 }
-                            }
-                            @{
+                                @{
                                 int id = 0;
                                 while (id == 0)
                                 {
@@ -114,23 +114,26 @@
                                     }
                                 }
                                 string queryString = id + ";" + timeList.First().Substring(0, 10) + " - " + timeList.Last().Substring(13, 10);
-                            }
+                                }
 
-                            <td>
-                                <button onclick="window.open('@(Html.Raw(Url.Action("Top10ProductIncomeDetail", "Report", new {query = queryString})))', '_blank')" c class="btn btn-info btn-xs">
-                                    <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
-                                </button>
-                            </td>
-                        </tr>
-                    }
+                                <td>
+                                    <button onclick="window.open('@(Html.Raw(Url.Action("Top10ProductIncomeDetail", "Report", new {query = queryString})))', '_blank')" class="btn btn-info btn-xs">
+                                        <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
+                                    </button>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
-<div class="row">
-    <button class="btn btn-danger pull-right">
-        <i class="fa fa-list" style="margin-right: 3px"></i>Xem toàn bộ
-    </button>
-</div>
+@if (productCode.Count == 10)
+{
+    <div class="row">
+        <button class="btn btn-danger pull-right" onclick="window.open('@(Html.Raw(Url.Action("GetAllProductIncomeWeekly", "Report", new { startDate = Model.ElementAt(0).StartDate.Value.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture), endDate = Model.ElementAt(Model.Count - 1).EndDate.Value.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)})))', '_blank')">
+            <i class="fa fa-list" style="margin-right: 3px"></i>Xem toàn bộ
+        </button>
+    </div>
+}

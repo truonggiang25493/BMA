@@ -98,7 +98,7 @@
                                 pointColor: "rgba(151,187,205,1)",
                                 pointStrokeColor: "#fff",
                                 data: income,
-                                title: "Thu nhập"
+                                title: "Lợi nhuận"
                             }
                         ]
                     }
@@ -110,7 +110,7 @@
                         responsive: true,
                         xAxisLabel: "Thời gian",
                         yAxisUnit: "đồng",
-                        yAxisLabel: "Thu nhập",
+                        yAxisLabel: "Lợi nhuận",
                         thousandSeparator: ".",
                         decimalSeparator: ",",
                         // Specify the number of Y-scales to display
@@ -145,8 +145,8 @@
                     $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
                 });
             } else if (timeType === "2") {
-                $('#fromDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").viewDate(moment().startOf('month')).maxDate(moment().endOf('month'));
-                $('#toDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").viewDate(moment().startOf('month')).maxDate(moment().endOf('month'));
+                $('#fromDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").date(moment().startOf('month')).maxDate(moment().endOf('month'));
+                $('#toDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").date(moment().startOf('month')).maxDate(moment().endOf('month'));
                 $("#fromDate").on("dp.change", function (e) {
                     $('#toDate').data("DateTimePicker").minDate(e.date.startOf('month'));
                 });
@@ -154,8 +154,8 @@
                     $('#fromDate').data("DateTimePicker").maxDate(e.date.add(1, 'months').endOf('month'));
                 });
             } else if (timeType === "3") {
-                $('#fromDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));
-                $('#toDate').data("DateTimePicker").viewMode("years").format("YYYY").viewDate(moment().startOf('year')).maxDate(moment().endOf('year'));
+                $('#fromDate').data("DateTimePicker").viewMode("years").format("YYYY").date(moment().startOf('year')).maxDate(moment().endOf('year'));
+                $('#toDate').data("DateTimePicker").viewMode("years").format("YYYY").date(moment().startOf('year')).maxDate(moment().endOf('year'));
                 $("#fromDate").on("dp.change", function (e) {
                     $('#toDate').data("DateTimePicker").minDate(e.date.startOf('year'));
                 });
@@ -211,7 +211,7 @@
                                 pointColor: "rgba(151,187,205,1)",
                                 pointStrokeColor: "#fff",
                                 data: income,
-                                title: "Thu nhập"
+                                title: "Lợi nhuận"
                             }
                         ]
                     }
@@ -223,7 +223,7 @@
                         responsive: true,
                         xAxisLabel: "Thời gian",
                         yAxisUnit: "đồng",
-                        yAxisLabel: "Thu nhập",
+                        yAxisLabel: "Lợi nhuận",
                         thousandSeparator: ".",
                         decimalSeparator: ",",
                         bezierCurve : false,
@@ -240,7 +240,7 @@
                         responsive: true,
                         xAxisLabel: "Thời gian",
                         yAxisUnit: "đồng",
-                        yAxisLabel: "Thu nhập",
+                        yAxisLabel: "Lợi nhuận",
                         thousandSeparator: ".",
                         bezierCurve : false,
                         // The space between the X Axis (on position 0) can be filled or not

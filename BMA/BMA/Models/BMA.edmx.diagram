@@ -31,7 +31,6 @@
         <EntityTypeShape EntityType="BMAModel.TaxType" Width="1.5" PointX="0.75" PointY="14.375" />
         <EntityTypeShape EntityType="BMAModel.TndnTaxDeclaration" Width="1.5" PointX="14.75" PointY="16" />
         <EntityTypeShape EntityType="BMAModel.User" Width="1.5" PointX="3" PointY="7.75" />
-        <EntityTypeShape EntityType="BMAModel.VatTaxDeclaration" Width="1.5" PointX="7.75" PointY="17" />
         <AssociationConnector Association="BMAModel.FK_Product_Category_CategoryId" />
         <AssociationConnector Association="BMAModel.FK_Customer_User" />
         <AssociationConnector Association="BMAModel.FK_DiscardedInputMaterial_InputMaterial" />
@@ -55,6 +54,7 @@
         <AssociationConnector Association="BMAModel.FK_User_Role" />
         <AssociationConnector Association="BMAModel.FK_Staff_User" />
         <AssociationConnector Association="BMAModel.FK_TaxRate_TaxType_TaxRateId" />
+        <EntityTypeShape EntityType="BMAModel.VatTaxDeclaration" Width="1.5" PointX="0.75" PointY="17.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

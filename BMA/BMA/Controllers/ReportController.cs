@@ -26,112 +26,152 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "StoreInfor");
             }
-            ViewBag.Title = "Báo cáo thu nhập";
+            ViewBag.Title = "Lợi nhuận theo thời gian";
             ViewBag.TreeView = "report";
             ViewBag.TreeViewMenu = "incomeReport";
             return View();
         }
         public ActionResult ReviewByTimePartialView(string start, string end, int? type)
         {
-            ReportBusiness business = new ReportBusiness();
-            if (type == null)
+            try
             {
-                type = 1;
-            }
-            if (type == 1)
-            {
-                DateTime startDate;
-                DateTime endDate;
-                if (start == null || end == null)
+                if (Session["User"] == null)
                 {
-                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
-                    endDate = DateTime.Now.LastDayOfWeek();
+                    return null;
                 }
-                else
+                if ((int)Session["UserRole"] != 1)
                 {
-                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    return null;
+                }
+                ReportBusiness business = new ReportBusiness();
+                if (type == null)
+                {
+                    type = 1;
+                }
+                if (type == 1)
+                {
+                    DateTime startDate;
+                    DateTime endDate;
+                    if (start == null || end == null)
+                    {
+                        startDate = DateTime.Now.FirstDayOfWeek().AddDays(-21);
+                        endDate = DateTime.Now.LastDayOfWeek();
+                    }
+                    else
+                    {
+                        startDate = DateTime.ParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    }
+
+
+                    List<sp_GetIncomeWeekly_Result> result = business.GetIncomeWeeklyStore(startDate, endDate);
+                    return PartialView("ReviewIncomeWeeklyPartialView", result);
+                }
+                if (type == 2)
+                {
+                    DateTime startMonth = DateTime.ParseExact(start, "MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime endMonth = DateTime.ParseExact(end, "MM/yyyy", CultureInfo.InvariantCulture);
+
+                    List<sp_GetIncomeMonthly_Result> result = business.GetIncomeMonthlyStore(startMonth.Month,
+                        startMonth.Year, endMonth.Month, endMonth.Year);
+                    return PartialView("ReviewIncomeMonthlyPartialView", result);
+
+                }
+                if (type == 3)
+                {
+                    int startYear = DateTime.ParseExact(start, "yyyy", CultureInfo.InvariantCulture).Year;
+                    int endYear = DateTime.ParseExact(end, "yyyy", CultureInfo.InvariantCulture).Year;
+                    List<sp_GetIncomeYearly_Result> result = business.GetIncomeYearlyStore(startYear, endYear);
+                    return PartialView("ReviewIncomeYearlyPartialView", result);
                 }
 
-
-                List<sp_GetIncomeWeekly_Result> result = business.GetIncomeWeeklyStore(startDate, endDate);
-                return PartialView("ReviewIncomeWeeklyPartialView", result);
+                return null;
             }
-            if (type == 2)
+            catch (Exception)
             {
-                DateTime startMonth = DateTime.ParseExact(start, "MM/yyyy", CultureInfo.InvariantCulture);
-                DateTime endMonth = DateTime.ParseExact(end, "MM/yyyy", CultureInfo.InvariantCulture);
-
-                List<sp_GetIncomeMonthly_Result> result = business.GetIncomeMonthlyStore(startMonth.Month,
-                    startMonth.Year, endMonth.Month, endMonth.Year);
-                return PartialView("ReviewIncomeMonthlyPartialView", result);
-
-            }
-            if (type == 3)
-            {
-                int startYear = DateTime.ParseExact(start, "yyyy", CultureInfo.InvariantCulture).Year;
-                int endYear = DateTime.ParseExact(end, "yyyy", CultureInfo.InvariantCulture).Year;
-                List<sp_GetIncomeYearly_Result> result = business.GetIncomeYearlyStore(startYear, endYear);
-                return PartialView("ReviewIncomeYearlyPartialView", result);
+                return null;
             }
 
-            return null;
         }
 
         public ActionResult ReviewIncomeWeeklyDetail(DateTime startDate, DateTime endDate)
         {
-            // Check autherization
-            if (Session["User"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+                ViewBag.Title = "Lợi nhuận từ " + startDate.ToString("dd/MM/yyyy") + " đến " + endDate.ToString("dd/MM/yyyy");
+                ViewBag.TreeView = "report";
+                ViewBag.TreeViewMenu = "incomeReport";
+                ReportBusiness reportBusiness = new ReportBusiness();
+                ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeWeeklyDetail(startDate, endDate);
+                return View(reportIncome);
             }
-            if ((int)Session["UserRole"] != 1)
+            catch (Exception)
             {
-                return RedirectToAction("Index", "StoreInfor");
+                return RedirectToAction("ManageError", "Error");
             }
-            ViewBag.Title = "Lợi nhuận từ " + startDate.ToString("dd/MM/yyyy") + " đến " + endDate.ToString("dd/MM/yyyy");
-            ViewBag.TreeView = "report";
-            ViewBag.TreeViewMenu = "incomeReport";
-            ReportBusiness reportBusiness = new ReportBusiness();
-            ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeWeeklyDetail(startDate, endDate);
-            return View(reportIncome);
+
         }
 
         public ActionResult ReviewIncomeMonthlyDetail(int month, int year)
         {
-            // Check autherization
-            if (Session["User"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+                ViewBag.Title = "Lợi nhuận tháng " + month + "/" + year;
+                ViewBag.TreeView = "report";
+                ViewBag.TreeViewMenu = "incomeReport";
+                ReportBusiness reportBusiness = new ReportBusiness();
+                ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeMonthlyDetail(month, year);
+                return View(reportIncome);
             }
-            if ((int)Session["UserRole"] != 1)
+            catch (Exception)
             {
-                return RedirectToAction("Index", "StoreInfor");
+                return RedirectToAction("ManageError", "Error");
             }
-            ViewBag.Title = "Lợi nhuận tháng " + month + "/" + year;
-            ViewBag.TreeView = "report";
-            ViewBag.TreeViewMenu = "incomeReport";
-            ReportBusiness reportBusiness = new ReportBusiness();
-            ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeMonthlyDetail(month, year);
-            return View(reportIncome);
+
         }
         public ActionResult ReviewIncomeYearlyDetail(int year)
         {
-            // Check autherization
-            if (Session["User"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+                ViewBag.Title = "Lợi nhuận năm " + year;
+                ViewBag.TreeView = "report";
+                ViewBag.TreeViewMenu = "incomeReport";
+                ReportBusiness reportBusiness = new ReportBusiness();
+                ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeYearlyDetail(year);
+                return View(reportIncome);
             }
-            if ((int)Session["UserRole"] != 1)
+            catch (Exception)
             {
-                return RedirectToAction("Index", "StoreInfor");
+                return RedirectToAction("ManageError", "Error");
             }
-            ViewBag.Title = "Lợi nhuận năm " + year;
-            ViewBag.TreeView = "report";
-            ViewBag.TreeViewMenu = "incomeReport";
-            ReportBusiness reportBusiness = new ReportBusiness();
-            ReportIncomeViewModel reportIncome = reportBusiness.ReviewIncomeYearlyDetail(year);
-            return View(reportIncome);
+
         }
         #endregion
 
@@ -139,7 +179,17 @@ namespace BMA.Controllers
 
         public ActionResult ReviewRevenueByProduct()
         {
-            ViewBag.Title = "Thống kê thu nhập theo sản phẩm";
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                return RedirectToAction("Index", "StoreInfor");
+            }
+
+            ViewBag.Title = "Lợi nhuận theo sản phẩm";
             ViewBag.TreeViewMenu = "incomeProduct";
             ViewBag.TreeView = "report";
             return View();
@@ -147,107 +197,232 @@ namespace BMA.Controllers
         [HttpPost]
         public ActionResult ReviewIncomePerProductPartialView(string start, string end, int? type)
         {
-            ReportBusiness business = new ReportBusiness();
-
-            if (type == null)
+            try
             {
-                type = 1;
-            }
-            if (type == 1)
-            {
-                DateTime startDate;
-                DateTime endDate;
-                if (start == null || end == null)
+                // Check autherization
+                if (Session["User"] == null)
                 {
-                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
-                    endDate = DateTime.Now;
+                    return null;
                 }
-                else
+                if ((int)Session["UserRole"] != 1)
                 {
-                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    return null;
                 }
 
+                ReportBusiness business = new ReportBusiness();
 
-                List<sp_GetTop10IncomeOfProductWeekly_Result> result = business.GetTop10ProductIncomeWeekly(startDate, endDate);
-                return PartialView("Top10ProductIncomeWeeklyPartialView", result);
+                if (type == null)
+                {
+                    type = 1;
+                }
+                if (type == 1)
+                {
+                    DateTime startDate;
+                    DateTime endDate;
+                    if (start == null || end == null)
+                    {
+                        startDate = DateTime.Now.FirstDayOfWeek().AddDays(-21);
+                        endDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        startDate = DateTime.ParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    }
+
+
+                    List<sp_GetTop10IncomeOfProductWeekly_Result> result = business.GetTop10ProductIncomeWeekly(startDate, endDate);
+                    return PartialView("Top10ProductIncomeWeeklyPartialView", result);
+                }
+                else if (type == 2)
+                {
+                    DateTime startDate = DateTime.ParseExact(start, "MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime endDate = DateTime.ParseExact(end, "MM/yyyy", CultureInfo.InvariantCulture);
+
+                    List<sp_GetTop10IncomeOfProductMonthly_Result> result =
+                        business.GetTop10ProductIncomeMonthly(startDate, endDate);
+
+                    return PartialView("Top10ProductIncomeMonthlyPartialView", result);
+                }
+                else if (type == 3)
+                {
+                    DateTime startDate = DateTime.ParseExact(start, "yyyy", CultureInfo.InvariantCulture);
+                    DateTime endDate = DateTime.ParseExact(end, "yyyy", CultureInfo.InvariantCulture);
+
+                    List<sp_GetTop10IncomeOfProductYearly_Result> result =
+                        business.GetTop10ProductIncomeYearly(startDate, endDate);
+
+                    return PartialView("Top10ProductIncomeYearlyPartialView", result);
+                }
+                return null;
             }
-            else if (type == 2)
+            catch (Exception)
             {
-                DateTime startDate = DateTime.ParseExact(start, "MM/yyyy", CultureInfo.InvariantCulture);
-                DateTime endDate = DateTime.ParseExact(end, "MM/yyyy", CultureInfo.InvariantCulture);
-
-                List<sp_GetTop10IncomeOfProductMonthly_Result> result =
-                    business.GetTop10ProductIncomeMonthly(startDate, endDate);
-
-                return PartialView("Top10ProductIncomeMonthlyPartialView", result);
+                return null;
             }
-            else if (type == 3)
-            {
-                DateTime startDate = DateTime.ParseExact(start, "yyyy", CultureInfo.InvariantCulture);
-                DateTime endDate = DateTime.ParseExact(end, "yyyy", CultureInfo.InvariantCulture);
 
-                List<sp_GetTop10IncomeOfProductYearly_Result> result =
-                    business.GetTop10ProductIncomeYearly(startDate, endDate);
-
-                return PartialView("Top10ProductIncomeYearlyPartialView", result);
-            }
-            return null;
         }
 
         public ActionResult Top10ProductIncomeDetail(string query)
         {
-            if (!query.IsEmpty())
+            try
             {
-                ViewBag.Title = "Chi tiết lợi nhuận từ sản phẩm";
-                string[] tempStrings = query.Split(';');
-
-                int id = Convert.ToInt32(tempStrings[0].Trim());
-
-                if (tempStrings[1].Length == 23)
+                // Check autherization
+                if (Session["User"] == null)
                 {
-                    DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 10), "dd/MM/yyyy",
-                        CultureInfo.InvariantCulture);
-                    DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(13, 10), "dd/MM/yyyy",
-                        CultureInfo.InvariantCulture);
-
-                    ReportBusiness business = new ReportBusiness();
-
-                    ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, startDate, endDate, null, null,
-                        null, null);
-
-                    return View("Top10ProductIncomeWeeklyDetail", result);
+                    return RedirectToAction("Index", "Home");
                 }
-                else if (tempStrings[1].Length == 17)
+                if ((int)Session["UserRole"] != 1)
                 {
-                    DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 7), "MM/yyyy",
-                        CultureInfo.InvariantCulture);
-                    DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(10, 7), "MM/yyyy",
-                        CultureInfo.InvariantCulture);
-
-                    ReportBusiness business = new ReportBusiness();
-
-                    ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, null, null, startDate.Month,
-                        startDate.Year, endDate.Month, endDate.Year);
-
-                    return View("Top10ProductIncomeMonthlyDetail", result);
-
+                    return RedirectToAction("Index", "StoreInfor");
                 }
-                else if (tempStrings[1].Length == 11)
+                if (!query.IsEmpty())
                 {
-                    int startYear = Convert.ToInt32(tempStrings[1].Substring(0, 4));
-                    int endYear = Convert.ToInt32(tempStrings[1].Substring(7, 4));
+                    ViewBag.Title = "Chi tiết lợi nhuận từ sản phẩm";
+                    string[] tempStrings = query.Split(';');
 
-                    ReportBusiness business = new ReportBusiness();
+                    int id = Convert.ToInt32(tempStrings[0].Trim());
 
-                    ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, null, null, null, startYear,
-                        null, endYear);
+                    if (tempStrings[1].Length == 23)
+                    {
+                        DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 10), "dd/MM/yyyy",
+                            CultureInfo.InvariantCulture);
+                        DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(13, 10), "dd/MM/yyyy",
+                            CultureInfo.InvariantCulture);
 
-                    return View("Top10ProductIncomeYearlyDetail", result);
+                        ReportBusiness business = new ReportBusiness();
 
+                        ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, startDate, endDate, null, null,
+                            null, null);
+
+                        return View("Top10ProductIncomeWeeklyDetail", result);
+                    }
+                    else if (tempStrings[1].Length == 17)
+                    {
+                        DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 7), "MM/yyyy",
+                            CultureInfo.InvariantCulture);
+                        DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(10, 7), "MM/yyyy",
+                            CultureInfo.InvariantCulture);
+
+                        ReportBusiness business = new ReportBusiness();
+
+                        ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, null, null, startDate.Month,
+                            startDate.Year, endDate.Month, endDate.Year);
+
+                        return View("Top10ProductIncomeMonthlyDetail", result);
+
+                    }
+                    else if (tempStrings[1].Length == 11)
+                    {
+                        int startYear = Convert.ToInt32(tempStrings[1].Substring(0, 4));
+                        int endYear = Convert.ToInt32(tempStrings[1].Substring(7, 4));
+
+                        ReportBusiness business = new ReportBusiness();
+
+                        ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, null, null, null, startYear,
+                            null, endYear);
+
+                        return View("Top10ProductIncomeYearlyDetail", result);
+
+                    }
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+
+        }
+
+        public ActionResult GetAllProductIncomeWeekly(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+
+                ReportBusiness business = new ReportBusiness();
+                List<sp_GetAllProductIncomeWeekly_Result> result = business.GetAllProductIncomeWeekly(startDate, endDate);
+
+                if (result.Count > 10)
+                {
+                    return View(result);
+                }
+                else
+                {
+                    return RedirectToAction("ReviewRevenueByProduct", "Report");
                 }
             }
-            return RedirectToAction("Index", "Home");
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+        }
+        public ActionResult GetAllProductIncomeMonthly(int startMonth, int startYear, int endMonth, int endYear)
+        {
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                return RedirectToAction("Index", "StoreInfor");
+            }
+
+            DateTime startDate = new DateTime(startYear, startMonth, 1);
+            DateTime endDate = new DateTime(endYear, endMonth, 1);
+
+            ReportBusiness business = new ReportBusiness();
+            List<sp_GetAllProductIncomeMonthly_Result> result = business.GetAllProductIncomeMonthly(startDate, endDate);
+
+            if (result.Count > 10)
+            {
+                return View(result);
+            }
+            else
+            {
+                return RedirectToAction("ReviewRevenueByProduct", "Report");
+            }
+
+
+        }
+        public ActionResult GetAllProductIncomeYearly(int startYear, int endYear)
+        {
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                return RedirectToAction("Index", "StoreInfor");
+            }
+
+            DateTime startDate = new DateTime(startYear, 1, 1);
+            DateTime endDate = new DateTime(endYear, 1, 1);
+
+            ReportBusiness business = new ReportBusiness();
+            List<sp_GetAllProductIncomeYearly_Result> result = business.GetAllProductIncomeYearly(startDate, endDate);
+
+            if (result.Count > 10)
+            {
+                return View(result);
+            }
+            else
+            {
+                return RedirectToAction("ReviewRevenueByProduct", "Report");
+            }
+
+
         }
 
         #endregion
@@ -256,7 +431,17 @@ namespace BMA.Controllers
 
         public ActionResult ReviewRevenuePerCustomer()
         {
-            ViewBag.Title = "Thống kê doanh thu theo khách hàng";
+            // Check autherization
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if ((int)Session["UserRole"] != 1)
+            {
+                return RedirectToAction("Index", "StoreInfor");
+            }
+
+            ViewBag.Title = "Doanh thu theo khách hàng";
             ViewBag.TreeView = "report";
             ViewBag.TreeViewMenu = "customerRevenue";
 
@@ -266,107 +451,247 @@ namespace BMA.Controllers
         [HttpPost]
         public ActionResult ReviewRevenuePerCustomerPartialView(string start, string end, int? type)
         {
-            ReportBusiness business = new ReportBusiness();
-
-            if (type == null)
+            try
             {
-                type = 1;
-            }
-            if (type == 1)
-            {
-                DateTime startDate;
-                DateTime endDate;
-                if (start == null || end == null)
+                // Check autherization
+                if (Session["User"] == null)
                 {
-                    startDate = DateTime.Now.FirstDayOfWeek().AddDays(-7);
-                    endDate = DateTime.Now;
+                    return null;
                 }
-                else
+                if ((int)Session["UserRole"] != 1)
                 {
-                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    return null;
                 }
 
+                ReportBusiness business = new ReportBusiness();
 
-                List<sp_GetTop10CustomerRevenueWeekly_Result> result = business.GetTop10CustomerRevenueWeekly(startDate, endDate);
-                return PartialView("Top10CustomerRevenueWeeklyPartialView", result);
+                if (type == null)
+                {
+                    type = 1;
+                }
+                if (type == 1)
+                {
+                    DateTime startDate;
+                    DateTime endDate;
+                    if (start == null || end == null)
+                    {
+                        startDate = DateTime.Now.FirstDayOfWeek().AddDays(-21);
+                        endDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        startDate = DateTime.ParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    }
+
+
+                    List<sp_GetTop10CustomerRevenueWeekly_Result> result = business.GetTop10CustomerRevenueWeekly(startDate, endDate);
+                    return PartialView("Top10CustomerRevenueWeeklyPartialView", result);
+                }
+                else if (type == 2)
+                {
+                    DateTime startDate = DateTime.ParseExact(start, "MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime endDate = DateTime.ParseExact(end, "MM/yyyy", CultureInfo.InvariantCulture);
+
+                    List<sp_GetTop10CustomerRevenueMonthly_Result> result =
+                        business.GetTop10CustomerRevenueMonthly(startDate, endDate);
+
+                    return PartialView("Top10CustomerRevenueMonthlyPartialView", result);
+                }
+                else if (type == 3)
+                {
+                    DateTime startDate = DateTime.ParseExact(start, "yyyy", CultureInfo.InvariantCulture);
+                    DateTime endDate = DateTime.ParseExact(end, "yyyy", CultureInfo.InvariantCulture);
+
+                    List<sp_GetTop10CustomerRevenueYearly_Result> result =
+                        business.GetTop10CustomerRevenueYearly(startDate, endDate);
+
+                    return PartialView("Top10CustomerRevenueYearlyPartialView", result);
+                }
+
+                return null;
             }
-            else if (type == 2)
+            catch (Exception)
             {
-                DateTime startDate = DateTime.ParseExact(start, "MM/yyyy", CultureInfo.InvariantCulture);
-                DateTime endDate = DateTime.ParseExact(end, "MM/yyyy", CultureInfo.InvariantCulture);
-
-                List<sp_GetTop10CustomerRevenueMonthly_Result> result =
-                    business.GetTop10CustomerRevenueMonthly(startDate, endDate);
-
-                return PartialView("Top10CustomerRevenueMonthlyPartialView", result);
-            }
-            else if (type == 3)
-            {
-                DateTime startDate = DateTime.ParseExact(start, "yyyy", CultureInfo.InvariantCulture);
-                DateTime endDate = DateTime.ParseExact(end, "yyyy", CultureInfo.InvariantCulture);
-
-                List<sp_GetTop10CustomerRevenueYearly_Result> result =
-                    business.GetTop10CustomerRevenueYearly(startDate, endDate);
-
-                return PartialView("Top10CustomerRevenueYearlyPartialView", result);
+                return null;
             }
 
-            return null;
         }
 
         public ActionResult Top10CustomerRevenueDetail(string query)
         {
-            if (!query.IsEmpty())
+            try
             {
-                ViewBag.Title = "Chi tiết doanh thu từ khách hàng";
-                string[] tempStrings = query.Split(';');
-
-                int id = Convert.ToInt32(tempStrings[0].Trim());
-                if (tempStrings[1].Length == 23)
+                // Check autherization
+                if (Session["User"] == null)
                 {
-                    DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 10), "dd/MM/yyyy",
-                        CultureInfo.InvariantCulture);
-                    DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(13, 10), "dd/MM/yyyy",
-                        CultureInfo.InvariantCulture);
-
-                    ReportBusiness business = new ReportBusiness();
-
-                    CustomerRevenueReport result = business.GetCustomerRevenueReport(id, startDate, endDate, null, null,
-                        null, null);
-
-                    return View("Top10CustomerRevenueWeeklyDetail", result);
+                    return RedirectToAction("Index", "Home");
                 }
-                else if (tempStrings[1].Length == 17)
+                if ((int)Session["UserRole"] != 1)
                 {
-                    DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 7), "MM/yyyy",
-                        CultureInfo.InvariantCulture);
-                    DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(10, 7), "MM/yyyy",
-                        CultureInfo.InvariantCulture);
-
-                    ReportBusiness business = new ReportBusiness();
-
-                    CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, startDate.Month,
-                        startDate.Year, endDate.Month, endDate.Year);
-
-                    return View("Top10CustomerRevenueMonthlyDetail", result);
-
+                    return RedirectToAction("Index", "StoreInfor");
                 }
-                else if (tempStrings[1].Length == 11)
+
+                if (!query.IsEmpty())
                 {
-                    int startYear = Convert.ToInt32(tempStrings[1].Substring(0, 4));
-                    int endYear = Convert.ToInt32(tempStrings[1].Substring(7, 4));
+                    ViewBag.Title = "Chi tiết doanh thu từ khách hàng";
+                    string[] tempStrings = query.Split(';');
 
-                    ReportBusiness business = new ReportBusiness();
+                    int id = Convert.ToInt32(tempStrings[0].Trim());
+                    if (tempStrings[1].Length == 23)
+                    {
+                        DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 10), "dd/MM/yyyy",
+                            CultureInfo.InvariantCulture);
+                        DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(13, 10), "dd/MM/yyyy",
+                            CultureInfo.InvariantCulture);
 
-                    CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, null, startYear,
-                        null, endYear);
+                        ReportBusiness business = new ReportBusiness();
 
-                    return View("Top10CustomerRevenueYearlyDetail", result);
+                        CustomerRevenueReport result = business.GetCustomerRevenueReport(id, startDate, endDate, null, null,
+                            null, null);
 
+                        return View("Top10CustomerRevenueWeeklyDetail", result);
+                    }
+                    else if (tempStrings[1].Length == 17)
+                    {
+                        DateTime startDate = DateTime.ParseExact(tempStrings[1].Substring(0, 7), "MM/yyyy",
+                            CultureInfo.InvariantCulture);
+                        DateTime endDate = DateTime.ParseExact(tempStrings[1].Substring(10, 7), "MM/yyyy",
+                            CultureInfo.InvariantCulture);
+
+                        ReportBusiness business = new ReportBusiness();
+
+                        CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, startDate.Month,
+                            startDate.Year, endDate.Month, endDate.Year);
+
+                        return View("Top10CustomerRevenueMonthlyDetail", result);
+
+                    }
+                    else if (tempStrings[1].Length == 11)
+                    {
+                        int startYear = Convert.ToInt32(tempStrings[1].Substring(0, 4));
+                        int endYear = Convert.ToInt32(tempStrings[1].Substring(7, 4));
+
+                        ReportBusiness business = new ReportBusiness();
+
+                        CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, null, startYear,
+                            null, endYear);
+
+                        return View("Top10CustomerRevenueYearlyDetail", result);
+
+                    }
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+
+        }
+
+
+        public ActionResult GetAllCustomerRevenueWeekly(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+
+                ReportBusiness business = new ReportBusiness();
+                List<sp_GetAllCustomerRevenueWeekly_Result> result = business.GetAllCustomerRevenueWeekly(startDate, endDate);
+
+                if (result.Count > 10)
+                {
+                    return View(result);
+                }
+                else
+                {
+                    return RedirectToAction("ReviewRevenueByProduct", "Report");
                 }
             }
-            return RedirectToAction("Index", "Home");
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+            
+
+
+        }
+        public ActionResult GetAllCustomerRevenueMonthly(int startMonth, int startYear, int endMonth, int endYear)
+        {
+            try
+            {
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+
+                DateTime startDate = new DateTime(startYear, startMonth, 1);
+                DateTime endDate = new DateTime(endYear, endMonth, 1);
+
+                ReportBusiness business = new ReportBusiness();
+                List<sp_GetAllCustomerRevenueMonthly_Result> result = business.GetAllCustomerRevenueMonthly(startDate, endDate);
+
+                if (result.Count > 10)
+                {
+                    return View(result);
+                }
+                else
+                {
+                    return RedirectToAction("ReviewRevenueByProduct", "Report");
+                }
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+        }
+        public ActionResult GetAllCustomerRevenueYearly(int startYear, int endYear)
+        {
+            try
+            {
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+
+                DateTime startDate = new DateTime(startYear, 1, 1);
+                DateTime endDate = new DateTime(endYear, 1, 1);
+
+                ReportBusiness business = new ReportBusiness();
+                List<sp_GetAllCustomerRevenueYearly_Result> result = business.GetAllCustomerRevenueYearly(startDate, endDate);
+
+                if (result.Count > 10)
+                {
+                    return View(result);
+                }
+                else
+                {
+                    return RedirectToAction("ReviewRevenueByProduct", "Report");
+                }
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
         }
 
         #endregion

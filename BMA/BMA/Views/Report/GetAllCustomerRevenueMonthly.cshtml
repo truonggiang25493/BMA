@@ -1,0 +1,142 @@
+﻿@using System.Globalization
+@using BMA.Models
+@model List<BMA.Models.sp_GetAllCustomerRevenueMonthly_Result>
+
+@{
+    ViewBag.Title = "GetAllCustomerRevenueMonthly";
+    Layout = "~/Views/Layout/ManageLayout.cshtml";
+}
+<div class="box">
+    <div class="box-header">
+        @if (Model.ElementAt(0).MonthNo == Model.ElementAt(Model.Count - 1).YearNo && Model.ElementAt(0).YearNo == Model.ElementAt(Model.Count - 1).YearNo)
+        {
+            <h2 class="box-title">Doanh thu tất cả khách hàng tháng @(Model.ElementAt(0).MonthNo)/@(Model.ElementAt(0).YearNo)</h2>
+        }
+        else
+        {
+            <h2 class="box-title">Doanh thu tất cả khách hàng tháng từ tháng @(Model.ElementAt(0).MonthNo)/@(Model.ElementAt(0).YearNo) đến tháng @(Model.ElementAt(Model.Count - 1).MonthNo)/@(Model.ElementAt(Model.Count - 1).YearNo)</h2>
+        }
+    </div>
+    <div class="box-body">
+        @{
+            List<string> customerName = new List<string>();
+            List<string> fullName = new List<string>();
+            List<String> timeList = new List<string>();
+            foreach (sp_GetAllCustomerRevenueMonthly_Result result in Model)
+            {
+                if (customerName.Count == 0)
+                {
+                    customerName.Add(result.Username);
+                    fullName.Add(result.Fullname);
+                    timeList.Add((result.MonthNo + "/" + result.YearNo));
+                }
+                else
+                {
+                    bool nameCheck = true;
+                    foreach (string s in customerName)
+                    {
+                        if (s.Equals(result.Username))
+                        {
+                            nameCheck = false;
+                        }
+
+                    }
+                    if (nameCheck)
+                    {
+                        customerName.Add(result.Username);
+                        fullName.Add(result.Fullname);
+                    }
+
+                    bool timeCheck = true;
+                    foreach (string s in timeList)
+                    {
+                        string temp = ((result.MonthNo + "/" + result.YearNo));
+                        if (s.Equals(temp))
+                        {
+                            timeCheck = false;
+                        }
+                    }
+                    if (timeCheck)
+                    {
+                        timeList.Add((result.MonthNo + "/" + result.YearNo));
+                    }
+                }
+            }
+
+
+        }
+        <!--Table-->
+        <table class="table" id="example3">
+            <thead>
+                <tr>
+                    <th>Tên đăng nhập</th>
+                    <th>Khách hàng</th>
+                    @foreach (string time in timeList)
+                    {
+                        <th style="text-align: center">@time</th>
+                    }
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < customerName.Count; i++)
+                {
+                    <tr>
+                        <td>@(customerName.ElementAt(i))</td>
+                        <td>@(fullName.ElementAt(i))</td>
+                        @foreach (string time in timeList)
+                        {
+                            foreach (sp_GetAllCustomerRevenueMonthly_Result result in Model)
+                            {
+                                if (result.Username.Equals(customerName.ElementAt(i)) && (result.MonthNo + "/" + result.YearNo).Equals(time))
+                                {
+                                    <td style="text-align: right">@result.Revenue.Value.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                }
+                            }
+                        }
+                        @{}
+                        @{
+
+
+                                int id = 0;
+                                while (id == 0)
+                                {
+                                    foreach (sp_GetAllCustomerRevenueMonthly_Result result in Model)
+                                    {
+                                        if (result.Username.Equals(customerName.ElementAt(i)))
+                                        {
+                                            id = result.CustomerUserId.Value;
+                                        }
+                                    }
+                                }
+                                string queryString = "";
+                                if (timeList.First().Length == 7 && timeList.Last().Length == 7)
+                                {
+                                    queryString = id + ";" + timeList.First() + " - " + timeList.Last();
+                                }
+                                else if (timeList.First().Length == 6 && timeList.Last().Length == 7)
+                                {
+                                    queryString = id + ";" + "0" + timeList.First() + " - " + timeList.Last();
+                                }
+                                else if (timeList.First().Length == 7 && timeList.Last().Length == 6)
+                                {
+                                    queryString = id + ";" + timeList.First() + " - " + "0" + timeList.Last();
+                                }
+                                else
+                                {
+                                    queryString = id + ";" + "0" + timeList.First() + " - " + "0" + timeList.Last();
+                                }
+                                }
+                        <
+                        <
+                        <td>
+                            <button onclick="window.open('@(Html.Raw(Url.Action(" top10customerrevenuedetail", "Report" , new { query=queryString })))', '_blank' )" class="btn btn-info btn-xs">
+                                <i class="fa fa-info" style="margin-right: 3px"></i>Chi tiết
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
