@@ -445,7 +445,7 @@
                                 </a>
                                 <ul class="treeview-menu">
                                     <li id="listInputMaterial"><a onclick="NotificatePartialLink('http://localhost:2072/InputMaterial/InputMaterialIndex')" style="cursor: pointer"><i class="fa fa-cubes"></i>Danh sách nguyên liệu đầu vào</a></li>
-                                    @if (Session["User"] != null && Session["UserRole"] != null && (int)Session["UserRole"] == 2)
+                                    @if ((int)Session["UserRole"] == 2)
                                     {
                                         <li id="addInputMaterial"><a onclick="NotificatePartialLink('http://localhost:2072/InputMaterial/AddInputMaterial')" style="cursor: pointer"><i class="fa fa-plus"></i>Thêm nguyên liệu đầu vào</a></li>
                                     }
@@ -471,36 +471,36 @@
                     }
                     @if (Session["User"] != null && Session["UserRole"] != null)
                     {
-                        if ((int)Session["UserRole"] == 2)
-                        {
-                            <li class="treeview" id="order">
-                                <a href="#">
-                                    <i class="fa fa-file-o"></i> <span>Đơn hàng</span>
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </a>
-                                <ul class="treeview-menu">
-
-                                    <li id="orderList"><a onclick="NotificatePartialLink('@(Url.Action("Index", "Order") + "?fromDate=" + DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy") + "&toDate=" + DateTime.Now.ToString("dd/MM/yyyy"))')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
+                        <li class="treeview" id="order">
+                            <a href="#">
+                                <i class="fa fa-file-o"></i> <span>Đơn hàng</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="orderList"><a onclick="NotificatePartialLink('@(Url.Action("Index", "Order") + "?fromDate=" + DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy") + "&toDate=" + DateTime.Now.ToString("dd/MM/yyyy"))')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách đơn hàng</a></li>
+                                @if ((int)Session["UserRole"] == 2)
+                                {
                                     <li id="addOrder"><a onclick="NotificatePartialLink('http://localhost:2072/Order/Add')" style="cursor: pointer"><i class="fa fa-plus"></i>Tạo mới đơn hàng</a></li>
-                                </ul>
-                            </li>
-                        }
+                                }
+                            </ul>
+                        </li>
                     }
                     @if (Session["User"] != null && Session["UserRole"] != null)
                     {
-                        if ((int)Session["UserRole"] == 2)
-                        {
-                            <li class="treeview" id="inputBill">
-                                <a href="#">
-                                    <i class="fa fa-file-text-o"></i> <span>Hóa đơn</span>
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <li id="listInputBill"><a onclick="NotificatePartialLink('http://localhost:2072/InputBill/InputBillIndex')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
+                        <li class="treeview" id="inputBill">
+                            <a href="#">
+                                <i class="fa fa-file-text-o"></i> <span>Hóa đơn</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="listInputBill"><a onclick="NotificatePartialLink('http://localhost:2072/InputBill/InputBillIndex')" style="cursor: pointer"><i class="fa fa-list-ol"></i>Danh sách hóa đơn</a></li>
+                                @if ((int)Session["UserRole"] == 2)
+                                {
                                     <li id="addInputBill"><a onclick="NotificatePartialLink('http://localhost:2072/InputBill/AddInputBill')" style="cursor: pointer"><i class="fa fa-plus"></i>Tạo mới hóa đơn</a></li>
-                                </ul>
-                            </li>
-                        }
+                                }
+                            </ul>
+                        </li>
+
                     }
                     @if (Session["User"] != null && Session["UserRole"] != null)
                     {
@@ -630,6 +630,7 @@
     @RenderSection("CustomerIndexScript", false)
     @RenderSection("SupplierIndexScript", false)
     @RenderSection("OrderIndexScript", false)
+    @RenderSection("StaffIndexScript", false)
     <script>
         $(function () {
             $('#example4').DataTable({

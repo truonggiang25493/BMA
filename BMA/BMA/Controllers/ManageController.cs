@@ -72,25 +72,32 @@ namespace BMA.Controllers
 
         public int ChangePassword(FormCollection f)
         {
-            AccountBusiness ab = new AccountBusiness();
-            int cusUserId = Convert.ToInt32(Session["UserId"]);
-            string sOldPass = f["txtOldPass"];
-            string sNewPass = f["txtNewPass"];
-            string sNewPassConfirm = f["txtNewPassConfirm"];
-            if (!ab.checkPass(cusUserId, sOldPass))
+            try
             {
-                return -1;
+                AccountBusiness ab = new AccountBusiness();
+                int cusUserId = Convert.ToInt32(Session["UserId"]);
+                string sOldPass = f["txtOldPass"];
+                string sNewPass = f["txtNewPass"];
+                string sNewPassConfirm = f["txtNewPassConfirm"];
+                if (!ab.checkPass(cusUserId, sOldPass))
+                {
+                    return -1;
+                }
+                if (sOldPass == sNewPass)
+                {
+                    return -2;
+                }
+                if (sNewPass != sNewPassConfirm)
+                {
+                    return -3;
+                }
+                ab.ChangePassword(cusUserId, sNewPass);
+                return 1;
             }
-            if (sOldPass == sNewPass)
+            catch
             {
-                return -2;
+                return -4;
             }
-            if (sNewPass != sNewPassConfirm)
-            {
-                return -3;
-            }
-            ab.ChangePassword(cusUserId, sNewPass);
-            return 1;
         }
     }
 }

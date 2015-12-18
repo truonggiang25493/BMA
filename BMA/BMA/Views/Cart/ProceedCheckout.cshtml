@@ -50,17 +50,17 @@
                                         </tr>
                                         @foreach (var item in Model)
                                         {
-                                        <tr class="CartProduct">
-                                            <td class="CartProductThumb"><div> <a href="#"><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" style="width:86px;height:58px;"></a> </div></td>
-                                            <td>
-                                                <div class="CartDescription">
-                                                    <h4>@item.ProductName</h4>
-                                                </div>
-                                            </td>
-                                            <td class="delete"><div class="price ">@item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) </div></td>
-                                            <td class="hidden-xs">@item.Quantity</td>
-                                            <td class="price">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-                                        </tr>
+                                            <tr class="CartProduct">
+                                                <td class="CartProductThumb"><div> <a href="#"><img src="@Url.Content("~/Content/Images/BakeryImages/" + @item.ProductImage)" style="width:86px;height:58px;"></a> </div></td>
+                                                <td>
+                                                    <div class="CartDescription">
+                                                        <h4>@item.ProductName</h4>
+                                                    </div>
+                                                </td>
+                                                <td class="delete"><div class="price ">@item.Price.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")) </div></td>
+                                                <td class="hidden-xs">@item.Quantity</td>
+                                                <td class="price">@item.Total.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                                            </tr>
                                             sumTotal = sumTotal + @item.Total;
                                         }
                                     </tbody>
@@ -88,14 +88,14 @@
                                         </tr>
                                         @if (dbq != null)
                                         {
-                                        <tr>
-                                            <td>Giảm giá(@string.Format("{0}{1}", dbq.DiscountValue, "%"))</td>
-                                            <td class="price"><span class="success">@(discount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Sau giảm giá</td>
-                                            <td class="price"><span class="success">@(cosAfterDiscount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
-                                        </tr>
+                                            <tr>
+                                                <td>Giảm giá(@string.Format("{0}{1}", dbq.DiscountValue, "%"))</td>
+                                                <td class="price"><span class="success">@(discount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sau giảm giá</td>
+                                                <td class="price"><span class="success">@(cosAfterDiscount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</span></td>
+                                            </tr>
                                         }
                                         <tr>
                                             <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
@@ -125,23 +125,23 @@
                                 {
                                     if (Session["BeEdited"] != null)
                                     {
-                            <a onclick="EditOrder()" class="btn btn-primary btn-small ">
-                                Xác nhận &nbsp; <i class="fa fa-check"></i>
-                            </a>
+                                        <a onclick="EditOrder()" class="btn btn-primary btn-small ">
+                                            Xác nhận &nbsp; <i class="fa fa-check"></i>
+                                        </a>
                                     }
                                     else
                                     {
-                            <a onclick="OrderProduct()" class="btn btn-primary btn-small ">
-                                Xác nhận &nbsp; <i class="fa fa-check"></i>
-                            </a>
+                                        <a onclick="OrderProduct()" class="btn btn-primary btn-small ">
+                                            Xác nhận &nbsp; <i class="fa fa-check"></i>
+                                        </a>
                                     }
 
                                 }
                                 else
                                 {
-                            <a onclick="OrderInfo()" class="btn btn-primary btn-small ">
-                                Xác nhận &nbsp; <i class="fa fa-check"></i>
-                            </a>
+                                    <a onclick="OrderInfo()" class="btn btn-primary btn-small ">
+                                        Xác nhận &nbsp; <i class="fa fa-check"></i>
+                                    </a>
                                 }
                             }
                         </div>
@@ -169,14 +169,22 @@
                 data: "@(Url.Action("EditOrder", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"])}))",
                 success: function (data) {
                     if (data === "1") {
+                        noty({
+                            text: 'Chỉnh sửa đơn thành công, nhân viên cửa hàng sẽ nhanh chóng liên lạc với quý khách. Cám ơn quý khách',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1500
+                        });
                         window.setTimeout(function () {
                             window.location.replace("@(Url.Action("EditOrderSuccess", "Cart", new { @orderId = Convert.ToInt32(Session["BeEdited"])}))");
-                        }, 500);
-                    } if (data === "-1") {
+                        }, 2000);
+                    } else if (data === "-1") {
                         window.setTimeout(function () {
                             window.location.replace("@(Url.Action("Index", "Product"))");
                         }, 500);
-                    } if (data === "-2") {
+                    } else if (data === "-2") {
                         noty({
                             text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng.',
                             type: 'warning',
@@ -185,8 +193,7 @@
                             theme: 'defaultTheme',
                             timeout: 3000
                         });
-                    }
-                    if (data === "-3") {
+                    } if (data === "-3") {
                         noty({
                             text: 'Đơn hàng đã bị hủy, không thể chỉnh sửa.',
                             type: 'warning',
@@ -195,11 +202,20 @@
                             theme: 'defaultTheme',
                             timeout: 3000
                         });
+                    } else {
+                        noty({
+                            text: 'Đã có lỗi xảy ra',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
+                        });
                     }
                 },
                 fail: function () {
                     noty({
-                        text: 'Đã có lỗi xảy ra',
+                        text: 'Đã có lỗi xảy ra. Vui lòng thử lại',
                         type: 'error',
                         dismissQueue: false,
                         layout: 'topCenter',
@@ -217,14 +233,22 @@
                 data: "@(Url.Action("OrderProduct", "Cart"))",
                 success: function (data) {
                     if (data === "1") {
+                        noty({
+                            text: 'Đặt hàng thành công, nhân viên cửa hàng sẽ nhanh chóng liên lạc với quý khách. Cám ơn quý khách',
+                            type: 'warning',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1500
+                        });
                         window.setTimeout(function () {
                             window.location.replace("@(Url.Action("OrderSuccess", "Cart"))");
-                        }, 500);
-                    } if (data === "-1") {
+                        }, 2000);
+                    } else if (data === "-1") {
                         window.setTimeout(function () {
                             window.location.replace("@(Url.Action("Index", "Product"))");
                         }, 500);
-                    } if (data === "-2") {
+                    } else if (data === "-2") {
                         noty({
                             text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng',
                             type: 'warning',
@@ -232,6 +256,15 @@
                             layout: 'topCenter',
                             theme: 'defaultTheme',
                             timeout: 3000
+                        });
+                    } else {
+                        noty({
+                            text: 'Đã có lỗi xảy ra. Vui lòng thử lại',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
                         });
                     }
                 },
@@ -258,8 +291,7 @@
                         window.setTimeout(function () {
                             window.location.replace("@(Url.Action("OrderInfo", "Cart"))");
                         }, 500);
-                    }
-                    if (data === "-1") {
+                    } else if (data === "-1") {
                         noty({
                             text: 'Xin lỗi quý khách, sản phẩm ' + productName + ' đã ngừng sản xuất. Qúy khách vui lòng gỡ khỏi giỏ hàng',
                             type: 'warning',
@@ -267,6 +299,15 @@
                             layout: 'topCenter',
                             theme: 'defaultTheme',
                             timeout: 3000
+                        });
+                    } else {
+                        noty({
+                            text: 'Đã có lỗi xảy ra. Vui lòng thử lại',
+                            type: 'error',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 1000
                         });
                     }
                 },

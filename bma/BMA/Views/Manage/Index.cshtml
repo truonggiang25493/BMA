@@ -391,7 +391,7 @@
                                                             } else if (data === '-3') {
                                                                 var n = noty({
                                                                     text: 'Có lỗi xảy ra, vui lòng thử lại.',
-                                                                    type: 'warning',
+                                                                    type: 'error',
                                                                     dismissQueue: false,
                                                                     layout: 'topCenter',
                                                                     theme: 'defaultTheme',
@@ -540,6 +540,15 @@
                                                         noty({
                                                             text: 'Mật khẩu mới và mật khẩu xác nhận không trùng khớp.',
                                                             type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 2000
+                                                        });
+                                                    } else {
+                                                        noty({
+                                                            text: 'Đã có lỗi xảy ra. Vui lòng thử lại',
+                                                            type: 'error',
                                                             dismissQueue: false,
                                                             layout: 'topCenter',
                                                             theme: 'defaultTheme',

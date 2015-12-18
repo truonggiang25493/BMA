@@ -239,7 +239,7 @@
                                     {
                                         <li> <a onclick="NotificatePartialLink('http://localhost:2072/CusManage/Index')"><span class="hidden-xs"><i class="fa fa-street-view"></i><span style="text-transform:none;">@((Session["User"] as User).Username)</span> - Quản lý</span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
                                     }
-                                    <li> <a href="@Url.Action("Logout", "Account")"><span class="hidden-xs"><i class="fa fa-sign-out"></i> Đăng xuất </span> <i class="glyphicon glyphicon-user hide visible-xs "></i></a> </li>
+                                    <li> <a href="@Url.Action("Logout", "Account")"><span class="hidden-xs"><i class="fa fa-sign-out"></i> Đăng xuất </span></a> </li>
                                 </ul>
                             }
                             else
@@ -255,7 +255,7 @@
         </div>
 
         <div class="container">
-            <div class="navbar-header">
+            @*<div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only"> Toggle navigation </span> <span class="icon-bar"> </span> <span class="icon-bar"> </span> <span class="icon-bar"> </span> </button>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-cart"> <i class="fa fa-shopping-cart colorWhite"> </i> <span class="cartRespons colorWhite"> Cart ($210.00) </span> </button>
                 <a class="navbar-brand">@Html.Action("LogoPartial", "StoreInfor")  </a>
@@ -266,7 +266,7 @@
                     </div>
 
                 </div>
-            </div>
+            </div>*@
 
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">

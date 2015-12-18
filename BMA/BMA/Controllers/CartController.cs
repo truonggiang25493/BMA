@@ -122,8 +122,16 @@ namespace BMA.Controllers
 
         public ActionResult DeleteAll()
         {
-            Session["Cart"] = null;
-            return RedirectToAction("Index", "Product");
+            try
+            {
+                Session["Cart"] = null;
+                return RedirectToAction("Index", "Product");
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Error");
+            }
+
         }
 
         public ActionResult Cart()
@@ -201,18 +209,25 @@ namespace BMA.Controllers
 
         public ActionResult CartPartial()
         {
-            if (SumQuantity() == 0)
+            try
             {
+                if (SumQuantity() == 0)
+                {
+                    return PartialView();
+                }
+                if (Session["Cart"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                List<CustomerCartViewModel> lstProductCart = GetCart();
+                ViewBag.SumQuantity = lstProductCart.Count;
+                ViewBag.lstProductCart = lstProductCart;
                 return PartialView();
             }
-            if (Session["Cart"] == null)
+            catch
             {
-                return RedirectToAction("Index", "Home");
+                return null;
             }
-            List<CustomerCartViewModel> lstProductCart = GetCart();
-            ViewBag.SumQuantity = lstProductCart.Count;
-            ViewBag.lstProductCart = lstProductCart;
-            return PartialView();
         }
         #endregion
         #region Order method
@@ -249,147 +264,167 @@ namespace BMA.Controllers
 
         public int EditOrder(int orderId)
         {
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            if (Session["Cart"] == null)
+            try
             {
-                return -1;
-            }
-            List<CustomerCartViewModel> cart = GetCart();
-            foreach (var item in cart)
-            {
-                if (!cob.IsActiveProduct(item.ProductId))
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                if (Session["Cart"] == null)
                 {
-                    return -2;
+                    return -1;
                 }
-            }
-            //DateTime planDeliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
-            DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-            string Note = Session["Note"].ToString();
-            int amount = Convert.ToInt32(Session["Amount"]);
-            int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
-            int discount = Convert.ToInt32(Session["DiscountAmount"]);
-            int cusUserId = Convert.ToInt32(Session["UserId"]);
-            if (Session["User"] != null)
-            {
-                TempData["userName"] = (Session["User"] as User).Username;
-                TempData["phoneNumber"] = Session["Phonenumber"].ToString();
-            }
-            else
-            {
-                RedirectToAction("Index", "Product");
-            }
-            bool checkEditError = cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
-            if (!checkEditError)
-            {
+                List<CustomerCartViewModel> cart = GetCart();
+                foreach (var item in cart)
+                {
+                    if (!cob.IsActiveProduct(item.ProductId))
+                    {
+                        return -2;
+                    }
+                }
+                //DateTime planDeliveryDate = Convert.ToDateTime(f.Get("txtDeliveryDate"));
+                DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                string Note = Session["Note"].ToString();
+                int amount = Convert.ToInt32(Session["Amount"]);
+                int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
+                int discount = Convert.ToInt32(Session["DiscountAmount"]);
+                int cusUserId = Convert.ToInt32(Session["UserId"]);
+                if (Session["User"] != null)
+                {
+                    TempData["userName"] = (Session["User"] as User).Username;
+                    TempData["phoneNumber"] = Session["Phonenumber"].ToString();
+                }
+                else
+                {
+                    RedirectToAction("Index", "Product");
+                }
+                bool checkEditError = cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
+                if (!checkEditError)
+                {
+                    Session["Cart"] = null;
+                    return -3;
+                }
+                cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
+                cob.TurnFlagOff(orderId);
+                TempData["orderCode"] = cob.EditGetOrderCode(orderId);
+                Session["DeliveryDate"] = planDeliveryDate;
                 Session["Cart"] = null;
-                return -3;
+                Session["BeEdited"] = null;
+                Session["Amount"] = null;
+                Session["TaxAmount"] = null;
+                Session["DiscountAmount"] = null;
+                Session["Note"] = null;
+                return 1;
             }
-            cob.EditOrder(orderId, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
-            cob.TurnFlagOff(orderId);
-            TempData["orderCode"] = cob.EditGetOrderCode(orderId);
-            Session["DeliveryDate"] = planDeliveryDate;
-            Session["Cart"] = null;
-            Session["BeEdited"] = null;
-            Session["Amount"] = null;
-            Session["TaxAmount"] = null;
-            Session["DiscountAmount"] = null;
-            Session["Note"] = null;
-            return 1;
+            catch
+            {
+                return -4;
+            }
         }
 
 
         //For customer order
         public int OrderProduct()
         {
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            if (Session["Cart"] == null)
+            try
             {
-                return -1;
-            }
-            List<CustomerCartViewModel> cart = GetCart();
-            string orderTime = DateTime.Now.ToString("yyyyMMdd");
-            //DateTime planDeliveryDate = DateTime.Now;
-            DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-            string Note = Session["Note"].ToString();
-            int amount = Convert.ToInt32(Session["Amount"]);
-            int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
-            int discount = Convert.ToInt32(Session["DiscountAmount"]);
-            int cusUserId = Convert.ToInt32(Session["UserId"]);
-            if (Session["User"] != null)
-            {
-                TempData["userName"] = (Session["User"] as User).Username;
-                TempData["phoneNumber"] = Session["Phonenumber"].ToString();
-            }
-            else
-            {
-                return -1;
-            }
-            foreach (var item in cart)
-            {
-                if (!cob.IsActiveProduct(item.ProductId))
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                if (Session["Cart"] == null)
                 {
-                    return -2;
+                    return -1;
                 }
+                List<CustomerCartViewModel> cart = GetCart();
+                string orderTime = DateTime.Now.ToString("yyyyMMdd");
+                //DateTime planDeliveryDate = DateTime.Now;
+                DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                string Note = Session["Note"].ToString();
+                int amount = Convert.ToInt32(Session["Amount"]);
+                int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
+                int discount = Convert.ToInt32(Session["DiscountAmount"]);
+                int cusUserId = Convert.ToInt32(Session["UserId"]);
+                if (Session["User"] != null)
+                {
+                    TempData["userName"] = (Session["User"] as User).Username;
+                    TempData["phoneNumber"] = Session["Phonenumber"].ToString();
+                }
+                else
+                {
+                    return -1;
+                }
+                foreach (var item in cart)
+                {
+                    if (!cob.IsActiveProduct(item.ProductId))
+                    {
+                        return -2;
+                    }
+                }
+                cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
+                TempData["orderCode"] = cob.GetOrderCode();
+                Session["Cart"] = null;
+                Session["Amount"] = null;
+                Session["TaxAmount"] = null;
+                Session["DiscountAmount"] = null;
+                Session["Note"] = null;
+                return 1;
             }
-            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
-            TempData["orderCode"] = cob.GetOrderCode();
-            Session["Cart"] = null;
-            Session["Amount"] = null;
-            Session["TaxAmount"] = null;
-            Session["DiscountAmount"] = null;
-            Session["Note"] = null;
-            return 1;
+            catch
+            {
+                return -3;
+            }
 
         }
 
         //For customer after enter information
         public int LoginOrderProduct(FormCollection f)
         {
-            AccountBusiness ab = new AccountBusiness();
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            if (Session["Cart"] == null)
+            try
             {
-                return -4;
-            }
-            List<CustomerCartViewModel> cart = GetCart();
-            string orderTime = DateTime.Now.ToString("yyyyMMdd");
-            int amount = Convert.ToInt32(Session["Amount"]);
-            int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
-            int discount = Convert.ToInt32(Session["DiscountAmount"]);
-            string sAccount = f.Get("txtAccount").ToString();
-            string sPassword = f.Get("txtPassword").ToString();
-            User endUser = ab.checkLogin(sAccount, sPassword);
-            if (endUser != null)
-            {
-                int checkRole = endUser.RoleId;
-                if (checkRole != 3)
+                AccountBusiness ab = new AccountBusiness();
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                if (Session["Cart"] == null)
                 {
-                    TempData["Notify"] = "Tài khoản không hợp lệ";
-                    return -2;
+                    return -4;
                 }
-                Session["User"] = endUser;
-                Session["UserId"] = endUser.UserId;
-                Session["CusUserId"] = endUser.Customers.ElementAt(0).CustomerId;
-                TempData["userName"] = endUser.Username.ToString();
-                Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber.ToString();
+                List<CustomerCartViewModel> cart = GetCart();
+                string orderTime = DateTime.Now.ToString("yyyyMMdd");
+                int amount = Convert.ToInt32(Session["Amount"]);
+                int taxAmount = Convert.ToInt32(Session["TaxAmount"]);
+                int discount = Convert.ToInt32(Session["DiscountAmount"]);
+                string sAccount = f.Get("txtAccount").ToString();
+                string sPassword = f.Get("txtPassword").ToString();
+                User endUser = ab.checkLogin(sAccount, sPassword);
+                if (endUser != null)
+                {
+                    int checkRole = endUser.RoleId;
+                    if (checkRole != 3)
+                    {
+                        TempData["Notify"] = "Tài khoản không hợp lệ";
+                        return -2;
+                    }
+                    Session["User"] = endUser;
+                    Session["UserId"] = endUser.UserId;
+                    Session["CusUserId"] = endUser.Customers.ElementAt(0).CustomerId;
+                    TempData["userName"] = endUser.Username.ToString();
+                    Session["Phonenumber"] = endUser.Customers.ElementAt(0).CustomerPhoneNumber.ToString();
+                }
+                else
+                {
+                    TempData["Notify"] = "Sai tài khoản hoặc mật khẩu";
+                    return -3;
+                }
+                int cusUserId = Convert.ToInt32(Session["UserId"]);
+                DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                string Note = Session["Note"].ToString();
+                cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
+                TempData["orderCode"] = cob.GetOrderCode();
+                Session["Cart"] = null;
+                Session["Amount"] = null;
+                Session["TaxAmount"] = null;
+                Session["DiscountAmount"] = null;
+                Session["Note"] = null;
+                return 1;
             }
-            else
+            catch
             {
-                TempData["Notify"] = "Sai tài khoản hoặc mật khẩu";
-                return -3;
+                return -5;
             }
-            int cusUserId = Convert.ToInt32(Session["UserId"]);
-            DateTime planDeliveryDate = DateTime.ParseExact(Session["DeliveryDate"].ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-            string Note = Session["Note"].ToString();
-            cob.OrderProduct(orderTime, planDeliveryDate, amount, taxAmount, discount, cusUserId, cart, Note);
-            TempData["orderCode"] = cob.GetOrderCode();
-            Session["Cart"] = null;
-            Session["Amount"] = null;
-            Session["TaxAmount"] = null;
-            Session["DiscountAmount"] = null;
-            Session["Note"] = null;
-            return 1;
-
         }
 
         public int GuestOrderProduct(FormCollection f)
@@ -515,25 +550,32 @@ namespace BMA.Controllers
 
         public int CheckProductActive()
         {
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            List<CustomerCartViewModel> lstCart = GetCart();
-            foreach (var item in lstCart)
+            try
             {
-                if (!cob.IsActiveProduct(item.ProductId))
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                List<CustomerCartViewModel> lstCart = GetCart();
+                foreach (var item in lstCart)
                 {
-                    return -1;
+                    if (!cob.IsActiveProduct(item.ProductId))
+                    {
+                        return -1;
+                    }
                 }
+                return 1;
             }
-            return 1;
+            catch
+            {
+                return -2;
+            }
         }
         public ActionResult OrderInfo(FormCollection f)
         {
-            if (Session["Cart"] == null)
-            {
-                return RedirectToAction("Index", "Product");
-            }
             try
             {
+                if (Session["Cart"] == null)
+                {
+                    return RedirectToAction("Index", "Product");
+                }
                 return View();
             }
             catch (Exception)
@@ -543,16 +585,30 @@ namespace BMA.Controllers
         }
         public ActionResult OrderSuccess()
         {
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            var lstOrderItems = cob.OrderSuccess();
-            return View(lstOrderItems);
+            try
+            {
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                var lstOrderItems = cob.OrderSuccess();
+                return View(lstOrderItems);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
 
         public ActionResult EditOrderSuccess(int orderId)
         {
-            CustomerOrderBusiness cob = new CustomerOrderBusiness();
-            var lstOrderItems = cob.EditOrderSuccess(orderId);
-            return View(lstOrderItems);
+            try
+            {
+                CustomerOrderBusiness cob = new CustomerOrderBusiness();
+                var lstOrderItems = cob.EditOrderSuccess(orderId);
+                return View(lstOrderItems);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
         #endregion
     }
