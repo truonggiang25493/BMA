@@ -20,7 +20,7 @@
                 {
                     <tr>
                         <td>
-                            <span>@(supplier.SupplierName)</span>
+                            <span>@(supplier.SupplierName.Length <= 30 ? supplier.SupplierName : supplier.SupplierName.Substring(0, 26) + "...")</span>
                             <input type="hidden" name="txtSupplierId" value="@supplier.SupplierId" />
                         </td>
                         <td>

@@ -37,7 +37,7 @@
                     {
                         <tr>
                             <td style="width: 20%; text-align: center">@inputBill.InputBillCode</td>
-                            <td style="width: 25%">@inputBill.Supplier.SupplierName</td>
+                            <td style="width: 25%">@(inputBill.Supplier.SupplierName.Length <= 30 ? inputBill.Supplier.SupplierName : inputBill.Supplier.SupplierName.Substring(0, 26) + "...")</td>
                             <td style="width: 20%; text-align: right">@inputBill.ImportDate.ToString("dd/MM/yyyy")</td>
                             <td style="width: 20%; text-align: right">@((inputBill.InputBillAmount + inputBill.InputTaxAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                             <td style="width: 15%">
