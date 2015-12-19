@@ -52,6 +52,18 @@
                     }
                     $("#numberOfNoti").text(numberOfNoti);
 
+                    var notificateString = $("#notificateTitle").text();
+                    var endIndex = $("#notificateTitle").text().indexOf("(");
+                    //var endIndex = $("#notificateTitle").text().indexOf(")");
+                    if (endIndex == -1) {
+                        var notificateTitle = notificateString + '(' + numberOfNoti + ')';
+                        $("#notificateTitle").text(notificateTitle);
+                    } else {
+                        var title = $("#notificateTitle").text().slice(0, endIndex);
+                        var notificateTitle = title + '(' + numberOfNoti + ')';
+                        $("#notificateTitle").text(notificateTitle);
+                    }
+
                     $("[data-role='numberOfEditOrder']").text(numberOfEditOrder);
                 }
             } else if (info == 1 && checkToNotify != null) {
@@ -82,6 +94,17 @@
                         $("#hiddenNewOrderCount").attr('value', numberOfNewOrder);
                     }
                     $("#numberOfNoti").text(numberOfNoti);
+                    var notificateString = $("#notificateTitle").text();
+                    var endIndex = $("#notificateTitle").text().indexOf("(");
+                    //var endIndex = $("#notificateTitle").text().indexOf(")");
+                    if (endIndex == -1) {
+                        var notificateTitle = notificateString + '(' + numberOfNoti + ')';
+                        $("#notificateTitle").text(notificateTitle);
+                    } else {
+                        var title = $("#notificateTitle").text().slice(0, endIndex);
+                        var notificateTitle = title + '(' + numberOfNoti + ')';
+                        $("#notificateTitle").text(notificateTitle);
+                    }
 
                     $("[data-role='numberOfNewOrder']").text(numberOfNewOrder);
                 }
@@ -120,6 +143,17 @@
                     $("#hiddenConfirmOrderCount").attr('value', numberOfConfirmOrder);
                 }
                 $("#numberOfNoti").text(numberOfNoti);
+                var notificateString = $("#notificateTitle").text();
+                var endIndex = $("#notificateTitle").text().indexOf("(");
+                //var endIndex = $("#notificateTitle").text().indexOf(")");
+                if (endIndex == -1) {
+                    var notificateTitle = notificateString + '(' + numberOfNoti + ')';
+                    $("#notificateTitle").text(notificateTitle);
+                } else {
+                    var title = $("#notificateTitle").text().slice(0, endIndex);
+                    var notificateTitle = title + '(' + numberOfNoti + ')';
+                    $("#notificateTitle").text(notificateTitle);
+                }
 
                 $("[data-role='numberOfConfirmOrder']").text(numberOfConfirmOrder);
             }
@@ -136,19 +170,18 @@
 </script>
 
 @{
-    @*<a class="dropdown cartMenu">*@
     <a class=" dropdown-toggle" data-toggle="dropdown" style="cursor:default;" onclick="resetNumberOfNoti()">
-        <div style="color: white; padding:14px;" class="notiBell" id="notiBell" onclick="return changeCss()">
+        <div style="color: white; padding:14px; position:absolute;right:109px;" class="notiBell" id="notiBell" onclick="return changeCss()">
             <i class="fa fa-bell-o"></i>
         </div>
 
         @if (ViewBag.notificatePartialCount == 0)
         {
-            <span class="label label-danger" style="position:absolute;bottom:30px;right:112px;width:15px;height:14px;" id="numberOfNoti"></span>
+            <span class="label label-danger" style="position: absolute; bottom: 30px; right: 112px; width: 14px; height: 13px;" id="numberOfNoti"></span>
         }
         else
         {
-            <span class="label label-danger" style="position:absolute;bottom:30px;right:112px;width:13px;height:13px;" id="numberOfNoti"><span style="position: absolute;margin-left:-3px;">@ViewBag.notificatePartialCount</span></span>
+            <span class="label label-danger" style="position: absolute; bottom: 30px; right: 112px; width: 14px; height: 13px;" id="numberOfNoti"><span style="position: fixed;margin-left:-3px;">@ViewBag.notificatePartialCount</span></span>
         }
         <ul class="dropdown-menu" style="margin-right:103px; padding-top:-695px;margin-top:-2px;">
             <li>
@@ -213,6 +246,9 @@
 <script type="text/javascript">
     function resetNumberOfNoti() {
         $("#hiddenNumberOfNoti").attr('value', 0);
+        var endIndex = $("#notificateTitle").text().indexOf("(");
+        var title = $("#notificateTitle").text().slice(0, endIndex);
+        $("#notificateTitle").text(title);
         $("#numberOfNoti").text('');
     }
 

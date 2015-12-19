@@ -4,7 +4,24 @@
 <html>
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <title>@ViewBag.Title</title>
+    <title id="notificateTitle">
+        @if (Session["NotificateCount"] != null)
+        {
+            if ((int)Session["NotificateCount"] == 0)
+            {
+                @ViewBag.Title;
+            }
+            else
+            {
+                ViewBag.Title = string.Format("{0}{1}{2}{3}", ViewBag.Title, " (", (int)Session["NotificateCount"], ")");
+                @ViewBag.Title;
+            }
+        }
+        else
+        {
+            @ViewBag.Title;
+        }
+    </title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <link href="/Content/jquery-ui.css" rel="stylesheet" />
     <!-- Bootstrap 3.3.5 -->
@@ -631,6 +648,7 @@
     @RenderSection("SupplierIndexScript", false)
     @RenderSection("OrderIndexScript", false)
     @RenderSection("StaffIndexScript", false)
+    @RenderSection("StaffDetailScript", false)
     <script>
         $(function () {
             $('#example4').DataTable({

@@ -38,6 +38,16 @@ namespace BMA.Controllers
                 {
                     lstProduct = pb.SearchProduct(f["txtSearch"]).OrderByDescending(n => n.ProductId).ToPagedList(pageNumber, pageSize);
                 }
+
+                //if (ViewBag.notificatePartialCount == 0 || ViewBag.notificatePartialCount == null)
+                //{
+                //    ViewBag.Title = ViewBag.ProductTitle;
+                //}
+                //else
+                //{
+                //    ViewBag.Title = string.Format("{0}{1}{2}{3}", ViewBag.ProductTitle, "(", ViewBag.notificatePartialCount, ")");
+                //}
+
                 return View(lstProduct);
             }
             catch
