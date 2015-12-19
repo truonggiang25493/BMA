@@ -539,7 +539,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <span>
-                                                        <a class="btn btn-info btn-xs pull-right">Chi tiết hóa đơn</a>
+                                                        <a class="btn btn-info btn-xs pull-right" href="@(Url.Action("InputBillDetail","InputBill", new{id=exportFrom.InputbillId}))">Chi tiết hóa đơn</a>
                                                     </span>
                                                 </div>
                                             </div>
@@ -1047,9 +1047,19 @@
                                 if (isGuest === 0) {
                                     var deposit = parseInt($("#deposit-amount").val().split(".").join(""));
                                     var isDeposit = $("#deposit").attr('style').split(" ").join("").indexOf("display:none");
-                                    if (isDeposit === -1 && deposit < parseInt(@((Model.MaterialCost/1000)*1000))) {
+                                    if (isDeposit === -1 && deposit < parseInt("@((Model.MaterialCost/1000)*1000)")) {
                                         noty({
-                                            text: 'Tiền cọc không được nhỏ hơn @(((Model.MaterialCost/1000)*1000).ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))).',
+                                            text: 'Tiền cọc không được nhỏ hơn @(((Model.MaterialCost/1000)*1000).ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN"))).',
+                                            type: 'warning',
+                                            dismissQueue: false,
+                                            layout: 'topCenter',
+                                            theme: 'defaultTheme',
+                                            timeout: 2000
+                                        });
+                                        $(this).focus();
+                                    } else if (isDeposit === -1 && deposit > parseInt(@(Model.Order.Amount + Model.Order.TaxAmount - Model.Order.DiscountAmount))) {
+                                        noty({
+                                            text: 'Tiền cọc không được lớn hơn @((Model.Order.Amount + Model.Order.TaxAmount - Model.Order.DiscountAmount).ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))).',
                                             type: 'warning',
                                             dismissQueue: false,
                                             layout: 'topCenter',
@@ -1625,6 +1635,17 @@
                 if (data < parseInt(@((Model.MaterialCost/1000)*1000))) {
                     noty({
                         text: 'Tiền cọc không được nhỏ hơn @(((Model.MaterialCost/1000)*1000).ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN"))).',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 2000
+                    });
+                    $(this).focus();
+                }
+                if (data > parseInt(@(Model.Order.Amount + Model.Order.TaxAmount - Model.Order.DiscountAmount))) {
+                    noty({
+                        text: 'Tiền cọc không được lớn hơn @((Model.Order.Amount + Model.Order.TaxAmount - Model.Order.DiscountAmount).ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN"))).',
                         type: 'warning',
                         dismissQueue: false,
                         layout: 'topCenter',
