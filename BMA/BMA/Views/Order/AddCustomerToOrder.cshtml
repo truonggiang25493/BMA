@@ -280,7 +280,7 @@
                                                     timeout: 1000
                                                 });
                                                 $("#customerPhoneNumber").focus();
-                                            } else if (!new RegExp(/^\d{10,11}$/).test(phoneNumber)) {
+                                            } else if (!new RegExp(/^\d{8,13}$/).test(phoneNumber)) {
                                                 var n = noty({
                                                     text: 'Hãy nhập số điện thoại đúng.',
                                                     type: 'warning',
@@ -635,7 +635,7 @@
                     timeout: 1000
                 });
                 $(this).focus();
-            } else if (!new RegExp(/^\d{10,11}$/).test(value)) {
+            } else if (!new RegExp(/^\d{8,13}$/).test(value)) {
                 noty({
                     text: 'Hãy nhập số điện thoại đúng.',
                     type: 'warning',

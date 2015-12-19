@@ -122,15 +122,15 @@
                         if (data === "1") {
                             noty({
                                 text: 'Đặt hàng thành công, nhân viên cửa hàng sẽ nhanh chóng liên lạc với quý khách. Cám ơn quý khách',
-                                type: 'warning',
+                                type: 'success',
                                 dismissQueue: false,
                                 layout: 'topCenter',
                                 theme: 'defaultTheme',
-                                timeout: 1500
+                                timeout: 1000
                             });
                             window.setTimeout(function () {
                                 window.location.replace("@(Url.Action("OrderSuccess", "Cart"))");
-                            }, 2000);
+                            }, 1000);
                         } else if (data === "-2") {
                             noty({
                                 text: 'Tài khoản không hợp lệ.',
@@ -274,15 +274,15 @@
                         if (data === "1") {
                             noty({
                                 text: 'Đặt hàng thành công, nhân viên cửa hàng sẽ nhanh chóng liên lạc với quý khách. Cám ơn quý khách',
-                                type: 'warning',
+                                type: 'success',
                                 dismissQueue: false,
                                 layout: 'topCenter',
                                 theme: 'defaultTheme',
-                                timeout: 1500
+                                timeout: 1000
                             });
                             window.setTimeout(function () {
                                 window.location.replace("@(Url.Action("OrderSuccess", "Cart"))");
-                            }, 2000);
+                            }, 1000);
                         } else if (data === "-1") {
                             noty({
                                 text: 'Email đã tồn tại trong hệ thống, vui lòng thử lại.',

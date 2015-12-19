@@ -295,6 +295,9 @@ namespace BMA.Controllers
                         ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, startDate, endDate, null, null,
                             null, null);
 
+                        ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                        ViewBag.TreeViewMenu = "incomeProduct";
+                        ViewBag.TreeView = "report";
                         return View("Top10ProductIncomeWeeklyDetail", result);
                     }
                     else if (tempStrings[1].Length == 17)
@@ -309,6 +312,9 @@ namespace BMA.Controllers
                         ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, null, null, startDate.Month,
                             startDate.Year, endDate.Month, endDate.Year);
 
+                        ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                        ViewBag.TreeViewMenu = "incomeProduct";
+                        ViewBag.TreeView = "report";
                         return View("Top10ProductIncomeMonthlyDetail", result);
 
                     }
@@ -322,6 +328,9 @@ namespace BMA.Controllers
                         ReportProductIncomeViewModel result = business.GetReportProductIncomeViewModel(id, null, null, null, startYear,
                             null, endYear);
 
+                        ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                        ViewBag.TreeViewMenu = "incomeProduct";
+                        ViewBag.TreeView = "report";
                         return View("Top10ProductIncomeYearlyDetail", result);
 
                     }
@@ -354,6 +363,9 @@ namespace BMA.Controllers
 
                 if (result.Count > 10)
                 {
+                    ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                    ViewBag.TreeViewMenu = "incomeProduct";
+                    ViewBag.TreeView = "report";
                     return View(result);
                 }
                 else
@@ -368,61 +380,80 @@ namespace BMA.Controllers
         }
         public ActionResult GetAllProductIncomeMonthly(int startMonth, int startYear, int endMonth, int endYear)
         {
-            // Check autherization
-            if (Session["User"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+
+                DateTime startDate = new DateTime(startYear, startMonth, 1);
+                DateTime endDate = new DateTime(endYear, endMonth, 1);
+
+                ReportBusiness business = new ReportBusiness();
+                List<sp_GetAllProductIncomeMonthly_Result> result = business.GetAllProductIncomeMonthly(startDate, endDate);
+
+                if (result.Count > 10)
+                {
+                    ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                    ViewBag.TreeViewMenu = "incomeProduct";
+                    ViewBag.TreeView = "report";
+                    return View(result);
+                }
+                else
+                {
+                    return RedirectToAction("ReviewRevenueByProduct", "Report");
+                }
             }
-            if ((int)Session["UserRole"] != 1)
+            catch (Exception)
             {
-                return RedirectToAction("Index", "StoreInfor");
+                return RedirectToAction("ManageError", "Error");
             }
 
-            DateTime startDate = new DateTime(startYear, startMonth, 1);
-            DateTime endDate = new DateTime(endYear, endMonth, 1);
-
-            ReportBusiness business = new ReportBusiness();
-            List<sp_GetAllProductIncomeMonthly_Result> result = business.GetAllProductIncomeMonthly(startDate, endDate);
-
-            if (result.Count > 10)
-            {
-                return View(result);
-            }
-            else
-            {
-                return RedirectToAction("ReviewRevenueByProduct", "Report");
-            }
 
 
         }
         public ActionResult GetAllProductIncomeYearly(int startYear, int endYear)
         {
-            // Check autherization
-            if (Session["User"] == null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                // Check autherization
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] != 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+
+                DateTime startDate = new DateTime(startYear, 1, 1);
+                DateTime endDate = new DateTime(endYear, 1, 1);
+
+                ReportBusiness business = new ReportBusiness();
+                List<sp_GetAllProductIncomeYearly_Result> result = business.GetAllProductIncomeYearly(startDate, endDate);
+
+                if (result.Count > 10)
+                {
+                    ViewBag.Title = "Lợi nhuận theo sản phẩm";
+                    ViewBag.TreeViewMenu = "incomeProduct";
+                    ViewBag.TreeView = "report";
+                    return View(result);
+                }
+                else
+                {
+                    return RedirectToAction("ReviewRevenueByProduct", "Report");
+                }
             }
-            if ((int)Session["UserRole"] != 1)
+            catch (Exception)
             {
-                return RedirectToAction("Index", "StoreInfor");
+                return RedirectToAction("ManageError", "Error");
             }
-
-            DateTime startDate = new DateTime(startYear, 1, 1);
-            DateTime endDate = new DateTime(endYear, 1, 1);
-
-            ReportBusiness business = new ReportBusiness();
-            List<sp_GetAllProductIncomeYearly_Result> result = business.GetAllProductIncomeYearly(startDate, endDate);
-
-            if (result.Count > 10)
-            {
-                return View(result);
-            }
-            else
-            {
-                return RedirectToAction("ReviewRevenueByProduct", "Report");
-            }
-
-
         }
 
         #endregion
@@ -483,7 +514,6 @@ namespace BMA.Controllers
                         startDate = DateTime.ParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                         endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     }
-
 
                     List<sp_GetTop10CustomerRevenueWeekly_Result> result = business.GetTop10CustomerRevenueWeekly(startDate, endDate);
                     return PartialView("Top10CustomerRevenueWeeklyPartialView", result);
@@ -550,6 +580,9 @@ namespace BMA.Controllers
                         CustomerRevenueReport result = business.GetCustomerRevenueReport(id, startDate, endDate, null, null,
                             null, null);
 
+                        ViewBag.Title = "Doanh thu theo khách hàng";
+                        ViewBag.TreeView = "report";
+                        ViewBag.TreeViewMenu = "customerRevenue";
                         return View("Top10CustomerRevenueWeeklyDetail", result);
                     }
                     else if (tempStrings[1].Length == 17)
@@ -564,6 +597,9 @@ namespace BMA.Controllers
                         CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, startDate.Month,
                             startDate.Year, endDate.Month, endDate.Year);
 
+                        ViewBag.Title = "Doanh thu theo khách hàng";
+                        ViewBag.TreeView = "report";
+                        ViewBag.TreeViewMenu = "customerRevenue";
                         return View("Top10CustomerRevenueMonthlyDetail", result);
 
                     }
@@ -577,6 +613,9 @@ namespace BMA.Controllers
                         CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, null, startYear,
                             null, endYear);
 
+                        ViewBag.Title = "Doanh thu theo khách hàng";
+                        ViewBag.TreeView = "report";
+                        ViewBag.TreeViewMenu = "customerRevenue";
                         return View("Top10CustomerRevenueYearlyDetail", result);
 
                     }
@@ -610,6 +649,9 @@ namespace BMA.Controllers
 
                 if (result.Count > 10)
                 {
+                    ViewBag.Title = "Doanh thu theo khách hàng";
+                    ViewBag.TreeView = "report";
+                    ViewBag.TreeViewMenu = "customerRevenue";
                     return View(result);
                 }
                 else
@@ -621,7 +663,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("ManageError", "Error");
             }
-            
+
 
 
         }
@@ -647,6 +689,9 @@ namespace BMA.Controllers
 
                 if (result.Count > 10)
                 {
+                    ViewBag.Title = "Doanh thu theo khách hàng";
+                    ViewBag.TreeView = "report";
+                    ViewBag.TreeViewMenu = "customerRevenue";
                     return View(result);
                 }
                 else
@@ -681,6 +726,9 @@ namespace BMA.Controllers
 
                 if (result.Count > 10)
                 {
+                    ViewBag.Title = "Doanh thu theo khách hàng";
+                    ViewBag.TreeView = "report";
+                    ViewBag.TreeViewMenu = "customerRevenue";
                     return View(result);
                 }
                 else

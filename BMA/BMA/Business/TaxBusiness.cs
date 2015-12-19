@@ -128,7 +128,6 @@ namespace BMA.Business
                 result.Quarter = quarter;
                 result.Year = year;
                 result.CreateDate = new DateTime(year, quarter * 3, 1).AddMonths(1).AddDays(-1);
-                result.Value20Date = new DateTime(2013, 1, 1);
                 // Get StoreInfo
                 StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
                 if (storeInfo != null)

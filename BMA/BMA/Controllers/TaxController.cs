@@ -64,7 +64,7 @@ namespace BMA.Controllers
             }
 
         }
-        
+
         public ActionResult VatTaxDeclaration(int quarter, int year)
         {
             try
@@ -1315,7 +1315,7 @@ namespace BMA.Controllers
 
                 XElement HHDVBRaChiuTSuat5 = new XElement("HHDVBRaChiuTSuat5");
 
-                XElement ct30 = new XElement("ct30", vatForm.OutputCategories3TotalTaxAmount);
+                XElement ct30 = new XElement("ct30", vatForm.OutputCategories3TotalAmount);
                 HHDVBRaChiuTSuat5.Add(ct30);
 
                 XElement ct31 = new XElement("ct31", vatForm.OutputCategories3TotalTaxAmount);
@@ -1917,20 +1917,12 @@ namespace BMA.Controllers
                 #region Get Data from Form
                 string taxYear = form["taxYear"];
 
-                //Store Info Not get from form; Get from DB
-                BMAEntities db = new BMAEntities();
-
-                StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
+                
 
                 string createDate = form["createDate"];
                 string vatAgentOwnerName = form["vatAgentOwnerName"];
                 string vatAgentName = form["agentName"];
-                string vatAgentTaxCodeString = form["agentTaxCode"];
-                string vatAgentTaxCode = "";
-                if (vatAgentTaxCodeString != null)
-                {
-                    vatAgentTaxCode = vatAgentTaxCodeString.Replace(",", "");
-                }
+                string vatAgentTaxCode = form["agentTaxCode"].Replace(",", "");                 
                 string vatAgentNo = form["agentNo"];
                 string vatAgentAddress = form["vatAgentAddress"];
                 string vatAgentDistrict = form["vatAgentDistrict"];
@@ -1941,6 +1933,14 @@ namespace BMA.Controllers
                 string signName = form["signName"];
                 string maxRevenueRatio = form["maxRevenueRatio"];
 
+                string storeOwnerName = form["storeOwnerName"];
+                string storeTaxcode = form["storeTaxcode"].Replace(",", "");
+                string storeAddress = form["storeAddress"];
+                string storeDistrict = form["storeDistrict"];
+                string storeProvince = form["storeProvince"];
+                string storePhone = form["storePhone"];
+                string storeFax = form["storeFax"];
+                string storeEmail = form["storeEmail"];
 
                 string value22No = form["value22No"];
                 string value22Date = form["value22Date"];
@@ -2046,14 +2046,14 @@ namespace BMA.Controllers
                     tndn.MaxRevenueRatio = 0;
                 }
 
-                tndn.StoreOwnerName = storeInfo.OwnerName;
-                tndn.StoreTaxCode = storeInfo.TaxCode;
-                tndn.StoreAddress = storeInfo.Address;
-                tndn.StoreDistrict = storeInfo.District;
-                tndn.StoreProvince = storeInfo.Province;
-                tndn.StorePhone = storeInfo.Phonenumber;
-                tndn.StoreFax = storeInfo.Fax;
-                tndn.StoreEmail = storeInfo.Email;
+                tndn.StoreOwnerName = storeOwnerName;
+                tndn.StoreTaxCode = storeTaxcode;
+                tndn.StoreAddress = storeAddress;
+                tndn.StoreDistrict = storeDistrict;
+                tndn.StoreProvince = storeProvince;
+                tndn.StorePhone = storePhone;
+                tndn.StoreFax = storeFax;
+                tndn.StoreEmail = storeEmail;
 
                 tndn.TaxAgentTaxCode = vatAgentTaxCode;
                 tndn.TaxAgentName = vatAgentName;
@@ -2066,7 +2066,7 @@ namespace BMA.Controllers
                 tndn.TaxAgentFax = vatAgentFax;
                 tndn.TaxAgentEmail = vatAgentEmail;
                 tndn.SignName = signName;
-                if (createDate != null)
+                if (!createDate.Trim().IsEmpty())
                 {
                     tndn.CreateDate = DateTime.ParseExact(createDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 }
@@ -2076,8 +2076,11 @@ namespace BMA.Controllers
                 {
                     tndn.Value22No = Convert.ToInt32(value22No);
                 }
+                if (!value22Date.Trim().IsEmpty())
+                {
+                    tndn.Value22Date = DateTime.ParseExact(value22Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                }
 
-                tndn.Value22Date = DateTime.ParseExact(value22Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
                 tndn.ValueA1 = Convert.ToInt32(valueA1);
                 tndn.ValueB1 = Convert.ToInt32(valueB1);
@@ -2348,7 +2351,7 @@ namespace BMA.Controllers
                 tndn.TaxAgentFax = vatAgentFax;
                 tndn.TaxAgentEmail = vatAgentEmail;
                 tndn.SignName = signName;
-                if (createDate != null)
+                if (!createDate.Trim().IsEmpty())
                 {
                     tndn.CreateDate = DateTime.ParseExact(createDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 }

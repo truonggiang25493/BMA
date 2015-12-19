@@ -36,6 +36,10 @@
                             <label for="InputEmail"> Email <sup>*</sup></label>
                             <input required pattern=".{5,}" title="Email phải lớn hơn 5 ký tự" maxlength="200" type="email" class="form-control" value="@Model.Email" id="InputEmail" placeholder="Nhập email - example@gmail.com" name="txtEmail">
                         </div>
+                        <div class="form-group required">
+                            <label for="InputLastName" style="margin-top:20px"></label>
+                            <label for="InputLastName"><sup>*</sup> là các trường bắt buộc</label>
+                        </div>
                     </div>
                     <div class="col-xs-12 col-sm-6">
                         <div class="form-group required">
@@ -46,10 +50,7 @@
                             <label for="InputLastName">Số điện thoại <sup>*</sup> </label>
                             <input required maxlength="15" type="tel" class="form-control" value="@Model.Customers.ElementAt(0).CustomerPhoneNumber" id="InputPhone" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Nhập số điện thoại" name="txtPhone">
                         </div>
-                        <div class="form-group required">
-                            <label for="InputLastName" style="margin-top:20px;"></label>
-                            <p style="font-weight:bold;margin-top:10px;color:red">@TempData["checkEmailExisted"]</p>
-                        </div>
+        
                     </div>
 
                 </form>

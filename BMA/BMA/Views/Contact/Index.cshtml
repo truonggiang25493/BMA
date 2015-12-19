@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Liên hệ";
+    Layout = "~/Views/Layout/CustomerLayout.cshtml";
+}
+<div class="container main-container headerOffset globalPaddingBottom">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
+            <h1 class="title-big text-center section-title-style2">
+                <span> Liên hệ với chúng tôi </span>
+            </h1>
+            <p class="lead text-center">
+                Cửa hàng bánh được thành lập trong năm 2015, chuyên sản xuất bánh ngọt, bánh mặn, giao hàng số lượng lớn cho các trường học trong địa bàn thành phố Hồ Chí Minh. Mọi thắc mắc về việc mua hàng, quản lý đơn hàng...<br/><b>Quý khách có thể liên lạc với :</b>
+            </p>
+            <hr>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <h3 class="block-title-5">
+                        Chăm sóc khách hàng
+                    </h3>
+                    <p>
+                        @ViewBag.staffInfor.Fullname
+                        <br>
+                        <strong>
+                            Số điện thoại
+                        </strong>
+                        : @ViewBag.staffPhone
+                        <br>
+                        <strong>
+                            Email
+                        </strong>
+                        : @ViewBag.staffInfor.Email
+                    </p>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <h3 class="block-title-5">
+                        Chủ cửa hàng
+                    </h3>
+                    <p>
+                        @ViewBag.storeOwner.OwnerName
+                        <br>
+                        <strong>
+                            Số điện thoại
+                        </strong>
+                        : @ViewBag.storeOwner.Phonenumber
+                        <br>
+                        <strong>
+                            Email 
+                        </strong>
+                        : @ViewBag.storeOwner.Email
+                    </p>
+                </div>
+                <div style="clear:both"> </div>              
+            </div>
+        </div>
+    </div>
+</div>
+

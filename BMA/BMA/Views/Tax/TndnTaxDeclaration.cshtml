@@ -645,7 +645,7 @@
                             <div class="col-md-4"></div>
                             <div class="col-md-1" style="font-size: 18px; font-style: italic; text-align: right;padding-top:7px">Ngày</div>
                             <div class="col-md-3">
-                                <input type="date" class="form-control" id="createDate1" name="createDate" style="text-align: left; width: 65%; font-size: 18px;" min="@(DateTime.Now.ToString("yyyy-MM-dd"))" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" />
+                                <input type="date" class="form-control" id="createDate1" name="createDate" style="text-align: left; width: 65%; font-size: 18px;" min="@(DateTime.Now.ToString("yyyy-MM-dd"))" value="@(Model.CreateDate == null ? "" : Model.CreateDate.Value.ToString("yyyy-MM-dd"))" />
                             </div>
                             <div class="col-md-2"></div>
                         </div>
@@ -740,7 +740,7 @@
                             <h4 style="font-weight: bold; margin: 0">
                                 [01]&nbsp;Kỳ tính thuế @(Model.Year) từ @(new DateTime(Model.Year, 1, 1).ToString("dd/MM/yyyy")) đến @(new DateTime(Model.Year, 1, 1).AddYears(1).AddDays(-1).ToString("dd/MM/yyyy"))
                             </h4>
-                            <input type="number" name="taxYear" value="@(Model.Year)" />
+                            <input type="hidden" name="taxYear" value="@(Model.Year)" />
                         </div>
                         <!--Subtitle-->
                         <div class="row" style="text-align: center; margin-top: 10px">
@@ -754,7 +754,7 @@
                             </p>
                             <p style="font-size: 18px; margin: 0">
                                 [05] Tỷ lệ (%):&nbsp;&nbsp;
-                                <input type="text" name="maxRevenueRatio" style="text-align: right;width: 50px" value="@(Model.MaxRevenueRatio)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                <input type="number" name="maxRevenueRatio" min="0" max="100" style="text-align: right;width: 70px" value="@(Model.MaxRevenueRatio)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                 &nbsp;&nbsp;%
                             </p>
                         </div>
@@ -1157,23 +1157,23 @@
                             <div class="col-md-2"></div>
                             <div class="col-md-2">
                                 <p style="font-size: 18px;">
-                                    [11] Điện thoại:
+                                    [19] Điện thoại:
                                 </p>
                             </div>
                             <div class="col-md-1" style="margin-right: 25px">
-                                <input type="text" name="vatAgentPhone" style="width: 160%; font-size: 18px;" value="@(Model.TaxAgentPhone)" />
+                                <input type="text" name="vatAgentPhone" style="width: 160%; font-size: 18px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentPhone)" />
                             </div>
                             <div class="col-md-1">
                                 <p style="font-size: 18px;">
-                                    [12] Fax:
+                                    [20] Fax:
                                 </p>
                             </div>
                             <div class="col-md-1" style="margin-right: 25px">
-                                <input type="text" name="vatAgentFax" style="width: 160%; font-size: 18px;" value="@(Model.TaxAgentFax)" />
+                                <input type="text" name="vatAgentFax" style="width: 160%; font-size: 18px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@(Model.TaxAgentFax)" />
                             </div>
                             <div class="col-md-1" style="padding-right: 0">
                                 <p style="font-size: 18px;">
-                                    [13] Email:
+                                    [21] Email:
                                 </p>
                             </div>
                             <div class="col-md-3">
@@ -1196,7 +1196,7 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <input type="date" name="value22Date" style="width: 100%; font-size: 18px;" min="2010-01-01" value="@((Model.Value22Date == null) ? "2010-01-01": Model.Value22Date.Value.ToString("yyyy-MM-dd"))" />
+                                <input type="date" name="value22Date" style="width: 100%; font-size: 18px;" min="2010-01-01" value="@((Model.Value22Date == null) ? "": Model.Value22Date.Value.ToString("yyyy-MM-dd"))" />
                             </div>
                         </div>
 
@@ -1833,7 +1833,7 @@
                             <div class="col-md-4"></div>
                             <div class="col-md-1" style="font-size: 18px; font-style: italic; text-align: right;padding-top:7px">Ngày</div>
                             <div class="col-md-3">
-                                <input type="date" class="form-control" id="createDate2" style="text-align: left; width: 65%; font-size: 18px;" min="@(DateTime.Now.ToString("yyyy-MM-dd"))" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" />
+                                <input type="date" class="form-control" id="createDate2" style="text-align: left; width: 65%; font-size: 18px;" min="@(DateTime.Now.ToString("yyyy-MM-dd"))" value="@(Model.CreateDate == null ? "" : Model.CreateDate.Value.ToString("yyyy-MM-dd"))" />
                             </div>
                             <div class="col-md-2"></div>
                         </div>
@@ -1919,7 +1919,7 @@
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Hủy
             </button>
             <button class="btn btn-primary btn-sm" onclick="back()">
-                <i class="fa fa-arrow-left" style="margin-right: 3px"></i>Quay lại
+                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>Quay lại
             </button>
         </div>
     </div>
@@ -2512,21 +2512,47 @@
         $('#agentName1').on('input', function () {
             var data = $(this).val();
             $('#agentName2').val(data);
+
+            if (data.trim() !== "") {
+                var agentNo1 = $('#agentNo1').val();
+                if (agentNo1.trim() === "") {
+                    $('#agentNo1').addClass('invalid');
+                    $('#agentNo2').addClass('invalid');
+                    noty({
+                        text: 'Vui lòng nhập số chứng chỉ hành nghề.',
+                        type: 'warning',
+                        dismissQueue: false,
+                        layout: 'topCenter',
+                        theme: 'defaultTheme',
+                        timeout: 1000
+                    });
+                }
+            } else {
+                $('#agentNo1').removeClass('invalid');
+                $('#agentNo2').removeClass('invalid');
+            }
         });
 
         $('#agentName2').on('input', function () {
             var data = $(this).val();
             $('#agentName1').val(data);
+            $('#agentName1').trigger('input');
         });
 
         $('#agentNo1').on('input', function () {
             var data = $(this).val();
             $('#agentNo2').val(data);
+
+            if (data.trim() !== '') {
+                $('#agentNo1').removeClass('invalid');
+                $('#agentNo2').removeClass('invalid');
+            }
         });
 
         $('#agentNo2').on('input', function () {
             var data = $(this).val();
             $('#agentNo1').val(data);
+            $('#agentNo1').trigger('input');
         });
 
         $('#agentTaxCodeLetter0_1').on('input', function () {
@@ -3023,29 +3049,30 @@
             $('#storeOwnerName1').val(data);
         });
 
-        function removeStoreTaxCodeInvalidClass() {
+        function removeValidateIfNull() {
+            var value1 = $('#storeTaxcodeLetter0_1').val();
+            var value2 = $('#storeTaxcodeLetter1_1').val();
+            var value3 = $('#storeTaxcodeLetter2_1').val();
+            var value4 = $('#storeTaxcodeLetter3_1').val();
+            var value5 = $('#storeTaxcodeLetter4_1').val();
+            var value6 = $('#storeTaxcodeLetter5_1').val();
+            var value7 = $('#storeTaxcodeLetter6_1').val();
+            var value8 = $('#storeTaxcodeLetter7_1').val();
+            var value9 = $('#storeTaxcodeLetter8_1').val();
+            var value10 = $('#storeTaxcodeLetter9_1').val();
+            var value11 = $('#storeTaxcodeLetter10_1').val();
+            var value12 = $('#storeTaxcodeLetter11_1').val();
+            var value13 = $('#storeTaxcodeLetter12_1').val();
 
-            $('#storeTaxcodeLetter0_1').removeClass('invalid');
-            $('#storeTaxcodeLetter0_2').removeClass('invalid');
-
-            $('#storeTaxcodeLetter1_1').removeClass('invalid');
-            $('#storeTaxcodeLetter2_1').removeClass('invalid');
-            $('#storeTaxcodeLetter3_1').removeClass('invalid');
-            $('#storeTaxcodeLetter4_1').removeClass('invalid');
-            $('#storeTaxcodeLetter5_1').removeClass('invalid');
-            $('#storeTaxcodeLetter6_1').removeClass('invalid');
-            $('#storeTaxcodeLetter7_1').removeClass('invalid');
-            $('#storeTaxcodeLetter8_1').removeClass('invalid');
-            $('#storeTaxcodeLetter9_1').removeClass('invalid');
-
-            $('#storeTaxcodeLetter1_2').removeClass('invalid');
-            $('#storeTaxcodeLetter2_2').removeClass('invalid');
-            $('#storeTaxcodeLetter3_2').removeClass('invalid');
-            $('#storeTaxcodeLetter4_2').removeClass('invalid');
-            $('#storeTaxcodeLetter5_2').removeClass('invalid');
-            $('#storeTaxcodeLetter6_2').removeClass('invalid');
-            $('#storeTaxcodeLetter7_2').removeClass('invalid');
-            $('#storeTaxcodeLetter8_2').removeClass('invalid');
+            if (value1.trim() === '' && value2.trim() === '' && value3.trim() === '' && value4.trim() === '' && value5.trim() === '' && value6.trim() === '' && value7.trim() === '' && value8.trim() === '' && value9.trim() === '' && value10.trim() === '' && value11.trim() === '' && value12.trim() === '' && value13.trim() === '') {
+                removeStoreTaxCodeInvalidClass();
+                $('#storeTaxcodeLetter10_1').removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_1').removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_1').removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+            }
         }
 
         $('#storeTaxcodeLetter0_1').on('input', function () {
@@ -3641,6 +3668,30 @@
             $("#storeTaxcodeLetter12_1").trigger('input');
         });
 
+        function removeAgentTaxCodeIfNull() {
+            var value1 = $('#agentTaxCodeLetter0_1').val();
+            var value2 = $('#agentTaxCodeLetter1_1').val();
+            var value3 = $('#agentTaxCodeLetter2_1').val();
+            var value4 = $('#agentTaxCodeLetter3_1').val();
+            var value5 = $('#agentTaxCodeLetter4_1').val();
+            var value6 = $('#agentTaxCodeLetter5_1').val();
+            var value7 = $('#agentTaxCodeLetter6_1').val();
+            var value8 = $('#agentTaxCodeLetter7_1').val();
+            var value9 = $('#agentTaxCodeLetter8_1').val();
+            var value10 = $('#agentTaxCodeLetter9_1').val();
+            var value11 = $('#agentTaxCodeLetter10_1').val();
+            var value12 = $('#agentTaxCodeLetter11_1').val();
+            var value13 = $('#agentTaxCodeLetter12_1').val();
+            if (value1.trim() === '' && value2.trim() === '' && value3.trim() === '' && value4.trim() === '' && value5.trim() === '' && value6.trim() === '' && value7.trim() === '' && value8.trim() === '' && value9.trim() === '' && value10.trim() === '' && value11.trim() === '' && value12.trim() === '' && value13.trim() === '') {
+                removeAgentTaxCodeInvalidClass();
+                $('#agentTaxCodeLetter10_1').removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_1').removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_1').removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+            }
+        }
 
         function removeAgentTaxCodeInvalidClass() {
             $('#agentTaxCodeLetter0_1').removeClass('invalid');
@@ -3698,6 +3749,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter0_2').on('input', function () {
@@ -3738,6 +3790,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter1_2').on('input', function () {
@@ -3778,6 +3831,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter2_2').on('input', function () {
@@ -3819,6 +3873,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter3_2').on('input', function () {
@@ -3860,6 +3915,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter4_2').on('input', function () {
@@ -3901,6 +3957,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter5_2').on('input', function () {
@@ -3942,6 +3999,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter6_2').on('input', function () {
@@ -3983,6 +4041,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter7_2').on('input', function () {
@@ -4065,6 +4124,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter9_2').on('input', function () {
@@ -4268,29 +4328,186 @@
             $('#agentTaxCodeLetter12_3').val(data);
             $("#agentTaxCodeLetter12_1").trigger('input');
         });
-        function cancelVatTaxDeclaration() {
+
+        // Validate phone
+        $("[name='storePhone']").on('change', function () {
+            var phoneNumber = $(this).val();
+            if (phoneNumber.trim() === '') {
+                $(this).removeClass('invalid');
+            } else if (!new RegExp(/^\d{8,13}$/).test(phoneNumber)) {
+                var n = noty({
+                    text: 'Hãy nhập số điện thoại đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass('invalid');
+            }
+        })
+
+        $("[name='vatAgentPhone']").on('change', function () {
+            var phoneNumber = $(this).val();
+            if (phoneNumber.trim() === '') {
+                $(this).removeClass('invalid');
+            } else if (!new RegExp(/^\d{8,13}$/).test(phoneNumber)) {
+                var n = noty({
+                    text: 'Hãy nhập số điện thoại đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass('invalid');
+            }
+        })
+
+        // Validate fax
+        $("[name='storeFax']").on('change', function () {
+            var fax = $(this).val();
+            if (fax.trim() === '') {
+                $(this).removeClass('invalid');
+            } else if (!new RegExp(/^\d{8,13}$/).test(fax)) {
+                var n = noty({
+                    text: 'Hãy nhập số fax đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass('invalid');
+            }
+        })
+
+        $("[name='vatAgentFax']").on('change', function () {
+            var fax = $(this).val();
+            if (fax.trim() === '') {
+                $(this).removeClass('invalid');
+            } else if (!new RegExp(/^\d{8,13}$/).test(fax)) {
+                var n = noty({
+                    text: 'Hãy nhập số fax đúng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass('invalid');
+            }
+        })
+
+        // Validate email
+        $("[name='storeEmail']").on('change', function () {
+            var email = $(this).val();
+            if (email.trim() === '') {
+                $(this).removeClass('invalid');
+            } else if (email.length > 50) {
+                var n = noty({
+                    text: 'Email không được quá 50 kí tự.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else if (!new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i).test(email)) {
+                var n = noty({
+                    text: 'Hãy nhập email đúng định dạng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass('invalid');
+            }
+        })
+
+        $("[name='vatAgentEmail']").on('change', function () {
+            var email = $(this).val();
+            if (email.trim() === '') {
+                $(this).removeClass('invalid');
+            } else if (email.length > 50) {
+                var n = noty({
+                    text: 'Email không được quá 50 kí tự.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else if (!new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i).test(email)) {
+                var n = noty({
+                    text: 'Hãy nhập email đúng định dạng.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass('invalid');
+            }
+        })
+
+        function cancelTndnTaxDeclaration() {
             $.ajax({
                 url: "@(Url.Action("CancelTndnTaxDeclaration", "Tax"))",
                 method: "POST",
-            data: {
-                year:"@(Model.Year)"
-            },
-            success: function (data) {
-                if (data === "1") {
+                data: {
+                    year: "@(Model.Year)"
+                },
+                success: function (data) {
+                    if (data === "1") {
+                        noty({
+                            text: 'Hủy thành công',
+                            type: 'success',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                        window.setTimeout(function () {
+                            window.close();
+                        }, 4000);
+                    } else {
+                        noty({
+                            text: 'Hủy thất bại. Vui lòng thử lại.',
+                            type: 'danger',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    }
+                },
+                fail: function (e) {
                     noty({
-                        text: 'Hủy thành công',
-                        type: 'success',
-                        dismissQueue: false,
-                        layout: 'topCenter',
-                        theme: 'defaultTheme',
-                        timeout: 2000
-                    });
-                    window.setTimeout(function () {
-                        window.close();
-                    }, 4000);
-                } else {
-                    noty({
-                        text: 'Hủy thất bại. Vui lòng thử lại.',
+                        text: 'Không thể hủy. Vui lòng thử lại.',
                         type: 'danger',
                         dismissQueue: false,
                         layout: 'topCenter',
@@ -4298,22 +4515,25 @@
                         timeout: 2000
                     });
                 }
-            },
-            fail: function (e) {
+            });
+        }
+        $("[name='maxRevenueRatio']").on("change", function () {
+            var value = parseInt($(this).val());
+            if (value > 100) {
                 noty({
-                    text: 'Không thể hủy. Vui lòng thử lại.',
-                    type: 'danger',
+                    text: 'Tỉ lệ không quá 100%',
+                    type: 'warning',
                     dismissQueue: false,
                     layout: 'topCenter',
                     theme: 'defaultTheme',
                     timeout: 2000
                 });
+                $(this).addClass('invalid');
+            } else {
+                $(this).removeClass('invalid');
             }
-        });
-        }
+
+        })
     </script>
 </body>
-
-
-
 </html>
