@@ -740,7 +740,7 @@
                             <h4 style="font-weight: bold; margin: 0">
                                 [01]&nbsp;Kỳ tính thuế @(Model.Year) từ @(new DateTime(Model.Year, 1, 1).ToString("dd/MM/yyyy")) đến @(new DateTime(Model.Year, 1, 1).AddYears(1).AddDays(-1).ToString("dd/MM/yyyy"))
                             </h4>
-                            <input type="number" name="taxYear" value="@(Model.Year)" />
+                            <input type="hidden" name="taxYear" value="@(Model.Year)" />
                         </div>
                         <!--Subtitle-->
                         <div class="row" style="text-align: center; margin-top: 10px">
@@ -1157,7 +1157,7 @@
                             <div class="col-md-2"></div>
                             <div class="col-md-2">
                                 <p style="font-size: 18px;">
-                                    [11] Điện thoại:
+                                    [19] Điện thoại:
                                 </p>
                             </div>
                             <div class="col-md-1" style="margin-right: 25px">
@@ -1165,7 +1165,7 @@
                             </div>
                             <div class="col-md-1">
                                 <p style="font-size: 18px;">
-                                    [12] Fax:
+                                    [20] Fax:
                                 </p>
                             </div>
                             <div class="col-md-1" style="margin-right: 25px">
@@ -1173,7 +1173,7 @@
                             </div>
                             <div class="col-md-1" style="padding-right: 0">
                                 <p style="font-size: 18px;">
-                                    [13] Email:
+                                    [21] Email:
                                 </p>
                             </div>
                             <div class="col-md-3">

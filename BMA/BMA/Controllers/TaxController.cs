@@ -1315,7 +1315,7 @@ namespace BMA.Controllers
 
                 XElement HHDVBRaChiuTSuat5 = new XElement("HHDVBRaChiuTSuat5");
 
-                XElement ct30 = new XElement("ct30", vatForm.OutputCategories3TotalTaxAmount);
+                XElement ct30 = new XElement("ct30", vatForm.OutputCategories3TotalAmount);
                 HHDVBRaChiuTSuat5.Add(ct30);
 
                 XElement ct31 = new XElement("ct31", vatForm.OutputCategories3TotalTaxAmount);

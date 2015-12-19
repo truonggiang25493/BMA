@@ -415,6 +415,8 @@ namespace BMA.Controllers
                 return RedirectToAction("ManageError", "Error");
             }
 
+
+
         }
         public ActionResult GetAllProductIncomeYearly(int startYear, int endYear)
         {
@@ -452,9 +454,6 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("ManageError", "Error");
             }
-
-
-
         }
 
         #endregion
@@ -515,7 +514,6 @@ namespace BMA.Controllers
                         startDate = DateTime.ParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                         endDate = DateTime.ParseExact(end, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     }
-
 
                     List<sp_GetTop10CustomerRevenueWeekly_Result> result = business.GetTop10CustomerRevenueWeekly(startDate, endDate);
                     return PartialView("Top10CustomerRevenueWeeklyPartialView", result);
@@ -581,6 +579,7 @@ namespace BMA.Controllers
 
                         CustomerRevenueReport result = business.GetCustomerRevenueReport(id, startDate, endDate, null, null,
                             null, null);
+
                         ViewBag.Title = "Doanh thu theo khách hàng";
                         ViewBag.TreeView = "report";
                         ViewBag.TreeViewMenu = "customerRevenue";
@@ -597,6 +596,7 @@ namespace BMA.Controllers
 
                         CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, startDate.Month,
                             startDate.Year, endDate.Month, endDate.Year);
+
                         ViewBag.Title = "Doanh thu theo khách hàng";
                         ViewBag.TreeView = "report";
                         ViewBag.TreeViewMenu = "customerRevenue";
@@ -612,6 +612,7 @@ namespace BMA.Controllers
 
                         CustomerRevenueReport result = business.GetCustomerRevenueReport(id, null, null, null, startYear,
                             null, endYear);
+
                         ViewBag.Title = "Doanh thu theo khách hàng";
                         ViewBag.TreeView = "report";
                         ViewBag.TreeViewMenu = "customerRevenue";

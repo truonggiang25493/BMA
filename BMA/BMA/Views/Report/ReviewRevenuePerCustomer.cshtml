@@ -60,15 +60,15 @@
                 ignoreReadonly: true,
                 format: 'L',
                 locale: 'vi',
-                maxDate: moment().startOf('week').subtract(7, 'days').format('MM/DD/YYYY'),
-                defaultDate: moment().startOf('week').subtract(7, 'days').format('MM/DD/YYYY')
+                defaultDate: moment().startOf('week').subtract(21, 'days').format('MM/DD/YYYY'),
+                maxDate: moment().format('MM/DD/YYYY')
             });
             $('#toDate').datetimepicker({
                 ignoreReadonly: true,
                 format: 'L',
                 locale: 'vi',
                 defaultDate: moment().format('MM/DD/YYYY'),
-                maxDate: moment(),
+                maxDate: moment().format('MM/DD/YYYY'),
                 useCurrent: false
             });
             $("#fromDate").on("dp.change", function (e) {
@@ -177,6 +177,7 @@
                         yAxisLabel: "Doanh thu",
                         thousandSeparator: ".",
                         decimalSeparator: ",",
+                        bezierCurve: false,
                         // The space between the X Axis (on position 0) can be filled or not
                         datasetFill: false,
                         bezierCurve: false,

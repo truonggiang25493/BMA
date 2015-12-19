@@ -62,13 +62,15 @@
                 ignoreReadonly: true,
                 format: 'L',
                 locale: 'vi',
-                maxDate: moment().subtract(7, 'days')
+                defaultDate: moment().startOf('week').subtract(21, 'days').format('MM/DD/YYYY'),
+                maxDate: moment().format('MM/DD/YYYY')
             });
             $('#toDate').datetimepicker({
                 ignoreReadonly: true,
                 format: 'L',
                 locale: 'vi',
-                maxDate: moment(),
+                maxDate: moment().format('MM/DD/YYYY'),
+                defaultDate: moment().format('MM/DD/YYYY'),
                 useCurrent: false
             });
             $("#fromDate").on("dp.change", function (e) {
@@ -112,6 +114,7 @@
                         yAxisUnit: "đồng",
                         yAxisLabel: "Lợi nhuận",
                         thousandSeparator: ".",
+                        bezierCurve: false,
                         decimalSeparator: ",",
                         // Specify the number of Y-scales to display
                         scaleOverride: true,

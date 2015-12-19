@@ -511,6 +511,7 @@
     <Content Include="Content\Images\BakeryImages\BanhGai.jpg" />
     <Content Include="Content\Images\ErrorIcon.png" />
     <Content Include="Content\Images\InputBillImages\InputBillDemo.jpg" />
+    <Content Include="Content\Images\InputBillImages\InputBillDemo02.jpg" />
     <Content Include="Content\Images\PromoImages\promo.jpg" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\PagedList.css" />

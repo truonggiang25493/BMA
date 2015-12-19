@@ -20,7 +20,7 @@ namespace BMA.Business
         public static List<InputBill> GetInputBillList()
         {
             db = new BMAEntities();
-            List<InputBill> inputBillList = db.InputBills.OrderByDescending(n => n.InputBillId).ToList();
+            List<InputBill> inputBillList = db.InputBills.OrderByDescending(n => n.ImportDate).ToList();
             return inputBillList;
         }
         #endregion
