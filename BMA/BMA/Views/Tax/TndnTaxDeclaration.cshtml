@@ -3023,6 +3023,32 @@
             $('#storeOwnerName1').val(data);
         });
 
+        function removeValidateIfNull() {
+            var value1 = $('#storeTaxcodeLetter0_1').val();
+            var value2 = $('#storeTaxcodeLetter1_1').val();
+            var value3 = $('#storeTaxcodeLetter2_1').val();
+            var value4 = $('#storeTaxcodeLetter3_1').val();
+            var value5 = $('#storeTaxcodeLetter4_1').val();
+            var value6 = $('#storeTaxcodeLetter5_1').val();
+            var value7 = $('#storeTaxcodeLetter6_1').val();
+            var value8 = $('#storeTaxcodeLetter7_1').val();
+            var value9 = $('#storeTaxcodeLetter8_1').val();
+            var value10 = $('#storeTaxcodeLetter9_1').val();
+            var value11 = $('#storeTaxcodeLetter10_1').val();
+            var value12 = $('#storeTaxcodeLetter11_1').val();
+            var value13 = $('#storeTaxcodeLetter12_1').val();
+
+            if (value1.trim() === '' && value2.trim() === '' && value3.trim() === '' && value4.trim() === '' && value5.trim() === '' && value6.trim() === '' && value7.trim() === '' && value8.trim() === '' && value9.trim() === '' && value10.trim() === '' && value11.trim() === '' && value12.trim() === '' && value13.trim() === '') {
+                removeStoreTaxCodeInvalidClass();
+                $('#storeTaxcodeLetter10_1').removeClass('invalid');
+                $('#storeTaxcodeLetter10_2').removeClass('invalid');
+                $('#storeTaxcodeLetter11_1').removeClass('invalid');
+                $('#storeTaxcodeLetter11_2').removeClass('invalid');
+                $('#storeTaxcodeLetter12_1').removeClass('invalid');
+                $('#storeTaxcodeLetter12_2').removeClass('invalid');
+            }
+        }
+
         function removeStoreTaxCodeInvalidClass() {
 
             $('#storeTaxcodeLetter0_1').removeClass('invalid');
@@ -3080,6 +3106,7 @@
             } else {
                 removeStoreTaxCodeInvalidClass();
             }
+            removeValidateIfNull();
         });
 
         $('#storeTaxcodeLetter0_2').on('input', function () {
@@ -3120,6 +3147,7 @@
             } else {
                 removeStoreTaxCodeInvalidClass();
             }
+            removeValidateIfNull();
         });
 
         $('#storeTaxcodeLetter1_2').on('input', function () {
@@ -3160,6 +3188,7 @@
             } else {
                 removeStoreTaxCodeInvalidClass();
             }
+            removeValidateIfNull();
         });
 
         $('#storeTaxcodeLetter2_2').on('input', function () {
@@ -3200,6 +3229,7 @@
             } else {
                 removeStoreTaxCodeInvalidClass();
             }
+            removeValidateIfNull();
         });
 
         $('#storeTaxcodeLetter3_2').on('input', function () {
@@ -3240,6 +3270,7 @@
             } else {
                 removeStoreTaxCodeInvalidClass();
             }
+            removeValidateIfNull();
         });
 
         $('#storeTaxcodeLetter4_2').on('input', function () {
@@ -3280,6 +3311,7 @@
             } else {
                 removeStoreTaxCodeInvalidClass();
             }
+            removeValidateIfNull();
         });
 
         $('#storeTaxcodeLetter5_2').on('input', function () {
@@ -3320,6 +3352,7 @@
             } else {
                 removeStoreTaxCodeInvalidClass();
             }
+            removeValidateIfNull();
         });
 
         $('#storeTaxcodeLetter6_2').on('input', function () {
@@ -3360,6 +3393,7 @@
             } else {
                 removeStoreTaxCodeInvalidClass();
             }
+            removeValidateIfNull();
         });
 
         $('#storeTaxcodeLetter7_2').on('input', function () {
@@ -3400,6 +3434,7 @@
             } else {
                 removeStoreTaxCodeInvalidClass();
             }
+            removeValidateIfNull();
         });
 
         $('#storeTaxcodeLetter8_2').on('input', function () {
@@ -3440,6 +3475,7 @@
             } else {
                 removeStoreTaxCodeInvalidClass();
             }
+            removeValidateIfNull();
         });
 
         $('#storeTaxcodeLetter9_2').on('input', function () {
@@ -3641,6 +3677,30 @@
             $("#storeTaxcodeLetter12_1").trigger('input');
         });
 
+        function removeAgentTaxCodeIfNull() {
+            var value1 = $('#agentTaxCodeLetter0_1').val();
+            var value2 = $('#agentTaxCodeLetter1_1').val();
+            var value3 = $('#agentTaxCodeLetter2_1').val();
+            var value4 = $('#agentTaxCodeLetter3_1').val();
+            var value5 = $('#agentTaxCodeLetter4_1').val();
+            var value6 = $('#agentTaxCodeLetter5_1').val();
+            var value7 = $('#agentTaxCodeLetter6_1').val();
+            var value8 = $('#agentTaxCodeLetter7_1').val();
+            var value9 = $('#agentTaxCodeLetter8_1').val();
+            var value10 = $('#agentTaxCodeLetter9_1').val();
+            var value11 = $('#agentTaxCodeLetter10_1').val();
+            var value12 = $('#agentTaxCodeLetter11_1').val();
+            var value13 = $('#agentTaxCodeLetter12_1').val();
+            if (value1.trim() === '' && value2.trim() === '' && value3.trim() === '' && value4.trim() === '' && value5.trim() === '' && value6.trim() === '' && value7.trim() === '' && value8.trim() === '' && value9.trim() === '' && value10.trim() === '' && value11.trim() === '' && value12.trim() === '' && value13.trim() === '') {
+                removeAgentTaxCodeInvalidClass();
+                $('#agentTaxCodeLetter10_1').removeClass('invalid');
+                $('#agentTaxCodeLetter10_2').removeClass('invalid');
+                $('#agentTaxCodeLetter11_1').removeClass('invalid');
+                $('#agentTaxCodeLetter11_2').removeClass('invalid');
+                $('#agentTaxCodeLetter12_1').removeClass('invalid');
+                $('#agentTaxCodeLetter12_2').removeClass('invalid');
+            }
+        }
 
         function removeAgentTaxCodeInvalidClass() {
             $('#agentTaxCodeLetter0_1').removeClass('invalid');
@@ -3698,6 +3758,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter0_2').on('input', function () {
@@ -3738,6 +3799,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter1_2').on('input', function () {
@@ -3778,6 +3840,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter2_2').on('input', function () {
@@ -3819,6 +3882,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter3_2').on('input', function () {
@@ -3860,6 +3924,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter4_2').on('input', function () {
@@ -3901,6 +3966,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter5_2').on('input', function () {
@@ -3942,6 +4008,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter6_2').on('input', function () {
@@ -3983,6 +4050,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter7_2').on('input', function () {
@@ -4065,6 +4133,7 @@
             } else {
                 removeAgentTaxCodeInvalidClass();
             }
+            removeAgentTaxCodeIfNull();
         });
 
         $('#agentTaxCodeLetter9_2').on('input', function () {
@@ -4268,29 +4337,40 @@
             $('#agentTaxCodeLetter12_3').val(data);
             $("#agentTaxCodeLetter12_1").trigger('input');
         });
-        function cancelVatTaxDeclaration() {
+        function cancelTndnTaxDeclaration() {
             $.ajax({
                 url: "@(Url.Action("CancelTndnTaxDeclaration", "Tax"))",
                 method: "POST",
-            data: {
-                year:"@(Model.Year)"
-            },
-            success: function (data) {
-                if (data === "1") {
+                data: {
+                    year:"@(Model.Year)"
+                },
+                success: function (data) {
+                    if (data === "1") {
+                        noty({
+                            text: 'Hủy thành công',
+                            type: 'success',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                        window.setTimeout(function () {
+                            window.close();
+                        }, 4000);
+                    } else {
+                        noty({
+                            text: 'Hủy thất bại. Vui lòng thử lại.',
+                            type: 'danger',
+                            dismissQueue: false,
+                            layout: 'topCenter',
+                            theme: 'defaultTheme',
+                            timeout: 2000
+                        });
+                    }
+                },
+                fail: function (e) {
                     noty({
-                        text: 'Hủy thành công',
-                        type: 'success',
-                        dismissQueue: false,
-                        layout: 'topCenter',
-                        theme: 'defaultTheme',
-                        timeout: 2000
-                    });
-                    window.setTimeout(function () {
-                        window.close();
-                    }, 4000);
-                } else {
-                    noty({
-                        text: 'Hủy thất bại. Vui lòng thử lại.',
+                        text: 'Không thể hủy. Vui lòng thử lại.',
                         type: 'danger',
                         dismissQueue: false,
                         layout: 'topCenter',
@@ -4298,22 +4378,8 @@
                         timeout: 2000
                     });
                 }
-            },
-            fail: function (e) {
-                noty({
-                    text: 'Không thể hủy. Vui lòng thử lại.',
-                    type: 'danger',
-                    dismissQueue: false,
-                    layout: 'topCenter',
-                    theme: 'defaultTheme',
-                    timeout: 2000
-                });
-            }
-        });
+            });
         }
     </script>
 </body>
-
-
-
 </html>
