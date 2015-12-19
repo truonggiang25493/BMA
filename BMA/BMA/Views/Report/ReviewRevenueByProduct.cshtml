@@ -84,7 +84,7 @@
         $("#time-type").on("change", function () {
             var timeType = $("#time-type").val();
             if (timeType === "1") {
-                $('#fromDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment().subtract(7, 'days'));
+                $('#fromDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment());
                 $('#toDate').data("DateTimePicker").viewMode("days").format("DD/MM/YYYY").maxDate(moment()).date(moment());
                 $("#fromDate").on("dp.change", function (e) {
                     $('#toDate').data("DateTimePicker").minDate(e.date.add(1, 'days'));
@@ -93,7 +93,7 @@
                     $('#fromDate').data("DateTimePicker").maxDate(e.date.subtract(1, 'days'));
                 });
             } else if (timeType === "2") {
-                $('#fromDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").date(moment().startOf('month')).maxDate(moment().endOf('month'));
+                $('#fromDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").date(moment().startOf('month')).maxDate(moment().endOf('month')).minDate(moment().endOf('month').subtract(9,'months'));
                 $('#toDate').data("DateTimePicker").viewMode("months").format("MM/YYYY").date(moment().startOf('month')).maxDate(moment().endOf('month'));
                 $("#fromDate").on("dp.change", function (e) {
                     $('#toDate').data("DateTimePicker").minDate(e.date.startOf('month'));

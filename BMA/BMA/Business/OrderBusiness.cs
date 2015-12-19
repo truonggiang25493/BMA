@@ -1099,17 +1099,45 @@ namespace BMA.Business
             return result;
         }
 
-        public bool UpdateOrder(List<CartViewModel> cartList, int orderId, int depositAmount,
+        public int UpdateOrder(List<CartViewModel> cartList, int orderId, int depositAmount,
             DateTime deliveryDate, int staffUserId, string orderNote)
         {
 
             Order previousOrder = db.Orders.FirstOrDefault(m => m.OrderId == orderId);
 
+            if (previousOrder == null)
+            {
+                return 0;
+            }
+
+            int check = 0;
+
+            foreach (OrderItem orderItem in previousOrder.OrderItems)
+            {
+
+                foreach (CartViewModel cartViewModel in cartList)
+                {
+                    if (cartViewModel.ProductId == orderItem.ProductId &&
+                              cartViewModel.Quantity == orderItem.Quantity &&
+                              cartViewModel.RealPrice == orderItem.RealPrice)
+                    {
+                        check++;
+                    }
+                }
+            }
+
+            if (previousOrder.OrderItems.Count == check && cartList.Count == check)
+            {
+                return 2;
+            }
+
             OrderViewModel orderViewModel = MakeOrderViewModel(cartList, previousOrder.User.UserId, null);
+
+            
 
             if (orderViewModel == null)
             {
-                return false;
+                return 0;
             }
             DbContextTransaction contextTransaction = db.Database.BeginTransaction();
             // Add order
@@ -1199,7 +1227,7 @@ namespace BMA.Business
                     db.ProductMaterials.FirstOrDefault(m => m.ProductMaterialId == materialViewModel.ProductMaterialId);
                 if (productMaterial == null)
                 {
-                    return false;
+                    return 0;
                 }
                 productMaterial.CurrentQuantity -= materialViewModel.NeedQuantity;
                 db.SaveChanges();
@@ -1215,6 +1243,7 @@ namespace BMA.Business
             catch (Exception)
             {
                 contextTransaction.Rollback();
+                return 0;
             }
             finally
             {
@@ -1223,7 +1252,7 @@ namespace BMA.Business
 
 
 
-            return true;
+            return 1;
         }
 
         public bool IsEnoughMaterialForOrder(Order order)

@@ -645,7 +645,7 @@
                             <div class="col-md-4"></div>
                             <div class="col-md-1" style="font-size: 18px; font-style: italic; text-align: right;padding-top:7px">Ngày</div>
                             <div class="col-md-3">
-                                <input type="date" class="form-control" id="createDate1" name="createDate" style="text-align: left; width: 65%; font-size: 18px;" min="@(DateTime.Now.ToString("yyyy-MM-dd"))" value="@(Model.CreateDate == null ? "" : Model.CreateDate.Value.ToString("yyyy-MM-dd"))" />
+                                <input type="date" class="form-control" id="createDate1" name="createDate" style="text-align: left; width: 65%; font-size: 18px;" min="@(DateTime.Now.ToString("yyyy-MM-dd"))" value="@(Model.CreateDate == null ? "" : Model.CreateDate.Value.ToString("yyyy-MM-dd"))" onkeydown="return false" />
                             </div>
                             <div class="col-md-2"></div>
                         </div>
@@ -1196,7 +1196,7 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <input type="date" name="value22Date" style="width: 100%; font-size: 18px;" min="2010-01-01" value="@((Model.Value22Date == null) ? "": Model.Value22Date.Value.ToString("yyyy-MM-dd"))" />
+                                <input type="date" name="value22Date" style="width: 100%; font-size: 18px;" min="2010-01-01" value="@((Model.Value22Date == null) ? "": Model.Value22Date.Value.ToString("yyyy-MM-dd"))" onkeydown="return false" />
                             </div>
                         </div>
 
@@ -1721,7 +1721,7 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <input type="date" name="valueL3" style="width: 100%; @(Model.ValueL1.Value?"":"display: none")" min="@((Model.Year+1)+"-01-01")" value="@(Model.ValueL3 != null ? Model.ValueL3.Value.ToString("yyyy-MM-dd") : (Model.Year+1) + "-01-01")" />
+                                <input type="date" name="valueL3" style="width: 100%; @(Model.ValueL1.Value?"":"display: none")" min="@((Model.Year+1)+"-01-01")" value="@(Model.ValueL3 != null ? Model.ValueL3.Value.ToString("yyyy-MM-dd") : (Model.Year+1) + "-01-01")" onkeydown="return false" />
                             </div>
                             <div class="col-md-4"></div>
                         </div>
@@ -1769,9 +1769,9 @@
                                 <p style="font-size: 18px">
                                     <input type="text" readonly="readonly" name="valueM1DayQuantity" style="width: 50px" />
                                     ngày, từ ngày
-                                    <input type="date" name="valueM1FromDate" style="width: 160px" min="@((Model.Year + 1) + "-01-01")" value="@(Model.ValueM1FromDate==null?"":(Model.ValueM1FromDate.Value.ToString("yyyy-MM-dd")))" />
+                                    <input type="date" name="valueM1FromDate" style="width: 160px" min="@((Model.Year + 1) + "-01-01")" value="@(Model.ValueM1FromDate==null?"":(Model.ValueM1FromDate.Value.ToString("yyyy-MM-dd")))" onkeydown="return false" />
                                     đến ngày
-                                    <input type="date" name="valueM1ToDate" style="width: 160px" min="@((Model.Year + 1) + "-01-01")" value="@(Model.ValueM1ToDate == null ? "" : (Model.ValueM1ToDate.Value.ToString("yyyy-MM-dd")))" />
+                                    <input type="date" name="valueM1ToDate" style="width: 160px" min="@((Model.Year + 1) + "-01-01")" value="@(Model.ValueM1ToDate == null ? "" : (Model.ValueM1ToDate.Value.ToString("yyyy-MM-dd")))" onkeydown="return false" />
                                 </p>
                             </div>
                         </div>
@@ -1833,7 +1833,7 @@
                             <div class="col-md-4"></div>
                             <div class="col-md-1" style="font-size: 18px; font-style: italic; text-align: right;padding-top:7px">Ngày</div>
                             <div class="col-md-3">
-                                <input type="date" class="form-control" id="createDate2" style="text-align: left; width: 65%; font-size: 18px;" min="@(DateTime.Now.ToString("yyyy-MM-dd"))" value="@(Model.CreateDate == null ? "" : Model.CreateDate.Value.ToString("yyyy-MM-dd"))" />
+                                <input type="date" class="form-control" id="createDate2" style="text-align: left; width: 65%; font-size: 18px;" min="@(DateTime.Now.ToString("yyyy-MM-dd"))" value="@(Model.CreateDate == null ? "" : Model.CreateDate.Value.ToString("yyyy-MM-dd"))" onkeydown="return false" />
                             </div>
                             <div class="col-md-2"></div>
                         </div>

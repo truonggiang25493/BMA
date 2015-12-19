@@ -223,15 +223,13 @@ namespace BMA.Controllers
                     MvcApplication.confirmToCustomerNotifer.Change += this.OnChange6;
                     //het
 
-                    bool rs = true;
-                    rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate, staffUser.UserId, orderNote);
-                    if (rs)
+                    int rs = orderBusiness.UpdateOrder(cartList, orderId, depositAmount, deliveryDate, staffUser.UserId, orderNote);
+                    if (rs == 1)
                     {
                         Session["ProductList"] = null;
-                        return 1;
                     }
 
-                    return 0;
+                    return rs;
                 }
             }
             catch (Exception)
