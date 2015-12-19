@@ -101,79 +101,9 @@
                                             {
                                                 <div class="action-control"><a title="Chi tiết" class="btn btn-primary" data-target="#product-details-modal" data-toggle="modal" onclick="return openPopup('@item.ProductName','@item.ProductId','@item.ProductStandardPrice','@item.ProductImage','@item.ProductCode','@quantity','@selectDongia');"><span class="add2cart"><i class="glyphicon glyphicon-shopping-cart"></i> Mua hàng </span></a></div>
                                             }
-                                            
+
                                             <script type="text/javascript">
-                                                var imageLink;
-                                                function openPopup(productName, productId, price, image, code, quantity, selectDongia) {
-                                                    var printPrice = addPeriod(price);
-                                                    imageLink = "/Content/Images/BakeryImages/" + image;
-                                                    $('#product-details-modal #productPrice').text(printPrice + " Đồng");
-                                                    if (quantity == 0) {
-                                                        $('#product-details-modal #totalPriceProduct').text(addPeriod(price) + " Đồng");
-                                                    } else {
-                                                        $('#product-details-modal #totalPriceProduct').text(addPeriod(selectDongia) + " Đồng");
-                                                    }
-                                                    $('#product-details-modal #productImage').attr("src", imageLink)
-                                                    $('#product-details-modal #productCode').text(code);
-                                                    $("#product-details-modal #productName").text(productName);
-                                                    $("#product-details-modal .hiddenProductID").attr('value', productId);
-                                                    $("#product-details-modal .hiddenProductImage").attr('value', image);
-                                                    $('#product-details-modal .quanitySniper').attr('value', quantity);
-                                                    //$('#product-details-modal .quanitySniper').text(quantity);
 
-                                                    $('#product-details-modal .quanitySniper').keyup(function () {
-                                                        selectDongia = price;
-                                                        var total = $(this).val() * selectDongia;
-                                                        total = addPeriod(total);
-                                                        if (isNaN(total)) {
-
-                                                        } else {
-                                                            $('#product-details-modal #totalPriceProduct').text(total + " Đồng");
-                                                        }
-
-                                                    });
-
-                                                    //$('#product-details-modal .quanitySniper').on('keydown keyup', function (e) {
-                                                    //    if ($(this).val() > 5000
-                                                    //            && e.keyCode != 46 // delete
-                                                    //            && e.keyCode != 8 // backspace
-                                                    //           ) {
-                                                    //        e.preventDefault();
-                                                    //        $(this).val(5000);
-                                                    //    }
-                                                    //});
-
-                                                    //$('#product-details-modal .quanitySniper').on('keyup', function (e) {
-                                                    //    if ($(this).val() < 1
-                                                    //        && e.keyCode != 46 // delete
-                                                    //        && e.keyCode != 8 // backspace
-                                                    //        ) {
-                                                    //        e.preventDefault();
-                                                    //        $(this).val(1);
-                                                    //    }
-                                                    //});
-
-
-                                                    $('#product-details-modal .quanitySniper').keypress(function (e) {
-                                                        var key_codes = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
-                                                        if (!($.inArray(e.which, key_codes) >= 0)) {
-                                                            e.preventDefault();
-                                                        }
-                                                    });
-
-                                                    function addPeriod(nStr) {
-                                                        nStr += '';
-                                                        x = nStr.split('.');
-                                                        x1 = x[0];
-                                                        x2 = x.length > 1 ? '.' + x[1] : '';
-                                                        var rgx = /(\d+)(\d{3})/;
-                                                        while (rgx.test(x1)) {
-                                                            x1 = x1.replace(rgx, '$1' + '.' + '$2');
-                                                        }
-                                                        return x1 + x2;
-                                                    }
-                                                    return 1;
-                                                }
                                             </script>
                                         </div>
                                     </div>
@@ -301,6 +231,73 @@
 
 <script src="/Content/CustomerLayout/assets/js/jquery.scrollme.min.js"></script>
 <script type="text/javascript">
+
+    var imageLink;
+    var lstProductId = [];
+    var lstQuantity = [];
+    function openPopup(productName, productId, price, image, code, quantity, selectDongia) {
+        var printPrice = addPeriod(price);
+        var index = lstProductId.indexOf(productId);
+        if (index !== -1) {
+            quantity = lstQuantity[index];
+        }
+        imageLink = "/Content/Images/BakeryImages/" + image;
+        $('#product-details-modal #productPrice').text(printPrice + " Đồng");
+        if (quantity == 0) {
+            $('#product-details-modal #totalPriceProduct').text(addPeriod(price) + " Đồng");
+        } else {
+            $('#product-details-modal #totalPriceProduct').text(addPeriod(selectDongia) + " Đồng");
+        }
+        $('#product-details-modal #productImage').attr("src", imageLink)
+        $('#product-details-modal #productCode').text(code);
+        $("#product-details-modal #productName").text(productName);
+        $("#product-details-modal .hiddenProductID").attr('value', productId);
+        $("#product-details-modal .hiddenProductImage").attr('value', image);
+        $('#product-details-modal .quanitySniper').val(quantity);
+
+        $('#product-details-modal .quanitySniper').keyup(function () {
+            selectDongia = price;
+            var total = $(this).val() * selectDongia;
+            var tempQuantity = $('#product-details-modal .quanitySniper').val();
+            var checkProductIdExist = lstProductId.indexOf(productId);
+            if (index !== -1) {
+                lstProductId.push(productId);
+                lstQuantity.push(tempQuantity);
+            } else {
+                lstQuantity[index] = tempQuantity;
+            }
+
+            if (isNaN(total)) {
+
+            } else {
+                total = addPeriod(total);
+                $('#product-details-modal #totalPriceProduct').text(total + " Đồng");
+            }
+
+        });
+
+        $('#product-details-modal .quanitySniper').keypress(function (e) {
+            var key_codes = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
+            if (!($.inArray(e.which, key_codes) >= 0)) {
+                e.preventDefault();
+            }
+        });
+
+        function addPeriod(nStr) {
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + '.' + '$2');
+            }
+            return x1 + x2;
+        }
+        return 1;
+    }
+
+
     $(document).ready(function () {
         var isMobile = function () {
             //console.log("Navigator: " + navigator.userAgent);
