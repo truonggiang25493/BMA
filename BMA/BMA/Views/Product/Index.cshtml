@@ -237,12 +237,9 @@
     var lstQuantity = [];
     function openPopup(productName, productId, price, image, code, quantity, selectDongia) {
         var printPrice = addPeriod(price);
-        for (var i = 0; i < lstProductId.length; i++) {
-            if (lstProductId[i] == productId) {
-                quantity = lstQuantity[i];
-            } else {
-                quantity = 0;
-            }
+        var index = lstProductId.indexOf(productId);
+        if (index !== -1) {
+            quantity = lstQuantity[index];
         }
         imageLink = "/Content/Images/BakeryImages/" + image;
         $('#product-details-modal #productPrice').text(printPrice + " Đồng");
@@ -256,14 +253,20 @@
         $("#product-details-modal #productName").text(productName);
         $("#product-details-modal .hiddenProductID").attr('value', productId);
         $("#product-details-modal .hiddenProductImage").attr('value', image);
-        $('#product-details-modal .quanitySniper').attr('value', quantity);
-        //$('#product-details-modal .quanitySniper').text(quantity);
+        $('#product-details-modal .quanitySniper').val(quantity);
 
         $('#product-details-modal .quanitySniper').keyup(function () {
             selectDongia = price;
             var total = $(this).val() * selectDongia;
-            lstProductId.push(productId);
-            lstQuantity.push(quantity);
+            var tempQuantity = $('#product-details-modal .quanitySniper').val();
+            var checkProductIdExist = lstProductId.indexOf(productId);
+            if (index !== -1) {
+                lstProductId.push(productId);
+                lstQuantity.push(tempQuantity);
+            } else {
+                lstQuantity[index] = tempQuantity;
+            }
+
             if (isNaN(total)) {
 
             } else {

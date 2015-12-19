@@ -256,7 +256,7 @@
                 </a>
             </li>
             <li>
-                <a onclick="RemoveConfirmStatusNoty('http://localhost:2072/Order/Index')" style="cursor:pointer">
+                <a onclick="RemoveConfirmStatusNoty('@Html.Raw(Url.Action("Index", "Order", new { orderStatus = 2}))')" style="cursor:pointer">
                     <i class="fa fa-check text-green"></i> Có
                     @if (ViewBag.confirmOrderCountPartial == 0)
                     {
@@ -270,7 +270,7 @@
                 </a>
             </li>
             <li>
-                <a onclick="RemoveCancelStatusNoty('http://localhost:2072/Order/Index')" style="cursor:pointer">
+                <a onclick="RemoveCancelStatusNoty('@Html.Raw(Url.Action("Index", "Order", new { orderStatus = 6}))')" style="cursor:pointer">
                     <i class="fa fa-times text-red"></i> Có
                     @if (ViewBag.cancelOrderCountPartial == 0)
                     {
