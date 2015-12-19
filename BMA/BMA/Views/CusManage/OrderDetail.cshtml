@@ -77,6 +77,21 @@
                             }
                             <p><strong>Thời gian đặt hàng:</strong> @Model.CreateTime.ToString("dd/MM/yyyy HH:mm")</p>
                             <p><strong>Thời gian nhận hàng (dự kiến):</strong> @Model.PlanDeliveryTime.ToString("dd/MM/yyyy HH:mm")</p>
+
+                            @if (Model.OrderStatus == 2 || Model.OrderStatus == 3 || Model.OrderStatus == 4 || Model.OrderStatus == 6)
+                            {
+                                <div style="margin-top:20px;">
+                                    <p><strong>Tiền cọc :</strong> @Model.DepositAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</p>
+                                    @if (Model.OrderStatus == 6)
+                                    {
+                                        <p><strong>Tiền cọc hoàn trả :</strong> @Model.ReturnDeposit.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</p>
+                                    }
+                                    else
+                                    {
+                                        <p><strong>Số tiền còn lại :</strong> @((Model.TaxAmount + (Model.Amount - Model.DiscountAmount) - Model.DepositAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</p>
+                                    }
+                                </div>
+                            }
                         </div>
 
                         <div class="order-box">
@@ -112,10 +127,20 @@
                                             <td>Thuế VAT(@string.Format("{0}{1}", ViewBag.taxRate.TaxRateValue, "%"))</td>
                                             <td class="price" id="total-tax">@Model.TaxAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
                                         </tr>
-                                        <tr>
-                                            <td>Thành tiền</td>
-                                            <td class=" site-color" id="total-price" style="font-size: 20px; color: #4ec67f !important">@((Model.TaxAmount + (Model.Amount - Model.DiscountAmount)).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
-                                        </tr>
+                                        @if (Model.OrderStatus == 2 || Model.OrderStatus == 3 || Model.OrderStatus == 4 || Model.OrderStatus == 6)
+                                        {
+                                            <tr>
+                                                <td style="padding-bottom: 82px;">Thành tiền</td>
+                                                <td class=" site-color" id="total-price" style="font-size: 20px; color: #4ec67f !important">@((Model.TaxAmount + (Model.Amount - Model.DiscountAmount)).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>Thành tiền</td>
+                                                <td class=" site-color" id="total-price" style="font-size: 20px; color: #4ec67f !important">@((Model.TaxAmount + (Model.Amount - Model.DiscountAmount)).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
+                                            </tr>
+                                        }
                                         @*<tr>
                                                 <td style="font-weight:bold">Thời gian nhận hàng (dự kiến)</td>
                                                 <td class="price" id="total-tax">@(Model.PlanDeliveryTime.ToString("MM/dd/yyyy HH:mm"))</td>

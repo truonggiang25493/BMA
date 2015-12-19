@@ -178,6 +178,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\AccountBusiness.cs" />
+    <Compile Include="Business\ContactBusiness.cs" />
     <Compile Include="Business\CusManageBusiness.cs" />
     <Compile Include="Business\CustomerBusiness.cs" />
     <Compile Include="Business\CustomerOrderBusiness.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="Common\XmlResult.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CusManageController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DiscardInputMaterialController.cs" />
@@ -211,7 +213,6 @@
     <Compile Include="Controllers\ManageProductController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\OtherExpenseController.cs" />
-    <Compile Include="Controllers\ProcedureController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
@@ -1402,7 +1403,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Layout\CustomerLayout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Procedure\Index.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Product\Cookie.cshtml" />
     <Content Include="Views\Product\Saltine.cshtml" />
@@ -1548,6 +1548,8 @@
     <Content Include="Views\Report\GetAllCustomerRevenueWeekly.cshtml" />
     <Content Include="Views\Report\GetAllCustomerRevenueMonthly.cshtml" />
     <Content Include="Views\Report\GetAllCustomerRevenueYearly.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Home\NotificateTitle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

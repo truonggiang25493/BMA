@@ -39,6 +39,17 @@
                 }
                 $("#numberOfNoti").text(numberOfNoti);
 
+                var notificateString = $("#notificateTitle").text();
+                var endIndex = $("#notificateTitle").text().indexOf("(");
+                if (endIndex == -1) {
+                    var notificateTitle = notificateString + '(' + numberOfNoti + ')';
+                    $("#notificateTitle").text(notificateTitle);
+                } else {
+                    var title = $("#notificateTitle").text().slice(0, endIndex);
+                    var notificateTitle = title + '(' + numberOfNoti + ')';
+                    $("#notificateTitle").text(notificateTitle);
+                }
+
                 $("[data-role='numberOfLowMaterial']").text(numberOfLowQuantity);
             }
         }
@@ -73,6 +84,18 @@
                     $("#hiddenOrderCount").attr('value', numberOfNewOrder)
                 }
                 $("#numberOfNoti").text(numberOfNoti);
+
+                var notificateString = $("#notificateTitle").text();
+                var endIndex = $("#notificateTitle").text().indexOf("(");
+                if (endIndex == -1) {
+                    var notificateTitle = notificateString + '(' + numberOfNoti + ')';
+                    $("#notificateTitle").text(notificateTitle);
+                } else {
+                    var title = $("#notificateTitle").text().slice(0, endIndex);
+                    var notificateTitle = title + '(' + numberOfNoti + ')';
+                    $("#notificateTitle").text(notificateTitle);
+                }
+
                 $("[data-role='numberOfNewOrder']").text(numberOfNewOrder);
             }
         }
@@ -107,6 +130,18 @@
                     $("#hiddenConfirmOrderCount").attr('value', numberOfConfirmOrder)
                 }
                 $("#numberOfNoti").text(numberOfNoti);
+
+                var notificateString = $("#notificateTitle").text();
+                var endIndex = $("#notificateTitle").text().indexOf("(");
+                if (endIndex == -1) {
+                    var notificateTitle = notificateString + '(' + numberOfNoti + ')';
+                    $("#notificateTitle").text(notificateTitle);
+                } else {
+                    var title = $("#notificateTitle").text().slice(0, endIndex);
+                    var notificateTitle = title + '(' + numberOfNoti + ')';
+                    $("#notificateTitle").text(notificateTitle);
+                }
+
                 $("[data-role='numberOfConfirmOrder']").text(numberOfConfirmOrder);
             }
         }
@@ -141,6 +176,18 @@
                     $("#hiddenCancelOrderCount").attr('value', numberOfCancelOrder)
                 }
                 $("#numberOfNoti").text(numberOfNoti);
+
+                var notificateString = $("#notificateTitle").text();
+                var endIndex = $("#notificateTitle").text().indexOf("(");
+                if (endIndex == -1) {
+                    var notificateTitle = notificateString + '(' + numberOfNoti + ')';
+                    $("#notificateTitle").text(notificateTitle);
+                } else {
+                    var title = $("#notificateTitle").text().slice(0, endIndex);
+                    var notificateTitle = title + '(' + numberOfNoti + ')';
+                    $("#notificateTitle").text(notificateTitle);
+                }
+
                 $("[data-role='numberOfCancelOrder']").text(numberOfCancelOrder);
             }
         }
@@ -177,6 +224,9 @@
 <script type="text/javascript">
     function resetNumberOfNoti() {
         $("#hiddenNumberOfNoti").attr('value', 0);
+        var endIndex = $("#notificateTitle").text().indexOf("(");
+        var title = $("#notificateTitle").text().slice(0, endIndex);
+        $("#notificateTitle").text(title);
         $("#numberOfNoti").text('');
     }
 </script>

@@ -19,6 +19,21 @@ namespace BMA.Controllers
             return View();
         }
 
+        public ActionResult NotificateTitle()
+        {
+            if (Session["CusNotificateCount"] == null)
+            {
+                int count = 0;
+                ViewBag.notificatePartialCount = count;
+                Session["CusNotificateCount"] = count;
+            }
+            else
+            {
+                int count = Convert.ToInt32(Session["CusNotificateCount"]);
+                ViewBag.notificatePartialCount = count;
+            }
+            return PartialView();
+        }
         public ActionResult NotificatePartial()
         {
             try
