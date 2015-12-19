@@ -1294,7 +1294,7 @@
                                             timeout: 2000
                                         });
                                         $("#customerPhoneNumber").focus();
-                                    } else if (!new RegExp(/^\d{10,11}$/).test(phoneNumber)) {
+                                    } else if (!new RegExp(/^\d{8,13}$/).test(phoneNumber)) {
                                         var n = noty({
                                             text: 'Hãy nhập số điện thoại đúng.',
                                             type: 'warning',
