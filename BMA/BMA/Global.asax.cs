@@ -44,6 +44,18 @@ namespace BMA
             orderBusiness.AutoRemoveWaitingOrder();
         }
 
+        protected void Page_Load()
+        {
+            AccountBusiness ab = new AccountBusiness();
+            if (Context.Session != null)
+            {
+                if (Session.IsNewSession)
+                {
+
+                }
+            }
+        }
+
     }
 
 }

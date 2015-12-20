@@ -99,23 +99,44 @@
                                 </a>
                                 <script>
                                     function open_container(materialId, materialName, strURL, isActive) {
-                                        var content =
-                                            '<form role="form" action="" method="post" id="form-aprrove">' +
+                                        if (isActive) {
+                                            var content =
+                                           '<form role="form" action="" method="post" id="form-aprrove">' +
+                                               '<div class="form-group">' +
+                                               '<label>' + materialName + '</label>' +
+                                               '<input type="hidden" name="materialId" value="' + materialId + '"/>' +
+                                               '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                               '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
+                                               '</div>' +
                                                 '<div class="form-group">' +
-                                                '<label>' + materialName + '</label>' +
-                                                '<input type="hidden" name="materialId" value="' + materialId + '"/>' +
-                                                '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
-                                                '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
-                                                '</div>' +
-                                                 '<div class="form-group">' +
-                                                 '<input type="radio" name="status" value="True" checked> Sử dụng' +
-                                                '</div>' +
-                                                 '<div class="form-group">' +
-                                                 '<input type="radio" name="status" value="False"> Ngừng sử dụng' +
-                                                '</div>' +
-                                                '<div class="form-group" style="padding-bottom: 20px;">' +
-                                                '</div>' +
-                                                '</form>';
+                                                '<input type="radio" name="status" value="True" checked> Sử dụng' +
+                                               '</div>' +
+                                                '<div class="form-group">' +
+                                                '<input type="radio" name="status" value="False"> Ngừng sử dụng' +
+                                               '</div>' +
+                                               '<div class="form-group" style="padding-bottom: 20px;">' +
+                                               '</div>' +
+                                               '</form>';
+                                        }
+                                        else {
+                                            var content =
+                                           '<form role="form" action="" method="post" id="form-aprrove">' +
+                                               '<div class="form-group">' +
+                                               '<label>' + materialName + '</label>' +
+                                               '<input type="hidden" name="materialId" value="' + materialId + '"/>' +
+                                               '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                               '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
+                                               '</div>' +
+                                                '<div class="form-group">' +
+                                                '<input type="radio" name="status" value="True"> Sử dụng' +
+                                               '</div>' +
+                                                '<div class="form-group">' +
+                                                '<input type="radio" name="status" value="False" checked> Ngừng sử dụng' +
+                                               '</div>' +
+                                               '<div class="form-group" style="padding-bottom: 20px;">' +
+                                               '</div>' +
+                                               '</form>';
+                                        }
                                         var title = 'Chọn trạng thái';
                                         var footer = '<button onclick="checkExistedInProduct()" class="btn btn-success pull-right">Đồng ý</button>' +
                                                 '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</button>';
@@ -177,7 +198,7 @@
                                                     });
                                                 } else if (data === "-4") {
                                                     noty({
-                                                        text: 'Nguyên liệu hiện đã có trạng thái Đã hủy.',
+                                                        text: 'Nguyên liệu hiện đã có trạng thái Không còn sử dụng.',
                                                         type: 'warning',
                                                         dismissQueue: false,
                                                         layout: 'topCenter',

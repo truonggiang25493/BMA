@@ -58,7 +58,8 @@
                                 </a>
                                 <script>
                                     function open_container(productId, productName, strURL, isActive) {
-                                        var content =
+                                        if (isActive) {
+                                            var content =
                                             '<form role="form" action="s" method="post" id="form-aprrove">' +
                                                 '<div class="form-group">' +
                                                 '<label>' + productName + '</label>' +
@@ -75,6 +76,26 @@
                                                 '<div class="form-group" style="padding-bottom: 20px;">' +
                                                 '</div>' +
                                                 '</form>';
+                                        }
+                                        else {
+                                            var content =
+                                            '<form role="form" action="s" method="post" id="form-aprrove">' +
+                                                '<div class="form-group">' +
+                                                '<label>' + productName + '</label>' +
+                                                '<input type="hidden" name="productId" value="' + productId + '"/>' +
+                                                '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                                '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
+                                                '</div>' +
+                                                 '<div class="form-group">' +
+                                                 '<input type="radio" name="status" value="True"> Sử dụng' +
+                                                '</div>' +
+                                                 '<div class="form-group">' +
+                                                 '<input type="radio" name="status" value="False" checked> Ngừng sử dụng' +
+                                                '</div>' +
+                                                '<div class="form-group" style="padding-bottom: 20px;">' +
+                                                '</div>' +
+                                                '</form>';
+                                        }
                                         var title = 'Chọn trạng thái';
                                         var footer = '<button onclick="checkValidate()" class="btn btn-success pull-right">Đồng ý</button>' +
                                                 '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</button>';
