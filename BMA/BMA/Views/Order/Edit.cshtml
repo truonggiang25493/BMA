@@ -137,9 +137,9 @@
                 <div class="row">
                     <div class="col-xs-12" style="margin-top: 8%">
                         <!--Back button-->
-                        <button class="btn btn-primary">
+                        <a class="btn btn-primary" href="@(Url.Action("Index","Order"))">
                             <i class="fa fa-arrow-left" style="margin-right: 3px"></i>Quay lại
-                        </button>
+                        </a>
                         <!--Update order-->
                         <button class="btn btn-primary pull-right" style="margin-right: 10px; display: none;" id="updateInfo" onclick="update_material_list()">
                             <i class="fa fa-refresh" style="margin-right: 3px"></i>Cập nhật danh sách
@@ -173,11 +173,12 @@
                                             discount = (totalAmount * 10/100);
                                         }
                                         $("#total-table tr:nth-child(2) td").text(formatCurrency(discount));
-                                        var totalTax = (totalAmount-discount) * @(Model.TaxRate) / 100;
-                                        $("#total-table tr:nth-child(3) td").text(formatCurrency(totalTax));
-
-                                        var totalValue = totalAmount + totalTax-discount;
-                                        $("#total-table tr:nth-child(4) td").text(formatCurrency(totalValue));
+                                        var afterDiscount = totalAmount - discount;
+                                        $("#total-table tr:nth-child(3) td").text(formatCurrency(afterDiscount));
+                                        var totalTax = afterDiscount * @(Model.TaxRate) / 100;
+                                        $("#total-table tr:nth-child(4) td").text(formatCurrency(totalTax));
+                                        var totalValue = afterDiscount + totalTax;
+                                        $("#total-table tr:nth-child(5) td").text(formatCurrency(totalValue));
 
                                         $.ajax({
                                             url: "@Url.Action("UpdateMaterialList","Order")",
@@ -220,6 +221,10 @@
                         <tr>
                             <th>Giảm: </th>
                             <td style="text-align: right">@Model.Order.DiscountAmount.ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        </tr>
+                        <tr>
+                            <th>Sau giảm giá: </th>
+                            <td style="text-align: right">@((Model.Order.Amount - Model.Order.DiscountAmount).ToString("C0", CultureInfo.CreateSpecificCulture("vi-VN")))</td>
                         </tr>
                         <tr>
                             <th>Thuế(VAT) @(Model.TaxRate)%: </th>
@@ -687,11 +692,22 @@
         }
 
         function update_order(materialCost) {
+            var maxValue = parseInt($("#total-table tr:nth-child(5) td").html().split(".").join(""));
             var deposit = parseInt($("#deposit-amount").val().split(".").join(""));
             var isDeposit = $("#deposit").attr('style').split(" ").join("").indexOf("display:none");
             if (isDeposit === -1 && deposit < materialCost) {
                 noty({
                     text: 'Tiền cọc không được nhỏ hơn '+materialCost+'.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 2000
+                });
+                $(this).focus();
+            } else if (isDeposit === -1 && deposit > maxValue) {
+                noty({
+                    text: 'Tiền cọc không được lớn hơn '+maxValue+'.',
                     type: 'warning',
                     dismissQueue: false,
                     layout: 'topCenter',
@@ -728,14 +744,10 @@
                     data: $("#update-product-list").serialize(),
                     success: function(data) {
                         if (data === "-1") {
-                            var index1 = $("#update-product-list").indexOf(depositAmountControl);
-                            if (index1 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
-                            var index2 = $("#update-product-list").indexOf(deliveryDateControl);
-                            if (index2 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
+                            $("#update-product-list [name='depositAmount']").remove();
+                            $("#update-product-list [name='deliveryDate']").remove();
+                            $("#update-product-list [name='orderNote']").remove();
+
                             $('#myModal').modal('hide');
                             noty({
                                 text: 'Tổng lượng phải lớn hơn 0',
@@ -746,14 +758,10 @@
                                 timeout: 1000
                             });
                         }else if (data === "-2") {
-                            var index1 = $("#update-product-list").indexOf(depositAmountControl);
-                            if (index1 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
-                            var index2 = $("#update-product-list").indexOf(deliveryDateControl);
-                            if (index2 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
+                            $("#update-product-list [name='depositAmount']").remove();
+                            $("#update-product-list [name='deliveryDate']").remove();
+                            $("#update-product-list [name='orderNote']").remove();
+
                             $('#myModal').modal('hide');
                             noty({
                                 text: 'Tổng lượng phải lớn hơn @(ViewBag.MinQuantity)',
@@ -763,19 +771,28 @@
                                 theme: 'defaultTheme',
                                 timeout: 1000
                             });
-
-                        } else if (data === "0") {
-                            var index1 = $("#update-product-list").indexOf(depositAmountControl);
-                            if (index1 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
-                            var index2 = $("#update-product-list").indexOf(deliveryDateControl);
-                            if (index2 > -1) {
-                                $("#update-product-list").splice(index1, 1);
-                            }
+                        }else if (data === "0") {
+                            $("#update-product-list [name='depositAmount']").remove();
+                            $("#update-product-list [name='deliveryDate']").remove();
+                            $("#update-product-list [name='orderNote']").remove();
+                            
                             $('#myModal').modal('hide');
                             noty({
                                 text: 'Không thể chỉnh sửa',
+                                type: 'warning',
+                                dismissQueue: false,
+                                layout: 'topCenter',
+                                theme: 'defaultTheme',
+                                timeout: 1000
+                            });
+                        } else if (data === "2") {
+                            $("#update-product-list [name='depositAmount']").remove();
+                            $("#update-product-list [name='deliveryDate']").remove();
+                            $("#update-product-list [name='orderNote']").remove();
+
+                            $('#myModal').modal('hide');
+                            noty({
+                                text: 'Sản phẩm trong đơn hàng không thay đổi. Không thể cập nhật.',
                                 type: 'warning',
                                 dismissQueue: false,
                                 layout: 'topCenter',

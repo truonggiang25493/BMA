@@ -372,7 +372,61 @@
                                                         }
 
                                                         function cancel_order() {
-                                                            $('#return-deposit-form').submit();
+                                                            $.ajax({
+                                                                "url": "@(Url.Action("Cancel","Order"))",
+                                                                "method": "POST",
+                                                                "data": $('#return-deposit-form').serialize(),
+                                                                "success": function (data) {
+                                                                    if (data === '-7') {
+                                                                        $('#myModal').modal('hide');
+                                                                        noty({
+                                                                            text: 'Vui lòng đăng nhập với tài khoản nhân viên',
+                                                                            type: 'warning',
+                                                                            dismissQueue: false,
+                                                                            layout: 'topCenter',
+                                                                            theme: 'defaultTheme',
+                                                                            timeout: 3000
+                                                                        });
+                                                                        window.setTimeout(function () {
+                                                                            window.location.replace("@(Url.Action("Index", "Home"))");
+                                                                        }, 4000);
+                                                                    } else if (data === "1") {
+                                                                        $('#myModal').modal('hide');
+
+                                                                        noty({
+                                                                            text: 'Hủy đơn hàng thành công',
+                                                                            type: 'success',
+                                                                            dismissQueue: false,
+                                                                            layout: 'topCenter',
+                                                                            theme: 'defaultTheme',
+                                                                            timeout: 3000
+                                                                        });
+                                                                        window.setTimeout(function () {
+                                                                            window.location.replace("@(Url.Action("Index", "Order"))");
+                                                                        }, 4000);
+                                                                    } else {
+                                                                        noty({
+                                                                            text: 'Không thể hủy đơn hàng.',
+                                                                            type: 'warning',
+                                                                            dismissQueue: false,
+                                                                            layout: 'topCenter',
+                                                                            theme: 'defaultTheme',
+                                                                            timeout: 3000
+                                                                        });
+                                                                    }
+                                                                },
+                                                                "fail": function (e) {
+                                                                    $('#myModal').modal('hide');
+                                                                    var n = noty({
+                                                                        text: 'Đã có lỗi xảy ra',
+                                                                        type: 'error',
+                                                                        dismissQueue: false,
+                                                                        layout: 'bottomRight',
+                                                                        theme: 'defaultTheme',
+                                                                        timeout: 2000
+                                                                    });
+                                                                }
+                                                            });
                                                         }
                                                     </script>
                                                 </a>
