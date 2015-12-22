@@ -41,10 +41,13 @@
             </div>
             <div class="row" style="margin-top: 10px;">
                 <div class="col-md-12">
-                    <a class="btn btn-info pull-left" href="@(Url.Action("Add", "Order"))">
-                        <i class="fa fa-plus" style="margin-right: 3px"></i>
-                        Tạo mới đơn hàng
-                    </a>
+                    @if (Session["UserRole"] != null && (int)Session["UserRole"] == 2)
+                    {
+                        <a class="btn btn-info pull-left" href="@(Url.Action("Add", "Order"))">
+                            <i class="fa fa-plus" style="margin-right: 3px"></i>
+                            Tạo mới đơn hàng
+                        </a>
+                    }
                 </div>
             </div>
             <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
@@ -207,16 +210,21 @@
                                             @if (orderViewModel.Order.OrderStatus == 0 && orderViewModel.Order.GuestInfo == null)
                                             {
                                                 <!--Sửa-->
-                                                <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "Order", new {id = orderViewModel.Order.OrderId}))" data-toggle="tooltip" data-placement="top" title="Sửa">
-                                                    <i class="fa fa-edit" style="margin-right: 3px"></i>
-                                                </a>
+                                                if (Session["UserRole"] != null && (int)Session["UserRole"] == 2)
+                                                {
+                                                    <a class="btn btn-link btn-xs" href="@(Url.Action("Edit", "Order", new {id = orderViewModel.Order.OrderId}))" data-toggle="tooltip" data-placement="top" title="Sửa">
+                                                        <i class="fa fa-edit" style="margin-right: 3px"></i>
+                                                    </a>
+                                                }
                                             }
                                             @if (orderViewModel.Order.OrderStatus != 5 && orderViewModel.Order.OrderStatus != 6)
                                             {
                                                 <!--Hủy-->
-                                                <a class="btn btn-link btn-xs" onclick="open_cancel_order(@orderViewModel.Order.OrderId, @(orderViewModel.Order.DepositAmount), @(orderViewModel.Order.OrderStatus))" data-toggle="tooltip" data-placement="top" title="Hủy">
-                                                    <i class="fa fa-close" style="margin-right: 3px"></i>
-                                                    <script type="text/javascript">
+                                                if (Session["UserRole"] != null && (int)Session["UserRole"] == 2)
+                                                {
+                                                    <a class="btn btn-link btn-xs" onclick="open_cancel_order(@orderViewModel.Order.OrderId, @(orderViewModel.Order.DepositAmount), @(orderViewModel.Order.OrderStatus))" data-toggle="tooltip" data-placement="top" title="Hủy">
+                                                        <i class="fa fa-close" style="margin-right: 3px"></i>
+                                                        <script type="text/javascript">
                                                         function open_cancel_order(orderId, deposit, orderStatus) {
                                                             var body2 = $("<form>", {
                                                                 "action": "@Url.Action("Cancel", "Order")",
@@ -299,7 +307,9 @@
                                                                                         "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
                                                                                         "value": deposit,
                                                                                         "max": deposit,
-                                                                                        "min": "0"
+                                                                                        "min": "0",
+                                                                                        "step": "1000",
+                                                                                        "onkeydown": "return false"
                                                                                     })
                                                                                 ]
                                                                             })
@@ -428,8 +438,9 @@
                                                                 }
                                                             });
                                                         }
-                                                    </script>
-                                                </a>
+                                                        </script>
+                                                    </a>
+                                                }
                                             }
                                         </td>
                                     </tr>
@@ -441,10 +452,13 @@
             </div>
         </div>
         <div class="box-footer clearfix">
-            <a class="btn btn-info pull-left" href="@(Url.Action("Add", "Order"))">
-                <i class="fa fa-plus" style="margin-right: 3px"></i>
-                Thêm đơn hàng mới
-            </a>
+            @if (Session["UserRole"] != null && (int)Session["UserRole"] == 2)
+            {
+                <a class="btn btn-info pull-left" href="@(Url.Action("Add", "Order"))">
+                    <i class="fa fa-plus" style="margin-right: 3px"></i>
+                    Tạo mới đơn hàng
+                </a>
+            }
         </div>
     </div>
 </section>

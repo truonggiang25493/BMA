@@ -11,6 +11,18 @@
 </section>
 @if (Model.Order.OrderStatus == 0)
 {
+    if (ViewBag.DiscountByQuantityList != null)
+    {
+        <input type="hidden" id="from1" value="@((ViewBag.DiscountByQuantityList as List<DiscountByQuantity>).ElementAt(0).QuantityFrom)" />
+        <input type="hidden" id="to1" value="@((ViewBag.DiscountByQuantityList as List<DiscountByQuantity>).ElementAt(0).QuantityTo)" />
+        <input type="hidden" id="value1" value="@((ViewBag.DiscountByQuantityList as List<DiscountByQuantity>).ElementAt(0).DiscountValue)" />
+        <input type="hidden" id="from2" value="@((ViewBag.DiscountByQuantityList as List<DiscountByQuantity>).ElementAt(1).QuantityFrom)" />
+        <input type="hidden" id="to2" value="@((ViewBag.DiscountByQuantityList as List<DiscountByQuantity>).ElementAt(1).QuantityTo)" />
+        <input type="hidden" id="value2" value="@((ViewBag.DiscountByQuantityList as List<DiscountByQuantity>).ElementAt(1).DiscountValue)" />
+        <input type="hidden" id="from3" value="@((ViewBag.DiscountByQuantityList as List<DiscountByQuantity>).ElementAt(2).QuantityFrom)" />
+        <input type="hidden" id="to3" value="@((ViewBag.DiscountByQuantityList as List<DiscountByQuantity>).ElementAt(2).QuantityTo)" />
+        <input type="hidden" id="value3" value="@((ViewBag.DiscountByQuantityList as List<DiscountByQuantity>).ElementAt(2).DiscountValue)" />
+    }
     <section class="invoice">
         <!--Title row-->
         <div class="row">
@@ -167,11 +179,25 @@
 
                                         $("#total-table tr:first td").text(formatCurrency(totalAmount));
                                         var discount = 0;
-                                        if (totalQuantity >= 501 && totalQuantity <= 1000) {
-                                            discount = (totalAmount * 5/100);
-                                        }else if (totalQuantity >= 1001 && totalQuantity <= 10000) {
-                                            discount = (totalAmount * 10/100);
+                                        var from1 = $("#from1").val();
+                                        if(from1 != null && from1.trim()!==''){
+                                            var to1 = $("#to1").val();
+                                            var value1 = $("#value1").val();
+                                            var from2 = $("#from2").val();
+                                            var to2 = $("#to2").val();
+                                            var value2 = $("#value2").val();
+                                            var from3 = $("#from3").val();
+                                            var to3 = $("#to3").val();
+                                            var value3 = $("#value3").val();
+                                            if (totalQuantity >= from1 && totalQuantity <= to1) {
+                                                discount = (totalAmount * value1/100);
+                                            }else if (totalQuantity >= from2 && totalQuantity <= to2) {
+                                                discount = (totalAmount * value2/100);
+                                            }else if (totalQuantity >= from3 && totalQuantity <= to3) {
+                                                discount = (totalAmount * value3/100);
+                                            }
                                         }
+                                        
                                         $("#total-table tr:nth-child(2) td").text(formatCurrency(discount));
                                         var afterDiscount = totalAmount - discount;
                                         $("#total-table tr:nth-child(3) td").text(formatCurrency(afterDiscount));
@@ -775,7 +801,7 @@
                             $("#update-product-list [name='depositAmount']").remove();
                             $("#update-product-list [name='deliveryDate']").remove();
                             $("#update-product-list [name='orderNote']").remove();
-                            
+
                             $('#myModal').modal('hide');
                             noty({
                                 text: 'Không thể chỉnh sửa',
