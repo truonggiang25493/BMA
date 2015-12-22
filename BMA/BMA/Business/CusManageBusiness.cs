@@ -47,14 +47,15 @@ namespace BMA.Business
         {
             List<Order> orderToCheck = db.Orders.ToList();
             int orderStatusInt = Convert.ToInt32(orderStatus);
-            DateTime compareFromDate = DateTime.ParseExact(fromDate.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            DateTime compareToDate = DateTime.ParseExact(toDate.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime compareFromDate = DateTime.ParseExact(fromDate.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture).AddDays(1);
+            DateTime compareToDate = DateTime.ParseExact(toDate.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture).AddDays(1);
             if (orderStatusInt.CompareTo(7) != 0)
             {
                 orderToCheck = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != 1 && n.OrderStatus == orderStatusInt && n.CreateTime > compareFromDate && n.CreateTime < compareToDate).ToList();
             }
             else
             {
+
                 orderToCheck = db.Orders.Where(n => n.CustomerUserId == cusId && n.OrderStatus != 1 && n.CreateTime > compareFromDate && n.CreateTime < compareToDate).ToList();
             }
             List<Order> orderCancelConfirm = db.Orders.Where(n => n.PreviousOrderId != null).ToList();

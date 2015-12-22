@@ -95,7 +95,8 @@
                                                                     "class": "form-control",
                                                                     "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
                                                                     "id": "discardQuantity",
-                                                                    "name": "discardQuantity"
+                                                                    "name": "discardQuantity",
+                                                                    "max-length":'6'
                                                                 }),
                                                                 $("<input>", {
                                                                     "type": "hidden",
@@ -177,7 +178,16 @@
                                                         theme: 'defaultTheme',
                                                         timeout: 1000
                                                     });
-                                                } else if (discardNote.trim() === '') {
+                                                } else if ((checkdiscardQuantity).toString().length > 6) {
+                                                    noty({
+                                                        text: 'Số lượng hủy phải nhỏ hơn 1.000.000',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
+                                                }else if (discardNote.trim() === '') {
                                                     noty({
                                                         text: 'Ghi chú không được trống.',
                                                         type: 'warning',

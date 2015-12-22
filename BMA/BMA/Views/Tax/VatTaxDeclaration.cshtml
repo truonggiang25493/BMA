@@ -71,7 +71,7 @@
 <body>
     <div class="container">
         <div class="row">
-            <form id="taxDeclaration" method="POST" action="@(Url.Action(" exportvattaxdeclaration", "Tax" ))">
+            <form id="taxDeclaration" method="POST" action="@(Url.Action("ExportVatTaxDeclaration", "Tax" ))">
                 <!--Menu-->
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#apenddix1" data-toggle="tab">PL 01-1GTGT</a></li>
@@ -3300,7 +3300,7 @@
         }
     });
 
-    $(document).on('input', "[name='input_category1_column5']", function () {
+    $(document).on('change', "[name='input_category1_column5']", function () {
         var value = $(this).val();
         if (value.trim() === '') {
             noty({
@@ -3482,7 +3482,7 @@
         }
     });
 
-    $(document).on('input', "[name='input_category2_column5']", function () {
+    $(document).on('change', "[name='input_category2_column5']", function () {
         var value = $(this).val();
         if (value.trim() === '') {
             noty({
@@ -3664,7 +3664,7 @@
         }
     });
 
-    $(document).on('input', "[name='input_category3_column5']", function () {
+    $(document).on('change', "[name='input_category3_column5']", function () {
         var value = $(this).val();
         if (value.trim() === '') {
             noty({
@@ -3846,7 +3846,7 @@
         }
     });
 
-    $(document).on('input', "[name='output_category1_column5']", function () {
+    $(document).on('change', "[name='output_category1_column5']", function () {
         var value = $(this).val();
         if (value.trim() === '') {
             noty({
@@ -3972,7 +3972,7 @@
         }
     });
 
-    $(document).on('input', "[name='output_category2_column5']", function () {
+    $(document).on('change', "[name='output_category2_column5']", function () {
         var value = $(this).val();
         if (value.trim() === '') {
             noty({
@@ -4098,7 +4098,7 @@
         }
     });
 
-    $(document).on('input', "[name='output_category3_column5']", function () {
+    $(document).on('change', "[name='output_category3_column5']", function () {
         var value = $(this).val();
         if (value.trim() === '') {
             noty({
@@ -4224,7 +4224,7 @@
         }
     });
 
-    $(document).on('input', "[name='output_category4_column5']", function () {
+    $(document).on('change', "[name='output_category4_column5']", function () {
         var value = $(this).val();
         if (value.trim() === '') {
             noty({
@@ -6659,10 +6659,11 @@
         var data = parseInt($(this).val().split(".").join(""));
 
         var data24 = parseInt($("#value24").html().split(".").join(""));
+        var data22 = parseInt($("[name='value22']").val().split(".").join(""));
 
-        if (data > data24) {
+        if (data > (data24 + data22)) {
             noty({
-                text: 'Giá trị ô 25 không được lớn hơn ô 24.',
+                text: 'Giá trị ô 25 không được lớn hơn ô 22 và 24.',
                 type: 'warning',
                 dismissQueue: false,
                 layout: 'topCenter',
@@ -6674,6 +6675,28 @@
             $(this).addClass('invalid');
         } else {
             $(this).removeClass('invalid');
+        }
+    });
+
+    $("[name='value22']").on('input', function () {
+        var data22 = parseInt($(this).val().split(".").join(""));
+
+        var data24 = parseInt($("#value24").html().split(".").join(""));
+        var data25 = parseInt($("[name='value25']").val().split(".").join(""));
+
+        if (data25 > (data24 + data22)) {
+            noty({
+                text: 'Giá trị ô 25 không được lớn hơn ô 22 và 24.',
+                type: 'warning',
+                dismissQueue: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                timeout: 500
+            });
+            $("[name='value25']").focus();
+            $("[name='value25']").addClass('invalid');
+        } else {
+            $("[name='value25']").removeClass('invalid');
         }
     });
 

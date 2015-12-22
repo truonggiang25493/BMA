@@ -45,34 +45,27 @@
                                 {
                                     if (item.CurrentQuantity < item.StandardQuantity && item.IsActive)
                                     {
-                                        <p style="float:right;color:red;font-weight:bold">@string.Format("{0:0,0} {1}", item.CurrentQuantity, item.ProductMaterialUnit)</p>
+                                        <p style="float:right;color:red;font-weight:bold">@(item.CurrentQuantity.ToString("N0",CultureInfo.CreateSpecificCulture("vi-VN"))+" "+item.ProductMaterialUnit)</p>
                                     }
                                     else
                                     {
-                                        <p style="float:right">@string.Format("{0:0,0} {1}", item.CurrentQuantity, item.ProductMaterialUnit)</p>
+                                        <p style="float:right">@(item.CurrentQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) + " " + item.ProductMaterialUnit)</p>
                                     }
                                 }
                                 else
                                 {
                                     if (item.CurrentQuantity < item.StandardQuantity && item.IsActive)
                                     {
-                                        <p style="float:right;color:red;font-weight:bold">@string.Format("{0} {1}", item.CurrentQuantity, item.ProductMaterialUnit)</p>
+                                        <p style="float:right;color:red;font-weight:bold">@(item.CurrentQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) + " " + item.ProductMaterialUnit)</p>
                                     }
                                     else
                                     {
-                                        <p style="float:right">@string.Format("{0} {1}", item.CurrentQuantity, item.ProductMaterialUnit)</p>
+                                        <p style="float:right">@(item.CurrentQuantity.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) + " " + item.ProductMaterialUnit)</p>
                                     }
                                 }
                             </td>
                             <td>
-                                @if (item.StandardQuantity > 10)
-                                {
-                                    <p style="float:right">@string.Format("{0:0,0} {1}", item.StandardQuantity, item.ProductMaterialUnit)</p>
-                                }
-                                else
-                                {
-                                    <p style="float:right">@string.Format("{0} {1}", item.StandardQuantity, item.ProductMaterialUnit)</p>
-                                }
+                                <p style="float:right">@(item.StandardQuantity.Value.ToString("N0", CultureInfo.CreateSpecificCulture("vi-VN")) + " " + item.ProductMaterialUnit)</p>                                
                             </td>
                             @{
                         if (item.IsActive)
@@ -94,28 +87,49 @@
                                         <i class="fa fa-edit" style="margin-right: 3px"></i>
                                     </a>
                                 }
-                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductMaterialId, '@item.ProductMaterialName', '@strURL')" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
+                                <a class="btn btn-link btn-xs" href="javascript:void(0)" id="btn-choose" onclick="open_container(@item.ProductMaterialId, '@item.ProductMaterialName', '@strURL', '@item.IsActive')" data-toggle="tooltip" data-placement="top" title="Thay đổi trạng thái">
                                     <i class="fa fa-refresh" style="margin-right: 3px"></i>
                                 </a>
                                 <script>
                                     function open_container(materialId, materialName, strURL, isActive) {
-                                        var content =
-                                            '<form role="form" action="" method="post" id="form-aprrove">' +
+                                        if (isActive) {
+                                            var content =
+                                           '<form role="form" action="" method="post" id="form-aprrove">' +
+                                               '<div class="form-group">' +
+                                               '<label>' + materialName + '</label>' +
+                                               '<input type="hidden" name="materialId" value="' + materialId + '"/>' +
+                                               '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                               '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
+                                               '</div>' +
                                                 '<div class="form-group">' +
-                                                '<label>' + materialName + '</label>' +
-                                                '<input type="hidden" name="materialId" value="' + materialId + '"/>' +
-                                                '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
-                                                '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
-                                                '</div>' +
-                                                 '<div class="form-group">' +
-                                                 '<input type="radio" name="status" value="True" checked> Sử dụng' +
-                                                '</div>' +
-                                                 '<div class="form-group">' +
-                                                 '<input type="radio" name="status" value="False"> Ngừng sử dụng' +
-                                                '</div>' +
-                                                '<div class="form-group" style="padding-bottom: 20px;">' +
-                                                '</div>' +
-                                                '</form>';
+                                                '<input type="radio" name="status" value="True" checked> Sử dụng' +
+                                               '</div>' +
+                                                '<div class="form-group">' +
+                                                '<input type="radio" name="status" value="False"> Ngừng sử dụng' +
+                                               '</div>' +
+                                               '<div class="form-group" style="padding-bottom: 20px;">' +
+                                               '</div>' +
+                                               '</form>';
+                                        }
+                                        else {
+                                            var content =
+                                           '<form role="form" action="" method="post" id="form-aprrove">' +
+                                               '<div class="form-group">' +
+                                               '<label>' + materialName + '</label>' +
+                                               '<input type="hidden" name="materialId" value="' + materialId + '"/>' +
+                                               '<input type="hidden" name="strURL" value="' + strURL + '"/>' +
+                                               '<input type="hidden" name="isActive" value="' + isActive + '"/>' +
+                                               '</div>' +
+                                                '<div class="form-group">' +
+                                                '<input type="radio" name="status" value="True"> Sử dụng' +
+                                               '</div>' +
+                                                '<div class="form-group">' +
+                                                '<input type="radio" name="status" value="False" checked> Ngừng sử dụng' +
+                                               '</div>' +
+                                               '<div class="form-group" style="padding-bottom: 20px;">' +
+                                               '</div>' +
+                                               '</form>';
+                                        }
                                         var title = 'Chọn trạng thái';
                                         var footer = '<button onclick="checkExistedInProduct()" class="btn btn-success pull-right">Đồng ý</button>' +
                                                 '<button type="button" class="btn btn-danger pull-right" style="margin-right: 10px;" data-dismiss="modal">Hủy</button>';
@@ -177,7 +191,7 @@
                                                     });
                                                 } else if (data === "-4") {
                                                     noty({
-                                                        text: 'Nguyên liệu hiện đã có trạng thái Đã hủy.',
+                                                        text: 'Nguyên liệu hiện đã có trạng thái Không còn sử dụng.',
                                                         type: 'warning',
                                                         dismissQueue: false,
                                                         layout: 'topCenter',

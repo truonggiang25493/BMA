@@ -20,12 +20,20 @@ namespace BMA.Controllers
         // GET: Tax
         public ActionResult Index()
         {
-            ViewBag.Title = "Báo cáo thuế";
-            ViewBag.TreeView = "report";
-            ViewBag.TreeViewMenu = "taxRepory";
-            TaxBusiness taxBusiness = new TaxBusiness();
-            TaxRateViewModel taxRate = taxBusiness.GetTaxRate();
-            return View(taxRate);
+            try
+            {
+                ViewBag.Title = "Báo cáo thuế";
+                ViewBag.TreeView = "report";
+                ViewBag.TreeViewMenu = "taxRepory";
+                TaxBusiness taxBusiness = new TaxBusiness();
+                TaxRateViewModel taxRate = taxBusiness.GetTaxRate();
+                return View(taxRate);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+
         }
 
         #region VAT Tax
@@ -1917,12 +1925,12 @@ namespace BMA.Controllers
                 #region Get Data from Form
                 string taxYear = form["taxYear"];
 
-                
+
 
                 string createDate = form["createDate"];
                 string vatAgentOwnerName = form["vatAgentOwnerName"];
                 string vatAgentName = form["agentName"];
-                string vatAgentTaxCode = form["agentTaxCode"].Replace(",", "");                 
+                string vatAgentTaxCode = form["agentTaxCode"].Replace(",", "");
                 string vatAgentNo = form["agentNo"];
                 string vatAgentAddress = form["vatAgentAddress"];
                 string vatAgentDistrict = form["vatAgentDistrict"];
@@ -2205,8 +2213,6 @@ namespace BMA.Controllers
                 //Store Info Not get from form; Get from DB
                 BMAEntities db = new BMAEntities();
 
-                StoreInfo storeInfo = db.StoreInfoes.FirstOrDefault();
-
                 string createDate = form["createDate"];
                 string vatAgentOwnerName = form["vatAgentOwnerName"];
                 string vatAgentName = form["agentName"];
@@ -2226,6 +2232,15 @@ namespace BMA.Controllers
                 string signName = form["signName"];
                 string maxRevenueRatio = form["maxRevenueRatio"];
 
+
+                string storeOwnerName = form["storeOwnerName"];
+                string storeTaxcode = form["storeTaxcode"].Replace(",", "");
+                string storeAddress = form["storeAddress"];
+                string storeDistrict = form["storeDistrict"];
+                string storeProvince = form["storeProvince"];
+                string storePhone = form["storePhone"];
+                string storeFax = form["storeFax"];
+                string storeEmail = form["storeEmail"];
 
                 string value22No = form["value22No"];
                 string value22Date = form["value22Date"];
@@ -2331,14 +2346,14 @@ namespace BMA.Controllers
                     tndn.MaxRevenueRatio = 0;
                 }
 
-                tndn.StoreOwnerName = storeInfo.OwnerName;
-                tndn.StoreTaxCode = storeInfo.TaxCode;
-                tndn.StoreAddress = storeInfo.Address;
-                tndn.StoreDistrict = storeInfo.District;
-                tndn.StoreProvince = storeInfo.Province;
-                tndn.StorePhone = storeInfo.Phonenumber;
-                tndn.StoreFax = storeInfo.Fax;
-                tndn.StoreEmail = storeInfo.Email;
+                tndn.StoreOwnerName = storeOwnerName;
+                tndn.StoreTaxCode = storeTaxcode;
+                tndn.StoreAddress = storeAddress;
+                tndn.StoreDistrict = storeDistrict;
+                tndn.StoreProvince = storeProvince;
+                tndn.StorePhone = storePhone;
+                tndn.StoreFax = storeFax;
+                tndn.StoreEmail = storeEmail;
 
                 tndn.TaxAgentTaxCode = vatAgentTaxCode;
                 tndn.TaxAgentName = vatAgentName;
@@ -2357,12 +2372,15 @@ namespace BMA.Controllers
                 }
 
 
-                if (value22No.Trim().Length > 0)
+                if (!value22No.Trim().IsEmpty())
                 {
                     tndn.Value22No = Convert.ToInt32(value22No);
                 }
 
-                tndn.Value22Date = DateTime.ParseExact(value22Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                if (!value22Date.Trim().IsEmpty())
+                {
+                    tndn.Value22Date = DateTime.ParseExact(value22Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                }
 
                 tndn.ValueA1 = Convert.ToInt32(valueA1);
                 tndn.ValueB1 = Convert.ToInt32(valueB1);
@@ -2593,13 +2611,13 @@ namespace BMA.Controllers
 
                 XElement NNT = new XElement("NNT");
 
-                XElement mst = new XElement("mst", storeInfo.TaxCode);
+                XElement mst = new XElement("mst", tndn.StoreTaxCode);
                 NNT.Add(mst);
 
-                XElement tenNNT = new XElement("tenNNT", storeInfo.OwnerName);
+                XElement tenNNT = new XElement("tenNNT", tndn.StoreOwnerName);
                 NNT.Add(tenNNT);
 
-                XElement dchiNNT = new XElement("dchiNNT", storeInfo.Address);
+                XElement dchiNNT = new XElement("dchiNNT", tndn.StoreAddress);
                 NNT.Add(dchiNNT);
 
                 XElement phuongXa = new XElement("phuongXa");
@@ -2608,22 +2626,22 @@ namespace BMA.Controllers
                 XElement maHuyenNNT = new XElement("maHuyenNNT");
                 NNT.Add(maHuyenNNT);
 
-                XElement tenHuyenNNT = new XElement("tenHuyenNNT", storeInfo.District);
+                XElement tenHuyenNNT = new XElement("tenHuyenNNT", tndn.StoreDistrict);
                 NNT.Add(tenHuyenNNT);
 
                 XElement maTinhNNT = new XElement("maTinhNNT");
                 NNT.Add(maTinhNNT);
 
-                XElement tenTinhNNT = new XElement("tenTinhNNT", storeInfo.Province);
+                XElement tenTinhNNT = new XElement("tenTinhNNT", tndn.StoreProvince);
                 NNT.Add(tenTinhNNT);
 
-                XElement dthoaiNNT = new XElement("dthoaiNNT", storeInfo.Phonenumber);
+                XElement dthoaiNNT = new XElement("dthoaiNNT", tndn.StorePhone);
                 NNT.Add(dthoaiNNT);
 
-                XElement faxNNT = new XElement("faxNNT", storeInfo.Fax);
+                XElement faxNNT = new XElement("faxNNT", tndn.StoreFax);
                 NNT.Add(faxNNT);
 
-                XElement emailNNT = new XElement("emailNNT", storeInfo.Email);
+                XElement emailNNT = new XElement("emailNNT", tndn.StoreEmail);
                 NNT.Add(emailNNT);
 
                 TTinTKhaiThue.Add(NNT);

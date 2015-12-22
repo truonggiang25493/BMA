@@ -170,6 +170,15 @@
                                                         timeout: 1000
                                                     });
                                                     $("#txtStaffEmail").focus();
+                                                } else if (data === '6') {
+                                                    noty({
+                                                        text: 'Đã có lỗi.',
+                                                        type: 'warning',
+                                                        dismissQueue: false,
+                                                        layout: 'topCenter',
+                                                        theme: 'defaultTheme',
+                                                        timeout: 1000
+                                                    });
                                                 } else if (data === '0') {
                                                     $.ajax({
                                                         url: "@(Url.Action("StaffEditInfo", "Staff"))",

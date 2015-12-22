@@ -21,23 +21,31 @@ namespace BMA.Controllers
 
         public ActionResult InputBillIndex()
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                db = new BMAEntities();
-                ViewBag.TreeView = "inputBill";
-                ViewBag.TreeViewMenu = "listInputBill";
-                var inputBillList = InputBillBusiness.GetInputBillList();
-                if (inputBillList == null)
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
                 {
-                    RedirectToAction("InputBillIndex", "InputBill");
+                    return RedirectToAction("Index", "Home");
                 }
-                return View(inputBillList);
+                else
+                {
+                    db = new BMAEntities();
+                    ViewBag.TreeView = "inputBill";
+                    ViewBag.TreeViewMenu = "listInputBill";
+                    var inputBillList = InputBillBusiness.GetInputBillList();
+                    if (inputBillList == null)
+                    {
+                        RedirectToAction("InputBillIndex", "InputBill");
+                    }
+                    return View(inputBillList);
+                }
             }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+
         }
 
         #endregion
@@ -46,29 +54,37 @@ namespace BMA.Controllers
 
         public ActionResult InputBillDetail(int id)
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] == 3)
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                try
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
                 {
-                    ViewBag.TreeView = "inputBill";
-                    InputBill inputBillDetail = inputBillBusiness.GetInputBill(id);
-                    if (inputBillDetail == null)
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    try
                     {
-                        return RedirectToAction("InputBillIndex", "InputBill");
+                        ViewBag.TreeView = "inputBill";
+                        InputBill inputBillDetail = inputBillBusiness.GetInputBill(id);
+                        if (inputBillDetail == null)
+                        {
+                            return RedirectToAction("InputBillIndex", "InputBill");
 
+                        }
+                        return View(inputBillDetail);
                     }
-                    return View(inputBillDetail);
-                }
-                catch (Exception)
-                {
-                    return RedirectToAction("ManageError", "Error");
+                    catch (Exception)
+                    {
+                        return RedirectToAction("ManageError", "Error");
+                    }
                 }
             }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+
         }
 
         #endregion
@@ -77,16 +93,24 @@ namespace BMA.Controllers
 
         public ActionResult GetInputMaterialInBill(int id)
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+                {
+                    return null;
+                }
+                else
+                {
+                    List<InputMaterial> inputMaterialList = db.InputMaterials.Where(n => n.InputBillId == id).ToList();
+                    return PartialView("InputMaterialInBillPartialView", inputMaterialList);
+                }
             }
-            else
+            catch (Exception)
             {
-                List<InputMaterial> inputMaterialList = db.InputMaterials.Where(n => n.InputBillId == id).ToList();
-                return PartialView("InputMaterialInBillPartialView", inputMaterialList);
+                return null;
             }
+
         }
 
         #endregion
@@ -95,16 +119,24 @@ namespace BMA.Controllers
 
         public ActionResult GetSupplierList()
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    return null;
+                }
+                else
+                {
+                    List<Supplier> supplierList = db.Suppliers.ToList();
+                    return PartialView("SupplierPartialView", supplierList);
+                }
             }
-            else
+            catch (Exception)
             {
-                List<Supplier> supplierList = db.Suppliers.ToList();
-                return PartialView("SupplierPartialView", supplierList);
+                return null;
             }
+
         }
 
         #endregion
@@ -113,29 +145,37 @@ namespace BMA.Controllers
 
         public ActionResult AddInputBill()
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int) Session["UserRole"] != 2)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    try
+                    {
+                        ViewBag.TreeView = "inputBill";
+                        ViewBag.TreeViewMenu = "addInputBill";
+
+                        OrderBusiness business = new OrderBusiness();
+                        ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
+
+                        List<InputBill> inputBills = db.InputBills.ToList();
+                        return View(inputBills);
+                    }
+                    catch (Exception)
+                    {
+                        return RedirectToAction("ManageError", "Error");
+                    }
+                }
             }
-            else
+            catch (Exception)
             {
-                try
-                {
-                    ViewBag.TreeView = "inputBill";
-                    ViewBag.TreeViewMenu = "addInputBill";
-
-                    OrderBusiness business = new OrderBusiness();
-                    ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
-
-                    List<InputBill> inputBills = db.InputBills.ToList();
-                    return View(inputBills);
-                }
-                catch (Exception)
-                {
-                    return RedirectToAction("ManageError", "Error");
-                }
+                return RedirectToAction("ManageError", "Error");
             }
+
         }
 
         #endregion
@@ -147,40 +187,48 @@ namespace BMA.Controllers
         public int AddInputBill(string supplierIdString, string inputBillAmountString, string inputTaxAmountString,
             string importDate, string fileName, string formNo, string serial)
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return -7;
-            }
-            else
-            {
-                InputBill inputBill = new InputBill();
-                try
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
                 {
-                    inputBill.SupplierId = Convert.ToInt32(supplierIdString);
-                    inputBill.InputBillAmount = Convert.ToInt32(inputBillAmountString);
-                    inputBill.InputTaxAmount = Convert.ToInt32(inputTaxAmountString);
-                    inputBill.ImportDate = DateTime.ParseExact(importDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    String inputBillCode = supplierIdString + importDate;
-                    inputBill.InputBillCode = inputBillCode.Replace("/", "");
-                    inputBill.InputRawImage = fileName;
-                }
-                catch (Exception)
-                {
-                    return 0;
-
-                }
-
-                bool result = InputBillBusiness.AddInputBill(inputBill);
-                if (result)
-                {
-                    return 2;
+                    return -7;
                 }
                 else
                 {
-                    return 0;
+                    InputBill inputBill = new InputBill();
+                    try
+                    {
+                        inputBill.SupplierId = Convert.ToInt32(supplierIdString);
+                        inputBill.InputBillAmount = Convert.ToInt32(inputBillAmountString);
+                        inputBill.InputTaxAmount = Convert.ToInt32(inputTaxAmountString);
+                        inputBill.ImportDate = DateTime.ParseExact(importDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        String inputBillCode = supplierIdString + importDate;
+                        inputBill.InputBillCode = inputBillCode.Replace("/", "");
+                        inputBill.InputRawImage = fileName;
+                    }
+                    catch (Exception)
+                    {
+                        return 0;
+
+                    }
+
+                    bool result = InputBillBusiness.AddInputBill(inputBill);
+                    if (result)
+                    {
+                        return 2;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
                 }
             }
+            catch (Exception)
+            {
+                return 0;
+            }
+            
         }
 
         #endregion
@@ -240,30 +288,38 @@ namespace BMA.Controllers
 
         public ActionResult EditInputBill(int id)
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                try
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
                 {
-                    ViewBag.TreeView = "inputBill";
-                    OrderBusiness business = new OrderBusiness();
-                    ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
-                    InputBill inputBill = db.InputBills.SingleOrDefault(m => m.InputBillId == id);
-                    if (inputBill==null)
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    try
                     {
-                        return RedirectToAction("InputBillIndex", "InputBill");
+                        ViewBag.TreeView = "inputBill";
+                        OrderBusiness business = new OrderBusiness();
+                        ViewBag.TaxRate = business.GetVatRateAtTime(DateTime.Now);
+                        InputBill inputBill = db.InputBills.SingleOrDefault(m => m.InputBillId == id);
+                        if (inputBill == null)
+                        {
+                            return RedirectToAction("InputBillIndex", "InputBill");
+                        }
+                        else return View(inputBill);
                     }
-                    else return View(inputBill);
-                }
-                catch (Exception)
-                {
-                    return RedirectToAction("ManageError", "Error");
+                    catch (Exception)
+                    {
+                        return RedirectToAction("ManageError", "Error");
+                    }
                 }
             }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageError", "Error");
+            }
+            
         }
 
 
@@ -323,29 +379,36 @@ namespace BMA.Controllers
         public int EditInputBill(int inputBillId, string supplierIdString, string inputBillAmountString,
             string inputTaxAmountString, string importDate, string fileName, string formNo, string serial)
         {
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return -7;
-            }
-            else
-            {
-                int supplierId = Convert.ToInt32(supplierIdString);
-                int inputBillAmount = Convert.ToInt32(inputBillAmountString);
-                int inputBillTaxAmount = Convert.ToInt32(inputTaxAmountString);
-                String inputBillCode = supplierIdString + importDate;
-
-                bool result = InputBillBusiness.EditInputBill(inputBillId, supplierId, inputBillCode, inputBillAmount,
-                    inputBillTaxAmount, fileName, importDate, formNo, serial);
-                if (result)
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
                 {
-                    return 2;
+                    return -7;
                 }
                 else
                 {
-                    return 0;
+                    int supplierId = Convert.ToInt32(supplierIdString);
+                    int inputBillAmount = Convert.ToInt32(inputBillAmountString);
+                    int inputBillTaxAmount = Convert.ToInt32(inputTaxAmountString);
+
+                    bool result = InputBillBusiness.EditInputBill(inputBillId, supplierId, inputBillAmount,
+                        inputBillTaxAmount, fileName, importDate, formNo, serial);
+                    if (result)
+                    {
+                        return 2;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
                 }
             }
+            catch (Exception)
+            {
+                return 0;
+            }
+            
         }
 
         #endregion

@@ -316,33 +316,41 @@ namespace BMA.Controllers
         [HttpPost, ActionName("Edit")]
         public int EditConfirm(int productId, string productName, string productUnit, double productWeight, string productDes, string productNote, int productPrice, int dropCate, string fileName, int[] materialId, int[] materialQuantity)
         {
-            ManageProductBusiness mpb = new ManageProductBusiness();
-            var productToUpdate = mpb.GetProductDetail(productId);
-            string productCode = CreateProductCode(productName);
-            var productList = mpb.GetActiveProduct();
-            if (!StringComparer.CurrentCultureIgnoreCase.Equals(productName, productToUpdate.ProductName))
-            {
-                for (int i = 0; i < productList.Count; i++)
-                {
-                    if (StringComparer.CurrentCultureIgnoreCase.Equals(productName, productList[i].ProductName))
-                    {
-                        //string strURL = Request.UrlReferrer.AbsolutePath;
-                        //string URL = String.Format("{0}{1}{2}", strURL, "?ProductId=", productId);
-                        //TempData["Error"] = String.Format("{0}{1}", productName, " đã tồn tại");
-                        return -4;
-                    }
-                }
-            }
             try
             {
-                productPrice = Convert.ToInt32(productPrice.ToString().Replace(".", ""));
-                mpb.EditProduct(productId, productName, productUnit, productWeight, productDes, productNote, productPrice, dropCate, productCode, fileName, materialId, materialQuantity);
-                return 2;
+                ManageProductBusiness mpb = new ManageProductBusiness();
+                var productToUpdate = mpb.GetProductDetail(productId);
+                string productCode = CreateProductCode(productName);
+                var productList = mpb.GetActiveProduct();
+                if (!StringComparer.CurrentCultureIgnoreCase.Equals(productName, productToUpdate.ProductName))
+                {
+                    for (int i = 0; i < productList.Count; i++)
+                    {
+                        if (StringComparer.CurrentCultureIgnoreCase.Equals(productName, productList[i].ProductName))
+                        {
+                            //string strURL = Request.UrlReferrer.AbsolutePath;
+                            //string URL = String.Format("{0}{1}{2}", strURL, "?ProductId=", productId);
+                            //TempData["Error"] = String.Format("{0}{1}", productName, " đã tồn tại");
+                            return -4;
+                        }
+                    }
+                }
+                try
+                {
+                    productPrice = Convert.ToInt32(productPrice.ToString().Replace(".", ""));
+                    mpb.EditProduct(productId, productName, productUnit, productWeight, productDes, productNote, productPrice, dropCate, productCode, fileName, materialId, materialQuantity);
+                    return 2;
+                }
+                catch (DataException)
+                {
+                    return -5;
+                }
             }
-            catch (DataException)
+            catch (Exception)
             {
                 return -5;
             }
+
         }
 
         public int ChangeStatus(int productId, bool status, string strURL)
@@ -511,105 +519,136 @@ namespace BMA.Controllers
         [HttpPost]
         public ActionResult GetListMaterialToAdd(int? productId)
         {
-            // Check autherization
-            User staffUser = Session["User"] as User;
-            if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                if (productId != null)
+                // Check autherization
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
                 {
-                    List<ProductMaterial> materialList = Session["MaterialList"] as List<ProductMaterial>;
-                    //materialList = Session["MaterialList"] as List<ProductMaterial>;
-
-                    return PartialView(materialList);
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    List<ProductMaterial> materialList = new List<ProductMaterial>();
-                    materialList = Session["MaterialListToAdd"] as List<ProductMaterial>;
+                    if (productId != null)
+                    {
+                        List<ProductMaterial> materialList = Session["MaterialList"] as List<ProductMaterial>;
+                        //materialList = Session["MaterialList"] as List<ProductMaterial>;
 
-                    return PartialView(materialList);
+                        return PartialView(materialList);
+                    }
+                    else
+                    {
+                        List<ProductMaterial> materialList = new List<ProductMaterial>();
+                        materialList = Session["MaterialListToAdd"] as List<ProductMaterial>;
+
+                        return PartialView(materialList);
+                    }
+
                 }
-
             }
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
 
         public int RemoveMaterialFromListToAdd(int[] materialId)
         {
-            List<ProductMaterial> lstMaterial = Session["MaterialListToAdd"] as List<ProductMaterial>;
-            if (materialId != null)
+            try
             {
-                if (materialId.Length > 0)
+                List<ProductMaterial> lstMaterial = Session["MaterialListToAdd"] as List<ProductMaterial>;
+                if (materialId != null)
                 {
-                    foreach (int index in materialId)
+                    if (materialId.Length > 0)
                     {
-                        if (lstMaterial != null && lstMaterial.Count > 0)
+                        foreach (int index in materialId)
                         {
-                            lstMaterial.Remove(lstMaterial.SingleOrDefault(n => n.ProductMaterialId == index));
+                            if (lstMaterial != null && lstMaterial.Count > 0)
+                            {
+                                lstMaterial.Remove(lstMaterial.SingleOrDefault(n => n.ProductMaterialId == index));
+                            }
                         }
+                        Session["MaterialListToAdd"] = lstMaterial;
+                        return 1;
                     }
-                    Session["MaterialListToAdd"] = lstMaterial;
-                    return 1;
+                    return 0;
                 }
-                return 0;
+                else
+                {
+                    return -1;
+                }
             }
-            else
+            catch (Exception)
             {
                 return -1;
             }
+
         }
 
         public int AddMaterialInMaterialListToAdd(int materialId)
         {
-            List<ProductMaterial> materialList = Session["MaterialListToAdd"] as List<ProductMaterial>;
-            ProductMaterial productMaterial = db.ProductMaterials.FirstOrDefault(n => n.ProductMaterialId == materialId && n.IsActive);
-            if (productMaterial != null)
+            try
             {
-                if (materialList != null && materialList.Count > 0)
+                List<ProductMaterial> materialList = Session["MaterialListToAdd"] as List<ProductMaterial>;
+                ProductMaterial productMaterial = db.ProductMaterials.FirstOrDefault(n => n.ProductMaterialId == materialId && n.IsActive);
+                if (productMaterial != null)
                 {
-                    bool check = true;
-                    foreach (ProductMaterial material in materialList)
+                    if (materialList != null && materialList.Count > 0)
                     {
-                        if (material.ProductMaterialId == materialId)
+                        bool check = true;
+                        foreach (ProductMaterial material in materialList)
                         {
-                            check = false;
+                            if (material.ProductMaterialId == materialId)
+                            {
+                                check = false;
+                            }
                         }
+                        if (check)
+                        {
+                            materialList.Add(productMaterial);
+                        }
+                        return 1;
                     }
-                    if (check)
-                    {
-                        materialList.Add(productMaterial);
-                    }
-                    return 1;
+                    return 0;
                 }
                 return 0;
             }
-            return 0;
+            catch
+            {
+                return 0;
+            }
+
         }
 
         [HttpPost]
         public int RemoveMaterialInProductList(int[] materialId)
         {
-            List<ProductMaterial> materialList = Session["MaterialList"] as List<ProductMaterial>;
-            if (materialId != null)
+            try
             {
-                if (materialId.Length > 0)
+                List<ProductMaterial> materialList = Session["MaterialList"] as List<ProductMaterial>;
+                if (materialId != null)
                 {
-                    foreach (int index in materialId)
+                    if (materialId.Length > 0)
                     {
-                        if (materialList != null && materialList.Count > 0)
+                        foreach (int index in materialId)
                         {
-                            materialList.Remove(materialList.FirstOrDefault(m => m.ProductMaterialId == index));
+                            if (materialList != null && materialList.Count > 0)
+                            {
+                                materialList.Remove(materialList.FirstOrDefault(m => m.ProductMaterialId == index));
+                            }
                         }
+                        Session["MaterialList"] = materialList;
+                        return 1;
                     }
-                    Session["MaterialList"] = materialList;
-                    return 1;
+                    return 0;
                 }
-                return 0;
+                else
+                {
+                    return -1;
+                }
             }
-            else
+            catch (Exception)
             {
                 return -1;
             }
@@ -618,31 +657,39 @@ namespace BMA.Controllers
         [HttpPost]
         public int AddMaterialInMaterialList(int materialId)
         {
-            List<ProductMaterial> materialList = Session["MaterialList"] as List<ProductMaterial>;
-            ProductMaterial productMaterial = db.ProductMaterials.FirstOrDefault(n => n.ProductMaterialId == materialId && n.IsActive);
-            if (productMaterial != null)
+            try
             {
-                if (materialList != null && materialList.Count > 0)
+                List<ProductMaterial> materialList = Session["MaterialList"] as List<ProductMaterial>;
+                ProductMaterial productMaterial = db.ProductMaterials.FirstOrDefault(n => n.ProductMaterialId == materialId && n.IsActive);
+                if (productMaterial != null)
                 {
-                    bool check = true;
-                    foreach (ProductMaterial material in materialList)
+                    if (materialList != null && materialList.Count > 0)
                     {
-                        if (material.ProductMaterialId == materialId)
+                        bool check = true;
+                        foreach (ProductMaterial material in materialList)
                         {
-                            check = false;
+                            if (material.ProductMaterialId == materialId)
+                            {
+                                check = false;
+                            }
                         }
+                        if (check)
+                        {
+                            materialList.Add(productMaterial);
+                        }
+                        return 1;
                     }
-                    if (check)
-                    {
-                        materialList.Add(productMaterial);
-                    }
-                    return 1;
+                    return 0;
                 }
+
+
+                return 0;
+            }
+            catch (Exception)
+            {
                 return 0;
             }
 
-
-            return 0;
         }
     }
 }

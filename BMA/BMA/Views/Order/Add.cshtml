@@ -116,6 +116,9 @@
                                 if (productQuantity < 1) {
                                     checkQuantity = 0;
                                 }
+                                if (productQuantity > 5000) {
+                                    checkQuantity = 2;
+                                }
                                 if (productPrice < 1000) {
                                     checkPrice = 0;
                                 }
@@ -139,6 +142,15 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
+                            } else if (checkQuantity === 2) {
+                                noty({
+                                    text: 'Số lượng mỗi sản phẩm không được lớn hơn 5000.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
                             } else if (totalQuantity === 0) {
                                 noty({
                                     text: 'Vui lòng có một sản phẩm có số lượng lớn hơn 0',
@@ -148,9 +160,18 @@
                                     theme: 'defaultTheme',
                                     timeout: 1000
                                 });
+                            } else if (totalQuantity > 10000) {
+                                noty({
+                                    text: 'Số lượng sản phẩm không được lớn hơn 10000.',
+                                    type: 'warning',
+                                    dismissQueue: false,
+                                    layout: 'topCenter',
+                                    theme: 'defaultTheme',
+                                    timeout: 1000
+                                });
                             } else if (totalQuantity < parseInt("@((int) ViewBag.MinQuantity)")) {
                                 noty({
-                                    text: "Số lượng sản phẩm phải lớn hơn " + "@(((int) ViewBag.MinQuantity).ToString())",
+                                    text: "Số lượng sản phẩm trong đơn hàng phải lớn hơn " + "@(((int) ViewBag.MinQuantity).ToString())",
                                     type: 'warning',
                                     dismissQueue: false,
                                     layout: 'topCenter',
@@ -412,8 +433,9 @@
                                                 "value": price,
                                                 "min": 1000,
                                                 "style": "text-align: right;",
-                                                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57"
-
+                                                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
+                                                "onkeydown": "return false",
+                                                "max":"@(ViewBag.MaxPrice)"
                                             })
                                         }),
                                         $("<td>", {
@@ -425,7 +447,8 @@
                                                 "value": "1",
                                                 "min": "1",
                                                 style: "text-align: right;",
-                                                onkeypress: "return event.charCode >= 48 && event.charCode <= 57"
+                                                onkeypress: "return event.charCode >= 48 && event.charCode <= 57",
+                                                "max-length":"4"
                                             })
                                         }),
                                         $("<td>", {

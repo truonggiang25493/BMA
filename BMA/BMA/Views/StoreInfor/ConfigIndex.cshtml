@@ -925,7 +925,7 @@
                                         theme: 'defaultTheme',
                                         timeout: 2000
                                     });
-                                } else if (parseInt(lstQuantityFrom[0]) > parseInt(lstQuantityTo[0]) || parseInt(lstQuantityFrom[1]) > parseInt(lstQuantityTo[1]) || parseInt(lstQuantityFrom[2]) > parseInt(lstQuantityTo[2])) {
+                                } else if (parseInt(lstQuantityFrom[0]) >= parseInt(lstQuantityTo[0]) || parseInt(lstQuantityFrom[1]) >= parseInt(lstQuantityTo[1]) || parseInt(lstQuantityFrom[2]) >= parseInt(lstQuantityTo[2])) {
                                     noty({
                                         text: 'Trong một hàng, số lượng "từ" không được lớn hơn số lượng "đến".',
                                         type: 'warning',
@@ -943,7 +943,7 @@
                                         theme: 'defaultTheme',
                                         timeout: 2000
                                     });
-                                } else if (parseInt(lstDiscount[0]) > parseInt(lstDiscount[1]) || parseInt(lstDiscount[1]) > parseInt(lstDiscount[2])) {
+                                } else if (parseInt(lstDiscount[0]) >= parseInt(lstDiscount[1]) || parseInt(lstDiscount[1]) >= parseInt(lstDiscount[2])) {
                                     noty({
                                         text: 'Tỉ lệ giảm hàng sau không được nhỏ hơn hàng trước.',
                                         type: 'warning',

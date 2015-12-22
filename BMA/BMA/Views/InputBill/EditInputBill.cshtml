@@ -14,17 +14,17 @@
 <section>
     <div style="margin-top: 1%">
         <div class="row">
-            <div class="col-md-5" style="margin-top: 2%">
+            <div class="col-md-6" style="margin-top: 2%">
                 <div class="box box-primary">
                     <form id="add-input-bill-form">
                         <input type="hidden" name="InputBillId" id="InputBillId" value="@Model.InputBillId" />
                         <div class="box-body box-profile" style="margin-top: 5%">
                             <!-- Choose supplier -->
                             <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-5">
+                                <div class="col-xs-4">
                                     <b>Nhà cung cấp<b style="color: #ff0000">*</b>:</b>
                                 </div>
-                                <div class="col-xs-7" id="input-bill-info">
+                                <div class="col-xs-8" id="input-bill-info">
 
                                     <input type="text" value="@Model.Supplier.SupplierName" name="supplierName" id="supplierName" readonly style="margin-bottom: 10px" class="form-control" />
                                     <input type="hidden" value="@Model.SupplierId" name="supplierId" id="supplierId" />
@@ -70,26 +70,42 @@
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-5">
+                                <div class="col-xs-4">
                                     <label>Chi phí (Chưa thuế)<b style="color: #ff0000">*</b>: </label>
                                 </div>
-                                <div class="col-xs-7">
+                                <div class="col-xs-8">
                                     <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="@Model.InputBillAmount" name="txtInputBillAmount" id="txtInputBillAmount" oninput="maxLengthCheck(this)" maxlength="9" min="1000" max="999999999" placeholder="nhập số tiền từ 1.000 - 999.999.999" class="form-control" />
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 17px;">
-                                <div class="col-xs-5">
+                                <div class="col-xs-4">
                                     <div class="form-group">
                                         <label>Thuế VAT<b style="color: #ff0000">*</b>: </label>
                                     </div>
                                 </div>
-                                <div class="col-xs-7">
+                                <div class="col-xs-8">
                                     <div class="form-group">
                                         <input type="number" value="@Model.InputTaxAmount" readonly="readonly" name="txtInputTaxAmount" id="txtInputTaxAmount" class="form-control" />
                                     </div>
                                 </div>
                             </div>
-                            
+                            <div class="row" style="margin-bottom: 17px;">
+                                <div class="col-xs-4">
+                                    <div class="form-group">
+                                        <b>Ngày nhập<b style="color: #ff0000">*</b>: </b>
+                                    </div>
+                                </div>
+                                <div class="col-xs-8">
+                                    <div class="form-group">
+                                        <div class='input-group date' id='datetimepicker2'>
+                                            <input type="text" readonly="readonly" required name="txtImportDate" id="txtImportDate" class="form-control" value="@Model.ImportDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row" style="margin-bottom: 17px;">
                                 <div class="col-xs-12">
                                     <b><b style="color: #ff0000">*</b>: Thông tin bắt buộc</b>
@@ -101,7 +117,7 @@
                 </div>
             </div>
 
-            <div class="col-md-7" style="margin-top: 2%">
+            <div class="col-md-6" style="margin-top: 2%">
                 <div class="box box-primary">
                     <form role="form" action="@Url.Action("EditImage", "InputBill")" id="imageForm" method="post" enctype="multipart/form-data">
                         <div class="box-profile">
@@ -168,7 +184,9 @@
                             var supplierId = $("#supplierId").val();
                             var formNo = $("#txtFormNo").val();
                             var serial = $("#txtSerial").val();
-
+                            if (fileName == "") {
+                                fileName = "@Model.InputRawImage";
+                            }
                             var action = $("#imageForm").attr("action");
                             var contentType;
                             var processData;

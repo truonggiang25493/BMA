@@ -69,10 +69,16 @@ namespace BMA.Controllers
         {
             try
             {
-                if (Session["User"] == null || Session["UserRole"] == null)
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
                 {
                     return RedirectToAction("Index", "Home");
                 }
+                if ((int)Session["UserRole"] == 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+
                 ViewBag.TreeView = "productMaterial";
                 ViewBag.TreeViewMenu = "productMaterialList";
                 ManageMaterialBusiness mmb = new ManageMaterialBusiness();
@@ -167,6 +173,16 @@ namespace BMA.Controllers
         {
             try
             {
+                User staffUser = Session["User"] as User;
+                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] == 3)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if ((int)Session["UserRole"] == 1)
+                {
+                    return RedirectToAction("Index", "StoreInfor");
+                }
+
                 ViewBag.TreeView = "productMaterial";
                 ViewBag.TreeViewMenu = "addProductMaterial";
                 ViewBag.previousURL = strURL;

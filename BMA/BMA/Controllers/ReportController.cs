@@ -22,7 +22,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            if ((int)Session["UserRole"] != 1)
+            if (Session["UserRole"] != null && (int)Session["UserRole"] != 1)
             {
                 return RedirectToAction("Index", "StoreInfor");
             }
@@ -184,7 +184,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            if ((int)Session["UserRole"] != 1)
+            if (Session["UserRole"] != null && (int)Session["UserRole"] != 1)
             {
                 return RedirectToAction("Index", "StoreInfor");
             }
@@ -353,7 +353,7 @@ namespace BMA.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                if ((int)Session["UserRole"] != 1)
+                if (Session["UserRole"] != null && (int)Session["UserRole"] != 1)
                 {
                     return RedirectToAction("Index", "StoreInfor");
                 }
@@ -387,7 +387,7 @@ namespace BMA.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                if ((int)Session["UserRole"] != 1)
+                if (Session["UserRole"] != null && (int)Session["UserRole"] != 1)
                 {
                     return RedirectToAction("Index", "StoreInfor");
                 }
@@ -427,7 +427,7 @@ namespace BMA.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                if ((int)Session["UserRole"] != 1)
+                if (Session["UserRole"] != null && (int)Session["UserRole"] != 1)
                 {
                     return RedirectToAction("Index", "StoreInfor");
                 }
@@ -467,7 +467,7 @@ namespace BMA.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            if ((int)Session["UserRole"] != 1)
+            if (Session["UserRole"] != null && (int)Session["UserRole"] != 1)
             {
                 return RedirectToAction("Index", "StoreInfor");
             }
@@ -489,7 +489,7 @@ namespace BMA.Controllers
                 {
                     return null;
                 }
-                if ((int)Session["UserRole"] != 1)
+                if (Session["UserRole"] != null && (int)Session["UserRole"] != 1)
                 {
                     return null;
                 }
@@ -557,7 +557,7 @@ namespace BMA.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                if ((int)Session["UserRole"] != 1)
+                if (Session["UserRole"] != null && (int)Session["UserRole"] != 1)
                 {
                     return RedirectToAction("Index", "StoreInfor");
                 }
@@ -639,7 +639,7 @@ namespace BMA.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                if ((int)Session["UserRole"] != 1)
+                if (Session["UserRole"] != null && (int)Session["UserRole"] != 1)
                 {
                     return RedirectToAction("Index", "StoreInfor");
                 }

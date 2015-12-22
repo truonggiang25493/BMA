@@ -257,6 +257,15 @@
                                                             timeout: 1500
                                                         });
                                                         $("#txtSupplierTaxCode").focus();
+                                                    } else if (data === "6") {
+                                                        noty({
+                                                            text: 'Đã có lỗi.',
+                                                            type: 'warning',
+                                                            dismissQueue: false,
+                                                            layout: 'topCenter',
+                                                            theme: 'defaultTheme',
+                                                            timeout: 1500
+                                                        });
                                                     } else if (data === "-7") {
                                                         noty({
                                                             text: 'Bạn không có quyền thực hiện chức năng này',

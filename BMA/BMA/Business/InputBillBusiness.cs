@@ -55,7 +55,7 @@ namespace BMA.Business
         #endregion
 
         #region Edit input bill
-        public static bool EditInputBill(int inputBillId, int supplierId, String inputBillCode, int inputBillAmount, int inputTaxAmount, String inputRawImage, String importDate, string formNo, string serial)
+        public static bool EditInputBill(int inputBillId, int supplierId, int inputBillAmount, int inputTaxAmount, String inputRawImage, String importDate, string formNo, string serial)
         {
             var inputBill = db.InputBills.SingleOrDefault(n => n.InputBillId == inputBillId);
             if (inputBill != null)
@@ -67,7 +67,7 @@ namespace BMA.Business
                     inputBill.InputBillAmount = inputBillAmount;
                     inputBill.InputTaxAmount = inputTaxAmount;
                     inputBill.ImportDate = DateTime.ParseExact(importDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    inputBill.InputBillCode = inputBillCode.Replace("-", "");
+                    //inputBill.InputBillCode = inputBillCode.Replace("-", "");
                     inputBill.InputRawImage = inputRawImage;
 
                     db.SaveChanges();

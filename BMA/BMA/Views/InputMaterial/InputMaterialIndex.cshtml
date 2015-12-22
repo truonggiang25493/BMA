@@ -149,7 +149,8 @@
                                 "onkeypress": "return event.charCode >= 48 && event.charCode <= 57",
                                 "class": "form-control",
                                 "id": "discardQuantity",
-                                "name": "discardQuantity"
+                                "name": "discardQuantity",
+                                "max-length": '6'
                             }),
                             $("<input>", {
                                 "type": "hidden",
@@ -234,6 +235,15 @@
             } else if ((checkdiscardQuantity) <= 0) {
                 noty({
                     text: 'Số lượng hủy không được nhỏ hơn 0.',
+                    type: 'warning',
+                    dismissQueue: false,
+                    layout: 'topCenter',
+                    theme: 'defaultTheme',
+                    timeout: 1000
+                });
+            } else if ((checkdiscardQuantity).toString().length > 6) {
+                noty({
+                    text: 'Số lượng hủy phải nhỏ hơn 1.000.000',
                     type: 'warning',
                     dismissQueue: false,
                     layout: 'topCenter',

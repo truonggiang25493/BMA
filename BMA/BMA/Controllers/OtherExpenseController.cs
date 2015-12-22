@@ -74,46 +74,54 @@ namespace BMA.Controllers
         [HttpPost]
         public int AddOtherExpense(FormCollection form)
         {
-            string name = form["otherExpenseName"];
-            string amountString = form["otherExpenseAmount"];
-            string timeType = form["timeType"];
-            string timePointString = form["timePoint"];
-            string fromTimeString = form["fromTime"];
-            string toTimeString = form["toTime"];
-            int otherExpenseType = Convert.ToInt32(form["otherExpenseType"].Trim());
-
-            if (timeType.Equals("1"))
+            try
             {
-                try
-                {
-                    int month = DateTime.ParseExact(timePointString, "MM/yyyy", CultureInfo.InvariantCulture).Month;
-                    int year = DateTime.ParseExact(timePointString, "MM/yyyy", CultureInfo.InvariantCulture).Year;
-                    int amount = Convert.ToInt32(amountString);
+                string name = form["otherExpenseName"];
+                string amountString = form["otherExpenseAmount"];
+                string timeType = form["timeType"];
+                string timePointString = form["timePoint"];
+                string fromTimeString = form["fromTime"];
+                string toTimeString = form["toTime"];
+                int otherExpenseType = Convert.ToInt32(form["otherExpenseType"].Trim());
 
-                    OtherExpenseBusiness business = new OtherExpenseBusiness();
-                    return (business.AddOtherExpense(name, amount, 1, month, year, null, null, otherExpenseType) ? 1 : 0);
-                }
-                catch (Exception)
+                if (timeType.Equals("1"))
                 {
-                    return 0;
+                    try
+                    {
+                        int month = DateTime.ParseExact(timePointString, "MM/yyyy", CultureInfo.InvariantCulture).Month;
+                        int year = DateTime.ParseExact(timePointString, "MM/yyyy", CultureInfo.InvariantCulture).Year;
+                        int amount = Convert.ToInt32(amountString);
+
+                        OtherExpenseBusiness business = new OtherExpenseBusiness();
+                        return (business.AddOtherExpense(name, amount, 1, month, year, null, null, otherExpenseType) ? 1 : 0);
+                    }
+                    catch (Exception)
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        DateTime fromTime = DateTime.ParseExact(fromTimeString, "MM/yyyy", CultureInfo.InvariantCulture);
+                        DateTime toTime = DateTime.ParseExact(toTimeString, "MM/yyyy", CultureInfo.InvariantCulture);
+                        int amount = Convert.ToInt32(amountString);
+
+                        OtherExpenseBusiness business = new OtherExpenseBusiness();
+                        return (business.AddOtherExpense(name, amount, 2, null, null, fromTime, toTime, otherExpenseType) ? 1 : 0);
+                    }
+                    catch (Exception)
+                    {
+                        return 0;
+                    }
                 }
             }
-            else
+            catch (Exception)
             {
-                try
-                {
-                    DateTime fromTime = DateTime.ParseExact(fromTimeString, "MM/yyyy", CultureInfo.InvariantCulture);
-                    DateTime toTime = DateTime.ParseExact(toTimeString, "MM/yyyy", CultureInfo.InvariantCulture);
-                    int amount = Convert.ToInt32(amountString);
-
-                    OtherExpenseBusiness business = new OtherExpenseBusiness();
-                    return (business.AddOtherExpense(name, amount, 2, null, null, fromTime, toTime, otherExpenseType) ? 1 : 0);
-                }
-                catch (Exception)
-                {
-                    return 0;
-                }
+                return 0;
             }
+            
         }
         // Delete Other expense
         [HttpPost]

@@ -291,7 +291,7 @@
                                             theme: 'defaultTheme',
                                             timeout: 1000
                                         });
-                                    } else if (txtImportQuantity < txtInputMaterialPrice) {
+                                    } else if (parseInt(txtInputMaterialPrice) < parseInt(txtImportQuantity)) {
                                         noty({
                                             text: 'Số lượng nguyên liệu nhập vào không được lớn hơn tổng giá nguyên liệu.',
                                             type: 'warning',
@@ -300,6 +300,7 @@
                                             theme: 'defaultTheme',
                                             timeout: 1000
                                         });
+                                    
                                     } else if (txtImportDate.trim() === '') {
                                         noty({
                                             text: 'Ngày nhập nguyên liệu không được trống.',

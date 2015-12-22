@@ -1614,6 +1614,11 @@ namespace BMA.Business
         }
         #endregion
 
+        public int GetMaxPrice()
+        {
+            return db.Policies.FirstOrDefault(m => m.PolicyId == 2).PolicyBound;
+        }
+
         #region Get product list
         /// <summary>
         /// Get product list
@@ -1691,7 +1696,7 @@ namespace BMA.Business
 
         public List<DiscountByQuantity> GetDiscountByQuantityList()
         {
-            return db.DiscountByQuantities.ToList();
+            return db.DiscountByQuantities.Where(m=>m.beUsing).ToList();
         }
 
         public bool ExportMaterial(int productMaterialId, int outputMaterialId, int exportQuantity)

@@ -41,7 +41,7 @@ namespace BMA.Controllers
                 }
                 // Check autherization
                 User staffUser = Session["User"] as User;
-                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                if (staffUser == null || Session["UserRole"] == null)
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -89,7 +89,7 @@ namespace BMA.Controllers
             {
                 // Check autherization
                 User staffUser = Session["User"] as User;
-                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                if (staffUser == null || Session["UserRole"] == null)
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -132,7 +132,11 @@ namespace BMA.Controllers
                 ViewBag.MinQuantity = minQuantity;
 
                 List<DiscountByQuantity> discountByQuantityList = orderBusiness.GetDiscountByQuantityList();
-                ViewBag.DiscountByQuantityList = discountByQuantityList;
+                if (discountByQuantityList != null && discountByQuantityList.Count != 0)
+                {
+                    ViewBag.DiscountByQuantityList = discountByQuantityList;
+                }
+
                 OrderViewModel orderViewModel = orderBusiness.GetOrderViewModel(id);
                 TaxRate taxRate = db.TaxRates.FirstOrDefault(m => m.TaxTypeId == 1 && m.EndDate >= DateTime.Now && m.BeginDate <= DateTime.Now);
                 if (taxRate != null)
@@ -388,6 +392,7 @@ namespace BMA.Controllers
                 OrderBusiness orderBusiness = new OrderBusiness();
                 InitiateProductList(null);
                 ViewBag.MinQuantity = orderBusiness.GetMinQuantity();
+                ViewBag.MaxPrice = orderBusiness.GetMaxPrice();
                 ViewBag.TreeView = "order";
                 ViewBag.TreeViewMenu = "addOrder";
                 return View();
@@ -922,7 +927,7 @@ namespace BMA.Controllers
             {
                 // Check autherization
                 User staffUser = Session["User"] as User;
-                if (staffUser == null || Session["UserRole"] == null || (int)Session["UserRole"] != 2)
+                if (staffUser == null || Session["UserRole"] == null)
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -971,14 +976,22 @@ namespace BMA.Controllers
         [HttpPost]
         public int CheckCustomerField(FormCollection form)
         {
-            string customerEmailString = form["customerEmail"];
-            string customerAddressString = form["customerAddress"];
-            string customerPhoneNumberString = form["customerPhoneNumber"];
-            string customerTaxCodeString = form["customerTaxCode"];
-            string usernameString = form["username"];
+            try
+            {
+                string customerEmailString = form["customerEmail"];
+                string customerAddressString = form["customerAddress"];
+                string customerPhoneNumberString = form["customerPhoneNumber"];
+                string customerTaxCodeString = form["customerTaxCode"];
+                string usernameString = form["username"];
 
-            OrderBusiness orderBusiness = new OrderBusiness();
-            return orderBusiness.CheckCustomerField(customerEmailString, customerAddressString, customerPhoneNumberString, customerTaxCodeString, usernameString);
+                OrderBusiness orderBusiness = new OrderBusiness();
+                return orderBusiness.CheckCustomerField(customerEmailString, customerAddressString, customerPhoneNumberString, customerTaxCodeString, usernameString);
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+
         }
 
 
